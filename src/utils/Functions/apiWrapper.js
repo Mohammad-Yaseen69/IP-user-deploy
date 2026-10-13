@@ -57,9 +57,7 @@ export const apiWrapper = async ({
         token = await executeGlobalRecaptcha();
         if (!token) {
           console.warn("reCAPTCHA execution returned no token.");
-          logRecaptchaFailureToSentry(
-            "apiWrapper: Token generation returned null (Case 2)",
-          );
+          logRecaptchaFailureToSentry("apiWrapper: Token generation returned null (Case 2)");
         }
       }
       if (!telemetrySignals) {
@@ -73,8 +71,7 @@ export const apiWrapper = async ({
       dataToSend = payload;
       if (token && dataToSend instanceof FormData) {
         dataToSend.append("recaptchaToken", token);
-        if (telemetrySignals)
-          dataToSend.append("signals", JSON.stringify(telemetrySignals));
+        if (telemetrySignals) dataToSend.append("signals", JSON.stringify(telemetrySignals));
       }
     } else if (isEncrypted) {
       dataToSend = {
@@ -115,10 +112,7 @@ export const apiWrapper = async ({
     return isDecrypted ? decryptData(res.data.data) : res.data;
   } catch (error) {
     if (capcheRequired || captchaRequired) {
-      logRecaptchaFailureToSentry(
-        `API call to ${endpoint} failed (Case 2)`,
-        error?.message,
-      );
+      logRecaptchaFailureToSentry(`API call to ${endpoint} failed (Case 2)`, error?.message);
     }
     console.error("API Wrapper Error:", error);
     throw error;

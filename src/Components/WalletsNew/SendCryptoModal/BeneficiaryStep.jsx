@@ -11,9 +11,7 @@ import {
 } from "./cryptoProtocols";
 
 const getBeneficiaryName = (beneficiary) => {
-  const name = [beneficiary?.first_name, beneficiary?.last_name]
-    .filter(Boolean)
-    .join(" ");
+  const name = [beneficiary?.first_name, beneficiary?.last_name].filter(Boolean).join(" ");
   return (
     name ||
     beneficiary?.company_name ||
@@ -62,11 +60,7 @@ const BeneficiaryStep = ({
       <div className={styles.section}>
         <div className={styles.sectionLabel}>
           <span>{t("Select beneficiary")}</span>
-          <button
-            type="button"
-            className={styles.addBtn}
-            onClick={onAddBeneficiary}
-          >
+          <button type="button" className={styles.addBtn} onClick={onAddBeneficiary}>
             <Plus size={14} />
             {t("Add New")}
           </button>
@@ -84,9 +78,7 @@ const BeneficiaryStep = ({
         <div className={styles.beneficiaryList}>
           {filtered.length === 0 && (
             <div className={styles.emptyState}>
-              {t(
-                "No beneficiaries with a saved crypto wallet address. Add one to send crypto.",
-              )}
+              {t("No beneficiaries with a saved crypto wallet address. Add one to send crypto.")}
             </div>
           )}
 
@@ -111,9 +103,7 @@ const BeneficiaryStep = ({
                   <small>{maskAddress(firstAddress)}</small>
                 </span>
                 <span className={styles.assetBadge}>
-                  {channels.length > 1
-                    ? `${channels.length} ${t("wallets")}`
-                    : t("Crypto")}
+                  {channels.length > 1 ? `${channels.length} ${t("wallets")}` : t("Crypto")}
                 </span>
               </button>
             );
@@ -127,11 +117,7 @@ const BeneficiaryStep = ({
               {onEditBeneficiary && (
                 <>
                   {" "}
-                  <button
-                    type="button"
-                    className={styles.linkBtn}
-                    onClick={onEditBeneficiary}
-                  >
+                  <button type="button" className={styles.linkBtn} onClick={onEditBeneficiary}>
                     {t("Edit beneficiary")}
                   </button>
                 </>
@@ -147,8 +133,7 @@ const BeneficiaryStep = ({
           <div className={styles.beneficiaryList}>
             {cryptoChannels.map((channel, index) => {
               const channelAddress = getChannelAddress(channel);
-              const selected =
-                getChannelAddress(selectedChannel) === channelAddress;
+              const selected = getChannelAddress(selectedChannel) === channelAddress;
               return (
                 <button
                   type="button"
@@ -173,9 +158,7 @@ const BeneficiaryStep = ({
           <div className={styles.addressBox}>
             <span className={styles.addressValue}>{address}</span>
             <span className={styles.addressMeta}>
-              {addressStatus === "checking" && (
-                <span>{t("Checking address...")}</span>
-              )}
+              {addressStatus === "checking" && <span>{t("Checking address...")}</span>}
               {addressStatus === "valid" && (
                 <span className={styles.addressOk}>
                   {t("Valid for")} {getProtocolLabel(protocol)}
@@ -184,27 +167,19 @@ const BeneficiaryStep = ({
               {addressStatus === "invalid" && (
                 <span className={styles.addressBad}>
                   {isProtocolLocked
-                    ? t(
-                        "This address is not valid on the network saved for this beneficiary.",
-                      )
+                    ? t("This address is not valid on the network saved for this beneficiary.")
                     : t("This address is not valid for the selected network.")}
                   {onEditBeneficiary && (
                     <>
                       {" "}
-                      <button
-                        type="button"
-                        className={styles.linkBtn}
-                        onClick={onEditBeneficiary}
-                      >
+                      <button type="button" className={styles.linkBtn} onClick={onEditBeneficiary}>
                         {t("Edit beneficiary")}
                       </button>
                     </>
                   )}
                 </span>
               )}
-              {!addressStatus && (
-                <span>{t("Taken from the saved beneficiary wallet.")}</span>
-              )}
+              {!addressStatus && <span>{t("Taken from the saved beneficiary wallet.")}</span>}
             </span>
           </div>
         </div>
@@ -222,9 +197,7 @@ const BeneficiaryStep = ({
           </div>
           {isProtocolLocked && protocol ? (
             <div className={styles.protocolGrid}>
-              <span
-                className={`${styles.protocolChip} ${styles.protocolChipActive}`}
-              >
+              <span className={`${styles.protocolChip} ${styles.protocolChipActive}`}>
                 {getProtocolLabel(protocol)}
               </span>
             </div>

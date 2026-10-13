@@ -73,8 +73,7 @@ const UserState = ({ children }) => {
   const [userPortfolio, setUserPortfolio] = useState([]);
   const [userVideos, setUserVideos] = useState([]);
   const [profileCompleted, setProfileCompleted] = useState(null);
-  const [profileCompletedPercentage, setProfileCompletedPercentage] =
-    useState(0);
+  const [profileCompletedPercentage, setProfileCompletedPercentage] = useState(0);
   const [profileIncompleteReason, setProfileIncompleteReason] = useState("");
   const [showModalState, setShowModalState] = useState(false);
   const navigate = useNavigate();
@@ -128,8 +127,7 @@ const UserState = ({ children }) => {
       (error) => {
         if (
           error.response?.status === 401 &&
-          decryptData(error?.response?.data?.data).message ===
-            "Unauthorize to access this route."
+          decryptData(error?.response?.data?.data).message === "Unauthorize to access this route."
         ) {
           // setSearchParams({ ...currentParams, show_logout_modal: "unauthorized" }, { replace: true });
           navigate(
@@ -285,26 +283,18 @@ const UserState = ({ children }) => {
           }
 
           if (!decrypted?.tfa) {
-            setMissingTabsData((prev) =>
-              prev.includes("tfa") ? prev : [...prev, "tfa"],
-            );
+            setMissingTabsData((prev) => (prev.includes("tfa") ? prev : [...prev, "tfa"]));
           }
           const isKycMissing =
             decrypted?.account_type === "business"
-              ? decrypted?.company?.kyb_status === "declined" ||
-                !decrypted.company?.kyb_status
-              : decrypted?.user?.kyc_status === "declined" ||
-                !decrypted.user?.kyc_status;
+              ? decrypted?.company?.kyb_status === "declined" || !decrypted.company?.kyb_status
+              : decrypted?.user?.kyc_status === "declined" || !decrypted.user?.kyc_status;
 
           if (isKycMissing) {
-            setMissingTabsData((prev) =>
-              prev.includes("kyc") ? prev : [...prev, "kyc"],
-            );
+            setMissingTabsData((prev) => (prev.includes("kyc") ? prev : [...prev, "kyc"]));
           }
           if (!decrypted?.insta_username && !decrypted?.telegram_bot) {
-            setMissingTabsData((prev) =>
-              prev.includes("social") ? prev : [...prev, "social"],
-            );
+            setMissingTabsData((prev) => (prev.includes("social") ? prev : [...prev, "social"]));
           }
 
           return decrypted;
@@ -332,13 +322,8 @@ const UserState = ({ children }) => {
                 ) &&
                 !window.location.pathname.toLowerCase().includes("profile/")
               ) {
-                const currentPath =
-                  window.location.pathname + window.location.search;
-                if (
-                  currentPath &&
-                  currentPath !== "undefined" &&
-                  !currentPath.includes("/login")
-                ) {
+                const currentPath = window.location.pathname + window.location.search;
+                if (currentPath && currentPath !== "undefined" && !currentPath.includes("/login")) {
                   sessionStorage.setItem("path", currentPath);
                 }
                 navigate(getLoginPath(), { replace: true });
@@ -370,10 +355,7 @@ const UserState = ({ children }) => {
           setAgentDetails(decrypted?.agentDetails);
         }
         if (decrypted?.country?.status === false) {
-          sessionStorage.setItem(
-            "country_status_error",
-            "Service not available in your country!",
-          );
+          sessionStorage.setItem("country_status_error", "Service not available in your country!");
           clearAuthStorage();
           clearData();
           navigate(getLoginPath(), { replace: true });
@@ -402,26 +384,18 @@ const UserState = ({ children }) => {
         }
 
         if (!decrypted?.tfa) {
-          setMissingTabsData((prev) =>
-            prev.includes("tfa") ? prev : [...prev, "tfa"],
-          );
+          setMissingTabsData((prev) => (prev.includes("tfa") ? prev : [...prev, "tfa"]));
         }
         const isKycMissing =
           decrypted?.account_type === "business"
-            ? decrypted?.company?.kyb_status === "declined" ||
-              !decrypted.company?.kyb_status
-            : decrypted?.user?.kyc_status === "declined" ||
-              !decrypted.user?.kyc_status;
+            ? decrypted?.company?.kyb_status === "declined" || !decrypted.company?.kyb_status
+            : decrypted?.user?.kyc_status === "declined" || !decrypted.user?.kyc_status;
 
         if (isKycMissing) {
-          setMissingTabsData((prev) =>
-            prev.includes("kyc") ? prev : [...prev, "kyc"],
-          );
+          setMissingTabsData((prev) => (prev.includes("kyc") ? prev : [...prev, "kyc"]));
         }
         if (!decrypted?.insta_username && !decrypted?.telegram_bot) {
-          setMissingTabsData((prev) =>
-            prev.includes("social") ? prev : [...prev, "social"],
-          );
+          setMissingTabsData((prev) => (prev.includes("social") ? prev : [...prev, "social"]));
         }
       })
       .catch((err) => {
@@ -433,16 +407,11 @@ const UserState = ({ children }) => {
         }
         if (
           !publicRoutes.some((item) =>
-            window.location.pathname
-              .toLowerCase()
-              .includes(item.path.toLowerCase().split(":")[0]),
+            window.location.pathname.toLowerCase().includes(item.path.toLowerCase().split(":")[0]),
           ) &&
           !window.location.pathname.toLowerCase().includes("profile/")
         ) {
-          sessionStorage.setItem(
-            "path",
-            window.location.href?.split("pay.ch")?.[1],
-          );
+          sessionStorage.setItem("path", window.location.href?.split("pay.ch")?.[1]);
           navigate(getLoginPath(), { replace: true });
         }
       });
@@ -464,10 +433,9 @@ const UserState = ({ children }) => {
 
   const getUserWallets = (dontSort) => {
     axios
-      .get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-user-wallet/${userDetails?._id}`,
-        { headers: authHeader },
-      )
+      .get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-user-wallet/${userDetails?._id}`, {
+        headers: authHeader,
+      })
       .then(async (res) => {
         const decrypted = decryptData(res.data.data);
         const sorted = decrypted.walletList.sort((a, b) => {
@@ -484,9 +452,7 @@ const UserState = ({ children }) => {
         } else {
           const defaultWallet = decrypted.walletList.find((w) => w.default);
           const otherWallets = sorted.filter((w) => !w.default);
-          const wallets = defaultWallet
-            ? [defaultWallet, ...otherWallets]
-            : otherWallets;
+          const wallets = defaultWallet ? [defaultWallet, ...otherWallets] : otherWallets;
           setUserWallets(wallets);
         }
         getUserBalances();
@@ -505,12 +471,7 @@ const UserState = ({ children }) => {
       const p = decrypted?.paymentAddressDetails;
 
       if (p?.profileImage?.coordinates) {
-        getImage(
-          p?.profileImage?.url,
-          p?.profileImage?.coordinates,
-          "pa",
-          "dp",
-        );
+        getImage(p?.profileImage?.url, p?.profileImage?.coordinates, "pa", "dp");
       }
       if (p?.coverImage?.coordinates) {
         getImage(p?.coverImage?.url, p?.coverImage?.coordinates, "pa", "cover");
@@ -565,19 +526,14 @@ const UserState = ({ children }) => {
   // security questions
   const getSecurityQuestions = () => {
     axios
-      .get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/user/get-security-question`,
-        {
-          headers: authHeader,
-        },
-      )
+      .get(`${import.meta.env.VITE_IP_DEV_API}/api/user/get-security-question`, {
+        headers: authHeader,
+      })
       .then((res) => {
         const decrypted = decryptData(res.data.data);
         const questions = decrypted.questionsList?.map((item) => {
           const question = questionsData.find(
-            (it) =>
-              it.language_code === (i18n.language || "en") &&
-              it.number === item?.question_no,
+            (it) => it.language_code === (i18n.language || "en") && it.number === item?.question_no,
           );
           return { ...question, ...item };
         });
@@ -591,12 +547,9 @@ const UserState = ({ children }) => {
   // invitation link
   const getInvitationLink = () => {
     axios
-      .get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/invitation/get-link/${userDetails?._id}`,
-        {
-          headers: authHeader,
-        },
-      )
+      .get(`${import.meta.env.VITE_IP_DEV_API}/api/invitation/get-link/${userDetails?._id}`, {
+        headers: authHeader,
+      })
       .then((res) => {
         const decrypted = decryptData(res.data.data);
         const formattedUrl = `${base_url}/signup/`;
@@ -648,14 +601,9 @@ const UserState = ({ children }) => {
       .then((res) => {
         const decrypted = decryptData(res.data.data);
         if (decrypted.fieldsInformation) {
-          const {
-            completedBasicFields,
-            totalBasicFields,
-            completedProfilePercent,
-          } = decrypted.fieldsInformation;
-          setProfileIncompleteReason(
-            completedBasicFields !== totalBasicFields ? "basic" : "",
-          );
+          const { completedBasicFields, totalBasicFields, completedProfilePercent } =
+            decrypted.fieldsInformation;
+          setProfileIncompleteReason(completedBasicFields !== totalBasicFields ? "basic" : "");
           const isComplete = completedProfilePercent === 100;
           if (!isComplete) {
             sessionStorage.removeItem("force_auth_on_login");
@@ -667,13 +615,9 @@ const UserState = ({ children }) => {
       });
   };
 
-  const forceAuthOnLogin =
-    sessionStorage.getItem("force_auth_on_login") === "true";
+  const forceAuthOnLogin = sessionStorage.getItem("force_auth_on_login") === "true";
   const shouldForceAuthenticator =
-    Boolean(userDetails?._id) &&
-    profileCompleted === true &&
-    !userDetails?.tfa &&
-    forceAuthOnLogin;
+    Boolean(userDetails?._id) && profileCompleted === true && !userDetails?.tfa && forceAuthOnLogin;
   useEffect(() => {
     if (userDetails?._id) {
       getProfileCompletionDetails();
@@ -683,12 +627,9 @@ const UserState = ({ children }) => {
   // getActive countries
   const getAllActiveCountries = () => {
     axios
-      .get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/country/get-all-active-country`,
-        {
-          headers: authHeader,
-        },
-      )
+      .get(`${import.meta.env.VITE_IP_DEV_API}/api/country/get-all-active-country`, {
+        headers: authHeader,
+      })
       .then((res) => {
         const decrypted = decryptData(res.data.data);
         // console.log(decrypted)
@@ -716,12 +657,9 @@ const UserState = ({ children }) => {
   const getUserVideos = (userId = null) => {
     const id = userId ?? userDetails?._id;
     axios
-      .get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/account/get-all-document/${id}/address`,
-        {
-          headers: authHeader,
-        },
-      )
+      .get(`${import.meta.env.VITE_IP_DEV_API}/api/account/get-all-document/${id}/address`, {
+        headers: authHeader,
+      })
       .then((res) => {
         const decrypted = decryptData(res.data.data);
         setUserVideos(decrypted.result);
@@ -744,14 +682,10 @@ const UserState = ({ children }) => {
       }
       console.log(decrypted);
       setUserWithdrawals(
-        decrypted?.withdrawalList?.filter(
-          (withdrawal) => !withdrawal.isCrypto,
-        ) ?? [],
+        decrypted?.withdrawalList?.filter((withdrawal) => !withdrawal.isCrypto) ?? [],
       );
       setCryptoWithdrawals(
-        decrypted?.withdrawalList?.filter(
-          (withdrawal) => withdrawal.isCrypto === true,
-        ) ?? [],
+        decrypted?.withdrawalList?.filter((withdrawal) => withdrawal.isCrypto === true) ?? [],
       );
     } catch (error) {
       const dec = decryptData(error.response?.data?.data);
@@ -795,22 +729,19 @@ const UserState = ({ children }) => {
 
   const validateSendingLimits = () => {
     if (
-      userDetails?.level?.daily_sending_limit -
-        userDetails?.used_limits?.daily_sending_limit <
+      userDetails?.level?.daily_sending_limit - userDetails?.used_limits?.daily_sending_limit <
       1
     ) {
       return true;
     }
     if (
-      userDetails?.level?.monthly_sending_limit -
-        userDetails?.used_limits?.monthly_sending_limit <
+      userDetails?.level?.monthly_sending_limit - userDetails?.used_limits?.monthly_sending_limit <
       1
     ) {
       return true;
     }
     if (
-      userDetails?.level?.yearly_sending_limit -
-        userDetails?.used_limits?.yearly_sending_limit <
+      userDetails?.level?.yearly_sending_limit - userDetails?.used_limits?.yearly_sending_limit <
       1
     ) {
       return true;
@@ -820,8 +751,7 @@ const UserState = ({ children }) => {
 
   const validateReceivingLimits = () => {
     if (
-      userDetails?.level?.daily_receiving_limit -
-        userDetails?.used_limits?.daily_receiving_limit <
+      userDetails?.level?.daily_receiving_limit - userDetails?.used_limits?.daily_receiving_limit <
       1
     ) {
       return true;
@@ -1010,16 +940,15 @@ const UserState = ({ children }) => {
         shouldForceAuthenticator,
       }}
     >
-      {(showModalState || Boolean(isSessionExpired)) &&
-        !location.pathname.startsWith("/pay/") && (
-          <SessionExpireModal
-            isOpen={showModalState || Boolean(isSessionExpired)}
-            toggle={() => {
-              setShowModalState(false);
-              window.history.replaceState(null, null, window.location.pathname);
-            }}
-          />
-        )}
+      {(showModalState || Boolean(isSessionExpired)) && !location.pathname.startsWith("/pay/") && (
+        <SessionExpireModal
+          isOpen={showModalState || Boolean(isSessionExpired)}
+          toggle={() => {
+            setShowModalState(false);
+            window.history.replaceState(null, null, window.location.pathname);
+          }}
+        />
+      )}
       {children}
     </UserContext.Provider>
   );

@@ -65,11 +65,7 @@ const CatDownItem = ({
           }}
           onClick={handleCheckboxChange}
         >
-          <input
-            type="checkbox"
-            checked={checked}
-            onChange={handleCheckboxChange}
-          />
+          <input type="checkbox" checked={checked} onChange={handleCheckboxChange} />
           <span style={{ fontWeight: 700 }}>{t(category?.name)}</span>
         </div>
         {category?.type?.toLowerCase() !== "admin" && (

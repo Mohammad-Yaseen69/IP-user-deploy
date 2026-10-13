@@ -55,13 +55,9 @@ const WalletBeneficiaryCard = ({ user, setWallet, wallet }) => {
             fontWeight: 800,
           }}
         >
-          {user?.beneficiary_type === "individual"
-            ? user.first_name[0]
-            : user.company_name[0]}
+          {user?.beneficiary_type === "individual" ? user.first_name[0] : user.company_name[0]}
         </div>
-        <h5 style={{ marginBottom: 0 }}>
-          {`${user?.first_name} ${user?.last_name}`.slice(0, 20)}
-        </h5>
+        <h5 style={{ marginBottom: 0 }}>{`${user?.first_name} ${user?.last_name}`.slice(0, 20)}</h5>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: ".3rem" }}>
         {walletBadges.length > 0 &&

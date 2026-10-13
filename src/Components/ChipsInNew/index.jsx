@@ -16,13 +16,8 @@ import styles from "./styles/index.module.scss";
 import vt from "./view_trans.png";
 
 const ChipsInNew = () => {
-  const {
-    userWallets,
-    authHeader,
-    userDetails,
-    setWalletRefresh,
-    getUserWallets,
-  } = useContext(UserContext);
+  const { userWallets, authHeader, userDetails, setWalletRefresh, getUserWallets } =
+    useContext(UserContext);
   const [currentWallet, setCurrentWallet] = useState({});
   const [currency, setCurrency] = useState("");
   const [defaultWal, setDefaultWal] = useState(null);
@@ -47,11 +42,7 @@ const ChipsInNew = () => {
   useEffect(() => {
     if (userWallets.length > 0) {
       userWallets.map((wal) => {
-        if (
-          wal?.wallet_id &&
-          !wal?.qrCode?.url &&
-          wal.wallet_type.toLowerCase() === "insta"
-        ) {
+        if (wal?.wallet_id && !wal?.qrCode?.url && wal.wallet_type.toLowerCase() === "insta") {
           // console.log(wal)
           const data = {
             title: `${userDetails?.user?.first_name ?? userDetails?.company_name} ${userDetails?.user?.last_name ?? ""}`,
@@ -78,9 +69,7 @@ const ChipsInNew = () => {
     }
   }, []);
 
-  const [showTooltip, setShowTooltip] = useState(
-    !sessionStorage.getItem("show_qr_modal"),
-  );
+  const [showTooltip, setShowTooltip] = useState(!sessionStorage.getItem("show_qr_modal"));
 
   useEffect(() => {
     sessionStorage.setItem("show_qr_modal", true);
@@ -95,9 +84,7 @@ const ChipsInNew = () => {
         <>
           <div className={styles.container}>
             <div className={styles.top}>
-              <h4
-                style={{ display: "flex", gap: "1rem", alignItems: "center" }}
-              >
+              <h4 style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
                 {t("My QR Code Sticker")}{" "}
                 <Info
                   color="#5926f0"
@@ -126,9 +113,7 @@ const ChipsInNew = () => {
           </div>
           <div className={styles.mobile}>
             <div className={styles.top}>
-              <h4
-                style={{ display: "flex", gap: "1rem", alignItems: "center" }}
-              >
+              <h4 style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
                 {t("My QR Code Sticker")}{" "}
                 <Info
                   color="#5926f0"
@@ -191,19 +176,14 @@ const ChipsInNew = () => {
               </Link>
             </div>
           </div>
-          <QrGenerate
-            wallets={userWallets?.filter((item) => !item?.qrCode?.url)}
-          />
+          <QrGenerate wallets={userWallets?.filter((item) => !item?.qrCode?.url)} />
         </>
       ) : (
         <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
           <CardBody>
             <CardText>
               {t("Not supported on this level.")}
-              <Link
-                to={"/"}
-                style={{ textDecoration: "underline", fontWeight: 600 }}
-              >
+              <Link to={"/"} style={{ textDecoration: "underline", fontWeight: 600 }}>
                 {t("Go back to Home.")}
               </Link>
             </CardText>

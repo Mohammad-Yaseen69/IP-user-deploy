@@ -24,13 +24,8 @@ import { ChevronDown, ChevronUp } from "react-feather";
 import { useTranslation } from "react-i18next";
 
 const SecurityQuestions = ({ isCollapsed, setIsCollapsed }) => {
-  const {
-    userSecurityQues,
-    authHeader,
-    userDetails,
-    setUserRefresh,
-    getSecurityQuestions,
-  } = useContext(UserContext);
+  const { userSecurityQues, authHeader, userDetails, setUserRefresh, getSecurityQuestions } =
+    useContext(UserContext);
   useEffect(() => {
     if (userDetails) {
       getSecurityQuestions();
@@ -96,8 +91,7 @@ const SecurityQuestions = ({ isCollapsed, setIsCollapsed }) => {
       });
   };
 
-  const isValidAnswer = (answer) =>
-    !answer?.startsWith(" ") && !answer?.endsWith(" ");
+  const isValidAnswer = (answer) => !answer?.startsWith(" ") && !answer?.endsWith(" ");
 
   const toggleAccordion = () => {
     setIsCollapsed(isCollapsed ? "security" : "");
@@ -105,24 +99,15 @@ const SecurityQuestions = ({ isCollapsed, setIsCollapsed }) => {
 
   return (
     <Form className="card" id="security">
-      <SuccessModal
-        isOpen={showSuccess}
-        toggle={() => setShowSuccess(!showSuccess)}
-      />
+      <SuccessModal isOpen={showSuccess} toggle={() => setShowSuccess(!showSuccess)} />
       <CardHeader
         className={`pb-0 ${isCollapsed ? "collapsed" : "expanded"}`}
         onClick={toggleAccordion}
       >
-        <H4 attrH4={{ className: "card-title mb-0" }}>
-          {t("Security Questions")}
-        </H4>
-        <div className="card-options">
-          {isCollapsed ? <ChevronDown /> : <ChevronUp />}
-        </div>
+        <H4 attrH4={{ className: "card-title mb-0" }}>{t("Security Questions")}</H4>
+        <div className="card-options">{isCollapsed ? <ChevronDown /> : <ChevronUp />}</div>
       </CardHeader>
-      <div
-        className={`accordion-body ${isCollapsed ? "collapsed" : "expanded"}`}
-      >
+      <div className={`accordion-body ${isCollapsed ? "collapsed" : "expanded"}`}>
         <CardBody>
           <Row>
             <Col md="12">
@@ -139,10 +124,7 @@ const SecurityQuestions = ({ isCollapsed, setIsCollapsed }) => {
                     <option
                       value={que._id}
                       key={que._id}
-                      disabled={
-                        selectedQuesThree === que._id ||
-                        selectedQuesTwo === que._id
-                      }
+                      disabled={selectedQuesThree === que._id || selectedQuesTwo === que._id}
                     >
                       {que.question}
                     </option>
@@ -175,10 +157,7 @@ const SecurityQuestions = ({ isCollapsed, setIsCollapsed }) => {
                     <option
                       value={que._id}
                       key={que._id}
-                      disabled={
-                        selectedQuesOne === que._id ||
-                        selectedQuesThree === que._id
-                      }
+                      disabled={selectedQuesOne === que._id || selectedQuesThree === que._id}
                     >
                       {que.question}
                     </option>
@@ -211,10 +190,7 @@ const SecurityQuestions = ({ isCollapsed, setIsCollapsed }) => {
                     <option
                       value={que._id}
                       key={que._id}
-                      disabled={
-                        selectedQuesOne === que._id ||
-                        selectedQuesTwo === que._id
-                      }
+                      disabled={selectedQuesOne === que._id || selectedQuesTwo === que._id}
                     >
                       {que.question}
                     </option>
@@ -276,9 +252,7 @@ const SecurityQuestions = ({ isCollapsed, setIsCollapsed }) => {
             />
           )}
           <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-            <ModalHeader toggle={() => setShowOtp(!showOtp)}>
-              {t("Confirm")}
-            </ModalHeader>
+            <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
             <ModalBody>
               <OtpVerification
                 variant="card"

@@ -13,9 +13,7 @@ export const handlePaymentApiError = ({
   try {
     const decrypted = decryptData(error?.response?.data?.data);
 
-    const limitError = LimitsErrorMessage(
-      decrypted?.code ?? decrypted?.message,
-    );
+    const limitError = LimitsErrorMessage(decrypted?.code ?? decrypted?.message);
     const apiError = apiErrorMessage(decrypted?.message);
 
     if (apiError) {
@@ -29,8 +27,7 @@ export const handlePaymentApiError = ({
     }
 
     if (decrypted?.message?.toLowerCase()?.includes("account is locked")) {
-      const time =
-        decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+      const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
       const timeInSec = +time.split(":")[0] * 60 + +time.split(":")[1];
 
       setProfileLockTime?.(timeInSec);

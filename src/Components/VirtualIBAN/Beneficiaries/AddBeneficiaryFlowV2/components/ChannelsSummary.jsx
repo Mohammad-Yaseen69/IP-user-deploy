@@ -14,8 +14,7 @@ export const getBeneficiaryChannels = (beneficiary) => {
     key: item?._id,
     icon: METHOD_AVATAR_ICON.bank_account,
     title: item?.name || "Bank account",
-    value:
-      item?.iban || item?.account_number || item?.bank_account_number || "",
+    value: item?.iban || item?.account_number || item?.bank_account_number || "",
     meta: [item?.swift_code, item?.city].filter(Boolean).join(" • "),
   }));
 
@@ -47,10 +46,7 @@ export const getBeneficiaryChannels = (beneficiary) => {
 };
 
 const ChannelsSummary = ({ beneficiary, heading = "Payout channels" }) => {
-  const channels = useMemo(
-    () => getBeneficiaryChannels(beneficiary),
-    [beneficiary],
-  );
+  const channels = useMemo(() => getBeneficiaryChannels(beneficiary), [beneficiary]);
 
   return (
     <SummaryCard heading={heading}>
@@ -64,10 +60,7 @@ const ChannelsSummary = ({ beneficiary, heading = "Payout channels" }) => {
           />
         ))
       ) : (
-        <SummaryRow
-          label="No payout channels"
-          value="Add one to send money to this recipient"
-        />
+        <SummaryRow label="No payout channels" value="Add one to send money to this recipient" />
       )}
     </SummaryCard>
   );

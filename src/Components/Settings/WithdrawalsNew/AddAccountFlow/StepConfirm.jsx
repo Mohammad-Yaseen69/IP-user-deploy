@@ -4,18 +4,10 @@ import {
   Alert,
   SummaryRow,
 } from "../../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/components";
-import {
-  METHOD_LABELS,
-  maskAddress,
-  maskIban,
-  maskNumber,
-  maskPhone,
-} from "../withdrawalAccounts";
+import { METHOD_LABELS, maskAddress, maskIban, maskNumber, maskPhone } from "../withdrawalAccounts";
 
 const describeAccount = (method, channel, payers) => {
-  const payerName = payers.find(
-    (payer) => String(payer.id) === String(channel.payer_id),
-  )?.name;
+  const payerName = payers.find((payer) => String(payer.id) === String(channel.payer_id))?.name;
   switch (method) {
     case "bank_account":
       return [
@@ -27,16 +19,11 @@ const describeAccount = (method, channel, payers) => {
         .filter(Boolean)
         .join(" · ");
     case "mobile_wallet":
-      return [
-        payerName || channel.wallet_name,
-        maskPhone(channel.wallet_account_number),
-      ]
+      return [payerName || channel.wallet_name, maskPhone(channel.wallet_account_number)]
         .filter(Boolean)
         .join(" · ");
     case "cash_pickup":
-      return [payerName, maskNumber(channel.document_number)]
-        .filter(Boolean)
-        .join(" · ");
+      return [payerName, maskNumber(channel.document_number)].filter(Boolean).join(" · ");
     case "crypto_wallet":
       return `USDT · ${maskAddress(channel.wallet_address)}`;
     default:
@@ -44,14 +31,7 @@ const describeAccount = (method, channel, payers) => {
   }
 };
 
-const StepConfirm = ({
-  method,
-  country,
-  channel,
-  payers,
-  holderName,
-  address,
-}) => {
+const StepConfirm = ({ method, country, channel, payers, holderName, address }) => {
   const { t } = useTranslation();
   const isCrypto = method === "crypto_wallet";
 
@@ -62,15 +42,10 @@ const StepConfirm = ({
         <SummaryRow
           label={t("Method")}
           value={
-            isCrypto
-              ? `${t(METHOD_LABELS[method])} · ${channel.network}`
-              : t(METHOD_LABELS[method])
+            isCrypto ? `${t(METHOD_LABELS[method])} · ${channel.network}` : t(METHOD_LABELS[method])
           }
         />
-        <SummaryRow
-          label={t("Account")}
-          value={describeAccount(method, channel, payers)}
-        />
+        <SummaryRow label={t("Account")} value={describeAccount(method, channel, payers)} />
         <SummaryRow label={t("Holder")} value={holderName} />
         {address && (
           <SummaryRow

@@ -22,8 +22,7 @@ const UpdateFeePackModal = ({ isOpen, onClose, target }) => {
   const displayEmail = targetData.email || targetData.phone || "—";
   const currentPackName =
     targetData.fee_pack?.name || targetData.fee_pack_name || t("Standard Plan");
-  const currentPackId =
-    targetData.fee_pack?._id || targetData.fee_pack_id || "";
+  const currentPackId = targetData.fee_pack?._id || targetData.fee_pack_id || "";
 
   const [selectedPackId, setSelectedPackId] = useState("");
 
@@ -35,11 +34,7 @@ const UpdateFeePackModal = ({ isOpen, onClose, target }) => {
         method: "GET",
         isDecrypted: true,
       });
-      const list = Array.isArray(dec)
-        ? dec
-        : Array.isArray(dec?.data)
-          ? dec.data
-          : [];
+      const list = Array.isArray(dec) ? dec : Array.isArray(dec?.data) ? dec.data : [];
       return list;
     },
     enabled: Boolean(isOpen),
@@ -178,14 +173,10 @@ const UpdateFeePackModal = ({ isOpen, onClose, target }) => {
               {displayName.substring(0, 2).toUpperCase()}
             </div>
             <div>
-              <div
-                style={{ fontWeight: 600, fontSize: "14px", color: "#1E293B" }}
-              >
+              <div style={{ fontWeight: 600, fontSize: "14px", color: "#1E293B" }}>
                 {displayName}
               </div>
-              <div style={{ fontSize: "12px", color: "#64748B" }}>
-                {displayEmail}
-              </div>
+              <div style={{ fontSize: "12px", color: "#64748B" }}>{displayEmail}</div>
             </div>
           </div>
           <div style={{ textAlign: "right" }}>
@@ -205,8 +196,7 @@ const UpdateFeePackModal = ({ isOpen, onClose, target }) => {
               {isClient ? t("Client") : t("Lead")}
             </span>
             <div style={{ fontSize: "11px", color: "#64748B" }}>
-              {t("Current")}:{" "}
-              <strong style={{ color: "#0F172A" }}>{currentPackName}</strong>
+              {t("Current")}: <strong style={{ color: "#0F172A" }}>{currentPackName}</strong>
             </div>
           </div>
         </div>
@@ -225,9 +215,7 @@ const UpdateFeePackModal = ({ isOpen, onClose, target }) => {
           </label>
 
           {loadingPacks ? (
-            <div
-              style={{ padding: "20px", textAlign: "center", color: "#6B7280" }}
-            >
+            <div style={{ padding: "20px", textAlign: "center", color: "#6B7280" }}>
               <Spinner size="sm" color="primary" /> {t("Loading fee packs...")}
             </div>
           ) : feePacks.length === 0 ? (
@@ -289,9 +277,7 @@ const UpdateFeePackModal = ({ isOpen, onClose, target }) => {
                             height: "18px",
                             borderRadius: "50%",
                             border: `2px solid ${isSelected ? "#4F46E5" : "#CBD5E1"}`,
-                            backgroundColor: isSelected
-                              ? "#4F46E5"
-                              : "transparent",
+                            backgroundColor: isSelected ? "#4F46E5" : "transparent",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
@@ -338,8 +324,7 @@ const UpdateFeePackModal = ({ isOpen, onClose, target }) => {
                               marginTop: "2px",
                             }}
                           >
-                            {pack.pricing_summary ||
-                              t("Standard pricing schedule")}
+                            {pack.pricing_summary || t("Standard pricing schedule")}
                           </div>
                         </div>
                       </div>
@@ -469,9 +454,7 @@ const UpdateFeePackModal = ({ isOpen, onClose, target }) => {
             }}
           >
             {updateMutation.isPending && <Spinner size="sm" color="light" />}
-            <span>
-              {updateMutation.isPending ? t("Updating...") : t("Save & Update")}
-            </span>
+            <span>{updateMutation.isPending ? t("Updating...") : t("Save & Update")}</span>
           </button>
         </div>
       </ModalBody>

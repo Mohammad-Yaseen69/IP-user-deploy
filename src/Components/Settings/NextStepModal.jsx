@@ -30,10 +30,7 @@ const NextStepModal = ({ isOpen, toggle, setCurrentTab }) => {
       type: "social",
     },
     {
-      text:
-        userDetails?.account_type === "business"
-          ? "Verify Business"
-          : "Verify identity",
+      text: userDetails?.account_type === "business" ? "Verify Business" : "Verify identity",
       link:
         userDetails?.account_type === "business"
           ? "Business Verification"
@@ -71,11 +68,7 @@ const NextStepModal = ({ isOpen, toggle, setCurrentTab }) => {
           style={{ alignItems: window.innerWidth < 1000 && "center" }}
           className={styles.container}
         >
-          <h1>
-            {t(
-              "Please complete these important steps for a seamless experience.",
-            )}
-          </h1>
+          <h1>{t("Please complete these important steps for a seamless experience.")}</h1>
 
           <p>{t("Click on an option to get started")}</p>
 

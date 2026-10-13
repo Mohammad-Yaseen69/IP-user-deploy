@@ -11,9 +11,7 @@ const ChooseWithdrawal = ({ current, setCurrent, withdrawal }) => {
   const { t } = useTranslation();
   const { allowedCountries } = useContext(UserContext);
   const country = useMemo(() => {
-    const country = countries?.find(
-      (item) => item?.alpha3 === withdrawal?.iso_code,
-    );
+    const country = countries?.find((item) => item?.alpha3 === withdrawal?.iso_code);
     return country;
   }, [allowedCountries, withdrawal]);
   return (
@@ -41,19 +39,11 @@ const ChooseWithdrawal = ({ current, setCurrent, withdrawal }) => {
             flexDirection: "column",
           }}
         >
-          <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>
-            {country?.name}
-          </h5>
-          <div style={{}}>
-            {service_name_formatter(withdrawal?.account_type?.join("_"))}
-          </div>
+          <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>{country?.name}</h5>
+          <div style={{}}>{service_name_formatter(withdrawal?.account_type?.join("_"))}</div>
           <span>{withdrawal.name}</span>
         </div>
-        {current === "default" ? (
-          <Check color="green" size={24} />
-        ) : (
-          <img src={i} alt="i" />
-        )}
+        {current === "default" ? <Check color="green" size={24} /> : <img src={i} alt="i" />}
       </CardBody>
     </Card>
   );

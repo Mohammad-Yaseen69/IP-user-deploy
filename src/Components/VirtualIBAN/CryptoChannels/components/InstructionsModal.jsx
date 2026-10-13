@@ -45,10 +45,7 @@ const InstructionsModal = ({ isOpen, toggle, onNext, currency = "EUR" }) => {
             )}
           </Callout>
 
-          <IncludesList
-            heading={t("How it works")}
-            items={HOW_IT_WORKS.map((item) => t(item))}
-          />
+          <IncludesList heading={t("How it works")} items={HOW_IT_WORKS.map((item) => t(item))} />
 
           <Callout>
             {t(

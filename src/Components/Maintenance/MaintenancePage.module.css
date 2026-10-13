@@ -4,12 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(
-    120% 120% at 50% 0%,
-    #f5f3ff 0%,
-    #ffffff 50%,
-    #f8fafc 100%
-  );
+  background: radial-gradient(120% 120% at 50% 0%, #f5f3ff 0%, #ffffff 50%, #f8fafc 100%);
   padding: 24px 16px;
   position: relative;
   overflow: hidden;
@@ -47,11 +42,7 @@
   right: 10%;
   width: 400px;
   height: 400px;
-  background: radial-gradient(
-    circle,
-    rgba(99, 102, 241, 0.08) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
   filter: blur(50px);

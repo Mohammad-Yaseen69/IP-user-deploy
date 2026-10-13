@@ -23,8 +23,7 @@ export const transitions = {
     back: () => null,
   },
   [STEPS.PAYMENT_METHOD]: {
-    next: (data) =>
-      data.fundingMethod === "paypal" ? STEPS.REVIEW : STEPS.PAYMENT_DETAILS,
+    next: (data) => (data.fundingMethod === "paypal" ? STEPS.REVIEW : STEPS.PAYMENT_DETAILS),
     back: () => STEPS.AMOUNT,
   },
   [STEPS.PAYMENT_DETAILS]: {
@@ -34,9 +33,7 @@ export const transitions = {
   [STEPS.REVIEW]: {
     next: () => STEPS.DONE,
     back: (data) =>
-      data.fundingMethod === "paypal"
-        ? STEPS.PAYMENT_METHOD
-        : STEPS.PAYMENT_DETAILS,
+      data.fundingMethod === "paypal" ? STEPS.PAYMENT_METHOD : STEPS.PAYMENT_DETAILS,
   },
   [STEPS.DONE]: {
     next: () => null,

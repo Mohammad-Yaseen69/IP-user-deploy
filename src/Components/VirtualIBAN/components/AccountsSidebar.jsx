@@ -8,12 +8,7 @@ import { getVirtualIbanCountry } from "../utils/virtualIban";
 import { useTranslation } from "react-i18next";
 import { usePermission } from "../../../hooks/GeneralUse/usePermission";
 
-const AccountsSidebar = ({
-  selectedAccount,
-  onSelect,
-  accounts = [],
-  isLoading,
-}) => {
+const AccountsSidebar = ({ selectedAccount, onSelect, accounts = [], isLoading }) => {
   const [showModal, setShowModal] = useState(false);
   const { t } = useTranslation();
   const can = usePermission();
@@ -35,9 +30,7 @@ const AccountsSidebar = ({
       </p>
 
       <div className={styles.accountItemCon}>
-        {isLoading && (
-          <div className={styles.accCurrency}>{t("Loading accounts...")}</div>
-        )}
+        {isLoading && <div className={styles.accCurrency}>{t("Loading accounts...")}</div>}
         {!isLoading && accounts.length === 0 && (
           <div className={styles.accCurrency}>{t("No virtual IBANs yet")}</div>
         )}
@@ -82,9 +75,7 @@ const AccountsSidebar = ({
                     </div>
                 </div>
             } */}
-      {canCreateIban && (
-        <VirtualIbanModal isOpen={showModal} toggle={handleCloseModal} />
-      )}
+      {canCreateIban && <VirtualIbanModal isOpen={showModal} toggle={handleCloseModal} />}
     </div>
   );
 };

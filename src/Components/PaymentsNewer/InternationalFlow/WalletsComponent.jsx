@@ -52,11 +52,7 @@ const WalletsComponent = ({ data, dataHandler, loading = false, inEsim }) => {
           <div style={{ height: "100px", width: "100px", margin: "0 auto" }}>
             <InstaPayLoader />
           </div>
-        ) : (
-            data.payment_type?.value === "wallet" && !inEsim
-              ? data.wallet?._id
-              : true
-          ) ? (
+        ) : (data.payment_type?.value === "wallet" && !inEsim ? data.wallet?._id : true) ? (
           <FeesComponent data={data} />
         ) : (
           ""
@@ -101,16 +97,15 @@ const WalletsComponent = ({ data, dataHandler, loading = false, inEsim }) => {
                   textAlign: "center ",
                 }}
               >
-                {t(
-                  "You Have Selected PKR Currency Wallet For This Transaction",
-                ).replace("PKR", `${data.wallet?.currency?.code}`)}
+                {t("You Have Selected PKR Currency Wallet For This Transaction").replace(
+                  "PKR",
+                  `${data.wallet?.currency?.code}`,
+                )}
               </p>
             )
             // <strong style={{ fontWeight: "900", fontSize: "1rem" }}>{data.wallet?.currency?.code}</strong>
           }
-          {filteredWallets?.length > 1 && !inEsim && (
-            <CurConversion showHeading={false} />
-          )}
+          {filteredWallets?.length > 1 && !inEsim && <CurConversion showHeading={false} />}
         </div>
       </div>
     </>
@@ -214,11 +209,9 @@ export const WalletCard = ({
 
         setWalletFeeDetails((prev) => [...prev, dec.data]);
         wallet.isSufficient =
-          wallet?.balance?.available >
-          +dec.data?.feeDetails?.totalAmount.replace(/[,]/g, "");
+          wallet?.balance?.available > +dec.data?.feeDetails?.totalAmount.replace(/[,]/g, "");
         setIsSufficient(
-          wallet?.balance?.available >
-            +dec.data?.feeDetails?.totalAmount.replace(/[,]/g, ""),
+          wallet?.balance?.available > +dec.data?.feeDetails?.totalAmount.replace(/[,]/g, ""),
         );
       } catch (error) {
         const dec = decryptData(error.response?.data?.data);
@@ -229,9 +222,7 @@ export const WalletCard = ({
 
   const [isSufficient, setIsSufficient] = useState(false);
   const hasSufficientOverride = typeof isSufficientOverride === "boolean";
-  const canUseWallet = hasSufficientOverride
-    ? isSufficientOverride
-    : isSufficient;
+  const canUseWallet = hasSufficientOverride ? isSufficientOverride : isSufficient;
 
   useEffect(() => {
     if (hasSufficientOverride) return;
@@ -251,8 +242,7 @@ export const WalletCard = ({
         }
 
         const apidata = [
-          data?.currency_wallet?.currency?.code ??
-            data?.localWallet?.currency?.code,
+          data?.currency_wallet?.currency?.code ?? data?.localWallet?.currency?.code,
           wallet?.currency?.code,
           Number(amount) || data?.package?.prices?.amount,
         ];
@@ -267,11 +257,7 @@ export const WalletCard = ({
   }, [wallet, blocked, cardType, hasSufficientOverride]);
 
   const handleClick = () => {
-    if (
-      !loading &&
-      !blocked &&
-      (canUseWallet || cardToWallet || allowWalletSelection)
-    ) {
+    if (!loading && !blocked && (canUseWallet || cardToWallet || allowWalletSelection)) {
       dataHandler("wallet", wallet);
     }
   };
@@ -324,12 +310,7 @@ export const WalletCard = ({
               </g>
               <defs>
                 <clipPath id="clip0_2796_2328">
-                  <rect
-                    width="14"
-                    height="14"
-                    fill="white"
-                    transform="translate(0.5 0.370605)"
-                  />
+                  <rect width="14" height="14" fill="white" transform="translate(0.5 0.370605)" />
                 </clipPath>
               </defs>
             </svg>
@@ -343,8 +324,7 @@ export const WalletCard = ({
       <div className={styles.bottom}>
         <p>{t("Monthly limit")}</p>
         <h3>
-          {walletData?.balance_limits?.total} /{" "}
-          {walletData?.balance_limits?.remaining}
+          {walletData?.balance_limits?.total} / {walletData?.balance_limits?.remaining}
         </h3>
         <div className={styles.bb}>
           <Progress
@@ -354,8 +334,7 @@ export const WalletCard = ({
               100
             }
             barStyle={{
-              background:
-                "linear-gradient(to right, rgba(256,256,256,.6), rgba(256,256,256,.9))",
+              background: "linear-gradient(to right, rgba(256,256,256,.6), rgba(256,256,256,.9))",
               borderRadius: "50px",
               margin: "2px",
             }}
@@ -364,9 +343,7 @@ export const WalletCard = ({
               background: "rgba(256,256,256,.3)",
             }}
           />
-          <span style={{ right: "5px" }}>
-            {walletData?.balance_limits?.remaining}
-          </span>
+          <span style={{ right: "5px" }}>{walletData?.balance_limits?.remaining}</span>
         </div>
       </div>
     </div>

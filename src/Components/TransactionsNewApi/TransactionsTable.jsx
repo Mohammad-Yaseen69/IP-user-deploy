@@ -51,10 +51,7 @@ const TransactionsTable = () => {
   const datePickerRef = useRef(null);
 
   const handleClickOutside = useCallback((event) => {
-    if (
-      datePickerRef.current &&
-      !datePickerRef.current.contains(event.target)
-    ) {
+    if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
       setShowDatePicker(false);
     }
   }, []);
@@ -77,8 +74,7 @@ const TransactionsTable = () => {
   const [page, setPage] = useState(1);
   const [currentTrxType, setCurrentTrxType] = useState("all");
   const [maxLimit, setMaxLimit] = useState(false);
-  const { userDetails, authHeader, verifyToken, getUserBeneficiaries } =
-    useContext(UserContext);
+  const { userDetails, authHeader, verifyToken, getUserBeneficiaries } = useContext(UserContext);
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [debounceTimer, setDebounceTimer] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -131,10 +127,7 @@ const TransactionsTable = () => {
           ...prev,
           ...decrypted.transactionList.filter(transactionFilter),
         ]);
-        setFiltered((prev) => [
-          ...prev,
-          ...decrypted.transactionList.filter(transactionFilter),
-        ]);
+        setFiltered((prev) => [...prev, ...decrypted.transactionList.filter(transactionFilter)]);
         if (decrypted.transactionList.length < 15) {
           setMaxLimit(true);
           setStopLoader(true);
@@ -169,8 +162,7 @@ const TransactionsTable = () => {
       )
       .then((res) => {
         const decrypted = decryptData(res.data.data);
-        const newTransactions =
-          decrypted.transactionList.filter(transactionFilter);
+        const newTransactions = decrypted.transactionList.filter(transactionFilter);
 
         if (search) {
           setTransactions(decrypted.transactionList);
@@ -232,10 +224,7 @@ const TransactionsTable = () => {
           ...prev,
           ...decrypted.transactionList.filter(transactionFilter),
         ]);
-        setFiltered((prev) => [
-          ...prev,
-          ...decrypted.transactionList.filter(transactionFilter),
-        ]);
+        setFiltered((prev) => [...prev, ...decrypted.transactionList.filter(transactionFilter)]);
         if (decrypted.transactionList.length < 15) {
           setMaxLimit(true);
           setStopLoader(true);
@@ -383,9 +372,7 @@ const TransactionsTable = () => {
       setFiltered(transactions);
     }
     if (active === "Sent") {
-      const sentTransactions = transactions?.filter(
-        (item) => item?.transaction_type === "debit",
-      );
+      const sentTransactions = transactions?.filter((item) => item?.transaction_type === "debit");
       setFiltered(sentTransactions);
     }
     if (active === "Received") {
@@ -395,9 +382,7 @@ const TransactionsTable = () => {
       setFiltered(receivedTransactions);
     }
     if (active === "Quoted") {
-      const quotedTransactions = transactions?.filter(
-        (item) => item?.payment_type === "quotation",
-      );
+      const quotedTransactions = transactions?.filter((item) => item?.payment_type === "quotation");
       setFiltered(quotedTransactions);
     }
     if (active === "Requested") {
@@ -517,11 +502,7 @@ const TransactionsTable = () => {
                 zIndex: 10000000,
               }}
             >
-              <DateRangePicker
-                maxDate={new Date()}
-                ranges={[dateRange]}
-                onChange={handleChange}
-              />
+              <DateRangePicker maxDate={new Date()} ranges={[dateRange]} onChange={handleChange} />
             </div>
           )}
         </div>

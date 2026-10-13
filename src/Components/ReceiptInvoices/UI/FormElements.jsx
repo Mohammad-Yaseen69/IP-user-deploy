@@ -24,14 +24,7 @@ export const Field = ({ label, required, children, toggle }) => (
   </div>
 );
 
-export const TextInput = ({
-  value,
-  onChange,
-  placeholder,
-  onBlur,
-  styles,
-  ...props
-}) => (
+export const TextInput = ({ value, onChange, placeholder, onBlur, styles, ...props }) => (
   <input
     value={value}
     onChange={onChange}
@@ -49,14 +42,7 @@ export const TextInput = ({
   />
 );
 
-export const TextArea = ({
-  value,
-  onChange,
-  placeholder,
-  rows = 4,
-  style,
-  ...props
-}) => (
+export const TextArea = ({ value, onChange, placeholder, rows = 4, style, ...props }) => (
   <textarea
     value={value}
     onChange={onChange}
@@ -75,13 +61,7 @@ export const TextArea = ({
   />
 );
 
-export const Select = ({
-  value,
-  onChange,
-  options,
-  placeholder = "Select",
-  style,
-}) => (
+export const Select = ({ value, onChange, options, placeholder = "Select", style }) => (
   <select
     value={value}
     onChange={onChange}
@@ -136,12 +116,7 @@ export const DownloadButton = ({ url, style }) => {
   return (
     <div style={style} className={styles.downloadBtn}>
       <img src={download} alt="" />
-      <a
-        href={url}
-        target="_blank"
-        rel="noreferrer"
-        style={{ whiteSpace: "nowrap" }}
-      >
+      <a href={url} target="_blank" rel="noreferrer" style={{ whiteSpace: "nowrap" }}>
         <span>{t("Download")}</span>
       </a>
     </div>

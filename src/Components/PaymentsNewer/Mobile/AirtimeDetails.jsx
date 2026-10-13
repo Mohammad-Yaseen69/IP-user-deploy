@@ -50,9 +50,8 @@ const AirtimeDetails = ({
   const { userWallets, authHeader, userDetails } = useContext(UserContext);
   const countryCode = useMemo(
     () =>
-      countries.filter((it) =>
-        country?.name?.toLowerCase()?.includes(it.name.toLowerCase()),
-      )?.[0]?.code,
+      countries.filter((it) => country?.name?.toLowerCase()?.includes(it.name.toLowerCase()))?.[0]
+        ?.code,
     [country],
   );
   const [showBelowPhone, setShowBelowPhone] = useState(false);
@@ -89,12 +88,7 @@ const AirtimeDetails = ({
     return () => clearTimeout(timeout);
   }, [phone]);
 
-  const getExchangeRate = async (
-    setLoader,
-    currency,
-    amount,
-    exchangeCurrency,
-  ) => {
+  const getExchangeRate = async (setLoader, currency, amount, exchangeCurrency) => {
     setExchangeError("");
     setLoader(true);
     try {
@@ -463,189 +457,170 @@ const AirtimeDetails = ({
                   </Input>
                 </div>
               )}
-              {serviceType &&
-                (serviceType != 11 || subServicesProvider.length > 1) && (
-                  <>
-                    {serviceLoading ? (
-                      <div
-                        style={{
-                          height: "200px",
-                          width: "200px",
-                          margin: "1rem auto",
-                        }}
-                      >
-                        <InstaPayLoader />
-                      </div>
-                    ) : (
-                      <>
-                        <div style={{ display: "flex", gap: "1rem" }}>
-                          <div style={{ flex: 1 }}>
-                            <Label
-                              style={{
-                                color: "#7D7D7D",
-                                fontSize: "1rem",
-                                fontStyle: "normal",
-                                fontWeight: 600,
-                                lineHeight: "170%",
-                              }}
-                            >
-                              {t("Package")}
-                            </Label>
-                            <Input
-                              style={{
-                                borderRadius: "8px",
-                                border: "1px solid rgba(0, 0, 0, 0.13)",
-                                background: "#FFF",
-                              }}
-                              type="select"
-                              value={packages}
-                              onChange={(e) => setPackages(e.target.value)}
-                            >
-                              <option value="" disabled>
-                                {t("--Select-A-Package--")}
-                              </option>
-                              {subServicesProvider?.map((item) => (
-                                <option value={item?.id}>{item?.name}</option>
-                              ))}
-                            </Input>
-                          </div>
-                          <div style={{ width: "120px" }}>
-                            <Label
-                              style={{
-                                color: "#7D7D7D",
-                                fontSize: "1rem",
-                                fontStyle: "normal",
-                                fontWeight: 600,
-                                lineHeight: "170%",
-                              }}
-                            >
-                              {t("Wallet")}
-                            </Label>
-                            <Input
-                              style={{
-                                borderRadius: "8px",
-                                border: "1px solid rgba(0, 0, 0, 0.13)",
-                                background: "#FFF",
-                              }}
-                              type="select"
-                              value={wallet}
-                              onChange={(e) => setWallet(e.target.value)}
-                            >
-                              {userWallets
-                                ?.filter(
-                                  (item) =>
-                                    item?.wallet_type === "insta" &&
-                                    !item?.blocked &&
-                                    !item?.admin_blocked &&
-                                    !item?.blocked &&
-                                    !item?.admin_blocked &&
-                                    item?.status === "active",
-                                )
-                                ?.map((item) => (
-                                  <option value={item?._id}>
-                                    {item?.currency?.code}{" "}
-                                  </option>
-                                ))}
-                            </Input>
-                          </div>
+              {serviceType && (serviceType != 11 || subServicesProvider.length > 1) && (
+                <>
+                  {serviceLoading ? (
+                    <div
+                      style={{
+                        height: "200px",
+                        width: "200px",
+                        margin: "1rem auto",
+                      }}
+                    >
+                      <InstaPayLoader />
+                    </div>
+                  ) : (
+                    <>
+                      <div style={{ display: "flex", gap: "1rem" }}>
+                        <div style={{ flex: 1 }}>
+                          <Label
+                            style={{
+                              color: "#7D7D7D",
+                              fontSize: "1rem",
+                              fontStyle: "normal",
+                              fontWeight: 600,
+                              lineHeight: "170%",
+                            }}
+                          >
+                            {t("Package")}
+                          </Label>
+                          <Input
+                            style={{
+                              borderRadius: "8px",
+                              border: "1px solid rgba(0, 0, 0, 0.13)",
+                              background: "#FFF",
+                            }}
+                            type="select"
+                            value={packages}
+                            onChange={(e) => setPackages(e.target.value)}
+                          >
+                            <option value="" disabled>
+                              {t("--Select-A-Package--")}
+                            </option>
+                            {subServicesProvider?.map((item) => (
+                              <option value={item?.id}>{item?.name}</option>
+                            ))}
+                          </Input>
                         </div>
-                        {pkgDetails && (
-                          <>
-                            {exchangeLoader ? (
+                        <div style={{ width: "120px" }}>
+                          <Label
+                            style={{
+                              color: "#7D7D7D",
+                              fontSize: "1rem",
+                              fontStyle: "normal",
+                              fontWeight: 600,
+                              lineHeight: "170%",
+                            }}
+                          >
+                            {t("Wallet")}
+                          </Label>
+                          <Input
+                            style={{
+                              borderRadius: "8px",
+                              border: "1px solid rgba(0, 0, 0, 0.13)",
+                              background: "#FFF",
+                            }}
+                            type="select"
+                            value={wallet}
+                            onChange={(e) => setWallet(e.target.value)}
+                          >
+                            {userWallets
+                              ?.filter(
+                                (item) =>
+                                  item?.wallet_type === "insta" &&
+                                  !item?.blocked &&
+                                  !item?.admin_blocked &&
+                                  !item?.blocked &&
+                                  !item?.admin_blocked &&
+                                  item?.status === "active",
+                              )
+                              ?.map((item) => (
+                                <option value={item?._id}>{item?.currency?.code} </option>
+                              ))}
+                          </Input>
+                        </div>
+                      </div>
+                      {pkgDetails && (
+                        <>
+                          {exchangeLoader ? (
+                            <div
+                              style={{
+                                height: "70px",
+                                width: "70px",
+                                margin: "0 auto",
+                              }}
+                            >
+                              <InstaPayLoader />
+                            </div>
+                          ) : exchangeError ? (
+                            <div
+                              style={{
+                                fontSize: ".8rem",
+                                fontWeight: 500,
+                                textAlign: "center",
+                                margin: "1rem",
+                              }}
+                            >
+                              {exchangeError}
+                            </div>
+                          ) : (
+                            <>
                               <div
                                 style={{
-                                  height: "70px",
-                                  width: "70px",
-                                  margin: "0 auto",
+                                  display: "flex",
+                                  marginTop: ".5rem",
+                                  justifyContent: "space-between",
+                                  alignItems: "center",
+                                  padding: "0 .7rem",
                                 }}
                               >
-                                <InstaPayLoader />
+                                <span style={{ fontWeight: "600" }}>{t("Total")}:</span>
+                                <strong style={{ fontWeight: "700" }}>
+                                  {selectedPackage?.response ? (
+                                    <>
+                                      {selectedPackage?.response?.total}{" "}
+                                      {selectedPackage?.response?.unit}
+                                    </>
+                                  ) : (
+                                    <>
+                                      {selectedPackage?.filteredData?.[0]?.total}{" "}
+                                      {selectedPackage?.filteredData?.[0]?.unit}
+                                    </>
+                                  )}
+                                </strong>
                               </div>
-                            ) : exchangeError ? (
                               <div
                                 style={{
-                                  fontSize: ".8rem",
-                                  fontWeight: 500,
-                                  textAlign: "center",
-                                  margin: "1rem",
+                                  display: "flex",
+                                  marginTop: ".5rem",
+                                  justifyContent: "space-between",
+                                  alignItems: "center",
+                                  padding: "0 .7rem",
                                 }}
                               >
-                                {exchangeError}
+                                <span style={{ fontWeight: "600" }}>{t("Fees")}:</span>
+                                <strong style={{ fontWeight: "700" }}>
+                                  {selectedPackage?.response ? (
+                                    <>
+                                      {selectedPackage?.response?.fee}{" "}
+                                      {selectedPackage?.response?.unit}
+                                    </>
+                                  ) : (
+                                    <>
+                                      {selectedPackage?.filteredData?.[0]?.fee}{" "}
+                                      {selectedPackage?.filteredData?.[0]?.unit}
+                                    </>
+                                  )}
+                                </strong>
                               </div>
-                            ) : (
-                              <>
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    marginTop: ".5rem",
-                                    justifyContent: "space-between",
-                                    alignItems: "center",
-                                    padding: "0 .7rem",
-                                  }}
-                                >
-                                  <span style={{ fontWeight: "600" }}>
-                                    {t("Total")}:
-                                  </span>
-                                  <strong style={{ fontWeight: "700" }}>
-                                    {selectedPackage?.response ? (
-                                      <>
-                                        {selectedPackage?.response?.total}{" "}
-                                        {selectedPackage?.response?.unit}
-                                      </>
-                                    ) : (
-                                      <>
-                                        {
-                                          selectedPackage?.filteredData?.[0]
-                                            ?.total
-                                        }{" "}
-                                        {
-                                          selectedPackage?.filteredData?.[0]
-                                            ?.unit
-                                        }
-                                      </>
-                                    )}
-                                  </strong>
-                                </div>
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    marginTop: ".5rem",
-                                    justifyContent: "space-between",
-                                    alignItems: "center",
-                                    padding: "0 .7rem",
-                                  }}
-                                >
-                                  <span style={{ fontWeight: "600" }}>
-                                    {t("Fees")}:
-                                  </span>
-                                  <strong style={{ fontWeight: "700" }}>
-                                    {selectedPackage?.response ? (
-                                      <>
-                                        {selectedPackage?.response?.fee}{" "}
-                                        {selectedPackage?.response?.unit}
-                                      </>
-                                    ) : (
-                                      <>
-                                        {
-                                          selectedPackage?.filteredData?.[0]
-                                            ?.fee
-                                        }{" "}
-                                        {
-                                          selectedPackage?.filteredData?.[0]
-                                            ?.unit
-                                        }
-                                      </>
-                                    )}
-                                  </strong>
-                                </div>
-                              </>
-                            )}
-                          </>
-                        )}
-                      </>
-                    )}
-                  </>
-                )}
+                            </>
+                          )}
+                        </>
+                      )}
+                    </>
+                  )}
+                </>
+              )}
               {serviceType == 11 && subServicesProvider.length === 1 && (
                 <>
                   {serviceLoading ? (
@@ -674,14 +649,9 @@ const AirtimeDetails = ({
                                     lineHeight: "170%",
                                   }}
                                 >
-                                  {t("Amount")} (
-                                  {(pkgDetails?.baseAmount?.min + 1)?.toFixed(
-                                    2,
-                                  )}{" "}
+                                  {t("Amount")} ({(pkgDetails?.baseAmount?.min + 1)?.toFixed(2)}{" "}
                                   {curWal?.currency?.code} -{" "}
-                                  {(pkgDetails?.baseAmount?.max + 1)?.toFixed(
-                                    2,
-                                  )}{" "}
+                                  {(pkgDetails?.baseAmount?.max + 1)?.toFixed(2)}{" "}
                                   {curWal?.currency?.code} )
                                 </Label>
                                 <Input
@@ -735,9 +705,7 @@ const AirtimeDetails = ({
                                         item?.status === "active",
                                     )
                                     ?.map((item) => (
-                                      <option value={item?._id}>
-                                        {item?.currency?.code}{" "}
-                                      </option>
+                                      <option value={item?._id}>{item?.currency?.code} </option>
                                     ))}
                                 </Input>
                               </div>
@@ -776,9 +744,7 @@ const AirtimeDetails = ({
                                         padding: "0 .7rem",
                                       }}
                                     >
-                                      <span style={{ fontWeight: "600" }}>
-                                        {t("Total")}:
-                                      </span>
+                                      <span style={{ fontWeight: "600" }}>{t("Total")}:</span>
                                       <strong style={{ fontWeight: "700" }}>
                                         {selectedPackage?.response ? (
                                           <>
@@ -787,14 +753,8 @@ const AirtimeDetails = ({
                                           </>
                                         ) : (
                                           <>
-                                            {
-                                              selectedPackage?.filteredData?.[0]
-                                                ?.total
-                                            }{" "}
-                                            {
-                                              selectedPackage?.filteredData?.[0]
-                                                ?.unit
-                                            }
+                                            {selectedPackage?.filteredData?.[0]?.total}{" "}
+                                            {selectedPackage?.filteredData?.[0]?.unit}
                                           </>
                                         )}
                                       </strong>
@@ -808,9 +768,7 @@ const AirtimeDetails = ({
                                         padding: "0 .7rem",
                                       }}
                                     >
-                                      <span style={{ fontWeight: "600" }}>
-                                        {t("Fees")}:
-                                      </span>
+                                      <span style={{ fontWeight: "600" }}>{t("Fees")}:</span>
                                       <strong style={{ fontWeight: "700" }}>
                                         {selectedPackage?.response ? (
                                           <>
@@ -819,14 +777,8 @@ const AirtimeDetails = ({
                                           </>
                                         ) : (
                                           <>
-                                            {
-                                              selectedPackage?.filteredData?.[0]
-                                                ?.fee
-                                            }{" "}
-                                            {
-                                              selectedPackage?.filteredData?.[0]
-                                                ?.unit
-                                            }
+                                            {selectedPackage?.filteredData?.[0]?.fee}{" "}
+                                            {selectedPackage?.filteredData?.[0]?.unit}
                                           </>
                                         )}
                                       </strong>
@@ -846,20 +798,14 @@ const AirtimeDetails = ({
                                       <strong style={{ fontWeight: "700" }}>
                                         {selectedPackage?.response ? (
                                           <>
-                                            {
-                                              selectedPackage?.response
-                                                ?.sending_amount
-                                            }{" "}
+                                            {selectedPackage?.response?.sending_amount}{" "}
                                             {selectedPackage?.response?.unit}
                                           </>
                                         ) : (
                                           <>
-                                            {selectedPackage?.filteredData?.[0]
-                                              ?.sending_amount ?? amount}{" "}
-                                            {
-                                              selectedPackage?.filteredData?.[0]
-                                                ?.unit
-                                            }
+                                            {selectedPackage?.filteredData?.[0]?.sending_amount ??
+                                              amount}{" "}
+                                            {selectedPackage?.filteredData?.[0]?.unit}
                                           </>
                                         )}
                                       </strong>

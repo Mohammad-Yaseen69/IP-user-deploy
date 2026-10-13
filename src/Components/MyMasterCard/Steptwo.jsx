@@ -42,8 +42,7 @@ const Steptwo = ({ cardType, setStep, userDetails, applePay, googlePay }) => {
           <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
             <span className={styles.cardDetail}>
               {t("Virtual Card :")}
-              {t(cardType[0].toUpperCase() + cardType.slice(1))}{" "}
-              {t("Card (USD)")}
+              {t(cardType[0].toUpperCase() + cardType.slice(1))} {t("Card (USD)")}
             </span>
             <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
               <div
@@ -119,9 +118,7 @@ const Steptwo = ({ cardType, setStep, userDetails, applePay, googlePay }) => {
           >
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <img src={DollarIcon} alt="" />
-              <p
-                style={{ marginBottom: "0", fontSize: "14px", fontWeight: 600 }}
-              >
+              <p style={{ marginBottom: "0", fontSize: "14px", fontWeight: 600 }}>
                 {t("Pricing & Payment Summary")}
               </p>
             </div>
@@ -136,9 +133,7 @@ const Steptwo = ({ cardType, setStep, userDetails, applePay, googlePay }) => {
               }}
             >
               <div className={styles.cardDetail2}>
-                <p style={{ fontSize: "10px", color: "#A4A4A4" }}>
-                  {t("Card Type")}
-                </p>
+                <p style={{ fontSize: "10px", color: "#A4A4A4" }}>{t("Card Type")}</p>
 
                 <h3 style={{ fontSize: "16px", color: "black" }}>
                   {" "}
@@ -147,9 +142,7 @@ const Steptwo = ({ cardType, setStep, userDetails, applePay, googlePay }) => {
               </div>
 
               <div className={styles.cardDetail2} style={{ gap: "4px" }}>
-                <p style={{ fontSize: "10px", color: "#A4A4A4" }}>
-                  {t("Total Cost")}
-                </p>
+                <p style={{ fontSize: "10px", color: "#A4A4A4" }}>{t("Total Cost")}</p>
 
                 <h3 style={{ fontSize: "16px", color: "black" }}>
                   ${cardType === "standard" ? "5" : "10"} {t("(Card Fee)")}
@@ -194,9 +187,7 @@ const Steptwo = ({ cardType, setStep, userDetails, applePay, googlePay }) => {
                   : !userDetails.company?.kyb_status) ||
                   applePay ||
                   googlePay) && (
-                  <h3 style={{ fontSize: "16px", color: "black" }}>
-                    $ {total.toFixed(2)}
-                  </h3>
+                  <h3 style={{ fontSize: "16px", color: "black" }}>$ {total.toFixed(2)}</h3>
                 )}
               </div>
             </div>

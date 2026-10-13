@@ -38,8 +38,7 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
   const [status, setStatus] = useState({ type: null, message: "" });
   const [step, setStep] = useState(1);
 
-  const isWildcardParent = (pk) =>
-    pk && selectedPermissions.includes(`${pk}.*`);
+  const isWildcardParent = (pk) => pk && selectedPermissions.includes(`${pk}.*`);
   const queryClient = useQueryClient();
 
   const [form, setForm] = useState({
@@ -54,8 +53,7 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
       const mod = key.split(".")[0];
       return (
         selectedPermissions.includes(`${key}.*`) ||
-        (selectedPermissions.includes(`${mod}.*`) &&
-          !deniedPermissions.includes(`${key}.*`))
+        (selectedPermissions.includes(`${mod}.*`) && !deniedPermissions.includes(`${key}.*`))
       );
     }
 
@@ -64,8 +62,7 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
     const feat = parts.length === 3 ? parts[1] : null;
 
     const underModWildcard = selectedPermissions.includes(`${mod}.*`);
-    const underFeatWildcard =
-      feat && selectedPermissions.includes(`${mod}.${feat}.*`);
+    const underFeatWildcard = feat && selectedPermissions.includes(`${mod}.${feat}.*`);
 
     if (underModWildcard) {
       if (feat && deniedPermissions.includes(`${mod}.${feat}.*`)) return false;
@@ -132,9 +129,7 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
 
       if (featureWildcard) {
         if (newPerms.includes(featureWildcard)) {
-          newPerms = newPerms.filter(
-            (p) => p !== featureWildcard && !p.startsWith(`${key}.`),
-          );
+          newPerms = newPerms.filter((p) => p !== featureWildcard && !p.startsWith(`${key}.`));
           newDenied = newDenied.filter((p) => !p.startsWith(`${key}.`));
         } else if (isUnderWildcard) {
           if (newDenied.includes(featureWildcard)) {
@@ -152,9 +147,7 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
             .find((m) => m.module === moduleKey)
             ?.features.find((f) => !f.feature)
             ?.actions.map((a) => a.key) || [];
-        const allSelected = generalActions.every((ak) =>
-          isSelected(ak, "action"),
-        );
+        const allSelected = generalActions.every((ak) => isSelected(ak, "action"));
 
         if (allSelected) {
           newPerms = newPerms.filter((p) => !generalActions.includes(p));
@@ -180,10 +173,7 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
         const mod = parts[0];
         const feat = parts.length === 3 ? parts[1] : null;
 
-        if (
-          isWildcardParent(mod) ||
-          (feat && newPerms.includes(`${mod}.${feat}.*`))
-        ) {
+        if (isWildcardParent(mod) || (feat && newPerms.includes(`${mod}.${feat}.*`))) {
           newDenied.push(key);
         } else {
           newPerms.push(key);
@@ -206,8 +196,7 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
         isEncrypted: true,
         isDecrypted: true,
       }),
-    onMutate: () =>
-      setStatus({ type: "loading", message: t("Creating role...") }),
+    onMutate: () => setStatus({ type: "loading", message: t("Creating role...") }),
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ["roles"] });
       setStatus({
@@ -226,10 +215,7 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
         }
       } else {
         errorMsg =
-          err?.response?.data?.message ||
-          err?.response?.data?.error ||
-          err?.message ||
-          errorMsg;
+          err?.response?.data?.message || err?.response?.data?.error || err?.message || errorMsg;
       }
       setStatus({ type: "error", message: errorMsg });
     },
@@ -244,8 +230,7 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
         isEncrypted: true,
         isDecrypted: true,
       }),
-    onMutate: () =>
-      setStatus({ type: "loading", message: t("Updating role...") }),
+    onMutate: () => setStatus({ type: "loading", message: t("Updating role...") }),
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ["roles"] });
       setStatus({
@@ -264,10 +249,7 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
         }
       } else {
         errorMsg =
-          err?.response?.data?.message ||
-          err?.response?.data?.error ||
-          err?.message ||
-          errorMsg;
+          err?.response?.data?.message || err?.response?.data?.error || err?.message || errorMsg;
       }
       setStatus({ type: "error", message: errorMsg });
     },
@@ -422,9 +404,7 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         {status.type === "loading" && (
           <div className={styles.statusScreen}>
-            <Spinner
-              style={{ width: "3rem", height: "3rem", color: "#5626e6" }}
-            />
+            <Spinner style={{ width: "3rem", height: "3rem", color: "#5626e6" }} />
             <p className={styles.statusMsg}>{status.message}</p>
           </div>
         )}
@@ -471,11 +451,7 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
                     const isDone = step > st.id;
                     const isActive = step === st.id;
                     return (
-                      <div
-                        key={st.id}
-                        className={styles.stepItem}
-                        style={{ position: "relative" }}
-                      >
+                      <div key={st.id} className={styles.stepItem} style={{ position: "relative" }}>
                         {idx < STEPS.length - 1 && (
                           <div
                             style={{
@@ -525,9 +501,7 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
                         />
                       </div>
                       <div className={styles.formGroup}>
-                        <label className={styles.formLabel}>
-                          {t("Description")}
-                        </label>
+                        <label className={styles.formLabel}>{t("Description")}</label>
                         <textarea
                           style={{
                             height: "120px",
@@ -565,26 +539,15 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
 
                   {step === 3 && (
                     <>
-                      <div
-                        className={styles.reviewCard}
-                        style={{ marginBottom: 12 }}
-                      >
+                      <div className={styles.reviewCard} style={{ marginBottom: 12 }}>
                         <div className={styles.reviewRow}>
-                          <span className={styles.reviewRowKey}>
-                            {t("Title")}
-                          </span>
-                          <span className={styles.reviewRowVal}>
-                            {form.title}{" "}
-                          </span>
+                          <span className={styles.reviewRowKey}>{t("Title")}</span>
+                          <span className={styles.reviewRowVal}>{form.title} </span>
                         </div>
 
                         <div className={styles.reviewRow}>
-                          <span className={styles.reviewRowKey}>
-                            {t("Description")}
-                          </span>
-                          <span className={styles.reviewRowVal}>
-                            {form.description}
-                          </span>
+                          <span className={styles.reviewRowKey}>{t("Description")}</span>
+                          <span className={styles.reviewRowVal}>{form.description}</span>
                         </div>
                       </div>
                       <div className={styles.permTreeWrapper}>
@@ -620,11 +583,7 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
                 </div>
               </div>
               <div className={styles.footerRight}>
-                <button
-                  className={styles.btnCancel}
-                  onClick={onClose}
-                  type="button"
-                >
+                <button className={styles.btnCancel} onClick={onClose} type="button">
                   {t("Cancel")}
                 </button>
                 <div>

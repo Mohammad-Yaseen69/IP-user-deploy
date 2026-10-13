@@ -1,12 +1,5 @@
 import React, { useState, useContext } from "react";
-import {
-  FormGroup,
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalHeader,
-} from "reactstrap";
+import { FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from "reactstrap";
 import styles from "./styles/doctype.module.css";
 import { CheckCircle, Info } from "react-feather";
 import { UserContext } from "../../Context/UserContext";
@@ -22,9 +15,7 @@ const FileUploadWithPreview = ({
   onFileSelected,
   getDraftFile,
 }) => {
-  const existingFile = userDetails?.company?.kyb_files?.find(
-    (f) => f.document_name === docName,
-  );
+  const existingFile = userDetails?.company?.kyb_files?.find((f) => f.document_name === docName);
   const [localFile, setLocalFile] = useState(null);
   const draftFile = !localFile && getDraftFile ? getDraftFile(docName) : null;
   const { t } = useTranslation();
@@ -45,9 +36,7 @@ const FileUploadWithPreview = ({
         }
         return [...prev, file];
       });
-      setCompanyFileNames((prev) =>
-        prev.includes(docName) ? prev : [...prev, docName],
-      );
+      setCompanyFileNames((prev) => (prev.includes(docName) ? prev : [...prev, docName]));
     }
   };
 
@@ -74,11 +63,7 @@ const FileUploadWithPreview = ({
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
           <span style={{ fontWeight: 500 }}>
             {t("Uploaded")}:{" "}
-            <a
-              href={existingFile.file_link}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={existingFile.file_link} target="_blank" rel="noopener noreferrer">
               {existingFile.key?.split("/")?.[2]}
             </a>
           </span>
@@ -88,11 +73,7 @@ const FileUploadWithPreview = ({
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
           <span style={{ fontWeight: 500 }}>
             {t("Uploaded")}:{" "}
-            <a
-              href={draftFile.file_link}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={draftFile.file_link} target="_blank" rel="noopener noreferrer">
               {draftFile.name}
             </a>
           </span>
@@ -104,12 +85,7 @@ const FileUploadWithPreview = ({
         </div>
       )}
       {!isReadOnly && (
-        <Input
-          type="file"
-          name={docName}
-          onChange={handleFileChange}
-          style={{ maxWidth: 300 }}
-        />
+        <Input type="file" name={docName} onChange={handleFileChange} style={{ maxWidth: 300 }} />
       )}
       {existingFile && !localFile && !isReadOnly && (
         <small style={{ color: "#888" }}>
@@ -140,19 +116,11 @@ const SoleTradedDocs = ({
       <div>
         <FormGroup>
           <Label>
-            {t(
-              "Sole Trader's Registry Extract (Entity's Registration/Creation Document)",
-            )}
-            <Info
-              className={styles.info_icon}
-              size={16}
-              onClick={() => setModalOne(!modalOne)}
-            />
+            {t("Sole Trader's Registry Extract (Entity's Registration/Creation Document)")}
+            <Info className={styles.info_icon} size={16} onClick={() => setModalOne(!modalOne)} />
           </Label>
           <FileUploadWithPreview
-            docName={t(
-              `Sole Trader's Registry Extract (Entity's Registration/Creation Document)`,
-            )}
+            docName={t(`Sole Trader's Registry Extract (Entity's Registration/Creation Document)`)}
             setCompanyFiles={setCompanyFiles}
             setCompanyFileNames={setCompanyFileNames}
             onFileSelected={onFileSelected}
@@ -162,14 +130,8 @@ const SoleTradedDocs = ({
             isReadOnly={isReadOnly}
           />
         </FormGroup>
-        <Modal
-          isOpen={modalOne}
-          toggle={() => setModalOne(!modalOne)}
-          style={{ minWidth: "60vw" }}
-        >
-          <ModalHeader toggle={() => setModalOne(!modalOne)}>
-            {t("Details")}
-          </ModalHeader>
+        <Modal isOpen={modalOne} toggle={() => setModalOne(!modalOne)} style={{ minWidth: "60vw" }}>
+          <ModalHeader toggle={() => setModalOne(!modalOne)}>{t("Details")}</ModalHeader>
           <ModalBody>
             <div className={styles.content}>
               <p>
@@ -178,11 +140,7 @@ const SoleTradedDocs = ({
                 )}
               </p>
               <br />
-              <p>
-                {t(
-                  "Where applicable, the document should not be older than 3 months.",
-                )}
-              </p>
+              <p>{t("Where applicable, the document should not be older than 3 months.")}</p>
               <br />
               <p>{t("The document must contain:")}</p>
               <br />
@@ -208,11 +166,7 @@ const SoleTradedDocs = ({
         <FormGroup>
           <Label>
             {t("Collection of Identification Documents")}{" "}
-            <Info
-              className={styles.info_icon}
-              size={16}
-              onClick={() => setModalTwo(!modalTwo)}
-            />
+            <Info className={styles.info_icon} size={16} onClick={() => setModalTwo(!modalTwo)} />
           </Label>
           <FileUploadWithPreview
             docName={t(`Collection of Identification Documents`)}
@@ -225,14 +179,8 @@ const SoleTradedDocs = ({
             isReadOnly={isReadOnly}
           />
         </FormGroup>
-        <Modal
-          isOpen={modalTwo}
-          toggle={() => setModalTwo(!modalTwo)}
-          style={{ minWidth: "60vw" }}
-        >
-          <ModalHeader toggle={() => setModalTwo(!modalTwo)}>
-            {t("Details")}
-          </ModalHeader>
+        <Modal isOpen={modalTwo} toggle={() => setModalTwo(!modalTwo)} style={{ minWidth: "60vw" }}>
+          <ModalHeader toggle={() => setModalTwo(!modalTwo)}>{t("Details")}</ModalHeader>
           <ModalBody>
             <div className={styles.content}>
               <p>
@@ -246,11 +194,7 @@ const SoleTradedDocs = ({
               <ul>
                 <li>{t("Valid National Identity Card")}</li>
                 <li>{t("Valid Passport")}</li>
-                <li>
-                  {t(
-                    "Valid Resident Permits (only if issued by a European country)",
-                  )}
-                </li>
+                <li>{t("Valid Resident Permits (only if issued by a European country)")}</li>
               </ul>
               <br />
               <p>
@@ -288,9 +232,7 @@ const SoleTradedDocs = ({
           toggle={() => setModalThree(!modalThree)}
           style={{ minWidth: "60vw" }}
         >
-          <ModalHeader toggle={() => setModalThree(!modalThree)}>
-            {t("Details")}
-          </ModalHeader>
+          <ModalHeader toggle={() => setModalThree(!modalThree)}>{t("Details")}</ModalHeader>
           <ModalBody>
             <div className={styles.content}>
               <ul>

@@ -58,14 +58,7 @@ const SidebarProgress = ({
     { key: "documents", label: t("Documents"), icon: <File size={15} /> },
   ];
 
-  const ORDER = [
-    "account",
-    "company",
-    "activity",
-    "owners",
-    "documents",
-    "review",
-  ];
+  const ORDER = ["account", "company", "activity", "owners", "documents", "review"];
 
   const getStatus = (itemKey) => {
     const currentIdx = ORDER.indexOf(currentStepKey);
@@ -112,20 +105,8 @@ const SidebarProgress = ({
 
       <div className={styles.progressSection}>
         <div className={styles.progressWrapper}>
-          <svg
-            className={styles.progressSvg}
-            width="118"
-            height="118"
-            viewBox="0 0 118 118"
-          >
-            <circle
-              cx="59"
-              cy="59"
-              r="46"
-              stroke="#ECE9FF"
-              strokeWidth="8"
-              fill="none"
-            />
+          <svg className={styles.progressSvg} width="118" height="118" viewBox="0 0 118 118">
+            <circle cx="59" cy="59" r="46" stroke="#ECE9FF" strokeWidth="8" fill="none" />
 
             <circle
               cx="59"
@@ -194,19 +175,13 @@ const SidebarProgress = ({
               </div>
 
               <div className={styles.right}>
-                {status === "done" && (
-                  <span className={styles.doneBadge}>{t("Done")}</span>
-                )}
+                {status === "done" && <span className={styles.doneBadge}>{t("Done")}</span>}
 
                 {status === "inprogress" && (
-                  <span className={styles.progressBadge}>
-                    {t("In progress")}
-                  </span>
+                  <span className={styles.progressBadge}>{t("In progress")}</span>
                 )}
 
-                {status === "todo" && (
-                  <span className={styles.todoBadge}>{t("To do")}</span>
-                )}
+                {status === "todo" && <span className={styles.todoBadge}>{t("To do")}</span>}
               </div>
             </div>
           );
@@ -216,13 +191,7 @@ const SidebarProgress = ({
       <button
         type="button"
         className={styles.askBtn}
-        onClick={() =>
-          window.open(
-            "https://wa.me/41783192428",
-            "_blank",
-            "noopener,noreferrer",
-          )
-        }
+        onClick={() => window.open("https://wa.me/41783192428", "_blank", "noopener,noreferrer")}
       >
         <MessageSquare size={15} />
 

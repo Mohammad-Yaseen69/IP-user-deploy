@@ -43,12 +43,8 @@ const PinFields = ({
             style={{ border: shake && "1px solid red" }}
             value={asteriskFields?.[index] || value}
             onPaste={(e) => handlePaste(e, setter, data)}
-            onChange={(e) =>
-              changeHandler(index, e.target.value, setter, data, inputRefs)
-            }
-            onKeyDown={(e) =>
-              handleInputKeyDown(index, e, setter, data, inputRefs)
-            }
+            onChange={(e) => changeHandler(index, e.target.value, setter, data, inputRefs)}
+            onKeyDown={(e) => handleInputKeyDown(index, e, setter, data, inputRefs)}
             ref={(el) => (inputRefs.current[index] = el)}
           />
         ))}

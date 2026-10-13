@@ -16,9 +16,7 @@ const AmountStep = ({ amount, setAmount, currencyCode = "EUR" }) => {
   const { t } = useTranslation();
   const numericAmount = getAmountNumber(amount);
   const maxAmount = getAmountNumber(MAX_AMOUNT);
-  const activeQuick = QUICK_AMOUNTS.includes(numericAmount)
-    ? numericAmount
-    : null;
+  const activeQuick = QUICK_AMOUNTS.includes(numericAmount) ? numericAmount : null;
   const symbol = getCurrencySymbol(currencyCode);
 
   const handleQuickSelect = (value) => {

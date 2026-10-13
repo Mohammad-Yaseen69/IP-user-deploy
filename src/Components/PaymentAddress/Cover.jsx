@@ -15,13 +15,8 @@ import del from "./files/icons/delete.svg";
 import { t } from "i18next";
 
 const Cover = ({ cover, setCover, dets, canUploadPaymentBanner }) => {
-  const {
-    authHeader,
-    userDetails,
-    verifyToken,
-    croppedImages,
-    setCroppedImages,
-  } = useContext(UserContext);
+  const { authHeader, userDetails, verifyToken, croppedImages, setCroppedImages } =
+    useContext(UserContext);
 
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -173,10 +168,7 @@ const Cover = ({ cover, setCover, dets, canUploadPaymentBanner }) => {
           }}
         >
           {canUploadPaymentBanner && (
-            <label
-              htmlFor="cover"
-              style={{ marginBottom: "0", cursor: "pointer" }}
-            >
+            <label htmlFor="cover" style={{ marginBottom: "0", cursor: "pointer" }}>
               <svg
                 width="44"
                 height="44"
@@ -240,13 +232,7 @@ const Cover = ({ cover, setCover, dets, canUploadPaymentBanner }) => {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <rect
-                  width="44"
-                  height="44"
-                  rx="8"
-                  fill="black"
-                  fill-opacity="0.31"
-                />
+                <rect width="44" height="44" rx="8" fill="black" fill-opacity="0.31" />
                 <path
                   d="M12 16H24.8C25.9201 16 26.4802 16 26.908 16.218C27.2843 16.4097 27.5903 16.7157 27.782 17.092C28 17.5198 28 18.0799 28 19.2V32M32 28L19.2 28C18.0799 28 17.5198 28 17.092 27.782C16.7157 27.5903 16.4097 27.2843 16.218 26.908C16 26.4802 16 25.9201 16 24.8V12"
                   stroke="white"

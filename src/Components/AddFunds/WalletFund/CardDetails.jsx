@@ -3,15 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { Check, ChevronRight } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import {
-  Button,
-  Card,
-  Input,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-} from "reactstrap";
+import { Button, Card, Input, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import logo_w from "../../../assets/images/logo/logo_white.png";
 import { UserContext } from "../../../Context/UserContext";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
@@ -55,8 +47,7 @@ const CardDetails = ({
     const currentYear = currentDate.getFullYear() % 100; // Get last two digits of the year
 
     const isValidExpiry =
-      contentYear > currentYear ||
-      (contentYear === currentYear && contentMonth > currentMonth);
+      contentYear > currentYear || (contentYear === currentYear && contentMonth > currentMonth);
     const isValidCVC = cvc.length >= 3;
 
     setIsValid(isValidCardNumber && isValidExpiry && isValidCVC);
@@ -157,14 +148,10 @@ const CardDetails = ({
     >
       {/* delete modal */}
       <Modal isOpen={showDeleteModal} toggle={toggleDeleteModal}>
-        <ModalHeader toggle={toggleDeleteModal}>
-          {t("Delete Card Info")}
-        </ModalHeader>
+        <ModalHeader toggle={toggleDeleteModal}>{t("Delete Card Info")}</ModalHeader>
         <ModalBody>
-          {t(
-            "Are you sure, you want to remove this card details ending with these ",
-          )}
-          "{currentCard?.last4}" {t("4 digits?")}
+          {t("Are you sure, you want to remove this card details ending with these ")}"
+          {currentCard?.last4}" {t("4 digits?")}
         </ModalBody>
         <ModalFooter>
           <Button
@@ -207,9 +194,7 @@ const CardDetails = ({
                     setCardNumber("");
                     setCardError("");
                     expiryCheck(item);
-                    setCurrentCard((prev) =>
-                      prev?._id === item?._id ? null : item,
-                    );
+                    setCurrentCard((prev) => (prev?._id === item?._id ? null : item));
                   }}
                 >
                   <div className={styles.c_top}>
@@ -290,8 +275,7 @@ const CardDetails = ({
         <div
           style={{
             display: "flex",
-            justifyContent:
-              window.innerWidth > 1000 ? "flex-end" : "space-between",
+            justifyContent: window.innerWidth > 1000 ? "flex-end" : "space-between",
             alignItems: "center",
             gap: "1.5rem",
             flexWrap: "wrap-reverse",
@@ -335,9 +319,7 @@ const CardDetails = ({
             onClick={() => {
               setSubStep((prev) => prev + 1);
             }}
-            disabled={
-              currentCard ? false : !isValid || !cardHolderName || cardError
-            }
+            disabled={currentCard ? false : !isValid || !cardHolderName || cardError}
           >
             {t("Next")} <ChevronRight size={20} />
           </Button>

@@ -52,11 +52,7 @@ const CreditCardInput = ({
         gap: ".6rem",
       }}
     >
-      <CardHolderName
-        content={cardHolderName}
-        setContent={setCardHolderName}
-        guest={guest}
-      />
+      <CardHolderName content={cardHolderName} setContent={setCardHolderName} guest={guest} />
       <CardNumberInput
         content={cardNumber}
         setContent={setCardNumber}
@@ -65,17 +61,8 @@ const CreditCardInput = ({
         guest={guest}
       />
       <div style={{ display: "flex", gap: ".6rem" }}>
-        <CardCVC
-          content={cardCvc}
-          setContent={setCardCvc}
-          maxLength={4}
-          guest={guest}
-        />
-        <CardExpiry
-          content={cardExpiry}
-          guest={guest}
-          setContent={setCardExpiry}
-        />
+        <CardCVC content={cardCvc} setContent={setCardCvc} maxLength={4} guest={guest} />
+        <CardExpiry content={cardExpiry} guest={guest} setContent={setCardExpiry} />
       </div>
     </div>
   );

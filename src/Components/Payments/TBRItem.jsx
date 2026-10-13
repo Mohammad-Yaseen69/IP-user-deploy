@@ -119,11 +119,7 @@ const TBRItem = (props) => {
                 style={{ color: "#7d7d7d" }}
                 title="Cancel edit"
               />
-              <Trash2
-                size={16}
-                onClick={() => toggleDel()}
-                cursor={"pointer"}
-              />
+              <Trash2 size={16} onClick={() => toggleDel()} cursor={"pointer"} />
               <PaymentsConfirmationModal
                 isOpen={showDelModal}
                 message={"Are you sure, you want to delete the current row?"}

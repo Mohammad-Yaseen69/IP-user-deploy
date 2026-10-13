@@ -51,19 +51,13 @@ const SwiftCurrencyModal = ({
                 <Globe size={22} color="#5626E6" />
               </div>
               <div>
-                <h2 className={styles.swiftModalTitle}>
-                  {t("SWIFT Confirmation Letter")}
-                </h2>
+                <h2 className={styles.swiftModalTitle}>{t("SWIFT Confirmation Letter")}</h2>
                 <p className={styles.swiftModalSubtitle}>
                   {t("Select depositing currency for receiving instructions")}
                 </p>
               </div>
             </div>
-            <button
-              className={styles.swiftModalCloseBtn}
-              onClick={toggle}
-              type="button"
-            >
+            <button className={styles.swiftModalCloseBtn} onClick={toggle} type="button">
               <X size={18} />
             </button>
           </div>
@@ -75,14 +69,10 @@ const SwiftCurrencyModal = ({
                 onClick={() => setSelectedCurrency("usd")}
               >
                 <div className={styles.radioIndicator}>
-                  {selectedCurrency === "usd" && (
-                    <div className={styles.radioIndicatorInner} />
-                  )}
+                  {selectedCurrency === "usd" && <div className={styles.radioIndicatorInner} />}
                 </div>
                 <div className={styles.currencyBadgeIcon}>$</div>
-                <span className={styles.currencyLabelText}>
-                  {t("Depositing in USD")}
-                </span>
+                <span className={styles.currencyLabelText}>{t("Depositing in USD")}</span>
               </div>
 
               <div
@@ -90,14 +80,10 @@ const SwiftCurrencyModal = ({
                 onClick={() => setSelectedCurrency("eur")}
               >
                 <div className={styles.radioIndicator}>
-                  {selectedCurrency === "eur" && (
-                    <div className={styles.radioIndicatorInner} />
-                  )}
+                  {selectedCurrency === "eur" && <div className={styles.radioIndicatorInner} />}
                 </div>
                 <div className={styles.currencyBadgeIcon}>€</div>
-                <span className={styles.currencyLabelText}>
-                  {t("Depositing in EUR")}
-                </span>
+                <span className={styles.currencyLabelText}>{t("Depositing in EUR")}</span>
               </div>
             </div>
 
@@ -122,9 +108,7 @@ const SwiftCurrencyModal = ({
               disabled={isProcessing}
             >
               {getActionIcon()}
-              <span>
-                {isProcessing ? t("Processing...") : getActionLabel()}
-              </span>
+              <span>{isProcessing ? t("Processing...") : getActionLabel()}</span>
             </button>
           </div>
         </div>

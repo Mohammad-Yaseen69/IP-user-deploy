@@ -26,8 +26,7 @@ import { H4 } from "../../AbstractElements";
 
 const Basic = () => {
   const { t } = useTranslation();
-  const { userDetails, authHeader, setRefresh, setUserDetails } =
-    useContext(UserContext);
+  const { userDetails, authHeader, setRefresh, setUserDetails } = useContext(UserContext);
   const [company, setCompany] = useState("");
   const [username, setUsername] = useState(userDetails?.username);
   const [phone, setPhone] = useState(userDetails?.phone);
@@ -35,9 +34,7 @@ const Basic = () => {
   const [firstName, setFirstName] = useState(userDetails?.user?.first_name);
   const [lastName, setLastName] = useState(userDetails?.user?.last_name);
   const [gender, setGender] = useState(userDetails?.gender ?? "");
-  const [dateOfBirth, setDateOfBirth] = useState(
-    userDetails?.date_of_birth ?? "",
-  );
+  const [dateOfBirth, setDateOfBirth] = useState(userDetails?.date_of_birth ?? "");
   const [address, setAddress] = useState(userDetails?.address);
   const [city, setCity] = useState(userDetails?.city);
   const [postalCode, setPostalCode] = useState(userDetails?.postal_code);
@@ -251,9 +248,7 @@ const Basic = () => {
         {userDetails?.account_type === "individual" && (
           <>
             <div className={styles.i_l_con}>
-              <label className={`form-label ${styles.label}`}>
-                {t(FirstName)}
-              </label>
+              <label className={`form-label ${styles.label}`}>{t(FirstName)}</label>
               <input
                 className={`form-control ${styles.input}`}
                 disabled={!isEditMode}
@@ -265,9 +260,7 @@ const Basic = () => {
               />
             </div>
             <div className={styles.i_l_con}>
-              <label className={`form-label ${styles.label}`}>
-                {t(LastName)}
-              </label>
+              <label className={`form-label ${styles.label}`}>{t(LastName)}</label>
               <input
                 className={`form-control ${styles.input}`}
                 disabled={!isEditMode}
@@ -282,9 +275,7 @@ const Basic = () => {
         )}
 
         <div className={styles.i_l_con}>
-          <label className={`form-label ${styles.label}`}>
-            {t("Username")}
-          </label>
+          <label className={`form-label ${styles.label}`}>{t("Username")}</label>
           <input
             className={`form-control ${styles.input}`}
             type="text"
@@ -332,9 +323,7 @@ const Basic = () => {
         </div>
 
         <div className={styles.i_l_con}>
-          <label className={`form-label ${styles.label}`}>
-            {t("Date Of Birth")}
-          </label>
+          <label className={`form-label ${styles.label}`}>{t("Date Of Birth")}</label>
           <input
             type="date"
             id="exampleDate"
@@ -348,9 +337,7 @@ const Basic = () => {
         </div>
 
         <div className={styles.i_l_con}>
-          <label className={`form-label ${styles.label}`}>
-            {t(EmailAddress)}
-          </label>
+          <label className={`form-label ${styles.label}`}>{t(EmailAddress)}</label>
           <input
             className={`form-control ${styles.input}`}
             type="email"
@@ -363,9 +350,7 @@ const Basic = () => {
         </div>
 
         <div className={styles.i_l_con}>
-          <label className={`form-label ${styles.label}`}>
-            {t("Phone Number")}
-          </label>
+          <label className={`form-label ${styles.label}`}>{t("Phone Number")}</label>
           <PhoneInput
             placeholder={t("Enter Phone number")}
             value={phone}
@@ -421,9 +406,7 @@ const Basic = () => {
           <CountryDropDown
             onSelect={(selectedCountry) => {
               const filtered = countries.filter(
-                (item) =>
-                  item.name.toLowerCase() ===
-                  selectedCountry.name.toLowerCase(),
+                (item) => item.name.toLowerCase() === selectedCountry.name.toLowerCase(),
               )[0];
               setCountry(filtered.name);
               setCountryCode(filtered?.code);
@@ -442,9 +425,7 @@ const Basic = () => {
         </div>
 
         <div className={styles.i_l_con}>
-          <label className={`form-label ${styles.label}`}>
-            {t(PostalCode)}
-          </label>
+          <label className={`form-label ${styles.label}`}>{t(PostalCode)}</label>
           <input
             className={`form-control ${styles.input}`}
             disabled={!isEditMode}
@@ -459,19 +440,13 @@ const Basic = () => {
         <div className={styles.btn_con}>
           {isEditMode ? (
             <>
-              <button onClick={(_) => setIsEditMode(false)}>
-                {t("Cancel")}
-              </button>
+              <button onClick={(_) => setIsEditMode(false)}>{t("Cancel")}</button>
               <button onClick={editProfileHandler} disabled={isSaving}>
-                {isSaving
-                  ? t("Updating Your Profile")
-                  : t("Update Your Profile")}
+                {isSaving ? t("Updating Your Profile") : t("Update Your Profile")}
               </button>
             </>
           ) : (
-            <button onClick={(_) => setIsEditMode(true)}>
-              {t("Edit Your Profile")}
-            </button>
+            <button onClick={(_) => setIsEditMode(true)}>{t("Edit Your Profile")}</button>
           )}
         </div>
       </CardBody>

@@ -29,8 +29,7 @@ const CryptoAmount = ({ setSubStep, amount, setAmount, cryptoCurrency }) => {
           overflow: "hidden",
           padding: "30px 20px",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
       >
         <div>
@@ -39,11 +38,9 @@ const CryptoAmount = ({ setSubStep, amount, setAmount, cryptoCurrency }) => {
           </p>
           <div
             style={{
-              background:
-                "linear-gradient(to bottom right, #EC2AB6 0%, #5926F0 100%)",
+              background: "linear-gradient(to bottom right, #EC2AB6 0%, #5926F0 100%)",
               border: "0.5px solid rgba(0, 0, 0, 0.08)",
-              boxShadow:
-                "0px 4.456576347351074px 132.58314514160156px 0px rgba(0, 0, 0, 0.11)",
+              boxShadow: "0px 4.456576347351074px 132.58314514160156px 0px rgba(0, 0, 0, 0.11)",
               borderRadius: "24px",
               padding: "12px",
               display: "flex",
@@ -111,11 +108,7 @@ const CryptoAmount = ({ setSubStep, amount, setAmount, cryptoCurrency }) => {
               marginTop: "3rem",
             }}
           >
-            <img
-              src={cryptoCurrency.img}
-              alt={cryptoCurrency.value}
-              width={70}
-            />
+            <img src={cryptoCurrency.img} alt={cryptoCurrency.value} width={70} />
             <h4 style={{ marginBottom: 0, fontSize: "2rem", fontWeight: 900 }}>
               {exchanged.toFixed(3)} {cryptoCurrency.value.toUpperCase()}
             </h4>

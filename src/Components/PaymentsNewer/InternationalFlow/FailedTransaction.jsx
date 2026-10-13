@@ -36,11 +36,7 @@ const FailedTransaction = ({ showBack, backHandler, isPublic }) => {
       }
     >
       {showShare && (
-        <SocialModal
-          isOpen={showShare}
-          toggle={() => setShowShare(!showShare)}
-          link={base_url}
-        />
+        <SocialModal isOpen={showShare} toggle={() => setShowShare(!showShare)} link={base_url} />
       )}
       <div
         className={styles.top}
@@ -67,9 +63,7 @@ const FailedTransaction = ({ showBack, backHandler, isPublic }) => {
       </div>
       <div className={styles.confirmed}>
         <div className={styles.c_left}>
-          <h3 style={{ maxWidth: "15ch", color: "red" }}>
-            {t("Your payment is failed")}
-          </h3>
+          <h3 style={{ maxWidth: "15ch", color: "red" }}>{t("Your payment is failed")}</h3>
           <p>{error_message()}</p>
         </div>
         <img src={failed_gif} alt="" />
@@ -78,9 +72,7 @@ const FailedTransaction = ({ showBack, backHandler, isPublic }) => {
         <div className={styles.td_top}>
           <h4>{t("")}</h4>
           <div className={styles.actions}>
-            <button
-              onClick={() => window.open("https://insta-pay.ch/faq", "_blank")}
-            >
+            <button onClick={() => window.open("https://insta-pay.ch/faq", "_blank")}>
               <img src={help} alt="" />
               <span>{t("Need help?")}</span>
             </button>

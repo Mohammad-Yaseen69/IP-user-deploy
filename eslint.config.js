@@ -37,24 +37,12 @@ export default defineConfig([
       "react-hooks/exhaustive-deps": "off",
       "no-dupe-keys": "off",
       "react/prop-types": "off",
-      "react-refresh/only-export-components": [
-        "warn",
-        { allowConstantExport: true },
-      ],
+      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "i18next/no-literal-string": [
         "warn",
         {
           markupOnly: true,
-          ignoreAttribute: [
-            "data-testid",
-            "to",
-            "src",
-            "alt",
-            "href",
-            "className",
-            "id",
-            "key",
-          ],
+          ignoreAttribute: ["data-testid", "to", "src", "alt", "href", "className", "id", "key"],
         },
       ],
     },

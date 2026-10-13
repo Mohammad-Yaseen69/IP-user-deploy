@@ -1,12 +1,5 @@
 import React, { useContext, useState } from "react";
-import {
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalHeader,
-  Progress,
-} from "reactstrap";
+import { Input, Label, Modal, ModalBody, ModalHeader, Progress } from "reactstrap";
 import modal from "./files/modal.png";
 import Dropzone from "./CustomDropZone";
 import axios from "axios";
@@ -24,8 +17,7 @@ const AddPortfolioItem = ({ isOpen, toggle, pAddress }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isSaving, setIsSaving] = useState(false);
-  const { authHeader, userDetails, getUserDocuments, getUserVideos } =
-    useContext(UserContext);
+  const { authHeader, userDetails, getUserDocuments, getUserVideos } = useContext(UserContext);
 
   const addPortfolioItemAws = () => {
     if (file && title && fileType) {
@@ -128,12 +120,8 @@ const AddPortfolioItem = ({ isOpen, toggle, pAddress }) => {
       const res = await fetch(url, options);
       console.log(res);
       if (!res.ok) {
-        toast.error(
-          `Upload failed with status ${res.status}: ${res.statusText}`,
-        );
-        throw new Error(
-          `Upload failed with status ${res.status}: ${res.statusText}`,
-        );
+        toast.error(`Upload failed with status ${res.status}: ${res.statusText}`);
+        throw new Error(`Upload failed with status ${res.status}: ${res.statusText}`);
       }
       getMediaStatus(media_id);
       // const data = await res.json()
@@ -180,10 +168,7 @@ const AddPortfolioItem = ({ isOpen, toggle, pAddress }) => {
   };
 
   return (
-    <Modal
-      style={{ minWidth: window.innerWidth > 1000 ? "817px" : "90%" }}
-      isOpen={isOpen}
-    >
+    <Modal style={{ minWidth: window.innerWidth > 1000 ? "817px" : "90%" }} isOpen={isOpen}>
       <ModalHeader
         toggle={() => {
           if (isSaving) {
@@ -225,12 +210,7 @@ const AddPortfolioItem = ({ isOpen, toggle, pAddress }) => {
             flexDirection: pAddress && "column",
           }}
         >
-          <Dropzone
-            pAddress={pAddress}
-            file={file}
-            setFile={setFile}
-            setFileType={setFileType}
-          />
+          <Dropzone pAddress={pAddress} file={file} setFile={setFile} setFileType={setFileType} />
           {!pAddress && (
             <>
               <div>
@@ -319,9 +299,7 @@ const AddPortfolioItem = ({ isOpen, toggle, pAddress }) => {
                 {t("Uploading file, please do not close the window.")}
               </div>
             ) : (
-              <div
-                style={{ display: "flex", gap: "1rem", alignItems: "center" }}
-              >
+              <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
                 <button
                   style={{
                     border: "none",
@@ -345,22 +323,13 @@ const AddPortfolioItem = ({ isOpen, toggle, pAddress }) => {
                     border: "none",
                     outline: "none",
                     padding: "9px 16px",
-                    opacity:
-                      ((!title || !description) && !pAddress) ||
-                      !file ||
-                      isSaving
-                        ? 0.7
-                        : 1,
+                    opacity: ((!title || !description) && !pAddress) || !file || isSaving ? 0.7 : 1,
                     cursor:
-                      ((!title || !description) && !pAddress) ||
-                      !file ||
-                      isSaving
+                      ((!title || !description) && !pAddress) || !file || isSaving
                         ? "not-allowed"
                         : "pointer",
                   }}
-                  disabled={
-                    ((!title || !description) && !pAddress) || !file || isSaving
-                  }
+                  disabled={((!title || !description) && !pAddress) || !file || isSaving}
                   onClick={
                     String(file?.type)?.toLowerCase()?.includes("video") ||
                     String(file?.type)?.toLowerCase()?.includes("audio")

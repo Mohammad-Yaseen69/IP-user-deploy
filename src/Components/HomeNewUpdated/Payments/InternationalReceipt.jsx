@@ -1,14 +1,7 @@
 import { Card, CardBody } from "reactstrap";
 import { useTranslation } from "react-i18next";
 
-const Receipt = ({
-  amount,
-  currency,
-  country,
-  payoutChannel,
-  transactionDetails,
-  item,
-}) => {
+const Receipt = ({ amount, currency, country, payoutChannel, transactionDetails, item }) => {
   const { t } = useTranslation();
   return (
     <Card
@@ -28,15 +21,12 @@ const Receipt = ({
           padding: "14px",
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
         className="conf_cont"
       >
         <div style={{ textAlign: "center" }}>
-          <span style={{ color: "#8a8a8a", fontSize: "1.1rem" }}>
-            {t("You transferred")}
-          </span>
+          <span style={{ color: "#8a8a8a", fontSize: "1.1rem" }}>{t("You transferred")}</span>
           <h4 style={{ fontSize: "2rem" }}>
             {currency} {amount}
           </h4>
@@ -78,8 +68,7 @@ const Receipt = ({
           >
             {t("Conversion")}:{" "}
             <span style={{ color: "black", fontWeight: 600 }}>
-              {transactionDetails?.destination?.amount}{" "}
-              {transactionDetails?.destination?.currency}
+              {transactionDetails?.destination?.amount} {transactionDetails?.destination?.currency}
             </span>
           </div>
         </div>
@@ -94,9 +83,7 @@ const Receipt = ({
             borderRadius: "10px",
           }}
         >
-          <span style={{ minWidth: "100px", color: "#8a8a8a" }}>
-            {t("To Recipient")}:
-          </span>
+          <span style={{ minWidth: "100px", color: "#8a8a8a" }}>{t("To Recipient")}:</span>
           <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
             <div
               style={{
@@ -134,9 +121,7 @@ const Receipt = ({
             borderRadius: "10px",
           }}
         >
-          <span style={{ minWidth: "100px", color: "#8a8a8a" }}>
-            {t("Country")}:
-          </span>
+          <span style={{ minWidth: "100px", color: "#8a8a8a" }}>{t("Country")}:</span>
           <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
             <img
               src={country.file_url}
@@ -149,9 +134,7 @@ const Receipt = ({
               className="i_t_flag"
               draggable="false"
             />
-            <span style={{ fontWeight: 600, fontSize: ".8rem" }}>
-              {country.name}
-            </span>
+            <span style={{ fontWeight: 600, fontSize: ".8rem" }}>{country.name}</span>
           </div>
         </div>
         {/* payout channel */}
@@ -165,9 +148,7 @@ const Receipt = ({
             borderRadius: "10px",
           }}
         >
-          <span style={{ minWidth: "100px", color: "#8a8a8a" }}>
-            {t("Via")}:
-          </span>
+          <span style={{ minWidth: "100px", color: "#8a8a8a" }}>{t("Via")}:</span>
           <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
             <div
               style={{
@@ -192,9 +173,7 @@ const Receipt = ({
                 }}
               />
             </div>
-            <span style={{ fontWeight: 600, fontSize: ".8rem" }}>
-              {payoutChannel.name}
-            </span>
+            <span style={{ fontWeight: 600, fontSize: ".8rem" }}>{payoutChannel.name}</span>
           </div>
         </div>
       </CardBody>

@@ -29,10 +29,7 @@ const QRCard = ({ item }) => {
           </div>
         </div>
         <div className={styles.actions}>
-          <div
-            className={`${styles.action} ${styles.share}`}
-            onClick={toggleShareModal}
-          >
+          <div className={`${styles.action} ${styles.share}`} onClick={toggleShareModal}>
             <img
               src={share}
               alt="s"
@@ -50,11 +47,7 @@ const QRCard = ({ item }) => {
           </a>
         </div>
 
-        <SocialModal
-          isOpen={isShareModal}
-          link={item?.wallet_id}
-          toggle={toggleShareModal}
-        />
+        <SocialModal isOpen={isShareModal} link={item?.wallet_id} toggle={toggleShareModal} />
       </CardBody>
     </Card>
   );

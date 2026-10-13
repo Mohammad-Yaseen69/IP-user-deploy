@@ -28,9 +28,7 @@ const NewActivationPackModal = ({ open, handleClose }) => {
   ]);
 
   const handleInputChange = (id, field, value) => {
-    setFees((prev) =>
-      prev.map((row) => (row.id === id ? { ...row, [field]: value } : row)),
-    );
+    setFees((prev) => prev.map((row) => (row.id === id ? { ...row, [field]: value } : row)));
   };
   const [step1Fees, setStep1Fees] = useState([
     { id: 1, name: "Activation fee (one-time)", flat: "0", percent: "0" },
@@ -40,9 +38,7 @@ const NewActivationPackModal = ({ open, handleClose }) => {
 
   const toggleService = (id) => {
     setServices((prev) =>
-      prev.map((srv) =>
-        srv.id === id ? { ...srv, active: !srv.active } : srv,
-      ),
+      prev.map((srv) => (srv.id === id ? { ...srv, active: !srv.active } : srv)),
     );
   };
   return (
@@ -101,38 +97,24 @@ const NewActivationPackModal = ({ open, handleClose }) => {
             </div>
 
             <div className={styles.formGroup}>
-              <label className={styles.label}>
-                {t("Link to Agent (Optional)")}
-              </label>
-              <input
-                type="text"
-                className={styles.input}
-                placeholder={t("- None / Null -")}
-              />
+              <label className={styles.label}>{t("Link to Agent (Optional)")}</label>
+              <input type="text" className={styles.input} placeholder={t("- None / Null -")} />
             </div>
 
             <div className={styles.formGroup}>
               <label className={styles.label}>{t("Agent Revenue Model")}</label>
               <div className={styles.toggleGroup}>
-                <button
-                  className={`${styles.toggleBtn} ${styles.toggleBtnActive}`}
-                >
+                <button className={`${styles.toggleBtn} ${styles.toggleBtnActive}`}>
                   {t("1. Markup on our services")}
                 </button>
-                <button className={styles.toggleBtn}>
-                  {t("2. Commission on our fees")}
-                </button>
+                <button className={styles.toggleBtn}>{t("2. Commission on our fees")}</button>
               </div>
             </div>
 
             <div style={{ display: "flex", gap: "16px", width: "100%" }}>
               <div className={styles.formGroup} style={{ flex: 1 }}>
                 <label className={styles.label}>{t("Markup Type")}</label>
-                <input
-                  type="text"
-                  className={styles.input}
-                  defaultValue={t("percentage")}
-                />
+                <input type="text" className={styles.input} defaultValue={t("percentage")} />
               </div>
               <div className={styles.formGroup} style={{ flex: 1 }}>
                 <label className={styles.label}>{t("Markup Value")}</label>
@@ -140,9 +122,7 @@ const NewActivationPackModal = ({ open, handleClose }) => {
               </div>
             </div>
             <div className={styles.formGroup}>
-              <span className={styles.subLabel}>
-                {t("Apply markup on these services")}
-              </span>
+              <span className={styles.subLabel}>{t("Apply markup on these services")}</span>
               <div className={styles.servicesContainer}>
                 {services.map((srv) => (
                   <button
@@ -172,11 +152,7 @@ const NewActivationPackModal = ({ open, handleClose }) => {
                     <tr key={row.id}>
                       <td>{row.name}</td>
                       <td className={styles.textRight}>
-                        <input
-                          type="text"
-                          className={styles.tableInput}
-                          defaultValue={row.flat}
-                        />
+                        <input type="text" className={styles.tableInput} defaultValue={row.flat} />
                       </td>
                       <td className={styles.textRight}>
                         <input
@@ -213,9 +189,7 @@ const NewActivationPackModal = ({ open, handleClose }) => {
                         type="text"
                         className={styles.tableInput}
                         value={row.flat}
-                        onChange={(e) =>
-                          handleInputChange(row.id, "flat", e.target.value)
-                        }
+                        onChange={(e) => handleInputChange(row.id, "flat", e.target.value)}
                       />
                     </td>
                     <td className={styles.textRight}>
@@ -223,9 +197,7 @@ const NewActivationPackModal = ({ open, handleClose }) => {
                         type="text"
                         className={styles.tableInput}
                         value={row.percent}
-                        onChange={(e) =>
-                          handleInputChange(row.id, "percent", e.target.value)
-                        }
+                        onChange={(e) => handleInputChange(row.id, "percent", e.target.value)}
                       />
                     </td>
                   </tr>

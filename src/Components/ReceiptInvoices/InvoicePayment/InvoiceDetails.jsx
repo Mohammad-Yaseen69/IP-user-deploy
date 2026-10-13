@@ -11,9 +11,7 @@ const InvoiceDetails = ({ data, isSubscription = false }) => {
   const navigate = useNavigate();
 
   const country = data?.countryIsoCode
-    ? countriesInDiffLangs[i18n.language]?.find(
-        (c) => c.alpha3 === data.countryIsoCode,
-      )
+    ? countriesInDiffLangs[i18n.language]?.find((c) => c.alpha3 === data.countryIsoCode)
     : null;
 
   return (
@@ -27,9 +25,7 @@ const InvoiceDetails = ({ data, isSubscription = false }) => {
             alt=""
           />
           <h1>
-            {isSubscription
-              ? t("Subscription")?.toUpperCase()
-              : t("Invoice")?.toUpperCase()}{" "}
+            {isSubscription ? t("Subscription")?.toUpperCase() : t("Invoice")?.toUpperCase()}{" "}
           </h1>
         </div>
 
@@ -69,11 +65,7 @@ const InvoiceDetails = ({ data, isSubscription = false }) => {
 
         {flagCheck("allowDescription", data.account, "invoice") && (
           <div>
-            <span>
-              {isSubscription
-                ? t("Plan Description")
-                : t("Invoice Description")}
-            </span>
+            <span>{isSubscription ? t("Plan Description") : t("Invoice Description")}</span>
             <h2
               style={{
                 wordBreak: "break-word",

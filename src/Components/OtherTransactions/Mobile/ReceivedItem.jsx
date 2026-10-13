@@ -9,28 +9,9 @@ import { UserContext } from "../../../Context/UserContext";
 import { calculateFinalDate } from "../SubscriptionDetails";
 import { useQueryClient } from "@tanstack/react-query";
 
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-const ReceivedItem = ({
-  item,
-  activeItem,
-  setActiveItem,
-  index,
-  currentUser,
-}) => {
+const ReceivedItem = ({ item, activeItem, setActiveItem, index, currentUser }) => {
   const { t } = useTranslation();
   const { authHeader, verifyToken } = useContext(UserContext);
 
@@ -38,9 +19,7 @@ const ReceivedItem = ({
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
 
   const startMonth = +item_date.split("-")[1] - 1;
-  const startYear = new Date(
-    item_date?.split("-")?.reverse()?.join("-"),
-  ).getFullYear();
+  const startYear = new Date(item_date?.split("-")?.reverse()?.join("-")).getFullYear();
   const cycles = item?.cycles;
   const queryClient = useQueryClient();
   const handleNextYear = () => {
@@ -133,9 +112,7 @@ const ReceivedItem = ({
                 )}
                 <div className={styles.tmdr_item}>
                   <span>{t("Payment Type")}:</span>
-                  <h4>
-                    {item?.recursive ? t("Subscription") : t("Scheduled")}
-                  </h4>
+                  <h4>{item?.recursive ? t("Subscription") : t("Scheduled")}</h4>
                 </div>
               </div>
               <div className={styles.tmd_row}>
@@ -212,17 +189,12 @@ const ReceivedItem = ({
                 )}
                 <div className={styles.tmdr_item}>
                   <span>{t("Payment Type")}:</span>
-                  <h4>
-                    {item?.recursive ? t("Subscription") : t("Scheduled")}
-                  </h4>
+                  <h4>{item?.recursive ? t("Subscription") : t("Scheduled")}</h4>
                 </div>
               </div>
             </>
           )}
-          <div
-            className={styles.tmd_row}
-            style={{ alignItems: "flex-end", marginTop: "1rem" }}
-          >
+          <div className={styles.tmd_row} style={{ alignItems: "flex-end", marginTop: "1rem" }}>
             {/* <Link>{t("See more") + ">"}</Link> */}
             <div></div>
             {(item?.status?.toLowerCase() === "pending" ||
@@ -231,12 +203,7 @@ const ReceivedItem = ({
                 color="danger"
                 style={{ padding: "3px 18px" }}
                 onClick={() =>
-                  cancelSubscriptionOrSchedulePayment(
-                    item,
-                    authHeader,
-                    verifyToken,
-                    queryClient,
-                  )
+                  cancelSubscriptionOrSchedulePayment(item, authHeader, verifyToken, queryClient)
                 }
               >
                 {t("Cancel")}

@@ -50,11 +50,7 @@ const WalletTransferMobile = ({
         </button>
         <h5>{t("Wallet To Wallet").toUpperCase()}</h5>
         <div onClick={() => setShowRecentTransactions((prev) => !prev)}>
-          {showRecentTransactions ? (
-            <X />
-          ) : (
-            <img style={{ width: "20px" }} src={recent} alt="" />
-          )}
+          {showRecentTransactions ? <X /> : <img style={{ width: "20px" }} src={recent} alt="" />}
         </div>
       </div>
       <WalletToWalletFlow

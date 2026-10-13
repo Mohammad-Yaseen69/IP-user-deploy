@@ -60,9 +60,7 @@ const TopLeft = ({
   }, [userWallets]);
 
   // date picker
-  const [dateString, setDateString] = useState(
-    `${apiDates.from} To ${apiDates.to}`,
-  );
+  const [dateString, setDateString] = useState(`${apiDates.from} To ${apiDates.to}`);
 
   const [dateRange, setDateRange] = useState({
     startDate: new Date(),
@@ -89,10 +87,7 @@ const TopLeft = ({
   const datePickerRef = useRef(null);
 
   const handleClickOutside = useCallback((event) => {
-    if (
-      datePickerRef.current &&
-      !datePickerRef.current.contains(event.target)
-    ) {
+    if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
       setShowDatePicker(false);
     }
   }, []);
@@ -159,12 +154,8 @@ const TopLeft = ({
       // Check if the transaction should be included based on active filters
       return Object.keys(filters).every((filterKey) => {
         const filter = filters[filterKey];
-        const transactionType =
-          transaction.payment_type || transaction.service_type || "NONE";
-        return (
-          filter.active ||
-          !transactionType?.toLowerCase()?.includes(filterKey?.toLowerCase())
-        );
+        const transactionType = transaction.payment_type || transaction.service_type || "NONE";
+        return filter.active || !transactionType?.toLowerCase()?.includes(filterKey?.toLowerCase());
       });
     });
     // console.log(creditPayments)
@@ -173,12 +164,8 @@ const TopLeft = ({
       // Check if the transaction should be included based on active filters
       return Object.keys(filters).every((filterKey) => {
         const filter = filters[filterKey];
-        const transactionType =
-          transaction.payment_type || transaction.service_type || "NONE";
-        return (
-          filter.active ||
-          !transactionType?.toLowerCase()?.includes(filterKey?.toLowerCase())
-        );
+        const transactionType = transaction.payment_type || transaction.service_type || "NONE";
+        return filter.active || !transactionType?.toLowerCase()?.includes(filterKey?.toLowerCase());
       });
     });
     // console.log(debitPayments)
@@ -203,9 +190,7 @@ const TopLeft = ({
   const [maxData, setMaxData] = useState(0);
 
   useEffect(() => {
-    setMaxData(
-      credited.length > debited.length ? credited.length : debited.length,
-    );
+    setMaxData(credited.length > debited.length ? credited.length : debited.length);
   }, [credited, debited]);
 
   useEffect(() => {
@@ -304,12 +289,8 @@ const TopLeft = ({
             className={styles.cd_item}
             onClick={() => setCurrencyDropdownOpen(!currencyDropdownOpen)}
           >
-            <div className={styles.cdi_icon}>
-              {currentWallet?.currency?.code}{" "}
-            </div>
-            <span className={styles.cdi_currency}>
-              {currentWallet?.currency?.code}{" "}
-            </span>
+            <div className={styles.cdi_icon}>{currentWallet?.currency?.code} </div>
+            <span className={styles.cdi_currency}>{currentWallet?.currency?.code} </span>
             <span className={styles.down_icon}>
               <ChevronDown />
             </span>
@@ -331,12 +312,8 @@ const TopLeft = ({
                     }}
                     className={styles.cd_item}
                   >
-                    <div className={styles.cdi_icon}>
-                      {item?.currency?.code}{" "}
-                    </div>
-                    <span className={styles.cdi_currency}>
-                      {item?.currency?.code}{" "}
-                    </span>
+                    <div className={styles.cdi_icon}>{item?.currency?.code} </div>
+                    <span className={styles.cdi_currency}>{item?.currency?.code} </span>
                   </div>
                 ))}
             </div>
@@ -413,11 +390,7 @@ const TopLeft = ({
               >
                 <X />
               </button>
-              <DateRangePicker
-                maxDate={new Date()}
-                ranges={[dateRange]}
-                onChange={handleChange}
-              />
+              <DateRangePicker maxDate={new Date()} ranges={[dateRange]} onChange={handleChange} />
             </div>
           )}
         </div>

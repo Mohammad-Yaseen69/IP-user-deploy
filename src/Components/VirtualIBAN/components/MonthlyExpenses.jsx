@@ -63,8 +63,7 @@ const getChartOptions = (type, categories) => {
       theme: false,
       custom: ({ series, seriesIndex, dataPointIndex }) => {
         const value = series[seriesIndex][dataPointIndex];
-        const label =
-          seriesIndex === 0 ? "Transactions" : isIncome ? "Income" : "Expense";
+        const label = seriesIndex === 0 ? "Transactions" : isIncome ? "Income" : "Expense";
         const prefix = seriesIndex === 0 ? "" : "$";
         return `
           <div style="
@@ -95,15 +94,7 @@ const ChartSkeleton = () => {
     </div>
   );
 };
-const ChartCard = ({
-  title,
-  amount,
-  type,
-  chartData,
-  filter,
-  onFilterChange,
-  isLoading,
-}) => {
+const ChartCard = ({ title, amount, type, chartData, filter, onFilterChange, isLoading }) => {
   const { t } = useTranslation();
 
   const categories = chartData?.map((d) => d.month) || [];
@@ -190,10 +181,7 @@ const MonthlyExpenses = () => {
       />
       <ChartCard
         title="Expense"
-        amount={formatAmount(
-          data?.expense?.totalAmount,
-          data?.expense?.currency,
-        )}
+        amount={formatAmount(data?.expense?.totalAmount, data?.expense?.currency)}
         type="expense"
         chartData={data?.expense?.chartData}
         filter={expenseFilter}

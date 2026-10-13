@@ -1,13 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import {
-  Button,
-  Card,
-  CardBody,
-  Input,
-  Modal,
-  ModalBody,
-  ModalHeader,
-} from "reactstrap";
+import { Button, Card, CardBody, Input, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { payoutChannelData } from "../PaymentsNewer/PayoutChannel";
 import { Link, useNavigate } from "react-router-dom";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
@@ -51,8 +43,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
   const [resendTimer, setResendTimer] = useState(90);
   const [isAnyFieldEmpty, setIsAnyFieldEmpty] = useState(true);
   const [otpError, setOtpError] = useState("");
-  const { userDetails, authHeader, userWallets, profileCompleted } =
-    useContext(UserContext);
+  const { userDetails, authHeader, userWallets, profileCompleted } = useContext(UserContext);
   const [showCompletionModal, setShowCompletionModal] = useState(false);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const navigate = useNavigate();
@@ -151,9 +142,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
   const [serviceError, setServiceError] = useState("");
 
   const country =
-    countries.filter(
-      (coun) => coun.name.toLowerCase() === item?.country?.toLowerCase(),
-    )[0] ?? "";
+    countries.filter((coun) => coun.name.toLowerCase() === item?.country?.toLowerCase())[0] ?? "";
 
   useEffect(() => {
     setStep(1);
@@ -185,15 +174,12 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
       const data = await res.json();
       const decrypted = decryptData(data.data);
       const isAvailable = decrypted.filter(
-        (country) =>
-          country.countryName.toLowerCase() === item.country.toLowerCase(),
+        (country) => country.countryName.toLowerCase() === item.country.toLowerCase(),
       );
       // console.log(isAvailable)
 
       setCountryError(
-        isAvailable.length > 0
-          ? ""
-          : "Payment to this beneficiary's country is not supported.",
+        isAvailable.length > 0 ? "" : "Payment to this beneficiary's country is not supported.",
       );
     };
     if (item.country) {
@@ -211,13 +197,9 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
           const decrypted = decryptData(res.data.data);
           // console.log(decrypted)
           if (decrypted.length < 1) {
-            setPayoutError(
-              "Country doesn't support any of the beneficiary's payout channel.",
-            );
+            setPayoutError("Country doesn't support any of the beneficiary's payout channel.");
           } else {
-            const isAvailable = decrypted.filter(
-              (chan) => chan.id === payoutChannel.id,
-            );
+            const isAvailable = decrypted.filter((chan) => chan.id === payoutChannel.id);
             setPayoutError(
               isAvailable.length > 0
                 ? ""
@@ -272,8 +254,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
       if (amount.length > 0 && +amount >= 1) {
         const data = {
           wallet_id: userWallets?.filter(
-            (item) =>
-              item?.currency?.code?.toLowerCase() === currency?.toLowerCase(),
+            (item) => item?.currency?.code?.toLowerCase() === currency?.toLowerCase(),
           )[0]?._id,
           transaction_type: "C2C",
           amount: +amount,
@@ -435,9 +416,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
   return (
     <Modal isOpen={showModal} toggle={toggle}>
       <ModalHeader toggle={toggle}>{t("Send Money")}</ModalHeader>
-      <ModalBody
-        style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-      >
+      <ModalBody style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
         {channels.length > 0 ? (
           channels.map((channel) => (
             <>
@@ -495,27 +474,19 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                           }}
                         />
                       </div>
-                      <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>
-                        {channel?.name}
-                      </h5>
+                      <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>{channel?.name}</h5>
                     </div>
                   </CardBody>
                 </Card>
               )}
               {countryError && step === 1 && (
-                <span style={{ fontSize: "1rem", fontWeight: 600 }}>
-                  {countryError}
-                </span>
+                <span style={{ fontSize: "1rem", fontWeight: 600 }}>{countryError}</span>
               )}
               {!countryError && payoutError && step === 1 && (
-                <span style={{ fontSize: "1rem", fontWeight: 600 }}>
-                  {payoutError}
-                </span>
+                <span style={{ fontSize: "1rem", fontWeight: 600 }}>{payoutError}</span>
               )}
               {!countryError && !payoutError && serviceError && step === 1 && (
-                <span style={{ fontSize: "1rem", fontWeight: 600 }}>
-                  {serviceError}
-                </span>
+                <span style={{ fontSize: "1rem", fontWeight: 600 }}>{serviceError}</span>
               )}
 
               {step === 2 && service && (
@@ -529,14 +500,12 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                     padding: "14px",
                     background: "rgba(0,0,0,.03)",
                     paddingBottom: 0,
-                    boxShadow:
-                      "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+                    boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
                   }}
                 >
                   <div
                     style={{
-                      background:
-                        "linear-gradient(to bottom right, #EC2AB6 0%, #5926F0 100%)",
+                      background: "linear-gradient(to bottom right, #EC2AB6 0%, #5926F0 100%)",
                       border: "0.5px solid rgba(0, 0, 0, 0.08)",
                       boxShadow:
                         "0px 4.456576347351074px 132.58314514160156px 0px rgba(0, 0, 0, 0.11)",
@@ -637,9 +606,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                             justifyContent: "space-between",
                           }}
                         >
-                          <span style={{ color: "#a0a0a0" }}>
-                            {t("Exchange Rate:")}
-                          </span>
+                          <span style={{ color: "#a0a0a0" }}>{t("Exchange Rate:")}</span>
                           <span style={{ color: "#a0a0a0" }}>
                             {+exchangeRate?.wholesale_fx_rate?.toFixed(2) ?? ""}{" "}
                             {exchangeRate?.destination?.currency ?? ""}
@@ -664,21 +631,16 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                             justifyContent: "space-between",
                           }}
                         >
+                          <span style={{ fontWeight: "600" }}>{t("How much they receive:")}</span>
                           <span style={{ fontWeight: "600" }}>
-                            {t("How much they receive:")}
-                          </span>
-                          <span style={{ fontWeight: "600" }}>
-                            {+exchangeRate?.destination?.amount?.toFixed(2) ??
-                              ""}{" "}
+                            {+exchangeRate?.destination?.amount?.toFixed(2) ?? ""}{" "}
                             {exchangeRate?.destination?.currency ?? ""}
                           </span>
                         </p>
                       </>
                     ) : (
                       <>
-                        {exchangeError.includes(
-                          "strictly positive value expected",
-                        ) && (
+                        {exchangeError.includes("strictly positive value expected") && (
                           <>
                             <p
                               style={{
@@ -698,17 +660,12 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                 fontWeight: 800,
                               }}
                             >
-                              {
-                                +service?.transaction_types?.C2C
-                                  ?.minimum_transaction_amount
-                              }{" "}
+                              {+service?.transaction_types?.C2C?.minimum_transaction_amount}{" "}
                               {service?.currency}
                             </h2>
                           </>
                         )}
-                        {exchangeError.includes(
-                          "over maximum of the selected payer",
-                        ) ||
+                        {exchangeError.includes("over maximum of the selected payer") ||
                           (exchangeError.includes("1003012") && (
                             <>
                               {/* <p style={{ marginBottom: 0, textAlign: "center", fontSize: ".8rem", fontWeight: 600 }}>Maximum transaction amount should be</p>
@@ -728,8 +685,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                   }{" "}
                                   {service?.currency}
                                 </b>{" "}
-                                {t("for a single transfer to")}{" "}
-                                <b>{service.name}</b>.
+                                {t("for a single transfer to")} <b>{service.name}</b>.
                               </p>
                             </>
                           ))}
@@ -842,8 +798,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                       padding: "20px 30px",
                       background: "rgba(0,0,0,.03)",
                       paddingBottom: 0,
-                      boxShadow:
-                        "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+                      boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
                     }}
                     className="conf_cont"
                   >
@@ -945,9 +900,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                             }}
                           />
                         </div>
-                        <span style={{ fontWeight: 500 }}>
-                          {payoutChannel.name}
-                        </span>
+                        <span style={{ fontWeight: 500 }}>{payoutChannel.name}</span>
                       </div>
                     </div>
                     <div
@@ -1031,8 +984,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                             >
                               {item?.beneficiary_type === "individual"
                                 ? item?.first_name?.[0]
-                                : (item?.company_name?.[0] ??
-                                  item?.user?.first_name[0])}
+                                : (item?.company_name?.[0] ?? item?.user?.first_name[0])}
                             </div>
                           </div>
                           <div>
@@ -1043,10 +995,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                 alignItems: "center",
                               }}
                             >
-                              <h5
-                                className="mb-0"
-                                style={{ fontSize: ".9rem" }}
-                              >
+                              <h5 className="mb-0" style={{ fontSize: ".9rem" }}>
                                 {item?.first_name ?? item?.user?.first_name}{" "}
                                 {item?.last_name ?? item?.user?.last_name}
                               </h5>
@@ -1073,8 +1022,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                         background:
                           "linear-gradient(0deg, rgba(11, 13, 65, 0.16), rgba(11, 13, 65, 0.16)), radial-gradient(182.3% 794.57% at 91.57% -107.9%, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
                         backgroundBlendMode: "color-burn,normal",
-                        boxShadow:
-                          "0px 6px 13px -5.4094px rgba(89, 38, 240, 0.17)",
+                        boxShadow: "0px 6px 13px -5.4094px rgba(89, 38, 240, 0.17)",
                         borderRadius: "16px",
                         padding: "1rem",
                         width: "85%",
@@ -1172,8 +1120,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                       padding: "14px",
                       // gap: '14px',
                       paddingBottom: "1rem",
-                      boxShadow:
-                        "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+                      boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
                     }}
                     className="otp_cont"
                   >
@@ -1209,8 +1156,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                             width: "42px",
                             height: "42px",
                             borderRadius: "12px",
-                            filter:
-                              "drop-shadow(0px 4px 7px 0px rgba(172, 53, 159, 0.31))",
+                            filter: "drop-shadow(0px 4px 7px 0px rgba(172, 53, 159, 0.31))",
                           }}
                         />
                       </div>
@@ -1221,9 +1167,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                             fontWeight: 700,
                           }}
                         >
-                          {verified
-                            ? "Verification Code Verified"
-                            : "Enter Code"}
+                          {verified ? "Verification Code Verified" : "Enter Code"}
                         </h4>
                         <p
                           style={{
@@ -1246,9 +1190,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                           }}
                         >
                           {t("Moving To Next Step in")}{" "}
-                          <span style={{ color: "#5926f0", fontWeight: 800 }}>
-                            {timer}
-                          </span>
+                          <span style={{ color: "#5926f0", fontWeight: 800 }}>{timer}</span>
                         </span>
                       ) : (
                         <>
@@ -1264,9 +1206,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                   setOtpError("");
                                 }}
                                 onKeyDown={(e) => handleInputKeyDown(index, e)}
-                                ref={(input) =>
-                                  (inputRefs.current[index] = input)
-                                }
+                                ref={(input) => (inputRefs.current[index] = input)}
                                 style={{
                                   width: "36px",
                                   height: "36px",
@@ -1456,9 +1396,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                       borderRadius: "10px",
                     }}
                   >
-                    <span style={{ minWidth: "100px", color: "#8a8a8a" }}>
-                      {t("Country")}:
-                    </span>
+                    <span style={{ minWidth: "100px", color: "#8a8a8a" }}>{t("Country")}:</span>
                     <div
                       style={{
                         display: "flex",
@@ -1477,9 +1415,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                         className="i_t_flag"
                         draggable="false"
                       />
-                      <span style={{ fontWeight: 600, fontSize: ".8rem" }}>
-                        {country.name}
-                      </span>
+                      <span style={{ fontWeight: 600, fontSize: ".8rem" }}>{country.name}</span>
                     </div>
                   </div>
                   {/* payout channel */}
@@ -1493,9 +1429,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                       borderRadius: "10px",
                     }}
                   >
-                    <span style={{ minWidth: "100px", color: "#8a8a8a" }}>
-                      {t("Via")}:
-                    </span>
+                    <span style={{ minWidth: "100px", color: "#8a8a8a" }}>{t("Via")}:</span>
                     <div
                       style={{
                         display: "flex",

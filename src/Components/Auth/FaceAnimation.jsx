@@ -1,12 +1,6 @@
 import { motion } from "framer-motion";
 
-const FaceAnimation = ({
-  input,
-  currentInput,
-  isCorrect,
-  verification,
-  startTyping,
-}) => {
+const FaceAnimation = ({ input, currentInput, isCorrect, verification, startTyping }) => {
   const offset = startTyping ? currentInput * 3 : 0; // Reduced from 5 to 3 to keep movement in bounds
 
   const getEyePosition = (currentInput) => {
@@ -59,13 +53,7 @@ const FaceAnimation = ({
           fill="none"
         >
           <g filter="url(#filter0_di_3651_220)">
-            <ellipse
-              cx="25.1692"
-              cy="23.8433"
-              rx="16.1225"
-              ry="21.3254"
-              fill="#FAFAFA"
-            />
+            <ellipse cx="25.1692" cy="23.8433" rx="16.1225" ry="21.3254" fill="#FAFAFA" />
             <path
               d="M25.1687 3.14386C29.3819 3.14386 33.2432 5.4005 36.071 9.14093C38.8991 12.8817 40.6657 18.0778 40.6658 23.8431C40.6658 29.6083 38.899 34.8045 36.071 38.5452C33.2432 42.2857 29.3819 44.5433 25.1687 44.5433C20.9556 44.5431 17.0951 42.2855 14.2673 38.5452C11.4394 34.8045 9.67261 29.6083 9.67261 23.8431C9.67265 18.0778 11.4393 12.8817 14.2673 9.14093C17.0951 5.40064 20.9556 3.14403 25.1687 3.14386Z"
               stroke="#C8B7FA"
@@ -133,21 +121,12 @@ const FaceAnimation = ({
               />
               <feOffset dy="2.50197" />
               <feGaussianBlur stdDeviation="3.14831" />
-              <feComposite
-                in2="hardAlpha"
-                operator="arithmetic"
-                k2="-1"
-                k3="1"
-              />
+              <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
               <feColorMatrix
                 type="matrix"
                 values="0 0 0 0 0.564706 0 0 0 0 0.431373 0 0 0 0 0.960784 0 0 0 0.35 0"
               />
-              <feBlend
-                mode="normal"
-                in2="shape"
-                result="effect2_innerShadow_3651_220"
-              />
+              <feBlend mode="normal" in2="shape" result="effect2_innerShadow_3651_220" />
             </filter>
             <filter
               id="filter1_d_3651_220"
@@ -207,13 +186,7 @@ const FaceAnimation = ({
           fill="none"
         >
           <g filter="url(#filter0_di_3651_223)">
-            <ellipse
-              cx="25.9163"
-              cy="23.8433"
-              rx="16.1225"
-              ry="21.3254"
-              fill="#FAFAFA"
-            />
+            <ellipse cx="25.9163" cy="23.8433" rx="16.1225" ry="21.3254" fill="#FAFAFA" />
             <path
               d="M25.9158 3.14386C30.1291 3.14386 33.9903 5.4005 36.8182 9.14093C39.6462 12.8817 41.4128 18.0778 41.4129 23.8431C41.4129 29.6083 39.6461 34.8045 36.8182 38.5452C33.9903 42.2857 30.1291 44.5433 25.9158 44.5433C21.7028 44.5431 17.8422 42.2855 15.0145 38.5452C12.1865 34.8045 10.4197 29.6083 10.4197 23.8431C10.4198 18.0778 12.1864 12.8817 15.0145 9.14093C17.8422 5.40064 21.7028 3.14403 25.9158 3.14386Z"
               stroke="#C8B7FA"
@@ -281,21 +254,12 @@ const FaceAnimation = ({
               />
               <feOffset dy="2.50197" />
               <feGaussianBlur stdDeviation="3.14831" />
-              <feComposite
-                in2="hardAlpha"
-                operator="arithmetic"
-                k2="-1"
-                k3="1"
-              />
+              <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
               <feColorMatrix
                 type="matrix"
                 values="0 0 0 0 0.564706 0 0 0 0 0.431373 0 0 0 0 0.960784 0 0 0 0.35 0"
               />
-              <feBlend
-                mode="normal"
-                in2="shape"
-                result="effect2_innerShadow_3651_223"
-              />
+              <feBlend mode="normal" in2="shape" result="effect2_innerShadow_3651_223" />
             </filter>
             <filter
               id="filter1_d_3651_223"

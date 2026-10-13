@@ -59,9 +59,7 @@ const Wrapper = ({ children, directCard = false }) => (
     className={`${styles.container} ${directCard ? styles.directCardPage : ""}`}
   >
     {!directCard && <div className={styles.overlay} />}
-    {directCard && (
-      <div className={styles.directCardWatermark}>{t("InstaPay")}</div>
-    )}
+    {directCard && <div className={styles.directCardWatermark}>{t("InstaPay")}</div>}
     <Card
       style={{ marginBottom: "0px" }}
       className={`${styles.sub_container} ${directCard ? styles.directCardShell : ""}`}
@@ -195,8 +193,7 @@ const InvoicePayment = () => {
     : "/";
   const invoiceType = data?.invoiceType?.toLowerCase();
   const guestPaymentMethod = data?.guestDetails?.paymentMethod?.toLowerCase();
-  const isDirectCardInvoice =
-    invoiceType === "direct-card" || invoiceType === "direct_card";
+  const isDirectCardInvoice = invoiceType === "direct-card" || invoiceType === "direct_card";
 
   return (
     <Wrapper directCard={isDirectCardInvoice}>

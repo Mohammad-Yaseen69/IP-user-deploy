@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Badge,
-  Row,
-  Col,
-} from "reactstrap";
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Badge, Row, Col } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import styles from "../styles/ViewDetailModal.module.css";
 
@@ -52,10 +43,7 @@ const ViewDetailModal = ({ isOpen, toggle, item, isRole }) => {
               <DetailItem label="Title" value={item.title} />
               <DetailItem label="Role Type" value={item.roleType} />
               <DetailItem label="Required OTPs" value={item.requiredOtps} />
-              <DetailItem
-                label="Created At"
-                value={new Date(item.createdAt).toLocaleString()}
-              />
+              <DetailItem label="Created At" value={new Date(item.createdAt).toLocaleString()} />
               <Col xs={12} className="mb-3">
                 <div className={styles.detailCard}>
                   <span className={styles.detailLabel}>{t("Description")}</span>
@@ -71,34 +59,20 @@ const ViewDetailModal = ({ isOpen, toggle, item, isRole }) => {
               <DetailItem
                 label="Status"
                 value={
-                  <Badge
-                    color={item.status === "active" ? "success" : "warning"}
-                    pill
-                  >
+                  <Badge color={item.status === "active" ? "success" : "warning"} pill>
                     {item.status}
                   </Badge>
                 }
               />
               <DetailItem label="Country" value={item.country} />
-              <DetailItem
-                label="Created At"
-                value={new Date(item.createdAt).toLocaleString()}
-              />
+              <DetailItem label="Created At" value={new Date(item.createdAt).toLocaleString()} />
               <Col xs={12} md={6} className="mb-3">
                 <div className={styles.detailCard}>
-                  <span className={styles.detailLabel}>
-                    {t("Verifications")}
-                  </span>
+                  <span className={styles.detailLabel}>{t("Verifications")}</span>
                   <div className="d-flex flex-wrap gap-2 mt-1">
-                    {item.email_verification && (
-                      <Badge color="info">{t("Email")}</Badge>
-                    )}
-                    {item.sms_verification && (
-                      <Badge color="info">{t("SMS")}</Badge>
-                    )}
-                    {item.whatsapp_verification && (
-                      <Badge color="info">{t("WhatsApp")}</Badge>
-                    )}
+                    {item.email_verification && <Badge color="info">{t("Email")}</Badge>}
+                    {item.sms_verification && <Badge color="info">{t("SMS")}</Badge>}
+                    {item.whatsapp_verification && <Badge color="info">{t("WhatsApp")}</Badge>}
                   </div>
                 </div>
               </Col>
@@ -116,9 +90,7 @@ const ViewDetailModal = ({ isOpen, toggle, item, isRole }) => {
                     </Badge>
                   ))
                 ) : (
-                  <span className="text-muted small">
-                    {t("No permissions assigned")}
-                  </span>
+                  <span className="text-muted small">{t("No permissions assigned")}</span>
                 )}
               </div>
             </div>

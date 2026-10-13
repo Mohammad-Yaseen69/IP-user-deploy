@@ -1,11 +1,4 @@
-import {
-  Fragment,
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { Fragment, createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import TapTop from "./TapTop/index";
@@ -39,10 +32,7 @@ import NewMenu from "../Common/NewMenu";
 import AssistantWidget from "../Components/AssistantWidget";
 import { useVirtualIbans } from "../hooks/useVirtualIban";
 import PushConsentModal from "../Components/PushConsentModal";
-import {
-  isPushSupported,
-  getPushPermissionState,
-} from "../Services/PushNotificationService";
+import { isPushSupported, getPushPermissionState } from "../Services/PushNotificationService";
 
 export const MobileSbContext = createContext(null);
 
@@ -73,9 +63,7 @@ const Layout = ({ children, classNames, ...rest }) => {
   const queryData = location?.search?.split("=")[1]?.toString();
   const { animation } = useContext(AnimationThemeContext);
   const animationTheme =
-    localStorage.getItem("animation") ||
-    animation ||
-    ConfigDB.data.router_animation;
+    localStorage.getItem("animation") || animation || ConfigDB.data.router_animation;
   let sidebar_types1 =
     queryData === "compact-wrapper" || queryData === "horizontal-wrapper"
       ? queryData
@@ -146,8 +134,7 @@ const Layout = ({ children, classNames, ...rest }) => {
 
   const accountId = userDetails?.account?._id || userDetails?.account_id;
 
-  const { data: virtualIbans = [], isLoading: virtualIbansLoading } =
-    useVirtualIbans(accountId);
+  const { data: virtualIbans = [], isLoading: virtualIbansLoading } = useVirtualIbans(accountId);
   useEffect(() => {
     console.log("checking files status");
     if (location.pathname.toLowerCase().includes("my-mastercard")) return;
@@ -182,10 +169,7 @@ const Layout = ({ children, classNames, ...rest }) => {
 
     const hasVirtualIban = virtualIbans?.length > 0;
 
-    if (
-      hasVirtualIban &&
-      location.pathname.toLowerCase() === "/onboarding-iban"
-    ) {
+    if (hasVirtualIban && location.pathname.toLowerCase() === "/onboarding-iban") {
       navigate("/", { replace: true });
     }
   }, [virtualIbans, virtualIbansLoading, location.pathname, navigate]);
@@ -253,18 +237,12 @@ const Layout = ({ children, classNames, ...rest }) => {
     [],
   );
 
-  const socketsService = useMemo(
-    () => new SocketsService(socketConfig, () => {}),
-    [socketConfig],
-  );
+  const socketsService = useMemo(() => new SocketsService(socketConfig, () => {}), [socketConfig]);
 
   useEffect(() => {
     if (userDetails?._id) {
       socketsService.connect();
-      const userId =
-        isAgentLogin && agentDetails?._id
-          ? agentDetails?._id
-          : userDetails?._id;
+      const userId = isAgentLogin && agentDetails?._id ? agentDetails?._id : userDetails?._id;
       socketsService.connectToServer(userId, false, null, null, () =>
         setShowAnotherLoginModal(true),
       );
@@ -292,9 +270,7 @@ const Layout = ({ children, classNames, ...rest }) => {
     const permission = getPushPermissionState();
     if (permission !== "default") return;
 
-    const dismissedTime = localStorage.getItem(
-      "instapay_push_prompt_dismissed",
-    );
+    const dismissedTime = localStorage.getItem("instapay_push_prompt_dismissed");
     if (dismissedTime) {
       const sevenDays = 7 * 24 * 60 * 60 * 1000;
       if (Date.now() - Number(dismissedTime) < sevenDays) {
@@ -332,31 +308,21 @@ const Layout = ({ children, classNames, ...rest }) => {
   const [showSourceModal, setShowSourceModal] = useState(false);
 
   useEffect(() => {
-    setShowSourceModal(
-      !userDetails?.user?.source_of_funds && userDetails?.user?.occupation,
-    );
+    setShowSourceModal(!userDetails?.user?.source_of_funds && userDetails?.user?.occupation);
 
-    if (
-      userDetails?.user?.kyc_status !== "approved" &&
-      userDetails?.country?.kyc_required
-    ) {
+    if (userDetails?.user?.kyc_status !== "approved" && userDetails?.country?.kyc_required) {
       setShowModal(true);
       setShowKyc(true);
     }
   }, [userDetails]);
 
   const isFinancialQuestionModalOpen =
-    (is30DaysInfo &&
-      userDetails?.account_type === "individual" &&
-      profileCompleted === true) ||
+    (is30DaysInfo && userDetails?.account_type === "individual" && profileCompleted === true) ||
     (threeDaysReminderInfo &&
       userDetails?.account_type === "individual" &&
       profileCompleted === true) ||
     is30Days ||
-    (threeDaysReminder &&
-      !threeDaysReminderInfo &&
-      profileCompleted === true &&
-      !is30DaysInfo);
+    (threeDaysReminder && !threeDaysReminderInfo && profileCompleted === true && !is30DaysInfo);
 
   const canShowForcedAuthenticator =
     shouldForceAuthenticator && !showModal && !isFinancialQuestionModalOpen;
@@ -379,20 +345,13 @@ const Layout = ({ children, classNames, ...rest }) => {
         </ModalHeader>
         <ModalBody>
           <div>
-            <h4>
-              {t(
-                "Please check your internet connection to continue using Instapay.",
-              )}
-            </h4>
+            <h4>{t("Please check your internet connection to continue using Instapay.")}</h4>
           </div>
         </ModalBody>
       </Modal>
 
       {showSourceModal && (
-        <SourceOfFunds
-          isOpen={showSourceModal}
-          toggle={() => setShowSourceModal(false)}
-        />
+        <SourceOfFunds isOpen={showSourceModal} toggle={() => setShowSourceModal(false)} />
       )}
       {showTimerCountdown && <InactivityCountDownTimer />}
       <MobileSbContextProvider>
@@ -434,16 +393,11 @@ const Layout = ({ children, classNames, ...rest }) => {
                 profileCompleted === true
               }
               toggle={() => set3DaysReminderInfo(!threeDaysReminderInfo)}
-              toggleOnSuccess={() =>
-                set3DaysReminderInfo(!threeDaysReminderInfo)
-              }
+              toggleOnSuccess={() => set3DaysReminderInfo(!threeDaysReminderInfo)}
               setShowSuccessModal={setShowSuccessModal}
             />
           )}
-        {is30Days &&
-        !threeDaysReminderInfo &&
-        profileCompleted === true &&
-        !is30DaysInfo ? (
+        {is30Days && !threeDaysReminderInfo && profileCompleted === true && !is30DaysInfo ? (
           <ThirtyDaysModal isOpen={is30Days} toggle={() => {}} />
         ) : (
           <ThreeDaysModal
@@ -456,10 +410,7 @@ const Layout = ({ children, classNames, ...rest }) => {
             toggle={() => set3DaysReminder(!threeDaysReminder)}
           />
         )}
-        <Modal
-          toggle={() => setShowSuccessModal(false)}
-          isOpen={showSuccessModal}
-        >
+        <Modal toggle={() => setShowSuccessModal(false)} isOpen={showSuccessModal}>
           <ModalHeader toggle={() => setShowSuccessModal(false)}>
             {t("Questions Added")}
           </ModalHeader>
@@ -484,9 +435,7 @@ const Layout = ({ children, classNames, ...rest }) => {
             {((showModal === true && typeof profileCompleted === "boolean") ||
               (showModal &&
                 showKyc &&
-                !window.location.pathname
-                  .toLowerCase()
-                  .includes("/settings"))) && (
+                !window.location.pathname.toLowerCase().includes("/settings"))) && (
               <ProfileCompletionModal
                 setShowModal={setShowModal}
                 profileIncompleteReason={profileIncompleteReason}
@@ -513,16 +462,9 @@ const Layout = ({ children, classNames, ...rest }) => {
                 {/* <SideBar /> */}
                 <NewMenu />
                 <SidebarNew setShowModal={setShowModal} showModal={showModal} />
-                <div
-                  className="page-body"
-                  style={{ marginTop: 0, paddingTop: 0 }}
-                >
+                <div className="page-body" style={{ marginTop: 0, paddingTop: 0 }}>
                   <TransitionGroup {...rest}>
-                    <CSSTransition
-                      timeout={100}
-                      classNames={animationTheme}
-                      unmountOnExit
-                    >
+                    <CSSTransition timeout={100} classNames={animationTheme} unmountOnExit>
                       {/* <div> */}
                       <Outlet />
                       {/* </div> */}
@@ -539,9 +481,7 @@ const Layout = ({ children, classNames, ...rest }) => {
             {((showModal === true && typeof profileCompleted === "boolean") ||
               (showModal &&
                 showKyc &&
-                !window.location.pathname
-                  .toLowerCase()
-                  .includes("/settings"))) && (
+                !window.location.pathname.toLowerCase().includes("/settings"))) && (
               <ProfileCompletionModal
                 setShowModal={setShowModal}
                 profileIncompleteReason={profileIncompleteReason}

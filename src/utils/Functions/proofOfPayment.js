@@ -56,11 +56,7 @@ const formatPaymentMethod = (method) => {
   const upper = String(method).toUpperCase();
   if (upper === "SEPA_INST" || upper === "SEPA_INSTANT" || upper === "INSTANT")
     return "SEPA Instant (SEPA_INST)";
-  if (
-    upper === "SEPA_CT" ||
-    upper === "SEPA_CREDIT_TRANSFER" ||
-    upper === "STANDARD"
-  )
+  if (upper === "SEPA_CT" || upper === "SEPA_CREDIT_TRANSFER" || upper === "STANDARD")
     return "SEPA Credit Transfer (SEPA_CT)";
   return String(method).replace(/_/g, " ");
 };
@@ -81,11 +77,7 @@ const COLOR_ROW_SHADE = [246, 245, 252];
 const COLOR_CARD_BORDER = [222, 214, 250];
 const COLOR_DIVIDER = [225, 222, 240];
 
-export const generateProofOfPaymentPDF = async (
-  tx,
-  selectedIban,
-  userDetails,
-) => {
+export const generateProofOfPaymentPDF = async (tx, selectedIban, userDetails) => {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
@@ -127,8 +119,7 @@ export const generateProofOfPaymentPDF = async (
     userDetails?.company_name ||
     userDetails?.companyName ||
     "";
-  const accountHolderAddress =
-    userDetails?.address || userDetails?.formattedAddress || "";
+  const accountHolderAddress = userDetails?.address || userDetails?.formattedAddress || "";
 
   if (isValidValue(accountHolderName)) {
     let ahY = y - 11;
@@ -192,16 +183,8 @@ export const generateProofOfPaymentPDF = async (
   const iconCy = cardTop + 13;
   const iconR = 6;
 
-  const statusColor = isSuccess
-    ? COLOR_GREEN
-    : isPending
-      ? COLOR_AMBER
-      : COLOR_RED;
-  const statusBgColor = isSuccess
-    ? COLOR_GREEN_BG
-    : isPending
-      ? COLOR_AMBER_BG
-      : COLOR_RED_BG;
+  const statusColor = isSuccess ? COLOR_GREEN : isPending ? COLOR_AMBER : COLOR_RED;
+  const statusBgColor = isSuccess ? COLOR_GREEN_BG : isPending ? COLOR_AMBER_BG : COLOR_RED_BG;
 
   doc.setFillColor(...statusBgColor);
   doc.circle(iconCx, iconCy, iconR, "F");
@@ -272,20 +255,12 @@ export const generateProofOfPaymentPDF = async (
   const addTableRow = (label, value, options = {}) => {
     if (!isValidValue(value)) return;
 
-    const {
-      bold = false,
-      big = false,
-      color = COLOR_VALUE_DARK,
-      shaded,
-    } = options;
+    const { bold = false, big = false, color = COLOR_VALUE_DARK, shaded } = options;
 
     doc.setFont("helvetica", bold ? "bold" : "normal");
     doc.setFontSize(big ? 12 : 9.5);
     const valStr = String(value);
-    const lines = doc.splitTextToSize(
-      valStr,
-      contentWidth - (valueX - leftMargin) - 4,
-    );
+    const lines = doc.splitTextToSize(valStr, contentWidth - (valueX - leftMargin) - 4);
     const thisRowHeight = Math.max(lines.length * rowHeight, rowHeight);
 
     ensureSpace(thisRowHeight);
@@ -317,9 +292,7 @@ export const generateProofOfPaymentPDF = async (
     "";
 
   const txDate =
-    tx.settlement_time || tx.createdAt
-      ? new Date(tx.settlement_time || tx.createdAt)
-      : null;
+    tx.settlement_time || tx.createdAt ? new Date(tx.settlement_time || tx.createdAt) : null;
   const dateFormatted =
     txDate && !isNaN(txDate.getTime())
       ? txDate.toLocaleDateString("en-GB", {
@@ -334,9 +307,7 @@ export const generateProofOfPaymentPDF = async (
 
   const beneficiaryName =
     tx.beneficiary?.name ||
-    [tx.beneficiary?.first_name, tx.beneficiary?.last_name]
-      .filter(Boolean)
-      .join(" ") ||
+    [tx.beneficiary?.first_name, tx.beneficiary?.last_name].filter(Boolean).join(" ") ||
     tx.beneficiary_name ||
     tx.virtual_iban?.account_holder_name ||
     "";
@@ -368,18 +339,10 @@ export const generateProofOfPaymentPDF = async (
   const beneficiaryCountry = getCountryName(beneficiaryCountryCode);
 
   const beneficiaryIban =
-    tx.beneficiary?.account_number ||
-    tx.beneficiary?.iban ||
-    tx.beneficiary_iban ||
-    "";
+    tx.beneficiary?.account_number || tx.beneficiary?.iban || tx.beneficiary_iban || "";
 
   const paymentRail = formatPaymentMethod(
-    tx.bvnk_method ||
-      tx.payment_method ||
-      tx.rail ||
-      tx.network ||
-      tx.method ||
-      tx.transfer_speed,
+    tx.bvnk_method || tx.payment_method || tx.rail || tx.network || tx.method || tx.transfer_speed,
   );
 
   const rawRows = [
@@ -404,10 +367,7 @@ export const generateProofOfPaymentPDF = async (
       { bold: true, big: true, color: COLOR_PURPLE },
     ],
     ["Fees", tx.fee != null ? `${currency} ${Number(tx.fee).toFixed(2)}` : ""],
-    [
-      "Additional Information",
-      tx.additionalInformation || tx.additional_information,
-    ],
+    ["Additional Information", tx.additionalInformation || tx.additional_information],
   ];
 
   const rows = rawRows.filter(([, value]) => isValidValue(value));
@@ -421,9 +381,7 @@ export const generateProofOfPaymentPDF = async (
       const date = entry?.date ? new Date(entry.date) : null;
       const hasDate = date && !isNaN(date.getTime());
       const hasStatus =
-        isValidValue(entry?.status) ||
-        isValidValue(entry?.title) ||
-        isValidValue(entry?.event);
+        isValidValue(entry?.status) || isValidValue(entry?.title) || isValidValue(entry?.event);
       return hasDate && hasStatus;
     });
 
@@ -518,11 +476,7 @@ export const generateProofOfPaymentPDF = async (
 
   doc.setFontSize(7.5);
   doc.setTextColor(...COLOR_LABEL_GRAY);
-  doc.text(
-    "\u00A9 2026 Kemit Kingdom SA - All Rights Reserved.",
-    leftMargin,
-    footerY,
-  );
+  doc.text("\u00A9 2026 Kemit Kingdom SA - All Rights Reserved.", leftMargin, footerY);
 
   const refId = tx.external_reference || tx.reference_id || tx._id || "payment";
   doc.save(`ProofOfPayment_${refId}.pdf`);

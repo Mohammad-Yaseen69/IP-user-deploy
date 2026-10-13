@@ -50,9 +50,7 @@ const Country = ({ data, dataHandler, username }) => {
     let list = countries;
 
     if (search) {
-      list = countries.filter((item) =>
-        item.name.toLowerCase().includes(search.toLowerCase()),
-      );
+      list = countries.filter((item) => item.name.toLowerCase().includes(search.toLowerCase()));
     }
 
     // Only include IP country if it exists in filtered list
@@ -70,9 +68,7 @@ const Country = ({ data, dataHandler, username }) => {
       const dataGeo = await res.json();
 
       const ipIso = allowedCountries.find(
-        (it) =>
-          it.country_name.toLowerCase() ===
-          dataGeo?.country_name?.toLowerCase(),
+        (it) => it.country_name.toLowerCase() === dataGeo?.country_name?.toLowerCase(),
       )?.country_iso_code;
 
       if (ipIso) {
@@ -103,8 +99,7 @@ const Country = ({ data, dataHandler, username }) => {
         onClick={() => setShowList(true)}
         className={styles.selectFromList}
       >
-        {typeof data.country === "object" &&
-        Object.keys(data.country).length > 0 ? (
+        {typeof data.country === "object" && Object.keys(data.country).length > 0 ? (
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <img src={data?.country?.file_url} alt="" />
             <h3>{data?.country?.name}</h3>
@@ -115,9 +110,7 @@ const Country = ({ data, dataHandler, username }) => {
         <ChevronDown />
       </div>
 
-      <div
-        className={`${styles.container} ${showList ? styles.show : styles.hide}`}
-      >
+      <div className={`${styles.container} ${showList ? styles.show : styles.hide}`}>
         <div className={styles.search_con}>
           <BsSearch className={styles.icon} size={18} />
           <input

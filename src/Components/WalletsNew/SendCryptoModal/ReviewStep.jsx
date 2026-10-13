@@ -70,9 +70,7 @@ const ReviewStep = ({
     if (!quoteExpiresAt) return undefined;
 
     const tick = () =>
-      setSecondsLeft(
-        Math.max(0, Math.round((quoteExpiresAt - Date.now()) / 1000)),
-      );
+      setSecondsLeft(Math.max(0, Math.round((quoteExpiresAt - Date.now()) / 1000)));
     tick();
     const timer = setInterval(tick, 1000);
     return () => clearInterval(timer);
@@ -87,9 +85,7 @@ const ReviewStep = ({
 
       {isQuoteExpired ? (
         <div className={styles.expiredBox}>
-          <span className={styles.expiredText}>
-            {t("Quote expired or invalid. Please retry.")}
-          </span>
+          <span className={styles.expiredText}>{t("Quote expired or invalid. Please retry.")}</span>
           <button
             type="button"
             className={styles.refreshQuoteBtn}
@@ -105,9 +101,7 @@ const ReviewStep = ({
             <ClockIcon />
             <span className={convertStyles.timerText}>
               {t("This quote expires in")}{" "}
-              <strong className={convertStyles.timerSeconds}>
-                {formatTimeLeft(secondsLeft)}
-              </strong>
+              <strong className={convertStyles.timerSeconds}>{formatTimeLeft(secondsLeft)}</strong>
             </span>
           </div>
         </div>
@@ -123,24 +117,14 @@ const ReviewStep = ({
 
         <div className={convertStyles.reviewRow}>
           <div className={convertStyles.reviewRowLabel}>{t("Our fee")}</div>
-          <div
-            className={convertStyles.reviewRowValue}
-            style={{ color: "#d92d20" }}
-          >
-            -
-            {formatMoney(
-              feeDetails?.fee?.value,
-              feeDetails?.fee?.currency || totalCurrency,
-            )}
+          <div className={convertStyles.reviewRowValue} style={{ color: "#d92d20" }}>
+            -{formatMoney(feeDetails?.fee?.value, feeDetails?.fee?.currency || totalCurrency)}
           </div>
         </div>
 
         <div className={convertStyles.reviewRow}>
           <div className={convertStyles.reviewRowLabel}>{t("Network fee")}</div>
-          <div
-            className={convertStyles.reviewRowValue}
-            style={{ color: "#d92d20" }}
-          >
+          <div className={convertStyles.reviewRowValue} style={{ color: "#d92d20" }}>
             -
             {formatMoney(
               feeDetails?.network_fee?.value,
@@ -149,10 +133,7 @@ const ReviewStep = ({
           </div>
         </div>
 
-        <div
-          className={convertStyles.reviewRow}
-          style={{ background: "#f2eeff" }}
-        >
+        <div className={convertStyles.reviewRow} style={{ background: "#f2eeff" }}>
           <div
             className={convertStyles.reviewRowLabel}
             style={{ fontWeight: 600, color: "#5926f0" }}
@@ -183,12 +164,8 @@ const ReviewStep = ({
         </div>
 
         <div className={convertStyles.reviewRow}>
-          <div className={convertStyles.reviewRowLabel}>
-            {t("Destination address")}
-          </div>
-          <div
-            className={`${convertStyles.reviewRowValue} ${styles.monoValue}`}
-          >
+          <div className={convertStyles.reviewRowLabel}>{t("Destination address")}</div>
+          <div className={`${convertStyles.reviewRowValue} ${styles.monoValue}`}>
             {boundaryAddress(address)}
           </div>
         </div>
@@ -210,8 +187,7 @@ const ReviewStep = ({
           onChange={(event) => setConfirmedNetwork(event.target.checked)}
         />
         <span>
-          {t("I confirm the recipient supports")}{" "}
-          <strong>{cryptoCurrency}</strong> {t("on")}{" "}
+          {t("I confirm the recipient supports")} <strong>{cryptoCurrency}</strong> {t("on")}{" "}
           <strong>{networkLabel}</strong>
         </span>
       </label>

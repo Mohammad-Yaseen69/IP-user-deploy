@@ -80,10 +80,7 @@ const KYCModal = ({ showModal, setShowModal, KYCComments, KYCStatus }) => {
                 <h6 style={{ marginBottom: 0 }}>{headingText[headingKey]}</h6>
               </div>
               {KYCComments[headingKey].map((comment, index) => (
-                <div
-                  key={index}
-                  style={{ marginLeft: "34px", marginBottom: "3px" }}
-                >
+                <div key={index} style={{ marginLeft: "34px", marginBottom: "3px" }}>
                   <span
                     style={{
                       color:

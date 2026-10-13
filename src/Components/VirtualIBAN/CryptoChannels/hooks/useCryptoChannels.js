@@ -70,12 +70,7 @@ export const useCryptoChannels = (virtualIbanId) => {
         toast.error(t(res?.message || "Failed to add crypto channel."));
         return null;
       } catch (err) {
-        toast.error(
-          getErrorMessage(
-            err,
-            t("Failed to add crypto channel. Please try again."),
-          ),
-        );
+        toast.error(getErrorMessage(err, t("Failed to add crypto channel. Please try again.")));
         return null;
       } finally {
         setCreating(false);

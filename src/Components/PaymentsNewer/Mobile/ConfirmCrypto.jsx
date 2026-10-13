@@ -5,12 +5,7 @@ import { useTranslation } from "react-i18next";
 import faded_lines from "../files/faded_lines.png";
 import { payoutChannelData } from "../CryptoPayoutChannel";
 
-const ConfirmCrypto = ({
-  setSubStep,
-  cryptoCurrency,
-  amount,
-  walletAddress,
-}) => {
+const ConfirmCrypto = ({ setSubStep, cryptoCurrency, amount, walletAddress }) => {
   const { t } = useTranslation();
   const [complete, setComplete] = useState(false);
   const pRef = useRef(null);
@@ -44,9 +39,7 @@ const ConfirmCrypto = ({
           marginBottom: window.innerWidth < 1500 ? 0 : "1.5rem",
         }}
       >
-        <h5 style={{ fontSize: "1rem", color: "#a8a8a8" }}>
-          {t("You Are Sending")}
-        </h5>
+        <h5 style={{ fontSize: "1rem", color: "#a8a8a8" }}>{t("You Are Sending")}</h5>
         <h4 style={{ fontWeight: "900" }} className="f_s_3r">
           ${amount}
         </h4>
@@ -90,8 +83,7 @@ const ConfirmCrypto = ({
           }}
         >
           {(
-            +amount.split(",").join("") /
-            +cryptoCurrency.price.split("$")[1].split(",").join("")
+            +amount.split(",").join("") / +cryptoCurrency.price.split("$")[1].split(",").join("")
           ).toFixed(5)}
         </h4>
       </div>
@@ -113,9 +105,7 @@ const ConfirmCrypto = ({
             width: "90%",
           }}
         >
-          <span
-            style={{ color: "#808080", fontWeight: 500, whiteSpace: "nowrap" }}
-          >
+          <span style={{ color: "#808080", fontWeight: 500, whiteSpace: "nowrap" }}>
             {t("Estimated Price")}
             {t(": 1")}
             {cryptoCurrency.value.toUpperCase()} = {cryptoCurrency.price}
@@ -147,9 +137,7 @@ const ConfirmCrypto = ({
           borderRadius: "12px",
         }}
       >
-        <span style={{ color: "#a6a4ac" }}>
-          {t("To recipient (wallet id)")}
-        </span>
+        <span style={{ color: "#a6a4ac" }}>{t("To recipient (wallet id)")}</span>
         <h5
           style={{
             fontSize: "1.1rem",
@@ -224,9 +212,7 @@ const ConfirmCrypto = ({
               }}
             />
           </div>
-          <h4 style={{ marginBottom: 0, fontSize: "1.1rem" }}>
-            {payoutChannel.name}
-          </h4>
+          <h4 style={{ marginBottom: 0, fontSize: "1.1rem" }}>{payoutChannel.name}</h4>
         </div>
       </div>
 

@@ -568,12 +568,7 @@
           }
 
           .see_more {
-            background: linear-gradient(
-              to top,
-              #212121,
-              #2121213e,
-              transparent
-            );
+            background: linear-gradient(to top, #212121, #2121213e, transparent);
             backdrop-filter: blur(20px);
             color: white;
             display: flex;

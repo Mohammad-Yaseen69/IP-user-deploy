@@ -1,7 +1,5 @@
 export const getBeneficiaryDisplayName = (beneficiary, fallback = "") => {
-  const personName = [beneficiary?.first_name, beneficiary?.last_name]
-    .filter(Boolean)
-    .join(" ");
+  const personName = [beneficiary?.first_name, beneficiary?.last_name].filter(Boolean).join(" ");
 
   if (beneficiary?.beneficiary_type === "business") {
     return beneficiary?.company_name || personName || fallback;

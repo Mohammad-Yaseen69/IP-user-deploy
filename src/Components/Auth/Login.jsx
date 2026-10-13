@@ -1,10 +1,4 @@
-import {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import styles from "./styles/index.module.css";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../Context/UserContext";
@@ -21,13 +15,7 @@ import FaceAnimation from "./FaceAnimation";
 import BiometricSvg from "../../assets/icons/fingerprint.png";
 import { startAuthentication } from "@simplewebauthn/browser";
 import * as rdd from "react-device-detect";
-import {
-  authIcon,
-  instaIcon,
-  smsIcon,
-  whatsappIcon,
-  email as emailIcon,
-} from "./files";
+import { authIcon, instaIcon, smsIcon, whatsappIcon, email as emailIcon } from "./files";
 import "./styles/index.module.css";
 import useWindowWidth from "../../utils/useWindowWidth";
 import i18next from "i18next";
@@ -39,10 +27,7 @@ import VpnModal from "./VpnModal";
 import LocationDeniedModal from "./LocationDeniedModal";
 import { InputAdornment, Stack, TextField } from "@mui/material";
 import { AlarmIcon } from "../PaymentAddressPublic/PayAsGuest/Svgs";
-import {
-  LOGIN_PAGE_TYPES,
-  setLastLoginUsedPage,
-} from "../../utils/Functions/loginPage";
+import { LOGIN_PAGE_TYPES, setLastLoginUsedPage } from "../../utils/Functions/loginPage";
 
 const linkStyle = {
   color: "#5926F0",
@@ -65,8 +50,7 @@ const Login = ({ country, setIsLoginForm }) => {
   const isQuickLoginRef = useRef(false);
   const redirectQuery = params.get("redirect");
   const redirect =
-    location?.state?.redirect ??
-    (redirectQuery ? decodeURIComponent(redirectQuery) : null);
+    location?.state?.redirect ?? (redirectQuery ? decodeURIComponent(redirectQuery) : null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -88,8 +72,7 @@ const Login = ({ country, setIsLoginForm }) => {
   const [currentOtpMethod, setCurrentOtpMethod] = useState("auth");
   const [pendingOtpMethod, setPendingOtpMethod] = useState(null);
   const [isMobile] = useState(
-    ((rdd.isMobile || rdd.isMobileSafari) && (!rdd.isAndroid || !rdd.isIOS)) ??
-      false,
+    ((rdd.isMobile || rdd.isMobileSafari) && (!rdd.isAndroid || !rdd.isIOS)) ?? false,
   );
   const [isInstagramBrowser, setisInstagramBrowser] = useState();
   const [lastOtpSentTo, setLastOtpSentTo] = useState(null);
@@ -112,8 +95,7 @@ const Login = ({ country, setIsLoginForm }) => {
   const [otpDeliveryInfo, setOtpDeliveryInfo] = useState({});
   // Country the user picked in the dropdown; PhoneInput remounts when going back from the password step
 
-  const normalizeCredential = (value) =>
-    (value ?? "").toString().trim().toLowerCase();
+  const normalizeCredential = (value) => (value ?? "").toString().trim().toLowerCase();
   const getResolvedCredential = () => {
     const fromState = normalizeCredential(email);
     if (fromState) return fromState;
@@ -256,8 +238,7 @@ const Login = ({ country, setIsLoginForm }) => {
     }
     const credential = getResolvedCredential();
     const credentialIsEmail = isEmail.test(credential);
-    const isCredentialValid =
-      isPhoneNumber.test(credential) || credentialIsEmail;
+    const isCredentialValid = isPhoneNumber.test(credential) || credentialIsEmail;
 
     if (!isCredentialValid) {
       setIsLoginError("Uh-Oh! Please enter a valid email or phone number.");
@@ -277,13 +258,9 @@ const Login = ({ country, setIsLoginForm }) => {
     const isInsta = method
       ? method === "insta"
       : currentOtpMethod === "insta" ||
-        (currentOtpMethod !== "sms" &&
-          currentOtpMethod !== "email" &&
-          currentOtpMethod !== "wp");
+        (currentOtpMethod !== "sms" && currentOtpMethod !== "email" && currentOtpMethod !== "wp");
     const isWp = method ? method === "wp" : currentOtpMethod === "wp";
-    const isEmailOtp = method
-      ? method === "email"
-      : currentOtpMethod === "email";
+    const isEmailOtp = method ? method === "email" : currentOtpMethod === "email";
 
     const credentials = credentialIsEmail
       ? {
@@ -384,15 +361,10 @@ const Login = ({ country, setIsLoginForm }) => {
         const handleMethods = () => {
           if (method === undefined) {
             if (decrypted?.biometric && !isInstagramBrowser) return "biometric";
-            if (decrypted?.tfa && decrypted?.message === "authenticator")
-              return "auth";
-            if (decrypted?.message === "instagram" && !isInstagramBrowser)
-              return "insta";
+            if (decrypted?.tfa && decrypted?.message === "authenticator") return "auth";
+            if (decrypted?.message === "instagram" && !isInstagramBrowser) return "insta";
             if (decrypted?.message === "whatsapp") return "wp";
-            if (
-              decrypted?.otpMethod === "email" ||
-              (decrypted?.email && !decrypted?.phone)
-            )
+            if (decrypted?.otpMethod === "email" || (decrypted?.email && !decrypted?.phone))
               return "email";
             return "sms";
           } else {
@@ -518,10 +490,8 @@ const Login = ({ country, setIsLoginForm }) => {
           setIsLoginError(decrypted?.message);
         }
         if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-          const time =
-            decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
-          const timeInSec =
-            +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
+          const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+          const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
           setProfileLockTime(timeInSec);
         }
       });
@@ -554,11 +524,7 @@ const Login = ({ country, setIsLoginForm }) => {
     }
     if (email.startsWith("92")) return;
     const newEmail = email;
-    if (
-      /^\d+$/.test(newEmail.slice(0, 6)) &&
-      newEmail.startsWith(0) &&
-      newEmail.length >= 6
-    ) {
+    if (/^\d+$/.test(newEmail.slice(0, 6)) && newEmail.startsWith(0) && newEmail.length >= 6) {
       if (country) {
         const formatted = `${country?.country_code?.split("+")[1] ?? "41"}${newEmail.slice(1)}`;
         setEmail(formatted);
@@ -576,15 +542,9 @@ const Login = ({ country, setIsLoginForm }) => {
 
   const getUserInfo = async (username) => {
     const platform =
-      navigator?.userAgentData?.platform ||
-      rdd.osName ||
-      navigator.platform ||
-      "N/A";
+      navigator?.userAgentData?.platform || rdd.osName || navigator.platform || "N/A";
     const isMobileUser =
-      navigator?.userAgentData?.mobile ??
-      rdd.isMobile ??
-      rdd.isMobileSafari ??
-      false;
+      navigator?.userAgentData?.mobile ?? rdd.isMobile ?? rdd.isMobileSafari ?? false;
     try {
       const res = await fetch(
         `https://iplocate.io/api/lookup?apikey=${import.meta.env.VITE_IP_LOCATE_API_KEY}`,
@@ -612,12 +572,9 @@ const Login = ({ country, setIsLoginForm }) => {
         };
       }
     } catch (error) {
-      logger.error(
-        `IP Locate api failed at ${Date.now().toLocaleString()} for user: ${username}`,
-        {
-          error: error,
-        },
-      );
+      logger.error(`IP Locate api failed at ${Date.now().toLocaleString()} for user: ${username}`, {
+        error: error,
+      });
       console.log("ip locate failed");
       try {
         const res = await fetch("https://geolocation-db.com/json");
@@ -650,9 +607,7 @@ const Login = ({ country, setIsLoginForm }) => {
     };
 
     if (
-      (ipInfo?.privacy?.is_proxy ||
-        ipInfo?.privacy?.is_tor ||
-        ipInfo?.privacy?.is_vpn) &&
+      (ipInfo?.privacy?.is_proxy || ipInfo?.privacy?.is_tor || ipInfo?.privacy?.is_vpn) &&
       !isVpnAllowed
     ) {
       setShowNoticeModal(true);
@@ -737,35 +692,24 @@ const Login = ({ country, setIsLoginForm }) => {
     const encryptedWithLocation = encryptData(historyData);
 
     if (!userAccount?.tfa) {
-      setMissingTabsData((prev) =>
-        prev.includes("tfa") ? prev : [...prev, "tfa"],
-      );
+      setMissingTabsData((prev) => (prev.includes("tfa") ? prev : [...prev, "tfa"]));
     }
     const isKycMissing =
       userAccount?.account_type === "business"
-        ? userAccount?.company?.kyb_status === "declined" ||
-          !userAccount.company?.kyb_status
-        : userAccount?.user?.kyc_status === "declined" ||
-          !userAccount.user?.kyc_status;
+        ? userAccount?.company?.kyb_status === "declined" || !userAccount.company?.kyb_status
+        : userAccount?.user?.kyc_status === "declined" || !userAccount.user?.kyc_status;
 
     if (isKycMissing) {
-      setMissingTabsData((prev) =>
-        prev.includes("kyc") ? prev : [...prev, "kyc"],
-      );
+      setMissingTabsData((prev) => (prev.includes("kyc") ? prev : [...prev, "kyc"]));
     }
     if (!userAccount?.insta_username && !userAccount?.telegram_bot) {
-      setMissingTabsData((prev) =>
-        prev.includes("social") ? prev : [...prev, "social"],
-      );
+      setMissingTabsData((prev) => (prev.includes("social") ? prev : [...prev, "social"]));
     }
 
     try {
-      await axios.post(
-        `${import.meta.env.VITE_IP_DEV_API}/api/login/create-login-history`,
-        {
-          data: encryptedWithLocation,
-        },
-      );
+      await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/login/create-login-history`, {
+        data: encryptedWithLocation,
+      });
     } catch (err) {
       console.error("Login history creation failed:", err);
     } finally {
@@ -893,9 +837,7 @@ const Login = ({ country, setIsLoginForm }) => {
         const token = decrypted?.token;
         setIsOtpCorrect(true);
         axios
-          .get(
-            `${import.meta.env.VITE_IP_DEV_API}/api/account/auth/${decrypted?.token}`,
-          )
+          .get(`${import.meta.env.VITE_IP_DEV_API}/api/account/auth/${decrypted?.token}`)
           .then(async (res) => {
             const dec = decryptData(res.data.data);
             setShowInactivityModal(false);
@@ -912,9 +854,7 @@ const Login = ({ country, setIsLoginForm }) => {
           })
           .catch((err) => {
             setIsPressed(false);
-            setIsLoginError(
-              "Something went wrong while getting account details",
-            );
+            setIsLoginError("Something went wrong while getting account details");
           });
       })
       .catch((error) => {
@@ -922,10 +862,8 @@ const Login = ({ country, setIsLoginForm }) => {
         console.log(decrypted);
         setIsPressed(false);
         if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-          const time =
-            decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
-          const timeInSec =
-            +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
+          const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+          const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
           setProfileLockTime(timeInSec);
         } else {
           setIsLoginError("Uh-Oh! You entered incorrect OTP.");
@@ -979,10 +917,7 @@ const Login = ({ country, setIsLoginForm }) => {
     if (
       resendTimer > 0 &&
       lastOtpSentTo &&
-      (method === "sms" ||
-        method === "insta" ||
-        method === "wp" ||
-        method === "email")
+      (method === "sms" || method === "insta" || method === "wp" || method === "email")
     ) {
       if (!hasChangedMethodOnce || lastOtpSentTo === method) {
         setHasChangedMethodOnce(true);
@@ -995,10 +930,7 @@ const Login = ({ country, setIsLoginForm }) => {
         setPendingOtpMethod(method);
         return;
       }
-    } else if (
-      method !== "biometric" &&
-      (method === "auth" || resendTimer === 0)
-    ) {
+    } else if (method !== "biometric" && (method === "auth" || resendTimer === 0)) {
       shouldCallLoginHandler = true;
       setCurrentOtpMethod(method);
     }
@@ -1022,9 +954,7 @@ const Login = ({ country, setIsLoginForm }) => {
       setBiometricLoading(true);
       const credential = getResolvedCredential();
 
-      const emailOrPhone = isEmail.test(credential)
-        ? { email: credential }
-        : { phone: credential };
+      const emailOrPhone = isEmail.test(credential) ? { email: credential } : { phone: credential };
 
       const response1 = await axios.post(
         `${import.meta.env.VITE_IP_DEV_API}/api/account/login-biometric-challenge`,
@@ -1066,9 +996,7 @@ const Login = ({ country, setIsLoginForm }) => {
           const dec2 = await decryptData(response2.data.data);
           return dec2;
         } catch (err) {
-          const serverErr = err?.response?.data?.data
-            ? decryptData(err.response.data.data)
-            : err;
+          const serverErr = err?.response?.data?.data ? decryptData(err.response.data.data) : err;
           logger.error(`Biometric verification failed! for ${credential}`, {
             credentials,
             serverError: serverErr,
@@ -1081,10 +1009,7 @@ const Login = ({ country, setIsLoginForm }) => {
               verificationData.credentials = freshCreds;
               return await tryVerify(attempt + 1);
             } catch (innerErr) {
-              console.error(
-                "biometric retry startAuthentication failed:",
-                innerErr,
-              );
+              console.error("biometric retry startAuthentication failed:", innerErr);
               throw err;
             }
           }
@@ -1185,12 +1110,8 @@ const Login = ({ country, setIsLoginForm }) => {
 
   const resolvedCredential = getResolvedCredential();
   const isCredentialValid =
-    (isPhoneNumber.test(resolvedCredential) ||
-      isEmail.test(resolvedCredential)) &&
-    password;
-  const availableMethods = methods.filter(
-    (m) => m.avail && m.attr !== currentOtpMethod,
-  );
+    (isPhoneNumber.test(resolvedCredential) || isEmail.test(resolvedCredential)) && password;
+  const availableMethods = methods.filter((m) => m.avail && m.attr !== currentOtpMethod);
 
   const getOtpLabel = () => {
     const maskValue = (value) => {
@@ -1220,10 +1141,7 @@ const Login = ({ country, setIsLoginForm }) => {
 
     const maskedEmail = maskValue(otpDeliveryInfo.email);
     const maskedPhone = maskValue(otpDeliveryInfo.phone);
-    const service =
-      String(otpDeliveryInfo.phone ?? "").slice(0, 3) === "971"
-        ? "WhatsApp"
-        : "SMS";
+    const service = String(otpDeliveryInfo.phone ?? "").slice(0, 3) === "971" ? "WhatsApp" : "SMS";
 
     switch (currentOtpMethod) {
       case "auth":
@@ -1231,26 +1149,20 @@ const Login = ({ country, setIsLoginForm }) => {
           "Please enter the one-time password (OTP) from your Google Authenticator app to access your account",
         );
       case "insta":
-        return t(
-          "Please enter the one-time password (OTP) sent to your Instagram Account",
-        );
+        return t("Please enter the one-time password (OTP) sent to your Instagram Account");
       case "wp":
-        return t(
-          "Please enter the one-time password (OTP) sent to your WhatsApp on {{phone}}",
-          { phone: `\u200E${maskedPhone}\u200E` },
-        );
+        return t("Please enter the one-time password (OTP) sent to your WhatsApp on {{phone}}", {
+          phone: `\u200E${maskedPhone}\u200E`,
+        });
       case "email":
-        return t(
-          "Please enter the one-time password (OTP) sent to {{email}} via email",
-          {
-            email: `\u200E${maskedEmail}\u200E`,
-          },
-        );
+        return t("Please enter the one-time password (OTP) sent to {{email}} via email", {
+          email: `\u200E${maskedEmail}\u200E`,
+        });
       default:
-        return t(
-          "Please enter the one-time password (OTP) sent to {{phone}} via {{service}}",
-          { phone: `\u200E${maskedPhone}\u200E`, service },
-        );
+        return t("Please enter the one-time password (OTP) sent to {{phone}} via {{service}}", {
+          phone: `\u200E${maskedPhone}\u200E`,
+          service,
+        });
     }
   };
 
@@ -1270,11 +1182,7 @@ const Login = ({ country, setIsLoginForm }) => {
         }}
       />
 
-      <Modal
-        isOpen={showRestoreModal}
-        toggle={() => setShowRestoreModal(false)}
-        centered
-      >
+      <Modal isOpen={showRestoreModal} toggle={() => setShowRestoreModal(false)} centered>
         <ModalHeader toggle={() => setShowRestoreModal(false)}>
           {t("Account Restoration")}
         </ModalHeader>
@@ -1285,9 +1193,7 @@ const Login = ({ country, setIsLoginForm }) => {
             )}
           </p>
         </ModalBody>
-        <ModalFooter
-          style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}
-        >
+        <ModalFooter style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
           <Button
             color="secondary"
             onClick={resetLoginStates}
@@ -1306,8 +1212,7 @@ const Login = ({ country, setIsLoginForm }) => {
             onClick={(e) => loginHandler(e, undefined, true)}
             disabled={restoreLoading}
             style={{
-              background:
-                "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+              background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
               border: "none",
               borderRadius: "10px",
               padding: "10px 20px",
@@ -1331,9 +1236,7 @@ const Login = ({ country, setIsLoginForm }) => {
             <label>
               {t("Welcome Back")} {t("👋")}
             </label>
-            {!showQuickLogin && (
-              <p>{t("Enter your phone and password to access your account")}</p>
-            )}
+            {!showQuickLogin && <p>{t("Enter your phone and password to access your account")}</p>}
           </div>
           <div className={styles.formWrapper}>
             <div className={styles.fieldsContainer}>
@@ -1353,9 +1256,7 @@ const Login = ({ country, setIsLoginForm }) => {
                         alt=""
                       />
                     ) : (
-                      <div className={styles.dp}>
-                        {loginData?.name?.[0]?.toUpperCase()}
-                      </div>
+                      <div className={styles.dp}>{loginData?.name?.[0]?.toUpperCase()}</div>
                     )}
                     <h4
                       style={{
@@ -1434,15 +1335,11 @@ const Login = ({ country, setIsLoginForm }) => {
             {isLoginError && (
               <div className={styles.input_error}>
                 <AlertTriangle size={17} color="#F32D2D" />
-                <span>
-                  {profileLockTIme > 0 ? isLoginError : t(isLoginError)}
-                </span>
+                <span>{profileLockTIme > 0 ? isLoginError : t(isLoginError)}</span>
               </div>
             )}
             <span className={styles.para}>
-              {t(
-                "By logging in, you agree to the terms outlined in InstaPay's Privacy Policy.",
-              )}
+              {t("By logging in, you agree to the terms outlined in InstaPay's Privacy Policy.")}
             </span>
             <button
               type="submit"
@@ -1451,11 +1348,7 @@ const Login = ({ country, setIsLoginForm }) => {
             >
               {isPressed ? t("Processing") : t("Login")}
             </button>
-            <Stack
-              direction={"row"}
-              padding={"8px 12px"}
-              justifyContent={"space-between"}
-            >
+            <Stack direction={"row"} padding={"8px 12px"} justifyContent={"space-between"}>
               <div
                 className={styles.toggleLoginBtn}
                 onClick={() => {
@@ -1467,10 +1360,7 @@ const Login = ({ country, setIsLoginForm }) => {
                     isQuickLoginRef.current = false;
                   } else {
                     setLoginMethod(loginMethod === "email" ? "phone" : "email");
-                    localStorage.setItem(
-                      "loginWith",
-                      loginMethod === "email" ? "phone" : "email",
-                    );
+                    localStorage.setItem("loginWith", loginMethod === "email" ? "phone" : "email");
                     setEmail("");
                   }
                 }}
@@ -1487,11 +1377,7 @@ const Login = ({ country, setIsLoginForm }) => {
             </Stack>
             <span className={styles.para}>
               {t("If you don't have an account")}&nbsp;•&nbsp;
-              <Link
-                style={linkStyle}
-                to="/signup"
-                onClick={() => setIsLoginForm(false)}
-              >
+              <Link style={linkStyle} to="/signup" onClick={() => setIsLoginForm(false)}>
                 {t("Create an Account")}
               </Link>
             </span>
@@ -1512,9 +1398,7 @@ const Login = ({ country, setIsLoginForm }) => {
         <form onSubmit={verifyOTpHandler} className={styles.otp}>
           <div className={styles.right}>
             <div className={`${styles.topSection} ${styles.otpTopSection}`}>
-              {currentOtpMethod !== "biometric" && (
-                <label>{t("Enter OTP")}</label>
-              )}
+              {currentOtpMethod !== "biometric" && <label>{t("Enter OTP")}</label>}
               <p>
                 {currentOtpMethod === "biometric"
                   ? t("Verify your identity with your passkey on this device")
@@ -1581,9 +1465,7 @@ const Login = ({ country, setIsLoginForm }) => {
                   <div
                     style={{
                       animation:
-                        otpVerified && !isOtpCorrect
-                          ? "horizontal-shaking 0.5s ease-in-out"
-                          : "",
+                        otpVerified && !isOtpCorrect ? "horizontal-shaking 0.5s ease-in-out" : "",
                     }}
                     className={
                       styles.otp_inputs +
@@ -1615,17 +1497,10 @@ const Login = ({ country, setIsLoginForm }) => {
                   type="submit"
                   className={styles.form_btn}
                   disabled={
-                    isAnyFieldEmpty ||
-                    otpValues.some((item) => !item) ||
-                    isPressed ||
-                    isLoginError
+                    isAnyFieldEmpty || otpValues.some((item) => !item) || isPressed || isLoginError
                   }
                 >
-                  <span>
-                    {isPressed && !methodLoading
-                      ? t("Authorising")
-                      : t("Authorise")}
-                  </span>
+                  <span>{isPressed && !methodLoading ? t("Authorising") : t("Authorise")}</span>
                 </button>
                 <button
                   type="button"
@@ -1658,9 +1533,7 @@ const Login = ({ country, setIsLoginForm }) => {
 
                 {methods.filter((m) => m.avail).length > 1 && (
                   <p style={{ alignSelf: "baseline" }}>
-                    {t(
-                      "Choose your preferred method to receive your verification code:",
-                    )}
+                    {t("Choose your preferred method to receive your verification code:")}
                   </p>
                 )}
                 {methods.filter((m) => m.avail).length > 1 && (
@@ -1681,19 +1554,13 @@ const Login = ({ country, setIsLoginForm }) => {
                             key={index}
                             className={styles.otpMethodButton}
                             type="button"
-                            disabled={
-                              isPressed || methodLoading || biometricLoading
-                            }
+                            disabled={isPressed || methodLoading || biometricLoading}
                             onClick={() => handleOtpMethod(method.attr)}
                           >
                             <img src={method.icon} alt="" />
                             <span
-                              className={
-                                isMobile ? styles.otpMethodText : undefined
-                              }
-                              style={
-                                isMobile ? undefined : { marginBottom: "0" }
-                              }
+                              className={isMobile ? styles.otpMethodText : undefined}
+                              style={isMobile ? undefined : { marginBottom: "0" }}
                             >
                               {t(method.text)}
                             </span>
@@ -1712,10 +1579,8 @@ const Login = ({ country, setIsLoginForm }) => {
                         ["sms", "insta", "wp", "email"].includes(
                           pendingOtpMethod || currentOtpMethod,
                         ) &&
-                        lastOtpSentTo !==
-                          (pendingOtpMethod || currentOtpMethod)) ||
-                      (pendingOtpMethod &&
-                        lastOtpSentTo !== currentOtpMethod) ? (
+                        lastOtpSentTo !== (pendingOtpMethod || currentOtpMethod)) ||
+                      (pendingOtpMethod && lastOtpSentTo !== currentOtpMethod) ? (
                         <span>
                           {t(
                             "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}",
@@ -1732,11 +1597,9 @@ const Login = ({ country, setIsLoginForm }) => {
                               nextOtpMethod:
                                 (pendingOtpMethod || currentOtpMethod) === "sms"
                                   ? "SMS"
-                                  : (pendingOtpMethod || currentOtpMethod) ===
-                                      "wp"
+                                  : (pendingOtpMethod || currentOtpMethod) === "wp"
                                     ? "WhatsApp"
-                                    : (pendingOtpMethod || currentOtpMethod) ===
-                                        "email"
+                                    : (pendingOtpMethod || currentOtpMethod) === "email"
                                       ? "Email"
                                       : "Instagram",
 
@@ -1756,26 +1619,22 @@ const Login = ({ country, setIsLoginForm }) => {
                       )
                     ) : (
                       <>
-                        {currentOtpMethod !== "auth" &&
-                          currentOtpMethod !== "biometric" && (
-                            <>
-                              <span>{t("Didn't receive OTP?") + " "}</span>
-                              <span
-                                style={{ color: "#5926f0", cursor: "pointer" }}
-                                onClick={() => {
-                                  setLastOtpSentTo(currentOtpMethod);
-                                  setOTPValues(Array(numberOfFields).fill(""));
-                                  loginHandler(
-                                    { preventDefault: () => {} },
-                                    currentOtpMethod,
-                                  );
-                                  setResendTimer(120);
-                                }}
-                              >
-                                {t("Resend Now")}
-                              </span>
-                            </>
-                          )}
+                        {currentOtpMethod !== "auth" && currentOtpMethod !== "biometric" && (
+                          <>
+                            <span>{t("Didn't receive OTP?") + " "}</span>
+                            <span
+                              style={{ color: "#5926f0", cursor: "pointer" }}
+                              onClick={() => {
+                                setLastOtpSentTo(currentOtpMethod);
+                                setOTPValues(Array(numberOfFields).fill(""));
+                                loginHandler({ preventDefault: () => {} }, currentOtpMethod);
+                                setResendTimer(120);
+                              }}
+                            >
+                              {t("Resend Now")}
+                            </span>
+                          </>
+                        )}
                       </>
                     )}
                   </span>
@@ -1796,11 +1655,7 @@ export const AuthenticatorDetails = () => {
   return (
     <div className={styles.auth_details}>
       <div className={styles.left}>
-        <h5>
-          {t(
-            "Two-factor authentication (2FA) is the best way to protect yourself online.",
-          )}
-        </h5>
+        <h5>{t("Two-factor authentication (2FA) is the best way to protect yourself online.")}</h5>
         <p>
           {t(
             "We recommend you download and install the Google Authenticator app to ensure you receive your verification codes instantly, avoiding any SMS delays or issues.",

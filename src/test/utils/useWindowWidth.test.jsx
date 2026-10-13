@@ -56,10 +56,7 @@ describe("useWindowWidth", () => {
   it("should add resize event listener on mount", () => {
     renderHook(() => useWindowWidth());
 
-    expect(mockAddEventListener).toHaveBeenCalledWith(
-      "resize",
-      expect.any(Function),
-    );
+    expect(mockAddEventListener).toHaveBeenCalledWith("resize", expect.any(Function));
   });
 
   it("should remove resize event listener on unmount", () => {
@@ -67,9 +64,6 @@ describe("useWindowWidth", () => {
 
     unmount();
 
-    expect(mockRemoveEventListener).toHaveBeenCalledWith(
-      "resize",
-      expect.any(Function),
-    );
+    expect(mockRemoveEventListener).toHaveBeenCalledWith("resize", expect.any(Function));
   });
 });

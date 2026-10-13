@@ -35,18 +35,13 @@ const PaymentDetails = ({ data, dataHandler, isBankDeposit }) => {
               <div className={styles.cd_bot}>
                 <h5>
                   {t("Card ending")}{" "}
-                  {data.cardNumber?.slice(
-                    data?.cardNumber?.length - 5,
-                    data?.cardNumber?.length,
-                  )}
+                  {data.cardNumber?.slice(data?.cardNumber?.length - 5, data?.cardNumber?.length)}
                 </h5>
                 <span>
                   {t("Exp date")}: {data.expiry}
                 </span>
               </div>
-              <button onClick={() => dataHandler("step", 3)}>
-                {t("Change")}
-              </button>
+              <button onClick={() => dataHandler("step", 3)}>{t("Change")}</button>
             </div>
           </div>
         )}
@@ -77,9 +72,7 @@ const PaymentDetails = ({ data, dataHandler, isBankDeposit }) => {
             <span>{t("Exchange Rate")}</span>
             <span>
               1 {data.exchange_rate?.receiver?.currency} ={" "}
-              {Number(
-                data.exchange_rate?.exchange_rate?.exchange_rate,
-              )?.toLocaleString("en-US", {
+              {Number(data.exchange_rate?.exchange_rate?.exchange_rate)?.toLocaleString("en-US", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}{" "}
@@ -96,10 +89,10 @@ const PaymentDetails = ({ data, dataHandler, isBankDeposit }) => {
             {t("Receiver Gets")} {t("(Including fee)")}
           </span>
           <span>
-            {Number(data.exchange_rate?.receiver?.amount)?.toLocaleString(
-              "en-US",
-              { minimumFractionDigits: 2, maximumFractionDigits: 2 },
-            )}{" "}
+            {Number(data.exchange_rate?.receiver?.amount)?.toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}{" "}
             {isBankDeposit
               ? data.exchange_rate?.receiver?.currency
               : data.exchange_rate?.sending?.currency}

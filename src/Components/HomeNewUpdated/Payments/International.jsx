@@ -40,14 +40,10 @@ const International = ({
       const data = await res.json();
       const decrypted = decryptData(data.data);
       const isAvailable = decrypted.filter(
-        (country) =>
-          country?.countryName?.toLowerCase() ===
-          item?.country_name?.toLowerCase(),
+        (country) => country?.countryName?.toLowerCase() === item?.country_name?.toLowerCase(),
       );
       setCountryError(
-        isAvailable.length > 0
-          ? ""
-          : "Payment to this beneficiary's country is not supported.",
+        isAvailable.length > 0 ? "" : "Payment to this beneficiary's country is not supported.",
       );
     };
     if (item.country_name) {
@@ -65,13 +61,9 @@ const International = ({
           const decrypted = decryptData(res.data.data);
           console.log(decrypted);
           if (decrypted.length == 0) {
-            setPayoutError(
-              "Country doesn't support any of the beneficiary's payout channel.",
-            );
+            setPayoutError("Country doesn't support any of the beneficiary's payout channel.");
           } else {
-            const isAvailable = decrypted.filter(
-              (chan) => chan.id == paymentMethod.id,
-            );
+            const isAvailable = decrypted.filter((chan) => chan.id == paymentMethod.id);
             setPayoutError(
               isAvailable.length > 0
                 ? ""
@@ -103,10 +95,7 @@ const International = ({
                     if (paymentMethod.value === "mobile") {
                       return (
                         subSer?.name?.toLowerCase()?.split(" ")?.join("") ===
-                        item?.mobile_money_provider
-                          ?.toLowerCase()
-                          ?.split(" ")
-                          ?.join("")
+                        item?.mobile_money_provider?.toLowerCase()?.split(" ")?.join("")
                       );
                     }
                   });

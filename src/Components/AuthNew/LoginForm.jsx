@@ -3,13 +3,7 @@ import FormLogo from "./FormLogo";
 import InstaIcon from "./InstaIcon";
 import { Link } from "react-router-dom";
 import ev_left from "./files/ev_left.png";
-import {
-  AlertTriangle,
-  ChevronRight,
-  Eye,
-  EyeOff,
-  XCircle,
-} from "react-feather";
+import { AlertTriangle, ChevronRight, Eye, EyeOff, XCircle } from "react-feather";
 import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import axios from "axios";
@@ -34,8 +28,7 @@ const LoginForm = ({ setIsLoginForm, setIsForgot, country }) => {
   const [isPressed, setIsPressed] = useState(false);
   const [loginToken, setLoginToken] = useState("");
   const [step, setStep] = useState(1);
-  const { allowedCountries, profileLockTIme, setProfileLockTime } =
-    useContext(UserContext);
+  const { allowedCountries, profileLockTIme, setProfileLockTime } = useContext(UserContext);
   const [loginMethod, setLoginMethod] = useState("phone");
 
   useLayoutEffect(() => {
@@ -55,9 +48,7 @@ const LoginForm = ({ setIsLoginForm, setIsForgot, country }) => {
     setIsPressed(true);
     setIsLoginError("");
     if (emailVerified) {
-      const credentials = isEmail.test(email)
-        ? { email, password }
-        : { phone: email, password };
+      const credentials = isEmail.test(email) ? { email, password } : { phone: email, password };
       const encrypted = encryptData(credentials);
 
       axios
@@ -94,15 +85,11 @@ const LoginForm = ({ setIsLoginForm, setIsForgot, country }) => {
             setIsLoginError(`Uh-Oh! Your account is onhold.`);
           }
           if (decrypted.message?.toLowerCase()?.includes("delete")) {
-            setIsLoginError(
-              `Uh-Oh! Your account is currently on delete status.`,
-            );
+            setIsLoginError(`Uh-Oh! Your account is currently on delete status.`);
           }
           if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-            const time =
-              decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
-            const timeInSec =
-              +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
+            const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+            const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
             setProfileLockTime(timeInSec);
           }
         });
@@ -133,11 +120,7 @@ const LoginForm = ({ setIsLoginForm, setIsForgot, country }) => {
   useLayoutEffect(() => {
     if (loginMethod === "email") return;
     const newEmail = email;
-    if (
-      /^\d+$/.test(newEmail.slice(0, 6)) &&
-      newEmail.startsWith(0) &&
-      newEmail.length >= 6
-    ) {
+    if (/^\d+$/.test(newEmail.slice(0, 6)) && newEmail.startsWith(0) && newEmail.length >= 6) {
       if (country) {
         const formatted = `${country?.country_code?.split("+")[1] ?? "41"}${newEmail.slice(1)} `;
         setEmail(formatted);
@@ -155,10 +138,7 @@ const LoginForm = ({ setIsLoginForm, setIsForgot, country }) => {
   }, [loginMethod]);
 
   return (
-    <form
-      className={styles.form}
-      onSubmit={emailVerified ? loginHandler : checkEmailHandler}
-    >
+    <form className={styles.form} onSubmit={emailVerified ? loginHandler : checkEmailHandler}>
       {serviceError && (
         <Modal isOpen={true}>
           <ModalBody
@@ -188,9 +168,7 @@ const LoginForm = ({ setIsLoginForm, setIsForgot, country }) => {
           <div className={styles.input_group}>
             {!emailVerified ? (
               <div className={styles.input_container}>
-                <label>
-                  {loginMethod === "phone" ? t("Phone Number") : t("Email")}
-                </label>
+                <label>{loginMethod === "phone" ? t("Phone Number") : t("Email")}</label>
                 {loginMethod === "phone" ? (
                   <PhoneInput setPhone={setEmail} country={country} />
                 ) : (
@@ -219,15 +197,11 @@ const LoginForm = ({ setIsLoginForm, setIsForgot, country }) => {
                   }}
                   onClick={() => {
                     setLoginMethod(loginMethod === "email" ? "phone" : "email");
-                    localStorage.setItem(
-                      "loginWith",
-                      loginMethod === "email" ? "phone" : "email",
-                    );
+                    localStorage.setItem("loginWith", loginMethod === "email" ? "phone" : "email");
                     setEmail("");
                   }}
                 >
-                  {t("Login with ")}{" "}
-                  {loginMethod === "email" ? t("Phone Number") : t("email")}
+                  {t("Login with ")} {loginMethod === "email" ? t("Phone Number") : t("email")}
                 </div>
               </div>
             ) : (
@@ -249,10 +223,7 @@ const LoginForm = ({ setIsLoginForm, setIsForgot, country }) => {
               </div>
             )}
             {emailVerified && (
-              <div
-                className={styles.input_container}
-                style={{ position: "relative" }}
-              >
+              <div className={styles.input_container} style={{ position: "relative" }}>
                 <label>{t("Enter Your Password")}</label>
                 <div
                   style={{
@@ -313,8 +284,7 @@ const LoginForm = ({ setIsLoginForm, setIsForgot, country }) => {
             disabled={
               isPressed ||
               (emailVerified
-                ? !password ||
-                  (!isPhoneNumber.test(email) && !isEmail.test(email))
+                ? !password || (!isPhoneNumber.test(email) && !isEmail.test(email))
                 : !isPhoneNumber.test(email) && !isEmail.test(email))
             }
             onClick={emailVerified ? loginHandler : checkEmailHandler}

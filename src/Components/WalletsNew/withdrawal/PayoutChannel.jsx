@@ -92,9 +92,7 @@ const PayoutChannel = ({
     let timeout;
     if (forceSet !== null) {
       timeout = setTimeout(() => {
-        setPayoutChannel(
-          payoutChannelData.find((item) => item.id === forceSet),
-        );
+        setPayoutChannel(payoutChannelData.find((item) => item.id === forceSet));
       }, 500);
     }
     return () => clearTimeout(timeout);
@@ -120,8 +118,7 @@ const PayoutChannel = ({
           padding: "1.5rem",
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
       >
         {payoutChannelData.length > 0 ? (
@@ -176,20 +173,14 @@ const PayoutChannel = ({
                     />
                   </div>
                   <div style={{ display: "grid", gap: "5px" }}>
-                    <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>
-                      {t(item?.name)}
-                    </h5>
+                    <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>{t(item?.name)}</h5>
                     <h5 style={{ marginBottom: 0, fontSize: "0.8rem" }}>
                       {t(item?.withdrawalName)}
                     </h5>
                   </div>
                 </div>
                 {payoutChannel?.name === item?.name ? (
-                  <Check
-                    color="green"
-                    size={24}
-                    style={{ position: "absolute", right: "20px" }}
-                  />
+                  <Check color="green" size={24} style={{ position: "absolute", right: "20px" }} />
                 ) : (
                   <img
                     src={i}

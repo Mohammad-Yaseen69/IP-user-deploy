@@ -1,13 +1,5 @@
 import React, { useContext, useState } from "react";
-import {
-  Button,
-  Form,
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalHeader,
-} from "reactstrap";
+import { Button, Form, Input, Label, Modal, ModalBody, ModalHeader } from "reactstrap";
 import styles from "./styles/AddNominee.module.css";
 import { Camera } from "react-feather";
 import PhoneInput from "react-phone-input-2";
@@ -116,11 +108,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
             </div>
             <div className={styles.inp_con}>
               <Label>{t("Gender")}</Label>
-              <Input
-                type="select"
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
-              >
+              <Input type="select" value={gender} onChange={(e) => setGender(e.target.value)}>
                 <option value="" disabled>
                   --{t("Select Gender")}--
                 </option>
@@ -188,8 +176,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
       >
         <Button
           style={{
-            background:
-              "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
             border: "none",
             outline: "none",
             borderRadius: "10px",
@@ -210,9 +197,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
         </Button>
       </div>
       <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-        <ModalHeader toggle={() => setShowOtp(!showOtp)}>
-          {t("Confirm")}
-        </ModalHeader>
+        <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
         <ModalBody>
           <OtpVerification
             variant="card"
@@ -224,10 +209,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
           />
         </ModalBody>
       </Modal>
-      <SuccessModal
-        isOpen={showSuccess}
-        toggle={() => setShowSuccess(!showSuccess)}
-      />
+      <SuccessModal isOpen={showSuccess} toggle={() => setShowSuccess(!showSuccess)} />
     </div>
   );
 };

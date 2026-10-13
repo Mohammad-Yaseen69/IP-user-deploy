@@ -1,14 +1,6 @@
 import { H4 } from "../../AbstractElements";
 import { useForm } from "react-hook-form";
-import {
-  Row,
-  Col,
-  CardHeader,
-  CardBody,
-  Form,
-  FormGroup,
-  Label,
-} from "reactstrap";
+import { Row, Col, CardHeader, CardBody, Form, FormGroup, Label } from "reactstrap";
 import GradientButton from "./GradientButton";
 import { useTranslation } from "react-i18next";
 
@@ -26,9 +18,7 @@ const Password = () => {
   return (
     <Form className="card" id="password" onSubmit={handleSubmit(onEditSubmit)}>
       <CardHeader className={`pb-0 expanded`}>
-        <H4 attrH4={{ className: "card-title mb-0" }}>
-          {t("Change Password")}
-        </H4>
+        <H4 attrH4={{ className: "card-title mb-0" }}>{t("Change Password")}</H4>
       </CardHeader>
       <div className={`accordion-body expanded`}>
         <CardBody>
@@ -42,9 +32,7 @@ const Password = () => {
                   placeholder="Current Password"
                   {...register("company", { required: true })}
                 />
-                <span style={{ color: "red" }}>
-                  {errors.company && "Password is required"}{" "}
-                </span>
+                <span style={{ color: "red" }}>{errors.company && "Password is required"} </span>
               </FormGroup>
             </Col>
             <Col md="12">
@@ -56,25 +44,19 @@ const Password = () => {
                   placeholder="Current Password"
                   {...register("company", { required: true })}
                 />
-                <span style={{ color: "red" }}>
-                  {errors.company && "Password is required"}{" "}
-                </span>
+                <span style={{ color: "red" }}>{errors.company && "Password is required"} </span>
               </FormGroup>
             </Col>
             <Col md="12">
               <FormGroup className="mb-3">
-                <Label className="form-label">
-                  {t("Re-enter New Password")}
-                </Label>
+                <Label className="form-label">{t("Re-enter New Password")}</Label>
                 <input
                   className="form-control"
                   type="text"
                   placeholder="Current Password"
                   {...register("company", { required: true })}
                 />
-                <span style={{ color: "red" }}>
-                  {errors.company && "Password is required"}{" "}
-                </span>
+                <span style={{ color: "red" }}>{errors.company && "Password is required"} </span>
               </FormGroup>
             </Col>
           </Row>

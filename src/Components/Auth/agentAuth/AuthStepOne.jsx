@@ -37,8 +37,7 @@ const AuthStepOne = ({
       const credential = (email ?? "").toString().trim().toLowerCase();
       const isPhoneNumber = /^\d{9,20}$/;
       const isEmailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (!isPhoneNumber.test(credential) && !isEmailRegex.test(credential))
-        return;
+      if (!isPhoneNumber.test(credential) && !isEmailRegex.test(credential)) return;
       setEmailVerified(true);
     } else {
       handleSubmit(e, undefined, false, true);
@@ -130,9 +129,7 @@ const AuthStepOne = ({
             </div>
           </label>
           <span className={styles.para}>
-            {t(
-              "By logging in, you agree to the terms outlined in InstaPay's Privacy Policy.",
-            )}
+            {t("By logging in, you agree to the terms outlined in InstaPay's Privacy Policy.")}
           </span>
         </div>
         <button
@@ -169,16 +166,11 @@ const AuthStepOne = ({
             className={styles.loginWith}
             onClick={() => {
               setLoginMethod(loginMethod === "email" ? "phone" : "email");
-              localStorage.setItem(
-                "loginWith",
-                loginMethod === "email" ? "phone" : "email",
-              );
+              localStorage.setItem("loginWith", loginMethod === "email" ? "phone" : "email");
               setEmail("");
             }}
           >
-            {loginMethod === "email"
-              ? t("Sign in with phone")
-              : t("Sign in with email")}
+            {loginMethod === "email" ? t("Sign in with phone") : t("Sign in with email")}
           </span>
           <Link to={"/forgot-password/agent"} className={styles.forgot_pass}>
             {t("Forgot Password?")}

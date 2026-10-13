@@ -11,13 +11,7 @@ import useWindowWidth from "../../../utils/useWindowWidth";
 import { useState } from "react";
 import { Modal, ModalBody } from "reactstrap";
 
-const Stepone = ({
-  data,
-  dataHandler,
-  dataEsimHandler,
-  loadingCountries,
-  setShowModal,
-}) => {
+const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShowModal }) => {
   const { t } = useTranslation();
   const width = useWindowWidth();
   const [showCompatibleModal, setShowCompatibleModal] = useState(false);
@@ -49,9 +43,7 @@ const Stepone = ({
               background: "transparent",
             }}
           >
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
-            >
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               <div
                 style={{ flexDirection: width < 1000 && "column" }}
                 className={styles.warningDiv}
@@ -89,11 +81,7 @@ const Stepone = ({
                   onClick={() => setShowModal(true)}
                 >
                   <div className={country_styles.main}>
-                    <div
-                      className={
-                        data?.country?.file_url ? "" : country_styles.grad_icon
-                      }
-                    >
+                    <div className={data?.country?.file_url ? "" : country_styles.grad_icon}>
                       <img src={data?.country?.file_url ?? country} alt="" />
                     </div>
                     <span>
@@ -114,10 +102,7 @@ const Stepone = ({
                 className={styles.contentDiv}
               >
                 <h4>{t("Or Choose a Region")}</h4>
-                <div
-                  style={{ width: width < 1000 && "100%" }}
-                  className={styles.regions}
-                >
+                <div style={{ width: width < 1000 && "100%" }} className={styles.regions}>
                   {regions.map((region, index) => (
                     <div
                       style={{
@@ -155,10 +140,7 @@ const Stepone = ({
               </div>
             </div>
 
-            <div
-              style={{ justifyContent: "space-between" }}
-              className={styles.contentDiv}
-            >
+            <div style={{ justifyContent: "space-between" }} className={styles.contentDiv}>
               <div className={styles.info}>
                 <img src={info} alt="" />
                 <span>{t("Trouble buying an E-SIM?")}</span>
@@ -174,10 +156,7 @@ const Stepone = ({
                 >
                   {t("Back")}
                 </span>
-                <button
-                  onClick={() => dataHandler("step", 3)}
-                  className={styles.nxt}
-                >
+                <button onClick={() => dataHandler("step", 3)} className={styles.nxt}>
                   {t("Next")}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -257,13 +236,12 @@ const Stepone = ({
                       {t("Go to")} <b>{t("Settings > General > About")}</b>.
                     </li>
                     <li>
-                      {t("Scroll down to")} <b>{t("Available SIM")}</b>{" "}
-                      {t("or")} <b>{t("Digital SIM")}</b>.
+                      {t("Scroll down to")} <b>{t("Available SIM")}</b> {t("or")}{" "}
+                      <b>{t("Digital SIM")}</b>.
                     </li>
                   </ol>
                   <div style={{ marginBottom: 6 }}>
-                    {t("If you see an")} <b>{t("EID number")}</b>,{" "}
-                    {t("your iPhone supports eSIM.")}
+                    {t("If you see an")} <b>{t("EID number")}</b>, {t("your iPhone supports eSIM.")}
                   </div>
                   <div style={{ marginBottom: 6 }}>
                     {t("Alternatively, check under")}{" "}
@@ -271,9 +249,7 @@ const Stepone = ({
                     {t("If you see that option, eSIM is supported.")}
                   </div>
                 </div>
-                <div
-                  style={{ fontWeight: 600, marginTop: 10, marginBottom: 4 }}
-                >
+                <div style={{ fontWeight: 600, marginTop: 10, marginBottom: 4 }}>
                   {t("For Android (Samsung, Google Pixel, etc.):")}
                 </div>
                 <ol
@@ -286,16 +262,12 @@ const Stepone = ({
                   }}
                 >
                   <li>
-                    {t("Go to")}{" "}
-                    <b>{t("Settings > Connections > SIM card manager")}</b>{" "}
+                    {t("Go to")} <b>{t("Settings > Connections > SIM card manager")}</b>{" "}
                     {t("(Samsung)")}
                     <br />
                     {t("or")}
                     <br />
-                    <b>
-                      {t("Settings > Network & Internet > Mobile Network")}
-                    </b>{" "}
-                    {t("(Pixel)")}.
+                    <b>{t("Settings > Network & Internet > Mobile Network")}</b> {t("(Pixel)")}.
                   </li>
                   <li>
                     {t("Look for")} <b>{t("eSIM")}</b> {t("or")}{" "}

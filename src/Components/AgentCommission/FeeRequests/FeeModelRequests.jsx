@@ -13,17 +13,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useCallback, useContext, useEffect, useState } from "react";
-import {
-  CheckCircle,
-  Clock,
-  Copy,
-  Edit2,
-  Plus,
-  Shield,
-  Trash,
-  X,
-  XCircle,
-} from "react-feather";
+import { CheckCircle, Clock, Copy, Edit2, Plus, Shield, Trash, X, XCircle } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { UserContext } from "../../../Context/UserContext";
@@ -34,10 +24,7 @@ import TopRight from "../../topRight";
 import styles from "../styles/index.module.css";
 import FeeModelEditHistory from "./FeeModelEditHistory";
 import FeeModelForm from "./FeeModelForm";
-import {
-  useEditFeeRequest,
-  useFeeRequestEditHistory,
-} from "./hooks/useFeeRequestEdit";
+import { useEditFeeRequest, useFeeRequestEditHistory } from "./hooks/useFeeRequestEdit";
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
 import { useMutation } from "@tanstack/react-query";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
@@ -75,8 +62,7 @@ const FeeModelRequests = () => {
   const [editFeeSchedule, setEditFeeSchedule] = useState(DEFAULT_FEE_ITEMS);
   const { getKey: getEditKey, reset: resetEditKey } = useIdempotency();
 
-  const { data: editHistory = [], isLoading: loadingEditHistory } =
-    useFeeRequestEditHistory();
+  const { data: editHistory = [], isLoading: loadingEditHistory } = useFeeRequestEditHistory();
 
   const fetchRequests = useCallback(async () => {
     setLoadingRequests(true);
@@ -113,9 +99,7 @@ const FeeModelRequests = () => {
 
   const { mutate: editFeeRequest, isPending: savingEdit } = useEditFeeRequest({
     onSuccess: (dec) => {
-      toast.success(
-        dec?.message || t("Fee model request updated successfully!"),
-      );
+      toast.success(dec?.message || t("Fee model request updated successfully!"));
       resetEditKey();
       setEditingRequest(null);
       fetchRequests();
@@ -173,9 +157,7 @@ const FeeModelRequests = () => {
       );
 
       const dec = decryptData(res.data?.data);
-      toast.success(
-        dec?.message || t("Fee model request submitted successfully!"),
-      );
+      toast.success(dec?.message || t("Fee model request submitted successfully!"));
       setTitle("");
       setFeeSchedule(DEFAULT_FEE_ITEMS);
       setActiveTab("list");
@@ -238,8 +220,7 @@ const FeeModelRequests = () => {
     fontSize: "15px",
     fontWeight: 600,
     color: activeTab === tab ? "#5926F0" : "#6B7280",
-    borderBottom:
-      activeTab === tab ? "2px solid #5926F0" : "2px solid transparent",
+    borderBottom: activeTab === tab ? "2px solid #5926F0" : "2px solid transparent",
     cursor: "pointer",
     display: "flex",
     alignItems: "center",
@@ -252,9 +233,7 @@ const FeeModelRequests = () => {
         <div className={styles.headerTitle}>
           <h1>{t("Fee Model Requests")}</h1>
           <p>
-            {t(
-              "Request custom client pricing models and manage your approved referral codes.",
-            )}
+            {t("Request custom client pricing models and manage your approved referral codes.")}
           </p>
         </div>
         <div className={styles.topright}>{width > 1000 && <TopRight />}</div>
@@ -276,16 +255,10 @@ const FeeModelRequests = () => {
               borderBottom: "1px solid #E5E7EB",
             }}
           >
-            <button
-              onClick={() => setActiveTab("list")}
-              style={tabButtonStyle("list")}
-            >
+            <button onClick={() => setActiveTab("list")} style={tabButtonStyle("list")}>
               {t("Requested Models")} ({requests.length})
             </button>
-            <button
-              onClick={() => setActiveTab("create")}
-              style={tabButtonStyle("create")}
-            >
+            <button onClick={() => setActiveTab("create")} style={tabButtonStyle("create")}>
               <Plus size={16} /> {t("New Model Request")}
             </button>
           </Box>
@@ -307,9 +280,7 @@ const FeeModelRequests = () => {
             {loadingRequests ? (
               <Box sx={{ p: "60px", textAlign: "center" }}>
                 <CircularProgress sx={{ color: "#5926F0" }} />
-                <Typography
-                  sx={{ mt: 1.5, fontSize: "14px", color: "#6B7280" }}
-                >
+                <Typography sx={{ mt: 1.5, fontSize: "14px", color: "#6B7280" }}>
                   {t("Loading fee model requests...")}
                 </Typography>
               </Box>
@@ -323,20 +294,14 @@ const FeeModelRequests = () => {
                   textAlign: "center",
                 }}
               >
-                <Shield
-                  size={42}
-                  color="#9CA3AF"
-                  style={{ marginBottom: "12px" }}
-                />
+                <Shield size={42} color="#9CA3AF" style={{ marginBottom: "12px" }} />
                 <Typography
                   component="h3"
                   sx={{ fontSize: "18px", fontWeight: 700, color: "#111827" }}
                 >
                   {t("No Fee Model Requests Submitted")}
                 </Typography>
-                <Typography
-                  sx={{ fontSize: "14px", color: "#6B7280", mt: 0.75, mb: 2.5 }}
-                >
+                <Typography sx={{ fontSize: "14px", color: "#6B7280", mt: 0.75, mb: 2.5 }}>
                   {t(
                     "Request custom fee schedules for your clients. Once approved by admin, you will receive a unique referral code.",
                   )}
@@ -385,17 +350,11 @@ const FeeModelRequests = () => {
                           >
                             {req?.title}
                           </Typography>
-                          <Typography
-                            component="span"
-                            sx={{ fontSize: "12px", color: "#6B7280" }}
-                          >
-                            {t("Requested on")}:{" "}
-                            {new Date(req.createdAt).toLocaleDateString()}
+                          <Typography component="span" sx={{ fontSize: "12px", color: "#6B7280" }}>
+                            {t("Requested on")}: {new Date(req.createdAt).toLocaleDateString()}
                           </Typography>
                         </div>
-                        <Box
-                          sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                        >
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                           <Button
                             size="small"
                             variant="outlined"
@@ -509,9 +468,7 @@ const FeeModelRequests = () => {
                             return (
                               <div
                                 style={{
-                                  background: hasCommission
-                                    ? "#ECFDF5"
-                                    : "#F3F4F6",
+                                  background: hasCommission ? "#ECFDF5" : "#F3F4F6",
                                   padding: "14px 16px",
                                   borderRadius: "8px",
                                   border: `1px solid ${hasCommission ? "#A7F3D0" : "#E5E7EB"}`,
@@ -531,9 +488,7 @@ const FeeModelRequests = () => {
                                     <div
                                       style={{
                                         fontSize: "11px",
-                                        color: hasCommission
-                                          ? "#065F46"
-                                          : "#4B5563",
+                                        color: hasCommission ? "#065F46" : "#4B5563",
                                         fontWeight: 700,
                                         textTransform: "uppercase",
                                       }}
@@ -544,9 +499,7 @@ const FeeModelRequests = () => {
                                       style={{
                                         fontSize: "18px",
                                         fontWeight: 800,
-                                        color: hasCommission
-                                          ? "#047857"
-                                          : "#374151",
+                                        color: hasCommission ? "#047857" : "#374151",
                                         marginTop: "2px",
                                       }}
                                     >
@@ -560,13 +513,9 @@ const FeeModelRequests = () => {
 
                                   <Chip
                                     size="small"
-                                    color={
-                                      hasCommission ? "success" : "default"
-                                    }
+                                    color={hasCommission ? "success" : "default"}
                                     label={
-                                      hasCommission
-                                        ? t("Commission Active")
-                                        : t("No Commission")
+                                      hasCommission ? t("Commission Active") : t("No Commission")
                                     }
                                     sx={{ ...chipSx, fontSize: "11px" }}
                                   />
@@ -575,9 +524,7 @@ const FeeModelRequests = () => {
                                 <div
                                   style={{
                                     fontSize: "12px",
-                                    color: hasCommission
-                                      ? "#047857"
-                                      : "#6B7280",
+                                    color: hasCommission ? "#047857" : "#6B7280",
                                   }}
                                 >
                                   {hasCommission
@@ -640,9 +587,7 @@ const FeeModelRequests = () => {
                                   background: "#4F46E5",
                                   "&:hover": { background: "#4338CA" },
                                 }}
-                                onClick={() =>
-                                  copyToClipboard(req.model_code, "code")
-                                }
+                                onClick={() => copyToClipboard(req.model_code, "code")}
                               >
                                 {t("Copy Code")}
                               </Button>
@@ -657,9 +602,7 @@ const FeeModelRequests = () => {
                                 paddingTop: "10px",
                               }}
                             >
-                              <div
-                                style={{ overflow: "hidden", maxWidth: "70%" }}
-                              >
+                              <div style={{ overflow: "hidden", maxWidth: "70%" }}>
                                 <div
                                   style={{
                                     fontSize: "11px",
@@ -714,8 +657,7 @@ const FeeModelRequests = () => {
                               fontSize: "13px",
                             }}
                           >
-                            <strong>{t("Rejection Reason")}:</strong>{" "}
-                            {req.rejection_reason}
+                            <strong>{t("Rejection Reason")}:</strong> {req.rejection_reason}
                           </div>
                         )}
 
@@ -733,8 +675,7 @@ const FeeModelRequests = () => {
                           <div
                             style={{
                               display: "grid",
-                              gridTemplateColumns:
-                                "repeat(auto-fill, minmax(160px, 1fr))",
+                              gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
                               gap: "8px",
                             }}
                           >
@@ -749,11 +690,7 @@ const FeeModelRequests = () => {
                                   border: "1px solid #E5E7EB",
                                 }}
                               >
-                                <div
-                                  style={{ color: "#6B7280", fontSize: "11px" }}
-                                >
-                                  {f.name}
-                                </div>
+                                <div style={{ color: "#6B7280", fontSize: "11px" }}>{f.name}</div>
                                 <div
                                   style={{
                                     fontWeight: 600,
@@ -762,8 +699,7 @@ const FeeModelRequests = () => {
                                   }}
                                 >
                                   €{f.flatEuro || 0}{" "}
-                                  {f.percentAmount &&
-                                  !NO_PERCENT_FEE_IDS.includes(f.id)
+                                  {f.percentAmount && !NO_PERCENT_FEE_IDS.includes(f.id)
                                     ? `+ ${f.percentAmount}%`
                                     : ""}
                                 </div>
@@ -787,20 +723,16 @@ const FeeModelRequests = () => {
                                         typeof f.feesCommisionValue === "number"
                                           ? f.feesCommisionValue
                                           : (req.feesCommisionValue ??
-                                            req.created_pack_id
-                                              ?.feesCommisionValue ??
+                                            req.created_pack_id?.feesCommisionValue ??
                                             0);
                                       const iFix =
                                         typeof f.feesCommisionFixed === "number"
                                           ? f.feesCommisionFixed
                                           : (req.feesCommisionFixed ??
-                                            req.created_pack_id
-                                              ?.feesCommisionFixed ??
+                                            req.created_pack_id?.feesCommisionFixed ??
                                             0);
-                                      if (iType === "both")
-                                        return `${iVal}% + €${iFix}`;
-                                      if (iType === "fixed")
-                                        return `€${iFix > 0 ? iFix : iVal}`;
+                                      if (iType === "both") return `${iVal}% + €${iFix}`;
+                                      if (iType === "fixed") return `€${iFix > 0 ? iFix : iVal}`;
                                       return `${iVal}%`;
                                     })()}
                                   </div>
@@ -816,16 +748,10 @@ const FeeModelRequests = () => {
               </Grid>
             )}
 
-            <FeeModelEditHistory
-              history={editHistory}
-              loading={loadingEditHistory}
-            />
+            <FeeModelEditHistory history={editHistory} loading={loadingEditHistory} />
           </div>
         ) : (
-          <Card
-            variant="outlined"
-            sx={{ borderRadius: "12px", borderColor: "#E5E7EB", p: "24px" }}
-          >
+          <Card variant="outlined" sx={{ borderRadius: "12px", borderColor: "#E5E7EB", p: "24px" }}>
             <FeeModelForm
               heading={t("Request New Fee Model")}
               title={title}
@@ -842,12 +768,7 @@ const FeeModelRequests = () => {
         )}
       </div>
 
-      <Dialog
-        open={!!editingRequest}
-        onClose={closeEditModal}
-        maxWidth="md"
-        fullWidth
-      >
+      <Dialog open={!!editingRequest} onClose={closeEditModal} maxWidth="md" fullWidth>
         <DialogTitle
           sx={{
             display: "flex",
@@ -857,11 +778,7 @@ const FeeModelRequests = () => {
           }}
         >
           {t("Edit Fee Model Request")}
-          <IconButton
-            onClick={closeEditModal}
-            disabled={savingEdit}
-            size="small"
-          >
+          <IconButton onClick={closeEditModal} disabled={savingEdit} size="small">
             <X size={18} />
           </IconButton>
         </DialogTitle>

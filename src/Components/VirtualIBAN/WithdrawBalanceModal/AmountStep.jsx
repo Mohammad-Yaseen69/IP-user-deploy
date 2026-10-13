@@ -27,13 +27,9 @@ const AmountStep = ({
   const quickAmounts = getQuickAmountsFromBalance(sourceBalance);
   const symbol = getCurrencySymbol(currencyCode);
   const exceedsBalance = numericAmount > sourceBalance;
-  const sourceTitle =
-    sourceIban?.name || sourceIban?.title || `${currencyCode} IBAN`;
+  const sourceTitle = sourceIban?.name || sourceIban?.title || `${currencyCode} IBAN`;
   const sourceNumber =
-    sourceIban?.iban ||
-    sourceIban?.account_number ||
-    sourceIban?.accountNumber ||
-    "-";
+    sourceIban?.iban || sourceIban?.account_number || sourceIban?.accountNumber || "-";
 
   const handleQuickSelect = (value) => {
     setAmount(formatAmountValue(value));
@@ -63,9 +59,7 @@ const AmountStep = ({
           {formatAmountValue(sourceBalance)}
         </div>
         {exceedsBalance && (
-          <div className={styles.balanceError}>
-            {t("Amount cannot exceed available balance")}
-          </div>
+          <div className={styles.balanceError}>{t("Amount cannot exceed available balance")}</div>
         )}
         <div className={styles.quickAmounts}>
           {quickAmounts.map(({ percent, value }) => (

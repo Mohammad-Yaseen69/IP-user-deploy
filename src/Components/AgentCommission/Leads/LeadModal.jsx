@@ -18,12 +18,7 @@ import styles from "../styles/leadModal.module.css";
 import { UserContext } from "../../../Context/UserContext";
 import citiesData from "../../CitiesDropDown/CitiesData.json";
 
-const LeadModal = ({
-  open,
-  onClose,
-  onSubmit,
-  initialEntityType = "corporate",
-}) => {
+const LeadModal = ({ open, onClose, onSubmit, initialEntityType = "corporate" }) => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { userDetails } = useContext(UserContext);
@@ -37,9 +32,7 @@ const LeadModal = ({
     company_name: "",
     first_name: "",
     last_name: "",
-    country: userDetails?.country?.country_name
-      ? userDetails.country.country_name
-      : "Switzerland",
+    country: userDetails?.country?.country_name ? userDetails.country.country_name : "Switzerland",
     email: "",
     phone: "",
     fee_pack: "",
@@ -54,11 +47,7 @@ const LeadModal = ({
         method: "GET",
         isDecrypted: true,
       });
-      const list = Array.isArray(dec)
-        ? dec
-        : Array.isArray(dec?.data)
-          ? dec.data
-          : [];
+      const list = Array.isArray(dec) ? dec : Array.isArray(dec?.data) ? dec.data : [];
       const approved = list
         .filter((r) => r.status === "approved")
         .map((r) => ({
@@ -74,9 +63,7 @@ const LeadModal = ({
 
   useEffect(() => {
     if (open) {
-      setEntityType(
-        initialEntityType === "corporate" ? "business" : initialEntityType,
-      );
+      setEntityType(initialEntityType === "corporate" ? "business" : initialEntityType);
       setFormData({
         company_name: "",
         first_name: "",
@@ -127,9 +114,7 @@ const LeadModal = ({
           msg = typeof rawData === "string" ? rawData : err?.message;
         }
       }
-      setErrorMsg(
-        msg || err?.message || t("Failed to create lead. Please try again."),
-      );
+      setErrorMsg(msg || err?.message || t("Failed to create lead. Please try again."));
     },
   });
 
@@ -157,11 +142,7 @@ const LeadModal = ({
       return;
     }
 
-    if (
-      entityType === "individual" &&
-      !formData.phone?.trim() &&
-      !formData.email?.trim()
-    ) {
+    if (entityType === "individual" && !formData.phone?.trim() && !formData.email?.trim()) {
       setErrorMsg(t("Phone number or Email is required for individual leads."));
       return;
     }
@@ -292,18 +273,13 @@ const LeadModal = ({
                   onSelect={(selected) => {
                     handleChange(
                       "country",
-                      selected?.country_name ||
-                        selected?.name ||
-                        selected?.alpha3 ||
-                        "",
+                      selected?.country_name || selected?.name || selected?.alpha3 || "",
                     );
                   }}
                 />
               </div>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>
-                  {t("Company Email")}
-                </label>
+                <label className={styles.fieldLabel}>{t("Company Email")}</label>
                 <TextField
                   fullWidth
                   size="small"
@@ -320,10 +296,7 @@ const LeadModal = ({
               <div className={styles.fieldGroup}>
                 <label className={styles.fieldLabel}>{t("Phone Number")}</label>
                 <PhoneInput
-                  country={
-                    citiesData.find((c) => c.name === formData.country)?.iso3 ||
-                    "USA"
-                  }
+                  country={citiesData.find((c) => c.name === formData.country)?.iso3 || "USA"}
                   phone={formData.phone}
                   setPhone={(val) => handleChange("phone", val)}
                   setCountry={(selected) => {
@@ -353,9 +326,7 @@ const LeadModal = ({
           )}
 
           <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel}>
-              {t("Attached Approved Fee Pack")}
-            </label>
+            <label className={styles.fieldLabel}>{t("Attached Approved Fee Pack")}</label>
             <TextField
               select
               fullWidth
@@ -368,11 +339,7 @@ const LeadModal = ({
                 renderValue: (selected) => {
                   const match = feePacks.find((p) => p._id === selected);
                   if (!match)
-                    return (
-                      <span className={styles.placeholderText}>
-                        {t("Select Fee Pack")}
-                      </span>
-                    );
+                    return <span className={styles.placeholderText}>{t("Select Fee Pack")}</span>;
                   return `${match.name} (${match.pricing_summary || match.pack_type})`;
                 },
                 IconComponent: ChevronDown,
@@ -426,9 +393,7 @@ const LeadModal = ({
             disabled={createLeadMutation.isPending || loadingPacks}
             className={styles.submitBtn}
           >
-            {createLeadMutation.isPending
-              ? t("Submitting...")
-              : t("Submit lead & invite")}
+            {createLeadMutation.isPending ? t("Submitting...") : t("Submit lead & invite")}
             <ArrowRight size={18} />
           </button>
         </form>

@@ -34,12 +34,9 @@ const AccountItem = ({ data }) => {
 
   const otpCallback = (setter) => {
     axios
-      .get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/instagram/insta-unlink/${userDetails?._id}`,
-        {
-          headers: authHeader,
-        },
-      )
+      .get(`${import.meta.env.VITE_IP_DEV_API}/api/instagram/insta-unlink/${userDetails?._id}`, {
+        headers: authHeader,
+      })
       .then((res) => {
         // console.log(res)
         if (res.data.status) {
@@ -80,11 +77,7 @@ const AccountItem = ({ data }) => {
 
   useEffect(() => {
     if (showModal) {
-      if (
-        userDetails &&
-        !userDetails?.insta_username &&
-        userDetails?.username
-      ) {
+      if (userDetails && !userDetails?.insta_username && userDetails?.username) {
         getInstaLink();
       }
     }
@@ -120,8 +113,7 @@ const AccountItem = ({ data }) => {
           <div>
             <H4>{data.name}</H4>
             <P>
-              {userDetails?.insta_username &&
-              data.name.toLowerCase().includes("insta")
+              {userDetails?.insta_username && data.name.toLowerCase().includes("insta")
                 ? userDetails?.insta_username
                 : t("Social Account")}
             </P>
@@ -157,9 +149,7 @@ const AccountItem = ({ data }) => {
             <span style={{ fontWeight: 600 }}>{t("Coming Soon")}</span>
           )}
           <Modal isOpen={showDelOtp} toggle={() => setShowDelOtp(!showDelOtp)}>
-            <ModalHeader toggle={() => setShowDelOtp(!showDelOtp)}>
-              {t("Confirm")}
-            </ModalHeader>
+            <ModalHeader toggle={() => setShowDelOtp(!showDelOtp)}>{t("Confirm")}</ModalHeader>
             <ModalBody>
               <OtpVerification
                 variant="card"
@@ -174,9 +164,7 @@ const AccountItem = ({ data }) => {
         </div>
       </div>
       <Modal isOpen={showModal} toggle={() => setShowModal(!showModal)}>
-        <ModalHeader toggle={() => setShowModal(!showModal)}>
-          {t("Activate Account")}
-        </ModalHeader>
+        <ModalHeader toggle={() => setShowModal(!showModal)}>{t("Activate Account")}</ModalHeader>
         <ModalBody
           style={{
             display: "flex",
@@ -185,23 +173,16 @@ const AccountItem = ({ data }) => {
             gap: "1rem",
           }}
         >
-          <h5 style={{ fontSize: "1.5rem" }}>
-            {t("Enter the below code in Chatbot")}
-          </h5>
+          <h5 style={{ fontSize: "1.5rem" }}>{t("Enter the below code in Chatbot")}</h5>
           <h6 style={{ color: "green", fontSize: "1.1rem" }}>{conLink}</h6>
           <p style={{ marginBottom: "0" }}>
             {t("Code will expire in")}{" "}
-            <span style={{ fontSize: "1.1rem", fontWeight: "700" }}>
-              {timer}
-            </span>{" "}
-            {t("seconds")}
+            <span style={{ fontSize: "1.1rem", fontWeight: "700" }}>{timer}</span> {t("seconds")}
           </p>
         </ModalBody>
       </Modal>
       <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-        <ModalHeader toggle={() => setShowOtp(!showOtp)}>
-          {t("Confirm")}
-        </ModalHeader>
+        <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
         <ModalBody>
           <OtpVerification
             variant="card"
@@ -214,9 +195,7 @@ const AccountItem = ({ data }) => {
         </ModalBody>
       </Modal>
       <Modal isOpen={noUser} toggle={() => setNoUser(!noUser)}>
-        <ModalHeader toggle={() => setNoUser(!noUser)}>
-          {t("No Username")}
-        </ModalHeader>
+        <ModalHeader toggle={() => setNoUser(!noUser)}>{t("No Username")}</ModalHeader>
         <ModalBody>
           <h5>
             {t("You haven't set the username yet.")}{" "}

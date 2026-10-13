@@ -56,12 +56,9 @@ const BeneficiaryCard = ({
         if (type === "Requesting" || type === "Quoting") {
           setLoading(true);
           axios
-            .get(
-              `${import.meta.env.VITE_IP_DEV_API}/api/instagram/search-account/${user?.phone}`,
-              {
-                headers: authHeader,
-              },
-            )
+            .get(`${import.meta.env.VITE_IP_DEV_API}/api/instagram/search-account/${user?.phone}`, {
+              headers: authHeader,
+            })
             .then((res) => {
               addBenHandler(res.data.accountDetails);
             })
@@ -79,9 +76,7 @@ const BeneficiaryCard = ({
                 })
                 .catch((err) => {
                   // console.log(err)
-                  toast.error(
-                    "Something went wrong while getting user details!",
-                  );
+                  toast.error("Something went wrong while getting user details!");
                 });
             })
             .finally(() => {
@@ -129,14 +124,12 @@ const BeneficiaryCard = ({
               marginBottom: "-5px",
             }}
           >
-            {payoutChannel === "bank" &&
-              `Bank: ${user?.bank_details?.[0]?.name}`}
+            {payoutChannel === "bank" && `Bank: ${user?.bank_details?.[0]?.name}`}
             {payoutChannel === "mobile" &&
               `Provider: ${subService?.find((item) => item?.id == user?.mobile_wallet?.[0]?.money_provider)?.name ?? "N/A"}`}
           </span>
           <span style={{ fontSize: ".7rem" }}>
-            {payoutChannel === "bank" &&
-              `IBAN: ${user?.bank_details?.[0]?.iban}`}
+            {payoutChannel === "bank" && `IBAN: ${user?.bank_details?.[0]?.iban}`}
             {payoutChannel === "mobile" &&
               `NUMBER: ${user?.mobile_wallet?.[0]?.wallet_account_number}`}
           </span>
@@ -144,9 +137,7 @@ const BeneficiaryCard = ({
       </div>
       {(
         type === "Requesting" || type === "Quoting"
-          ? selectedUser?.some(
-              (it) => it?.email === user?.email || it?.phone === user?.phone,
-            )
+          ? selectedUser?.some((it) => it?.email === user?.email || it?.phone === user?.phone)
           : selectedUser.some((it) => it?._id === user?._id)
       ) ? (
         <Check style={{ fontWeight: "900" }} color="green" />

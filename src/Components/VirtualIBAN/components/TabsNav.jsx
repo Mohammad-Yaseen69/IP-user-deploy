@@ -25,8 +25,7 @@ const TabsNav = ({ activeTab, onTabChange }) => {
   const { t } = useTranslation();
   const can = usePermission();
   const visibleTabs = tabs.filter((tab) => {
-    if (tab.id === "transaction-history")
-      return can("virtual-iban.transactions.view");
+    if (tab.id === "transaction-history") return can("virtual-iban.transactions.view");
     if (tab.id === "ibanassets") return can("virtual-iban.details.view");
     if (tab.id === "crypto-channels") return can("virtual-iban.details.view");
     if (tab.id === "manage") return can("virtual-iban.status.update");

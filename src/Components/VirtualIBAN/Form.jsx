@@ -35,29 +35,17 @@ const Form = () => {
       <div className="row-group">
         <div className="input-group">
           <label>First name *</label>
-          <input
-            type="text"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
+          <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
         </div>
         <div className="input-group">
           <label>Last name *</label>
-          <input
-            type="text"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
+          <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} />
         </div>
       </div>
 
       <div className="input-group">
         <label>IBAN *</label>
-        <input
-          type="text"
-          value={iban}
-          onChange={(e) => setIban(e.target.value)}
-        />
+        <input type="text" value={iban} onChange={(e) => setIban(e.target.value)} />
         <div className="field-helper">
           <svg
             width="14"
@@ -129,11 +117,7 @@ const Form = () => {
 
       <div className="input-group">
         <label>Reference (visible to recipient) - required</label>
-        <input
-          type="text"
-          value={reference}
-          onChange={(e) => setReference(e.target.value)}
-        />
+        <input type="text" value={reference} onChange={(e) => setReference(e.target.value)} />
       </div>
 
       <div className="toggle-container">
@@ -143,9 +127,7 @@ const Form = () => {
         >
           <div className="toggle-knob"></div>
         </div>
-        <span className="toggle-label">
-          Save this beneficiary for next time
-        </span>
+        <span className="toggle-label">Save this beneficiary for next time</span>
       </div>
 
       <div className="form-footer">

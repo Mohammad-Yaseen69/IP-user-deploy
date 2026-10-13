@@ -123,9 +123,7 @@ const DynamicChannelModal = ({
 
   useEffect(() => {
     if (mobileProviders && mobileProviders.length > 0 && !mobileProvider) {
-      setMobileProvider(
-        String(mobileProviders[0]?.id || mobileProviders[0]?.name || ""),
-      );
+      setMobileProvider(String(mobileProviders[0]?.id || mobileProviders[0]?.name || ""));
       setWalletName(mobileProviders[0]?.name || "");
     }
   }, [mobileProviders]);
@@ -175,11 +173,7 @@ const DynamicChannelModal = ({
           return;
         }
         if (isErrorMode && !isValidBic(swift)) {
-          toast.error(
-            t(
-              "SWIFT / BIC code must be 8 or 11 characters (letters and digits only)",
-            ),
-          );
+          toast.error(t("SWIFT / BIC code must be 8 or 11 characters (letters and digits only)"));
           return;
         }
         if (!accNum) {
@@ -189,11 +183,7 @@ const DynamicChannelModal = ({
       }
 
       if (isErrorMode && swift && !isValidBic(swift)) {
-        toast.error(
-          t(
-            "SWIFT / BIC code must be 8 or 11 characters (letters and digits only)",
-          ),
-        );
+        toast.error(t("SWIFT / BIC code must be 8 or 11 characters (letters and digits only)"));
         return;
       }
 
@@ -202,10 +192,7 @@ const DynamicChannelModal = ({
         return;
       }
 
-      if (
-        !bankFormState.bank_branch_street ||
-        !bankFormState.bank_branch_street.trim()
-      ) {
+      if (!bankFormState.bank_branch_street || !bankFormState.bank_branch_street.trim()) {
         toast.error(t("Branch Street / Address is required"));
         return;
       }
@@ -231,10 +218,7 @@ const DynamicChannelModal = ({
         "";
 
       const resolvedCountryName =
-        selectedBankCountryName ||
-        bankCountry ||
-        beneficiaryData?.country_name ||
-        "";
+        selectedBankCountryName || bankCountry || beneficiaryData?.country_name || "";
 
       if (!resolvedCountryIso || !ISO3_REGEX.test(resolvedCountryIso)) {
         toast.error(t("Bank Country (3-letter ISO code) is required"));
@@ -271,8 +255,7 @@ const DynamicChannelModal = ({
         wallet_address: walletAddress.trim(),
       };
     } else if (channelType === "mobile_wallet") {
-      if (!mobileNumber || !mobileNumber.trim())
-        return toast.error(t("Mobile number is required"));
+      if (!mobileNumber || !mobileNumber.trim()) return toast.error(t("Mobile number is required"));
       channelPayload.mobile_wallet = {
         money_provider: String(mobileProvider || "Mobile Provider"),
         wallet_name: walletName || String(mobileProvider) || "Mobile Wallet",
@@ -311,16 +294,9 @@ const DynamicChannelModal = ({
     padding: "7px 12px",
     borderRadius: isMobile ? "10px" : "7px",
     border: "none",
-    background:
-      accNumType === type ? (isMobile ? "#7040FF" : "#FFFFFF") : "transparent",
+    background: accNumType === type ? (isMobile ? "#7040FF" : "#FFFFFF") : "transparent",
     color:
-      accNumType === type
-        ? isMobile
-          ? "white"
-          : "#4F46E5"
-        : isMobile
-          ? "#65627A"
-          : "#6B7280",
+      accNumType === type ? (isMobile ? "white" : "#4F46E5") : isMobile ? "#65627A" : "#6B7280",
     fontWeight: isMobile ? 600 : accNumType === type ? 600 : 500,
     fontSize: "13px",
     cursor: "pointer",
@@ -329,11 +305,7 @@ const DynamicChannelModal = ({
   });
 
   return (
-    <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="dynamic-channel-modal"
-    >
+    <Modal open={open} onClose={handleClose} aria-labelledby="dynamic-channel-modal">
       <Box className={styles.modalBox}>
         <div className={styles.modalHeader}>
           <div className={styles.headerLeft}>
@@ -358,10 +330,7 @@ const DynamicChannelModal = ({
                   ? `${beneficiaryData.first_name || ""} ${beneficiaryData.last_name || ""}`.trim() ||
                     beneficiaryData.company_name
                   : t("Beneficiary")}{" "}
-                •{" "}
-                {beneficiaryData?.country_name ||
-                  beneficiaryData?.country_iso_code ||
-                  ""}
+                • {beneficiaryData?.country_name || beneficiaryData?.country_iso_code || ""}
               </p>
             </div>
           </div>
@@ -427,10 +396,7 @@ const DynamicChannelModal = ({
                   <MenuItem value="crypto" className={styles.customMenuItem}>
                     {t("Crypto wallet")}
                   </MenuItem>
-                  <MenuItem
-                    value="mobile_wallet"
-                    className={styles.customMenuItem}
-                  >
+                  <MenuItem value="mobile_wallet" className={styles.customMenuItem}>
                     {t("Mobile wallet")}
                   </MenuItem>
                 </Select>
@@ -487,9 +453,7 @@ const DynamicChannelModal = ({
                 ) : (
                   <>
                     <div className={styles.inputGroup}>
-                      <label className={styles.fieldLabel}>
-                        {t("SWIFT / BIC")} *
-                      </label>
+                      <label className={styles.fieldLabel}>{t("SWIFT / BIC")} *</label>
                       <TextField
                         fullWidth
                         size="small"
@@ -507,9 +471,7 @@ const DynamicChannelModal = ({
                       />
                     </div>
                     <div className={styles.inputGroup}>
-                      <label className={styles.fieldLabel}>
-                        {t("Account Number")}
-                      </label>
+                      <label className={styles.fieldLabel}>{t("Account Number")}</label>
                       <TextField
                         fullWidth
                         size="small"
@@ -518,10 +480,7 @@ const DynamicChannelModal = ({
                         placeholder="1234567890"
                         value={bankFormState.bank_account_number}
                         onChange={(e) => {
-                          const val = e.target.value.replace(
-                            /[^a-zA-Z0-9]/g,
-                            "",
-                          );
+                          const val = e.target.value.replace(/[^a-zA-Z0-9]/g, "");
                           setBankFormState((prev) => ({
                             ...prev,
                             bank_account_number: val,
@@ -573,9 +532,7 @@ const DynamicChannelModal = ({
                 ) : null}
 
                 <div className={styles.inputGroup}>
-                  <label className={styles.fieldLabel}>
-                    {t("Account Holder Name")}
-                  </label>
+                  <label className={styles.fieldLabel}>{t("Account Holder Name")}</label>
                   <TextField
                     fullWidth
                     size="small"
@@ -594,9 +551,7 @@ const DynamicChannelModal = ({
                 </div>
 
                 <div className={styles.inputGroup}>
-                  <label className={styles.fieldLabel}>
-                    {t("Bank Name")} *
-                  </label>
+                  <label className={styles.fieldLabel}>{t("Bank Name")} *</label>
                   <TextField
                     fullWidth
                     size="small"
@@ -616,23 +571,15 @@ const DynamicChannelModal = ({
                 </div>
 
                 <div className={styles.inputGroup}>
-                  <label className={styles.fieldLabel}>
-                    {t("Bank Country")} *
-                  </label>
+                  <label className={styles.fieldLabel}>{t("Bank Country")} *</label>
                   <CountryDropDown
                     country={
-                      selectedBankCountry ||
-                      bankCountryIsoCode ||
-                      beneficiaryData?.country_iso_code
+                      selectedBankCountry || bankCountryIsoCode || beneficiaryData?.country_iso_code
                     }
                     onSelect={(selected) => {
                       const cName =
-                        selected?.country_name ||
-                        selected?.name ||
-                        selected?.alpha3 ||
-                        "";
-                      const cCode =
-                        selected?.alpha3 || selected?.country_iso_code || "";
+                        selected?.country_name || selected?.name || selected?.alpha3 || "";
+                      const cCode = selected?.alpha3 || selected?.country_iso_code || "";
                       setSelectedBankCountry(cCode);
                       setSelectedBankCountryName(cName);
                     }}
@@ -647,9 +594,7 @@ const DynamicChannelModal = ({
                   }}
                 >
                   <div className={styles.inputGroup}>
-                    <label className={styles.fieldLabel}>
-                      {t("Branch Name")}
-                    </label>
+                    <label className={styles.fieldLabel}>{t("Branch Name")}</label>
                     <TextField
                       fullWidth
                       size="small"
@@ -667,9 +612,7 @@ const DynamicChannelModal = ({
                     />
                   </div>
                   <div className={styles.inputGroup}>
-                    <label className={styles.fieldLabel}>
-                      {t("Bank City")} *
-                    </label>
+                    <label className={styles.fieldLabel}>{t("Bank City")} *</label>
                     <TextField
                       fullWidth
                       size="small"
@@ -697,9 +640,7 @@ const DynamicChannelModal = ({
                   }}
                 >
                   <div className={styles.inputGroup}>
-                    <label className={styles.fieldLabel}>
-                      {t("Branch Address / Street")} *
-                    </label>
+                    <label className={styles.fieldLabel}>{t("Branch Address / Street")} *</label>
                     <TextField
                       fullWidth
                       size="small"
@@ -718,9 +659,7 @@ const DynamicChannelModal = ({
                     />
                   </div>
                   <div className={styles.inputGroup}>
-                    <label className={styles.fieldLabel}>
-                      {t("Postal Code")} *
-                    </label>
+                    <label className={styles.fieldLabel}>{t("Postal Code")} *</label>
                     <TextField
                       fullWidth
                       size="small"
@@ -760,9 +699,7 @@ const DynamicChannelModal = ({
                 </div>
 
                 <div className={styles.inputGroup}>
-                  <label className={styles.fieldLabel}>
-                    {t("Wallet Address")}
-                  </label>
+                  <label className={styles.fieldLabel}>{t("Wallet Address")}</label>
                   <TextField
                     fullWidth
                     size="small"
@@ -780,9 +717,7 @@ const DynamicChannelModal = ({
             {channelType === "mobile_wallet" && (
               <>
                 <div className={styles.inputGroup}>
-                  <label className={styles.fieldLabel}>
-                    {t("Mobile Provider")}
-                  </label>
+                  <label className={styles.fieldLabel}>{t("Mobile Provider")}</label>
                   <Select
                     value={mobileProvider}
                     onChange={(e) => {
@@ -813,15 +748,10 @@ const DynamicChannelModal = ({
                 </div>
 
                 <div className={styles.inputGroup}>
-                  <label className={styles.fieldLabel}>
-                    {t("Mobile Number / Wallet Account")}
-                  </label>
+                  <label className={styles.fieldLabel}>{t("Mobile Number / Wallet Account")}</label>
                   <PhoneInput
                     key={mobilePhoneKey}
-                    country={
-                      beneficiaryData?.country_iso_code ||
-                      beneficiaryData?.country_name
-                    }
+                    country={beneficiaryData?.country_iso_code || beneficiaryData?.country_name}
                     phone={mobilePhonePrefillRef.current}
                     setPhone={(val) => setMobileNumber(val)}
                     setCountry={() => {}}
@@ -832,19 +762,11 @@ const DynamicChannelModal = ({
           </div>
 
           <div className={styles.modalFooter}>
-            <button
-              type="button"
-              onClick={handleClose}
-              className={styles.backButton}
-            >
+            <button type="button" onClick={handleClose} className={styles.backButton}>
               <ArrowLeft size={16} style={{ marginRight: "6px" }} />
               {t("Back")}
             </button>
-            <button
-              type="submit"
-              disabled={submitting}
-              className={styles.saveButton}
-            >
+            <button type="submit" disabled={submitting} className={styles.saveButton}>
               {submitting ? t("Saving...") : t("Save channel")}
             </button>
           </div>

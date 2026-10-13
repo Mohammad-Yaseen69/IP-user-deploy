@@ -29,12 +29,7 @@ import { useLocation } from "react-router";
 // new
 import w2w from "./files/w2w.png";
 
-const WalletTransfer = ({
-  sendPaymentType,
-  setStep,
-  setSendPaymentType,
-  setIsWallet,
-}) => {
+const WalletTransfer = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) => {
   const { t } = useTranslation();
   const { userWallets, authHeader, userDetails } = useContext(UserContext);
   const [subStep, setSubStep] = useState(1);
@@ -74,12 +69,9 @@ const WalletTransfer = ({
   useEffect(() => {
     if (wallet) {
       axios
-        .get(
-          `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-by-wallet-id/${wallet}`,
-          {
-            headers: authHeader,
-          },
-        )
+        .get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-by-wallet-id/${wallet}`, {
+          headers: authHeader,
+        })
         .then((res) => {
           const decrypted = decryptData(res.data.data);
           if (decrypted.status === true) {
@@ -288,12 +280,9 @@ const WalletTransfer = ({
                     <div style={{ height: "100%" }}>
                       <h4 className="head_left_side">
                         {subStep === 1 && t("Enter the Wallet ID")}
-                        {subStep === 2 &&
-                          t("Enter the Amount You Wish to Transfer.")}
+                        {subStep === 2 && t("Enter the Amount You Wish to Transfer.")}
                         {subStep === 3 && t("Select Payment Type.")}
-                        {subStep === 4 &&
-                          confirmed &&
-                          t("Authenticate Your Payment.")}
+                        {subStep === 4 && confirmed && t("Authenticate Your Payment.")}
                       </h4>
                       {subStep === 4 && !confirmed ? (
                         <div
@@ -379,10 +368,7 @@ const WalletTransfer = ({
                       }}
                     >
                       {wallet && subStep > 1 && subStep < 4 && (
-                        <SelectedWallet
-                          wallet={walletDetails}
-                          setSubStep={setSubStep}
-                        />
+                        <SelectedWallet wallet={walletDetails} setSubStep={setSubStep} />
                       )}
                       {subStep > 2 && subStep < 4 && (
                         <SelectedAmountAndCurrency
@@ -409,11 +395,7 @@ const WalletTransfer = ({
                 </div>
                 <div style={{ flex: 1.6, minWidth: "300px", height: "100%" }}>
                   {subStep === 1 && (
-                    <WalletDetails
-                      wallet={wallet}
-                      setWallet={setWallet}
-                      setSubStep={setSubStep}
-                    />
+                    <WalletDetails wallet={wallet} setWallet={setWallet} setSubStep={setSubStep} />
                   )}
                   {subStep === 2 && (
                     <AmountAndCurrency
@@ -458,34 +440,30 @@ const WalletTransfer = ({
                       sendType={sendType}
                     />
                   )}
-                  {subStep === 3 &&
-                    paymentType.value === "subscription" &&
-                    notInstant && (
-                      <Recursive
-                        setSubStep={setSubStep}
-                        recursiveType={recursiveType}
-                        setRecursiveType={setRecursiveType}
-                        unlimited={unlimited}
-                        setUnlimited={setUnlimited}
-                        recDay={recDay}
-                        setRecDay={setRecDay}
-                        recCycle={recCycle}
-                        setRecCycle={setRecCycle}
-                        recStartDate={recStartDate}
-                        setRecStartDate={setRecStartDate}
-                      />
-                    )}
-                  {subStep === 3 &&
-                    paymentType.value === "schedule" &&
-                    notInstant && (
-                      <SchedulePayment
-                        scheduleDate={scheduleDate}
-                        setScheduleDate={setScheduleDate}
-                        scheduleTime={scheduleTime}
-                        setScheduleTime={setScheduleTime}
-                        setSubStep={setSubStep}
-                      />
-                    )}
+                  {subStep === 3 && paymentType.value === "subscription" && notInstant && (
+                    <Recursive
+                      setSubStep={setSubStep}
+                      recursiveType={recursiveType}
+                      setRecursiveType={setRecursiveType}
+                      unlimited={unlimited}
+                      setUnlimited={setUnlimited}
+                      recDay={recDay}
+                      setRecDay={setRecDay}
+                      recCycle={recCycle}
+                      setRecCycle={setRecCycle}
+                      recStartDate={recStartDate}
+                      setRecStartDate={setRecStartDate}
+                    />
+                  )}
+                  {subStep === 3 && paymentType.value === "schedule" && notInstant && (
+                    <SchedulePayment
+                      scheduleDate={scheduleDate}
+                      setScheduleDate={setScheduleDate}
+                      scheduleTime={scheduleTime}
+                      setScheduleTime={setScheduleTime}
+                      setSubStep={setSubStep}
+                    />
+                  )}
                   {subStep === 4 && !confirmed && (
                     <ConfirmSendWallet
                       amount={amount}

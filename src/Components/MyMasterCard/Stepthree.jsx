@@ -22,11 +22,7 @@ const Stepthree = () => {
   return (
     <>
       <div className={styles.top} style={{ width: "100%" }}>
-        <h2>
-          {!isKycVerified
-            ? t("Let's Verify Your Identity")
-            : t("You're Already Verified!")}
-        </h2>
+        <h2>{!isKycVerified ? t("Let's Verify Your Identity") : t("You're Already Verified!")}</h2>
         <p>
           {!isKycVerified
             ? t(

@@ -10,12 +10,9 @@ export const useGetApiKey = ({ accountId, headers, enabled = true }) => {
     queryKey: ["userApiKey", accountId],
     enabled: !!accountId && enabled,
     queryFn: async () => {
-      const res = await axios.get(
-        `${BASE}/api/userkey/get-apikey/${accountId}`,
-        {
-          headers,
-        },
-      );
+      const res = await axios.get(`${BASE}/api/userkey/get-apikey/${accountId}`, {
+        headers,
+      });
       return decryptData(res.data.data);
     },
     retry: 0,
@@ -29,11 +26,7 @@ export const useCreateUserKey = ({ headers, accountId }) => {
     mutationFn: async ({ webhook_url, account, features }) => {
       const payload = { webhook_url, account, features };
       const data = encryptData(payload);
-      const res = await axios.post(
-        `${BASE}/api/userkey/create-user-key`,
-        { data },
-        { headers },
-      );
+      const res = await axios.post(`${BASE}/api/userkey/create-user-key`, { data }, { headers });
       return decryptData(res.data.data);
     },
     onSuccess: (data, variables) => {
@@ -49,11 +42,7 @@ export const useRegenerateUserKey = ({ headers, accountId }) => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async () => {
-      const res = await axios.post(
-        `${BASE}/api/userkey/regenerate-user-key`,
-        {},
-        { headers },
-      );
+      const res = await axios.post(`${BASE}/api/userkey/regenerate-user-key`, {}, { headers });
       return decryptData(res.data.data);
     },
     onSuccess: (data) => {
@@ -75,11 +64,7 @@ export const useUpdateWebhookUrl = ({ headers, accountId }) => {
   return useMutation({
     mutationFn: async ({ webhook_url }) => {
       const data = encryptData({ webhook_url });
-      const res = await axios.put(
-        `${BASE}/api/userkey/update-webhook-url`,
-        { data },
-        { headers },
-      );
+      const res = await axios.put(`${BASE}/api/userkey/update-webhook-url`, { data }, { headers });
       return decryptData(res.data.data);
     },
     onSuccess: (data) => {
@@ -100,11 +85,7 @@ export const useUpdateFeatures = ({ headers, accountId }) => {
   return useMutation({
     mutationFn: async ({ features }) => {
       const data = encryptData({ features });
-      const res = await axios.put(
-        `${BASE}/api/userkey/update-features`,
-        { data },
-        { headers },
-      );
+      const res = await axios.put(`${BASE}/api/userkey/update-features`, { data }, { headers });
       return decryptData(res.data.data);
     },
     onSuccess: (data) => {

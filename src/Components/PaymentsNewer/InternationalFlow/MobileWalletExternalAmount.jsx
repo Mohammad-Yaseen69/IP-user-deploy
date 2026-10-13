@@ -4,13 +4,9 @@ import { Info } from "react-feather";
 const getExternalAmount = (exchangeRate) =>
   exchangeRate?.external_transaction_data || exchangeRate?.external_amount;
 
-const MobileWalletExternalAmount = ({
-  data,
-  externalData: externalDataProp,
-}) => {
+const MobileWalletExternalAmount = ({ data, externalData: externalDataProp }) => {
   const { t } = useTranslation();
-  const externalData =
-    externalDataProp || getExternalAmount(data?.exchange_rate);
+  const externalData = externalDataProp || getExternalAmount(data?.exchange_rate);
   const currency = externalData?.total?.currency || externalData?.currency;
   const value = externalData?.total?.value || externalData?.value;
 
@@ -43,9 +39,7 @@ const MobileWalletExternalAmount = ({
             letterSpacing: "-0.28px",
           }}
         >
-          <strong>
-            {t("You'll pay the following amout through your mobile wallet.")}
-          </strong>
+          <strong>{t("You'll pay the following amout through your mobile wallet.")}</strong>
         </span>
       </div>
       <div

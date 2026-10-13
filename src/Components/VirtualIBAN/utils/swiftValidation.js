@@ -1,5 +1,4 @@
-export const BIC_REGEX =
-  /^[A-Za-z]{4}[A-Za-z]{2}[A-Za-z0-9]{2}([A-Za-z0-9]{3})?$/;
+export const BIC_REGEX = /^[A-Za-z]{4}[A-Za-z]{2}[A-Za-z0-9]{2}([A-Za-z0-9]{3})?$/;
 export const DESCRIPTION_REGEX = /^[a-zA-Z0-9\s,.-]{5,34}$/;
 export const ISO3_REGEX = /^[A-Za-z]{3}$/;
 export const NON_EMPTY_REGEX = /^(?!\s*$).+/;
@@ -49,11 +48,7 @@ export const validateSwiftBeneficiary = (beneficiary) => {
   //     errors.push("Postal code is required");
   // }
 
-  const bank =
-    beneficiary.bank_details?.[0] ||
-    beneficiary.bank ||
-    beneficiary?.bank_details ||
-    {};
+  const bank = beneficiary.bank_details?.[0] || beneficiary.bank || beneficiary?.bank_details || {};
   const accountOrIban = bank.iban || bank.extras?.iban || bank.account_number;
   if (!accountOrIban || !String(accountOrIban).trim()) {
     errors.push("Bank account number / IBAN is required");

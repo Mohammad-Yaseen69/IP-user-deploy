@@ -5,8 +5,7 @@
   font-family: "themify";
   src: url("#{$ti-font-path}/themify.eot?-fvbane");
   src:
-    url("#{$ti-font-path}/themify.eot?#iefix-fvbane")
-      format("embedded-opentype"),
+    url("#{$ti-font-path}/themify.eot?#iefix-fvbane") format("embedded-opentype"),
     url("#{$ti-font-path}/themify.woff?-fvbane") format("woff"),
     url("#{$ti-font-path}//themify.ttf?-fvbane") format("truetype"),
     url("#{$ti-font-path}/themify.svg?-fvbane#themify") format("svg");

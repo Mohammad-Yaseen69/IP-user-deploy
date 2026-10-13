@@ -75,13 +75,7 @@ const CryptoFiatMobile = ({ step, setStep, setCurrentFlow, setAction }) => {
             setStep={setStep}
           />
         )}
-        {step === 4 && (
-          <CryptoWalletDetails
-            setStep={setStep}
-            setWallet={() => {}}
-            wallet={""}
-          />
-        )}
+        {step === 4 && <CryptoWalletDetails setStep={setStep} setWallet={() => {}} wallet={""} />}
         {step === 5 && (
           <ConfirmCrypto
             amount={amount}

@@ -119,10 +119,7 @@ const MyMasterCard = () => {
       <div className={styles.top}>
         <h4
           style={{
-            display:
-              width < 1000 &&
-              (addFundsMobile || ctcMobile || ctwMobile) &&
-              "none",
+            display: width < 1000 && (addFundsMobile || ctcMobile || ctwMobile) && "none",
           }}
         >
           {t("My Mastercard")}
@@ -166,8 +163,7 @@ const MyMasterCard = () => {
                   setCardPurchased={setCardPurchased}
                   transactions={transactions}
                 />
-                {((!addFundsMobile && !ctcMobile && !ctwMobile) ||
-                  width > 1000) && (
+                {((!addFundsMobile && !ctcMobile && !ctwMobile) || width > 1000) && (
                   <TransactionsTable
                     ref={ref}
                     cardNo={currentCardDetails?.card_number}

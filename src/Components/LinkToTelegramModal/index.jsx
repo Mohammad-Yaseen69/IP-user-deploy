@@ -122,18 +122,13 @@ const LinktoTelegramModal = ({ isOpen, toggle }) => {
             <div className={styles.left}>
               {window.innerWidth > 900 && (
                 <h1>
-                  {t("Link Your Instagram Account to InstaPay").replace(
-                    "Instagram",
-                    "Telegram",
-                  )}
+                  {t("Link Your Instagram Account to InstaPay").replace("Instagram", "Telegram")}
                 </h1>
               )}
               <div className={styles.guide}>
                 {steps.map((item) => (
                   <div className={styles.guide_item} key={item.step}>
-                    <h2 className={styles.step_count}>
-                      {t(item.step).split(" – ")[0]}
-                    </h2>
+                    <h2 className={styles.step_count}>{t(item.step).split(" – ")[0]}</h2>
                     <div className={styles.gi_right}>
                       <h3>{t(item.name).split(" – ")[1]}</h3>
                       <p>{t(item.desc)}</p>
@@ -179,9 +174,7 @@ const LinktoTelegramModal = ({ isOpen, toggle }) => {
                       padding: ".6rem 1rem",
                       justifyContent: "center",
                     }}
-                    onClick={() =>
-                      window.open("https://t.me/instapay_swiss_bot/", "_blank")
-                    }
+                    onClick={() => window.open("https://t.me/instapay_swiss_bot/", "_blank")}
                   >
                     <div
                       style={{
@@ -196,10 +189,7 @@ const LinktoTelegramModal = ({ isOpen, toggle }) => {
                     >
                       <Instagram color="white" size={20} />
                     </div>
-                    {t("Go to InstaPay Instagram account").replace(
-                      "Instagram",
-                      "Telegram",
-                    )}
+                    {t("Go to InstaPay Instagram account").replace("Instagram", "Telegram")}
                   </button>
                 </div>
               ) : (
@@ -214,14 +204,9 @@ const LinktoTelegramModal = ({ isOpen, toggle }) => {
                   <button
                     className={styles.button}
                     style={{ color: "white" }}
-                    onClick={() =>
-                      window.open("https://t.me/instapay_swiss_bot/", "_blank")
-                    }
+                    onClick={() => window.open("https://t.me/instapay_swiss_bot/", "_blank")}
                   >
-                    {t("Go to InstaPay Instagram account").replace(
-                      "Instagram",
-                      "Telegram",
-                    )}
+                    {t("Go to InstaPay Instagram account").replace("Instagram", "Telegram")}
                   </button>
                 </div>
               )}
@@ -236,10 +221,7 @@ const LinktoTelegramModal = ({ isOpen, toggle }) => {
                   }}
                 >
                   <h1>
-                    {t("Link Your Instagram Account to InstaPay").replace(
-                      "Instagram",
-                      "Telegram",
-                    )}
+                    {t("Link Your Instagram Account to InstaPay").replace("Instagram", "Telegram")}
                   </h1>
                   <img
                     src={close}

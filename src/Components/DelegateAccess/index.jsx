@@ -98,13 +98,7 @@ const DelegateAccess = () => {
               className={`${styles.tabBtn} ${!isRole ? styles.activeTab : ""}`}
               onClick={handleRoleAgentToggle}
             >
-              <img
-                src={userFour}
-                alt="userFour"
-                width={20}
-                height={20}
-                loading="lazy"
-              />
+              <img src={userFour} alt="userFour" width={20} height={20} loading="lazy" />
               {t("Manage Agents")}
             </button>
             <button
@@ -132,29 +126,20 @@ const DelegateAccess = () => {
           {width < 700 && (
             <div className={styles.mobileAddBtn}>
               {width < 700 && (
-                <button
-                  className={styles.addBtn2}
-                  onClick={() => naviagte("/activity")}
-                >
+                <button className={styles.addBtn2} onClick={() => naviagte("/activity")}>
                   <FaHistory size={20} /> {t("Activity Feed")}
                 </button>
               )}
               {width < 700 &&
                 (isRole
                   ? hasPermission("delegate-access.roles.add") && (
-                      <button
-                        className={styles.addBtn}
-                        onClick={handleModalOpen}
-                      >
+                      <button className={styles.addBtn} onClick={handleModalOpen}>
                         {t("Add Role")}
                         <Plus size={20} />
                       </button>
                     )
                   : hasPermission("delegate-access.agents.add") && (
-                      <button
-                        className={styles.addBtn}
-                        onClick={handleModalOpen}
-                      >
+                      <button className={styles.addBtn} onClick={handleModalOpen}>
                         {t("Add Agent")} <Plus size={20} />
                       </button>
                     ))}
@@ -168,9 +153,7 @@ const DelegateAccess = () => {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder={t(
-                `${isRole ? "Search for Role" : "Search for Agent"}`,
-              )}
+              placeholder={t(`${isRole ? "Search for Role" : "Search for Agent"}`)}
             />
           </div>
         </div>

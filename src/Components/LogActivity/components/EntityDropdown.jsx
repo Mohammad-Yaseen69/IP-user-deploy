@@ -2,12 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronDown, X } from "react-feather";
 import { useTranslation } from "react-i18next";
 import styles from "../styles/Index.module.css";
-export const EntityDropdown = ({
-  value,
-  onChange,
-  fmt,
-  adminActivitiesData,
-}) => {
+export const EntityDropdown = ({ value, onChange, fmt, adminActivitiesData }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef();
   const { t } = useTranslation();
@@ -30,9 +25,7 @@ export const EntityDropdown = ({
           borderColor: open ? "#4f46e5" : value.length ? "#c7d2fe" : "#e2e8f0",
         }}
       >
-        <span className={styles.filterText}>
-          {value ? fmt(value) : t("Filter by Entity")}
-        </span>
+        <span className={styles.filterText}>{value ? fmt(value) : t("Filter by Entity")}</span>
 
         <div className={styles.filterActions}>
           {value && (
@@ -66,9 +59,7 @@ export const EntityDropdown = ({
                 onChange(entity === value ? "" : entity);
                 setOpen(false);
               }}
-              className={`${styles.dropdownItem} ${
-                entity === value ? styles.activeItem : ""
-              }`}
+              className={`${styles.dropdownItem} ${entity === value ? styles.activeItem : ""}`}
               onMouseEnter={(e) => {
                 if (entity !== value) e.target.style.background = "#f8fafc";
               }}

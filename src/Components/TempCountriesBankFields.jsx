@@ -40,9 +40,7 @@ const TempCountriesBankFields = () => {
 
   const buttonClick = async () => {
     setData([]);
-    const results = await Promise.all(
-      countries.map((country) => getData(country)),
-    );
+    const results = await Promise.all(countries.map((country) => getData(country)));
     const filteredResults = results.filter((result) => result !== null);
     setData(
       dataType === "all"
@@ -59,11 +57,7 @@ const TempCountriesBankFields = () => {
 
   return (
     <div>
-      <input
-        type="text"
-        value={filename}
-        onChange={(e) => setFileName(e.target.value)}
-      />
+      <input type="text" value={filename} onChange={(e) => setFileName(e.target.value)} />
       <div>
         <label>{t("Data Type")}</label>
         <select value={service} onChange={(e) => setService(e.target.value)}>

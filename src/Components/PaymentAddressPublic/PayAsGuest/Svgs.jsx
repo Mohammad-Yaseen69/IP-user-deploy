@@ -1,11 +1,5 @@
 const CardSvg = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="47"
-    height="47"
-    viewBox="0 0 47 47"
-    fill="none"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="47" height="47" viewBox="0 0 47 47" fill="none">
     <g filter="url(#filter0_d_2202_242)">
       <rect
         x="6"
@@ -15,14 +9,7 @@ const CardSvg = () => (
         rx="8"
         fill="url(#paint0_linear_2202_242)"
       />
-      <rect
-        x="6"
-        y="2.69043"
-        width="34.8672"
-        height="34.8672"
-        rx="8"
-        fill="white"
-      />
+      <rect x="6" y="2.69043" width="34.8672" height="34.8672" rx="8" fill="white" />
       <rect
         x="6"
         y="2.69043"
@@ -62,11 +49,7 @@ const CardSvg = () => (
           type="matrix"
           values="0 0 0 0 0.67451 0 0 0 0 0.207843 0 0 0 0 0.623529 0 0 0 0.31 0"
         />
-        <feBlend
-          mode="normal"
-          in2="BackgroundImageFix"
-          result="effect1_dropShadow_2202_242"
-        />
+        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_2202_242" />
         <feBlend
           mode="normal"
           in="SourceGraphic"
@@ -103,13 +86,7 @@ const CardSvg = () => (
 );
 
 const CardActiveSvg = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="47"
-    height="47"
-    viewBox="0 0 47 47"
-    fill="none"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="47" height="47" viewBox="0 0 47 47" fill="none">
     <g filter="url(#filter0_d_2202_322)">
       <rect
         x="6"
@@ -119,14 +96,7 @@ const CardActiveSvg = () => (
         rx="8"
         fill="url(#paint0_linear_2202_322)"
       />
-      <rect
-        x="6"
-        y="2.69043"
-        width="34.8672"
-        height="34.8672"
-        rx="8"
-        fill="white"
-      />
+      <rect x="6" y="2.69043" width="34.8672" height="34.8672" rx="8" fill="white" />
     </g>
     <path
       fillRule="evenodd"
@@ -158,11 +128,7 @@ const CardActiveSvg = () => (
           type="matrix"
           values="0 0 0 0 0.67451 0 0 0 0 0.207843 0 0 0 0 0.623529 0 0 0 0.31 0"
         />
-        <feBlend
-          mode="normal"
-          in2="BackgroundImageFix"
-          result="effect1_dropShadow_2202_322"
-        />
+        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_2202_322" />
         <feBlend
           mode="normal"
           in="SourceGraphic"
@@ -187,22 +153,9 @@ const CardActiveSvg = () => (
 );
 
 const WalletSvg = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="47"
-    height="47"
-    viewBox="0 0 47 47"
-    fill="none"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="47" height="47" viewBox="0 0 47 47" fill="none">
     <g filter="url(#filter0_d_2202_250)">
-      <rect
-        x="6"
-        y="2.86719"
-        width="34.8672"
-        height="34.8672"
-        rx="8"
-        fill="#D9D9D9"
-      />
+      <rect x="6" y="2.86719" width="34.8672" height="34.8672" rx="8" fill="#D9D9D9" />
       <rect
         x="6"
         y="2.86719"
@@ -246,11 +199,7 @@ const WalletSvg = () => (
           type="matrix"
           values="0 0 0 0 0.67451 0 0 0 0 0.207843 0 0 0 0 0.623529 0 0 0 0.31 0"
         />
-        <feBlend
-          mode="normal"
-          in2="BackgroundImageFix"
-          result="effect1_dropShadow_2202_250"
-        />
+        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_2202_250" />
         <feBlend
           mode="normal"
           in="SourceGraphic"
@@ -275,13 +224,7 @@ const WalletSvg = () => (
 );
 
 const WalletActiveSvg = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="47"
-    height="47"
-    viewBox="0 0 47 47"
-    fill="none"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="47" height="47" viewBox="0 0 47 47" fill="none">
     <g filter="url(#filter0_d_2202_328)">
       <rect
         x="6"
@@ -291,14 +234,7 @@ const WalletActiveSvg = () => (
         rx="8"
         fill="url(#paint0_linear_2202_328)"
       />
-      <rect
-        x="6"
-        y="2.86719"
-        width="34.8672"
-        height="34.8672"
-        rx="8"
-        fill="white"
-      />
+      <rect x="6" y="2.86719" width="34.8672" height="34.8672" rx="8" fill="white" />
     </g>
     <path
       fillRule="evenodd"
@@ -334,11 +270,7 @@ const WalletActiveSvg = () => (
           type="matrix"
           values="0 0 0 0 0.67451 0 0 0 0 0.207843 0 0 0 0 0.623529 0 0 0 0.31 0"
         />
-        <feBlend
-          mode="normal"
-          in2="BackgroundImageFix"
-          result="effect1_dropShadow_2202_328"
-        />
+        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_2202_328" />
         <feBlend
           mode="normal"
           in="SourceGraphic"
@@ -363,22 +295,9 @@ const WalletActiveSvg = () => (
 );
 
 const PaypalSvg = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="47"
-    height="47"
-    viewBox="0 0 47 47"
-    fill="none"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="47" height="47" viewBox="0 0 47 47" fill="none">
     <g filter="url(#filter0_d_2202_264)">
-      <rect
-        x="6"
-        y="2.60156"
-        width="34.8672"
-        height="34.8672"
-        rx="8"
-        fill="#D9D9D9"
-      />
+      <rect x="6" y="2.60156" width="34.8672" height="34.8672" rx="8" fill="#D9D9D9" />
       <rect
         x="6"
         y="2.60156"
@@ -418,11 +337,7 @@ const PaypalSvg = () => (
           type="matrix"
           values="0 0 0 0 0.67451 0 0 0 0 0.207843 0 0 0 0 0.623529 0 0 0 0.31 0"
         />
-        <feBlend
-          mode="normal"
-          in2="BackgroundImageFix"
-          result="effect1_dropShadow_2202_264"
-        />
+        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_2202_264" />
         <feBlend
           mode="normal"
           in="SourceGraphic"
@@ -447,13 +362,7 @@ const PaypalSvg = () => (
 );
 
 const PaypalActiveSvg = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="47"
-    height="47"
-    viewBox="0 0 47 47"
-    fill="none"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="47" height="47" viewBox="0 0 47 47" fill="none">
     <g filter="url(#filter0_d_2202_338)">
       <rect
         x="6"
@@ -463,14 +372,7 @@ const PaypalActiveSvg = () => (
         rx="8"
         fill="url(#paint0_linear_2202_338)"
       />
-      <rect
-        x="6"
-        y="2.60156"
-        width="34.8672"
-        height="34.8672"
-        rx="8"
-        fill="white"
-      />
+      <rect x="6" y="2.60156" width="34.8672" height="34.8672" rx="8" fill="white" />
     </g>
     <path
       fillRule="evenodd"
@@ -502,11 +404,7 @@ const PaypalActiveSvg = () => (
           type="matrix"
           values="0 0 0 0 0.67451 0 0 0 0 0.207843 0 0 0 0 0.623529 0 0 0 0.31 0"
         />
-        <feBlend
-          mode="normal"
-          in2="BackgroundImageFix"
-          result="effect1_dropShadow_2202_338"
-        />
+        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_2202_338" />
         <feBlend
           mode="normal"
           in="SourceGraphic"
@@ -578,13 +476,7 @@ export const pagSvgs = {
 };
 
 export const PaymentReviewSVG = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="100"
-    height="81"
-    viewBox="0 0 100 81"
-    fill="none"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="100" height="81" viewBox="0 0 100 81" fill="none">
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -609,13 +501,7 @@ export const PaymentReviewSVG = () => (
 
 export const AlarmIcon = () => {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="14"
-      height="18"
-      viewBox="0 0 14 18"
-      fill="none"
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18" fill="none">
       <path
         d="M2.58422 6.66665H2.50004V4.99998C2.50004 2.69879 4.36552 0.833313 6.66671 0.833313C8.96789 0.833313 10.8334 2.69879 10.8334 4.99998V6.66665H10.7492M6.66671 9.99998V11.6666M12.5 10.8333C12.5 14.055 9.88837 16.6666 6.66671 16.6666C3.44505 16.6666 0.833374 14.055 0.833374 10.8333C0.833374 7.61165 3.44505 4.99998 6.66671 4.99998C9.88837 4.99998 12.5 7.61165 12.5 10.8333Z"
         stroke="#717680"
@@ -628,13 +514,7 @@ export const AlarmIcon = () => {
 };
 
 export const StuckCircle = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 20 20"
-    fill="none"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
     <path
       opacity="0.28"
       d="M15.3028 15.3032L12.209 12.2094C12.7949 11.6234 13.124 10.8287 13.124 10C13.124 9.17139 12.7949 8.37667 12.209 7.79065L15.3028 4.6969C16.7092 6.10341 17.4993 8.01099 17.4993 10C17.4993 11.9891 16.7092 13.8966 15.3028 15.3032ZM4.69652 4.6969C3.29011 6.10341 2.5 8.01099 2.5 10C2.5 11.9891 3.29011 13.8966 4.69652 15.3032L7.79027 12.2094C7.20443 11.6234 6.87532 10.8287 6.87532 10C6.87532 9.17139 7.20443 8.37667 7.79027 7.79065L4.69652 4.6969Z"
@@ -648,13 +528,7 @@ export const StuckCircle = () => (
 );
 
 export const User = ({ color = "#fff" }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="22"
-    height="21"
-    viewBox="0 0 22 21"
-    fill="none"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="21" viewBox="0 0 22 21" fill="none">
     <path
       d="M21.0255 19.0965C19.4787 16.4224 17.095 14.5049 14.3132 13.5959C15.6892 12.7767 16.7583 11.5286 17.3563 10.043C17.9542 8.55749 18.048 6.91673 17.6232 5.37273C17.1984 3.82874 16.2786 2.46687 15.0049 1.49626C13.7312 0.525663 12.1741 0 10.5727 0C8.97132 0 7.41423 0.525663 6.14053 1.49626C4.86683 2.46687 3.94695 3.82874 3.52216 5.37273C3.09737 6.91673 3.19116 8.55749 3.78912 10.043C4.38708 11.5286 5.45614 12.7767 6.83215 13.5959C4.05035 14.5039 1.66668 16.4214 0.119881 19.0965C0.0631569 19.189 0.0255324 19.2919 0.00922714 19.3992C-0.00707815 19.5065 -0.00173395 19.6159 0.0249444 19.7211C0.0516228 19.8262 0.0990949 19.925 0.16456 20.0115C0.230025 20.098 0.312156 20.1706 0.406109 20.2249C0.500062 20.2791 0.603932 20.314 0.711592 20.3275C0.819251 20.341 0.928519 20.3328 1.03295 20.3033C1.13738 20.2739 1.23485 20.2238 1.31963 20.1561C1.4044 20.0884 1.47475 20.0044 1.52652 19.909C3.43996 16.6021 6.82199 14.6278 10.5727 14.6278C14.3234 14.6278 17.7054 16.6021 19.6189 19.909C19.6706 20.0044 19.741 20.0884 19.8258 20.1561C19.9105 20.2238 20.008 20.2739 20.1124 20.3033C20.2169 20.3328 20.3261 20.341 20.4338 20.3275C20.5415 20.314 20.6453 20.2791 20.7393 20.2249C20.8332 20.1706 20.9154 20.098 20.9808 20.0115C21.0463 19.925 21.0938 19.8262 21.1204 19.7211C21.1471 19.6159 21.1525 19.5065 21.1362 19.3992C21.1199 19.2919 21.0822 19.189 21.0255 19.0965ZM4.88519 7.31526C4.88519 6.19038 5.21876 5.09076 5.84371 4.15546C6.46866 3.22015 7.35693 2.49117 8.39618 2.0607C9.43544 1.63022 10.579 1.51759 11.6823 1.73705C12.7855 1.9565 13.799 2.49818 14.5944 3.29359C15.3898 4.089 15.9315 5.10242 16.1509 6.20569C16.3704 7.30895 16.2577 8.45252 15.8273 9.49178C15.3968 10.531 14.6678 11.4193 13.7325 12.0442C12.7972 12.6692 11.6976 13.0028 10.5727 13.0028C9.06477 13.0012 7.61907 12.4014 6.5528 11.3352C5.48654 10.2689 4.88681 8.82319 4.88519 7.31526Z"
       fill={color}
@@ -663,13 +537,7 @@ export const User = ({ color = "#fff" }) => (
 );
 
 export const IdDoc = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    viewBox="0 0 16 16"
-    fill="none"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
     <path
       opacity="0.28"
       d="M13.5 3H2.5C2.36739 3 2.24021 3.05268 2.14645 3.14645C2.05268 3.24021 2 3.36739 2 3.5V12.5C2 12.6326 2.05268 12.7598 2.14645 12.8536C2.24021 12.9473 2.36739 13 2.5 13H13.5C13.6326 13 13.7598 12.9473 13.8536 12.8536C13.9473 12.7598 14 12.6326 14 12.5V3.5C14 3.36739 13.9473 3.24021 13.8536 3.14645C13.7598 3.05268 13.6326 3 13.5 3ZM6 9C5.70333 9 5.41332 8.91203 5.16664 8.7472C4.91997 8.58238 4.72771 8.34811 4.61418 8.07403C4.50065 7.79994 4.47094 7.49834 4.52882 7.20736C4.5867 6.91639 4.72956 6.64912 4.93934 6.43934C5.14912 6.22956 5.41639 6.0867 5.70736 6.02882C5.99834 5.97094 6.29994 6.00065 6.57403 6.11418C6.84811 6.22771 7.08238 6.41997 7.2472 6.66664C7.41203 6.91332 7.5 7.20333 7.5 7.5C7.5 7.89782 7.34196 8.27936 7.06066 8.56066C6.77936 8.84196 6.39782 9 6 9Z"
@@ -683,13 +551,7 @@ export const IdDoc = () => (
 );
 
 export const Buildings = ({ color = "#5926F0" }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="25"
-    height="22"
-    viewBox="0 0 25 22"
-    fill="none"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="22" viewBox="0 0 25 22" fill="none">
     <path
       d="M23.5625 19.5011H21.9375V8.12606C21.9375 7.69508 21.7663 7.28175 21.4615 6.97701C21.1568 6.67226 20.7435 6.50106 20.3125 6.50106H13.8125V1.62606C13.8127 1.33179 13.733 1.043 13.5819 0.790502C13.4307 0.538004 13.2139 0.331278 12.9545 0.19239C12.6951 0.0535019 12.4028 -0.0123358 12.1089 0.00190416C11.8149 0.0161442 11.5304 0.109927 11.2856 0.273244L3.16062 5.68856C2.93774 5.83726 2.75508 6.03878 2.62891 6.27516C2.50275 6.51154 2.43699 6.77546 2.4375 7.0434V19.5011H0.8125C0.597012 19.5011 0.390349 19.5867 0.237976 19.739C0.0856024 19.8914 0 20.0981 0 20.3136C0 20.529 0.0856024 20.7357 0.237976 20.8881C0.390349 21.0405 0.597012 21.1261 0.8125 21.1261H23.5625C23.778 21.1261 23.9847 21.0405 24.137 20.8881C24.2894 20.7357 24.375 20.529 24.375 20.3136C24.375 20.0981 24.2894 19.8914 24.137 19.739C23.9847 19.5867 23.778 19.5011 23.5625 19.5011ZM20.3125 8.12606V19.5011H13.8125V8.12606H20.3125ZM4.0625 7.0434L12.1875 1.62606V19.5011H4.0625V7.0434ZM10.5625 9.75106V11.3761C10.5625 11.5915 10.4769 11.7982 10.3245 11.9506C10.1722 12.103 9.96549 12.1886 9.75 12.1886C9.53451 12.1886 9.32785 12.103 9.17548 11.9506C9.0231 11.7982 8.9375 11.5915 8.9375 11.3761V9.75106C8.9375 9.53557 9.0231 9.32891 9.17548 9.17653C9.32785 9.02416 9.53451 8.93856 9.75 8.93856C9.96549 8.93856 10.1722 9.02416 10.3245 9.17653C10.4769 9.32891 10.5625 9.53557 10.5625 9.75106ZM7.3125 9.75106V11.3761C7.3125 11.5915 7.2269 11.7982 7.07452 11.9506C6.92215 12.103 6.71549 12.1886 6.5 12.1886C6.28451 12.1886 6.07785 12.103 5.92548 11.9506C5.7731 11.7982 5.6875 11.5915 5.6875 11.3761V9.75106C5.6875 9.53557 5.7731 9.32891 5.92548 9.17653C6.07785 9.02416 6.28451 8.93856 6.5 8.93856C6.71549 8.93856 6.92215 9.02416 7.07452 9.17653C7.2269 9.32891 7.3125 9.53557 7.3125 9.75106ZM7.3125 15.4386V17.0636C7.3125 17.279 7.2269 17.4857 7.07452 17.6381C6.92215 17.7905 6.71549 17.8761 6.5 17.8761C6.28451 17.8761 6.07785 17.7905 5.92548 17.6381C5.7731 17.4857 5.6875 17.279 5.6875 17.0636V15.4386C5.6875 15.2231 5.7731 15.0164 5.92548 14.864C6.07785 14.7117 6.28451 14.6261 6.5 14.6261C6.71549 14.6261 6.92215 14.7117 7.07452 14.864C7.2269 15.0164 7.3125 15.2231 7.3125 15.4386ZM10.5625 15.4386V17.0636C10.5625 17.279 10.4769 17.4857 10.3245 17.6381C10.1722 17.7905 9.96549 17.8761 9.75 17.8761C9.53451 17.8761 9.32785 17.7905 9.17548 17.6381C9.0231 17.4857 8.9375 17.279 8.9375 17.0636V15.4386C8.9375 15.2231 9.0231 15.0164 9.17548 14.864C9.32785 14.7117 9.53451 14.6261 9.75 14.6261C9.96549 14.6261 10.1722 14.7117 10.3245 14.864C10.4769 15.0164 10.5625 15.2231 10.5625 15.4386Z"
       fill={color}
@@ -698,13 +560,7 @@ export const Buildings = ({ color = "#5926F0" }) => (
 );
 
 export const TimerClock = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    viewBox="0 0 16 16"
-    fill="none"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
     <path
       opacity="0.28"
       d="M14 8C14 9.18669 13.6481 10.3467 12.9888 11.3334C12.3295 12.3201 11.3925 13.0892 10.2961 13.5433C9.19975 13.9974 7.99335 14.1162 6.82946 13.8847C5.66558 13.6532 4.59648 13.0818 3.75736 12.2426C2.91825 11.4035 2.3468 10.3344 2.11529 9.17054C1.88378 8.00666 2.0026 6.80026 2.45673 5.7039C2.91085 4.60754 3.67989 3.67047 4.66658 3.01118C5.65328 2.35189 6.81331 2 8 2C9.5913 2 11.1174 2.63214 12.2426 3.75736C13.3679 4.88258 14 6.4087 14 8Z"
@@ -718,13 +574,7 @@ export const TimerClock = () => (
 );
 
 export const Documents = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    viewBox="0 0 16 16"
-    fill="none"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
     <path
       opacity="0.28"
       d="M13 4.5V11.5C13 11.6326 12.9473 11.7598 12.8536 11.8536C12.7598 11.9473 12.6326 12 12.5 12H11V6.5L8.5 4H5V2.5C5 2.36739 5.05268 2.24021 5.14645 2.14645C5.24021 2.05268 5.36739 2 5.5 2H10.5L13 4.5Z"
@@ -738,13 +588,7 @@ export const Documents = () => (
 );
 
 export const RadioChecked = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 20 20"
-    fill="none"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
     <rect width="20" height="20" rx="10" fill="#4A32E3" />
     <g filter="url(#filter0_d_13918_1095)">
       <circle cx="10" cy="10" r="5" fill="white" />
@@ -769,15 +613,8 @@ export const RadioChecked = () => (
         <feOffset dy="1" />
         <feGaussianBlur stdDeviation="1" />
         <feComposite in2="hardAlpha" operator="out" />
-        <feColorMatrix
-          type="matrix"
-          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.07 0"
-        />
-        <feBlend
-          mode="normal"
-          in2="BackgroundImageFix"
-          result="effect1_dropShadow_13918_1095"
-        />
+        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.07 0" />
+        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_13918_1095" />
         <feBlend
           mode="normal"
           in="SourceGraphic"

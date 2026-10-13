@@ -23,8 +23,7 @@ const RailSelect = ({
   useEffect(() => {
     if (!open) return undefined;
     const close = (event) => {
-      if (rootRef.current && !rootRef.current.contains(event.target))
-        setOpen(false);
+      if (rootRef.current && !rootRef.current.contains(event.target)) setOpen(false);
     };
     document.addEventListener("mousedown", close);
     return () => document.removeEventListener("mousedown", close);
@@ -51,9 +50,7 @@ const RailSelect = ({
             )
           )
         ) : (
-          <span
-            className={`${styles.railSelectMain} ${styles.railSelectPlaceholder}`}
-          >
+          <span className={`${styles.railSelectMain} ${styles.railSelectPlaceholder}`}>
             {placeholder}
           </span>
         )}
@@ -62,9 +59,7 @@ const RailSelect = ({
 
       {open && (
         <div className={styles.railMenu} role="listbox">
-          {options.length === 0 && (
-            <div className={styles.railMenuEmpty}>{emptyText}</div>
-          )}
+          {options.length === 0 && <div className={styles.railMenuEmpty}>{emptyText}</div>}
           {options.map((option) => (
             <button
               type="button"

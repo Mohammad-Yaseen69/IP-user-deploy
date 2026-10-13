@@ -2,14 +2,7 @@ import axios from "axios";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useContext, useState } from "react";
-import {
-  Modal,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Input,
-  ModalHeader,
-} from "reactstrap";
+import { Modal, ModalBody, ModalFooter, Button, Input, ModalHeader } from "reactstrap";
 import { UserContext } from "../../../Context/UserContext";
 import styles from "./styles/recentTrans.module.scss";
 import { useTranslation } from "react-i18next";
@@ -41,9 +34,7 @@ const getWallet = async (authHeader, id, currency) => {
   );
   const decrypted = decryptData(res.data.data);
 
-  return decrypted?.walletList?.find(
-    (item) => item?.currency?.code === currency,
-  );
+  return decrypted?.walletList?.find((item) => item?.currency?.code === currency);
 };
 
 const RecentTransactions = ({
@@ -53,8 +44,7 @@ const RecentTransactions = ({
   setSubStep,
   dataCurrency,
 }) => {
-  const { userDetails, authHeader, userWallets, beneficiaries } =
-    useContext(UserContext);
+  const { userDetails, authHeader, userWallets, beneficiaries } = useContext(UserContext);
   const { t } = useTranslation();
   const { data, isError } = useQuery({
     queryKey: ["RecentTransaction", type, userDetails?._id],
@@ -103,25 +93,17 @@ const RecentTransactions = ({
   };
 
   const proceedTransaction = async (t, finalAmount) => {
-    const sendingWallet = userWallets?.find(
-      (w) => w?.wallet_id === t?.wallet_id,
-    );
+    const sendingWallet = userWallets?.find((w) => w?.wallet_id === t?.wallet_id);
     const currency = {
       ...sendingWallet,
-      ...currencies.find(
-        (item) => item.currency_code === sendingWallet?.currency?.code,
-      ),
+      ...currencies.find((item) => item.currency_code === sendingWallet?.currency?.code),
     };
     dataHandler("reason", t?.purpose);
     setShowRecent(false);
 
     if (type === "international") {
-      const country = countriesData.find(
-        (item) => item.name === t?.beneficiary?.country_name,
-      );
-      const beneficiary = beneficiaries?.find(
-        (ben) => ben?._id === t?.beneficiary?._id,
-      );
+      const country = countriesData.find((item) => item.name === t?.beneficiary?.country_name);
+      const beneficiary = beneficiaries?.find((ben) => ben?._id === t?.beneficiary?._id);
       const channelValue = (() => {
         const typeStr = t?.payer?.type?.toLowerCase() || "";
         if (typeStr.includes("bank")) return "bank";
@@ -130,9 +112,7 @@ const RecentTransactions = ({
         if (typeStr.includes("cash")) return "cash";
         return "cash";
       })();
-      const channel = payoutChannelData.find(
-        (item) => item?.value === channelValue,
-      );
+      const channel = payoutChannelData.find((item) => item?.value === channelValue);
 
       dataHandler("amount", Number(finalAmount).toFixed(2));
       dataHandler("country", country);
@@ -143,10 +123,7 @@ const RecentTransactions = ({
         "flow",
         `${userDetails?.account_type === "individual" ? "C" : "B"}2${beneficiary?.beneficiary_type === "individual" ? "C" : "B"}`,
       );
-      dataHandler(
-        "transactionType",
-        beneficiary?.beneficiary_type === "individual" ? "C" : "B",
-      );
+      dataHandler("transactionType", beneficiary?.beneficiary_type === "individual" ? "C" : "B");
       dataHandler("payer", t?.payer);
       dataHandler("payoutChannel", {
         ...channel,
@@ -179,20 +156,14 @@ const RecentTransactions = ({
   };
 
   const canRepeat = async (tx) => {
-    const sendingWallet = userWallets?.find(
-      (w) => w?.wallet_id === tx?.wallet_id,
-    );
+    const sendingWallet = userWallets?.find((w) => w?.wallet_id === tx?.wallet_id);
     if (!sendingWallet) return false;
 
     if (type === "international") {
       const hasNA = (paths = []) =>
         paths.some((path) => {
           const val = path.split(".")?.reduce((acc, key) => acc?.[key], tx);
-          return (
-            val === "N/A" ||
-            val === "NA" ||
-            String(val)?.toLowerCase?.() === "n/a"
-          );
+          return val === "N/A" || val === "NA" || String(val)?.toLowerCase?.() === "n/a";
         });
 
       if (
@@ -207,9 +178,7 @@ const RecentTransactions = ({
         return false;
 
       const hasCountry = Boolean(
-        countriesData.find(
-          (item) => item.name === tx?.beneficiary?.country_name,
-        ),
+        countriesData.find((item) => item.name === tx?.beneficiary?.country_name),
       );
       const hasBeneficiary = Boolean(
         beneficiaries?.find((ben) => ben?._id === tx?.beneficiary?._id),
@@ -224,9 +193,7 @@ const RecentTransactions = ({
             : typeStr.includes("cash")
               ? "cash"
               : "";
-      const hasChannel = Boolean(
-        payoutChannelData.find((item) => item?.value === channelValue),
-      );
+      const hasChannel = Boolean(payoutChannelData.find((item) => item?.value === channelValue));
       return (
         hasCountry &&
         hasBeneficiary &&
@@ -256,15 +223,9 @@ const RecentTransactions = ({
     formatCurrency(e.target.value, true, setModalValue);
   };
   return (
-    <div
-      style={{ minWidth: width < 1000 && "100%" }}
-      className={styles.container}
-    >
+    <div style={{ minWidth: width < 1000 && "100%" }} className={styles.container}>
       {data?.length > 0 && (
-        <div
-          style={{ justifyContent: width < 1000 && "center" }}
-          className={styles.top}
-        >
+        <div style={{ justifyContent: width < 1000 && "center" }} className={styles.top}>
           <h4>{t("RECENT TRANSFERS")}</h4>
           {width > 1000 && <span>{t("See all")}</span>}
         </div>
@@ -274,8 +235,7 @@ const RecentTransactions = ({
         {data?.map((tx) => {
           const receiverName =
             `${tx?.beneficiary?.first_name || tx?.receiver?.first_name || tx?.receiver?.company_name || ""} ${tx?.receiver?.last_name || tx?.beneficiary?.last_name || tx?.receiver?.company_name || ""}`.trim();
-          const country =
-            tx?.receiver?.country_name || tx?.beneficiary?.country_name || "";
+          const country = tx?.receiver?.country_name || tx?.beneficiary?.country_name || "";
           // const paymentTypeLabel = tx?.paid_via_details?.type === "ip_wallet" ? "Mobile Wallet" : (tx?.paid_via_details?.type || "")
           const createdAt = tx?.created_at
             ? new Date(tx.created_at).toLocaleString("en-US", {
@@ -362,17 +322,11 @@ const RecentTransactions = ({
       </div>
 
       <Modal isOpen={modalData.isOpen} toggle={closeExploreModal} centered>
-        <ModalHeader toggle={closeExploreModal}>
-          {t("Amount Confirmation")}
-        </ModalHeader>
+        <ModalHeader toggle={closeExploreModal}>{t("Amount Confirmation")}</ModalHeader>
         <ModalBody style={{ padding: "1.5rem" }}>
           {modalData.isEditing ? (
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "15px" }}
-            >
-              <h4 style={{ fontSize: "18px", fontWeight: "700" }}>
-                {t("Enter New Amount")}
-              </h4>
+            <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+              <h4 style={{ fontSize: "18px", fontWeight: "700" }}>{t("Enter New Amount")}</h4>
               <div
                 style={{
                   display: "flex",
@@ -456,9 +410,7 @@ const RecentTransactions = ({
               </h4>
               <div style={{ display: "flex", gap: "10px" }}>
                 <button
-                  onClick={() =>
-                    setModalData((prev) => ({ ...prev, isEditing: true }))
-                  }
+                  onClick={() => setModalData((prev) => ({ ...prev, isEditing: true }))}
                   style={{
                     flex: 1,
                     borderRadius: "8px",

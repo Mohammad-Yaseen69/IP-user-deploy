@@ -6,8 +6,7 @@ export const PLAID_EXIT_MAP = {
   },
   PAYMENT_ACCOUNT_INVALID: {
     code: "PAYMENT_ACCOUNT_INVALID",
-    message:
-      "This account is no longer active. Please select another account or bank.",
+    message: "This account is no longer active. Please select another account or bank.",
   },
   PAYMENT_ACCOUNT_BLOCKED: {
     code: "PAYMENT_ACCOUNT_BLOCKED",
@@ -21,8 +20,7 @@ export const PLAID_EXIT_MAP = {
   },
   PAYMENT_INVALID_CURRENCY: {
     code: "PAYMENT_INVALID_CURRENCY",
-    message:
-      "The selected currency is not supported. Please choose EUR, GBP, or USD.",
+    message: "The selected currency is not supported. Please choose EUR, GBP, or USD.",
   },
   PAYMENT_EXPIRED: {
     code: "PAYMENT_EXPIRED",

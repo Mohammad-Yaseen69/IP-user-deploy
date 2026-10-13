@@ -75,13 +75,12 @@ const QrQuickerPay = () => {
     handleGetFeeDetails,
   );
 
-  const { mutateAsync: getWalletDetailsMutation, isPending: walletLoading } =
-    useMutation({
-      mutationFn: (payload) => getWalletDetails(payload),
-      onSuccess: (recipientDets) => {
-        dataHandler("recipientDets", recipientDets);
-      },
-    });
+  const { mutateAsync: getWalletDetailsMutation, isPending: walletLoading } = useMutation({
+    mutationFn: (payload) => getWalletDetails(payload),
+    onSuccess: (recipientDets) => {
+      dataHandler("recipientDets", recipientDets);
+    },
+  });
 
   useEffect(() => {
     const getWalletDetails = async () => {
@@ -101,18 +100,14 @@ const QrQuickerPay = () => {
   }, [wallet_id, getWalletDetailsMutation]);
 
   const { mutateAsync: confirmTransactionMutation } = useMutation({
-    mutationFn: ({ payload, apiHeaders }) =>
-      confirmTransaction(apiHeaders, payload),
+    mutationFn: ({ payload, apiHeaders }) => confirmTransaction(apiHeaders, payload),
     onError: (error) => {
       const dec = decryptData(error?.response?.data?.data);
       const err = apiErrorMessage(dec.message);
       const err2 = LimitsErrorMessage(dec.message);
       dataHandler(
         "error",
-        err2 ||
-          err ||
-          dec?.message ||
-          "We are unable to process your request at the moment.",
+        err2 || err || dec?.message || "We are unable to process your request at the moment.",
       );
       dataHandler("showModal", true);
     },
@@ -138,10 +133,9 @@ const QrQuickerPay = () => {
     }
   };
 
-  const { mutateAsync: sendOtpSkipMutation, isPending: sendOtpLoading } =
-    useMutation({
-      mutationFn: (payload) => sendOtpSkip(payload.token, payload),
-    });
+  const { mutateAsync: sendOtpSkipMutation, isPending: sendOtpLoading } = useMutation({
+    mutationFn: (payload) => sendOtpSkip(payload.token, payload),
+  });
 
   const handleSendOtpSkip = async () => {
     dataHandler("isPressed", true);
@@ -181,10 +175,7 @@ const QrQuickerPay = () => {
         return;
       }
       if (dec?.message?.toLowerCase()?.includes("exceeded")) {
-        dataHandler(
-          "error",
-          "The transaction amount exceeds your QR payment threshold amount.",
-        );
+        dataHandler("error", "The transaction amount exceeds your QR payment threshold amount.");
         dataHandler("showModal", true);
         return;
       }
@@ -265,11 +256,7 @@ const QrQuickerPay = () => {
 
                 {data.step === 3 && <StepThree />}
 
-                {data.step !== 1 && (
-                  <span className={styles.label}>
-                    {t("Recipient Details")}:
-                  </span>
-                )}
+                {data.step !== 1 && <span className={styles.label}>{t("Recipient Details")}:</span>}
 
                 <UserDets step={data.step} recipientDets={data.recipientDets} />
 
@@ -293,18 +280,13 @@ const QrQuickerPay = () => {
                   <div className={styles.options}>
                     {paymentConfirmOptions.map((option) => (
                       <div
-                        onClick={() =>
-                          !option.link && navigate(option.navigate)
-                        }
+                        onClick={() => !option.link && navigate(option.navigate)}
                         key={option.text}
                       >
                         <img src={option.icon} alt="" loading="lazy" />
                         <span>
                           {option.link ? (
-                            <a
-                              style={{ color: "black" }}
-                              href={option.navigate}
-                            >
+                            <a style={{ color: "black" }} href={option.navigate}>
                               {option.text}
                             </a>
                           ) : (
@@ -346,9 +328,7 @@ const QrQuickerPay = () => {
                       opacity:
                         (data.isPressed ||
                           !data.amount ||
-                          /^0+$/.test(
-                            data.amount.toString().replace(/\./g, ""),
-                          ) ||
+                          /^0+$/.test(data.amount.toString().replace(/\./g, "")) ||
                           feeLoading ||
                           sendOtpLoading) &&
                         ".5",

@@ -18,11 +18,7 @@ const TermsModal = ({ handleCreateStore, setShowModal }) => {
         </p>
 
         <label className={styles.checkboxLabel}>
-          <input
-            type="checkbox"
-            checked={agreed}
-            onChange={() => setAgreed(!agreed)}
-          />
+          <input type="checkbox" checked={agreed} onChange={() => setAgreed(!agreed)} />
           {t("I have read and agree to the InstaPay eShop Terms of Service")}
         </label>
 
@@ -30,11 +26,7 @@ const TermsModal = ({ handleCreateStore, setShowModal }) => {
           <button className={styles.cancel} onClick={() => window.close()}>
             {t("Cancel")}
           </button>
-          <button
-            className={styles.continue}
-            onClick={handleCreateStore()}
-            disabled={!agreed}
-          >
+          <button className={styles.continue} onClick={handleCreateStore()} disabled={!agreed}>
             {t("Continue to eShop")} <ChevronRight />
           </button>
         </div>

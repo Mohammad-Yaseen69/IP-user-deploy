@@ -47,8 +47,7 @@ const ConfirmRequest = ({
   const svgRef = useRef(null);
   const chevRef = useRef(null);
   const width = useWindowWidth();
-  const { userDetails, profileCompleted, authHeader, userWallets } =
-    useContext(UserContext);
+  const { userDetails, profileCompleted, authHeader, userWallets } = useContext(UserContext);
   const [showCompletionModal, setShowCompletionModal] = useState(false);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -135,9 +134,7 @@ const ConfirmRequest = ({
               purpose: requestObject.reason ?? "family support",
               sender: userDetails?._id,
               receiver: ben._id,
-              cycles: requestObject.unlimited
-                ? "unlimited"
-                : +requestObject.recCycle,
+              cycles: requestObject.unlimited ? "unlimited" : +requestObject.recCycle,
               date: date,
               description: requestObject.comment,
               payment_type: "payment_request",
@@ -191,9 +188,7 @@ const ConfirmRequest = ({
         setConfirmed(true);
         setToken(dec?.token);
       } catch (error) {
-        toast.error(
-          t("Something went wrong while confirming the transaction!"),
-        );
+        toast.error(t("Something went wrong while confirming the transaction!"));
         // console.log(decryptData(error?.response?.data?.data))
       }
     });
@@ -227,9 +222,7 @@ const ConfirmRequest = ({
       console.log(response);
       if (response?.address) {
         const country = CitiesData.find(
-          (cont) =>
-            cont.iso2.toLowerCase() ==
-            response?.address?.country_code?.toLowerCase(),
+          (cont) => cont.iso2.toLowerCase() == response?.address?.country_code?.toLowerCase(),
         );
         await prefrencesFunc(country);
       } else {

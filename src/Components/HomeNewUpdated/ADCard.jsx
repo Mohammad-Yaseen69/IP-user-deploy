@@ -92,9 +92,7 @@ const ADCard = ({ data, isActive }) => {
             </span>
             <h5>
               {data.currency?.code}{" "}
-              {Number(
-                data.balance.available + data.balance.reserved,
-              )?.toLocaleString("en-US", {
+              {Number(data.balance.available + data.balance.reserved)?.toLocaleString("en-US", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}
@@ -111,9 +109,7 @@ const ADCard = ({ data, isActive }) => {
               }}
               className={`${r_styles.flex} ${r_styles.r_blocked}`}
             >
-              <span style={{ fontSize: "12px", fontWeight: 600 }}>
-                {t("Available balance")}:
-              </span>
+              <span style={{ fontSize: "12px", fontWeight: 600 }}>{t("Available balance")}:</span>
               <h5>
                 {data.currency?.code}{" "}
                 {Number(data.balance.available)?.toLocaleString("en-US", {
@@ -132,9 +128,7 @@ const ADCard = ({ data, isActive }) => {
               }}
               className={`${r_styles.flex} ${r_styles.r_blocked}`}
             >
-              <span style={{ fontSize: "12px", fontWeight: 600 }}>
-                {t("Blocked balance")}:
-              </span>
+              <span style={{ fontSize: "12px", fontWeight: 600 }}>{t("Blocked balance")}:</span>
               <h5>
                 {data.currency?.code}{" "}
                 {Number(data.balance.reserved)?.toLocaleString("en-US", {
@@ -145,9 +139,7 @@ const ADCard = ({ data, isActive }) => {
             </div>
           </div>
           <div className={`${r_styles.flex} ${r_styles.r_wallet}`}>
-            <span style={{ fontSize: "12px", fontWeight: 600 }}>
-              {t("Wallet ID")}:
-            </span>
+            <span style={{ fontSize: "12px", fontWeight: 600 }}>{t("Wallet ID")}:</span>
             <h5 style={{ fontSize: "10px" }}>
               {data?.wallet_id}
               {copied ? (
@@ -159,16 +151,10 @@ const ADCard = ({ data, isActive }) => {
               )}
             </h5>
           </div>
-          <div
-            className={`${r_styles.flex} ${r_styles.r_bal}`}
-            style={{ marginTop: ".5rem" }}
-          >
-            <span style={{ fontSize: "12px", fontWeight: 600 }}>
-              {t("Monthly limit")}:
-            </span>
+          <div className={`${r_styles.flex} ${r_styles.r_bal}`} style={{ marginTop: ".5rem" }}>
+            <span style={{ fontSize: "12px", fontWeight: 600 }}>{t("Monthly limit")}:</span>
             <h5>
-              {walletData?.balance_limits?.total} /{" "}
-              {walletData?.balance_limits?.remaining}
+              {walletData?.balance_limits?.total} / {walletData?.balance_limits?.remaining}
             </h5>
           </div>
           <div className={r_styles.bb}>
@@ -179,8 +165,7 @@ const ADCard = ({ data, isActive }) => {
                 100
               }
               barStyle={{
-                background:
-                  "linear-gradient(to right, rgba(256,256,256,.6), rgba(256,256,256,.9))",
+                background: "linear-gradient(to right, rgba(256,256,256,.6), rgba(256,256,256,.9))",
                 borderRadius: "50px",
                 margin: "2px",
               }}
@@ -189,9 +174,7 @@ const ADCard = ({ data, isActive }) => {
                 background: "rgba(256,256,256,.3)",
               }}
             />
-            <span style={{ right: "5px" }}>
-              {walletData?.balance_limits?.remaining}
-            </span>
+            <span style={{ right: "5px" }}>{walletData?.balance_limits?.remaining}</span>
           </div>
         </>
       ) : (
@@ -214,9 +197,7 @@ const ADCard = ({ data, isActive }) => {
           <div className={styles.wallet_details}>
             <span>{t("Wallet ID")}: </span>
             <div className={styles.wd_sub}>
-              <span>
-                {`${data?.wallet_type?.toUpperCase()}-${data?.wallet_id?.toUpperCase()}`}
-              </span>
+              <span>{`${data?.wallet_type?.toUpperCase()}-${data?.wallet_id?.toUpperCase()}`}</span>
               {copied ? (
                 <Check style={{ marginLeft: ".5rem" }} size={12} />
               ) : (
@@ -237,16 +218,13 @@ const ADCard = ({ data, isActive }) => {
                   "min(.9vw, 20px)",
               }}
             >
-              {walletData?.balance_limits?.total} /{" "}
-              {walletData?.balance_limits?.remaining}
+              {walletData?.balance_limits?.total} / {walletData?.balance_limits?.remaining}
             </h3>
             <div className={styles.bb}>
               <Progress
                 value={
                   (removeCommasAndCurrency(walletData?.balance_limits?.used) /
-                    removeCommasAndCurrency(
-                      walletData?.balance_limits?.total,
-                    )) *
+                    removeCommasAndCurrency(walletData?.balance_limits?.total)) *
                   100
                 }
                 barStyle={{
@@ -260,9 +238,7 @@ const ADCard = ({ data, isActive }) => {
                   background: "rgba(256,256,256,.3)",
                 }}
               />
-              <span style={{ right: "5px" }}>
-                {walletData?.balance_limits?.remaining}
-              </span>
+              <span style={{ right: "5px" }}>{walletData?.balance_limits?.remaining}</span>
             </div>
           </div>
         </>

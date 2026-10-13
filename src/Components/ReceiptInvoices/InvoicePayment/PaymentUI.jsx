@@ -18,14 +18,7 @@ import PayWithCrypto from "../../PaymentAddressPublic/PayWithCrypto";
 import InvoiceDetails from "./InvoiceDetails";
 import { useState } from "react";
 
-const PaymentUI = ({
-  data,
-  user_name,
-  state,
-  dataHandler,
-  url,
-  toggleCreditModal,
-}) => {
+const PaymentUI = ({ data, user_name, state, dataHandler, url, toggleCreditModal }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const width = useWindowWidth();
@@ -49,9 +42,7 @@ const PaymentUI = ({
       },
       width: "15px",
       disabled: !flagCheck("payments.allowInstapay", userDetails, "invoice"),
-      disabledMessage: t(
-        "This method is disabled for this payment address by admin.",
-      ),
+      disabledMessage: t("This method is disabled for this payment address by admin."),
     },
     {
       label: "Pay with Crypto",
@@ -60,18 +51,14 @@ const PaymentUI = ({
         dataHandler("showCryptoModal", true);
       },
       disabled: !flagCheck("payments.allowCrypto", userDetails, "invoice"),
-      disabledMessage: t(
-        "This method is disabled for this payment address by admin.",
-      ),
+      disabledMessage: t("This method is disabled for this payment address by admin."),
     },
     {
       label: user_name === "novamind" ? "PAY" : "Pay As Guest",
       logo: addFunds,
       onClick: toggleCreditModal,
       disabled: !flagCheck("payments.allowGuestPay", userDetails, "invoice"),
-      disabledMessage: t(
-        "This method is disabled for this payment address by admin.",
-      ),
+      disabledMessage: t("This method is disabled for this payment address by admin."),
     },
   ];
 
@@ -157,15 +144,9 @@ const PaymentUI = ({
 
         {!data.paid ? (
           visibleButtons.length > 0 ? (
-            <PaymentActionsButtons
-              actionButtons={visibleButtons}
-              userDetails={userDetails}
-            />
+            <PaymentActionsButtons actionButtons={visibleButtons} userDetails={userDetails} />
           ) : (
-            <div
-              className={styles.paidInvoice}
-              style={{ border: "none", background: "none" }}
-            >
+            <div className={styles.paidInvoice} style={{ border: "none", background: "none" }}>
               <p style={{ color: "red" }}>{t("No Payment Method Available")}</p>
             </div>
           )
@@ -185,11 +166,7 @@ const PaymentUI = ({
           }}
         >
           <AnimatedHeader mobileUI />
-          <img
-            src={ip}
-            alt=""
-            style={{ margin: "20px auto", width: "200px" }}
-          />
+          <img src={ip} alt="" style={{ margin: "20px auto", width: "200px" }} />
         </div>
       )}
     </>

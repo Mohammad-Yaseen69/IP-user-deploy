@@ -80,8 +80,7 @@ const CardExpiry = ({ content, setContent, isinVVC = false, guest }) => {
     const currentYear = currentDate.getFullYear() % 100;
 
     const isValidExpiry =
-      contentYear > currentYear ||
-      (contentYear === currentYear && contentMonth > currentMonth);
+      contentYear > currentYear || (contentYear === currentYear && contentMonth > currentMonth);
     setError(isValidExpiry && contentMonth <= 12 ? "" : "Invalid Date");
   }, [content]);
   return (
@@ -107,16 +106,11 @@ const CardExpiry = ({ content, setContent, isinVVC = false, guest }) => {
           {content}
         </div>
         {content.length < 1 && (
-          <span
-            style={{ display: isinVVC && "none" }}
-            className={styles.placeholder}
-          >
+          <span style={{ display: isinVVC && "none" }} className={styles.placeholder}>
             {t("MM / YY")}
           </span>
         )}
-        {error && content.length > 3 && (
-          <div className={styles.error}>{t(error)}</div>
-        )}
+        {error && content.length > 3 && <div className={styles.error}>{t(error)}</div>}
       </div>
     </div>
   );

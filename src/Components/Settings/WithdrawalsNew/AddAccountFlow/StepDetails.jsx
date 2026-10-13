@@ -37,18 +37,11 @@ const StepDetails = ({
 
   const renderPanel = () => {
     if (!isCrypto && requirementsLoading) {
-      return (
-        <p className={abf.optionSubtitle}>
-          {t("Loading the details this method needs...")}
-        </p>
-      );
+      return <p className={abf.optionSubtitle}>{t("Loading the details this method needs...")}</p>;
     }
     if (!isCrypto && requirementsError) {
       return (
-        <Alert
-          variant="error"
-          title={t("We could not load the required details")}
-        >
+        <Alert variant="error" title={t("We could not load the required details")}>
           {t("Please pick the method again, or try another one.")}
         </Alert>
       );

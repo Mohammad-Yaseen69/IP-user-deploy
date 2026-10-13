@@ -50,10 +50,7 @@ const Manage = () => {
           </div>
         </div>
 
-        <button
-          className={styles.linkBtn}
-          onClick={() => navigate("/geo-fencing")}
-        >
+        <button className={styles.linkBtn} onClick={() => navigate("/geo-fencing")}>
           {t("Go to settings")} <ArrowRight size={15} />
         </button>
       </div>
@@ -65,11 +62,7 @@ const Manage = () => {
           </div>
           <div>
             <h4>{t("Legal agreements")}</h4>
-            <p>
-              {t(
-                "View and download your signed agreements, MSAs, and service contracts.",
-              )}
-            </p>
+            <p>{t("View and download your signed agreements, MSAs, and service contracts.")}</p>
           </div>
         </div>
 
@@ -93,18 +86,11 @@ const Manage = () => {
           </div>
           <div>
             <h4>{t("Security & 2FA")}</h4>
-            <p>
-              {t(
-                "Manage password, two-factor authentication, and active session devices.",
-              )}
-            </p>
+            <p>{t("Manage password, two-factor authentication, and active session devices.")}</p>
           </div>
         </div>
 
-        <button
-          className={styles.linkBtn}
-          onClick={() => navigate("/settings?tab=tfa")}
-        >
+        <button className={styles.linkBtn} onClick={() => navigate("/settings?tab=tfa")}>
           {t("Go to settings")} <ArrowRight size={15} />
         </button>
       </div>

@@ -71,11 +71,7 @@ const PaymentSelect = ({
             onClick={() => {
               if (!option.comingSoon) {
                 setPaymentType(option.type);
-                if (
-                  option.type !== "paypal" &&
-                  window.innerWidth > 1000 &&
-                  setStep
-                ) {
+                if (option.type !== "paypal" && window.innerWidth > 1000 && setStep) {
                   setStep(2);
                 }
               }

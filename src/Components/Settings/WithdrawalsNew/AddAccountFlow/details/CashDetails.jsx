@@ -7,13 +7,7 @@ import {
 } from "../../../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/components";
 import { DOCUMENT_TYPES } from "../../withdrawalPayload";
 
-const CashDetails = ({
-  channel,
-  setChannel,
-  payers,
-  identifiers,
-  onValidChange,
-}) => {
+const CashDetails = ({ channel, setChannel, payers, identifiers, onValidChange }) => {
   const { t } = useTranslation();
   const needsMsisdn = (identifiers || []).includes("msisdn");
 
@@ -27,8 +21,7 @@ const CashDetails = ({
     onValidChange(valid);
   }, [valid, onValidChange]);
 
-  const setField = (name, value) =>
-    setChannel((prev) => ({ ...prev, [name]: value }));
+  const setField = (name, value) => setChannel((prev) => ({ ...prev, [name]: value }));
 
   return (
     <Fields>
@@ -62,9 +55,7 @@ const CashDetails = ({
         id="wd-cash-doc-number"
         label={t("Document number")}
         value={channel.document_number ?? ""}
-        onChange={(value) =>
-          setField("document_number", value.replace(/[^a-zA-Z0-9]/g, ""))
-        }
+        onChange={(value) => setField("document_number", value.replace(/[^a-zA-Z0-9]/g, ""))}
       />
 
       {needsMsisdn && (

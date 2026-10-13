@@ -72,8 +72,7 @@ export const STEP_ORDER = [
 
 export const transitions = {
   [STEPS.TRANSACTION_TYPE]: {
-    next: (data) =>
-      data.isThirdPartyAllowed ? STEPS.SENDING_TYPE : STEPS.AMOUNT_DETAILS,
+    next: (data) => (data.isThirdPartyAllowed ? STEPS.SENDING_TYPE : STEPS.AMOUNT_DETAILS),
 
     back: () => null, // null = exit the international flow entirely
 
@@ -120,8 +119,7 @@ export const transitions = {
   [STEPS.AMOUNT_DETAILS]: {
     next: () => STEPS.BENEFICIARY,
 
-    back: (data) =>
-      data.isThirdPartyAllowed ? STEPS.SENDING_TYPE : STEPS.TRANSACTION_TYPE,
+    back: (data) => (data.isThirdPartyAllowed ? STEPS.SENDING_TYPE : STEPS.TRANSACTION_TYPE),
 
     showBack: () => true,
 
@@ -165,8 +163,7 @@ export const transitions = {
   // ─────────────────────────────────────────────────────────────────────────
 
   [STEPS.PAYMENT_METHOD]: {
-    next: (data) =>
-      data.payment_type?.value === "card" ? STEPS.CARD_DETAILS : STEPS.REVIEW,
+    next: (data) => (data.payment_type?.value === "card" ? STEPS.CARD_DETAILS : STEPS.REVIEW),
 
     back: () => STEPS.PURPOSE,
 
@@ -203,9 +200,7 @@ export const transitions = {
     next: () => null,
 
     back: (data) =>
-      data.payment_type?.value === "card"
-        ? STEPS.CARD_DETAILS
-        : STEPS.PAYMENT_METHOD,
+      data.payment_type?.value === "card" ? STEPS.CARD_DETAILS : STEPS.PAYMENT_METHOD,
 
     showBack: () => true,
 
@@ -293,8 +288,7 @@ export const getDisabledState = (step, data, extras = {}) => {
       const now = new Date();
       const currentMonth = now.getMonth() + 1;
       const currentYear = now.getFullYear() % 100;
-      const isValidExpiry =
-        yy > currentYear || (yy === currentYear && mm > currentMonth);
+      const isValidExpiry = yy > currentYear || (yy === currentYear && mm > currentMonth);
 
       return (
         !data.cardNumber ||
@@ -340,8 +334,7 @@ export const isSubmitStep = (step) => step === STEPS.REVIEW;
 
 // ─── Helper: is the back button visible? ─────────────────────────────────────
 
-export const showBackButton = (step, data) =>
-  transitions[step]?.showBack(data) ?? false;
+export const showBackButton = (step, data) => transitions[step]?.showBack(data) ?? false;
 
 // ─── Primary navigation helpers ──────────────────────────────────────────────
 

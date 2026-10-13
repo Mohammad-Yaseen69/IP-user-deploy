@@ -34,9 +34,7 @@
 }
 
 .top button span {
-  background:
-    linear-gradient(341deg, #e64067 -4.84%, #5926f0 90.69%, #4828a0 166.81%),
-    #d9d9d9;
+  background: linear-gradient(341deg, #e64067 -4.84%, #5926f0 90.69%, #4828a0 166.81%), #d9d9d9;
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -100,9 +98,7 @@
 }
 
 .ben_card.active {
-  background:
-    linear-gradient(341deg, #e64067 -4.84%, #5926f0 90.69%, #4828a0 166.81%),
-    #d9d9d9;
+  background: linear-gradient(341deg, #e64067 -4.84%, #5926f0 90.69%, #4828a0 166.81%), #d9d9d9;
 }
 
 .dp {
@@ -110,9 +106,7 @@
   height: 58.094px;
   border-radius: 9.234px;
   box-shadow: 0px 3.003px 24.024px 0px rgba(109, 41, 220, 0.17);
-  background:
-    linear-gradient(341deg, #e64067 -4.84%, #5926f0 90.69%, #4828a0 166.81%),
-    #d9d9d9;
+  background: linear-gradient(341deg, #e64067 -4.84%, #5926f0 90.69%, #4828a0 166.81%), #d9d9d9;
   font-size: 1rem;
   font-weight: 800;
   display: flex;

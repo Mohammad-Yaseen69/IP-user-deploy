@@ -1,15 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Col,
-  FormGroup,
-  Input,
-  Label,
-} from "reactstrap";
+import { Button, Card, CardBody, CardHeader, Col, FormGroup, Input, Label } from "reactstrap";
 import { H4 } from "../../AbstractElements";
 import { ChevronDown, ChevronUp } from "react-feather";
 import GradientButton from "../User/UserSettings/GradientButton";
@@ -152,13 +143,9 @@ const ApiKey = ({ isCollapsed, setIsCollapsed }) => {
         onClick={toggleAccordion}
       >
         <H4 attrH4={{ className: "card-title mb-0" }}>{t("API Key")}</H4>
-        <div className="card-options">
-          {isCollapsed ? <ChevronDown /> : <ChevronUp />}
-        </div>
+        <div className="card-options">{isCollapsed ? <ChevronDown /> : <ChevronUp />}</div>
       </CardHeader>
-      <div
-        className={`accordion-body ${isCollapsed ? "collapsed" : "expanded"}`}
-      >
+      <div className={`accordion-body ${isCollapsed ? "collapsed" : "expanded"}`}>
         <CardBody>
           {featureStatus === "not requested" && (
             <Col
@@ -244,9 +231,7 @@ const ApiKey = ({ isCollapsed, setIsCollapsed }) => {
                   <Input
                     type="text"
                     placeholder={
-                      isGetting
-                        ? t("Getting API Key...")
-                        : t("API key will be rendered")
+                      isGetting ? t("Getting API Key...") : t("API key will be rendered")
                     }
                     readOnly
                     disabled
@@ -322,11 +307,7 @@ const ApiKey = ({ isCollapsed, setIsCollapsed }) => {
               <Col md="12">
                 <FormGroup className="mb-3">
                   <Label className="form-label">{t("Webhook URL")}</Label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    placeholder={t("Webhook URL")}
-                  />
+                  <input className="form-control" type="text" placeholder={t("Webhook URL")} />
                 </FormGroup>
               </Col>
             </>

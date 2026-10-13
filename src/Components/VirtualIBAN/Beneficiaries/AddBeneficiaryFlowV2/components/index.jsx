@@ -157,9 +157,7 @@ export const OptionCard = ({
       strongBorder && !selected && !disabled ? styles.optionStrongBorder : "",
     ].join(" ")}
   >
-    <span
-      className={`${styles.optionIcon} ${selected ? styles.optionIconSelected : ""}`}
-    >
+    <span className={`${styles.optionIcon} ${selected ? styles.optionIconSelected : ""}`}>
       <Icon
         name={icon}
         size={20}
@@ -173,23 +171,15 @@ export const OptionCard = ({
       />
     </span>
 
-    <span
-      className={`${styles.optionText} ${tight ? styles.optionTextTight : ""}`}
-    >
-      <span
-        className={`${styles.optionTitle} ${disabled ? styles.optionTitleDisabled : ""}`}
-      >
+    <span className={`${styles.optionText} ${tight ? styles.optionTextTight : ""}`}>
+      <span className={`${styles.optionTitle} ${disabled ? styles.optionTitleDisabled : ""}`}>
         {title}
       </span>
-      {subtitle && !disabled && (
-        <span className={styles.optionSubtitle}>{subtitle}</span>
-      )}
+      {subtitle && !disabled && <span className={styles.optionSubtitle}>{subtitle}</span>}
     </span>
 
     {note && <span className={styles.optionNote}>{note}</span>}
-    {timing && !disabled && (
-      <span className={styles.optionTiming}>{timing}</span>
-    )}
+    {timing && !disabled && <span className={styles.optionTiming}>{timing}</span>}
     {!disabled && !note && <RadioDot checked={selected} />}
   </button>
 );
@@ -206,21 +196,10 @@ export const GroupHeader = ({ icon, title, subtitle }) => (
 );
 
 /* "Who you are paying" card shown at the top of steps 2 and 3. */
-export const ContextCard = ({
-  initial,
-  icon,
-  name,
-  meta,
-  actionLabel,
-  onAction,
-}) => (
+export const ContextCard = ({ initial, icon, name, meta, actionLabel, onAction }) => (
   <div className={styles.contextCard}>
     <div className={styles.contextAvatar}>
-      {icon ? (
-        <Icon name={icon} size={20} color="var(--abf-primary)" />
-      ) : (
-        initial
-      )}
+      {icon ? <Icon name={icon} size={20} color="var(--abf-primary)" /> : initial}
     </div>
     <div className={styles.contextText}>
       <p className={styles.contextName}>{name}</p>
@@ -250,9 +229,7 @@ export const Hint = ({ children, error = false }) => {
         size={12}
         color={error ? "var(--abf-error)" : "var(--abf-grey-400)"}
       />
-      <p className={`${styles.hintText} ${error ? styles.hintTextError : ""}`}>
-        {children}
-      </p>
+      <p className={`${styles.hintText} ${error ? styles.hintTextError : ""}`}>{children}</p>
     </div>
   );
 };
@@ -274,9 +251,7 @@ export const TextField = ({
 }) => (
   <div className={`${styles.field} ${flex ? styles.fieldFlex : ""}`}>
     {label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
-    <div
-      className={`${styles.inputShell} ${error ? styles.inputShellError : ""}`}
-    >
+    <div className={`${styles.inputShell} ${error ? styles.inputShellError : ""}`}>
       <input
         id={id}
         className={styles.input}
@@ -288,9 +263,7 @@ export const TextField = ({
         maxLength={maxLength}
         onChange={(event) => onChange && onChange(event.target.value)}
       />
-      {trailingIcon && (
-        <Icon name={trailingIcon} size={16} color="var(--abf-text-secondary)" />
-      )}
+      {trailingIcon && <Icon name={trailingIcon} size={16} color="var(--abf-text-secondary)" />}
     </div>
     <Hint error={!!error}>{error || hint}</Hint>
   </div>
@@ -322,10 +295,8 @@ export const SelectField = ({
       >
         <option value="">{placeholder}</option>
         {options.map((option) => {
-          const optionValue =
-            typeof option === "string" ? option : option.value;
-          const optionLabel =
-            typeof option === "string" ? option : option.label;
+          const optionValue = typeof option === "string" ? option : option.value;
+          const optionLabel = typeof option === "string" ? option : option.label;
           return (
             <option key={optionValue} value={optionValue}>
               {optionLabel}
@@ -343,9 +314,7 @@ export const FieldRow = ({ children, alignEnd = false }) => (
   <div className={`${styles.fieldRow}`}>{children}</div>
 );
 
-export const Fields = ({ children }) => (
-  <div className={styles.fields}>{children}</div>
-);
+export const Fields = ({ children }) => <div className={styles.fields}>{children}</div>;
 
 /* "Also required by this bank" heading, with the rule and the reason line. */
 export const SectionTitle = ({ title, why }) => (
@@ -363,9 +332,7 @@ export const SectionTitle = ({ title, why }) => (
   </div>
 );
 
-export const Section = ({ children }) => (
-  <div className={styles.section}>{children}</div>
-);
+export const Section = ({ children }) => <div className={styles.section}>{children}</div>;
 
 export const SummaryCard = ({ heading, action, onAction, children }) => (
   <div className={styles.summary}>
@@ -394,16 +361,10 @@ export const SummaryRow = ({
   narrow,
 }) => (
   <div className={styles.summaryRow}>
-    <p
-      className={`${styles.summaryLabel} ${narrow ? styles.summaryLabelNarrow : ""}`}
-    >
-      {label}
-    </p>
+    <p className={`${styles.summaryLabel} ${narrow ? styles.summaryLabelNarrow : ""}`}>{label}</p>
     <div className={styles.summaryValue}>
       {icon && <Icon name={icon} size={16} color={iconColor} />}
-      <p
-        className={`${styles.summaryValueText} ${success ? styles.summaryValueSuccess : ""}`}
-      >
+      <p className={`${styles.summaryValueText} ${success ? styles.summaryValueSuccess : ""}`}>
         {value}
       </p>
     </div>

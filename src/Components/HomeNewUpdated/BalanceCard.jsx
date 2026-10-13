@@ -40,10 +40,7 @@ const BalanceComponent = () => {
                 </div>
               </div>
             ) : (
-              <h4
-                className={`${styles.head}`}
-                style={{ letterSpacing: "-2px" }}
-              >
+              <h4 className={`${styles.head}`} style={{ letterSpacing: "-2px" }}>
                 $
                 {Number(totalBalance)?.toLocaleString("en-US", {
                   minimumFractionDigits: 2,

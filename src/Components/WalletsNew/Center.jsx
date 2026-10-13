@@ -242,10 +242,7 @@ const CenterContainer = ({
         {!chartData ? (
           <InstaPayLoader />
         ) : (
-          <div
-            id="chart"
-            style={{ height: "auto", position: "relative", width: "250px" }}
-          >
+          <div id="chart" style={{ height: "auto", position: "relative", width: "250px" }}>
             <div className={styles.balance_info}>
               <h4>
                 {currentWallet?.currency?.code}{" "}
@@ -255,9 +252,7 @@ const CenterContainer = ({
                 })}
               </h4>
               {/* <span>{t(`${currentType === "credit" ? "Credit" : "Debit"} in`)} {`${t(new Date().toLocaleString('default', { month: 'short' }))}`}</span> */}
-              <span>
-                {t(`${currentType === "credit" ? "Credit" : "Debit"}`)}
-              </span>
+              <span>{t(`${currentType === "credit" ? "Credit" : "Debit"}`)}</span>
             </div>
             {chartData?.options && (
               <ReactApexChart
@@ -267,10 +262,7 @@ const CenterContainer = ({
                 width={"150%"}
                 height={"150%"}
                 style={{
-                  transform:
-                    window.innerWidth > 480
-                      ? "translateX(-25%)"
-                      : "translateX(0%)",
+                  transform: window.innerWidth > 480 ? "translateX(-25%)" : "translateX(0%)",
                 }}
               />
             )}

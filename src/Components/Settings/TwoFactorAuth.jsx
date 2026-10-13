@@ -142,9 +142,7 @@ const TwoFactorAuth = () => {
         setAuthenticatorActive(false);
         console.log(dec);
       } catch (error) {
-        toast.error(
-          "Something went wrong while disabling Google Authenticator.",
-        );
+        toast.error("Something went wrong while disabling Google Authenticator.");
       } finally {
         setEnablingAuth(false);
       }
@@ -163,9 +161,7 @@ const TwoFactorAuth = () => {
         setGuideModal(false);
       } catch (error) {
         const dec = decryptData(error?.response?.data?.data);
-        toast.error(
-          dec?.message ?? "Something went wrong while enabling authenticator.",
-        );
+        toast.error(dec?.message ?? "Something went wrong while enabling authenticator.");
       } finally {
         setEnablingAuth(false);
       }
@@ -261,8 +257,7 @@ const TwoFactorAuth = () => {
       const decrypted = decryptData(err.response.data.data);
       setError(decrypted?.message ?? "Invalid Verification Code");
       if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-        const time =
-          decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+        const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
         const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
         setProfileLockTime(timeInSec);
         const coun = localStorage.getItem("ip_country");
@@ -353,11 +348,7 @@ const TwoFactorAuth = () => {
 
     console.log(res);
     setDevices((prev) =>
-      prev.map((d) =>
-        d.credentialId === device.credentialId
-          ? { ...d, enabled: !d.enabled }
-          : d,
-      ),
+      prev.map((d) => (d.credentialId === device.credentialId ? { ...d, enabled: !d.enabled } : d)),
     );
   };
 
@@ -378,9 +369,7 @@ const TwoFactorAuth = () => {
     // const dec = decryptData(res.data.data)
 
     setDevices((prev) =>
-      prev.filter(
-        (d) => d.credentialId !== deleteState.deviceToDelete.credentialId,
-      ),
+      prev.filter((d) => d.credentialId !== deleteState.deviceToDelete.credentialId),
     );
     setFingerBioActive((prev) => (!devices.length ? false : prev));
     setDelete({ deviceToDelete: {}, showModal: false });
@@ -422,35 +411,24 @@ const TwoFactorAuth = () => {
         }}
         className={`pb-0`}
       >
-        <H4 attrH4={{ className: "card-title mb-0" }}>
-          {t("Two Factor Authentication")}
-        </H4>
+        <H4 attrH4={{ className: "card-title mb-0" }}>{t("Two Factor Authentication")}</H4>
         <p style={{ fontSize: "16px", fontWeight: 600, color: "#8E8E8E" }}>
           {t("Here, you can set up and manage your Two Factor Authentication.")}
         </p>
       </CardHeader>
 
       {guideModal && (
-        <Modal
-          isOpen={guideModal}
-          style={{ width: "96vw", maxWidth: "900px", margin: "0 auto" }}
-        >
+        <Modal isOpen={guideModal} style={{ width: "96vw", maxWidth: "900px", margin: "0 auto" }}>
           <ModalBody style={{ padding: 0 }}>
             <AuthenticatorDetails />
           </ModalBody>
-          <ModalFooter
-            style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}
-          >
-            <button
-              disabled={enablingAuth}
-              style={{ all: "unset", cursor: "pointer" }}
-            >
+          <ModalFooter style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
+            <button disabled={enablingAuth} style={{ all: "unset", cursor: "pointer" }}>
               {t("Skip")}
             </button>
             <Button
               style={{
-                background:
-                  "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                 border: "none",
                 outline: "none",
                 borderRadius: "10px",
@@ -476,10 +454,7 @@ const TwoFactorAuth = () => {
         <table className={styles.table}>
           <tbody>
             <tr>
-              <td
-                style={{ width: "100%", fontWeight: 600 }}
-                data-label="Email Address"
-              >
+              <td style={{ width: "100%", fontWeight: 600 }} data-label="Email Address">
                 <img
                   src={EmailIcon}
                   style={{
@@ -517,10 +492,7 @@ const TwoFactorAuth = () => {
               )}
             </tr>
             <tr>
-              <td
-                style={{ width: "100%", fontWeight: 600 }}
-                data-label="Phone Number"
-              >
+              <td style={{ width: "100%", fontWeight: 600 }} data-label="Phone Number">
                 <img
                   src={PhoneIcon}
                   style={{
@@ -558,10 +530,7 @@ const TwoFactorAuth = () => {
               )}
             </tr>
             <tr>
-              <td
-                style={{ width: "100%", fontWeight: 600 }}
-                data-label="Phone Number"
-              >
+              <td style={{ width: "100%", fontWeight: 600 }} data-label="Phone Number">
                 <img
                   src={PhoneIcon}
                   style={{
@@ -599,10 +568,7 @@ const TwoFactorAuth = () => {
               )}
             </tr>
             <tr>
-              <td
-                style={{ width: "100%", fontWeight: 600 }}
-                data-label="Phone Number"
-              >
+              <td style={{ width: "100%", fontWeight: 600 }} data-label="Phone Number">
                 <img
                   src={AuthIcon}
                   style={{
@@ -618,11 +584,7 @@ const TwoFactorAuth = () => {
               <td data-label={t("Google Authenticator")}>
                 {enablingAuth ? (
                   <div className="d-flex justify-content-center">
-                    <div
-                      className="spinner-border"
-                      color="primary"
-                      role="status"
-                    >
+                    <div className="spinner-border" color="primary" role="status">
                       <span className="sr-only">{t("Loading...")}</span>
                     </div>
                   </div>
@@ -639,10 +601,7 @@ const TwoFactorAuth = () => {
               </td>
             </tr>
             <tr>
-              <td
-                style={{ width: "100%", fontWeight: 600 }}
-                data-label="Finger Biometric"
-              >
+              <td style={{ width: "100%", fontWeight: 600 }} data-label="Finger Biometric">
                 <img
                   src={BioIcon}
                   style={{
@@ -733,24 +692,16 @@ const TwoFactorAuth = () => {
                           fill="black"
                         />
                       </svg>
-                      <p style={{ fontSize: "12px", color: "#333333" }}>
-                        {device?.deviceName}
-                      </p>
+                      <p style={{ fontSize: "12px", color: "#333333" }}>{device?.deviceName}</p>
                     </div>
 
-                    <img
-                      src={BioIcon}
-                      style={{ width: "14px", height: "14px" }}
-                      alt=""
-                    />
+                    <img src={BioIcon} style={{ width: "14px", height: "14px" }} alt="" />
                   </div>
 
                   <div style={{ display: "flex", alignItems: "center" }}>
                     <svg
                       style={{ cursor: "pointer" }}
-                      onClick={() =>
-                        setDelete({ showModal: true, deviceToDelete: device })
-                      }
+                      onClick={() => setDelete({ showModal: true, deviceToDelete: device })}
                       xmlns="http://www.w3.org/2000/svg"
                       width="16"
                       height="17"
@@ -766,10 +717,7 @@ const TwoFactorAuth = () => {
                       />
                     </svg>
 
-                    <Switch
-                      callback={() => deviceToggle(device)}
-                      checked={device?.enabled}
-                    />
+                    <Switch callback={() => deviceToggle(device)} checked={device?.enabled} />
                   </div>
                 </div>
               ))}
@@ -784,14 +732,9 @@ const TwoFactorAuth = () => {
                 marginRight: "10px",
               }}
             >
-              <button
-                onClick={() => setShowBioModal(true)}
-                className={styles.plus}
-              >
+              <button onClick={() => setShowBioModal(true)} className={styles.plus}>
                 <img src={Plus} alt="" />
-                <p style={{ marginBottom: "0" }}>
-                  {t("Register Biometric Passkey")}
-                </p>
+                <p style={{ marginBottom: "0" }}>{t("Register Biometric Passkey")}</p>
               </button>
             </div>
           </div>
@@ -805,35 +748,23 @@ const TwoFactorAuth = () => {
               alignItems: "flex-end",
             }}
           >
-            <div
-              className={styles.devices}
-              style={{ backgroundColor: "white", padding: "12px" }}
-            >
-              <h4 style={{ fontSize: "12px" }}>
-                {t("Manage Your Biometric Devices")}
-              </h4>
+            <div className={styles.devices} style={{ backgroundColor: "white", padding: "12px" }}>
+              <h4 style={{ fontSize: "12px" }}>{t("Manage Your Biometric Devices")}</h4>
 
               {devices?.map((device, idx) => (
                 <div key={idx} className={styles.device}>
                   <div>
                     <div>
-                      <p style={{ fontSize: "12px", color: "#333333" }}>
-                        {device.deviceName}{" "}
-                      </p>
+                      <p style={{ fontSize: "12px", color: "#333333" }}>{device.deviceName} </p>
                     </div>
                   </div>
 
                   <div style={{ display: "flex", alignItems: "center" }}>
-                    <Switch
-                      callback={() => deviceToggle(device)}
-                      checked={device?.enabled}
-                    />
+                    <Switch callback={() => deviceToggle(device)} checked={device?.enabled} />
 
                     <svg
                       style={{ cursor: "pointer" }}
-                      onClick={() =>
-                        setDelete({ showModal: true, deviceToDelete: device })
-                      }
+                      onClick={() => setDelete({ showModal: true, deviceToDelete: device })}
                       xmlns="http://www.w3.org/2000/svg"
                       width="16"
                       height="17"
@@ -862,18 +793,12 @@ const TwoFactorAuth = () => {
                 margin: "0",
               }}
             >
-              <button
-                onClick={() => setShowDevices(false)}
-                className={styles.close}
-              >
+              <button onClick={() => setShowDevices(false)} className={styles.close}>
                 <img src={Cancel} alt="" />
                 <p style={{ marginBottom: "0" }}>{t("Close")}</p>
               </button>
 
-              <button
-                onClick={() => setShowBioModal(true)}
-                className={styles.plus}
-              >
+              <button onClick={() => setShowBioModal(true)} className={styles.plus}>
                 <img src={Plus} alt="" />
                 <p style={{ marginBottom: "0" }}>{t("Register Biometric")}</p>
               </button>
@@ -973,10 +898,7 @@ const TwoFactorAuth = () => {
         >
           <ModalBody style={{ padding: "0", display: "flex" }}>
             {window.innerWidth > 1000 && (
-              <div
-                style={{ background: `url(${sideImg})` }}
-                className={styles.modalLeftSide}
-              >
+              <div style={{ background: `url(${sideImg})` }} className={styles.modalLeftSide}>
                 <div></div>
               </div>
             )}
@@ -1039,31 +961,16 @@ const TwoFactorAuth = () => {
                     ? t(
                         `You can now use your fingerprint to log in on this device. You can add 1 more devices as biometric authentication`,
                       )
-                        .replace(
-                          "1",
-                          devices.length === 0
-                            ? "2"
-                            : devices.length === 1
-                              ? "1"
-                              : "",
-                        )
+                        .replace("1", devices.length === 0 ? "2" : devices.length === 1 ? "1" : "")
                         .replace("can", devices.length < 1 ? "can" : "can't")
                     : deviceAddError
                       ? "We couldn't capture a valid fingerprint. Please try again."
-                      : t(
-                          "Confirm with biometrics to register your new passkey.",
-                        )}
+                      : t("Confirm with biometrics to register your new passkey.")}
                 </p>
               </div>
 
               <img
-                src={
-                  showSuccess
-                    ? FingerSuccess
-                    : deviceAddError
-                      ? FingerFailed
-                      : Finger
-                }
+                src={showSuccess ? FingerSuccess : deviceAddError ? FingerFailed : Finger}
                 alt=""
               />
 
@@ -1112,8 +1019,7 @@ const TwoFactorAuth = () => {
                           width: "100%",
                           background: "#FAFAFA",
                           borderRadius: "4px",
-                          padding:
-                            window.innerWidth > 1000 ? "8px 10px" : "15px",
+                          padding: window.innerWidth > 1000 ? "8px 10px" : "15px",
                           fontSize: "12px",
                           fontWeight: 600,
                         }}
@@ -1149,8 +1055,7 @@ const TwoFactorAuth = () => {
                 >
                   <button
                     style={{
-                      width:
-                        (window.innerWidth < 1000 || showSuccess) && "100%",
+                      width: (window.innerWidth < 1000 || showSuccess) && "100%",
                       background: showSuccess && "#5926F0",
                       color: showSuccess && "white",
                     }}
@@ -1187,9 +1092,7 @@ const TwoFactorAuth = () => {
           <ModalBody>
             <div className={styles.deleteModal}>
               <div>
-                <div
-                  style={{ display: "flex", alignItems: "center", gap: "10px" }}
-                >
+                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

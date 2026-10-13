@@ -50,11 +50,7 @@ const CustomSubmitButton = styled.button`
   padding: 10px 20px;
   /* background-color: #007bff; */
   background: rgb(3, 51, 164);
-  background: linear-gradient(
-    310deg,
-    rgba(3, 51, 164, 0.8) 16%,
-    rgba(240, 11, 240, 0.8) 97%
-  );
+  background: linear-gradient(310deg, rgba(3, 51, 164, 0.8) 16%, rgba(240, 11, 240, 0.8) 97%);
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -109,8 +105,7 @@ export default function SubscriptionRequest() {
       .split(" - ")?.[1]
       ?.split(" GMT")[0];
     try {
-      const apiUrl =
-        "https://fontawesomev23.com/api/webhook/set-subscription-payment-request";
+      const apiUrl = "https://fontawesomev23.com/api/webhook/set-subscription-payment-request";
       const requestBody = {
         data: {
           token,
@@ -152,17 +147,14 @@ export default function SubscriptionRequest() {
       setSelectedTimezone(`${timezone?.name}-${timezone?.timezone}`);
     }
   }, [defaul, timezones]);
-  const isDateValid =
-    selectedDate.isAfter(dayjs(), "day") || selectedDate.isSame(dayjs(), "day");
+  const isDateValid = selectedDate.isAfter(dayjs(), "day") || selectedDate.isSame(dayjs(), "day");
 
   // Example usage of platform for conditional UI (add where needed)
   // <div>{platform === "telegram" ? "Telegram flow" : "Instagram flow"}</div>
 
   const handleTimezoneFilter = (options, { inputValue }) => {
     const normalizedInput = inputValue.replace(/^(\+)([1-9])$/, "$10$2"); // Remove leading zeros
-    return options.filter((option) =>
-      option.toLowerCase().includes(normalizedInput.toLowerCase()),
-    );
+    return options.filter((option) => option.toLowerCase().includes(normalizedInput.toLowerCase()));
   };
   return (
     <div
@@ -186,12 +178,9 @@ export default function SubscriptionRequest() {
               autoplay={true}
             />
             <h5 style={{ padding: "1rem", textAlign: "center" }}>
-              {t(
-                "You can now close this webpage and go back to {{platform}}.",
-                {
-                  platform: platform === "telegram" ? "Telegram" : "Instagram",
-                },
-              )}
+              {t("You can now close this webpage and go back to {{platform}}.", {
+                platform: platform === "telegram" ? "Telegram" : "Instagram",
+              })}
             </h5>
             <RedirectButton platform={platform} />
           </CustomDatePickerContainer>
@@ -209,9 +198,7 @@ export default function SubscriptionRequest() {
                   flexDirection: "column",
                 }}
               >
-                <CustomLabel htmlFor="datepicker">
-                  {t("Select a Date:")}
-                </CustomLabel>
+                <CustomLabel htmlFor="datepicker">{t("Select a Date:")}</CustomLabel>
                 <MobileDatePicker
                   id="datepicker"
                   value={selectedDate}
@@ -227,24 +214,16 @@ export default function SubscriptionRequest() {
                   flexDirection: "column",
                 }}
               >
-                <CustomLabel htmlFor="timezone">
-                  {t("Select a Timezone:")}
-                </CustomLabel>
+                <CustomLabel htmlFor="timezone">{t("Select a Timezone:")}</CustomLabel>
                 <Autocomplete
                   fullWidth={true}
                   disablePortal
                   options={[
                     "System Default",
-                    ...timezones?.map(
-                      (option) => `${option.name} - ${option.timezone}`,
-                    ),
+                    ...timezones?.map((option) => `${option.name} - ${option.timezone}`),
                   ]}
                   getOptionLabel={(option) => option}
-                  value={
-                    selectedTimezone?.includes("undefined")
-                      ? ""
-                      : selectedTimezone
-                  }
+                  value={selectedTimezone?.includes("undefined") ? "" : selectedTimezone}
                   onChange={(e, newValue) => {
                     setSelectedTimezone(newValue);
                   }}
@@ -254,11 +233,7 @@ export default function SubscriptionRequest() {
                     <TextField
                       {...params}
                       variant="outlined"
-                      value={
-                        selectedTimezone?.includes("undefined")
-                          ? ""
-                          : selectedTimezone
-                      }
+                      value={selectedTimezone?.includes("undefined") ? "" : selectedTimezone}
                     />
                   )}
                 />

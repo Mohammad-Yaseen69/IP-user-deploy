@@ -66,21 +66,13 @@ const AdBlockCheck = () => {
   }, [adBlockDetected]);
 
   return (
-    <Modal
-      isOpen={show}
-      centered
-      backdrop="static"
-      keyboard={false}
-      className={style.modalMain}
-    >
+    <Modal isOpen={show} centered backdrop="static" keyboard={false} className={style.modalMain}>
       <ModalHeader className={style["modal-header"]}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <div className={style["alert-circle"]}>
             <IoWarning color="#fff" size={30} />
           </div>
-          <span className={style["modal-title"]}>
-            {t("Ad Blocker Detected")}
-          </span>
+          <span className={style["modal-title"]}>{t("Ad Blocker Detected")}</span>
         </div>
       </ModalHeader>
       <ModalBody>
@@ -99,16 +91,12 @@ const AdBlockCheck = () => {
           </p>
           <p className={style["no-ads"]}>
             {t("We value your experience and promise that")}
-            <span>{t("we do not show any ads")}</span>{" "}
-            {t("on our payment platform.")}
+            <span>{t("we do not show any ads")}</span> {t("on our payment platform.")}
           </p>
         </div>
       </ModalBody>
       <ModalFooter className={style["modal-footer"]}>
-        <Button
-          onClick={() => window.location.reload()}
-          className={style["reload-button"]}
-        >
+        <Button onClick={() => window.location.reload()} className={style["reload-button"]}>
           {t("I've disabled it - reload page")}
         </Button>
       </ModalFooter>

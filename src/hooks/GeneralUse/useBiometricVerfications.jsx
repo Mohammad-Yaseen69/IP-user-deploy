@@ -8,12 +8,7 @@ import {
   biometricVerification2,
 } from "../../Components/QrQuickerPay/queries";
 
-const useBiometricVerifications = (
-  data,
-  dataHandler,
-  handleGetFeeDetails,
-  invoice,
-) => {
+const useBiometricVerifications = (data, dataHandler, handleGetFeeDetails, invoice) => {
   const { mutateAsync: biometricVerification1Mutation } = useMutation({
     mutationFn: (payload) => biometricVerification1(payload),
   });

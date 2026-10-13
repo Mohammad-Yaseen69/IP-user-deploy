@@ -42,9 +42,7 @@ const RegistrationCompleted = ({ setStep, setIsLoginForm }) => {
     <div className={styles.container}>
       <div className={styles.left}>
         <h1>{t("Registration Completed")}</h1>
-        <h2>
-          {t("Unleash The Potential Of Social Media Payments with InstaPay")}
-        </h2>
+        <h2>{t("Unleash The Potential Of Social Media Payments with InstaPay")}</h2>
         <h3>{t("Few clicks away from transforming your life!")}</h3>
         <img src={logo} alt="Instapay" />
       </div>

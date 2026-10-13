@@ -30,8 +30,7 @@ const SchedulePayment = ({
     if (selectedDateObj.toDateString() === today.toDateString()) {
       const currentTime = today.getHours() * 60 + today.getMinutes();
       const selectedTimeMinutes =
-        parseInt(selectedTime.split(":")[0]) * 60 +
-        parseInt(selectedTime.split(":")[1]);
+        parseInt(selectedTime.split(":")[0]) * 60 + parseInt(selectedTime.split(":")[1]);
 
       return selectedTimeMinutes >= currentTime + 5;
     }
@@ -55,12 +54,8 @@ const SchedulePayment = ({
       setScheduleTime("");
     } else {
       setTimeError(false);
-      console.log(
-        new Date(`1970-10-01T${selectedTime}:00`).toLocaleTimeString(),
-      );
-      setScheduleTime(
-        new Date(`1970-10-01T${selectedTime}:00`).toLocaleTimeString(),
-      );
+      console.log(new Date(`1970-10-01T${selectedTime}:00`).toLocaleTimeString());
+      setScheduleTime(new Date(`1970-10-01T${selectedTime}:00`).toLocaleTimeString());
     }
   };
 
@@ -77,8 +72,7 @@ const SchedulePayment = ({
           padding: "20px",
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
       >
         <Card style={{ marginBottom: 0 }}>
@@ -97,15 +91,12 @@ const SchedulePayment = ({
             }}
           >
             {/* LEFT SIDE */}
-            <div
-              style={{ display: "flex", alignItems: "center", gap: ".5rem" }}
-            >
+            <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
               <div
                 style={{
                   minHeight: "35px",
                   minWidth: "35px",
-                  background:
-                    "linear-gradient(to top left, #e64067,#5926f0,#4828a0)",
+                  background: "linear-gradient(to top left, #e64067,#5926f0,#4828a0)",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
@@ -175,19 +166,15 @@ const SchedulePayment = ({
                 position: "relative",
               }}
             >
-              <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>
-                {t("Timezone")}
-              </p>
+              <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>{t("Timezone")}</p>
               <select
                 style={{
                   background: "#fff",
-                  background:
-                    "linear-gradient(to right,#E64067, #5926F0, #4828A0)",
+                  background: "linear-gradient(to right,#E64067, #5926F0, #4828A0)",
                   backgroundClip: "text",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
-                  boxShadow:
-                    "0px -1px 32px -3.3496174812316895px rgba(89, 38, 240, 0.36)",
+                  boxShadow: "0px -1px 32px -3.3496174812316895px rgba(89, 38, 240, 0.36)",
                   borderRadius: "100px",
                   border: "none",
                   outline: "none",
@@ -201,10 +188,7 @@ const SchedulePayment = ({
               >
                 <option value="">{t("Select A Timezone")}</option>
                 {timezones?.map((country) => (
-                  <option
-                    value={country?.name + "-" + country?.timezone}
-                    key={country?.name}
-                  >
+                  <option value={country?.name + "-" + country?.timezone} key={country?.name}>
                     {`${country?.name} - ${country?.timezone}`}
                   </option>
                 ))}
@@ -230,13 +214,11 @@ const SchedulePayment = ({
                 readOnly
                 style={{
                   background: "#fff",
-                  background:
-                    "linear-gradient(to right,#E64067, #5926F0, #4828A0)",
+                  background: "linear-gradient(to right,#E64067, #5926F0, #4828A0)",
                   backgroundClip: "text",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
-                  boxShadow:
-                    "0px -1px 32px -3.3496174812316895px rgba(89, 38, 240, 0.36)",
+                  boxShadow: "0px -1px 32px -3.3496174812316895px rgba(89, 38, 240, 0.36)",
                   borderRadius: "100px",
                   border: "none",
                   outline: "none",
@@ -266,10 +248,7 @@ const SchedulePayment = ({
                 onClick={(_) => setShowPicker(true)}
               />
               {showPicker && (
-                <CustomDatePicker
-                  setRecStartDate={setScheduleDate}
-                  setShowPicker={setShowPicker}
-                />
+                <CustomDatePicker setRecStartDate={setScheduleDate} setShowPicker={setShowPicker} />
               )}
             </div>
             {showDateError && (
@@ -306,13 +285,11 @@ const SchedulePayment = ({
                 type="time"
                 style={{
                   background: "#fff",
-                  background:
-                    "linear-gradient(to right,#E64067, #5926F0, #4828A0)",
+                  background: "linear-gradient(to right,#E64067, #5926F0, #4828A0)",
                   backgroundClip: "text",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
-                  boxShadow:
-                    "0px -1px 32px -3.3496174812316895px rgba(89, 38, 240, 0.36)",
+                  boxShadow: "0px -1px 32px -3.3496174812316895px rgba(89, 38, 240, 0.36)",
                   borderRadius: "100px",
                   border: "none",
                   outline: "none",

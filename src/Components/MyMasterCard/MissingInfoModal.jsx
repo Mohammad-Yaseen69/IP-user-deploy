@@ -40,9 +40,7 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess }) => {
 
   const sendOtp = async () => {
     if (!info) {
-      toast.error(
-        t("Please enter your {{missingType}}", { missingType: t(missingType) }),
-      );
+      toast.error(t("Please enter your {{missingType}}", { missingType: t(missingType) }));
       return;
     }
 
@@ -79,8 +77,7 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess }) => {
   const updateUserDetails = async () => {
     try {
       const data = missingType === "email" ? { email: info } : { phone: info };
-      const type =
-        userDetails?.account_type === "individual" ? "individual" : "business";
+      const type = userDetails?.account_type === "individual" ? "individual" : "business";
 
       const res = await axios.put(
         `${import.meta.env.VITE_IP_DEV_API}/api/account/update-${type}/${userDetails?._id}`,
@@ -154,9 +151,7 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess }) => {
           phone={info}
           disableDropdown={true}
           country={
-            countriesData.find(
-              (item) => item.alpha3 === userDetails?.country_iso_code,
-            )?.alpha3
+            countriesData.find((item) => item.alpha3 === userDetails?.country_iso_code)?.alpha3
           }
           setPhone={setInfo}
           customStyles={{
@@ -186,10 +181,7 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess }) => {
 
   return (
     <Modal toggle={toggle} isOpen={isOpen} centered backdrop="static">
-      <ModalHeader
-        toggle={toggle}
-        style={{ borderBottom: "none", paddingBottom: "0" }}
-      >
+      <ModalHeader toggle={toggle} style={{ borderBottom: "none", paddingBottom: "0" }}>
         <div style={{ fontWeight: "700", fontSize: "1.25rem", color: "#333" }}>
           {t("Add {{missingType}} to continue", {
             missingType: t(missingType),
@@ -200,15 +192,12 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess }) => {
         {!showOtp ? (
           <div>
             <p style={{ color: "#666", marginBottom: "1.5rem" }}>
-              {t(
-                "To proceed with your MasterCard purchase, please provide your {{missingType}}.",
-                { missingType: t(missingType) },
-              )}
+              {t("To proceed with your MasterCard purchase, please provide your {{missingType}}.", {
+                missingType: t(missingType),
+              })}
             </p>
             <FormGroup>
-              <Label
-                style={{ fontWeight: "600", fontSize: "0.9rem", color: "#555" }}
-              >
+              <Label style={{ fontWeight: "600", fontSize: "0.9rem", color: "#555" }}>
                 {t(missingType === "email" ? "Email Address" : "Phone Number")}
               </Label>
               {renderInput()}
@@ -236,11 +225,7 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess }) => {
       </ModalBody>
       {!showOtp && (
         <ModalFooter style={{ borderTop: "none", paddingTop: "0" }}>
-          <Button
-            color="link"
-            onClick={toggle}
-            style={{ color: "#666", textDecoration: "none" }}
-          >
+          <Button color="link" onClick={toggle} style={{ color: "#666", textDecoration: "none" }}>
             {t("Cancel")}
           </Button>
           <Button

@@ -132,10 +132,7 @@ const SelfieModal = ({ isOpen, toggle, onUploadSuccess }) => {
       onUploadSuccess();
       handleToggle();
     } catch (err) {
-      toast.error(
-        err.response?.data?.message ||
-          t("Failed to upload selfie. Please try again."),
-      );
+      toast.error(err.response?.data?.message || t("Failed to upload selfie. Please try again."));
     } finally {
       setIsUploading(false);
     }
@@ -148,20 +145,9 @@ const SelfieModal = ({ isOpen, toggle, onUploadSuccess }) => {
   };
 
   return (
-    <Modal
-      toggle={handleToggle}
-      isOpen={isOpen}
-      centered
-      backdrop="static"
-      size="md"
-    >
-      <ModalHeader
-        toggle={handleToggle}
-        style={{ borderBottom: "none", paddingBottom: "0" }}
-      >
-        <div
-          style={{ fontWeight: "700", fontSize: "1.25rem", color: "#1e293b" }}
-        >
+    <Modal toggle={handleToggle} isOpen={isOpen} centered backdrop="static" size="md">
+      <ModalHeader toggle={handleToggle} style={{ borderBottom: "none", paddingBottom: "0" }}>
+        <div style={{ fontWeight: "700", fontSize: "1.25rem", color: "#1e293b" }}>
           {t("Additional Document for Your Mastercard")}
         </div>
       </ModalHeader>
@@ -214,15 +200,9 @@ const SelfieModal = ({ isOpen, toggle, onUploadSuccess }) => {
                   cursor: "pointer",
                   transition: "all 0.2s ease",
                 }}
-                onClick={() =>
-                  document.getElementById("selfie-upload-input").click()
-                }
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.borderColor = "#5926f0")
-                }
-                onMouseOut={(e) =>
-                  (e.currentTarget.style.borderColor = "#cbd5e1")
-                }
+                onClick={() => document.getElementById("selfie-upload-input").click()}
+                onMouseOver={(e) => (e.currentTarget.style.borderColor = "#5926f0")}
+                onMouseOut={(e) => (e.currentTarget.style.borderColor = "#cbd5e1")}
               >
                 <div style={{ color: "#5926f0", marginBottom: "8px" }}>
                   <UploadCloud size={32} />
@@ -250,12 +230,8 @@ const SelfieModal = ({ isOpen, toggle, onUploadSuccess }) => {
                   transition: "all 0.2s ease",
                 }}
                 onClick={startCamera}
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.borderColor = "#5926f0")
-                }
-                onMouseOut={(e) =>
-                  (e.currentTarget.style.borderColor = "#cbd5e1")
-                }
+                onMouseOver={(e) => (e.currentTarget.style.borderColor = "#5926f0")}
+                onMouseOut={(e) => (e.currentTarget.style.borderColor = "#cbd5e1")}
               >
                 <div style={{ color: "#5926f0", marginBottom: "8px" }}>
                   <Camera size={32} />
@@ -399,9 +375,7 @@ const SelfieModal = ({ isOpen, toggle, onUploadSuccess }) => {
                       gap: "6px",
                       border: "none",
                     }}
-                    onClick={() =>
-                      document.getElementById("selfie-upload-input").click()
-                    }
+                    onClick={() => document.getElementById("selfie-upload-input").click()}
                   >
                     <RefreshCw size={14} />
                     {t("Reupload")}

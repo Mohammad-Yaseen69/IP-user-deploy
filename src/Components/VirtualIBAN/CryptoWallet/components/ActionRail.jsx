@@ -58,12 +58,8 @@ const ActionRail = () => {
                 className={`${styles.railRadio} ${sendTo === "saved" ? styles.railRadioOn : ""}`}
               />
               <span>
-                <span className={styles.railOptionTitle}>
-                  {t("Saved beneficiary")}
-                </span>
-                <p className={styles.railOptionSub}>
-                  {t("Pick a contact & their crypto channel")}
-                </p>
+                <span className={styles.railOptionTitle}>{t("Saved beneficiary")}</span>
+                <p className={styles.railOptionSub}>{t("Pick a contact & their crypto channel")}</p>
               </span>
             </div>
             <div
@@ -74,12 +70,8 @@ const ActionRail = () => {
                 className={`${styles.railRadio} ${sendTo === "new" ? styles.railRadioOn : ""}`}
               />
               <span>
-                <span className={styles.railOptionTitle}>
-                  {t("New wallet address")}
-                </span>
-                <p className={styles.railOptionSub}>
-                  {t("Paste an external address")}
-                </p>
+                <span className={styles.railOptionTitle}>{t("New wallet address")}</span>
+                <p className={styles.railOptionSub}>{t("Paste an external address")}</p>
               </span>
             </div>
           </div>
@@ -96,9 +88,7 @@ const ActionRail = () => {
         <div>
           <span className={styles.railLabel}>{t("Crypto channel")}</span>
           <div className={`${styles.railSelect} ${styles.railSelectSm}`}>
-            <span className={styles.railSelectMain}>
-              USDT • Tron — TQ5n8pJm2V...ONs2Lp
-            </span>
+            <span className={styles.railSelectMain}>USDT • Tron — TQ5n8pJm2V...ONs2Lp</span>
             <ChevronDown size={18} className={styles.railChevron} />
           </div>
         </div>

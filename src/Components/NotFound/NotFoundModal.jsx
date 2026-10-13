@@ -58,11 +58,7 @@ const NotFoundModal = ({
           </>
         ))}
         <div style={{ marginTop: "1.5rem", display: "flex", gap: "1rem" }}>
-          <Button
-            style={{ borderRadius: "9px" }}
-            color="danger"
-            onClick={toggle}
-          >
+          <Button style={{ borderRadius: "9px" }} color="danger" onClick={toggle}>
             {t(buttonText)}
           </Button>
           <Button

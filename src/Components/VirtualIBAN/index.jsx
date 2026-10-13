@@ -3,10 +3,7 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../Context/UserContext";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
-import {
-  useVirtualIbanProcessingStatus,
-  useVirtualIbans,
-} from "../../hooks/useVirtualIban";
+import { useVirtualIbanProcessingStatus, useVirtualIbans } from "../../hooks/useVirtualIban";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import useWindowWidth from "../../utils/useWindowWidth";
 import InstaPayLoader from "../Loader";
@@ -25,24 +22,18 @@ import IBANDetails from "./IBAN/IBANDetails";
 import Manage from "./Manage/Manage";
 import OnboardingIBAN from "./OnBoardingIBAN";
 import styles from "./styles/index.module.css";
-import {
-  asVirtualIbanArray,
-  isVirtualIbanAdminBlocked,
-} from "./utils/virtualIban";
+import { asVirtualIbanArray, isVirtualIbanAdminBlocked } from "./utils/virtualIban";
 import VirtualIbanModal from "./VirtualIbanModal";
 import Notifications from "../Notifications";
 import LanguagePicker from "../LanguagePicker";
 import { ChevronLeft } from "react-feather";
 
 const VirtualBank = () => {
-  const { userDetails, selectedAccount, setSelectedAccount } =
-    useContext(UserContext);
+  const { userDetails, selectedAccount, setSelectedAccount } = useContext(UserContext);
   const { t } = useTranslation();
   const can = usePermission();
   const width = useWindowWidth();
-  const { data: rawIbans = [], isLoading: ibansLoading } = useVirtualIbans(
-    userDetails?._id,
-  );
+  const { data: rawIbans = [], isLoading: ibansLoading } = useVirtualIbans(userDetails?._id);
   const { data: ibanCreationStatus, isLoading: ibanCreationStatusLoading } =
     useVirtualIbanProcessingStatus();
   const [activeTab, setActiveTab] = useState("overview");
@@ -60,9 +51,7 @@ const VirtualBank = () => {
   const canUpdateStatus = can("virtual-iban.status.update");
 
   const selectedIban = useMemo(
-    () =>
-      ibans.find((iban) => (iban?._id || iban?.id) === selectedAccount) ||
-      ibans[0],
+    () => ibans.find((iban) => (iban?._id || iban?.id) === selectedAccount) || ibans[0],
     [ibans, selectedAccount],
   );
   const selectedIbanAdminBlocked = isVirtualIbanAdminBlocked(selectedIban);
@@ -175,15 +164,11 @@ const VirtualBank = () => {
       <div className={styles.top}>
         <div className={styles.headerTitle}>
           <h1>
-            {userDetails?.account_type === "business"
-              ? t("Business IBAN")
-              : t("My virtual bank")}
+            {userDetails?.account_type === "business" ? t("Business IBAN") : t("My virtual bank")}
           </h1>
           <p>
             {userDetails?.account_type === "business"
-              ? t(
-                  "Activate a dedicated business account to receive and hold company funds.",
-                )
+              ? t("Activate a dedicated business account to receive and hold company funds.")
               : t("Manage and monitor your InstaPay Virtual Bank Account.")}
           </p>
         </div>
@@ -195,10 +180,7 @@ const VirtualBank = () => {
           <div className={styles.mobileTop}>
             <div className={styles.headerTitle}>
               {onboardingStep !== "landing" && (
-                <ChevronLeft
-                  size={22}
-                  onClick={() => onboardingRef.current?.back()}
-                />
+                <ChevronLeft size={22} onClick={() => onboardingRef.current?.back()} />
               )}
               <h1>
                 {onboardingStep === "pricing"
@@ -224,10 +206,7 @@ const VirtualBank = () => {
         <div style={{ minHeight: "520px", width: "100%" }} />
       ) : showGetIBAN || (ibans.length === 0 && canCreateIban) ? (
         userDetails?.account_type === "business" ? (
-          <OnboardingIBAN
-            ref={onboardingRef}
-            onStepChange={setOnboardingStep}
-          />
+          <OnboardingIBAN ref={onboardingRef} onStepChange={setOnboardingStep} />
         ) : (
           <IBAN onCreated={handleBackToDashboard} />
         )

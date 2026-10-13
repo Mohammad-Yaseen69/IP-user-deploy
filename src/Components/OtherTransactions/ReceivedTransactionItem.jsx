@@ -77,11 +77,7 @@ const ReceivedTransactionItem = ({
             : "N/A"}
         </div>
         <div>
-          {"recursive" in item
-            ? item?.recursive === true
-              ? "Recursive"
-              : "Schedule"
-            : "N/A"}
+          {"recursive" in item ? (item?.recursive === true ? "Recursive" : "Schedule") : "N/A"}
         </div>
         <div>
           {item?.type?.[0]?.toUpperCase()}
@@ -117,8 +113,7 @@ const ReceivedTransactionItem = ({
             style={{
               borderRadius: "9.938px",
               flex: "none",
-              background:
-                "linear-gradient(to top left,#e1e1e1,#e2e2e2,#b5b5b5)",
+              background: "linear-gradient(to top left,#e1e1e1,#e2e2e2,#b5b5b5)",
               boxShadow: "0px 3.3125px 5.79688px 0px rgba(172, 53, 159, 0.31)",
               display: "flex",
               justifyContent: "center",
@@ -127,18 +122,11 @@ const ReceivedTransactionItem = ({
               width: "34px",
               aspectRatio: 1,
               margin: "0 auto",
-              opacity:
-                item?.status === "processing" || item?.status === "pending"
-                  ? 1
-                  : 0,
+              opacity: item?.status === "processing" || item?.status === "pending" ? 1 : 0,
               pointerEvents:
-                item?.status === "processing" || item?.status === "pending"
-                  ? "all"
-                  : "none",
+                item?.status === "processing" || item?.status === "pending" ? "all" : "none",
             }}
-            onClick={() =>
-              cancelSubscriptionOrSchedulePayment(item, authHeader, verifyToken)
-            }
+            onClick={() => cancelSubscriptionOrSchedulePayment(item, authHeader, verifyToken)}
           >
             <X color="#fff" />
           </div>

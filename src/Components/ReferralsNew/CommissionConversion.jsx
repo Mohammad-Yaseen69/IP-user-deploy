@@ -1,13 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Button,
-  Input,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-} from "reactstrap";
+import { Button, Input, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { UserContext } from "../../Context/UserContext";
 import { NumberInputValidator } from "../../Helper/NumberInput";
 import Draggable from "react-draggable";
@@ -35,8 +28,7 @@ const CommissionConversion = ({
   const { t } = useTranslation();
   const [amount, setAmount] = useState(1);
   const [currency, setCurrency] = useState(defaultCurrency || "USD");
-  const { userWallets, authHeader, userDetails, setProfileLockTime } =
-    useContext(UserContext);
+  const { userWallets, authHeader, userDetails, setProfileLockTime } = useContext(UserContext);
   const [token, setToken] = useState("");
   const [confirmed, setConfirmed] = useState(false);
   const [complete, setComplete] = useState(false);
@@ -143,10 +135,8 @@ const CommissionConversion = ({
             "We cannot process your request at the moment, please try again later.",
         );
         if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-          const time =
-            decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
-          const timeInSec =
-            +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
+          const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+          const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
           setProfileLockTime(timeInSec);
           const coun = localStorage.getItem("ip_country");
           localStorage.clear();
@@ -168,9 +158,7 @@ const CommissionConversion = ({
     const getCommissionRates = async () => {
       setFx({});
       try {
-        const wallet = userWallets?.find(
-          (it) => it?.currency?.code === currency,
-        );
+        const wallet = userWallets?.find((it) => it?.currency?.code === currency);
         const res = await axios.get(
           `${import.meta.env.VITE_IP_DEV_API}/api/invitation/get-withdrawal-rates/USD/${userDetails?.level?._id}/${amount}/${wallet?._id}`,
         );
@@ -250,11 +238,7 @@ const CommissionConversion = ({
               </div>
             ) : step === 2 ? (
               <>
-                <Input
-                  type="select"
-                  value={currency}
-                  onChange={(e) => setCurrency(e.target.value)}
-                >
+                <Input type="select" value={currency} onChange={(e) => setCurrency(e.target.value)}>
                   {userWallets
                     ?.filter(
                       (item) =>
@@ -266,9 +250,7 @@ const CommissionConversion = ({
                         item?.status === "active",
                     )
                     ?.map((item) => (
-                      <option value={item?.currency?.code}>
-                        {item?.currency?.code}{" "}
-                      </option>
+                      <option value={item?.currency?.code}>{item?.currency?.code} </option>
                     ))}
                 </Input>
                 {fxError ? (
@@ -332,13 +314,10 @@ const CommissionConversion = ({
                           <span>{t("Exchange Rate")}</span>
                           <span>
                             {t("1.00 USD =")}
-                            {Number(fx?.exchange_rate?.value)?.toLocaleString(
-                              "en-US",
-                              {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                              },
-                            )}{" "}
+                            {Number(fx?.exchange_rate?.value)?.toLocaleString("en-US", {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })}{" "}
                             {fx?.exchange_rate?.currency}
                           </span>
                         </div>
@@ -353,13 +332,10 @@ const CommissionConversion = ({
                       >
                         <span>{t("You will Get")}</span>
                         <span>
-                          {Number(fx?.recipient?.value)?.toLocaleString(
-                            "en-US",
-                            {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2,
-                            },
-                          )}{" "}
+                          {Number(fx?.recipient?.value)?.toLocaleString("en-US", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}{" "}
                           {fx?.recipient?.currency}
                         </span>
                       </div>
@@ -372,8 +348,7 @@ const CommissionConversion = ({
                           background:
                             "linear-gradient(0deg, rgba(11, 13, 65, 0.16), rgba(11, 13, 65, 0.16)), radial-gradient(182.3% 794.57% at 91.57% -107.9%, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
                           backgroundBlendMode: "color-burn,normal",
-                          boxShadow:
-                            "0px 6px 13px -5.4094px rgba(89, 38, 240, 0.17)",
+                          boxShadow: "0px 6px 13px -5.4094px rgba(89, 38, 240, 0.17)",
                           borderRadius: "16px",
                           padding: "1rem",
                           width: "100%",

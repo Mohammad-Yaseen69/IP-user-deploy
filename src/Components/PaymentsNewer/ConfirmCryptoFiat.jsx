@@ -6,12 +6,7 @@ import { useTranslation } from "react-i18next";
 import faded_lines from "./files/faded_lines.png";
 import { payoutChannelData } from "./CryptoPayoutChannel";
 
-const ConfirmCryptoFiat = ({
-  setSubStep,
-  cryptoCurrency,
-  amount,
-  walletAddress,
-}) => {
+const ConfirmCryptoFiat = ({ setSubStep, cryptoCurrency, amount, walletAddress }) => {
   const { t } = useTranslation();
   const [complete, setComplete] = useState(false);
   const pRef = useRef(null);
@@ -52,8 +47,7 @@ const ConfirmCryptoFiat = ({
           borderRadius: "20px",
           padding: window.innerWidth < 1500 ? "20px" : "20px 40px",
           paddingBottom: 0,
-          boxShadow:
-            "0px 2px 20px -5.704601287841797px rgba(89, 38, 240, 0.07)",
+          boxShadow: "0px 2px 20px -5.704601287841797px rgba(89, 38, 240, 0.07)",
         }}
         className="conf_cont"
       >
@@ -65,9 +59,7 @@ const ConfirmCryptoFiat = ({
             marginBottom: window.innerWidth < 1500 ? 0 : "1.5rem",
           }}
         >
-          <h5 style={{ fontSize: "1rem", color: "#a8a8a8" }}>
-            {t("You Are Sending")}
-          </h5>
+          <h5 style={{ fontSize: "1rem", color: "#a8a8a8" }}>{t("You Are Sending")}</h5>
           <h4 style={{ fontWeight: "900" }} className="f_s_3r">
             ${amount}
           </h4>
@@ -110,8 +102,7 @@ const ConfirmCryptoFiat = ({
             }}
           >
             {(
-              +amount.split(",").join("") /
-              +cryptoCurrency.price.split(" ")[0].split(",").join("")
+              +amount.split(",").join("") / +cryptoCurrency.price.split(" ")[0].split(",").join("")
             ).toFixed(5)}
           </h4>
         </div>
@@ -170,9 +161,7 @@ const ConfirmCryptoFiat = ({
             borderRadius: "12px",
           }}
         >
-          <span style={{ color: "#a6a4ac" }}>
-            {t("To recipient (wallet id)")}
-          </span>
+          <span style={{ color: "#a6a4ac" }}>{t("To recipient (wallet id)")}</span>
           <h5
             style={{
               fontSize: "1.1rem",
@@ -213,9 +202,7 @@ const ConfirmCryptoFiat = ({
             borderRadius: "16px",
           }}
         >
-          <span style={{ color: "#a6a4ac", minWidth: "60px" }}>
-            {t("Via")}:{" "}
-          </span>
+          <span style={{ color: "#a6a4ac", minWidth: "60px" }}>{t("Via")}: </span>
           <div
             style={{
               display: "flex",
@@ -247,9 +234,7 @@ const ConfirmCryptoFiat = ({
                 }}
               />
             </div>
-            <h4 style={{ marginBottom: 0, fontSize: "1.1rem" }}>
-              {payoutChannel.name}
-            </h4>
+            <h4 style={{ marginBottom: 0, fontSize: "1.1rem" }}>{payoutChannel.name}</h4>
           </div>
         </div>
 

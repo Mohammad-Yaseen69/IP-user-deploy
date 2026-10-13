@@ -27,8 +27,7 @@ const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
     setFormData((prev) => ({ ...prev, isIndependent: !prev.isIndependent }));
   };
 
-  const isStep1Valid =
-    formData.companyName.trim() !== "" && formData.email.trim() !== "";
+  const isStep1Valid = formData.companyName.trim() !== "" && formData.email.trim() !== "";
   const isStep2Valid = formData.clientProfile.trim() !== "";
 
   const handleNext = () => {
@@ -64,15 +63,9 @@ const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
                 <div
                   className={`${styles.stepIndicator} ${step > 1 ? styles.stepIndicatorCompleted : styles.stepIndicatorActive}`}
                 >
-                  {step > 1 ? (
-                    <Check size={14} />
-                  ) : (
-                    <div className={styles.dotActive} />
-                  )}
+                  {step > 1 ? <Check size={14} /> : <div className={styles.dotActive} />}
                 </div>
-                <span
-                  className={`${styles.stepLabel} ${styles.stepLabelActive}`}
-                >
+                <span className={`${styles.stepLabel} ${styles.stepLabelActive}`}>
                   {t("Sub-agent profile")}
                 </span>
               </div>
@@ -167,21 +160,14 @@ const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
                   />
                 </div>
 
-                <div
-                  className={styles.checkboxContainer}
-                  onClick={handleCheckboxChange}
-                >
+                <div className={styles.checkboxContainer} onClick={handleCheckboxChange}>
                   <div
                     className={`${styles.checkbox} ${formData.isIndependent ? styles.checkboxChecked : ""}`}
                   >
-                    {formData.isIndependent && (
-                      <Check size={12} strokeWidth={3} />
-                    )}
+                    {formData.isIndependent && <Check size={12} strokeWidth={3} />}
                   </div>
                   <span className={styles.checkboxLabel}>
-                    {t(
-                      "Sub-agent acts independently and holds their own required license.",
-                    )}
+                    {t("Sub-agent acts independently and holds their own required license.")}
                   </span>
                 </div>
               </>
@@ -190,9 +176,7 @@ const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
             {step === 2 && (
               <>
                 <div className={styles.formGroup}>
-                  <label className={styles.label}>
-                    {t("Select client profile")}
-                  </label>
+                  <label className={styles.label}>{t("Select client profile")}</label>
                   <div className={styles.selectWrapper}>
                     <select
                       className={`${styles.select} ${!formData.clientProfile ? styles.placeholderText : ""}`}
@@ -204,18 +188,14 @@ const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
                       </option>
                       <option value="apex">{t("Apex Platinum Co.")}</option>
                       <option value="regal">{t("Regal Goldsmiths")}</option>
-                      <option value="blue">
-                        {t("BlueLine Button Traders")}
-                      </option>
+                      <option value="blue">{t("BlueLine Button Traders")}</option>
                     </select>
                     <ChevronDown className={styles.selectIcon} size={16} />
                   </div>
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label className={styles.label}>
-                    {t("Commission split")}
-                  </label>
+                  <label className={styles.label}>{t("Commission split")}</label>
                   <input
                     type="text"
                     className={styles.input}
@@ -225,9 +205,7 @@ const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label className={styles.label}>
-                    {t("Assign more clients (Optional)")}
-                  </label>
+                  <label className={styles.label}>{t("Assign more clients (Optional)")}</label>
                   <div className={styles.selectWrapper}>
                     <select
                       className={`${styles.select} ${!formData.additionalClients ? styles.placeholderText : ""}`}
@@ -248,31 +226,19 @@ const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
             {step === 3 && (
               <div className={styles.reviewSection}>
                 <div>
-                  <h4 className={styles.reviewSubtitle}>
-                    {t("Primary Contact")}
-                  </h4>
+                  <h4 className={styles.reviewSubtitle}>{t("Primary Contact")}</h4>
                 </div>
                 <div className={styles.profileRow}>
-                  <div className={`${styles.avatar} ${styles.avatarPurple}`}>
-                    {t("AP")}
-                  </div>
-                  <span className={styles.profileName}>
-                    {t("Anna Petrova")}
-                  </span>
+                  <div className={`${styles.avatar} ${styles.avatarPurple}`}>{t("AP")}</div>
+                  <span className={styles.profileName}>{t("Anna Petrova")}</span>
                 </div>
                 <div className={styles.detailsGrid}>
                   <div className={styles.detailItem}>
-                    <span className={styles.detailLabel}>
-                      {t("Email Address")}
-                    </span>
-                    <span className={styles.detailValue}>
-                      {t("anna@example.com")}
-                    </span>
+                    <span className={styles.detailLabel}>{t("Email Address")}</span>
+                    <span className={styles.detailValue}>{t("anna@example.com")}</span>
                   </div>
                   <div className={styles.detailItem}>
-                    <span className={styles.detailLabel}>
-                      {t("Mobile Number")}
-                    </span>
+                    <span className={styles.detailLabel}>{t("Mobile Number")}</span>
                     <span className={styles.detailValue}>+44 1234 567890</span>
                   </div>
                 </div>
@@ -280,34 +246,22 @@ const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
                 <div className={styles.divider} />
 
                 <div className={styles.reviewHeaderFlex}>
-                  <h4 className={styles.reviewTitleDark}>
-                    {t("Assigned clients (2)")}
-                  </h4>
-                  <button className={styles.resetBtn}>
-                    {t("Reset selection")}
-                  </button>
+                  <h4 className={styles.reviewTitleDark}>{t("Assigned clients (2)")}</h4>
+                  <button className={styles.resetBtn}>{t("Reset selection")}</button>
                 </div>
 
                 <div className={styles.clientList}>
                   <div className={styles.clientRow}>
                     <div className={styles.clientInfo}>
-                      <div className={`${styles.avatar} ${styles.avatarBlue}`}>
-                        {t("AP")}
-                      </div>
-                      <span className={styles.clientName}>
-                        {t("Apex Platinum Co.")}
-                      </span>
+                      <div className={`${styles.avatar} ${styles.avatarBlue}`}>{t("AP")}</div>
+                      <span className={styles.clientName}>{t("Apex Platinum Co.")}</span>
                     </div>
                     <span className={styles.clientCommission}>30%</span>
                   </div>
                   <div className={styles.clientRow}>
                     <div className={styles.clientInfo}>
-                      <div className={`${styles.avatar} ${styles.avatarGreen}`}>
-                        {t("BB")}
-                      </div>
-                      <span className={styles.clientName}>
-                        {t("BlueLine Button Traders")}
-                      </span>
+                      <div className={`${styles.avatar} ${styles.avatarGreen}`}>{t("BB")}</div>
+                      <span className={styles.clientName}>{t("BlueLine Button Traders")}</span>
                     </div>
                     <span className={styles.clientCommission}>30%</span>
                   </div>
@@ -332,10 +286,7 @@ const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
                 <button
                   className={styles.btnPrimary}
                   onClick={handleNext}
-                  disabled={
-                    (step === 1 && !isStep1Valid) ||
-                    (step === 2 && !isStep2Valid)
-                  }
+                  disabled={(step === 1 && !isStep1Valid) || (step === 2 && !isStep2Valid)}
                 >
                   {t("Next")}
                 </button>

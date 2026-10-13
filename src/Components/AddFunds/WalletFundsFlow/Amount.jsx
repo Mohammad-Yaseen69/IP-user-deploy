@@ -17,9 +17,7 @@ const Amount = ({ data, dataHandler }) => {
   const { userDetails, authHeader } = useContext(UserContext);
 
   const _wallet =
-    data && typeof data.wallet === "object" && data.wallet !== null
-      ? data.wallet
-      : {};
+    data && typeof data.wallet === "object" && data.wallet !== null ? data.wallet : {};
   const [formattedAmount, setFormattedAmount] = useState(data?.amount);
   const handleKeyUp = (e) => {
     const cursor = e.target.selectionStart;
@@ -67,13 +65,9 @@ const Amount = ({ data, dataHandler }) => {
       });
       // dataHandler("amount", walletData?.min_topup_amount ?? data?.limits?.min)
 
-      const currentAmountNum = parseFloat(
-        String(formattedAmount ?? "0").replaceAll(",", ""),
-      );
+      const currentAmountNum = parseFloat(String(formattedAmount ?? "0").replaceAll(",", ""));
       const minAmountNum = parseFloat(
-        String(
-          walletData?.min_topup_amount ?? data?.limits?.min ?? "0",
-        ).replaceAll(",", ""),
+        String(walletData?.min_topup_amount ?? data?.limits?.min ?? "0").replaceAll(",", ""),
       );
 
       if (!currentAmountNum || currentAmountNum < minAmountNum) {
@@ -95,26 +89,20 @@ const Amount = ({ data, dataHandler }) => {
     let errorMsg = "";
     if (
       !data.amount ||
-      +String(data.amount ?? "")?.replaceAll(",", "") <
-        +formatCurrencyLocal(limits.min)
+      +String(data.amount ?? "")?.replaceAll(",", "") < +formatCurrencyLocal(limits.min)
     ) {
       errorMsg = `Minimum transactional amount is ${limits.min}`;
-    } else if (
-      +String(data.amount ?? "")?.replaceAll(",", "") >
-      +formatCurrencyLocal(limits.max)
-    ) {
+    } else if (+String(data.amount ?? "")?.replaceAll(",", "") > +formatCurrencyLocal(limits.max)) {
       errorMsg = `Maximum transactional amount is ${limits.max}`;
     } else if (
       userDetails?.account_type === "individual"
         ? userDetails?.user?.kyc_status !== "approved"
         : userDetails?.company?.kyb_status !== "approved" &&
-          +String(data.amount ?? "").replaceAll(",", "") >
-            +formatCurrencyLocal(limits.max)
+          +String(data.amount ?? "").replaceAll(",", "") > +formatCurrencyLocal(limits.max)
     ) {
       console.log(
         "SNAPSHOT FOR LIMIT ERROR",
-        +String(data.amount ?? "").replaceAll(",", "") >
-          +formatCurrencyLocal(limits.max),
+        +String(data.amount ?? "").replaceAll(",", "") > +formatCurrencyLocal(limits.max),
         +String(data.amount ?? "").replaceAll(",", ""),
         +formatCurrencyLocal(limits.max),
         userDetails?.user?.kyc_status,
@@ -136,9 +124,7 @@ const Amount = ({ data, dataHandler }) => {
       <div className={styles.amount}>
         <label>{t("Enter Amount")}</label>
         <div style={{ display: "flex", gap: ".5rem" }}>
-          <span style={{ width: "fit-content" }}>
-            {_wallet?.currency?.code}{" "}
-          </span>
+          <span style={{ width: "fit-content" }}>{_wallet?.currency?.code} </span>
           <input
             type="text"
             value={formattedAmount}
@@ -165,10 +151,8 @@ const Amount = ({ data, dataHandler }) => {
         </span>
       </div>
       {!data.amount ||
-      +String(data.amount ?? "")?.replaceAll(",", "") <
-        +formatCurrencyLocal(limits.min) ||
-      +String(data.amount ?? "")?.replaceAll(",", "") >
-        +formatCurrencyLocal(limits.max) ? (
+      +String(data.amount ?? "")?.replaceAll(",", "") < +formatCurrencyLocal(limits.min) ||
+      +String(data.amount ?? "")?.replaceAll(",", "") > +formatCurrencyLocal(limits.max) ? (
         <div
           style={{
             height: "100px",
@@ -183,16 +167,13 @@ const Amount = ({ data, dataHandler }) => {
         >
           {userDetails?.user?.kyc_status !== "approved" &&
           userDetails?.company?.kyb_status !== "approved" &&
-          +String(data.amount ?? "")?.replaceAll(",", "") >
-            +formatCurrencyLocal(limits.max)
+          +String(data.amount ?? "")?.replaceAll(",", "") > +formatCurrencyLocal(limits.max)
             ? t(
                 "⚠️ Invalid Amount: Your current  identity verification level limits the  maximum amount you can add. Please upgrade your identity verification to benefit from higher limits",
               ).replace("⚠️ ", "")
-            : +String(data.amount ?? "")?.replaceAll(",", "") <
-                +formatCurrencyLocal(limits.min)
+            : +String(data.amount ?? "")?.replaceAll(",", "") < +formatCurrencyLocal(limits.min)
               ? "Minimum transactional amount is " + limits.min
-              : +String(data.amount ?? "")?.replaceAll(",", "") >
-                  +formatCurrencyLocal(limits.max)
+              : +String(data.amount ?? "")?.replaceAll(",", "") > +formatCurrencyLocal(limits.max)
                 ? "Maximum transactional amount is " + limits.max
                 : formattedAmount
                   ? t("Invalid Amount")

@@ -52,21 +52,16 @@ const SendPaymentType = ({ sendPaymentType, setStep, setSendPaymentType }) => {
       ) : (
         ""
       )}
-      {!isInternational &&
-        userDetails?.level?.wallet_to_wallet?.send &&
-        canSendWallet && (
-          // <WalletTransfer sendPaymentType={sendPaymentType} setStep={setStep} setSendPaymentType={setSendPaymentType} setIsWallet={setIsWallet} />
-          <WalletToWalletFlow
-            sendPaymentType={sendPaymentType}
-            setStep={setStep}
-            setSendPaymentType={setSendPaymentType}
-            setIsWallet={setIsWallet}
-          />
-        )}
-      {!isInternational &&
-      !isWallet &&
-      userDetails?.level?.qr_pay?.send &&
-      canSendQr ? (
+      {!isInternational && userDetails?.level?.wallet_to_wallet?.send && canSendWallet && (
+        // <WalletTransfer sendPaymentType={sendPaymentType} setStep={setStep} setSendPaymentType={setSendPaymentType} setIsWallet={setIsWallet} />
+        <WalletToWalletFlow
+          sendPaymentType={sendPaymentType}
+          setStep={setStep}
+          setSendPaymentType={setSendPaymentType}
+          setIsWallet={setIsWallet}
+        />
+      )}
+      {!isInternational && !isWallet && userDetails?.level?.qr_pay?.send && canSendQr ? (
         // <QrPayment sendPaymentType={sendPaymentType} setStep={setStep} setSendPaymentType={setSendPaymentType} />
         <QRFlow
           sendPaymentType={sendPaymentType}

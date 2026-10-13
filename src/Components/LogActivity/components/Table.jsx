@@ -20,9 +20,7 @@ const ActivityTable = ({ filteredData, Loading }) => {
   };
 
   const dynamicDesc = (desc) => {
-    const isTransaction = desc
-      ?.toLowerCase()
-      ?.includes("transaction created with reference id:");
+    const isTransaction = desc?.toLowerCase()?.includes("transaction created with reference id:");
     if (isTransaction) {
       const reference = desc?.split("reference ID: ")?.[1];
       if (reference) {
@@ -46,10 +44,7 @@ const ActivityTable = ({ filteredData, Loading }) => {
         {width > 700 && (
           <thead>
             <tr className={`${styles.tr} ${styles.thead}`}>
-              <th
-                className={`${styles.th} ${styles.serial}`}
-                style={{ width: "4%" }}
-              >
+              <th className={`${styles.th} ${styles.serial}`} style={{ width: "4%" }}>
                 {t("S.No")}
               </th>
 
@@ -92,10 +87,7 @@ const ActivityTable = ({ filteredData, Loading }) => {
           ) : filteredData?.length > 0 ? (
             filteredData.map((item, index) =>
               width > 700 ? (
-                <tr
-                  key={item?._id || index}
-                  className={`${styles.tr} ${styles.dataRow}`}
-                >
+                <tr key={item?._id || index} className={`${styles.tr} ${styles.dataRow}`}>
                   <td
                     className={`${styles.td} ${styles.serial}`}
                     style={{ width: "6%", textAlign: "center" }}
@@ -103,27 +95,16 @@ const ActivityTable = ({ filteredData, Loading }) => {
                     {index + 1}
                   </td>
 
-                  <td
-                    className={styles.td}
-                    style={{ width: "14%", textAlign: "center" }}
-                  >
-                    {item?.createdAt
-                      ? new Date(item.createdAt).toLocaleDateString()
-                      : "—"}
+                  <td className={styles.td} style={{ width: "14%", textAlign: "center" }}>
+                    {item?.createdAt ? new Date(item.createdAt).toLocaleDateString() : "—"}
                   </td>
 
-                  <td
-                    className={styles.td}
-                    style={{ width: "18%", textAlign: "center" }}
-                  >
+                  <td className={styles.td} style={{ width: "18%", textAlign: "center" }}>
                     {item?.agent?.first_name || userDetails?.company_name || ""}
                     {item?.agent?.last_name || ""}
                   </td>
 
-                  <td
-                    className={styles.td}
-                    style={{ width: "14%", textAlign: "center" }}
-                  >
+                  <td className={styles.td} style={{ width: "14%", textAlign: "center" }}>
                     {item?.entityType || "—"}
                   </td>
 
@@ -149,10 +130,7 @@ const ActivityTable = ({ filteredData, Loading }) => {
                     {dynamicDesc(item?.description)}
                   </td>
 
-                  <td
-                    className={styles.td}
-                    style={{ width: "12%", textAlign: "center" }}
-                  >
+                  <td className={styles.td} style={{ width: "12%", textAlign: "center" }}>
                     {item?.ipAddress || "—"}
                   </td>
 
@@ -172,10 +150,7 @@ const ActivityTable = ({ filteredData, Loading }) => {
                   </td>
                 </tr>
               ) : (
-                <tr
-                  key={item?._id || index}
-                  className={`${styles.tr} ${styles.dataRow}`}
-                >
+                <tr key={item?._id || index} className={`${styles.tr} ${styles.dataRow}`}>
                   <td className={styles.td}>
                     {item?.agent?.first_name || userDetails?.company_name || ""}
                     {item?.agent?.last_name || ""}
@@ -191,33 +166,23 @@ const ActivityTable = ({ filteredData, Loading }) => {
                   </td>
 
                   <td className={styles.td}>
-                    <div style={{ color: "#6E7687", fontWeight: "500" }}>
-                      {t("Action")}
-                    </div>
+                    <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Action")}</div>
                     {truncate(item?.action, 15) || "—"}
                   </td>
 
                   <td className={styles.td}>
-                    <div style={{ color: "#6E7687", fontWeight: "500" }}>
-                      {t("Description")}
-                    </div>
+                    <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Description")}</div>
                     {dynamicDesc(item?.description)}
                   </td>
 
                   <td className={styles.td}>
-                    <div style={{ color: "#6E7687", fontWeight: "500" }}>
-                      {t("Ip Address")}
-                    </div>
+                    <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Ip Address")}</div>
                     {item?.ipAddress || "—"}
                   </td>
 
                   <td className={styles.td}>
-                    <div style={{ color: "#6E7687", fontWeight: "500" }}>
-                      {t("Date")}
-                    </div>
-                    {item?.createdAt
-                      ? new Date(item.createdAt).toLocaleDateString()
-                      : "—"}
+                    <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Date")}</div>
+                    {item?.createdAt ? new Date(item.createdAt).toLocaleDateString() : "—"}
                   </td>
                 </tr>
               ),
@@ -241,18 +206,12 @@ const ActivityTable = ({ filteredData, Loading }) => {
       </table>
 
       {showModal && selectedActivity && (
-        <div
-          className={styles.modalOverlay}
-          onClick={() => setShowModal(false)}
-        >
+        <div className={styles.modalOverlay} onClick={() => setShowModal(false)}>
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <h3>{t("Activity Details")}</h3>
 
-              <button
-                className={styles.closeBtn}
-                onClick={() => setShowModal(false)}
-              >
+              <button className={styles.closeBtn} onClick={() => setShowModal(false)}>
                 <X size={18} />
               </button>
             </div>

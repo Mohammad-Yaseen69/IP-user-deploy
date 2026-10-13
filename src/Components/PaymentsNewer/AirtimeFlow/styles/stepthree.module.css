@@ -233,9 +233,7 @@
 
 .tab.tab_a {
   border-radius: 6px;
-  background:
-    linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%),
-    #d9d9d9;
+  background: linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%), #d9d9d9;
   box-shadow: 0px 11.901px 8.655px -5.409px rgba(89, 38, 240, 0.17);
   position: relative;
   color: white;
@@ -336,9 +334,7 @@
 
 .cur div {
   border-radius: 4.517px;
-  background:
-    linear-gradient(341deg, #e64067 -4.84%, #5926f0 90.69%, #4828a0 166.81%),
-    #d9d9d9;
+  background: linear-gradient(341deg, #e64067 -4.84%, #5926f0 90.69%, #4828a0 166.81%), #d9d9d9;
   box-shadow: 0px 3.011px 5.27px 0px rgba(172, 53, 159, 0.31);
   /* width: 16.621px; */
   width: fit-content;

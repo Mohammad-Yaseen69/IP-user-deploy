@@ -14,8 +14,7 @@ import { IoCrop } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 
 const Profile = ({ dp, setDp, dets, canUpdatePaymentProfileImage }) => {
-  const { authHeader, userDetails, verifyToken, croppedImages } =
-    useContext(UserContext);
+  const { authHeader, userDetails, verifyToken, croppedImages } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const mainContainerRef = useRef(null);
@@ -120,10 +119,7 @@ const Profile = ({ dp, setDp, dets, canUpdatePaymentProfileImage }) => {
           className={styles.img}
         />
       ) : (
-        <div
-          className={styles.dp}
-          style={{ borderRadius: "16px", overflow: "hidden" }}
-        >
+        <div className={styles.dp} style={{ borderRadius: "16px", overflow: "hidden" }}>
           {userDetails?.account_type?.toLowerCase() === "individual"
             ? userDetails?.user?.first_name?.[0]?.toUpperCase()
             : userDetails?.company?.company_name?.[0]?.toUpperCase()}
@@ -156,8 +152,7 @@ const Profile = ({ dp, setDp, dets, canUpdatePaymentProfileImage }) => {
             position: "absolute",
             bottom: window?.innerWidth > 1000 ? "20px" : "-30px",
             left: window?.innerWidth > 1000 ? "50%" : "0px",
-            transform:
-              window?.innerWidth > 1000 ? "translateX(-50%)" : "translateX(0)",
+            transform: window?.innerWidth > 1000 ? "translateX(-50%)" : "translateX(0)",
             display: "flex",
             gap: ".4rem",
           }}
@@ -222,11 +217,7 @@ const Profile = ({ dp, setDp, dets, canUpdatePaymentProfileImage }) => {
           )}{" "}
           {dp && (
             <>
-              <span
-                style={{ fontSize: "14px", color: "#5926F0", fontWeight: 600 }}
-              >
-                |
-              </span>
+              <span style={{ fontSize: "14px", color: "#5926F0", fontWeight: 600 }}>|</span>
               <span
                 onClick={deletePfp}
                 style={{
@@ -251,14 +242,7 @@ const Profile = ({ dp, setDp, dets, canUpdatePaymentProfileImage }) => {
         imageUrl={dp}
         pId={dets._id}
       />
-      <input
-        type="file"
-        name="dp"
-        id="dp"
-        hidden
-        onChange={handleFileSelect}
-        accept="image/*"
-      />
+      <input type="file" name="dp" id="dp" hidden onChange={handleFileSelect} accept="image/*" />
     </div>
   );
 };

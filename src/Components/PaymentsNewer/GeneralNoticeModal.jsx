@@ -1,13 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Modal, ModalBody, ModalHeader, ModalFooter, Button } from "reactstrap";
 
-const GeneralNoticeModal = ({
-  isOpen,
-  toggle,
-  message,
-  buttonText,
-  onConfirm,
-}) => {
+const GeneralNoticeModal = ({ isOpen, toggle, message, buttonText, onConfirm }) => {
   const { t } = useTranslation();
 
   return (

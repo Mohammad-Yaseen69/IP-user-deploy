@@ -4,15 +4,7 @@ import { UserContext } from "../../Context/UserContext";
 import axios from "axios";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { toast } from "react-toastify";
-import {
-  Button,
-  FormGroup,
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalFooter,
-} from "reactstrap";
+import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter } from "reactstrap";
 import { sourceOfFunds } from "../Settings/Verification";
 import { t } from "i18next";
 
@@ -67,11 +59,7 @@ const SourceOfFunds = ({ isOpen, toggle }) => {
         </FormGroup>
       </ModalBody>
       <ModalFooter>
-        <Button
-          color="primary"
-          onClick={addSourceOfFunds}
-          disabled={!source || loading}
-        >
+        <Button color="primary" onClick={addSourceOfFunds} disabled={!source || loading}>
           {t("Continue")}
         </Button>
       </ModalFooter>

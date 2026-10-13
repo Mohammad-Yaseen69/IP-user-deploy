@@ -59,11 +59,7 @@ const StepTwo = ({ data, dataHandler, dataHandlerE }) => {
         >
           {!loading ? (
             plansData.map((plan) => (
-              <PlanCard
-                data={data}
-                plan={plan}
-                handlePlanSelect={handlePlanSelect}
-              />
+              <PlanCard data={data} plan={plan} handlePlanSelect={handlePlanSelect} />
             ))
           ) : (
             <div style={{ width: "300px", margin: "auto" }}>

@@ -116,14 +116,9 @@ const InviteFriendModal = ({ isOpen, toggle }) => {
             {step === 2 && (
               <>
                 <div className={styles.input_container}>
-                  <label>
-                    {loginMethod === "phone" ? t("Phone Number") : t("Email")}
-                  </label>
+                  <label>{loginMethod === "phone" ? t("Phone Number") : t("Email")}</label>
                   {loginMethod === "phone" ? (
-                    <PhoneInput
-                      setPhone={setEmail}
-                      country={userDetails?.country_iso_code}
-                    />
+                    <PhoneInput setPhone={setEmail} country={userDetails?.country_iso_code} />
                   ) : (
                     <input
                       type="email"
@@ -142,9 +137,7 @@ const InviteFriendModal = ({ isOpen, toggle }) => {
                       color: "#5926f0",
                     }}
                     onClick={() => {
-                      setLoginMethod(
-                        loginMethod === "email" ? "phone" : "email",
-                      );
+                      setLoginMethod(loginMethod === "email" ? "phone" : "email");
                       localStorage.setItem(
                         "loginWith",
                         loginMethod === "email" ? "phone" : "email",
@@ -152,17 +145,14 @@ const InviteFriendModal = ({ isOpen, toggle }) => {
                       setEmail("");
                     }}
                   >
-                    {t("Invite via")}{" "}
-                    {loginMethod === "email" ? t("Phone Number") : t("Email")}
+                    {t("Invite via")} {loginMethod === "email" ? t("Phone Number") : t("Email")}
                   </div>
                 </div>
                 <div
                   className={styles.input_container}
                   style={{ marginTop: "1.5rem", position: "relative" }}
                 >
-                  <label style={{ marginBottom: 0 }}>
-                    {t("Personalized Message")}
-                  </label>
+                  <label style={{ marginBottom: 0 }}>{t("Personalized Message")}</label>
                   <span style={{ position: "absolute", top: 6, right: 0 }}>
                     {message.length}/{loginMethod === "phone" ? 120 : 500}
                   </span>
@@ -176,16 +166,10 @@ const InviteFriendModal = ({ isOpen, toggle }) => {
                       height: "170px",
                     }}
                     onChange={(e) => {
-                      if (
-                        loginMethod === "phone" &&
-                        e.target.value.length <= 120
-                      ) {
+                      if (loginMethod === "phone" && e.target.value.length <= 120) {
                         setMessage(e.target.value);
                       }
-                      if (
-                        loginMethod === "email" &&
-                        e.target.value.length <= 500
-                      ) {
+                      if (loginMethod === "email" && e.target.value.length <= 500) {
                         setMessage(e.target.value);
                       }
                     }}
@@ -220,8 +204,7 @@ const InviteFriendModal = ({ isOpen, toggle }) => {
                 >
                   <strong>{t("Message")}: </strong>
                   <span>
-                    {t(message)} <br />{" "}
-                    {`${base_url}/auth/signup/${userDetails?.username}`}
+                    {t(message)} <br /> {`${base_url}/auth/signup/${userDetails?.username}`}
                   </span>
                 </div>
               </div>
@@ -253,13 +236,7 @@ const InviteFriendModal = ({ isOpen, toggle }) => {
           {step < 3 && (
             <Button
               onClick={() => setStep((prev) => prev + 1)}
-              disabled={
-                step === 1
-                  ? !loginMethod
-                  : step === 2
-                    ? email.length < 8
-                    : false
-              }
+              disabled={step === 1 ? !loginMethod : step === 2 ? email.length < 8 : false}
               style={{
                 border: "none",
                 outline: "none",

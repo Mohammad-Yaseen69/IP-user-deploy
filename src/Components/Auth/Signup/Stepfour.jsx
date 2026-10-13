@@ -3,12 +3,7 @@ import styles from "./styles/stepfour.module.css";
 import { useState } from "react";
 import { Check, Eye, EyeOff } from "react-feather";
 
-export const passwordRegex = [
-  /[A-Z]/,
-  /[a-z]/,
-  /[0-9]/,
-  /[!@#$%^&*(),.?":{}|<>]/,
-];
+export const passwordRegex = [/[A-Z]/, /[a-z]/, /[0-9]/, /[!@#$%^&*(),.?":{}|<>]/];
 
 const Stepfour = ({ data, dataHandler }) => {
   const { t } = useTranslation();
@@ -42,10 +37,7 @@ const Stepfour = ({ data, dataHandler }) => {
       </div>
       <div className={styles.pillsContainer}>
         {validation.map((x) => (
-          <div
-            key={x.label}
-            className={`${styles.pill} ${x.isFullfilled && styles.activePill}`}
-          >
+          <div key={x.label} className={`${styles.pill} ${x.isFullfilled && styles.activePill}`}>
             {x.isFullfilled && <Check size={14} />} {t(x.label)}
           </div>
         ))}

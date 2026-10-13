@@ -73,9 +73,7 @@ const ListModal = ({
         </div>
         <div className={styles.right}>
           {isLoading ? (
-            <div
-              style={{ height: "200px", width: "200px", margin: "auto auto" }}
-            >
+            <div style={{ height: "200px", width: "200px", margin: "auto auto" }}>
               <InstaPayLoader />
             </div>
           ) : searchable ? (
@@ -118,11 +116,7 @@ const ListModal = ({
                       </div>
                       {item?.icon ? (
                         current?.name === item?.name ? (
-                          <Check
-                            color="green"
-                            size={24}
-                            style={{ marginLeft: "auto" }}
-                          />
+                          <Check color="green" size={24} style={{ marginLeft: "auto" }} />
                         ) : (
                           <img
                             src={i}
@@ -170,11 +164,7 @@ const ListModal = ({
                     )}
                     <span>{t(service_name_formatter(item?.name))}</span>
                     {current?.name === item?.name ? (
-                      <Check
-                        color="green"
-                        size={24}
-                        style={{ marginLeft: "auto" }}
-                      />
+                      <Check color="green" size={24} style={{ marginLeft: "auto" }} />
                     ) : (
                       <img
                         src={i}

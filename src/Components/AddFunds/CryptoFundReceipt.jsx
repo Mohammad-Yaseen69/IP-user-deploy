@@ -22,9 +22,7 @@ const CryptoFundReceipt = ({ cryptoCurrency, amount }) => {
           borderRadius: "20px",
           padding: isBig ? "20px 40px" : "5px",
           paddingBottom: 0,
-          boxShadow: isBig
-            ? "0px 2px 20px -5.704601287841797px rgba(89, 38, 240, 0.07)"
-            : "none",
+          boxShadow: isBig ? "0px 2px 20px -5.704601287841797px rgba(89, 38, 240, 0.07)" : "none",
         }}
         className="conf_cont"
       >
@@ -36,9 +34,7 @@ const CryptoFundReceipt = ({ cryptoCurrency, amount }) => {
             marginBottom: "1.5rem",
           }}
         >
-          <h5 style={{ fontSize: "1rem", color: "#a8a8a8" }}>
-            {t("You Are Sending")}
-          </h5>
+          <h5 style={{ fontSize: "1rem", color: "#a8a8a8" }}>{t("You Are Sending")}</h5>
           <h4 style={{ fontWeight: "900" }} className="f_s_3r">
             ${amount}
           </h4>

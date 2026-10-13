@@ -35,20 +35,12 @@ const CryptoStablecoins = () => {
 
   const walletsSection = selectedWallet ? (
     <section>
-      <button
-        type="button"
-        className={styles.backLink}
-        onClick={() => setSelectedWalletId(null)}
-      >
+      <button type="button" className={styles.backLink} onClick={() => setSelectedWalletId(null)}>
         <ArrowLeft size={15} />
         {t("Your crypto wallets")}
       </button>
       <div style={{ marginTop: 14 }}>
-        <WalletDetail
-          wallet={selectedWallet}
-          pending={balance.pending}
-          isStale={balance.isStale}
-        />
+        <WalletDetail wallet={selectedWallet} pending={balance.pending} isStale={balance.isStale} />
       </div>
     </section>
   ) : (
@@ -61,11 +53,7 @@ const CryptoStablecoins = () => {
           </p>
         </div>
         {hasWallets && (
-          <button
-            type="button"
-            className={styles.addBtn}
-            onClick={() => setShowAddFlow(true)}
-          >
+          <button type="button" className={styles.addBtn} onClick={() => setShowAddFlow(true)}>
             <Plus size={16} />
             {t("Add crypto wallet")}
           </button>
@@ -123,11 +111,7 @@ const CryptoStablecoins = () => {
         {hasWallets && <ActionRail />}
       </div>
 
-      <AddCryptoWalletFlow
-        isOpen={showAddFlow}
-        toggle={() => setShowAddFlow(false)}
-        startAtAsset
-      />
+      <AddCryptoWalletFlow isOpen={showAddFlow} toggle={() => setShowAddFlow(false)} startAtAsset />
     </div>
   );
 };

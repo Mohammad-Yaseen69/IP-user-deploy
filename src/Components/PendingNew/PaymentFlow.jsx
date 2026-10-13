@@ -105,34 +105,27 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
               },
               limits: {
                 daily_receiving_limit: {
-                  limits_used:
-                    decrypted?.data?.limits_used?.daily_receiving_limit_used,
+                  limits_used: decrypted?.data?.limits_used?.daily_receiving_limit_used,
                   total_limits: decrypted?.data?.limits?.daily_receiving_limit,
                 },
                 daily_sending_limit: {
-                  limits_used:
-                    decrypted?.data?.limits_used?.daily_sending_limit_used,
+                  limits_used: decrypted?.data?.limits_used?.daily_sending_limit_used,
                   total_limits: decrypted?.data?.limits?.daily_sending_limit,
                 },
                 monthly_receiving_limit: {
-                  limits_used:
-                    decrypted?.data?.limits_used?.monthly_receiving_limit_used,
-                  total_limits:
-                    decrypted?.data?.limits?.monthly_receiving_limit,
+                  limits_used: decrypted?.data?.limits_used?.monthly_receiving_limit_used,
+                  total_limits: decrypted?.data?.limits?.monthly_receiving_limit,
                 },
                 monthly_sending_limit: {
-                  limits_used:
-                    decrypted?.data?.limits_used?.monthly_sending_limit_used,
+                  limits_used: decrypted?.data?.limits_used?.monthly_sending_limit_used,
                   total_limits: decrypted?.data?.limits?.monthly_sending_limit,
                 },
                 yearly_receiving_limit: {
-                  limits_used:
-                    decrypted?.data?.limits_used?.yearly_receiving_limit_used,
+                  limits_used: decrypted?.data?.limits_used?.yearly_receiving_limit_used,
                   total_limits: decrypted?.data?.limits?.yearly_receiving_limit,
                 },
                 yearly_sending_limit: {
-                  limits_used:
-                    decrypted?.data?.limits_used?.yearly_sending_limit_used,
+                  limits_used: decrypted?.data?.limits_used?.yearly_sending_limit_used,
                   total_limits: decrypted?.data?.limits?.yearly_sending_limit,
                 },
               },
@@ -228,9 +221,7 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
         } else if (dec?.message?.toLowerCase()?.includes("otp")) {
           setError("Invalid Verification Code");
         } else {
-          setError(
-            "We cannot process your request at the moment, please try again later.",
-          );
+          setError("We cannot process your request at the moment, please try again later.");
         }
       } catch (e) {
         setError("Something went wrong. Please try again.");
@@ -248,10 +239,7 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
     setCurrentWallet(def);
   }, [userWallets]);
   return (
-    <Card
-      className={styles.payment_flow}
-      style={{ marginBottom: 0, minWidth: "fit-content" }}
-    >
+    <Card className={styles.payment_flow} style={{ marginBottom: 0, minWidth: "fit-content" }}>
       <SuccessModal
         isOpen={showSuccess}
         subMessage={"Payment Request Accepted!"}
@@ -262,9 +250,7 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
         }}
       />
       <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-        <ModalHeader toggle={() => setShowOtp(!showOtp)}>
-          {t("Confirm")}
-        </ModalHeader>
+        <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
         <ModalBody>
           <OTPConfirmation
             variant="card"
@@ -339,18 +325,15 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
               <Wizard subStep={step} />
             </div>
             <div className={styles.step_two}>
-              <div
-                className={styles.purple_card}
-                style={{ flexDirection: "column" }}
-              >
+              <div className={styles.purple_card} style={{ flexDirection: "column" }}>
                 <span>{t("Via")}:</span>
                 <div style={{ gap: ".5rem" }}>
                   <p>{currentWallet?.currency?.code} </p>
                   <span>
-                    {currentWallet?.balance?.available?.toLocaleString(
-                      "en-US",
-                      { minimumFractionDigits: 2, maximumFractionDigits: 2 },
-                    )}
+                    {currentWallet?.balance?.available?.toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
                   </span>
                 </div>
               </div>
@@ -369,19 +352,17 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
                   </div>
                 )}
               {currentWallet?.balance?.available < total ? (
-                <span style={{ color: "red" }}>
-                  {t("Insufficient Balance.") + " "}
-                </span>
+                <span style={{ color: "red" }}>{t("Insufficient Balance.") + " "}</span>
               ) : (
                 <>
                   <div className={styles.purple_card}>
                     <span>{t("Sending")}:</span>
                     <span>
                       {" "}
-                      {Number(fx?.sending?.amount ?? 0)?.toLocaleString(
-                        "en-US",
-                        { minimumFractionDigits: 2, maximumFractionDigits: 2 },
-                      )}{" "}
+                      {Number(fx?.sending?.amount ?? 0)?.toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}{" "}
                       {currentWallet?.currency?.code}{" "}
                     </span>
                   </div>
@@ -396,10 +377,10 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
                     <span>{t("They Receive")}:</span>
                     <span>
                       {" "}
-                      {Number(fx?.receiver?.amount ?? 0)?.toLocaleString(
-                        "en-US",
-                        { minimumFractionDigits: 2, maximumFractionDigits: 2 },
-                      )}{" "}
+                      {Number(fx?.receiver?.amount ?? 0)?.toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}{" "}
                       {item?.currency?.code}{" "}
                     </span>
                   </div>
@@ -423,9 +404,7 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
                 {currentWallet?.balance?.available >= total ? (
                   <button
                     disabled={
-                      !currentWallet ||
-                      sending ||
-                      currentWallet?.balance?.available < total
+                      !currentWallet || sending || currentWallet?.balance?.available < total
                     }
                     onClick={sendOtp}
                     style={{
@@ -446,9 +425,7 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
                     }}
                     onClick={() => navigate("/add-funds")}
                   >
-                    <span style={{ whiteSpace: "nowrap" }}>
-                      {t("Add Funds")}
-                    </span>
+                    <span style={{ whiteSpace: "nowrap" }}>{t("Add Funds")}</span>
                   </button>
                 )}
               </div>

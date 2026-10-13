@@ -14,15 +14,8 @@ import { useTranslation } from "react-i18next";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 const Toggle = ({ checked, onChange, isCheckbox = false, style }) => (
-  <label
-    style={{ ...style }}
-    className={isCheckbox ? styles.checkbox : styles.toggle}
-  >
-    <input
-      type={isCheckbox ? "checkbox" : "checkbox"}
-      checked={checked}
-      onChange={onChange}
-    />
+  <label style={{ ...style }} className={isCheckbox ? styles.checkbox : styles.toggle}>
+    <input type={isCheckbox ? "checkbox" : "checkbox"} checked={checked} onChange={onChange} />
     <span className={isCheckbox ? styles.checkmark : styles.slider}></span>
   </label>
 );
@@ -75,9 +68,7 @@ const GeoFencing = () => {
 
         if (checksData.length === 0) return;
 
-        const updatedCountries = JSON.parse(
-          JSON.stringify(countriesWithRegion),
-        );
+        const updatedCountries = JSON.parse(JSON.stringify(countriesWithRegion));
 
         checksData.forEach((check) => {
           Object.entries(updatedCountries).forEach(([region, countries]) => {
@@ -87,12 +78,10 @@ const GeoFencing = () => {
 
             if (countryIndex !== -1) {
               if (check.reason.includes("payment_request_origin")) {
-                updatedCountries[region][countryIndex].accountPaymentCheck =
-                  false;
+                updatedCountries[region][countryIndex].accountPaymentCheck = false;
               }
               if (check.reason.includes("payment_request_live")) {
-                updatedCountries[region][countryIndex].locationPaymentCheck =
-                  false;
+                updatedCountries[region][countryIndex].locationPaymentCheck = false;
               }
             }
           });
@@ -112,18 +101,15 @@ const GeoFencing = () => {
     if (!Object.keys(countriesWithRegion).length) return;
 
     if (searchTerm) {
-      const filtered = Object.entries(countriesWithRegion).reduce(
-        (acc, [region, countries]) => {
-          const matchingCountries = countries.filter((country) =>
-            country.name.toLowerCase().includes(searchTerm.toLowerCase()),
-          );
-          if (matchingCountries.length > 0) {
-            acc[region] = matchingCountries;
-          }
-          return acc;
-        },
-        {},
-      );
+      const filtered = Object.entries(countriesWithRegion).reduce((acc, [region, countries]) => {
+        const matchingCountries = countries.filter((country) =>
+          country.name.toLowerCase().includes(searchTerm.toLowerCase()),
+        );
+        if (matchingCountries.length > 0) {
+          acc[region] = matchingCountries;
+        }
+        return acc;
+      }, {});
       setFilteredCountries(filtered);
 
       const firstMatchRegion = Object.keys(filtered)[0];
@@ -139,17 +125,9 @@ const GeoFencing = () => {
     setExpandedRegion(expandedRegion === region ? null : region);
   };
 
-  const handleCheckChange = (
-    e,
-    checkType,
-    isoCode,
-    region,
-    isRegionToggle = false,
-  ) => {
+  const handleCheckChange = (e, checkType, isoCode, region, isRegionToggle = false) => {
     if (!canUpdate) {
-      toast.error(
-        t("You don't have permission to update geo-fencing settings"),
-      );
+      toast.error(t("You don't have permission to update geo-fencing settings"));
       return;
     }
     const isChecked = e.target.checked;
@@ -215,9 +193,7 @@ const GeoFencing = () => {
 
   const submitChanges = async () => {
     if (!canUpdate) {
-      toast.error(
-        t("You don't have permission to update geo-fencing settings"),
-      );
+      toast.error(t("You don't have permission to update geo-fencing settings"));
       return;
     }
     setIsSaving(true);
@@ -258,30 +234,26 @@ const GeoFencing = () => {
       }, {});
 
       // Convert changes to final format and merge with existing disabled toggles
-      const changedToggles = Object.entries(latestStates).map(
-        ([isoCode, states]) => {
-          const reason = [];
-          if (states.accountPaymentCheck === false) {
-            reason.push("payment_request_origin");
-          }
-          if (states.locationPaymentCheck === false) {
-            reason.push("payment_request_live");
-          }
-          return {
-            isoCode,
-            reason,
-          };
-        },
-      );
+      const changedToggles = Object.entries(latestStates).map(([isoCode, states]) => {
+        const reason = [];
+        if (states.accountPaymentCheck === false) {
+          reason.push("payment_request_origin");
+        }
+        if (states.locationPaymentCheck === false) {
+          reason.push("payment_request_live");
+        }
+        return {
+          isoCode,
+          reason,
+        };
+      });
 
       // Merge existing disabled toggles with new changes
       const finalChecks = [...Object.values(allDisabledToggles)];
 
       // Add or update with new changes
       changedToggles.forEach((change) => {
-        const existingIndex = finalChecks.findIndex(
-          (check) => check.isoCode === change.isoCode,
-        );
+        const existingIndex = finalChecks.findIndex((check) => check.isoCode === change.isoCode);
         if (existingIndex !== -1) {
           finalChecks[existingIndex] = change;
         } else if (change.reason.length > 0) {
@@ -385,173 +357,110 @@ const GeoFencing = () => {
         </div>
 
         <div className={styles.regions}>
-          {Object.entries(filteredCountries).map(
-            ([region, countries], index) => (
-              <div key={region} className={styles.regionWrapper}>
-                <div
-                  className={styles.regionHeader}
-                  onClick={() => handleRegionClick(region)}
-                  style={{
-                    boxShadow:
-                      expandedRegion === region
-                        ? "0px 5px 20px 0px rgba(0, 146, 255, 0.12)"
-                        : "",
-                  }}
-                >
-                  <div className={styles.regionRow}>
-                    <span>{t(region)}</span>
-                    <div className={styles.checkboxGroup}>
-                      <Toggle
-                        checked={getRegionCheckStatus(
-                          region,
-                          "accountPaymentCheck",
-                        )}
-                        onChange={(e) =>
-                          handleCheckChange(
-                            e,
-                            "accountPaymentCheck",
-                            null,
-                            region,
-                            true,
-                          )
-                        }
-                        isCheckbox={true}
-                      />
-                      <Toggle
-                        checked={getRegionCheckStatus(
-                          region,
-                          "locationPaymentCheck",
-                        )}
-                        onChange={(e) =>
-                          handleCheckChange(
-                            e,
-                            "locationPaymentCheck",
-                            null,
-                            region,
-                            true,
-                          )
-                        }
-                        isCheckbox={true}
-                        style={{ marginLeft: "-20px" }}
-                      />
-                    </div>
-                    <div className={styles.checkboxGroup}>
-                      <Toggle
-                        checked={getRegionCheckStatus(
-                          region,
-                          "accountQuotationCheck",
-                        )}
-                        onChange={(e) =>
-                          handleCheckChange(
-                            e,
-                            "accountQuotationCheck",
-                            null,
-                            region,
-                            true,
-                          )
-                        }
-                        style={{
-                          marginLeft:
-                            window.innerWidth > 1000 ? "25px" : "10px",
-                        }}
-                        isCheckbox={true}
-                      />
-                      <Toggle
-                        checked={getRegionCheckStatus(
-                          region,
-                          "locationQuotationCheck",
-                        )}
-                        onChange={(e) =>
-                          handleCheckChange(
-                            e,
-                            "locationQuotationCheck",
-                            null,
-                            region,
-                            true,
-                          )
-                        }
-                        isCheckbox={true}
-                      />
-                    </div>
+          {Object.entries(filteredCountries).map(([region, countries], index) => (
+            <div key={region} className={styles.regionWrapper}>
+              <div
+                className={styles.regionHeader}
+                onClick={() => handleRegionClick(region)}
+                style={{
+                  boxShadow:
+                    expandedRegion === region ? "0px 5px 20px 0px rgba(0, 146, 255, 0.12)" : "",
+                }}
+              >
+                <div className={styles.regionRow}>
+                  <span>{t(region)}</span>
+                  <div className={styles.checkboxGroup}>
+                    <Toggle
+                      checked={getRegionCheckStatus(region, "accountPaymentCheck")}
+                      onChange={(e) =>
+                        handleCheckChange(e, "accountPaymentCheck", null, region, true)
+                      }
+                      isCheckbox={true}
+                    />
+                    <Toggle
+                      checked={getRegionCheckStatus(region, "locationPaymentCheck")}
+                      onChange={(e) =>
+                        handleCheckChange(e, "locationPaymentCheck", null, region, true)
+                      }
+                      isCheckbox={true}
+                      style={{ marginLeft: "-20px" }}
+                    />
                   </div>
-                  <ChevronRight
-                    className={`${styles.chevron} ${expandedRegion === region ? styles.expanded : ""}`}
-                  />
+                  <div className={styles.checkboxGroup}>
+                    <Toggle
+                      checked={getRegionCheckStatus(region, "accountQuotationCheck")}
+                      onChange={(e) =>
+                        handleCheckChange(e, "accountQuotationCheck", null, region, true)
+                      }
+                      style={{
+                        marginLeft: window.innerWidth > 1000 ? "25px" : "10px",
+                      }}
+                      isCheckbox={true}
+                    />
+                    <Toggle
+                      checked={getRegionCheckStatus(region, "locationQuotationCheck")}
+                      onChange={(e) =>
+                        handleCheckChange(e, "locationQuotationCheck", null, region, true)
+                      }
+                      isCheckbox={true}
+                    />
+                  </div>
                 </div>
-
-                {expandedRegion === region && (
-                  <div className={styles.countries}>
-                    {countries.map((country, idx) => (
-                      <div key={country.isoCode} className={styles.countryRow}>
-                        <div className={styles.countryInfo}>
-                          <span>{idx + 1}</span>
-                          <span>{t(country.name)}</span>
-                        </div>
-                        <div className={styles.checkboxGroup}>
-                          <Toggle
-                            checked={country.accountPaymentCheck}
-                            onChange={(e) =>
-                              handleCheckChange(
-                                e,
-                                "accountPaymentCheck",
-                                country.isoCode,
-                                region,
-                              )
-                            }
-                          />
-                          <Toggle
-                            checked={country.locationPaymentCheck}
-                            style={{ marginLeft: "-10px" }}
-                            onChange={(e) =>
-                              handleCheckChange(
-                                e,
-                                "locationPaymentCheck",
-                                country.isoCode,
-                                region,
-                              )
-                            }
-                          />
-                        </div>
-
-                        <div className={styles.checkboxGroup}>
-                          <Toggle
-                            checked={country.accountQuotationCheck}
-                            style={{ marginLeft: "20px" }}
-                            onChange={(e) =>
-                              handleCheckChange(
-                                e,
-                                "accountQuotationCheck",
-                                country.isoCode,
-                                region,
-                              )
-                            }
-                          />
-                          <Toggle
-                            checked={country.locationQuotationCheck}
-                            style={{ marginLeft: "-5px" }}
-                            onChange={(e) =>
-                              handleCheckChange(
-                                e,
-                                "locationQuotationCheck",
-                                country.isoCode,
-                                region,
-                              )
-                            }
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                <ChevronRight
+                  className={`${styles.chevron} ${expandedRegion === region ? styles.expanded : ""}`}
+                />
               </div>
-            ),
-          )}
+
+              {expandedRegion === region && (
+                <div className={styles.countries}>
+                  {countries.map((country, idx) => (
+                    <div key={country.isoCode} className={styles.countryRow}>
+                      <div className={styles.countryInfo}>
+                        <span>{idx + 1}</span>
+                        <span>{t(country.name)}</span>
+                      </div>
+                      <div className={styles.checkboxGroup}>
+                        <Toggle
+                          checked={country.accountPaymentCheck}
+                          onChange={(e) =>
+                            handleCheckChange(e, "accountPaymentCheck", country.isoCode, region)
+                          }
+                        />
+                        <Toggle
+                          checked={country.locationPaymentCheck}
+                          style={{ marginLeft: "-10px" }}
+                          onChange={(e) =>
+                            handleCheckChange(e, "locationPaymentCheck", country.isoCode, region)
+                          }
+                        />
+                      </div>
+
+                      <div className={styles.checkboxGroup}>
+                        <Toggle
+                          checked={country.accountQuotationCheck}
+                          style={{ marginLeft: "20px" }}
+                          onChange={(e) =>
+                            handleCheckChange(e, "accountQuotationCheck", country.isoCode, region)
+                          }
+                        />
+                        <Toggle
+                          checked={country.locationQuotationCheck}
+                          style={{ marginLeft: "-5px" }}
+                          onChange={(e) =>
+                            handleCheckChange(e, "locationQuotationCheck", country.isoCode, region)
+                          }
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
 
-      <div
-        style={{ display: "flex", justifyContent: "right", marginTop: "1rem" }}
-      >
+      <div style={{ display: "flex", justifyContent: "right", marginTop: "1rem" }}>
         <button
           onClick={submitChanges}
           disabled={changes.length < 1 || isSaving || !canUpdate}

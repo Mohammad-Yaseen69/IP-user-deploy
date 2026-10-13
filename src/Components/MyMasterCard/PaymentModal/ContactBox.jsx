@@ -14,11 +14,7 @@ const ContactBox = ({ style, isMobile }) => {
 
   if (isMobile) {
     return (
-      <div
-        style={style}
-        className={styles.helpButton}
-        onClick={handleContactClick}
-      >
+      <div style={style} className={styles.helpButton} onClick={handleContactClick}>
         <div className={styles.helpCircle}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -63,9 +59,7 @@ const ContactBox = ({ style, isMobile }) => {
         <span style={{ fontSize: "10px", fontWeight: 600, color: "#6F6F6F" }}>
           {t("Having Troubles?")}
         </span>
-        <span style={{ fontSize: "12px", fontWeight: 600, color: "black" }}>
-          {t("Contact Us")}
-        </span>
+        <span style={{ fontSize: "12px", fontWeight: 600, color: "black" }}>{t("Contact Us")}</span>
       </div>
     </div>
   );

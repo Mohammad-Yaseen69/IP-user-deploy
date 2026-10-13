@@ -111,9 +111,7 @@ const SendCrypto = () => {
             active={true}
             sendPaymentType={true}
           />
-          <Card
-            style={{ width: "100%", marginBottom: 0, paddingBottom: "1rem" }}
-          >
+          <Card style={{ width: "100%", marginBottom: 0, paddingBottom: "1rem" }}>
             <CardBody
               style={{
                 display: "flex",
@@ -143,10 +141,8 @@ const SendCrypto = () => {
                 >
                   <h4 className="head_left_side">
                     {subStep === 1 && "Choose Crypto Currency"}
-                    {subStep === 2 &&
-                      "Enter the amount in USD that you wish to exchange"}
-                    {subStep === 3 &&
-                      "Enter the Crypto wallet address of the beneficiary"}
+                    {subStep === 2 && "Enter the amount in USD that you wish to exchange"}
+                    {subStep === 3 && "Enter the Crypto wallet address of the beneficiary"}
                   </h4>
                   {subStep === 4 && (
                     <div
@@ -226,10 +222,7 @@ const SendCrypto = () => {
                       />
                     )}
                     {subStep > 2 && subStep < 4 && (
-                      <SelectedCryptoAmount
-                        amount={amount}
-                        setSubStep={setSubStep}
-                      />
+                      <SelectedCryptoAmount amount={amount} setSubStep={setSubStep} />
                     )}
                   </div>
                 </div>

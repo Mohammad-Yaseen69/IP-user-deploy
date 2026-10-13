@@ -78,8 +78,7 @@ const getGuestRequiredFields = (guestDetails, countryData) => {
     },
   ];
 
-  const cardPaymentRequiredFields =
-    countryData?.card_payment_required_fields || {};
+  const cardPaymentRequiredFields = countryData?.card_payment_required_fields || {};
 
   if (cardPaymentRequiredFields.customer_town) {
     fields.push({
@@ -135,9 +134,7 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
   const { getKey } = useIdempotency();
   const userDetails = invoice?.account;
   const accountId =
-    userDetails?._id ||
-    userDetails?.id ||
-    (typeof userDetails === "string" ? userDetails : "");
+    userDetails?._id || userDetails?.id || (typeof userDetails === "string" ? userDetails : "");
 
   const dataHandler = (field, value) => {
     dispatch({ type: "UPDATE_FIELD", field, value });
@@ -154,14 +151,10 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
     retry: 1,
   });
 
-  const guestDetails = useMemo(
-    () => invoice?.guestDetails || {},
-    [invoice?.guestDetails],
-  );
+  const guestDetails = useMemo(() => invoice?.guestDetails || {}, [invoice?.guestDetails]);
   const amount = Number(invoice?.amount || invoice?.price || 0);
   const wallet = invoice?.receivingWallet;
-  const countryIsoCode =
-    guestDetails.country_iso_code || invoice?.countryIsoCode;
+  const countryIsoCode = guestDetails.country_iso_code || invoice?.countryIsoCode;
   const selectedCountry = useMemo(
     () => CountriesData.find((c) => c.alpha3 === countryIsoCode),
     [countryIsoCode],
@@ -169,8 +162,7 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
   const accountCountry = CountriesData.find(
     (c) => c.alpha3 === invoice?.account?.country?.country_iso_code,
   );
-  const isDirectCardVerificationRequired =
-    invoice?.account?.isDirectCardVerificationRequired;
+  const isDirectCardVerificationRequired = invoice?.account?.isDirectCardVerificationRequired;
   const merchantName =
     invoice?.account?.company_name ||
     `${invoice?.account?.first_name || ""} ${invoice?.account?.last_name || ""}`.trim();
@@ -235,13 +227,10 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
         token: dec?.token,
       });
     } catch (error) {
-      const dec = error?.response?.data?.data
-        ? decryptData(error.response.data.data)
-        : {};
+      const dec = error?.response?.data?.data ? decryptData(error.response.data.data) : {};
       dataHandler(
         "exchange_rate_error",
-        dec?.message ??
-          "We cannot process your request at the moment, please try again later.",
+        dec?.message ?? "We cannot process your request at the moment, please try again later.",
       );
     } finally {
       dataHandler("loading", false);
@@ -282,9 +271,7 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
 
       dataHandler("cardTransactionDetails", decryptData(res.data.data));
     } catch (error) {
-      const dec = error?.response?.data?.data
-        ? decryptData(error.response.data.data)
-        : {};
+      const dec = error?.response?.data?.data ? decryptData(error.response.data.data) : {};
       const limitError = LimitsErrorMessage(dec.code);
 
       if (dec?.message === "invalid_card_details") {
@@ -418,28 +405,21 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
             <div>
               <span>{t("Fee on Sender")}</span>
               <strong>
-                {invoice.currency}{" "}
-                {formatCurrency(state.exchange_rate?.fee?.amount || 0, true)}
+                {invoice.currency} {formatCurrency(state.exchange_rate?.fee?.amount || 0, true)}
               </strong>
             </div>
             <div>
               <span>{t("Fee on Receiver")}</span>
               <strong>
                 {invoice.currency}{" "}
-                {formatCurrency(
-                  state.exchange_rate?.fee?.paymentAddressFee || 0,
-                  true,
-                )}
+                {formatCurrency(state.exchange_rate?.fee?.paymentAddressFee || 0, true)}
               </strong>
             </div>
             <div className={styles.totalRow}>
               <span>{t("Receiver Gets ")}</span>
               <strong>
                 <small>{invoice.currency}</small>
-                {formatCurrency(
-                  state.exchange_rate?.receiver?.amount || amount,
-                  true,
-                )}
+                {formatCurrency(state.exchange_rate?.receiver?.amount || amount, true)}
               </strong>
               {/* <strong>{invoice.currency} {formatCurrency(state.exchange_rate?.total || amount, true)}</strong> */}
             </div>
@@ -473,27 +453,16 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
                     {flagCheck("allowProfileName", userDetails, "invoice") && (
                       <h3>{merchantName}</h3>
                     )}
-                    {flagCheck(
-                      "allowVerificationBadge",
-                      userDetails,
-                      "invoice",
-                    ) &&
+                    {flagCheck("allowVerificationBadge", userDetails, "invoice") &&
                       (invoice?.account?.user?.kyc_status === "approved" ||
-                        invoice?.account?.kyb_status === "approved") && (
-                        <CheckCircle size={18} />
-                      )}
+                        invoice?.account?.kyb_status === "approved") && <CheckCircle size={18} />}
                   </div>
                   <div className={styles.merchantMeta}>
-                    {flagCheck("allowUsername", userDetails, "invoice") && (
-                      <span>@{username}</span>
-                    )}
+                    {flagCheck("allowUsername", userDetails, "invoice") && <span>@{username}</span>}
 
                     {flagCheck("allowCountry", userDetails, "invoice") &&
                       accountCountry?.file_url && (
-                        <img
-                          src={accountCountry.file_url}
-                          alt={accountCountry.alpha3}
-                        />
+                        <img src={accountCountry.file_url} alt={accountCountry.alpha3} />
                       )}
                     {flagCheck("allowAccountType", userDetails, "invoice") && (
                       <span className={styles.badge}>
@@ -567,11 +536,7 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
             {missingRequiredFields.length > 0 ? (
               <div className={styles.missingFields}>
                 <h3>{t("Direct card invoice is missing required details")}</h3>
-                <p>
-                  {t(
-                    "Please update this invoice before accepting card payment.",
-                  )}
-                </p>
+                <p>{t("Please update this invoice before accepting card payment.")}</p>
                 <ul>
                   {missingRequiredFields.map((field) => (
                     <li key={field.key}>{t(field.label)}</li>
@@ -599,9 +564,7 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
                   />
                 )}
                 {state.exchange_rate_error && (
-                  <p className={styles.errorText}>
-                    {t(state.exchange_rate_error)}
-                  </p>
+                  <p className={styles.errorText}>{t(state.exchange_rate_error)}</p>
                 )}
               </div>
             )}

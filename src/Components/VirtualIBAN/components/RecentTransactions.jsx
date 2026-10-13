@@ -48,11 +48,7 @@ const formatPaymentRail = (method) => {
   const upper = String(method).toUpperCase();
   if (upper === "SEPA_INST" || upper === "SEPA_INSTANT" || upper === "INSTANT")
     return "SEPA Instant (SEPA_INST)";
-  if (
-    upper === "SEPA_CT" ||
-    upper === "SEPA_CREDIT_TRANSFER" ||
-    upper === "STANDARD"
-  )
+  if (upper === "SEPA_CT" || upper === "SEPA_CREDIT_TRANSFER" || upper === "STANDARD")
     return "SEPA Credit Transfer (SEPA_CT)";
   return String(method).replace(/_/g, " ");
 };
@@ -82,8 +78,7 @@ const TransactionRow = ({ tx, selectedIban }) => {
     }
   };
 
-  const rawStatus =
-    tx.status || tx.bvnk_status || tx.ledger_transaction?.status || "PENDING";
+  const rawStatus = tx.status || tx.bvnk_status || tx.ledger_transaction?.status || "PENDING";
   const status = normalizeStatus(rawStatus);
   const statusColor = statusColors[status] || statusColors.PENDING;
 
@@ -96,9 +91,7 @@ const TransactionRow = ({ tx, selectedIban }) => {
   });
 
   const beneficiaryEntityType =
-    tx.beneficiary?.entity_type ||
-    tx.beneficiary?.beneficiary_type ||
-    tx.beneficiary?.type;
+    tx.beneficiary?.entity_type || tx.beneficiary?.beneficiary_type || tx.beneficiary?.type;
   const formattedEntityType = beneficiaryEntityType
     ? `${String(beneficiaryEntityType).charAt(0).toUpperCase()}${String(beneficiaryEntityType).slice(1).toLowerCase()}`
     : null;
@@ -109,9 +102,7 @@ const TransactionRow = ({ tx, selectedIban }) => {
     tx.beneficiary?.bank_details?.[0]?.name;
 
   const beneficiaryCountry =
-    tx.beneficiary?.address?.country ||
-    tx.beneficiary?.country ||
-    tx.beneficiary?.bankCountry;
+    tx.beneficiary?.address?.country || tx.beneficiary?.country || tx.beneficiary?.bankCountry;
 
   const paymentRail = formatPaymentRail(
     tx.bvnk_method || tx.payment_method || tx.rail || tx.network || tx.method,
@@ -123,21 +114,15 @@ const TransactionRow = ({ tx, selectedIban }) => {
         <td className={styles.dateCell}>{dateStr}</td>
 
         <td>
-          <span className={styles.typeChip}>
-            {t(formatType(tx.type || ""))}
-          </span>
+          <span className={styles.typeChip}>{t(formatType(tx.type || ""))}</span>
         </td>
 
-        <td className={styles.txId}>
-          {tx.reference_id || tx.external_reference || "N/A"}
-        </td>
+        <td className={styles.txId}>{tx.reference_id || tx.external_reference || "N/A"}</td>
 
         <td>
           {tx?.type === "iban_payin"
             ? tx?.originator?.name
-            : tx?.beneficiary?.name ||
-              tx.virtual_iban?.account_holder_name ||
-              "N/A"}
+            : tx?.beneficiary?.name || tx.virtual_iban?.account_holder_name || "N/A"}
         </td>
 
         <td
@@ -179,33 +164,17 @@ const TransactionRow = ({ tx, selectedIban }) => {
           <td colSpan={6}>
             <div className={styles.accordionInner}>
               <div className={styles.detailGrid}>
-                {paymentRail && (
-                  <DetailItem
-                    label={t("Payment Rail")}
-                    value={t(paymentRail)}
-                  />
-                )}
+                {paymentRail && <DetailItem label={t("Payment Rail")} value={t(paymentRail)} />}
                 {formattedEntityType && (
-                  <DetailItem
-                    label={t("Entity Type")}
-                    value={t(formattedEntityType)}
-                  />
+                  <DetailItem label={t("Entity Type")} value={t(formattedEntityType)} />
                 )}
-                {beneficiaryBank && (
-                  <DetailItem label={t("Bank Name")} value={beneficiaryBank} />
-                )}
+                {beneficiaryBank && <DetailItem label={t("Bank Name")} value={beneficiaryBank} />}
                 {beneficiaryCountry && (
                   <DetailItem label={t("Country")} value={beneficiaryCountry} />
                 )}
-                <DetailItem
-                  label={t("Amount")}
-                  value={formatSignedAmount(tx)}
-                />
+                <DetailItem label={t("Amount")} value={formatSignedAmount(tx)} />
                 {tx.fee != null && (
-                  <DetailItem
-                    label={t("Fee")}
-                    value={`${tx.currency} ${tx.fee?.toFixed(2)}`}
-                  />
+                  <DetailItem label={t("Fee")} value={`${tx.currency} ${tx.fee?.toFixed(2)}`} />
                 )}
                 {tx.total != null && (
                   <DetailItem
@@ -215,17 +184,9 @@ const TransactionRow = ({ tx, selectedIban }) => {
                 )}
 
                 {tx.transaction_type && (
-                  <DetailItem
-                    label={t("Transaction Type")}
-                    value={t(tx.transaction_type)}
-                  />
+                  <DetailItem label={t("Transaction Type")} value={t(tx.transaction_type)} />
                 )}
-                {tx.type && (
-                  <DetailItem
-                    label={t("Service Type")}
-                    value={t(formatType(tx.type))}
-                  />
-                )}
+                {tx.type && <DetailItem label={t("Service Type")} value={t(formatType(tx.type))} />}
 
                 {tx?.metadata?.network_fee_eur && (
                   <DetailItem
@@ -247,9 +208,7 @@ const TransactionRow = ({ tx, selectedIban }) => {
                   disabled={downloadingProof}
                 >
                   <Download size={13} />
-                  {downloadingProof
-                    ? t("Preparing...")
-                    : t("Download Proof of Payment")}
+                  {downloadingProof ? t("Preparing...") : t("Download Proof of Payment")}
                 </button>
               )}
             </div>
@@ -306,10 +265,7 @@ const RecentTransactions = ({
     <>
       <div className={styles.header}>
         <h3 className={styles.title}>{t("Recent Transactions ")}</h3>
-        <button
-          className={styles.viewAll}
-          onClick={() => setActiveTab("transaction-history")}
-        >
+        <button className={styles.viewAll} onClick={() => setActiveTab("transaction-history")}>
           {t("View All")}
         </button>
       </div>
@@ -475,11 +431,7 @@ const RecentTransactions = ({
                 </tr>
               ) : (
                 transactions.map((tx) => (
-                  <TransactionRow
-                    key={tx._id}
-                    tx={tx}
-                    selectedIban={selectedIban}
-                  />
+                  <TransactionRow key={tx._id} tx={tx} selectedIban={selectedIban} />
                 ))
               )}
             </tbody>

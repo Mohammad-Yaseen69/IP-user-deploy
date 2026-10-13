@@ -42,11 +42,7 @@ export const payoutChannelData = [
   },
 ];
 
-const CryptoPayoutChannel = ({
-  payoutChannel,
-  setPayoutChannel,
-  setSubStep,
-}) => {
+const CryptoPayoutChannel = ({ payoutChannel, setPayoutChannel, setSubStep }) => {
   const { t } = useTranslation();
 
   return (
@@ -67,8 +63,7 @@ const CryptoPayoutChannel = ({
           padding: "1.5rem",
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
       >
         {payoutChannelData.map((item) => (
@@ -121,16 +116,10 @@ const CryptoPayoutChannel = ({
                     }}
                   />
                 </div>
-                <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>
-                  {t(item.name)}
-                </h5>
+                <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>{t(item.name)}</h5>
               </div>
               {payoutChannel?.name === item.name ? (
-                <Check
-                  color="green"
-                  size={24}
-                  style={{ position: "absolute", right: "20px" }}
-                />
+                <Check color="green" size={24} style={{ position: "absolute", right: "20px" }} />
               ) : (
                 <img
                   src={i}

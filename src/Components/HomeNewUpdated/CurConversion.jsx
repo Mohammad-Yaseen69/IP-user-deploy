@@ -16,11 +16,7 @@ let timeout;
 
 const QUOTE_TTL_MS = 2 * 60 * 1000;
 
-const CurConversion = ({
-  extCurrency = "",
-  extWallet = null,
-  showHeading = true,
-}) => {
+const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true }) => {
   const { t } = useTranslation();
   const [enteredCurrency, setEnteredCurrency] = useState("");
   const [resultCurrency, setResultCurrency] = useState("");
@@ -45,10 +41,7 @@ const CurConversion = ({
   const availableWallets = useMemo(
     () =>
       userWallets
-        ?.filter(
-          (item) =>
-            item?.status === "active" && !item?.blocked && !item?.admin_blocked,
-        )
+        ?.filter((item) => item?.status === "active" && !item?.blocked && !item?.admin_blocked)
         ?.filter(
           (item) =>
             item?.currency?.code?.toLowerCase() !== "btc" &&
@@ -60,29 +53,19 @@ const CurConversion = ({
   useEffect(() => {
     if (!availableWallets.length) return;
 
-    const hasSendingWallet = availableWallets.some(
-      (item) => item?.currency?.code === userCurrency,
-    );
+    const hasSendingWallet = availableWallets.some((item) => item?.currency?.code === userCurrency);
     const fallbackWallet =
-      availableWallets.find((item) => item?.currency?.code === extCurrency) ||
-      availableWallets[0];
-    const sendingCode = hasSendingWallet
-      ? userCurrency
-      : fallbackWallet?.currency?.code;
+      availableWallets.find((item) => item?.currency?.code === extCurrency) || availableWallets[0];
+    const sendingCode = hasSendingWallet ? userCurrency : fallbackWallet?.currency?.code;
 
     if (sendingCode !== userCurrency) {
       setUserCurrency(sendingCode);
     }
 
-    const others = availableWallets.filter(
-      (item) => item?.currency?.code !== sendingCode,
-    );
-    const isReceivable = others.some(
-      (item) => item?.currency?.code === exchangedCurrency,
-    );
+    const others = availableWallets.filter((item) => item?.currency?.code !== sendingCode);
+    const isReceivable = others.some((item) => item?.currency?.code === exchangedCurrency);
     if (!isReceivable) {
-      const preferred =
-        others.find((item) => item?.currency?.code === "USD") || others?.[0];
+      const preferred = others.find((item) => item?.currency?.code === "USD") || others?.[0];
       setExchangedCurrency(preferred?.currency?.code ?? "");
     }
   }, [availableWallets, userCurrency, exchangedCurrency]);
@@ -92,32 +75,21 @@ const CurConversion = ({
   const toggleModal = () => setIsOpen(!isOpen);
 
   const senderWallet = useMemo(() => {
-    if (extWallet?._id && extWallet?.currency?.code === userCurrency)
-      return extWallet;
-    return availableWallets.find(
-      (item) => item?.currency?.code === userCurrency,
-    );
+    if (extWallet?._id && extWallet?.currency?.code === userCurrency) return extWallet;
+    return availableWallets.find((item) => item?.currency?.code === userCurrency);
   }, [availableWallets, extWallet, userCurrency]);
 
   const receiverWallet = useMemo(
     () =>
       availableWallets.find(
-        (item) =>
-          item?.currency?.code === exchangedCurrency &&
-          item?._id !== senderWallet?._id,
+        (item) => item?.currency?.code === exchangedCurrency && item?._id !== senderWallet?._id,
       ),
     [availableWallets, exchangedCurrency, senderWallet],
   );
 
-  const balance = useMemo(
-    () => Number(senderWallet?.balance?.available ?? 0),
-    [senderWallet],
-  );
+  const balance = useMemo(() => Number(senderWallet?.balance?.available ?? 0), [senderWallet]);
 
-  const invalid = useMemo(
-    () => balance < Number(enteredCurrency || 0),
-    [balance, enteredCurrency],
-  );
+  const invalid = useMemo(() => balance < Number(enteredCurrency || 0), [balance, enteredCurrency]);
 
   const convertCurrency = async () => {
     setError("");
@@ -144,8 +116,7 @@ const CurConversion = ({
         setLoading(true);
 
         const isCryptoConversion =
-          userWallet?.wallet_type === "crypto" ||
-          receiverWallet?.wallet_type === "crypto";
+          userWallet?.wallet_type === "crypto" || receiverWallet?.wallet_type === "crypto";
 
         const conversionPayload = {
           sender_wallet_id: userWallet?._id,
@@ -158,11 +129,7 @@ const CurConversion = ({
           ? `${import.meta.env.VITE_IP_DEV_API}/api/wallet/insta-wallet-conversion/fee`
           : `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${userCurrency}&to=${exchangedCurrency}&amount=${enteredCurrency}&type=conversion&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=wallet&receiver_wallet_id=${receiverWallet?._id}&sender_wallet_id=${userWallet?._id}&payment_method=instant`;
         const res = isCryptoConversion
-          ? axios.post(
-              url,
-              { data: encryptData(conversionPayload) },
-              { headers: authHeader },
-            )
+          ? axios.post(url, { data: encryptData(conversionPayload) }, { headers: authHeader })
           : axios.get(url, { headers: authHeader });
 
         res
@@ -170,8 +137,7 @@ const CurConversion = ({
             const decrypted = decryptData(res.data.data);
             setExchangePrice(
               (
-                decrypted?.data?.exchanged_rate?.value ||
-                decrypted?.data?.rate?.value
+                decrypted?.data?.exchanged_rate?.value || decrypted?.data?.rate?.value
               )?.toLocaleString("en-us", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 4,
@@ -179,8 +145,7 @@ const CurConversion = ({
             );
             setResultCurrency(
               Number(
-                decrypted?.data?.recipient?.value ||
-                  decrypted?.data?.recipientReceives?.value,
+                decrypted?.data?.recipient?.value || decrypted?.data?.recipientReceives?.value,
               )?.toLocaleString("en-us", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
@@ -191,28 +156,21 @@ const CurConversion = ({
             );
 
             const exchange_rate_details = {
-              exchange_rate:
-                decrypted?.data?.exchanged_rate?.value ||
-                decrypted?.data?.rate?.value,
+              exchange_rate: decrypted?.data?.exchanged_rate?.value || decrypted?.data?.rate?.value,
               receiver: {
                 currency:
                   decrypted?.data?.recipient?.currency ||
                   decrypted?.data?.recipientReceives?.currency,
                 amount:
-                  decrypted?.data?.recipient?.value ||
-                  decrypted?.data?.recipientReceives?.value,
+                  decrypted?.data?.recipient?.value || decrypted?.data?.recipientReceives?.value,
               },
               fee: {
                 amount: decrypted?.data?.fee?.value ?? 0.0,
                 currency: decrypted?.data?.fee?.currency,
               },
               sending: {
-                amount:
-                  decrypted?.data?.sending?.value ||
-                  decrypted?.data?.total?.value,
-                currency:
-                  decrypted?.data?.sending?.currency ||
-                  decrypted?.data?.total?.value,
+                amount: decrypted?.data?.sending?.value || decrypted?.data?.total?.value,
+                currency: decrypted?.data?.sending?.currency || decrypted?.data?.total?.value,
               },
               total: decrypted?.data?.total?.value,
               token: decrypted?.data?.token,
@@ -309,10 +267,7 @@ const CurConversion = ({
 
   const filteredWallets = useMemo(() => {
     return userWallets
-      ?.filter(
-        (item) =>
-          !item?.blocked && !item?.admin_blocked && item?.status === "active",
-      )
+      ?.filter((item) => !item?.blocked && !item?.admin_blocked && item?.status === "active")
       ?.filter(
         (item) =>
           item?.currency?.code?.toLowerCase() !== "btc" &&
@@ -360,10 +315,7 @@ const CurConversion = ({
           className={styles.form}
         >
           <div className={styles.input_con}>
-            <select
-              value={userCurrency}
-              onChange={(e) => setUserCurrency(e.target.value)}
-            >
+            <select value={userCurrency} onChange={(e) => setUserCurrency(e.target.value)}>
               {filteredWallets
                 ?.filter(
                   (item) =>
@@ -379,10 +331,7 @@ const CurConversion = ({
                     key={item?._id}
                     value={item?.currency?.code}
                     style={{
-                      display:
-                        userCurrency === item?.currency?.code
-                          ? "none"
-                          : "inherit",
+                      display: userCurrency === item?.currency?.code ? "none" : "inherit",
                     }}
                   >
                     {item?.currency?.code}
@@ -418,10 +367,7 @@ const CurConversion = ({
                     style={{
                       fontSize: "1rem",
                       fontWeight: 900,
-                      display:
-                        exchangedCurrency === item?.currency?.code
-                          ? "none"
-                          : "inherit",
+                      display: exchangedCurrency === item?.currency?.code ? "none" : "inherit",
                     }}
                   >
                     {item?.currency?.code}
@@ -493,9 +439,7 @@ const CurConversion = ({
             }
           >
             {balance < enteredCurrency ? (
-              <span>
-                {t(`Insufficient Balance in PKR`).replace("PKR", userCurrency)}
-              </span>
+              <span>{t(`Insufficient Balance in PKR`).replace("PKR", userCurrency)}</span>
             ) : (
               <>
                 <svg

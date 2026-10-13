@@ -58,21 +58,9 @@ describe("bankIdentifiers - IBAN by country", () => {
     added.forEach((code) => expect(codes).toContain(code));
 
     /* A few long-standing registry countries, as a sanity check on the package itself. */
-    [
-      "DE",
-      "FR",
-      "GB",
-      "ES",
-      "IT",
-      "NL",
-      "PK",
-      "SA",
-      "AE",
-      "CH",
-      "NO",
-      "TR",
-      "BR",
-    ].forEach((code) => expect(codes).toContain(code));
+    ["DE", "FR", "GB", "ES", "IT", "NL", "PK", "SA", "AE", "CH", "NO", "TR", "BR"].forEach((code) =>
+      expect(codes).toContain(code),
+    );
 
     expect(COUNTRIES.length).toBeGreaterThanOrEqual(120);
   });
@@ -169,33 +157,21 @@ describe("bankIdentifiers - invalid IBAN input", () => {
 });
 
 describe("bankIdentifiers - SWIFT / BIC and routing numbers", () => {
-  it.each(["DEUTDEFF", "DEUTDEFF500", "NWBKGB2L", "SCBLPKKX"])(
-    "accepts SWIFT %s",
-    (bic) => {
-      expect(isValidSwiftCode(bic)).toBe(true);
-    },
-  );
+  it.each(["DEUTDEFF", "DEUTDEFF500", "NWBKGB2L", "SCBLPKKX"])("accepts SWIFT %s", (bic) => {
+    expect(isValidSwiftCode(bic)).toBe(true);
+  });
 
-  it.each(["DEUT", "DEUTDEFF5", "12345678", ""])(
-    'rejects SWIFT "%s"',
-    (bic) => {
-      expect(isValidSwiftCode(bic)).toBe(false);
-    },
-  );
+  it.each(["DEUT", "DEUTDEFF5", "12345678", ""])('rejects SWIFT "%s"', (bic) => {
+    expect(isValidSwiftCode(bic)).toBe(false);
+  });
 
-  it.each(["021000021", "011000015", "026009593"])(
-    "accepts routing number %s",
-    (routing) => {
-      expect(isValidRoutingNumber(routing)).toBe(true);
-    },
-  );
+  it.each(["021000021", "011000015", "026009593"])("accepts routing number %s", (routing) => {
+    expect(isValidRoutingNumber(routing)).toBe(true);
+  });
 
-  it.each(["021000022", "12345678", "0210000210", ""])(
-    'rejects routing number "%s"',
-    (routing) => {
-      expect(isValidRoutingNumber(routing)).toBe(false);
-    },
-  );
+  it.each(["021000022", "12345678", "0210000210", ""])('rejects routing number "%s"', (routing) => {
+    expect(isValidRoutingNumber(routing)).toBe(false);
+  });
 });
 
 describe("bankIdentifiers - checkIdentifier and collectIdentifierErrors", () => {
@@ -212,15 +188,9 @@ describe("bankIdentifiers - checkIdentifier and collectIdentifierErrors", () => 
       state: "invalid",
       message: "This IBAN is not valid. Check it for a typo.",
     });
-    expect(
-      checkIdentifier("iban", "FR7630006000011234567890189").message,
-    ).toContain("12345678901");
-    expect(checkIdentifier("bic", "DEUTDEFF").message).toBe(
-      "Valid SWIFT / BIC",
-    );
-    expect(checkIdentifier("routing", "021000021").message).toBe(
-      "Valid routing number",
-    );
+    expect(checkIdentifier("iban", "FR7630006000011234567890189").message).toContain("12345678901");
+    expect(checkIdentifier("bic", "DEUTDEFF").message).toBe("Valid SWIFT / BIC");
+    expect(checkIdentifier("routing", "021000021").message).toBe("Valid routing number");
   });
 
   it("only checks identifiers it knows how to check", () => {

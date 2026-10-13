@@ -38,30 +38,26 @@ const CreateAgentPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const { mutateAsync: sendPassword, isPending: sendingPassword } = useMutation(
-    {
-      mutationFn: () =>
-        apiWrapper({
-          method: "POST",
-          isEncrypted: true,
-          endpoint: "/api/business-agents/agents/set-password",
-          payload: {
-            token,
-            password: passwords.password,
-          },
-        }),
-      onError: (error) => {
-        const dec = decryptData(error?.response?.data?.data);
-        setError(
-          dec?.message || "We're unable to process your request at the moment.",
-        );
-      },
-      onSuccess: (data) => {
-        setOtpToken(data?.token);
-        setStep(2);
-      },
+  const { mutateAsync: sendPassword, isPending: sendingPassword } = useMutation({
+    mutationFn: () =>
+      apiWrapper({
+        method: "POST",
+        isEncrypted: true,
+        endpoint: "/api/business-agents/agents/set-password",
+        payload: {
+          token,
+          password: passwords.password,
+        },
+      }),
+    onError: (error) => {
+      const dec = decryptData(error?.response?.data?.data);
+      setError(dec?.message || "We're unable to process your request at the moment.");
     },
-  );
+    onSuccess: (data) => {
+      setOtpToken(data?.token);
+      setStep(2);
+    },
+  });
 
   const { mutateAsync: resendOtp, isPending: resendingOtp } = useMutation({
     mutationFn: () =>
@@ -75,9 +71,7 @@ const CreateAgentPassword = () => {
       }),
     onError: (error) => {
       const dec = decryptData(error?.response?.data?.data);
-      setError(
-        dec?.message || "We're unable to process your request at the moment.",
-      );
+      setError(dec?.message || "We're unable to process your request at the moment.");
     },
     onSuccess: (data) => {
       setOtpToken(data?.token);
@@ -101,9 +95,7 @@ const CreateAgentPassword = () => {
       }),
     onError: (error) => {
       const dec = decryptData(error?.response?.data?.data);
-      setError(
-        dec?.message || "We're unable to process your request at the moment.",
-      );
+      setError(dec?.message || "We're unable to process your request at the moment.");
     },
     onSuccess: (data) => {
       setSuccess(true);
@@ -154,35 +146,22 @@ const CreateAgentPassword = () => {
     inputRefs.current[lastFilledIndex]?.focus();
   };
 
-  const isLengthValid =
-    passwords.password.length >= 9 && passwords.password.length <= 64;
+  const isLengthValid = passwords.password.length >= 9 && passwords.password.length <= 64;
   const hasUpper = /[A-Z]/.test(passwords.password);
   const hasLower = /[a-z]/.test(passwords.password);
   const hasNumber = /[0-9]/.test(passwords.password);
   const hasSpecial = /[^A-Za-z0-9]/.test(passwords.password);
-  const requirementCount =
-    [hasUpper, hasLower, hasNumber, hasSpecial].filter(Boolean).length >= 2;
+  const requirementCount = [hasUpper, hasLower, hasNumber, hasSpecial].filter(Boolean).length >= 2;
   const isPasswordValid = isLengthValid && requirementCount;
   const passwordsMatch =
-    passwords.password === passwords.confirmPassword &&
-    passwords.confirmPassword !== "";
+    passwords.password === passwords.confirmPassword && passwords.confirmPassword !== "";
 
   const renderStep1 = () => (
     <div className={styles2.wrapper}>
       <div className={otpStyles.leftPanel}>
-        <img
-          src={imgLeft}
-          loading="lazy"
-          alt=""
-          className={otpStyles.leftImg}
-        />
+        <img src={imgLeft} loading="lazy" alt="" className={otpStyles.leftImg} />
 
-        <img
-          src={InstapayLogo}
-          className={otpStyles.childLogo}
-          loading="lazy"
-          alt=""
-        />
+        <img src={InstapayLogo} className={otpStyles.childLogo} loading="lazy" alt="" />
 
         <h2>{t("Unlock Seamless Payments with InstaPay")}</h2>
       </div>
@@ -203,9 +182,7 @@ const CreateAgentPassword = () => {
             <input
               type={showPassword ? "text" : "password"}
               value={passwords.password}
-              onChange={(e) =>
-                setPasswords({ ...passwords, password: e.target.value })
-              }
+              onChange={(e) => setPasswords({ ...passwords, password: e.target.value })}
               placeholder={t("Password")}
             />
             {showPassword ? (
@@ -227,19 +204,11 @@ const CreateAgentPassword = () => {
             <h5>{t("Password must:")}</h5>
             <ul className={styles2.pg_list}>
               <li>
-                {isLengthValid ? (
-                  <Check size={14} color="#22c55e" />
-                ) : (
-                  <Cross />
-                )}
+                {isLengthValid ? <Check size={14} color="#22c55e" /> : <Cross />}
                 <p>{t("Be between 9 and 64 characters")}</p>
               </li>
               <li>
-                {requirementCount ? (
-                  <Check size={14} color="#22c55e" />
-                ) : (
-                  <Cross />
-                )}
+                {requirementCount ? <Check size={14} color="#22c55e" /> : <Cross />}
                 <p>{t("Include at least two of the following:")}</p>
               </li>
               <ul className={styles2.pg_sub_list}>
@@ -268,9 +237,7 @@ const CreateAgentPassword = () => {
             <input
               type={showConfirmPassword ? "text" : "password"}
               value={passwords.confirmPassword}
-              onChange={(e) =>
-                setPasswords({ ...passwords, confirmPassword: e.target.value })
-              }
+              onChange={(e) => setPasswords({ ...passwords, confirmPassword: e.target.value })}
               placeholder={t("Confirm Password")}
             />
             {showConfirmPassword ? (
@@ -307,9 +274,7 @@ const CreateAgentPassword = () => {
             className={styles2.form_btn}
             disabled={sendingPassword || !isPasswordValid || !passwordsMatch}
           >
-            <span>
-              {sendingPassword ? t("Continuing") : t("Send verification code")}
-            </span>
+            <span>{sendingPassword ? t("Continuing") : t("Send verification code")}</span>
             <ChevronRight size={22} color="white" />
           </button>
 
@@ -350,19 +315,9 @@ const CreateAgentPassword = () => {
   const renderStep2 = () => (
     <div className={otpStyles.wrapper}>
       <div className={otpStyles.leftPanel}>
-        <img
-          src={imgLeft}
-          loading="lazy"
-          alt=""
-          className={otpStyles.leftImg}
-        />
+        <img src={imgLeft} loading="lazy" alt="" className={otpStyles.leftImg} />
 
-        <img
-          src={InstapayLogo}
-          className={otpStyles.childLogo}
-          loading="lazy"
-          alt=""
-        />
+        <img src={InstapayLogo} className={otpStyles.childLogo} loading="lazy" alt="" />
 
         <h2>{t("Unlock Seamless Payments with InstaPay")}</h2>
       </div>
@@ -370,13 +325,7 @@ const CreateAgentPassword = () => {
       <div className={otpStyles.wrapperRight}>
         <div className={otpStyles.wrapperRight_two}>
           <div className={otpStyles.logo}>
-            <img
-              src={Logo}
-              loading="lazy"
-              width={100}
-              height={100}
-              alt="logo"
-            />
+            <img src={Logo} loading="lazy" width={100} height={100} alt="logo" />
           </div>
           <div className={otpStyles.top}>
             <div className={otpStyles.iconArea}>
@@ -414,10 +363,7 @@ const CreateAgentPassword = () => {
                 <>
                   {t("Didn't receive the code?")}
 
-                  <span
-                    className={otpStyles.resendBtn}
-                    onClick={() => resendOtp()}
-                  >
+                  <span className={otpStyles.resendBtn} onClick={() => resendOtp()}>
                     {resendingOtp ? t("Resending...") : t("Resend Now")}
                   </span>
                 </>
@@ -431,9 +377,7 @@ const CreateAgentPassword = () => {
               disabled={verifyingOtp || isAnyFieldEmpty}
               onClick={() => verifyOtp()}
             >
-              <span>
-                {verifyingOtp ? t("Verifying") : t("Verify and continue")}
-              </span>
+              <span>{verifyingOtp ? t("Verifying") : t("Verify and continue")}</span>
 
               <ChevronRight size={20} color="white" />
             </button>
@@ -465,12 +409,7 @@ const CreateAgentPassword = () => {
         toggle={() => setError(null)}
       />
 
-      <Modal
-        isOpen={success}
-        centered
-        backdrop="static"
-        style={{ borderRadius: "1rem" }}
-      >
+      <Modal isOpen={success} centered backdrop="static" style={{ borderRadius: "1rem" }}>
         <ModalBody style={{ textAlign: "center", padding: "40px" }}>
           <img
             src={Gif}

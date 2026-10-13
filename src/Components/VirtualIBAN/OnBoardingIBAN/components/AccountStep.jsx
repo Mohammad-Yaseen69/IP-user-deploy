@@ -107,9 +107,7 @@ const AccountStep = ({ onNext, onBack, userType }) => {
             </svg>
           </div>
 
-          <h2 className={styles.formHeading}>
-            {t("Let's create your access")}
-          </h2>
+          <h2 className={styles.formHeading}>{t("Let's create your access")}</h2>
           <p className={styles.formSubheading}>
             {t(
               "We'll link this journey to your email and send a one-time code. Pause and resume anytime, from any device.",
@@ -175,9 +173,7 @@ const AccountStep = ({ onNext, onBack, userType }) => {
           <div className={styles.formSecurityFooter}>
             <FaShieldHalved size={14} className={styles.securityIcon} />
             <span>
-              {t(
-                "Bank-grade security, encrypted under EU GDPR by Kemit Kingdom SA (K2SA)",
-              )}
+              {t("Bank-grade security, encrypted under EU GDPR by Kemit Kingdom SA (K2SA)")}
             </span>
           </div>
         </div>

@@ -7,9 +7,7 @@ const Cover = () => {
   const { userDetails, croppedImages } = useContext(UserContext);
   return (
     <img
-      src={
-        croppedImages?.profileBanner || userDetails?.coverImage?.url || cover
-      }
+      src={croppedImages?.profileBanner || userDetails?.coverImage?.url || cover}
       alt="cover"
       className={styles.cover}
     />

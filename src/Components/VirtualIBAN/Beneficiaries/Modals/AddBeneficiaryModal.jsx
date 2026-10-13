@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import {
-  Box,
-  Modal,
-  TextField,
-  IconButton,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, Modal, TextField, IconButton, useMediaQuery } from "@mui/material";
 import { X, User, Briefcase } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { apiWrapper } from "../../../../utils/Functions/apiWrapper";
@@ -24,12 +18,7 @@ import { handlePaymentApiError } from "../../../../utils/Functions/handlePayment
 import { useNavigate } from "react-router";
 const nameRegex = /^[A-Za-z\s]+$/;
 
-const AddBeneficiaryModal = ({
-  open,
-  handleClose,
-  onSaveSuccess,
-  beneficiaryToEdit,
-}) => {
+const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEdit }) => {
   const { t } = useTranslation();
   const isMobile = useMediaQuery("(max-width: 600px)");
   const [loading, setLoading] = useState(false);
@@ -93,9 +82,7 @@ const AddBeneficiaryModal = ({
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const isCountrySelected = !!(
-    formData.country_iso_code || formData.country_name
-  );
+  const isCountrySelected = !!(formData.country_iso_code || formData.country_name);
   const isCountryDisabled = !isCountrySelected;
 
   const handleSubmit = async (e) => {
@@ -170,12 +157,9 @@ const AddBeneficiaryModal = ({
 
     const payload = {
       beneficiary_type: beneficiaryType,
-      first_name:
-        beneficiaryType === "individual" ? formData.first_name.trim() : "",
-      last_name:
-        beneficiaryType === "individual" ? formData.last_name.trim() : "",
-      company_name:
-        beneficiaryType === "business" ? formData.company_name.trim() : "",
+      first_name: beneficiaryType === "individual" ? formData.first_name.trim() : "",
+      last_name: beneficiaryType === "individual" ? formData.last_name.trim() : "",
+      company_name: beneficiaryType === "business" ? formData.company_name.trim() : "",
       country_name: formData.country_name,
       country_iso_code: formData.country_iso_code,
       city: formData.city.trim(),
@@ -247,12 +231,7 @@ const AddBeneficiaryModal = ({
     padding: "8px 12px",
     borderRadius: isMobile ? "10px" : "8px",
     border: "none",
-    background:
-      beneficiaryType === type
-        ? isMobile
-          ? "#7040FF"
-          : "#FFFFFF"
-        : "transparent",
+    background: beneficiaryType === type ? (isMobile ? "#7040FF" : "#FFFFFF") : "transparent",
     color:
       beneficiaryType === type
         ? isMobile
@@ -282,11 +261,7 @@ const AddBeneficiaryModal = ({
     textTransform: isMobile ? "uppercase" : "none",
   };
   return (
-    <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="add-beneficiary-modal"
-    >
+    <Modal open={open} onClose={handleClose} aria-labelledby="add-beneficiary-modal">
       <Box
         sx={{
           position: "absolute",
@@ -341,9 +316,7 @@ const AddBeneficiaryModal = ({
                   color: "#111827",
                 }}
               >
-                {beneficiaryToEdit
-                  ? t("Edit Beneficiary")
-                  : t("Add Beneficiary")}
+                {beneficiaryToEdit ? t("Edit Beneficiary") : t("Add Beneficiary")}
               </h3>
               <p
                 style={{
@@ -356,11 +329,7 @@ const AddBeneficiaryModal = ({
               </p>
             </div>
           </div>
-          <IconButton
-            onClick={handleClose}
-            size="small"
-            style={{ color: "#9CA3AF" }}
-          >
+          <IconButton onClick={handleClose} size="small" style={{ color: "#9CA3AF" }}>
             <X size={18} />
           </IconButton>
         </div>
@@ -433,12 +402,7 @@ const AddBeneficiaryModal = ({
                     required
                     placeholder={t("e.g. Arnold")}
                     value={formData.first_name}
-                    onChange={(e) =>
-                      handleChange(
-                        "first_name",
-                        handleNameInput(e.target.value),
-                      )
-                    }
+                    onChange={(e) => handleChange("first_name", handleNameInput(e.target.value))}
                     sx={commonInputStyles}
                     onKeyDown={preventEdgeSpaces}
                   />
@@ -452,9 +416,7 @@ const AddBeneficiaryModal = ({
                     required
                     placeholder={t("e.g. Mbuka")}
                     value={formData.last_name}
-                    onChange={(e) =>
-                      handleChange("last_name", handleNameInput(e.target.value))
-                    }
+                    onChange={(e) => handleChange("last_name", handleNameInput(e.target.value))}
                     sx={commonInputStyles}
                     onKeyDown={preventEdgeSpaces}
                   />
@@ -471,12 +433,7 @@ const AddBeneficiaryModal = ({
                   placeholder={t("e.g. System Pay Services Solutions")}
                   value={formData.company_name}
                   onKeyDown={preventEdgeSpaces}
-                  onChange={(e) =>
-                    handleChange(
-                      "company_name",
-                      handleNameInput(e.target.value),
-                    )
-                  }
+                  onChange={(e) => handleChange("company_name", handleNameInput(e.target.value))}
                   sx={commonInputStyles}
                 />
               </div>
@@ -487,13 +444,8 @@ const AddBeneficiaryModal = ({
               <CountryDropDown
                 country={formData.country_iso_code || formData.country_name}
                 onSelect={(selected) => {
-                  const cName =
-                    selected?.country_name ||
-                    selected?.name ||
-                    selected?.alpha3 ||
-                    "";
-                  const cCode =
-                    selected?.alpha3 || selected?.country_iso_code || "";
+                  const cName = selected?.country_name || selected?.name || selected?.alpha3 || "";
+                  const cCode = selected?.alpha3 || selected?.country_iso_code || "";
                   handleChange("country_name", cName);
                   handleChange("country_iso_code", cCode);
                   handleChange("city", "");
@@ -509,19 +461,11 @@ const AddBeneficiaryModal = ({
                 marginBottom: "14px",
               }}
             >
-              <div
-                title={
-                  isCountryDisabled ? t("Please select country first") : ""
-                }
-              >
+              <div title={isCountryDisabled ? t("Please select country first") : ""}>
                 <label
                   style={{
                     ...labelStyle,
-                    color: isCountryDisabled
-                      ? "#9CA3AF"
-                      : isMobile
-                        ? "#9793A8"
-                        : "#374151",
+                    color: isCountryDisabled ? "#9CA3AF" : isMobile ? "#9793A8" : "#374151",
                   }}
                 >
                   {t("City")} *
@@ -548,9 +492,7 @@ const AddBeneficiaryModal = ({
                   placeholder="name@example.com"
                   value={formData.email}
                   onKeyDown={preventEmailSpaces}
-                  onChange={(e) =>
-                    handleChange("email", handleEmailInput(e.target.value))
-                  }
+                  onChange={(e) => handleChange("email", handleEmailInput(e.target.value))}
                   sx={commonInputStyles}
                 />
               </div>
@@ -563,15 +505,10 @@ const AddBeneficiaryModal = ({
               <label
                 style={{
                   ...labelStyle,
-                  color: isCountryDisabled
-                    ? "#9CA3AF"
-                    : isMobile
-                      ? "#9793A8"
-                      : "#374151",
+                  color: isCountryDisabled ? "#9CA3AF" : isMobile ? "#9793A8" : "#374151",
                 }}
               >
-                {t("Phone Number")}{" "}
-                {beneficiaryType === "individual" ? "*" : ""}
+                {t("Phone Number")} {beneficiaryType === "individual" ? "*" : ""}
               </label>
               <PhoneInput
                 key={phoneKey}
@@ -586,8 +523,7 @@ const AddBeneficiaryModal = ({
                     selected?.alpha3 ||
                     selected?.country_iso_code ||
                     "";
-                  const cCode =
-                    selected?.alpha3 || selected?.country_iso_code || "";
+                  const cCode = selected?.alpha3 || selected?.country_iso_code || "";
                   if (cName) handleChange("country_name", cName);
                   if (cCode) handleChange("country_iso_code", cCode);
                 }}
@@ -673,11 +609,7 @@ const AddBeneficiaryModal = ({
                 padding: isMobile ? "7px 20px" : "10px 24px",
                 borderRadius: "10px",
                 border: "none",
-                background: loading
-                  ? "#9CA3AF"
-                  : isMobile
-                    ? "#7040FF"
-                    : "#4F46E5",
+                background: loading ? "#9CA3AF" : isMobile ? "#7040FF" : "#4F46E5",
                 color: "#FFFFFF",
                 fontWeight: 600,
                 fontSize: "14px",
@@ -686,11 +618,7 @@ const AddBeneficiaryModal = ({
                 height: isMobile ? "fit-content" : "auto",
               }}
             >
-              {loading
-                ? t("Saving...")
-                : beneficiaryToEdit
-                  ? t("Update Beneficiary")
-                  : t("Next")}
+              {loading ? t("Saving...") : beneficiaryToEdit ? t("Update Beneficiary") : t("Next")}
             </button>
           </div>
         </form>

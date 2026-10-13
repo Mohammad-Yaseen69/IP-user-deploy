@@ -74,8 +74,7 @@ const AddCSVModal = ({ isOpen, toggleModal, srr, showInfo, setShowInfo }) => {
     // xls and xlsx
     else if (
       file.type === "application/vnd.ms-excel" ||
-      file.type ===
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     ) {
       const reader = new FileReader();
       setCSVProgress(0);
@@ -179,11 +178,7 @@ const AddCSVModal = ({ isOpen, toggleModal, srr, showInfo, setShowInfo }) => {
                 onChange={handleFile}
               />
               {error && (
-                <span
-                  style={{ color: "red", fontSize: ".8rem", fontWeight: 600 }}
-                >
-                  {error}
-                </span>
+                <span style={{ color: "red", fontSize: ".8rem", fontWeight: 600 }}>{error}</span>
               )}
             </FormGroup>
             <div
@@ -233,8 +228,7 @@ const AddCSVModal = ({ isOpen, toggleModal, srr, showInfo, setShowInfo }) => {
                 disabled={fileData.length === 0}
                 onClick={handleSubmit}
                 style={{
-                  background:
-                    "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                  background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                   border: "none",
                   outline: "none",
                 }}

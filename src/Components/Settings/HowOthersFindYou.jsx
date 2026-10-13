@@ -115,9 +115,7 @@ const HowOthersFindYou = () => {
   return (
     <Card id="two_factor">
       <CardHeader className={`pb-0`}>
-        <H4 attrH4={{ className: "card-title mb-0" }}>
-          {t("How Others Can Find You")}
-        </H4>
+        <H4 attrH4={{ className: "card-title mb-0" }}>{t("How Others Can Find You")}</H4>
       </CardHeader>
       <CardBody style={{ overflowX: "auto" }}>
         <table className={styles.table}>
@@ -232,8 +230,7 @@ const HowOthersFindYou = () => {
               ) : (
                 <Button
                   style={{
-                    background:
-                      "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                     border: "none",
                     outline: "none",
                     borderRadius: "10px",
@@ -249,8 +246,7 @@ const HowOthersFindYou = () => {
             <Button
               disabled={!isEdit}
               style={{
-                background:
-                  "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                 border: "none",
                 outline: "none",
                 borderRadius: "10px",

@@ -23,12 +23,8 @@ import styles from "./styles/tabs.module.css";
 import { Card, CardBody } from "reactstrap";
 
 const Tabs = ({ current, setCurrent }) => {
-  const {
-    userDetails,
-    profileCompleted,
-    profileCompletedPercentage,
-    profileIncompleteReason,
-  } = useContext(UserContext);
+  const { userDetails, profileCompleted, profileCompletedPercentage, profileIncompleteReason } =
+    useContext(UserContext);
   const { t } = useTranslation();
   // ********************************tabs data************************************
   const tabsData = [
@@ -142,8 +138,7 @@ const Tabs = ({ current, setCurrent }) => {
                                 }} />
                             </div> */}
             <span className={styles.name}>{item.name}</span>
-            {item.name.toLowerCase().includes("basic") &&
-            profileIncompleteReason === "basic" ? (
+            {item.name.toLowerCase().includes("basic") && profileIncompleteReason === "basic" ? (
               <div
                 style={{
                   height: "5px",
@@ -170,8 +165,7 @@ const Tabs = ({ current, setCurrent }) => {
             )}
             {item.name.toLowerCase().includes("verify") &&
             userDetails &&
-            (!("verified" in userDetails) ||
-              userDetails?.verified == "false") ? (
+            (!("verified" in userDetails) || userDetails?.verified == "false") ? (
               <div
                 style={{
                   height: "5px",

@@ -10,9 +10,7 @@ const Accounts = () => {
     <Card id="accounts">
       <CardHeader className={`pb-0 expanded`}>
         <div>
-          <H4 attrH4={{ className: "card-title mb-0" }}>
-            {t("Social Accounts")}
-          </H4>
+          <H4 attrH4={{ className: "card-title mb-0" }}>{t("Social Accounts")}</H4>
           <p style={{ marginTop: ".5rem", color: "black", fontWeight: "300" }}>
             {t("Here you can setup and manage your integration settings.")}
           </p>

@@ -1,11 +1,4 @@
-import {
-  Search,
-  ChevronLeft,
-  ChevronRight,
-  ArrowUp,
-  ArrowDown,
-  Edit2,
-} from "react-feather";
+import { Search, ChevronLeft, ChevronRight, ArrowUp, ArrowDown, Edit2 } from "react-feather";
 import { useTranslation } from "react-i18next";
 import useWindowWidth from "../../../utils/useWindowWidth";
 import TopRight from "../../topRight";
@@ -45,15 +38,7 @@ const Clients = () => {
     isFetching,
     refetch,
   } = useQuery({
-    queryKey: [
-      "agent-clients",
-      search,
-      statusFilter,
-      typeFilter,
-      sortBy,
-      sortOrder,
-      page,
-    ],
+    queryKey: ["agent-clients", search, statusFilter, typeFilter, sortBy, sortOrder, page],
     queryFn: () =>
       apiWrapper({
         endpoint: `/api/iban-fees/agent-clients?${queryParams}`,
@@ -101,11 +86,7 @@ const Clients = () => {
       <div className={styles.top}>
         <div className={styles.headerTitle}>
           <h1>{t("Referred Clients")}</h1>
-          <p>
-            {t(
-              "View and manage all clients registered using your referral fee code.",
-            )}
-          </p>
+          <p>{t("View and manage all clients registered using your referral fee code.")}</p>
         </div>
         <div className={styles.topright}>{width > 1000 && <TopRight />}</div>
       </div>
@@ -115,10 +96,7 @@ const Clients = () => {
           className={styles.controlsRow}
           style={{ flexWrap: "wrap", gap: "12px", marginBottom: "20px" }}
         >
-          <div
-            className={styles.searchWrapper}
-            style={{ minWidth: "260px", flex: 1 }}
-          >
+          <div className={styles.searchWrapper} style={{ minWidth: "260px", flex: 1 }}>
             <Search className={styles.searchIcon} size={16} />
             <input
               type="text"
@@ -129,10 +107,7 @@ const Clients = () => {
             />
           </div>
 
-          <div
-            className={styles.actionGroup}
-            style={{ gap: "10px", flexWrap: "wrap" }}
-          >
+          <div className={styles.actionGroup} style={{ gap: "10px", flexWrap: "wrap" }}>
             <select
               value={typeFilter}
               onChange={handleTypeFilterChange}
@@ -154,11 +129,7 @@ const Clients = () => {
               <option value="blocked">{t("Blocked")}</option>
             </select>
 
-            <select
-              value={sortBy}
-              onChange={handleSortChange}
-              className={styles.filterSelect}
-            >
+            <select value={sortBy} onChange={handleSortChange} className={styles.filterSelect}>
               <option value="createdAt">{t("Sort by Date")}</option>
               <option value="company_name">{t("Sort by Name")}</option>
               <option value="status">{t("Sort by Status")}</option>
@@ -170,11 +141,7 @@ const Clients = () => {
               className={`${styles.secondaryBtn} ${styles.sortToggleBtn}`}
               title={t("Toggle Sort Order")}
             >
-              {sortOrder === "asc" ? (
-                <ArrowUp size={14} />
-              ) : (
-                <ArrowDown size={14} />
-              )}
+              {sortOrder === "asc" ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
               <span>{sortOrder.toUpperCase()}</span>
             </button>
           </div>
@@ -209,23 +176,17 @@ const Clients = () => {
                 borderRadius: "0 0 8px 8px",
               }}
             >
-              <div
-                style={{ padding: "30px", textAlign: "center", color: "#666" }}
-              >
+              <div style={{ padding: "30px", textAlign: "center", color: "#666" }}>
                 {t("Updating list...")}
               </div>
             </div>
           )}
           {isLoading ? (
-            <div
-              style={{ padding: "30px", textAlign: "center", color: "#666" }}
-            >
+            <div style={{ padding: "30px", textAlign: "center", color: "#666" }}>
               {t("Loading clients list...")}
             </div>
           ) : isError ? (
-            <div
-              style={{ padding: "30px", textAlign: "center", color: "#dc2626" }}
-            >
+            <div style={{ padding: "30px", textAlign: "center", color: "#dc2626" }}>
               {t("Failed to load clients. Please try again.")}
             </div>
           ) : clientsList.length > 0 ? (
@@ -240,19 +201,14 @@ const Clients = () => {
               const ibanStatusUpper = client.ibanStatus
                 ? client.ibanStatus.toUpperCase()
                 : "NOT REQUESTED";
-              const statusUpper = client.status
-                ? client.status.toUpperCase()
-                : "ACTIVE";
+              const statusUpper = client.status ? client.status.toUpperCase() : "ACTIVE";
               const feePackName = client.fee_pack?.name || t("Standard Plan");
-              const feePackSummary =
-                client.fee_pack?.pricing_summary || feePackName;
+              const feePackSummary = client.fee_pack?.pricing_summary || feePackName;
 
               return (
                 <div key={client._id || idx} className={styles.tableDataRow}>
                   <div className={styles.clientCell}>
-                    <span className={`${styles.avatar} ${avatarColor}`}>
-                      {client.initials}
-                    </span>
+                    <span className={`${styles.avatar} ${avatarColor}`}>{client.initials}</span>
                     <div>
                       <span
                         className={styles.clientName}
@@ -260,9 +216,7 @@ const Clients = () => {
                       >
                         {client.name}
                       </span>
-                      <span style={{ fontSize: "12px", color: "#6B7280" }}>
-                        {client.email}
-                      </span>
+                      <span style={{ fontSize: "12px", color: "#6B7280" }}>{client.email}</span>
                     </div>
                   </div>
 
@@ -300,10 +254,7 @@ const Clients = () => {
                       >
                         {feePackName}
                       </span>
-                      <Edit2
-                        size={11}
-                        style={{ opacity: 0.7, flexShrink: 0 }}
-                      />
+                      <Edit2 size={11} style={{ opacity: 0.7, flexShrink: 0 }} />
                     </span>
                   </div>
 
@@ -334,20 +285,14 @@ const Clients = () => {
 
                   <div>
                     <span
-                      className={
-                        statusUpper === "ACTIVE"
-                          ? styles.badgePaid
-                          : styles.badgePending
-                      }
+                      className={statusUpper === "ACTIVE" ? styles.badgePaid : styles.badgePending}
                     >
                       {statusUpper}
                     </span>
                   </div>
 
                   <div style={{ color: "#6B7280", fontSize: "13px" }}>
-                    {client.createdAt
-                      ? new Date(client.createdAt).toLocaleDateString()
-                      : "-"}
+                    {client.createdAt ? new Date(client.createdAt).toLocaleDateString() : "-"}
                   </div>
 
                   <div style={{ display: "flex", justifyContent: "center" }}>
@@ -365,9 +310,7 @@ const Clients = () => {
               );
             })
           ) : (
-            <div
-              style={{ padding: "30px", textAlign: "center", color: "#666" }}
-            >
+            <div style={{ padding: "30px", textAlign: "center", color: "#666" }}>
               {t("No clients found matching the selected criteria.")}
             </div>
           )}
@@ -387,9 +330,9 @@ const Clients = () => {
             }}
           >
             <div style={{ fontSize: "14px", color: "#4B5563" }}>
-              {t("Showing page")} <strong>{pagination.currentPage}</strong>{" "}
-              {t("of")} <strong>{pagination.totalPages}</strong> (
-              {pagination.totalClients} {t("total clients")})
+              {t("Showing page")} <strong>{pagination.currentPage}</strong> {t("of")}{" "}
+              <strong>{pagination.totalPages}</strong> ({pagination.totalClients}{" "}
+              {t("total clients")})
             </div>
 
             <div style={{ display: "flex", gap: "8px" }}>
@@ -418,18 +361,14 @@ const Clients = () => {
               <button
                 type="button"
                 disabled={page >= pagination.totalPages}
-                onClick={() =>
-                  setPage((prev) => Math.min(prev + 1, pagination.totalPages))
-                }
+                onClick={() => setPage((prev) => Math.min(prev + 1, pagination.totalPages))}
                 style={{
                   padding: "6px 14px",
                   borderRadius: "6px",
                   border: "1px solid #D1D5DB",
-                  backgroundColor:
-                    page >= pagination.totalPages ? "#F3F4F6" : "#FFFFFF",
+                  backgroundColor: page >= pagination.totalPages ? "#F3F4F6" : "#FFFFFF",
                   color: page >= pagination.totalPages ? "#9CA3AF" : "#374151",
-                  cursor:
-                    page >= pagination.totalPages ? "not-allowed" : "pointer",
+                  cursor: page >= pagination.totalPages ? "not-allowed" : "pointer",
                   display: "flex",
                   alignItems: "center",
                   gap: "4px",

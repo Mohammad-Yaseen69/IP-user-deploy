@@ -53,10 +53,7 @@ const StepMethod = ({
   return (
     <>
       {error && (
-        <Alert
-          variant="error"
-          title={t("We could not load withdrawal methods")}
-        >
+        <Alert variant="error" title={t("We could not load withdrawal methods")}>
           {t("Please go back and pick the country again.")}
         </Alert>
       )}

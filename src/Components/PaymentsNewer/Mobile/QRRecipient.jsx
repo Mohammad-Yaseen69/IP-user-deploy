@@ -49,15 +49,12 @@ const QRRecipient = ({ wallet, dataHandler }) => {
               </div>
             )}
             <h2>
-              {wallet?.first_name || wallet?.company_name?.[0]}{" "}
-              {wallet?.last_name}
+              {wallet?.first_name || wallet?.company_name?.[0]} {wallet?.last_name}
             </h2>
             <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
               <p>@{wallet?.username}</p>
               <span>
-                {wallet?.account_type === "individual"
-                  ? t("Personal")
-                  : t("Business")}{" "}
+                {wallet?.account_type === "individual" ? t("Personal") : t("Business")}{" "}
                 {t("Account")}
               </span>
             </div>

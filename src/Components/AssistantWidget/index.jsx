@@ -1,14 +1,7 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../Context/UserContext";
-import {
-  ChatIcon,
-  CloseIcon,
-  MicIcon,
-  RefreshIcon,
-  SendIcon,
-  StopIcon,
-} from "./Icons";
+import { ChatIcon, CloseIcon, MicIcon, RefreshIcon, SendIcon, StopIcon } from "./Icons";
 import MessageList from "./MessageList";
 import styles from "./styles.module.css";
 import { useAssistant } from "./useAssistant";
@@ -16,8 +9,7 @@ import { useAssistantSession } from "./useAssistantSession";
 import { isVoiceInputSupported, useVoiceInput } from "./useVoiceInput";
 
 const VOICE_ERRORS = {
-  permission_denied:
-    "Microphone access was blocked. Allow it in your browser settings.",
+  permission_denied: "Microphone access was blocked. Allow it in your browser settings.",
   nothing_heard: "I didn't catch that — try again.",
   recording_failed: "Couldn't start recording.",
   transcription_failed: "Couldn't transcribe that — try again.",
@@ -32,10 +24,9 @@ const AssistantWidget = () => {
 
   const { ensureToken, authedFetch, clearSession } = useAssistantSession();
 
-  const { messages, isThinking, starterPrompts, greeting, send, reset } =
-    useAssistant({
-      authedFetch,
-    });
+  const { messages, isThinking, starterPrompts, greeting, send, reset } = useAssistant({
+    authedFetch,
+  });
 
   const voice = useVoiceInput({
     authedFetch,
@@ -105,11 +96,7 @@ const AssistantWidget = () => {
   return (
     <div className={styles.root}>
       {isOpen && (
-        <div
-          className={styles.panel}
-          role="dialog"
-          aria-label={t("InstaPay Assistant")}
-        >
+        <div className={styles.panel} role="dialog" aria-label={t("InstaPay Assistant")}>
           <div className={styles.header}>
             <p className={styles.headerTitle}>{t("InstaPay Assistant")}</p>
             <div className={styles.headerSpacer} />
@@ -171,9 +158,7 @@ const AssistantWidget = () => {
             </button>
           </form>
 
-          <p className={voice.error ? styles.voiceHintError : styles.voiceHint}>
-            {voiceHint}
-          </p>
+          <p className={voice.error ? styles.voiceHintError : styles.voiceHint}>{voiceHint}</p>
         </div>
       )}
 

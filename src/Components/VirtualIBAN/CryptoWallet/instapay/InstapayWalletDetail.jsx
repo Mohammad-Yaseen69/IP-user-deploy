@@ -74,9 +74,7 @@ const InstapayWalletDetail = ({ wallet }) => {
         error,
         navigate,
         setProfileLockTime,
-        fallback: t(
-          "We cannot process your request at the moment, please try again later.",
-        ),
+        fallback: t("We cannot process your request at the moment, please try again later."),
         setError: (message) => toast.error(message),
       });
     } finally {
@@ -104,10 +102,7 @@ const InstapayWalletDetail = ({ wallet }) => {
     <div className={styles.detailStack}>
       <div className={styles.detail}>
         <div className={styles.detailHead}>
-          <span
-            className={styles.detailMark}
-            style={{ background: getWalletAccentColor(code) }}
-          >
+          <span className={styles.detailMark} style={{ background: getWalletAccentColor(code) }}>
             {getAssetSymbol(code)}
           </span>
           <div>
@@ -123,11 +118,7 @@ const InstapayWalletDetail = ({ wallet }) => {
           <div className={styles.detailBalance}>
             <div>
               <div className={styles.balanceLabel}>{t("Wallet ID")}</div>
-              <button
-                type="button"
-                className={styles.walletIdBtn}
-                onClick={copyWalletId}
-              >
+              <button type="button" className={styles.walletIdBtn} onClick={copyWalletId}>
                 <span>{wallet?.wallet_id || "-"}</span>
                 {copied ? <Check size={13} /> : <Copy size={13} />}
               </button>
@@ -162,9 +153,7 @@ const InstapayWalletDetail = ({ wallet }) => {
                     : undefined
                 }
                 onClick={() =>
-                  navigate(
-                    `/add-funds?type=crypto&wallet_address=${wallet?.wallet_id}`,
-                  )
+                  navigate(`/add-funds?type=crypto&wallet_address=${wallet?.wallet_id}`)
                 }
               >
                 <img src={add_funds} alt="" />
@@ -200,9 +189,7 @@ const InstapayWalletDetail = ({ wallet }) => {
                 onClick={toggleStatus}
               >
                 {busy === "status" ? t("Updating...") : t("Wallet Status")}
-                <span
-                  className={`${styles.toggle} ${isActive ? styles.toggleOn : ""}`}
-                >
+                <span className={`${styles.toggle} ${isActive ? styles.toggleOn : ""}`}>
                   <span className={styles.toggleThumb} />
                 </span>
               </button>
@@ -248,11 +235,7 @@ const InstapayWalletDetail = ({ wallet }) => {
           style={{ padding: 24, minHeight: 0, display: "block" }}
         >
           {/* The table hides its desktop or mobile rows by which of these wraps it. */}
-          <TransactionsTable
-            currentWallet={wallet}
-            filtered={filtered}
-            setFiltered={setFiltered}
-          />
+          <TransactionsTable currentWallet={wallet} filtered={filtered} setFiltered={setFiltered} />
         </div>
       )}
 

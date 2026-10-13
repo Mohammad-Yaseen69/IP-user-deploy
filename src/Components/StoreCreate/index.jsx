@@ -50,9 +50,7 @@ const StoreCreate = () => {
 
   useEffect(() => {
     if (data?.data && !isError) {
-      openInNewTab(
-        `${import.meta.env.VITE_IP_ECOM_URL}/dashboard/seller?fromMain=true`,
-      );
+      openInNewTab(`${import.meta.env.VITE_IP_ECOM_URL}/dashboard/seller?fromMain=true`);
     }
   }, [data, isError]);
 
@@ -107,9 +105,7 @@ const StoreCreate = () => {
             ))}
           </div>
           {can("eshop.create") && (
-            <button onClick={() => setShowModal(true)}>
-              {t("Get Started / Create Shop")}
-            </button>
+            <button onClick={() => setShowModal(true)}>{t("Get Started / Create Shop")}</button>
           )}
           {/* <p className={styles.links}>
                         <span className={styles.link}>
@@ -127,10 +123,7 @@ const StoreCreate = () => {
         </div>
       </div>
       {showModal && (
-        <TermsModal
-          setShowModal={setShowModal}
-          handleCreateStore={handleCreateStore}
-        />
+        <TermsModal setShowModal={setShowModal} handleCreateStore={handleCreateStore} />
       )}
     </div>
   );

@@ -86,14 +86,8 @@ const VerificationPayment = ({
   const { reset } = useIdempotency();
 
   const [isValid, setIsValid] = useState(false);
-  const {
-    userDetails,
-    userWallets,
-    authHeader,
-    setProfileLockTime,
-    verifyToken,
-    checkAuth,
-  } = useContext(UserContext);
+  const { userDetails, userWallets, authHeader, setProfileLockTime, verifyToken, checkAuth } =
+    useContext(UserContext);
   const [saving, setSaving] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
   const [token, setToken] = useState("");
@@ -125,16 +119,14 @@ const VerificationPayment = ({
   }, [userDetails]);
 
   useEffect(() => {
-    const isValidCardNumber =
-      cardDetails.cardNumber.split(" ").join("").length >= 16;
+    const isValidCardNumber = cardDetails.cardNumber.split(" ").join("").length >= 16;
     const [contentMonth, contentYear] = expiry.split("/").map(Number);
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth() + 1;
     const currentYear = currentDate.getFullYear() % 100;
 
     const isValidExpiry =
-      contentYear > currentYear ||
-      (contentYear === currentYear && contentMonth > currentMonth);
+      contentYear > currentYear || (contentYear === currentYear && contentMonth > currentMonth);
     const isValidCVC = cardDetails.CardCVC.length >= 3;
 
     setIsValid(isValidCardNumber && isValidExpiry && isValidCVC);
@@ -154,8 +146,7 @@ const VerificationPayment = ({
 
       const walletPromises = activeWallets.map(async (item) => {
         if (item?.currency?.code === "USD")
-          return item?.balance?.available >=
-            (amount || userDetails?.country?.kyc_fee)
+          return item?.balance?.available >= (amount || userDetails?.country?.kyc_fee)
             ? item
             : null;
         try {
@@ -167,13 +158,9 @@ const VerificationPayment = ({
           );
           const dec = decryptData(res?.data?.data);
           const requiredAmountInTarget = Number(
-            dec?.exchangeRate?.exchanged_amount ??
-              dec?.exchangeRate?.result ??
-              0,
+            dec?.exchangeRate?.exchanged_amount ?? dec?.exchangeRate?.result ?? 0,
           );
-          return item?.balance?.available >= requiredAmountInTarget
-            ? item
-            : null;
+          return item?.balance?.available >= requiredAmountInTarget ? item : null;
         } catch (error) {
           return null;
         }
@@ -256,9 +243,7 @@ const VerificationPayment = ({
         endpoint,
       });
       console.log(res);
-      setCreatedTransactionId(
-        res?.data?.transactionId || res?.data?.transaction_id,
-      );
+      setCreatedTransactionId(res?.data?.transactionId || res?.data?.transaction_id);
       setter(true);
     } catch (err) {
       // console.log(decryptData(error?.response?.data?.data))
@@ -268,14 +253,10 @@ const VerificationPayment = ({
           "You have already paid for the KYC please refresh the page to continue the verification process.",
         );
       } else {
-        setOtpError(
-          decrypted?.message ??
-            "Something went wrong while verifying the code.",
-        );
+        setOtpError(decrypted?.message ?? "Something went wrong while verifying the code.");
       }
       if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-        const time =
-          decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+        const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
         const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
         setProfileLockTime(timeInSec);
         const coun = localStorage.getItem("ip_country");
@@ -376,8 +357,7 @@ const VerificationPayment = ({
                     )
                     .map((item) => {
                       const isPaypalDisabled =
-                        (isKYB && item?.value === "paypal") ||
-                        item.value === "card";
+                        (isKYB && item?.value === "paypal") || item.value === "card";
                       return (
                         <Card
                           key={item.name}
@@ -394,9 +374,7 @@ const VerificationPayment = ({
                               gap: ".5rem",
                               padding: "15px",
                               justifyContent: "space-between",
-                              cursor: isPaypalDisabled
-                                ? "not-allowed"
-                                : "pointer",
+                              cursor: isPaypalDisabled ? "not-allowed" : "pointer",
                               position: "relative",
                               pointerEvents: isPaypalDisabled ? "none" : "auto",
                               opacity: isPaypalDisabled ? 0.7 : 1,
@@ -419,8 +397,7 @@ const VerificationPayment = ({
                                   justifyContent: "center",
                                   alignItems: "center",
                                   borderRadius: "12px",
-                                  boxShadow:
-                                    "0px 4px 7px rgba(172, 53, 159, 0.31)",
+                                  boxShadow: "0px 4px 7px rgba(172, 53, 159, 0.31)",
                                 }}
                               >
                                 <img
@@ -435,16 +412,12 @@ const VerificationPayment = ({
                                   }}
                                 />
                               </div>
-                              <h5
-                                style={{ marginBottom: 0, fontSize: "1.2rem" }}
-                              >
+                              <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>
                                 {t(item.name)}
                               </h5>
                             </div>
                             {isPaypalDisabled ? (
-                              <span style={{ fontWeight: 600 }}>
-                                {t("Coming Soon")}
-                              </span>
+                              <span style={{ fontWeight: 600 }}>{t("Coming Soon")}</span>
                             ) : payoutChannel?.name === item.name ? (
                               <Check
                                 color="green"
@@ -489,9 +462,7 @@ const VerificationPayment = ({
                         display: "flex",
                         background: "white",
                         boxShadow:
-                          wallet?._id !== item?._id
-                            ? "0 0 4px #1111113e"
-                            : "0 0 4px green",
+                          wallet?._id !== item?._id ? "0 0 4px #1111113e" : "0 0 4px green",
                         padding: "1rem",
                         borderRadius: "16px",
                         cursor: "pointer",
@@ -580,13 +551,10 @@ const VerificationPayment = ({
                             }}
                           >
                             {item?.currency?.code}{" "}
-                            {Number(item?.balance?.available)?.toLocaleString(
-                              "en-US",
-                              {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                              },
-                            )}
+                            {Number(item?.balance?.available)?.toLocaleString("en-US", {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })}
                           </h5>
                         </div>
                         {/* {
@@ -635,8 +603,7 @@ const VerificationPayment = ({
                 setSubStep={setStep}
                 payoutChannel={payoutChannel}
                 amount={
-                  feeDetails?.base_fee_breakdown?.base_fee_usd ||
-                  userDetails?.country?.kyc_fee
+                  feeDetails?.base_fee_breakdown?.base_fee_usd || userDetails?.country?.kyc_fee
                 }
                 card_cvc={cvc}
                 card_expiry={expiry}
@@ -674,14 +641,11 @@ const VerificationPayment = ({
                 }
               />
             )}
-            {(payoutChannel?.value === "bank"
-              ? step === 1
-              : step < 3 && !isKYB) && (
+            {(payoutChannel?.value === "bank" ? step === 1 : step < 3 && !isKYB) && (
               <h5 style={{ marginTop: "1rem" }}>
-                {t(
-                  "A fee of {{amount}} will be charged for the verification process.",
-                  { amount: `$${userDetails?.country?.kyc_fee}` },
-                )}
+                {t("A fee of {{amount}} will be charged for the verification process.", {
+                  amount: `$${userDetails?.country?.kyc_fee}`,
+                })}
               </h5>
             )}
 
@@ -758,9 +722,7 @@ const VerificationPayment = ({
         </Modal>
       )}
       <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-        <ModalHeader toggle={() => setShowOtp(!showOtp)}>
-          {t("Confirm")}
-        </ModalHeader>
+        <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
         <ModalBody>
           <OTPConfirmation
             variant="card"
@@ -811,11 +773,7 @@ const VerificationPayment = ({
                   alignItems: "center",
                 }}
               >
-                <CheckCircle
-                  size={64}
-                  className="text-success"
-                  style={{ marginBottom: "1rem" }}
-                />
+                <CheckCircle size={64} className="text-success" style={{ marginBottom: "1rem" }} />
                 {t("Payment Successful!")}
               </h5>
 

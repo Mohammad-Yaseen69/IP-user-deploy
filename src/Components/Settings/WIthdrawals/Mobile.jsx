@@ -26,9 +26,8 @@ const Mobile = ({
 }) => {
   const { t } = useTranslation();
   const isAfricanCountry =
-    citiesData.find(
-      (item) => item.iso3 === country?.alpha3 || item.iso3 === alpha3,
-    )?.region === "Africa";
+    citiesData.find((item) => item.iso3 === country?.alpha3 || item.iso3 === alpha3)?.region ===
+    "Africa";
 
   const styles = {
     opacity: 1,
@@ -80,12 +79,8 @@ const Mobile = ({
         </div>
       ) : (
         <>
-          <FormGroup
-            style={{ flex: 1, margin: 0, width: "100%", marginBottom: "1rem" }}
-          >
-            <Label className="col-form-label">
-              {t("Please Select A Payer")}{" "}
-            </Label>
+          <FormGroup style={{ flex: 1, margin: 0, width: "100%", marginBottom: "1rem" }}>
+            <Label className="col-form-label">{t("Please Select A Payer")} </Label>
             <Input
               disabled={!isEditMode}
               readOnly={!isEditMode}
@@ -140,10 +135,7 @@ const Mobile = ({
                 />
               </FormGroup>
               <FormGroup style={{ flex: 1, margin: 0, position: "relative" }}>
-                <Label
-                  className="col-form-label"
-                  htmlFor="mobile_wallet_account_number"
-                >
+                <Label className="col-form-label" htmlFor="mobile_wallet_account_number">
                   {t("Wallet Number")} <span className="req_star">*</span>
                 </Label>
                 <div
@@ -166,10 +158,7 @@ const Mobile = ({
                   <input
                     value={
                       values.mobile_wallet_account_number?.replace(
-                        CountryBasedPhone[country.alpha3]?.dial_code?.replace(
-                          "+",
-                          "",
-                        ),
+                        CountryBasedPhone[country.alpha3]?.dial_code?.replace("+", ""),
                         "",
                       ) || ""
                     }
@@ -185,9 +174,10 @@ const Mobile = ({
                       const inp = handleChange(e);
                       if (inp === null || inp === undefined) return;
 
-                      const dialCode = CountryBasedPhone[
-                        country.alpha3
-                      ]?.dial_code?.replace("+", "");
+                      const dialCode = CountryBasedPhone[country.alpha3]?.dial_code?.replace(
+                        "+",
+                        "",
+                      );
                       changeHandler({
                         target: {
                           value: `${dialCode}${inp}`,
@@ -198,8 +188,8 @@ const Mobile = ({
                       if (
                         userWithdrawals?.some(
                           (item, idx) =>
-                            item?.mobile_wallet?.[0]?.wallet_account_number ===
-                              inp && idx !== index,
+                            item?.mobile_wallet?.[0]?.wallet_account_number === inp &&
+                            idx !== index,
                         ) &&
                         userWithdrawals?.some(
                           (item, idx) =>
@@ -263,8 +253,7 @@ const Mobile = ({
               </FormGroup>
               <FormGroup style={{ flex: 1, margin: 0 }}>
                 <Label className="col-form-label">
-                  {t("Postal Code")}{" "}
-                  {!isAfricanCountry && <span className="req_star">*</span>}
+                  {t("Postal Code")} {!isAfricanCountry && <span className="req_star">*</span>}
                 </Label>
                 <Input
                   disabled={!isEditMode}

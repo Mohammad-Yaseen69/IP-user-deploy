@@ -47,8 +47,7 @@ const CryptoCard = ({ item }) => {
                 src={isStable ? chev_right : chev_up}
                 alt="c"
                 style={{
-                  transform:
-                    !isPositive && !isStable ? "rotate(180deg)" : "none",
+                  transform: !isPositive && !isStable ? "rotate(180deg)" : "none",
                   transition: "transform 0.3s ease",
                 }}
               />
@@ -56,9 +55,7 @@ const CryptoCard = ({ item }) => {
             </span>
           </div>
 
-          <h2 className={styles.card_heading}>
-            {t(`${item.name} (${item.value.toUpperCase()})`)}
-          </h2>
+          <h2 className={styles.card_heading}>{t(`${item.name} (${item.value.toUpperCase()})`)}</h2>
           <span
             style={{
               background: item.text_bg,
@@ -80,11 +77,7 @@ const CryptoCard = ({ item }) => {
         <div className={styles.wrapper_mobile}>
           <div className={styles.top}>
             <div>
-              <img
-                src={item.img}
-                alt={item.value}
-                className={styles.card_icon}
-              />
+              <img src={item.img} alt={item.value} className={styles.card_icon} />
               <span
                 style={{
                   background: item.text_bg,
@@ -95,10 +88,7 @@ const CryptoCard = ({ item }) => {
                 {item.value.toUpperCase()}-{t("USD")}
               </span>
             </div>
-            <h4
-              className={styles.card_price}
-              style={{ color: item.text_color }}
-            >
+            <h4 className={styles.card_price} style={{ color: item.text_color }}>
               $
               {item.price.toLocaleString("en-US", {
                 minimumFractionDigits: 2,
@@ -126,8 +116,7 @@ const CryptoCard = ({ item }) => {
                 src={isStable ? chev_right : chev_up}
                 alt="c"
                 style={{
-                  transform:
-                    !isPositive && !isStable ? "rotate(180deg)" : "none",
+                  transform: !isPositive && !isStable ? "rotate(180deg)" : "none",
                   transition: "transform 0.3s ease",
                 }}
               />

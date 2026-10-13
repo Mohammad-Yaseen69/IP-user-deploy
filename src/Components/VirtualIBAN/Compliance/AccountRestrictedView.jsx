@@ -14,10 +14,7 @@ const AccountRestrictedView = ({ restrictedData, onResolve }) => {
       </div>
       <h2 className={styles.restrictedTitle}>
         {restrictedData.title ||
-          t(
-            "compliance.restrictedDefaultTitle",
-            "Your account is temporarily restricted",
-          )}
+          t("compliance.restrictedDefaultTitle", "Your account is temporarily restricted")}
       </h2>
       <p className={styles.restrictedSubtitle}>
         {restrictedData.subtitle ||
@@ -28,10 +25,7 @@ const AccountRestrictedView = ({ restrictedData, onResolve }) => {
       </p>
       <div className={styles.restrictedCardBox}>
         {(restrictedData.items || []).map((item, index) => (
-          <div
-            key={item._id || item.id || index}
-            className={styles.restrictedItemRow}
-          >
+          <div key={item._id || item.id || index} className={styles.restrictedItemRow}>
             <span className={styles.itemTitle}>{item.title}</span>
             <span className={styles.badgeOverdue}>
               {item.status || t("compliance.overdueBadge", "Overdue")}

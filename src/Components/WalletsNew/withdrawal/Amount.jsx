@@ -7,10 +7,7 @@ import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import { UserContext } from "../../../Context/UserContext";
 import { useLocation } from "react-router";
-import {
-  LimitsErrorMessage,
-  possibleErrors,
-} from "../../../utils/Functions/paymentLimits";
+import { LimitsErrorMessage, possibleErrors } from "../../../utils/Functions/paymentLimits";
 import InstaPayLoader from "../../Loader";
 import { service_name_formatter } from "../../TransactionsNewApi/TransactionItem";
 import { formatCurrency } from "../../../Helper/AmountFormat";
@@ -73,11 +70,9 @@ const AmountAndCurrency = ({
           setIsLoading(true);
           const data = {
             wallet_id: userWallets?.filter(
-              (item) =>
-                item?.currency?.code?.toLowerCase() === currency?.toLowerCase(),
+              (item) => item?.currency?.code?.toLowerCase() === currency?.toLowerCase(),
             )[0]?._id,
-            transaction_type:
-              userDetails?.account_type === "business" ? "B2B" : "C2C",
+            transaction_type: userDetails?.account_type === "business" ? "B2B" : "C2C",
             amount: +amount,
             service_name:
               payoutChannel?.value === "bank"
@@ -126,8 +121,7 @@ const AmountAndCurrency = ({
               console.log(decrypted);
               // console.log(decrypted)
               const data = {
-                wholesale_fx_rate:
-                  decrypted?.data?.result?.exchanged_rate?.value,
+                wholesale_fx_rate: decrypted?.data?.result?.exchanged_rate?.value,
                 destination: {
                   currency: decrypted?.data?.result?.recipient?.currency,
                   amount: decrypted?.data?.result?.recipient?.value,
@@ -136,17 +130,13 @@ const AmountAndCurrency = ({
                 total: decrypted?.data?.result?.total?.value,
                 daily_receiving_limit_used:
                   decrypted?.data?.result?.limits?.daily_sending_limit -
-                  decrypted?.data?.result?.limits_used
-                    ?.daily_sending_limit_used,
+                  decrypted?.data?.result?.limits_used?.daily_sending_limit_used,
               };
 
               console.log(data);
               if (amount <= data.fee.amount) {
                 setExchangeError("Invalid Amount Fee");
-              } else if (
-                wallet.balance.available <
-                +String(formattedAmount)?.replaceAll(",", "")
-              ) {
+              } else if (wallet.balance.available < +String(formattedAmount)?.replaceAll(",", "")) {
                 console.log(
                   wallet.balance.available,
                   +String(formattedAmount)?.replaceAll(", ", ""),
@@ -174,31 +164,22 @@ const AmountAndCurrency = ({
               } else if (
                 typeof dec?.message === "string"
                   ? dec?.message?.toLowerCase()?.includes("insufficient")
-                  : dec?.message?.[0]?.message
-                      ?.toLowerCase()
-                      ?.includes("insufficient")
+                  : dec?.message?.[0]?.message?.toLowerCase()?.includes("insufficient")
               ) {
                 setExchangeError("insufficient balance payer");
               } else if (
                 typeof dec?.message === "string"
                   ? dec?.message?.toLowerCase()?.includes("maximum")
-                  : dec?.message?.[0]?.message
-                      ?.toLowerCase()
-                      ?.includes("above the max")
+                  : dec?.message?.[0]?.message?.toLowerCase()?.includes("above the max")
               ) {
                 setExchangeError("max payer");
               } else if (
                 typeof dec?.message === "string"
                   ? dec?.message?.toLowerCase()?.includes("minimum")
-                  : dec?.message?.[0]?.message
-                      ?.toLowerCase()
-                      ?.includes("below the min")
+                  : dec?.message?.[0]?.message?.toLowerCase()?.includes("below the min")
               ) {
                 setExchangeError("min payer");
-              } else if (
-                wallet.balance.available <
-                +String(formattedAmount)?.replaceAll(",", "")
-              ) {
+              } else if (wallet.balance.available < +String(formattedAmount)?.replaceAll(",", "")) {
                 console.log(
                   wallet.balance.available,
                   +String(formattedAmount)?.replaceAll(", ", ""),
@@ -206,9 +187,7 @@ const AmountAndCurrency = ({
                 setExchangeError("insufficient balance");
               } else if (
                 typeof dec?.message === "string"
-                  ? dec?.message
-                      ?.toLowerCase()
-                      ?.includes("payer is currently unavailable")
+                  ? dec?.message?.toLowerCase()?.includes("payer is currently unavailable")
                   : dec?.message?.[0]?.message
                       ?.toLowerCase()
                       ?.includes("payer is currently unavailable")
@@ -257,11 +236,9 @@ const AmountAndCurrency = ({
       <h5>{t("Enter the amount")}</h5>
       <div
         style={{
-          background:
-            "linear-gradient(to bottom right, #EC2AB6 0%, #5926F0 100%)",
+          background: "linear-gradient(to bottom right, #EC2AB6 0%, #5926F0 100%)",
           border: "0.5px solid rgba(0, 0, 0, 0.08)",
-          boxShadow:
-            "0px 4.456576347351074px 132.58314514160156px 0px rgba(0, 0, 0, 0.11)",
+          boxShadow: "0px 4.456576347351074px 132.58314514160156px 0px rgba(0, 0, 0, 0.11)",
           borderRadius: "24px",
           padding: "12px",
           display: "flex",
@@ -277,10 +254,7 @@ const AmountAndCurrency = ({
             transform: "translate(15px, 5px)",
           }}
         >
-          {
-            userWallets?.find((i) => i?.currency?.code === currency)?.currency
-              ?.code
-          }
+          {userWallets?.find((i) => i?.currency?.code === currency)?.currency?.code}
         </h4>
         <input
           type="text"
@@ -391,9 +365,7 @@ const AmountAndCurrency = ({
                 justifyContent: "space-between",
               }}
             >
-              <span style={{ fontWeight: "600" }}>
-                {t("Amount the recipient will receive")}:
-              </span>
+              <span style={{ fontWeight: "600" }}>{t("Amount the recipient will receive")}:</span>
               <span style={{ fontWeight: "600", whiteSpace: "nowrap" }}>
                 {exchangeRate?.destination?.amount?.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
@@ -409,9 +381,7 @@ const AmountAndCurrency = ({
                 justifyContent: "space-between",
               }}
             >
-              <span style={{ fontWeight: "600" }}>
-                {t("Total Sent").split(" ")[0]}:
-              </span>
+              <span style={{ fontWeight: "600" }}>{t("Total Sent").split(" ")[0]}:</span>
               <span style={{ fontWeight: "600", whiteSpace: "nowrap" }}>
                 {formattedAmount ?? ""} {currency}
               </span>
@@ -439,10 +409,7 @@ const AmountAndCurrency = ({
                     fontWeight: 800,
                   }}
                 >
-                  {
-                    +subService?.transaction_types?.C2C
-                      ?.minimum_transaction_amount
-                  }{" "}
+                  {+subService?.transaction_types?.C2C?.minimum_transaction_amount}{" "}
                   {subService?.currency}
                 </h2>
               </>
@@ -467,9 +434,7 @@ const AmountAndCurrency = ({
                     fontWeight: 600,
                   }}
                 >
-                  {t(
-                    `Amount needs to be greater than ${exchangeRate?.fee?.amount} ${currency}`,
-                  )}
+                  {t(`Amount needs to be greater than ${exchangeRate?.fee?.amount} ${currency}`)}
                 </p>
               </>
             )}
@@ -520,9 +485,7 @@ const AmountAndCurrency = ({
                   }}
                 >
                   {service_name_formatter(
-                    t(
-                      "you have entered an amount that exceeds our limit at the moment",
-                    ),
+                    t("you have entered an amount that exceeds our limit at the moment"),
                   )}{" "}
                   ({`${limValue} $${currency}`}).
                 </p>
@@ -556,9 +519,7 @@ const AmountAndCurrency = ({
                 </h2>
               </>
             )}
-            {exchangeError.includes(
-              "An error occurred while creating the quotation",
-            ) && (
+            {exchangeError.includes("An error occurred while creating the quotation") && (
               <>
                 <h2
                   style={{
@@ -568,9 +529,7 @@ const AmountAndCurrency = ({
                     fontWeight: 800,
                   }}
                 >
-                  {t(
-                    "We cannot process your request at the moment, please try again later.",
-                  )}
+                  {t("We cannot process your request at the moment, please try again later.")}
                 </h2>
                 <p style={{ marginBottom: 0, textAlign: "center" }}>
                   {t("Please try again later")}
@@ -603,26 +562,18 @@ const AmountAndCurrency = ({
                   }}
                 >
                   {service_name_formatter(
-                    t(
-                      "you have entered an amount below the minimum payment range",
-                    ),
+                    t("you have entered an amount below the minimum payment range"),
                   )}{" "}
                   ({`${limValue} ${currency}`}).
                 </p>
               </>
             )}
-            {Object.keys(possibleErrors).some(
-              (item) => possibleErrors[item] === exchangeError,
-            ) && (
-              <p style={{ marginBottom: 0, textAlign: "center" }}>
-                {t(exchangeError)}
-              </p>
+            {Object.keys(possibleErrors).some((item) => possibleErrors[item] === exchangeError) && (
+              <p style={{ marginBottom: 0, textAlign: "center" }}>{t(exchangeError)}</p>
             )}
             {exchangeError === "sww" && (
               <p style={{ marginBottom: 0, textAlign: "center" }}>
-                {t(
-                  "We are unable to process your request at the moment. please try again later",
-                )}
+                {t("We are unable to process your request at the moment. please try again later")}
               </p>
             )}
           </>

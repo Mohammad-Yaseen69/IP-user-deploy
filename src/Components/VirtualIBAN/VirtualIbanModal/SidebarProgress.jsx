@@ -2,14 +2,7 @@ import useWindowWidth from "../../../utils/useWindowWidth";
 import styles from "../WithdrawBalanceModal/withdrawBalance.module.scss";
 import { useTranslation } from "react-i18next";
 
-const SidebarProgress = ({
-  isActive,
-  isCompleted,
-  stepLabel,
-  label,
-  Icon,
-  showBar,
-}) => {
+const SidebarProgress = ({ isActive, isCompleted, stepLabel, label, Icon, showBar }) => {
   const { t } = useTranslation();
   const width = useWindowWidth();
   return (
@@ -18,11 +11,7 @@ const SidebarProgress = ({
         <div
           style={{
             border: isActive ? "2.5px solid #C8B7FA" : "",
-            backgroundColor: isActive
-              ? "#5926F0"
-              : isCompleted
-                ? "#1FC16B"
-                : "#D2D2D2",
+            backgroundColor: isActive ? "#5926F0" : isCompleted ? "#1FC16B" : "#D2D2D2",
           }}
           className={styles.circle}
         >

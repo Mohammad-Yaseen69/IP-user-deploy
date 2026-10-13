@@ -1,11 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./styles/WithdrawalItem.module.css";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../../Context/UserContext";
@@ -44,16 +37,9 @@ import {
 } from "../../../utils/Data";
 import citiesData from "../../CitiesDropDown/CitiesData.json";
 
-const WithdrawalItem = ({
-  countries = [],
-  userWithdrawals,
-  count,
-  setNewWithdrawal,
-  index,
-}) => {
+const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdrawal, index }) => {
   const { t } = useTranslation();
-  const { userDetails, authHeader, getWithdrawals, setMissingTabsData } =
-    useContext(UserContext);
+  const { userDetails, authHeader, getWithdrawals, setMissingTabsData } = useContext(UserContext);
   const [country, setCountry] = useState(null);
   const [current, setCurrent] = useState(null);
   const [configured, setConfigured] = useState([]);
@@ -71,11 +57,7 @@ const WithdrawalItem = ({
     const matches = (item) =>
       item.name === sub_field_name ||
       (sub_field_name === "aba_routing_number" && item.name === "routing_code");
-    if (
-      fieldsInfo?.[service?.method?.split(" ")?.[0]]?.[field_name]?.some(
-        matches,
-      )
-    ) {
+    if (fieldsInfo?.[service?.method?.split(" ")?.[0]]?.[field_name]?.some(matches)) {
       isInThere = true;
     }
     return isInThere;
@@ -85,11 +67,7 @@ const WithdrawalItem = ({
     if (fieldsInfo === null) return false;
     let isInThere = false;
     for (const service in fieldsInfo) {
-      if (
-        fieldsInfo[service]?.[field_name]?.some(
-          (item) => item.name === sub_field_name,
-        )
-      ) {
+      if (fieldsInfo[service]?.[field_name]?.some((item) => item.name === sub_field_name)) {
         isInThere = true;
         break;
       }
@@ -292,19 +270,13 @@ const WithdrawalItem = ({
 
   const isAfricanBank = useMemo(() => {
     if (bankCountryCode) {
-      return (
-        citiesData.find((item) => item.iso3 === bankCountryCode)?.region ===
-        "Africa"
-      );
+      return citiesData.find((item) => item.iso3 === bankCountryCode)?.region === "Africa";
     }
   }, [bankCountryCode]);
 
   const isAfricanCountry = useMemo(() => {
     if (country?.alpha3) {
-      return (
-        citiesData.find((item) => item.iso3 === country?.alpha3)?.region ===
-        "Africa"
-      );
+      return citiesData.find((item) => item.iso3 === country?.alpha3)?.region === "Africa";
     }
     return false;
   }, [country]);
@@ -326,9 +298,7 @@ const WithdrawalItem = ({
         Object.keys(bankExtras)
           .filter((item) =>
             serviceFieldInfoValidate(
-              services?.find((item) =>
-                item?.method?.toLowerCase()?.includes("bank"),
-              ),
+              services?.find((item) => item?.method?.toLowerCase()?.includes("bank")),
               "credit_party_identifiers_accepted",
               item,
             ),
@@ -378,9 +348,7 @@ const WithdrawalItem = ({
       Object.keys(cashExtras)
         .filter((item) =>
           serviceFieldInfoValidate(
-            services?.find((item) =>
-              item?.method?.toLowerCase()?.includes("cash"),
-            ),
+            services?.find((item) => item?.method?.toLowerCase()?.includes("cash")),
             "credit_party_identifiers_accepted",
             item,
           ),
@@ -404,9 +372,7 @@ const WithdrawalItem = ({
       Object.keys(cardExtras)
         .filter((item) =>
           serviceFieldInfoValidate(
-            services?.find((item) =>
-              item?.method?.toLowerCase()?.includes("card"),
-            ),
+            services?.find((item) => item?.method?.toLowerCase()?.includes("card")),
             "credit_party_identifiers_accepted",
             item,
           ),
@@ -430,8 +396,7 @@ const WithdrawalItem = ({
           country: country?.alpha3,
           service: current?.name,
           vendor: current.vendor,
-          transaction_type:
-            userDetails?.account_type === "individual" ? "C2C" : "B2B",
+          transaction_type: userDetails?.account_type === "individual" ? "C2C" : "B2B",
         };
         // const encrypted = encryptData(data)
 
@@ -459,47 +424,38 @@ const WithdrawalItem = ({
         ...prev,
         address: userWithdrawals?.address ?? "",
         city: userWithdrawals?.city ?? "",
-        postal_code:
-          userWithdrawals?.postal_code ?? userWithdrawals?.postalCode ?? "",
+        postal_code: userWithdrawals?.postal_code ?? userWithdrawals?.postalCode ?? "",
         bank_payer: userWithdrawals?.bank_details?.[0]?.payer_id,
         bank_iban:
           userWithdrawals?.bank_details?.[0]?.iban ||
           userWithdrawals?.bank_details?.[0]?.swift_code,
-        bank_account_number:
-          userWithdrawals?.bank_details?.[0]?.account_number ?? "",
+        bank_account_number: userWithdrawals?.bank_details?.[0]?.account_number ?? "",
         bank_name: userWithdrawals?.bank_details?.[0]?.name ?? "",
-        bank_branch_name:
-          userWithdrawals?.bank_details?.[0]?.branch_name ?? "Main Branch",
-        bank_branch_street:
-          userWithdrawals?.bank_details?.[0]?.branch_street ?? "",
+        bank_branch_name: userWithdrawals?.bank_details?.[0]?.branch_name ?? "Main Branch",
+        bank_branch_street: userWithdrawals?.bank_details?.[0]?.branch_street ?? "",
         bank_city: userWithdrawals?.bank_details?.[0]?.city ?? "",
         bank_province: userWithdrawals?.bank_details?.[0]?.province ?? "",
         bank_postal_code: userWithdrawals?.bank_details?.[0]?.postal_code ?? "",
         bank_account_holder_name:
           userWithdrawals?.bank_details?.[0]?.account_holder_name ??
           `${userDetails?.user?.first_name ?? userDetails?.company_name} ${userDetails?.user?.last_name ?? ""}`,
-        mobile_money_provider:
-          userWithdrawals?.mobile_wallet?.[0]?.money_provider ?? "",
-        mobile_wallet_name:
-          userWithdrawals?.mobile_wallet?.[0]?.wallet_name ?? "",
+        mobile_money_provider: userWithdrawals?.mobile_wallet?.[0]?.money_provider ?? "",
+        mobile_wallet_name: userWithdrawals?.mobile_wallet?.[0]?.wallet_name ?? "",
         mobile_wallet_account_number:
           userWithdrawals?.mobile_wallet?.[0]?.wallet_account_number ?? "",
         mobile_payer: userWithdrawals?.mobile_wallet?.[0]?.payer_id,
         crypto_currency: userWithdrawals?.crypto?.[0]?.currency ?? "",
-        crypto_wallet_address:
-          userWithdrawals?.crypto?.[0]?.wallet_address ?? "",
+        crypto_wallet_address: userWithdrawals?.crypto?.[0]?.wallet_address ?? "",
         crypto_payer: userWithdrawals?.crypto?.[0]?.payer_id,
         document_type: userWithdrawals?.cash_pickup?.[0]?.document_type ?? "",
-        document_number:
-          userWithdrawals?.cash_pickup?.[0]?.document_number ?? "",
+        document_number: userWithdrawals?.cash_pickup?.[0]?.document_number ?? "",
         cash_payer: userWithdrawals?.cash_pickup?.[0]?.payer_id,
       }));
       setCard((prev) => ({
         ...prev,
         address: userWithdrawals?.address ?? "",
         city: userWithdrawals?.city ?? "",
-        postal_code:
-          userWithdrawals?.postal_code ?? userWithdrawals?.postalCode ?? "",
+        postal_code: userWithdrawals?.postal_code ?? userWithdrawals?.postalCode ?? "",
         card_payer: userWithdrawals?.card?.[0]?.payer_id,
         card_holder_one: userWithdrawals?.card?.[0]?.card_name,
         card_number_one: userWithdrawals?.card?.[0]?.card_number,
@@ -516,25 +472,19 @@ const WithdrawalItem = ({
           ? normalizeBankExtras(userWithdrawals.bank_details[0].extras)
           : prev,
       );
-      setMobileExtras(
-        (prev) => userWithdrawals?.mobile_wallet?.[0]?.extras ?? prev,
-      );
+      setMobileExtras((prev) => userWithdrawals?.mobile_wallet?.[0]?.extras ?? prev);
       setCashxtras((prev) => userWithdrawals?.cash_pickup?.[0]?.extras ?? prev);
       setCardExtras((prev) => userWithdrawals?.card?.[0]?.extras ?? prev);
       setConfigured(userWithdrawals?.account_type);
       const extras = userWithdrawals?.extras;
       setBasicExtras(extras ? { ...extras } : basicExtrasInitial);
       setIsEditMode(false);
-      setAccNumType(
-        userWithdrawals?.bank_details?.[0]?.iban ? "IBAN" : "Swift",
-      );
+      setAccNumType(userWithdrawals?.bank_details?.[0]?.iban ? "IBAN" : "Swift");
     }
   }, [userWithdrawals]);
 
   useEffect(() => {
-    const country = countries?.find(
-      (item) => item?.alpha3 === userWithdrawals?.iso_code,
-    );
+    const country = countries?.find((item) => item?.alpha3 === userWithdrawals?.iso_code);
     setCountry(country);
   }, [userWithdrawals, countries]);
 
@@ -593,9 +543,7 @@ const WithdrawalItem = ({
       bank_details: bankCompleted
         ? [
             {
-              service_id: payoutChannelData.find(
-                (item) => item.value === "bank",
-              ).id,
+              service_id: payoutChannelData.find((item) => item.value === "bank").id,
               payer_id: bankMobCrypto.bank_payer,
               swift_code: accNumType === "Swift" ? bankMobCrypto.bank_iban : "",
               iban: accNumType === "IBAN" ? bankMobCrypto.bank_iban : "",
@@ -615,9 +563,7 @@ const WithdrawalItem = ({
       mobile_wallet: mobileCompleted
         ? [
             {
-              service_id: payoutChannelData.find(
-                (item) => item.value === "mobile",
-              ).id,
+              service_id: payoutChannelData.find((item) => item.value === "mobile").id,
               payer_id: bankMobCrypto.mobile_money_provider,
               money_provider: bankMobCrypto.mobile_money_provider,
               wallet_name: bankMobCrypto.mobile_wallet_name,
@@ -630,9 +576,7 @@ const WithdrawalItem = ({
       crypto: cryptoCompleted
         ? [
             {
-              service_id: payoutChannelData.find(
-                (item) => item.value === "crypto",
-              ).id,
+              service_id: payoutChannelData.find((item) => item.value === "crypto").id,
               payer_id: bankMobCrypto.crypto_payer,
               currency: bankMobCrypto.crypto_currency,
               wallet_address: bankMobCrypto.crypto_wallet_address,
@@ -643,9 +587,7 @@ const WithdrawalItem = ({
       cash_pickup: cashCompleted
         ? [
             {
-              service_id: payoutChannelData.find(
-                (item) => item.value === "cash",
-              ).id,
+              service_id: payoutChannelData.find((item) => item.value === "cash").id,
               payer_id: bankMobCrypto.cash_payer,
               document_type: bankMobCrypto.document_type,
               document_number: bankMobCrypto.document_number,
@@ -657,9 +599,7 @@ const WithdrawalItem = ({
       card: cardCompleted
         ? [
             {
-              service_id: payoutChannelData.find(
-                (item) => item.value === "card",
-              ).id,
+              service_id: payoutChannelData.find((item) => item.value === "card").id,
               payer_id: card.card_payer,
               card_name: card.card_holder_one,
               card_number: card.card_number_one,
@@ -668,9 +608,7 @@ const WithdrawalItem = ({
               vendor: current.vendor,
             },
             {
-              service_id: payoutChannelData.find(
-                (item) => item.value === "card",
-              ).id,
+              service_id: payoutChannelData.find((item) => item.value === "card").id,
               payer_id: card.card_payer,
               card_name: card.card_holder_two,
               card_number: card.card_number_two,
@@ -678,9 +616,7 @@ const WithdrawalItem = ({
               vendor: current.vendor,
             },
             {
-              service_id: payoutChannelData.find(
-                (item) => item.value === "card",
-              ).id,
+              service_id: payoutChannelData.find((item) => item.value === "card").id,
               payer_id: card.card_payer,
               card_name: card.card_holder_three,
               card_number: card.card_number_three,
@@ -704,9 +640,7 @@ const WithdrawalItem = ({
       .then((res) => {
         getWithdrawals();
         setShowSuccess(true);
-        setMissingTabsData((prev) =>
-          prev.filter((item) => item !== "withdrawls"),
-        );
+        setMissingTabsData((prev) => prev.filter((item) => item !== "withdrawls"));
 
         setIsEditMode(false);
         setIsSaving(false);
@@ -779,9 +713,7 @@ const WithdrawalItem = ({
       bank_details: bankCompleted
         ? [
             {
-              service_id: payoutChannelData.find(
-                (item) => item.value === "bank",
-              ).id,
+              service_id: payoutChannelData.find((item) => item.value === "bank").id,
               payer_id: bankMobCrypto.bank_payer,
               swift_code: accNumType === "Swift" ? bankMobCrypto.bank_iban : "",
               iban: accNumType === "IBAN" ? bankMobCrypto.bank_iban : "",
@@ -801,9 +733,7 @@ const WithdrawalItem = ({
       mobile_wallet: mobileCompleted
         ? [
             {
-              service_id: payoutChannelData.find(
-                (item) => item.value === "mobile",
-              ).id,
+              service_id: payoutChannelData.find((item) => item.value === "mobile").id,
               payer_id: bankMobCrypto.mobile_money_provider,
               money_provider: bankMobCrypto.mobile_money_provider,
               wallet_name: bankMobCrypto.mobile_wallet_name,
@@ -816,9 +746,7 @@ const WithdrawalItem = ({
       crypto: cryptoCompleted
         ? [
             {
-              service_id: payoutChannelData.find(
-                (item) => item.value === "crypto",
-              ).id,
+              service_id: payoutChannelData.find((item) => item.value === "crypto").id,
               payer_id: bankMobCrypto.crypto_payer,
               currency: bankMobCrypto.crypto_currency,
               wallet_address: bankMobCrypto.crypto_wallet_address,
@@ -829,9 +757,7 @@ const WithdrawalItem = ({
       cash_pickup: cashCompleted
         ? [
             {
-              service_id: payoutChannelData.find(
-                (item) => item.value === "cash",
-              ).id,
+              service_id: payoutChannelData.find((item) => item.value === "cash").id,
               payer_id: bankMobCrypto.cash_payer,
               document_type: bankMobCrypto.document_type,
               document_number: bankMobCrypto.document_number,
@@ -843,9 +769,7 @@ const WithdrawalItem = ({
       card: cardCompleted
         ? [
             {
-              service_id: payoutChannelData.find(
-                (item) => item.value === "card",
-              ).id,
+              service_id: payoutChannelData.find((item) => item.value === "card").id,
               payer_id: card.card_payer,
               card_name: card.card_holder_one,
               card_number: card.card_number_one,
@@ -854,9 +778,7 @@ const WithdrawalItem = ({
               vendor: current.vendor,
             },
             {
-              service_id: payoutChannelData.find(
-                (item) => item.value === "card",
-              ).id,
+              service_id: payoutChannelData.find((item) => item.value === "card").id,
               payer_id: card.card_payer,
               card_name: card.card_holder_two,
               card_number: card.card_number_two,
@@ -864,9 +786,7 @@ const WithdrawalItem = ({
               vendor: current.vendor,
             },
             {
-              service_id: payoutChannelData.find(
-                (item) => item.value === "card",
-              ).id,
+              service_id: payoutChannelData.find((item) => item.value === "card").id,
               payer_id: card.card_payer,
               card_name: card.card_holder_three,
               card_number: card.card_number_three,
@@ -971,9 +891,7 @@ const WithdrawalItem = ({
 
   const handleChannelSelect = (item) => {
     const isDifferentChannel = current?.name !== item?.name;
-    const isConfiguredChannel = userWithdrawals?.account_type?.includes(
-      item?.value,
-    );
+    const isConfiguredChannel = userWithdrawals?.account_type?.includes(item?.value);
     setCurrent(item);
 
     if (!userWithdrawals?._id || !isConfiguredChannel) {
@@ -1022,9 +940,7 @@ const WithdrawalItem = ({
     } catch (error) {
       const dec = decryptData(error?.response?.data?.data);
       toggleDelModal();
-      toast.error(
-        dec?.message ?? "Something went wrong while deleting the channel.",
-      );
+      toast.error(dec?.message ?? "Something went wrong while deleting the channel.");
     } finally {
       setIsSaving(false);
     }
@@ -1129,18 +1045,10 @@ const WithdrawalItem = ({
       )}
       {showDel && (
         <Modal isOpen={showDel}>
-          <ModalHeader toggle={toggleDelModal}>
-            {t("Delete Country Withdrawals")}
-          </ModalHeader>
-          <ModalBody>
-            {t("Are you sure, you want to delete this withdrawal channel?")}
-          </ModalBody>
+          <ModalHeader toggle={toggleDelModal}>{t("Delete Country Withdrawals")}</ModalHeader>
+          <ModalBody>{t("Are you sure, you want to delete this withdrawal channel?")}</ModalBody>
           <ModalFooter>
-            <Button
-              disabled={isSaving}
-              color="primary"
-              onClick={toggleDelModal}
-            >
+            <Button disabled={isSaving} color="primary" onClick={toggleDelModal}>
               {t("Cancel")}
             </Button>
             <Button disabled={isSaving} onClick={deleteChannel}>
@@ -1150,9 +1058,7 @@ const WithdrawalItem = ({
         </Modal>
       )}
       <div className={styles.top}>
-        <h2>
-          {t("Select the receiving channel below and setup the details.")}
-        </h2>
+        <h2>{t("Select the receiving channel below and setup the details.")}</h2>
         <div style={{ minWidth: "300px", display: "flex", gap: "1rem" }}>
           <CountriesDropdown
             onSelect={handleCountrySelect}
@@ -1160,9 +1066,7 @@ const WithdrawalItem = ({
             countries={countries}
             disabled={userWithdrawals?._id}
           />
-          {userWithdrawals?._id && (
-            <MoreMenu withdrawal_id={userWithdrawals?._id} />
-          )}
+          {userWithdrawals?._id && <MoreMenu withdrawal_id={userWithdrawals?._id} />}
         </div>
       </div>
       {country && (
@@ -1182,11 +1086,7 @@ const WithdrawalItem = ({
                       onClick={() => handleChannelSelect(item)}
                     >
                       <img
-                        src={
-                          current?.name === item?.name
-                            ? item?.active_icon
-                            : item?.icon
-                        }
+                        src={current?.name === item?.name ? item?.active_icon : item?.icon}
                         alt=""
                       />
                       <span>{t(item?.name)}</span>
@@ -1235,9 +1135,7 @@ const WithdrawalItem = ({
                     setBasicExtras={setBasicExtras}
                     alpha3={
                       countries.find((item) =>
-                        item.name
-                          .toLowerCase()
-                          .includes(country?.name?.toLowerCase()),
+                        item.name.toLowerCase().includes(country?.name?.toLowerCase()),
                       )?.alpha3
                     }
                     isAfricanBank={isAfricanBank}
@@ -1262,9 +1160,7 @@ const WithdrawalItem = ({
                     setBasicExtras={setBasicExtras}
                     alpha3={
                       countries.find((item) =>
-                        item.name
-                          .toLowerCase()
-                          .includes(country?.name?.toLowerCase()),
+                        item.name.toLowerCase().includes(country?.name?.toLowerCase()),
                       )?.alpha3
                     }
                   />
@@ -1289,9 +1185,7 @@ const WithdrawalItem = ({
                     setBasicExtras={setBasicExtras}
                     alpha3={
                       countries.find((item) =>
-                        item.name
-                          .toLowerCase()
-                          .includes(country?.name?.toLowerCase()),
+                        item.name.toLowerCase().includes(country?.name?.toLowerCase()),
                       )?.alpha3
                     }
                     country={country}
@@ -1317,9 +1211,7 @@ const WithdrawalItem = ({
                     setBasicExtras={setBasicExtras}
                     alpha3={
                       countries.find((item) =>
-                        item.name
-                          .toLowerCase()
-                          .includes(country?.name?.toLowerCase()),
+                        item.name.toLowerCase().includes(country?.name?.toLowerCase()),
                       )?.alpha3
                     }
                     country={country}
@@ -1343,8 +1235,7 @@ const WithdrawalItem = ({
                     alignItems: "center",
                   }}
                 >
-                  {current?.value &&
-                  userWithdrawals?.account_type?.includes(current?.value) ? (
+                  {current?.value && userWithdrawals?.account_type?.includes(current?.value) ? (
                     <>
                       <Button
                         color="danger"
@@ -1365,10 +1256,7 @@ const WithdrawalItem = ({
                         <span style={{ fontSize: ".9rem", fontWeight: "600" }}>
                           {t("Set As Default")}:{" "}
                         </span>
-                        <Switch
-                          checked={currentDefault}
-                          callback={updateDefault}
-                        />
+                        <Switch checked={currentDefault} callback={updateDefault} />
                       </div>
                     </>
                   ) : (
@@ -1414,8 +1302,7 @@ const WithdrawalItem = ({
                               disabled={
                                 isSaving ||
                                 (current?.value === "bank" && !bankCompleted) ||
-                                (current?.value === "mobile" &&
-                                  !mobileCompleted) ||
+                                (current?.value === "mobile" && !mobileCompleted) ||
                                 (current?.value === "cash" && !cashCompleted) ||
                                 (current?.value === "card" && !cardCompleted) ||
                                 bankError ||
@@ -1456,8 +1343,7 @@ const WithdrawalItem = ({
                         }
                         size="sm"
                         style={{
-                          background:
-                            "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                          background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                           border: "none",
                           outline: "none",
                           borderRadius: "5px",
@@ -1531,8 +1417,7 @@ export const MoreMenu = ({ withdrawal_id }) => {
       toggleDelModal();
       const dec = decryptData(error?.response?.data?.data);
       toast.error(
-        dec?.message ??
-          "We cannot process your request at the moment, please try again later.",
+        dec?.message ?? "We cannot process your request at the moment, please try again later.",
       );
     }
   };
@@ -1556,20 +1441,12 @@ export const MoreMenu = ({ withdrawal_id }) => {
         )}
       </button>
       <Modal isOpen={showDelModal}>
-        <ModalHeader toggle={toggleDelModal}>
-          {t("Delete Country Withdrawals")}
-        </ModalHeader>
+        <ModalHeader toggle={toggleDelModal}>{t("Delete Country Withdrawals")}</ModalHeader>
         <ModalBody>
-          {t(
-            "Are you sure, you want to delete the withdrawal details of this country?",
-          )}
+          {t("Are you sure, you want to delete the withdrawal details of this country?")}
         </ModalBody>
         <ModalFooter>
-          <Button
-            disabled={isDeleting}
-            color="primary"
-            onClick={toggleDelModal}
-          >
+          <Button disabled={isDeleting} color="primary" onClick={toggleDelModal}>
             {t("Cancel")}
           </Button>
           <Button disabled={isDeleting} onClick={deleteWithdrawals}>

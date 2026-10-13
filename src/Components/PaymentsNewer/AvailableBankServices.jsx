@@ -64,8 +64,7 @@ const AvailableBankServices = ({
           padding: "14px",
           gap: "14px",
           paddingBottom: "1rem",
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
       >
         <Card style={{ margin: 0, borderRadius: "12px" }}>

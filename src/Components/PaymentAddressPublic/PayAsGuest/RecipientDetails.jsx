@@ -10,23 +10,13 @@ import CitiesDropDown from "../../CitiesDropDown";
 import USCounties from "./USCounties.json";
 import CANCounties from "./CANCounties.json";
 import { verifyPhoneNumber } from "../../../utils/Functions/phoneVerification";
-import {
-  preventEdgeSpaces,
-  preventEmailSpaces,
-} from "../../../hooks/useTrimInput";
+import { preventEdgeSpaces, preventEmailSpaces } from "../../../hooks/useTrimInput";
 
-const RecipientDetails = ({
-  data,
-  dataHandler,
-  isShipping,
-  isReferenceRequired,
-}) => {
+const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }) => {
   const { t } = useTranslation();
-  const cardPaymentRequiredFields =
-    data.countryData?.card_payment_required_fields || {};
+  const cardPaymentRequiredFields = data.countryData?.card_payment_required_fields || {};
   const showCardPaymentAddressFields =
-    data.payment_type?.value === "card" &&
-    Object.values(cardPaymentRequiredFields).some(Boolean);
+    data.payment_type?.value === "card" && Object.values(cardPaymentRequiredFields).some(Boolean);
   const countyOptions =
     data?.country?.alpha3 === "USA"
       ? USCounties
@@ -56,9 +46,7 @@ const RecipientDetails = ({
       dataHandler("phone_verifying", false);
       dataHandler(
         "phone_error",
-        result === "Verified"
-          ? ""
-          : "Incorrect phone number, please enter a valid number.",
+        result === "Verified" ? "" : "Incorrect phone number, please enter a valid number.",
       );
     }, 700);
 
@@ -76,14 +64,10 @@ const RecipientDetails = ({
       if (selected <= minDate) {
         dataHandler(
           "dob",
-          date.format
-            ? date.format("YYYY-MM-DD")
-            : date.toISOString().split("T")[0],
+          date.format ? date.format("YYYY-MM-DD") : date.toISOString().split("T")[0],
         );
       } else {
-        toast.error(
-          t("Please select a date at least 15 years ago or earlier."),
-        );
+        toast.error(t("Please select a date at least 15 years ago or earlier."));
       }
     } else {
       dataHandler("dob", "");
@@ -96,9 +80,7 @@ const RecipientDetails = ({
         <div className={styles.bot_top}>
           <h5>{t("Personal Details")}</h5>
           <span>
-            {t(
-              "Please finalize your payment by entering the required personal information.",
-            )}
+            {t("Please finalize your payment by entering the required personal information.")}
           </span>
         </div>
         <div className={styles.personal}>
@@ -125,9 +107,7 @@ const RecipientDetails = ({
               phone={data.phone}
             />
             {data?.phone_error && (
-              <div
-                style={{ color: "red", fontWeight: 500, marginTop: ".5rem" }}
-              >
+              <div style={{ color: "red", fontWeight: 500, marginTop: ".5rem" }}>
                 {t("Incorrect phone number, please enter a valid number.")}
               </div>
             )}
@@ -142,9 +122,7 @@ const RecipientDetails = ({
               value={data.dob || null}
               onChange={handleDateChange}
               placeholder="YYYY-MM-DD"
-              maxDate={
-                new Date(new Date().setFullYear(new Date().getFullYear() - 15))
-              }
+              maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 15))}
               disableFuture
               InputProps={{
                 disableUnderline: true,
@@ -183,9 +161,7 @@ const RecipientDetails = ({
                     type="text"
                     onKeyDown={preventEdgeSpaces}
                     value={data.customerTown || ""}
-                    onChange={(e) =>
-                      dataHandler("customerTown", e.target.value)
-                    }
+                    onChange={(e) => dataHandler("customerTown", e.target.value)}
                     required={cardPaymentRequiredFields.customer_town}
                   />
                 </div>
@@ -199,9 +175,7 @@ const RecipientDetails = ({
                     type="text"
                     onKeyDown={preventEdgeSpaces}
                     value={data.customerStreet || ""}
-                    onChange={(e) =>
-                      dataHandler("customerStreet", e.target.value)
-                    }
+                    onChange={(e) => dataHandler("customerStreet", e.target.value)}
                     required={cardPaymentRequiredFields.customer_street}
                   />
                 </div>
@@ -226,9 +200,7 @@ const RecipientDetails = ({
                       type="text"
                       onKeyDown={preventEdgeSpaces}
                       value={data.customer_county || ""}
-                      onChange={(e) =>
-                        dataHandler("customer_county", e.target.value)
-                      }
+                      onChange={(e) => dataHandler("customer_county", e.target.value)}
                       required={cardPaymentRequiredFields.customer_county}
                     />
                   )}
@@ -239,9 +211,7 @@ const RecipientDetails = ({
 
           <div className={styles.inpt_co}>
             <label>
-              {isReferenceRequired
-                ? `${t("Ucard Number or Sharer ID")}*`
-                : t("Payment Reference")}{" "}
+              {isReferenceRequired ? `${t("Ucard Number or Sharer ID")}*` : t("Payment Reference")}{" "}
               {!isReferenceRequired && `(${t("Optional")})`}{" "}
             </label>
             <input
@@ -263,9 +233,8 @@ const RecipientDetails = ({
               onKeyDown={preventEmailSpaces}
               onChange={(e) => dataHandler("email", e.target.value.trim())}
             />
-            {!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
-              data.email,
-            ) && data.email.length > 0 ? (
+            {!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(data.email) &&
+            data.email.length > 0 ? (
               <span
                 style={{
                   fontWeight: "600",
@@ -280,9 +249,7 @@ const RecipientDetails = ({
             )}
           </div>
         </div>
-        {isShipping && (
-          <ShippingDetails data={data} dataHandler={dataHandler} />
-        )}
+        {isShipping && <ShippingDetails data={data} dataHandler={dataHandler} />}
       </div>
     </MuiPickersUtilsProvider>
   );

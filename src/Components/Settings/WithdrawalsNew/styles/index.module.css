@@ -57,9 +57,7 @@
 .info button {
   border-radius: 6px;
   border: 1px solid #dfdfdf !important;
-  background:
-    linear-gradient(341deg, #e64067 -4.84%, #5926f0 90.69%, #4828a0 166.81%),
-    #fff;
+  background: linear-gradient(341deg, #e64067 -4.84%, #5926f0 90.69%, #4828a0 166.81%), #fff;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
   display: flex;
   align-items: center;

@@ -83,12 +83,8 @@ const HomeNewUpdated = () => {
   useEffect(() => {
     const getCryptoRates = async () => {
       try {
-        const symbols = encodeURIComponent(
-          JSON.stringify(["BTCUSDT", "ETHUSDT"]),
-        );
-        const res = await fetch(
-          `https://api.binance.com/api/v3/ticker/price?symbols=${symbols}`,
-        );
+        const symbols = encodeURIComponent(JSON.stringify(["BTCUSDT", "ETHUSDT"]));
+        const res = await fetch(`https://api.binance.com/api/v3/ticker/price?symbols=${symbols}`);
         const data = await res.json();
 
         const btcPrice = data.find((i) => i.symbol === "BTCUSDT")?.price || 0;
@@ -186,19 +182,13 @@ const HomeNewUpdated = () => {
                       >
                         {userDetails?.profileImage?.url ? (
                           <img
-                            src={
-                              croppedImages.profileDP ||
-                              userDetails?.profileImage?.url
-                            }
+                            src={croppedImages.profileDP || userDetails?.profileImage?.url}
                             alt={userDetails?.user?.first_name}
                             style={{
-                              minWidth:
-                                window.innerWidth > 1650 ? "50px" : "40px",
-                              minHeight:
-                                window.innerWidth > 1650 ? "50px" : "40px",
+                              minWidth: window.innerWidth > 1650 ? "50px" : "40px",
+                              minHeight: window.innerWidth > 1650 ? "50px" : "40px",
                               width: window.innerWidth > 1650 ? "50px" : "40px",
-                              height:
-                                window.innerWidth > 1650 ? "50px" : "40px",
+                              height: window.innerWidth > 1650 ? "50px" : "40px",
                               borderRadius: "25px",
                               objectFit: "cover",
                             }}
@@ -207,10 +197,8 @@ const HomeNewUpdated = () => {
                         ) : (
                           <div
                             style={{
-                              minWidth:
-                                window.innerWidth > 1650 ? "50px" : "40px",
-                              minHeight:
-                                window.innerWidth > 1650 ? "50px" : "40px",
+                              minWidth: window.innerWidth > 1650 ? "50px" : "40px",
+                              minHeight: window.innerWidth > 1650 ? "50px" : "40px",
                               borderRadius: "25px",
                               display: "grid",
                               placeItems: "center",
@@ -221,8 +209,7 @@ const HomeNewUpdated = () => {
                               fontWeight: 800,
                             }}
                           >
-                            {userDetails?.account_type?.toLowerCase() ===
-                            "individual"
+                            {userDetails?.account_type?.toLowerCase() === "individual"
                               ? userDetails?.user?.first_name?.[0]?.toUpperCase()
                               : isAgentLogin
                                 ? agentDetails?.first_name?.[0]?.toUpperCase()
@@ -233,16 +220,14 @@ const HomeNewUpdated = () => {
                       <div>
                         <h5
                           style={{
-                            fontSize:
-                              window.innerWidth > 1650 ? "1.1rem" : ".8rem",
+                            fontSize: window.innerWidth > 1650 ? "1.1rem" : ".8rem",
                             fontWeight: "700",
                             marginBottom: 0,
                             whiteSpace: "nowrap",
                             overflow: "hidden",
                           }}
                         >
-                          {userDetails?.account_type?.toLowerCase() ===
-                          "individual"
+                          {userDetails?.account_type?.toLowerCase() === "individual"
                             ? `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}`
                                 ?.split(" ")
                                 ?.slice(0, 2)
@@ -258,9 +243,7 @@ const HomeNewUpdated = () => {
                             color: "#939393",
                           }}
                         >
-                          {isAgentLogin
-                            ? agentDetails?.email
-                            : userDetails?.email}
+                          {isAgentLogin ? agentDetails?.email : userDetails?.email}
                         </p>
                       </div>
                     </div>
@@ -276,14 +259,9 @@ const HomeNewUpdated = () => {
                     <ReferalRewards />
                   </div>
                   {can("dashboard.balance.view") &&
-                    userWallets.some((item) => item?.balance?.reserved) && (
-                      <OtherBalance />
-                    )}
+                    userWallets.some((item) => item?.balance?.reserved) && <OtherBalance />}
                   {userWallets.some((item) => item?.balance?.reserved) ? (
-                    <div
-                      className={styles.scroll_view}
-                      style={{ maxWidth: "33vw" }}
-                    >
+                    <div className={styles.scroll_view} style={{ maxWidth: "33vw" }}>
                       {currenciesData.map((item) => (
                         <CryptoCard key={item.name} item={item} />
                       ))}
@@ -310,9 +288,7 @@ const HomeNewUpdated = () => {
                 <RecentTrans currentWallet={selectedWallet} />
               )}
 
-              {can("dashboard.insights.view") && (
-                <Stats currentWallet={selectedWallet} />
-              )}
+              {can("dashboard.insights.view") && <Stats currentWallet={selectedWallet} />}
 
               <QuickLinksNew />
             </div>
@@ -389,11 +365,7 @@ const HomeNewUpdated = () => {
                   {t("Chat with us")}
                 </span>
                 {/* <img src={chat_an} alt="" style={{ position: "absolute", top: "0", left: "0", height: "100%", width: "100%", objectFit: "cover", mixBlendMode: "multiply", zIndex: "-1" }} /> */}
-                <ChevronRight
-                  color="black"
-                  size={20}
-                  style={{ marginLeft: "auto" }}
-                />
+                <ChevronRight color="black" size={20} style={{ marginLeft: "auto" }} />
               </div>
             </a>
           </div>
@@ -408,16 +380,11 @@ const HomeNewUpdated = () => {
             }
           }}
         >
-          <BusinessModal
-            isOpen={showBusinessModal}
-            toggle={() => setShowBusinessModal(false)}
-          />
+          <BusinessModal isOpen={showBusinessModal} toggle={() => setShowBusinessModal(false)} />
           <TopBar />
           <EarnMoneyBanner />
           <RecentBeneficiaries />
-          {can("wallet.list.view") && (
-            <WalletsMobile setCurrentWallet={setSelectedWallet} />
-          )}
+          {can("wallet.list.view") && <WalletsMobile setCurrentWallet={setSelectedWallet} />}
           {/* crypto */}
           <div className={styles.crypto}>
             <h5>
@@ -436,8 +403,7 @@ const HomeNewUpdated = () => {
                 onClick={() => setShowBusinessModal(true)}
                 className={cardsStyle.button}
                 style={{
-                  background:
-                    "linear-gradient(to left, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
+                  background: "linear-gradient(to left, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
                   color: "white",
                   display: "flex",
                   justifyContent: "center",
@@ -447,12 +413,7 @@ const HomeNewUpdated = () => {
                   padding: "1rem",
                 }}
               >
-                <img
-                  src={crown}
-                  alt="c"
-                  loading="lazy"
-                  style={{ width: "20px" }}
-                />
+                <img src={crown} alt="c" loading="lazy" style={{ width: "20px" }} />
                 <span
                   style={{
                     color: "white",
@@ -467,12 +428,8 @@ const HomeNewUpdated = () => {
             )}
           </div>
           <QuickLinksMobile />
-          {can("dashboard.insights.view") && (
-            <Stats currentWallet={selectedWallet} />
-          )}
-          {can("dashboard.insights.view") && (
-            <TransDetails selectedWallet={selectedWallet} />
-          )}
+          {can("dashboard.insights.view") && <Stats currentWallet={selectedWallet} />}
+          {can("dashboard.insights.view") && <TransDetails selectedWallet={selectedWallet} />}
           <CurConversion />
         </div>
       )}

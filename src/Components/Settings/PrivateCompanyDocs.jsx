@@ -1,12 +1,5 @@
 import React, { useContext, useState } from "react";
-import {
-  FormGroup,
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalHeader,
-} from "reactstrap";
+import { FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from "reactstrap";
 import styles from "./styles/doctype.module.css";
 import { CheckCircle, Info } from "react-feather";
 import { UserContext } from "../../Context/UserContext";
@@ -26,9 +19,7 @@ const FileUploadWithPreview = ({
   getDraftFile,
 }) => {
   const { t } = useTranslation();
-  const existingFile = userDetails?.company?.kyb_files?.find(
-    (f) => f.document_name === docName,
-  );
+  const existingFile = userDetails?.company?.kyb_files?.find((f) => f.document_name === docName);
   const [localFile, setLocalFile] = useState(null);
   const draftFile = !localFile && getDraftFile ? getDraftFile(docName) : null;
 
@@ -80,11 +71,7 @@ const FileUploadWithPreview = ({
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
           <span style={{ fontWeight: 500 }}>
             {t("Uploaded")}:{" "}
-            <a
-              href={existingFile.file_link}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={existingFile.file_link} target="_blank" rel="noopener noreferrer">
               {existingFile.key?.split("/")[2]}
             </a>
           </span>
@@ -94,11 +81,7 @@ const FileUploadWithPreview = ({
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
           <span style={{ fontWeight: 500 }}>
             {t("Uploaded")}:{" "}
-            <a
-              href={draftFile.file_link}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={draftFile.file_link} target="_blank" rel="noopener noreferrer">
               {draftFile.name}
             </a>
           </span>
@@ -110,12 +93,7 @@ const FileUploadWithPreview = ({
         </div>
       )}
       {!isReadOnly && (
-        <Input
-          type="file"
-          name={docName}
-          onChange={handleFileChange}
-          style={{ maxWidth: 300 }}
-        />
+        <Input type="file" name={docName} onChange={handleFileChange} style={{ maxWidth: 300 }} />
       )}
       {existingFile && !localFile && !draftFile && (
         <small style={{ color: "#888" }}>
@@ -148,14 +126,8 @@ const PrivateCompanyDocs = ({
       <div>
         <FormGroup>
           <Label>
-            {t(
-              " Official Company Registry Extract (Entity's Registration/Incorporation Document)",
-            )}
-            <Info
-              className={styles.info_icon}
-              size={16}
-              onClick={() => setModalOne(!modalOne)}
-            />
+            {t(" Official Company Registry Extract (Entity's Registration/Incorporation Document)")}
+            <Info className={styles.info_icon} size={16} onClick={() => setModalOne(!modalOne)} />
           </Label>
           <FileUploadWithPreview
             label={t(
@@ -175,14 +147,8 @@ const PrivateCompanyDocs = ({
             isReadOnly={isReadOnly}
           />
         </FormGroup>
-        <Modal
-          isOpen={modalOne}
-          toggle={() => setModalOne(!modalOne)}
-          style={{ minWidth: "60vw" }}
-        >
-          <ModalHeader toggle={() => setModalOne(!modalOne)}>
-            {t("Details")}
-          </ModalHeader>
+        <Modal isOpen={modalOne} toggle={() => setModalOne(!modalOne)} style={{ minWidth: "60vw" }}>
+          <ModalHeader toggle={() => setModalOne(!modalOne)}>{t("Details")}</ModalHeader>
           <ModalBody>
             <div className={styles.content}>
               <p>
@@ -192,9 +158,7 @@ const PrivateCompanyDocs = ({
               </p>
               <br />
               <p>
-                {t(
-                  "The document should be current, with an issuance date not exceeding 3 months.",
-                )}
+                {t("The document should be current, with an issuance date not exceeding 3 months.")}
               </p>
               <br />
               <p>{t("The document must include the following details:")}</p>
@@ -231,11 +195,7 @@ const PrivateCompanyDocs = ({
         <FormGroup>
           <Label>
             {t("Proof of Legal Representative's Authority")}
-            <Info
-              className={styles.info_icon}
-              size={16}
-              onClick={() => setModalTwo(!modalTwo)}
-            />
+            <Info className={styles.info_icon} size={16} onClick={() => setModalTwo(!modalTwo)} />
           </Label>
           <FileUploadWithPreview
             label={t("Proof of Legal Representative's Authority")}
@@ -251,20 +211,12 @@ const PrivateCompanyDocs = ({
             isReadOnly={isReadOnly}
           />
         </FormGroup>
-        <Modal
-          isOpen={modalTwo}
-          toggle={() => setModalTwo(!modalTwo)}
-          style={{ minWidth: "60vw" }}
-        >
-          <ModalHeader toggle={() => setModalTwo(!modalTwo)}>
-            {t("Details")}
-          </ModalHeader>
+        <Modal isOpen={modalTwo} toggle={() => setModalTwo(!modalTwo)} style={{ minWidth: "60vw" }}>
+          <ModalHeader toggle={() => setModalTwo(!modalTwo)}>{t("Details")}</ModalHeader>
           <ModalBody>
             <div className={styles.content}>
               <p>
-                {t(
-                  "This document validates an individual's authority to represent the company",
-                )}
+                {t("This document validates an individual's authority to represent the company")}
               </p>
               <br />
               <p>
@@ -289,9 +241,7 @@ const PrivateCompanyDocs = ({
       <div>
         <FormGroup>
           <Label>
-            {t(
-              "Ownership Structure and Ultimate Beneficial Owners (UBOs) Documentation",
-            )}
+            {t("Ownership Structure and Ultimate Beneficial Owners (UBOs) Documentation")}
             <Info
               className={styles.info_icon}
               size={16}
@@ -299,12 +249,8 @@ const PrivateCompanyDocs = ({
             />
           </Label>
           <FileUploadWithPreview
-            label={t(
-              "Ownership Structure and Ultimate Beneficial Owners (UBOs) Documentation",
-            )}
-            docName={t(
-              "Ownership Structure and Ultimate Beneficial Owners (UBOs) Documentation",
-            )}
+            label={t("Ownership Structure and Ultimate Beneficial Owners (UBOs) Documentation")}
+            docName={t("Ownership Structure and Ultimate Beneficial Owners (UBOs) Documentation")}
             modalToggle={() => setModalThree(!modalThree)}
             modalOpen={modalThree}
             setCompanyFiles={setCompanyFiles}
@@ -321,9 +267,7 @@ const PrivateCompanyDocs = ({
           toggle={() => setModalThree(!modalThree)}
           style={{ minWidth: "60vw" }}
         >
-          <ModalHeader toggle={() => setModalThree(!modalThree)}>
-            {t("Details")}
-          </ModalHeader>
+          <ModalHeader toggle={() => setModalThree(!modalThree)}>{t("Details")}</ModalHeader>
           <ModalBody>
             <div className={styles.content}>
               <p>
@@ -351,11 +295,7 @@ const PrivateCompanyDocs = ({
         <FormGroup>
           <Label>
             {t("Collection of Identification Documents")}
-            <Info
-              className={styles.info_icon}
-              size={16}
-              onClick={() => setModalFour(!modalFour)}
-            />
+            <Info className={styles.info_icon} size={16} onClick={() => setModalFour(!modalFour)} />
           </Label>
           <FileUploadWithPreview
             label={t("Collection of Identification Documents")}
@@ -376,9 +316,7 @@ const PrivateCompanyDocs = ({
           toggle={() => setModalFour(!modalFour)}
           style={{ minWidth: "60vw" }}
         >
-          <ModalHeader toggle={() => setModalFour(!modalFour)}>
-            {t("Details")}
-          </ModalHeader>
+          <ModalHeader toggle={() => setModalFour(!modalFour)}>{t("Details")}</ModalHeader>
           <ModalBody>
             <div className={styles.content}>
               <p>
@@ -418,11 +356,7 @@ const PrivateCompanyDocs = ({
         <FormGroup>
           <Label>
             {t("Proof of address of the company")}
-            <Info
-              className={styles.info_icon}
-              size={16}
-              onClick={() => setModalFive(!modalFive)}
-            />
+            <Info className={styles.info_icon} size={16} onClick={() => setModalFive(!modalFive)} />
           </Label>
           <FileUploadWithPreview
             label={t("Proof of Address")}
@@ -443,9 +377,7 @@ const PrivateCompanyDocs = ({
           toggle={() => setModalFive(!modalFive)}
           style={{ minWidth: "60vw" }}
         >
-          <ModalHeader toggle={() => setModalFive(!modalFive)}>
-            {t("Details")}
-          </ModalHeader>
+          <ModalHeader toggle={() => setModalFive(!modalFive)}>{t("Details")}</ModalHeader>
           <ModalBody>
             <div className={styles.content}>
               <ul>

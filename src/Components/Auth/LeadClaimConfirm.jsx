@@ -69,12 +69,8 @@ const LeadClaimConfirm = () => {
     return (
       <div style={containerStyle}>
         <div style={cardStyle}>
-          <h2 style={{ color: "#d32f2f", marginBottom: "12px" }}>
-            Invalid Request
-          </h2>
-          <p style={{ color: "#666" }}>
-            No confirmation token was provided in the URL.
-          </p>
+          <h2 style={{ color: "#d32f2f", marginBottom: "12px" }}>Invalid Request</h2>
+          <p style={{ color: "#666" }}>No confirmation token was provided in the URL.</p>
         </div>
       </div>
     );
@@ -95,12 +91,8 @@ const LeadClaimConfirm = () => {
       <div style={containerStyle}>
         <div style={cardStyle}>
           <XCircle size={48} color="#d32f2f" style={{ marginBottom: "16px" }} />
-          <h2 style={{ color: "#333", marginBottom: "12px" }}>
-            Link Expired or Invalid
-          </h2>
-          <p style={{ color: "#666" }}>
-            This confirmation request link is invalid or has expired.
-          </p>
+          <h2 style={{ color: "#333", marginBottom: "12px" }}>Link Expired or Invalid</h2>
+          <p style={{ color: "#666" }}>This confirmation request link is invalid or has expired.</p>
         </div>
       </div>
     );
@@ -111,17 +103,9 @@ const LeadClaimConfirm = () => {
       <div style={containerStyle}>
         <div style={cardStyle}>
           {statusMessage.type === "success" ? (
-            <CheckCircle
-              size={56}
-              color="#10B981"
-              style={{ marginBottom: "16px" }}
-            />
+            <CheckCircle size={56} color="#10B981" style={{ marginBottom: "16px" }} />
           ) : (
-            <Shield
-              size={56}
-              color="#6366F1"
-              style={{ marginBottom: "16px" }}
-            />
+            <Shield size={56} color="#6366F1" style={{ marginBottom: "16px" }} />
           )}
           <h2
             style={{
@@ -193,9 +177,8 @@ const LeadClaimConfirm = () => {
             marginBottom: "24px",
           }}
         >
-          Agent <strong>{details.agent_name || "Your Agent"}</strong> is
-          requesting to add your account to their introduced client group on
-          InstaPay with custom pricing.
+          Agent <strong>{details.agent_name || "Your Agent"}</strong> is requesting to add your
+          account to their introduced client group on InstaPay with custom pricing.
         </p>
 
         <div style={detailsBoxStyle}>
@@ -215,9 +198,7 @@ const LeadClaimConfirm = () => {
           </div>
           <div style={{ ...detailRowStyle, borderBottom: "none" }}>
             <span style={detailLabelStyle}>Proposed Fee Pack:</span>
-            <span
-              style={{ ...detailValueStyle, color: "#4F46E5", fontWeight: 600 }}
-            >
+            <span style={{ ...detailValueStyle, color: "#4F46E5", fontWeight: 600 }}>
               {details.fee_pack_name || "Custom Fee Pack"}{" "}
               {details.fee_pack_summary ? `(${details.fee_pack_summary})` : ""}
             </span>
@@ -230,9 +211,7 @@ const LeadClaimConfirm = () => {
             disabled={confirmMutation.isPending}
             style={primaryBtnStyle}
           >
-            {confirmMutation.isPending
-              ? "Processing..."
-              : "Accept Agent Assignment"}
+            {confirmMutation.isPending ? "Processing..." : "Accept Agent Assignment"}
           </button>
           <button
             onClick={() => confirmMutation.mutate("decline")}
@@ -265,8 +244,7 @@ const cardStyle = {
   maxWidth: "480px",
   width: "100%",
   textAlign: "center",
-  boxShadow:
-    "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
 };
 
 const logoStyle = {

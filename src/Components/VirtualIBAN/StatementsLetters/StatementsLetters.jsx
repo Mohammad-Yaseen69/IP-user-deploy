@@ -17,10 +17,7 @@ import { useTranslation } from "react-i18next";
 import useWindowWidth from "../../../utils/useWindowWidth";
 import TopRight from "../../topRight";
 import { UserContext } from "../../../Context/UserContext";
-import {
-  useVirtualIbans,
-  useVirtualIbanDetails,
-} from "../../../hooks/useVirtualIban";
+import { useVirtualIbans, useVirtualIbanDetails } from "../../../hooks/useVirtualIban";
 import { normalizeVirtualIban } from "../utils/virtualIban";
 import generateIbanLetterPdf from "./generateIbanLetterPdf";
 import generateSwiftLetterPdf from "./generateSwiftLetterPdf";
@@ -64,10 +61,7 @@ const StatementsLetters = () => {
 
   const selectedIban = useMemo(() => {
     if (!rawIbans.length) return null;
-    return (
-      rawIbans.find((iban) => (iban?._id || iban?.id) === selectedAccount) ||
-      rawIbans[0]
-    );
+    return rawIbans.find((iban) => (iban?._id || iban?.id) === selectedAccount) || rawIbans[0];
   }, [rawIbans, selectedAccount]);
 
   const ibanId = selectedIban?._id || selectedIban?.id;
@@ -163,17 +157,14 @@ const StatementsLetters = () => {
         toast.success(t("SWIFT confirmation letter downloaded successfully!"));
         setShowSwiftModal(false);
       } else if (actionType === "share") {
-        const virtualIbanId =
-          iban?.virtualIbanId || iban?._id || iban?.id || "";
+        const virtualIbanId = iban?.virtualIbanId || iban?._id || iban?.id || "";
         const base_url = window.location.origin || "https://my.insta-pay.ch";
         const shareUrl = `${base_url}/v/${virtualIbanId}?type=swift&curr=${currency}`;
         if (navigator.share) {
           navigator
             .share({
               title: t("SWIFT Confirmation Letter"),
-              text: t(
-                "Official InstaPay International / SWIFT Payment Instructions",
-              ),
+              text: t("Official InstaPay International / SWIFT Payment Instructions"),
               url: shareUrl,
             })
             .catch(() => handleCopy(shareUrl));
@@ -204,9 +195,7 @@ const StatementsLetters = () => {
   );
   const companyType = getSafeString(
     iban?.companyType || userDetails?.companyType,
-    userDetails?.companyName
-      ? "Limited Liability Company"
-      : "Individual Account",
+    userDetails?.companyName ? "Limited Liability Company" : "Individual Account",
   );
   const jurisdiction = getSafeString(
     iban?.incorporationJurisdiction ||
@@ -215,14 +204,8 @@ const StatementsLetters = () => {
       userDetails?.jurisdiction,
     "Cyprus",
   );
-  const ibanNumber = getSafeString(
-    iban?.iban,
-    "MT17 SYPL 3948 0354 2000 1814 7054 916",
-  );
-  const bic = getSafeString(
-    iban?.bank?.bic || iban?.swift_code || iban?.bic,
-    "SYPLMTM2",
-  );
+  const ibanNumber = getSafeString(iban?.iban, "MT17 SYPL 3948 0354 2000 1814 7054 916");
+  const bic = getSafeString(iban?.bank?.bic || iban?.swift_code || iban?.bic, "SYPLMTM2");
   const currency = getSafeString(iban?.currency, "EUR");
   const currencyLabel = currency === "EUR" ? "EUR (Euro)" : currency;
   const status = getSafeString(iban?.status, "Active");
@@ -288,11 +271,7 @@ const StatementsLetters = () => {
                     onClick={() => handleCopy(ibanNumber, true)}
                     aria-label={ibanCopied ? t("Copied") : t("Copy IBAN")}
                   >
-                    {ibanCopied ? (
-                      <Check size={20} color="#32CD32" />
-                    ) : (
-                      <Copy size={14} />
-                    )}
+                    {ibanCopied ? <Check size={20} color="#32CD32" /> : <Copy size={14} />}
                   </button>
                 </>
               ) : (
@@ -318,9 +297,7 @@ const StatementsLetters = () => {
 
           <div className={styles.columnsFlexGrid}>
             <div className={styles.leftColumn}>
-              <span className={styles.sectionHeadingTitle}>
-                {t("Documents & Statements")}
-              </span>
+              <span className={styles.sectionHeadingTitle}>{t("Documents & Statements")}</span>
               <p className={styles.sectionHeadingSub}>
                 {t(
                   "Choose official ownership confirmation letter or transaction activity statement.",
@@ -351,8 +328,7 @@ const StatementsLetters = () => {
                   >
                     {previewing ? (
                       <>
-                        <Loader size={14} className={styles.spinIcon} />{" "}
-                        {t("Loading...")}
+                        <Loader size={14} className={styles.spinIcon} /> {t("Loading...")}
                       </>
                     ) : (
                       <>
@@ -367,13 +343,11 @@ const StatementsLetters = () => {
                   >
                     {downloading ? (
                       <>
-                        <Loader size={14} className={styles.spinIcon} />{" "}
-                        {t("Generating...")}
+                        <Loader size={14} className={styles.spinIcon} /> {t("Generating...")}
                       </>
                     ) : width >= 480 ? (
                       <>
-                        <Download size={14} />{" "}
-                        {t("Download Confirmation Letter")}
+                        <Download size={14} /> {t("Download Confirmation Letter")}
                       </>
                     ) : (
                       <>
@@ -427,8 +401,7 @@ const StatementsLetters = () => {
                   >
                     {width >= 480 ? (
                       <>
-                        <Download size={14} />{" "}
-                        {t("Download Confirmation Letter")}
+                        <Download size={14} /> {t("Download Confirmation Letter")}
                       </>
                     ) : (
                       <>
@@ -461,9 +434,7 @@ const StatementsLetters = () => {
                     <File size={20} style={{ color: "#fff" }} />
                   </div>
                   <div className={styles.actionContent}>
-                    <h3 className={styles.actionTitle}>
-                      {t("Account Transactions Statement")}
-                    </h3>
+                    <h3 className={styles.actionTitle}>{t("Account Transactions Statement")}</h3>
                     <p className={styles.actionDesc}>
                       {t(
                         "Download incoming & outgoing transaction records for any selected date period in PDF or CSV format.",
@@ -491,9 +462,7 @@ const StatementsLetters = () => {
             </div>
 
             <div className={styles.rightColumn}>
-              <span className={styles.sectionSubTitle}>
-                {t("What the letter contains")}
-              </span>
+              <span className={styles.sectionSubTitle}>{t("What the letter contains")}</span>
               <p className={styles.sectionHeadingSub}>
                 {t("Live blueprint from your instant account record.")}
               </p>
@@ -518,19 +487,13 @@ const StatementsLetters = () => {
                   </tr>
                   <tr>
                     <td className={styles.metaLabel}>{t("IBAN")}</td>
-                    <td
-                      className={styles.metaValue}
-                      style={{ fontFamily: "monospace" }}
-                    >
+                    <td className={styles.metaValue} style={{ fontFamily: "monospace" }}>
                       {ibanNumber}
                     </td>
                   </tr>
                   <tr>
                     <td className={styles.metaLabel}>{t("BIC / SWIFT")}</td>
-                    <td
-                      className={styles.metaValue}
-                      style={{ fontFamily: "monospace" }}
-                    >
+                    <td className={styles.metaValue} style={{ fontFamily: "monospace" }}>
                       {bic}
                     </td>
                   </tr>

@@ -66,18 +66,12 @@ const Providers = ({ providers, channel, setProvider, provider }) => {
                   }}
                 />
               </div>
-              <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>
-                {t(item?.name)}
-              </h5>
+              <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>{t(item?.name)}</h5>
             </div>
             {!item?.active ? (
               <Badge color="primary">{t("Coming Soon")}</Badge>
             ) : provider?.name === item?.name ? (
-              <Check
-                color="green"
-                size={24}
-                style={{ position: "absolute", right: "20px" }}
-              />
+              <Check color="green" size={24} style={{ position: "absolute", right: "20px" }} />
             ) : (
               <img
                 src={i}

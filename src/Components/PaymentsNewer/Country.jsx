@@ -10,13 +10,7 @@ import { UserContext } from "../../Context/UserContext";
 import InstaPayLoader from "../Loader";
 import { useLocation } from "react-router";
 
-const PaymentCountry = ({
-  country,
-  setCountry,
-  setSubStep,
-  setServices,
-  type = "thunes",
-}) => {
+const PaymentCountry = ({ country, setCountry, setSubStep, setServices, type = "thunes" }) => {
   const { t } = useTranslation();
   const [searchCountries, setSearchCountries] = useState([]);
   const [filtered, setFiltered] = useState([]);
@@ -40,28 +34,20 @@ const PaymentCountry = ({
         const decrypted = decryptData(data.data);
 
         const countriesArray = countries.filter((item) => {
-          return decrypted.some(
-            (apiCountry) => apiCountry.countryIsoCode === item?.alpha3,
-          );
+          return decrypted.some((apiCountry) => apiCountry.countryIsoCode === item?.alpha3);
         });
         const allowed = countriesArray.filter((item) =>
-          allowedCountries.some((coun) =>
-            item?.name.includes(coun.country_name),
-          ),
+          allowedCountries.some((coun) => item?.name.includes(coun.country_name)),
         );
         setFiltered(allowed);
         setSearchCountries(allowed);
       } else {
-        const res = await fetch(
-          `${import.meta.env.VITE_IP_DEV_API}/api/dt/countries`,
-        );
+        const res = await fetch(`${import.meta.env.VITE_IP_DEV_API}/api/dt/countries`);
         const data = await res.json();
         const decrypted = decryptData(data.data);
 
         const countriesArray = countries.filter((item) => {
-          return decrypted.some(
-            (apiCountry) => apiCountry.iso_code === item?.alpha3,
-          );
+          return decrypted.some((apiCountry) => apiCountry.iso_code === item?.alpha3);
         });
         // const allowed = countriesArray.filter(item => allowedCountries.some(coun => item?.name.includes(coun.country_name)))
         setFiltered(countriesArray);
@@ -76,10 +62,9 @@ const PaymentCountry = ({
     if (country) {
       if (type === "thunes") {
         axios
-          .get(
-            `${import.meta.env.VITE_THUNES_API}/services/${country.alpha3}`,
-            { headers: authHeader },
-          )
+          .get(`${import.meta.env.VITE_THUNES_API}/services/${country.alpha3}`, {
+            headers: authHeader,
+          })
           .then((res) => {
             // console.log(decryptData(res.data.data))
             setServices(decryptData(res.data.data));
@@ -90,10 +75,9 @@ const PaymentCountry = ({
           });
       } else {
         axios
-          .get(
-            `${import.meta.env.VITE_IP_DEV_API}/api/dt/services-in-country/${country?.alpha3}`,
-            { headers: authHeader },
-          )
+          .get(`${import.meta.env.VITE_IP_DEV_API}/api/dt/services-in-country/${country?.alpha3}`, {
+            headers: authHeader,
+          })
           .then((res) => {
             // console.log(decryptData(res.data.data))
             setServices(decryptData(res.data.data));
@@ -143,8 +127,7 @@ const PaymentCountry = ({
           padding: "14px",
           gap: "14px",
           paddingBottom: "1rem",
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
       >
         <Card style={{ margin: 0, borderRadius: "12px" }}>
@@ -193,9 +176,7 @@ const PaymentCountry = ({
             className="coun_card_con"
           >
             {isLoading ? (
-              <div
-                style={{ height: "200px", width: "200px", margin: "0 auto" }}
-              >
+              <div style={{ height: "200px", width: "200px", margin: "0 auto" }}>
                 <InstaPayLoader />
               </div>
             ) : (

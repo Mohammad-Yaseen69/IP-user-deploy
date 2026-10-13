@@ -28,13 +28,7 @@ const SwapArrowIcon = () => (
   </svg>
 );
 
-const WalletStep = ({
-  fromWallet,
-  setFromWallet,
-  toWallet,
-  setToWallet,
-  wallets,
-}) => {
+const WalletStep = ({ fromWallet, setFromWallet, toWallet, setToWallet, wallets }) => {
   const { t } = useTranslation();
 
   const handleSwap = () => {

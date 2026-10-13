@@ -26,24 +26,18 @@ const AddQRDetails = ({ setSubStep, dataHandler, sendPaymentType }) => {
   useEffect(() => {
     if (result && result?.length === 8) {
       axios
-        .get(
-          `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-user-wallets/${result}`,
-          {
-            headers: authHeader,
-          },
-        )
+        .get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-user-wallets/${result}`, {
+          headers: authHeader,
+        })
         .then((res) => {
           const dec = decryptData(res.data.data);
           console.log(dec);
-          const users = dec?.users?.filter(
-            (item) => item?._id !== userDetails?._id,
-          );
+          const users = dec?.users?.filter((item) => item?._id !== userDetails?._id);
           dataHandler("beneficiary", users?.[0] ?? {});
           setMethod("code");
           if (users?.length > 0) {
             const defaultWal =
-              users?.[0]?.wallets?.find((it) => it?.default) ??
-              users?.[0]?.wallets?.[0];
+              users?.[0]?.wallets?.find((it) => it?.default) ?? users?.[0]?.wallets?.[0];
             dataHandler("beneficiary_wallet", defaultWal ?? {});
             setWalletError("");
             setIsReady(true);
@@ -74,13 +68,9 @@ const AddQRDetails = ({ setSubStep, dataHandler, sendPaymentType }) => {
     formData.append("file", selectedFile);
 
     axios
-      .post(
-        `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-qr-details`,
-        formData,
-        {
-          headers: authHeader,
-        },
-      )
+      .post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-qr-details`, formData, {
+        headers: authHeader,
+      })
       .then((res) => {
         const decrypted = decryptData(res.data.data);
         setMethod("code");
@@ -117,9 +107,7 @@ const AddQRDetails = ({ setSubStep, dataHandler, sendPaymentType }) => {
           onClick={() => setMethod("qr")}
           className={styles.tab}
         >
-          <span style={{ color: method === "qr" && "#FFF" }}>
-            {t("Scan Qr")}
-          </span>
+          <span style={{ color: method === "qr" && "#FFF" }}>{t("Scan Qr")}</span>
         </div>
 
         <div
@@ -127,9 +115,7 @@ const AddQRDetails = ({ setSubStep, dataHandler, sendPaymentType }) => {
           onClick={() => setMethod("code")}
           className={styles.tab}
         >
-          <span style={{ color: method === "code" && "#FFF" }}>
-            {t("Enter Merchant Code")}
-          </span>
+          <span style={{ color: method === "code" && "#FFF" }}>{t("Enter Merchant Code")}</span>
         </div>
       </div>
 
@@ -211,19 +197,14 @@ const AddQRDetails = ({ setSubStep, dataHandler, sendPaymentType }) => {
           <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
               <img src={addU} alt="" />
-              <h6 style={{ marginBottom: "0px" }}>
-                {t("Recipient Not on InstaPay?")}
-              </h6>
+              <h6 style={{ marginBottom: "0px" }}>{t("Recipient Not on InstaPay?")}</h6>
             </div>
             <button onClick={() => setIsOpen(true)}>
               <p>{t("Invite them")}</p>
             </button>
           </div>
           {walletError && (
-            <p
-              className={styles.error}
-              style={{ fontWeight: 600, color: "red" }}
-            >
+            <p className={styles.error} style={{ fontWeight: 600, color: "red" }}>
               {walletError}
             </p>
           )}

@@ -19,17 +19,13 @@ const AdditionalDocumentModal = ({ isOpen, toggle, accounType }) => {
   const mastercardFiles = (allFiles || []).filter(
     (item) =>
       item?.purpose === "mastercard_kyc" &&
-      (item?.status === "requested" ||
-        item?.status === "decline" ||
-        item?.status === "declined"),
+      (item?.status === "requested" || item?.status === "decline" || item?.status === "declined"),
   );
 
   const otherFiles = (allFiles || []).filter(
     (item) =>
       item?.purpose !== "mastercard_kyc" &&
-      (item?.status === "requested" ||
-        item?.status === "decline" ||
-        item?.status === "declined"),
+      (item?.status === "requested" || item?.status === "decline" || item?.status === "declined"),
   );
 
   const showMastercardOnly = mastercardFiles.length > 0;
@@ -65,9 +61,7 @@ const AdditionalDocumentModal = ({ isOpen, toggle, accounType }) => {
                 marginBottom: "20px",
               }}
             >
-              <div
-                style={{ color: "#2563eb", flexShrink: 0, marginTop: "2px" }}
-              >
+              <div style={{ color: "#2563eb", flexShrink: 0, marginTop: "2px" }}>
                 <Info size={18} />
               </div>
               <div>
@@ -280,8 +274,7 @@ const AdditionalDocumentModal = ({ isOpen, toggle, accounType }) => {
                 fontSize: "14px",
                 border: "none",
                 outline: "none",
-                background:
-                  "linear-gradient(135deg, #e64067 0%, #5926f0 50%, #4828a0 100%)",
+                background: "linear-gradient(135deg, #e64067 0%, #5926f0 50%, #4828a0 100%)",
                 color: "#ffffff",
                 display: "flex",
                 alignItems: "center",
@@ -293,13 +286,11 @@ const AdditionalDocumentModal = ({ isOpen, toggle, accounType }) => {
               }}
               onMouseOver={(e) => {
                 e.currentTarget.style.transform = "translateY(-1px)";
-                e.currentTarget.style.boxShadow =
-                  "0 6px 16px rgba(89, 38, 240, 0.3)";
+                e.currentTarget.style.boxShadow = "0 6px 16px rgba(89, 38, 240, 0.3)";
               }}
               onMouseOut={(e) => {
                 e.currentTarget.style.transform = "none";
-                e.currentTarget.style.boxShadow =
-                  "0 4px 12px rgba(89, 38, 240, 0.2)";
+                e.currentTarget.style.boxShadow = "0 4px 12px rgba(89, 38, 240, 0.2)";
               }}
             >
               {t("Upload Documents")}

@@ -9,13 +9,7 @@
     h4 {
       font-size: 32px;
       background:
-        linear-gradient(
-          3.1deg,
-          #e64067 -102.47%,
-          #5926f0 25.82%,
-          #4828a0 128.05%
-        ),
-        #ffffff;
+        linear-gradient(3.1deg, #e64067 -102.47%, #5926f0 25.82%, #4828a0 128.05%), #ffffff;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -301,11 +295,7 @@
         background-position: center;
 
         .cardDets {
-          background: linear-gradient(
-            180deg,
-            #33168a 0%,
-            #401da8 100%
-          ) !important;
+          background: linear-gradient(180deg, #33168a 0%, #401da8 100%) !important;
         }
       }
 
@@ -354,8 +344,7 @@
 
         button {
           display: flex;
-          padding: var(--RADIUS-radius-1, 4px) 13px var(--RADIUS-radius-1, 4px)
-            7px;
+          padding: var(--RADIUS-radius-1, 4px) 13px var(--RADIUS-radius-1, 4px) 7px;
           align-items: center;
           gap: 6px;
           border-radius: var(--RADIUS-radius-2, 8px);
@@ -639,10 +628,7 @@
                 gap: var(--RADIUS-radius-1, 4px);
                 border-radius: var(--RADIUS-radius-full, 999px);
                 border: 0.5px solid var(--COLORS-Green-200, #1fc16b);
-                background: var(
-                  --COLORS-Green-Alpha-10,
-                  rgba(31, 193, 107, 0.1)
-                );
+                background: var(--COLORS-Green-Alpha-10, rgba(31, 193, 107, 0.1));
 
                 color: #1fc16b;
                 font-size: 10px;
@@ -780,8 +766,7 @@
           display: flex;
           align-items: center;
           background: #fff;
-          box-shadow: 0px 4.327520847320557px 35.70204544067383px 0px
-            rgba(0, 0, 0, 0.06);
+          box-shadow: 0px 4.327520847320557px 35.70204544067383px 0px rgba(0, 0, 0, 0.06);
           padding: 7px 13px;
           border-radius: 12px;
 
@@ -890,13 +875,7 @@
             .colored_card {
               border-radius: 16px;
               background:
-                linear-gradient(
-                  186deg,
-                  #e64067 0%,
-                  #5926f0 55.65%,
-                  #4828a0 100%
-                ),
-                #fafafa;
+                linear-gradient(186deg, #e64067 0%, #5926f0 55.65%, #4828a0 100%), #fafafa;
               box-shadow: 0px 41px 93px -29px rgba(0, 0, 0, 0.12);
               padding: 30px 30px;
               width: fit-content;
@@ -1012,8 +991,7 @@
                     padding: 0.25rem 0.5rem;
                     border-radius: 986.464px;
                     background: #fff;
-                    box-shadow: 0px 2.6016643047332764px 7.80499267578125px 0px
-                      rgba(0, 0, 0, 0.08);
+                    box-shadow: 0px 2.6016643047332764px 7.80499267578125px 0px rgba(0, 0, 0, 0.08);
                     font-size: 0.6rem;
                     font-weight: 600;
 
@@ -1021,8 +999,7 @@
                       height: 5px;
                       width: 5px;
                       background-color: #72c123;
-                      box-shadow: 0px 1.08402681350708px 2.16805362701416px
-                        #91be65;
+                      box-shadow: 0px 1.08402681350708px 2.16805362701416px #91be65;
                       border-radius: 6px;
                     }
                   }
@@ -1092,13 +1069,7 @@
                   height: 20px;
                   width: 20px;
                   background:
-                    linear-gradient(
-                      386deg,
-                      #e64067 0%,
-                      #5926f0 55.65%,
-                      #4828a0 100%
-                    ),
-                    #fafafa;
+                    linear-gradient(386deg, #e64067 0%, #5926f0 55.65%, #4828a0 100%), #fafafa;
                   border-radius: 30px;
                   display: flex;
                   justify-content: center;
@@ -1286,8 +1257,7 @@
           display: flex;
           align-items: center;
           background: #fff;
-          box-shadow: 0px 4.327520847320557px 35.70204544067383px 0px
-            rgba(0, 0, 0, 0.06);
+          box-shadow: 0px 4.327520847320557px 35.70204544067383px 0px rgba(0, 0, 0, 0.06);
           padding: 7px 13px;
           border-radius: 12px;
           flex: 1;

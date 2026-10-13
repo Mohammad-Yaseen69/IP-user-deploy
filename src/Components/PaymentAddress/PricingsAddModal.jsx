@@ -233,10 +233,7 @@ const PricingsAddModal = ({
           </Field>
           {editMode && (
             <Field label={t("Status")} toggle>
-              <Toggle
-                onChange={() => setStatus((prev) => !prev)}
-                checked={status}
-              />
+              <Toggle onChange={() => setStatus((prev) => !prev)} checked={status} />
             </Field>
           )}
           <Field label={t("Add on Payment Address")} toggle>
@@ -245,13 +242,8 @@ const PricingsAddModal = ({
               checked={showOnPaymentAddress}
             />
           </Field>
-          <ButtonForRequests
-            isLoading={submitting || !formValid}
-            onClick={handleSave}
-          >
-            {editMode
-              ? t("Save Changes")
-              : t("Save & Publish to My Payment Address")}
+          <ButtonForRequests isLoading={submitting || !formValid} onClick={handleSave}>
+            {editMode ? t("Save Changes") : t("Save & Publish to My Payment Address")}
           </ButtonForRequests>
           <span
             onClick={onClose}

@@ -85,46 +85,18 @@ export const prefillEditBag = (beneficiary) => {
   const extras = beneficiary.extras || {};
 
   const bag = {
-    firstname: firstValue(
-      beneficiary.first_name,
-      extras.firstname,
-      extras.firstName,
-    ),
-    lastname: firstValue(
-      beneficiary.last_name,
-      extras.lastname,
-      extras.lastName,
-    ),
-    firstName: firstValue(
-      beneficiary.first_name,
-      extras.firstname,
-      extras.firstName,
-    ),
-    lastName: firstValue(
-      beneficiary.last_name,
-      extras.lastname,
-      extras.lastName,
-    ),
-    legalName: firstValue(
-      beneficiary.company_name,
-      extras.legalName,
-      extras.company_name,
-    ),
+    firstname: firstValue(beneficiary.first_name, extras.firstname, extras.firstName),
+    lastname: firstValue(beneficiary.last_name, extras.lastname, extras.lastName),
+    firstName: firstValue(beneficiary.first_name, extras.firstname, extras.firstName),
+    lastName: firstValue(beneficiary.last_name, extras.lastname, extras.lastName),
+    legalName: firstValue(beneficiary.company_name, extras.legalName, extras.company_name),
     email: firstValue(beneficiary.email, extras.email),
     msisdn: firstValue(beneficiary.phone, extras.msisdn),
-    address: firstValue(
-      beneficiary.address,
-      extras.address,
-      extras.beneficiaryAddress,
-    ),
+    address: firstValue(beneficiary.address, extras.address, extras.beneficiaryAddress),
     city: firstValue(beneficiary.city, extras.city, extras.beneficiaryCity),
     province_state: firstValue(extras.province_state),
     state_name: firstValue(extras.state_name),
-    postal_code: firstValue(
-      beneficiary.zip_code,
-      extras.postal_code,
-      extras.beneficiaryPostal,
-    ),
+    postal_code: firstValue(beneficiary.zip_code, extras.postal_code, extras.beneficiaryPostal),
     date_of_birth: firstValue(beneficiary.date_of_birth, extras.date_of_birth),
   };
 
@@ -135,11 +107,7 @@ export const prefillEditBag = (beneficiary) => {
   return bag;
 };
 
-export const buildBeneficiaryUpdatePayload = ({
-  form,
-  countries,
-  beneficiary,
-}) => {
+export const buildBeneficiaryUpdatePayload = ({ form, countries, beneficiary }) => {
   const payload = buildBeneficiaryPayload({ form, countries });
 
   const ownExtras = { ...payload.extras };
@@ -170,9 +138,7 @@ export const buildBeneficiaryUpdatePayload = ({
 };
 
 export const buildBeneficiaryPayload = ({ form, countries }) => {
-  const countryRecord = (countries || []).find(
-    (c) => c.country_iso_code === form.country,
-  );
+  const countryRecord = (countries || []).find((c) => c.country_iso_code === form.country);
 
   const payload = {
     beneficiary_type: form.recipient_type,
@@ -195,9 +161,7 @@ export const buildBeneficiaryPayload = ({ form, countries }) => {
   });
 
   if (form.recipient_type === "business" && !payload.company_name) {
-    payload.company_name = [payload.first_name, payload.last_name]
-      .filter(Boolean)
-      .join(" ");
+    payload.company_name = [payload.first_name, payload.last_name].filter(Boolean).join(" ");
   }
 
   payload.extras = {
@@ -242,14 +206,12 @@ export const buildChannelPayload = ({ form, transactionType }) => {
       .join(" ");
 
   const payload = { channel_type: channelType };
-  const channelKey =
-    CHANNEL_PAYLOAD_KEY[channelType] || CHANNEL_PAYLOAD_KEY.bank;
+  const channelKey = CHANNEL_PAYLOAD_KEY[channelType] || CHANNEL_PAYLOAD_KEY.bank;
 
   if (channelType === "bank") {
     payload[channelKey] = {
       iban: channel.iban || "",
-      swift_code:
-        channel.swift_bic_code || channel.swift_code || channel.bic || "",
+      swift_code: channel.swift_bic_code || channel.swift_code || channel.bic || "",
       account_number:
         channel.bank_account_number ||
         channel.account_number ||
@@ -302,8 +264,7 @@ export const buildTransactionBeneficiaryDetails = ({
 }) => {
   const { country, extras, ...beneficiary } = beneficiaryPayload;
   const { channel_type: channelType } = channelPayload;
-  const channelKey =
-    CHANNEL_PAYLOAD_KEY[channelType] || CHANNEL_PAYLOAD_KEY.bank;
+  const channelKey = CHANNEL_PAYLOAD_KEY[channelType] || CHANNEL_PAYLOAD_KEY.bank;
 
   const aliasKeys = Object.values(EXTRAS_ALIASES).flat();
   const filledKeys = Object.keys(form?.beneficiary || {});

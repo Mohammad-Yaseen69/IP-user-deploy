@@ -10,8 +10,7 @@ const LocationDeniedModal = ({ isOpen, toggle, onRetry }) => {
 
   const getBrowserInstruction = () => {
     const browser = rdd.browserName;
-    const isMobile =
-      rdd.isMobile || rdd.isMobileSafari || rdd.isAndroid || rdd.isIOS;
+    const isMobile = rdd.isMobile || rdd.isMobileSafari || rdd.isAndroid || rdd.isIOS;
     const type = isMobile ? "mobile" : "desktop";
 
     if (instructions[browser]) {
@@ -32,12 +31,7 @@ const LocationDeniedModal = ({ isOpen, toggle, onRetry }) => {
   const instruction = getBrowserInstruction();
 
   return (
-    <Modal
-      className="modal-margin-remove"
-      isOpen={isOpen}
-      toggle={toggle}
-      centered
-    >
+    <Modal className="modal-margin-remove" isOpen={isOpen} toggle={toggle} centered>
       <ModalHeader toggle={toggle}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <h4
@@ -96,9 +90,7 @@ const LocationDeniedModal = ({ isOpen, toggle, onRetry }) => {
           </p>
         </div>
         <p style={{ fontSize: "13px", color: "#666", marginBottom: "0" }}>
-          {t(
-            "After enabling location, please click 'Allow' and then 'Try Again'.",
-          )}
+          {t("After enabling location, please click 'Allow' and then 'Try Again'.")}
         </p>
       </ModalBody>
       <ModalFooter style={{ borderTop: "none" }}>

@@ -5,11 +5,7 @@ import { UserContext } from "../../Context/UserContext";
 
 const OtherBalance = () => {
   const { t } = useTranslation();
-  const {
-    available,
-    blocked,
-    balanceLoading: loading,
-  } = useContext(UserContext);
+  const { available, blocked, balanceLoading: loading } = useContext(UserContext);
 
   return (
     <div className={styles.container}>

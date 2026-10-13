@@ -12,8 +12,7 @@ const UnderProgress = ({ requests = [] }) => {
 
   const formatDueDate = (item) => {
     if (!item?.deadline) return null;
-    if (typeof item.deadline === "string")
-      return item.deadline.replace("Due ", "");
+    if (typeof item.deadline === "string") return item.deadline.replace("Due ", "");
     if (item.deadline.isSet && item.deadline.date) {
       try {
         return new Date(item.deadline.date).toLocaleDateString("en-GB", {
@@ -31,8 +30,7 @@ const UnderProgress = ({ requests = [] }) => {
   return (
     <div className={styles.section}>
       <h3 className={styles.sectionHeading}>
-        {t("compliance.inProgressSection", "In review")} (
-        {inProgressList.length})
+        {t("compliance.inProgressSection", "In review")} ({inProgressList.length})
       </h3>
       <div className={styles.cardsGrid}>
         {inProgressList.map((item) => {

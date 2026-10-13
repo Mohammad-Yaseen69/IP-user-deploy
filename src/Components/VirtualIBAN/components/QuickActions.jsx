@@ -59,10 +59,8 @@ const QuickActions = ({ selectedIban }) => {
 
   const getActionRestriction = (actionId) => {
     if (isFrozen) return FROZEN_ACTION_TOOLTIP;
-    if (isUserBlocked && actionId !== UNSUBSCRIBE_ACTION_ID)
-      return USER_BLOCKED_ACTION_TOOLTIP;
-    if (isBlocked && BLOCKED_DISABLED_ACTIONS.has(actionId))
-      return BLOCKED_ACTION_TOOLTIP;
+    if (isUserBlocked && actionId !== UNSUBSCRIBE_ACTION_ID) return USER_BLOCKED_ACTION_TOOLTIP;
+    if (isBlocked && BLOCKED_DISABLED_ACTIONS.has(actionId)) return BLOCKED_ACTION_TOOLTIP;
     return "";
   };
 
@@ -95,10 +93,8 @@ const QuickActions = ({ selectedIban }) => {
   useEffect(() => {
     const action = new URLSearchParams(location.search).get("action");
     if (!action || isBlocked || isFrozen || isUserBlocked) return;
-    if (action === "deposit" && can("virtual-iban.details.view"))
-      openModal("deposit");
-    else if (action === "convert" && can("virtual-iban.funds.convert"))
-      openModal("convertFunds");
+    if (action === "deposit" && can("virtual-iban.details.view")) openModal("deposit");
+    else if (action === "convert" && can("virtual-iban.funds.convert")) openModal("convertFunds");
   }, [location.search, isBlocked, isFrozen, isUserBlocked]);
   const permissionByAction = {
     1: "virtual-iban.details.view",
@@ -160,11 +156,7 @@ const QuickActions = ({ selectedIban }) => {
 
     try {
       await userBlockIban.mutateAsync({ ibanId, action });
-      toast.success(
-        action === "BLOCK"
-          ? "Virtual IBAN unsubscribed"
-          : "Virtual IBAN subscribed",
-      );
+      toast.success(action === "BLOCK" ? "Virtual IBAN unsubscribed" : "Virtual IBAN subscribed");
       return true;
     } catch (error) {
       handlePaymentApiError({
@@ -239,12 +231,7 @@ const QuickActions = ({ selectedIban }) => {
                 : "";
 
             return (
-              <Tooltip
-                key={action.id}
-                title={tooltipTitle}
-                arrow
-                placement="top"
-              >
+              <Tooltip key={action.id} title={tooltipTitle} arrow placement="top">
                 <span className={styles.tooltipWrap}>{card}</span>
               </Tooltip>
             );
@@ -253,18 +240,9 @@ const QuickActions = ({ selectedIban }) => {
           return card;
         })}
       {can("virtual-iban.details.view") && modals.deposit && (
-        <div
-          className={styles.modalOverlay}
-          onClick={() => closeModal("deposit")}
-        >
-          <div
-            className={styles.modalContent}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              className={styles.closeBtn}
-              onClick={() => closeModal("deposit")}
-            >
+        <div className={styles.modalOverlay} onClick={() => closeModal("deposit")}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <button className={styles.closeBtn} onClick={() => closeModal("deposit")}>
               <X />
             </button>
 

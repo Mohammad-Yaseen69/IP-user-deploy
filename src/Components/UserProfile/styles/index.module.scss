@@ -9,8 +9,7 @@
   .sub_container {
     border-radius: 60px;
     filter: drop-shadow(
-        15.146323204040527px 4.327520847320557px 242.34117126464844px
-          rgba(0, 0, 0, 0.07)
+        15.146323204040527px 4.327520847320557px 242.34117126464844px rgba(0, 0, 0, 0.07)
       )
       drop-shadow(0px -17px 58px rgba(0, 0, 0, 0.02));
 
@@ -573,12 +572,7 @@
           }
 
           .see_more {
-            background: linear-gradient(
-              to top,
-              #212121,
-              #2121213e,
-              transparent
-            );
+            background: linear-gradient(to top, #212121, #2121213e, transparent);
             backdrop-filter: blur(20px);
             color: white;
             display: flex;

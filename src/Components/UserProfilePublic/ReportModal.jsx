@@ -1,15 +1,6 @@
 import axios from "axios";
 import React, { useContext, useState } from "react";
-import {
-  Button,
-  Col,
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-} from "reactstrap";
+import { Button, Col, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { UserContext } from "../../Context/UserContext";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
@@ -58,20 +49,12 @@ const ReportModal = ({ user, isOpen, toggle, setReported }) => {
       <ModalBody>
         <Col>
           <Label>{t("Reason")}</Label>
-          <Input
-            type="select"
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
-          >
+          <Input type="select" value={reason} onChange={(e) => setReason(e.target.value)}>
             <option value="" disabled>
               {t("--Select-A-Reason--")}
             </option>
-            <option value="Fraudulent Acitivity">
-              {t("Fraudulent Activity")}
-            </option>
-            <option value="Harrasment or Abuse">
-              {t("Harassment or Abuse")}
-            </option>
+            <option value="Fraudulent Acitivity">{t("Fraudulent Activity")}</option>
+            <option value="Harrasment or Abuse">{t("Harassment or Abuse")}</option>
             <option value="Scamming">{t("Scamming")}</option>
             <option value="Impersonation">{t("Impersonation")}</option>
             <option value="Rule Violation">{t("Rule Violation")}</option>
@@ -94,8 +77,7 @@ const ReportModal = ({ user, isOpen, toggle, setReported }) => {
       <ModalFooter>
         <Button
           style={{
-            background:
-              "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
             border: "none",
             outline: "none",
             borderRadius: "10px",

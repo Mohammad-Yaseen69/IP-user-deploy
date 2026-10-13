@@ -61,9 +61,8 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
   const internationalReceiver = useMemo(() => {
     if (!transaction?.beneficiary) return null;
     return (
-      beneficiaries.filter(
-        (benef) => benef?._id === transaction?.beneficiary,
-      )?.[0] || transaction?.beneficiaryDetails
+      beneficiaries.filter((benef) => benef?._id === transaction?.beneficiary)?.[0] ||
+      transaction?.beneficiaryDetails
     );
   }, [transaction, beneficiaries]);
   return (
@@ -85,16 +84,8 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
       >
         <div className="d-flex gap-2 align-items-center">
           <div className={styles.left}>
-            <span
-              className={styles.icon}
-              style={{ fontSize: "1rem", fontWeight: 700 }}
-            >
-              {
-                renderAccountName(transaction, internationalReceiver)?.slice(
-                  0,
-                  20,
-                )?.[0]
-              }
+            <span className={styles.icon} style={{ fontSize: "1rem", fontWeight: 700 }}>
+              {renderAccountName(transaction, internationalReceiver)?.slice(0, 20)?.[0]}
             </span>
           </div>
           <div
@@ -107,10 +98,7 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
           >
             {/* <h4 className={styles.head} style={{ marginBottom: 0 }}>{transaction?.receiver?.user?.first_name} {transaction?.receiver?.user?.last_name}</h4> */}
             <h4 className={styles.head} style={{ marginBottom: 0 }}>
-              {renderAccountName(transaction, internationalReceiver)?.slice(
-                0,
-                20,
-              )}
+              {renderAccountName(transaction, internationalReceiver)?.slice(0, 20)}
             </h4>
             <p
               className="text-muted"
@@ -149,15 +137,11 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
             style={{
               fontWeight: "700",
               color:
-                transaction?.transaction_type?.toLowerCase() === "debit"
-                  ? "#FF7293"
-                  : "#1CB234",
+                transaction?.transaction_type?.toLowerCase() === "debit" ? "#FF7293" : "#1CB234",
               whiteSpace: "nowrap",
             }}
           >
-            {transaction?.transaction_type?.toLowerCase() === "debit"
-              ? "-"
-              : "+"}
+            {transaction?.transaction_type?.toLowerCase() === "debit" ? "-" : "+"}
             {transaction?.currency?.code}{" "}
             {transaction?.total
               ? transaction?.total?.toLocaleString("en-US", {
@@ -177,9 +161,7 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
               whiteSpace: "nowrap",
             }}
           >
-            <span
-              style={{ color: badgeColor, fontWeight: 600, textAlign: "right" }}
-            >
+            <span style={{ color: badgeColor, fontWeight: 600, textAlign: "right" }}>
               {t(transaction?.status?.toUpperCase())}
             </span>
           </div>

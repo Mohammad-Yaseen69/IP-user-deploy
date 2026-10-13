@@ -226,8 +226,7 @@ export const ShowingProducts = "Showing Products 1 - 24 Of 200 Results";
 export const Featured = "Featured";
 export const LowestPrices = "Lowest Prices";
 export const HighestPrices = "Highest Prices";
-export const NotFoundData =
-  "Sorry, We didn't find any results matching this search";
+export const NotFoundData = "Sorry, We didn't find any results matching this search";
 export const ProductDetails = "Product Details";
 export const AddToCart = "Add to Cart";
 export const BuyNow = "Buy Now";
@@ -258,14 +257,7 @@ export const NetBanking = "Net Banking";
 export const Submit = "Submit";
 
 export const SelectMonth = ["Select Month", "Jan", "Fab", "March", "April"];
-export const SelectYear = [
-  "Select Year",
-  "2015",
-  "2016",
-  "2017",
-  "2018",
-  "2021",
-];
+export const SelectYear = ["Select Year", "2015", "2016", "2017", "2018", "2021"];
 export const BankName = ["Bank Name", "SBI", "ICICI", "KOTAK", "BOB"];
 export const SelectCard = ["Select Card", "2", "3", "4", "5"];
 export const SelectDuration = [
@@ -297,14 +289,7 @@ export const LorumIpsum = "Lorum Ipsum";
 export const Purchase = "Purchase";
 
 export const CartTitle = "Cart";
-export const CartTableHeader = [
-  "Prdouct",
-  "Prdouct Name",
-  "Price",
-  "Quantity",
-  "Action",
-  "Total",
-];
+export const CartTableHeader = ["Prdouct", "Prdouct Name", "Price", "Quantity", "Action", "Total"];
 
 export const NewOrders = "New Order";
 export const TotalPrice = "Total Price";
@@ -314,13 +299,7 @@ export const ExploreShortlistItems = "Explore more shortlist some items.";
 
 export const WishlistTitle = "Wishlist";
 export const MoveToCarts = "Move to Cart";
-export const WishlistTableHeader = [
-  "Prdouct",
-  "Prdouct Name",
-  "Price",
-  "Availability",
-  "Action",
-];
+export const WishlistTableHeader = ["Prdouct", "Prdouct Name", "Price", "Availability", "Action"];
 
 // check out
 export const BillingDetails = "Billing Details";
@@ -331,12 +310,7 @@ export const Phone = "Phone";
 export const EmailAddress = "Email Address";
 export const Country = "Country";
 
-export const CountryMenu = [
-  "India",
-  "South Africa",
-  "United State",
-  "Australia",
-];
+export const CountryMenu = ["India", "South Africa", "United State", "Australia"];
 
 export const Address = "Address";
 export const TownCity = "Town/City";
@@ -411,13 +385,7 @@ export const Save = "Save";
 export const EditProfile = "Edit Profile";
 export const Company = "Company";
 export const Username = "Username";
-export const UsersCountryMenu = [
-  "--Select--",
-  "Germany",
-  "Canada",
-  "Usa",
-  "Aus",
-];
+export const UsersCountryMenu = ["--Select--", "Germany", "Canada", "Usa", "Aus"];
 export const AboutMe = "About Me";
 export const UpdateProfile = "Update Profile";
 export const UsersTableTitle = "Add projects And Upload";
@@ -438,8 +406,7 @@ export const Profile = "Profile";
 export const EricaHughes = "Erica Hughes";
 export const VincentPorter = "Vincent Porter";
 export const Active = "Active";
-export const ChataApp_p1 =
-  "Success isn't about end result, it's about what you learn.";
+export const ChataApp_p1 = "Success isn't about end result, it's about what you learn.";
 export const ChataApp_p2 = "Love Your Self.";
 export const Send = "SEND";
 
@@ -884,8 +851,7 @@ export const PillRating = "Pill Rating";
 
 export const SingleFileUpload = "Single File Upload";
 export const MultiImageUpload = "Multi only Image Upload";
-export const MultipleImageVideoAudioUpload =
-  "Multiple Image Video Audio Upload";
+export const MultipleImageVideoAudioUpload = "Multiple Image Video Audio Upload";
 export const LimitationFileUpload = "Limitation File Upload";
 export const CustomFileUpload = "Custom File Upload";
 
@@ -1124,8 +1090,7 @@ export const LineChartWithArea = "Line chart with area";
 export const BipolarBarChart = "Bi-polar bar chart";
 export const StackedBarChart = "Stacked bar chart";
 export const HorizontalBarChart = "Horizontal bar chart";
-export const ExtremeResponsiveConfiguration =
-  "Extreme responsive configuration";
+export const ExtremeResponsiveConfiguration = "Extreme responsive configuration";
 export const SimpleLineChart = "Simple line chart";
 export const HolesInData = "Holes in data";
 export const FilledHolesInData = "Filled holes in data";
@@ -1265,8 +1230,7 @@ export const YY = "YY";
 //  tables
 export const BasicTable = "Basic Table With Border Bottom Color";
 export const InverseTable = "Inverse Table";
-export const InverseTablePrimaryBackground =
-  "Inverse Table with Primary background";
+export const InverseTablePrimaryBackground = "Inverse Table with Primary background";
 export const HoverableRows = "Hoverable Rows With Horizontal Border";
 export const HoverableRowsSpan = `Hoverable row use a class  <code>table-hover</code> and for Horizontal border use a class <code>.table-border-horizontal</code> , Solid border Use a class<code>.border-solid .table</code>class.`;
 export const TextBackgroundUtilities = "Text or background utilities";
@@ -1320,11 +1284,9 @@ export const BorderBottomColorSpanText = `Example of a table head border with<co
 export const DefultStyling = "Defult Styling";
 export const DefultStylingSpanText = ` use class <code>table table-styling</code> inside table element`;
 export const TableFooterStyling = "Table Footer Styling";
-export const TableHeadOptionsPrimaryBackground =
-  "Table head options With Primary Background";
+export const TableHeadOptionsPrimaryBackground = "Table head options With Primary Background";
 export const CustomTableColor = "Custom Table Color";
-export const CustomTableColorHoverStripped =
-  "Custom Table Color with Hover and Stripped";
+export const CustomTableColorHoverStripped = "Custom Table Color with Hover and Stripped";
 
 // pages
 export const RememberPassword = "Remember password";
@@ -1697,8 +1659,7 @@ export const LeadParagraph =
   "Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus.";
 export const LeadSpan = `Make a paragraph stand out by adding <code>.lead</code>.`;
 export const InlineTextElements = "Inline text elements";
-export const InlineTextElementsSpan =
-  "Styling for common inline HTML5 elements.";
+export const InlineTextElementsSpan = "Styling for common inline HTML5 elements.";
 export const TextColorSpan = "You can Give text color by using txt-* className";
 export const BlockQuoteSpan = `Add a <code>&lt; footer className='blockquote-footer&gt;</code> for identifying the source. Wrap the name of the source work in <code>&lt;cite&gt;</code>.`;
 export const UpdateAvailable = "Update available";
@@ -1829,8 +1790,7 @@ export const Trainer = "Trainer";
 export const type = "type";
 export const classname = "classname";
 export const CustomHoverClassSpanText = ` Use class <code>table-hover, table-striped table-*</code> <code>table-info</code>,<code>table-success</code>, <code>table-success</code>,<code>table-info</code>, <code>table-danger</code>,<code>table-primary</code>, <code>table-secondary</code>,<code>table-light</code>, <code>table-active</code> inside table element.`;
-export const ResponsiveTablesWithLightBackground =
-  "Responsive Tables With Light Background";
+export const ResponsiveTablesWithLightBackground = "Responsive Tables With Light Background";
 export const ResponsiveTablesWithLightBackgroundSpan = `A <code>.table-responsive.theme-scrollbar , .table-light</code> inside table element.`;
 export const Task = "Task";
 export const Assign = "Assign";

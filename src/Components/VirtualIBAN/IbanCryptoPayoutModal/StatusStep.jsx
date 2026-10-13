@@ -50,19 +50,11 @@ const StatusStep = ({ result, status }) => {
   const { t } = useTranslation();
 
   const amount = money(result?.total?.value, result?.total?.currency, 2);
-  const estimate = money(
-    result?.recipient?.value,
-    result?.recipient?.currency,
-    6,
-  );
+  const estimate = money(result?.recipient?.value, result?.recipient?.currency, 6);
   const isCompleted = status === "COMPLETED";
   const isFailed = status === "FAILED";
 
-  const title = isCompleted
-    ? t("Crypto sent")
-    : isFailed
-      ? t("Payout failed")
-      : t("Sending...");
+  const title = isCompleted ? t("Crypto sent") : isFailed ? t("Payout failed") : t("Sending...");
 
   const message = isCompleted
     ? t("About {{estimate}} was sent on-chain to the recipient.", { estimate })
@@ -89,13 +81,7 @@ const StatusStep = ({ result, status }) => {
                 : undefined
           }
         >
-          {isCompleted ? (
-            <CheckIcon />
-          ) : isFailed ? (
-            <CrossIcon />
-          ) : (
-            <ClockIcon />
-          )}
+          {isCompleted ? <CheckIcon /> : isFailed ? <CrossIcon /> : <ClockIcon />}
         </div>
         <div className={convertStyles.doneText}>
           <h3>{title}</h3>

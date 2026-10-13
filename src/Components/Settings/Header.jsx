@@ -23,9 +23,7 @@ const Header = () => {
     croppedImages,
     setCroppedImages,
   } = useContext(UserContext);
-  const country = countries.find(
-    (item) => item.alpha3 === userDetails?.country_iso_code,
-  );
+  const country = countries.find((item) => item.alpha3 === userDetails?.country_iso_code);
   const [dp, setDp] = useState();
   const { t } = useTranslation();
   const [showDelModal, setShowDelModal] = useState(false);
@@ -253,10 +251,7 @@ const Header = () => {
                 position: "absolute",
                 bottom: window?.innerWidth > 1000 ? "20px" : "-30px",
                 left: window?.innerWidth > 1000 ? "50%" : "0px",
-                transform:
-                  window?.innerWidth > 1000
-                    ? "translateX(-50%)"
-                    : "translateX(0)",
+                transform: window?.innerWidth > 1000 ? "translateX(-50%)" : "translateX(0)",
                 display: "flex",
                 gap: ".4rem",
               }}
@@ -378,9 +373,7 @@ const Header = () => {
                       }}
                     >
                       <Camera size={18} />
-                      <span style={{ whiteSpace: "nowrap" }}>
-                        {t("Adjust")}
-                      </span>
+                      <span style={{ whiteSpace: "nowrap" }}>{t("Adjust")}</span>
                     </label>
                     <label
                       style={{
@@ -397,9 +390,7 @@ const Header = () => {
                       }}
                     >
                       <Trash2 size={18} />
-                      <span style={{ whiteSpace: "nowrap" }}>
-                        {t("Remove")}
-                      </span>
+                      <span style={{ whiteSpace: "nowrap" }}>{t("Remove")}</span>
                     </label>
                   </>
                 )}
@@ -447,9 +438,7 @@ const Header = () => {
           className={styles.completion_status_con}
         >
           <CardBody className={styles.completion_status_body}>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-            >
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
               <span>{t("Profile Completion")}</span>
               <button>
                 {profileCompletedPercentage === 100 ? (
@@ -462,17 +451,8 @@ const Header = () => {
                 )}
               </button>
             </div>
-            <div
-              id="chart"
-              style={{ flexShrink: 0 }}
-              className={styles.com_chart}
-            >
-              <ReactApexChart
-                options={options}
-                series={series}
-                type="radialBar"
-                height={150}
-              />
+            <div id="chart" style={{ flexShrink: 0 }} className={styles.com_chart}>
+              <ReactApexChart options={options} series={series} type="radialBar" height={150} />
             </div>
           </CardBody>
         </Card>

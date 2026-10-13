@@ -103,15 +103,11 @@ const LinkToInstagramModal = ({ isOpen, toggle }) => {
         >
           <ModalBody className={styles.container}>
             <div className={styles.left}>
-              {window.innerWidth > 900 && (
-                <h1>{t("Link Your Instagram Account to InstaPay")}</h1>
-              )}
+              {window.innerWidth > 900 && <h1>{t("Link Your Instagram Account to InstaPay")}</h1>}
               <div className={styles.guide}>
                 {steps.map((item) => (
                   <div className={styles.guide_item} key={item.step}>
-                    <h2 className={styles.step_count}>
-                      {t(item.step).split(" – ")[0]}
-                    </h2>
+                    <h2 className={styles.step_count}>{t(item.step).split(" – ")[0]}</h2>
                     <div className={styles.gi_right}>
                       <h3>{t(item.name).split(" – ")[1]}</h3>
                       <p>{t(item.desc)}</p>
@@ -158,10 +154,7 @@ const LinkToInstagramModal = ({ isOpen, toggle }) => {
                       justifyContent: "center",
                     }}
                     onClick={() =>
-                      window.open(
-                        "https://www.instagram.com/instapay_swiss/",
-                        "_blank",
-                      )
+                      window.open("https://www.instagram.com/instapay_swiss/", "_blank")
                     }
                   >
                     <div
@@ -193,10 +186,7 @@ const LinkToInstagramModal = ({ isOpen, toggle }) => {
                     className={styles.button}
                     style={{ color: "white" }}
                     onClick={() =>
-                      window.open(
-                        "https://www.instagram.com/instapay_swiss/",
-                        "_blank",
-                      )
+                      window.open("https://www.instagram.com/instapay_swiss/", "_blank")
                     }
                   >
                     {t("Go to InstaPay Instagram account")}

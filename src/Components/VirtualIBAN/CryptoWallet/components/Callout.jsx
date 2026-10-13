@@ -18,9 +18,7 @@ const Callout = ({ variant = "info", title, children }) => {
         <Icon />
       </span>
       <span>
-        {title ? (
-          <strong className={styles.calloutStrong}>{title} </strong>
-        ) : null}
+        {title ? <strong className={styles.calloutStrong}>{title} </strong> : null}
         {children}
       </span>
     </div>

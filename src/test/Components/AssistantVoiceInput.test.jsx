@@ -37,9 +37,7 @@ beforeEach(() => {
   FakeMediaRecorder.instances = [];
   FakeMediaRecorder.supported = ["audio/webm;codecs=opus"];
   stopTrack.mockClear();
-  getUserMedia
-    .mockReset()
-    .mockResolvedValue({ getTracks: () => [{ stop: stopTrack }] });
+  getUserMedia.mockReset().mockResolvedValue({ getTracks: () => [{ stop: stopTrack }] });
 
   globalThis.MediaRecorder = FakeMediaRecorder;
   Object.defineProperty(navigator, "mediaDevices", {
@@ -62,9 +60,7 @@ const authedFetch = (url, { headers, ...options } = {}) =>
   });
 
 const setup = (onTranscript = vi.fn()) => {
-  const { result } = renderHook(() =>
-    useVoiceInput({ authedFetch, onTranscript }),
-  );
+  const { result } = renderHook(() => useVoiceInput({ authedFetch, onTranscript }));
   return { result, onTranscript };
 };
 
@@ -137,9 +133,7 @@ describe("useVoiceInput", () => {
 
       await record(result);
 
-      await waitFor(() =>
-        expect(onTranscript).toHaveBeenCalledWith("how do I send money"),
-      );
+      await waitFor(() => expect(onTranscript).toHaveBeenCalledWith("how do I send money"));
 
       const [url, init] = globalThis.fetch.mock.calls[0];
       expect(url).toContain("/api/assistant/transcribe");
@@ -180,9 +174,7 @@ describe("useVoiceInput", () => {
 
       await record(result);
 
-      await waitFor(() =>
-        expect(result.current.error).toBe("transcription_failed"),
-      );
+      await waitFor(() => expect(result.current.error).toBe("transcription_failed"));
       expect(onTranscript).not.toHaveBeenCalled();
     });
   });

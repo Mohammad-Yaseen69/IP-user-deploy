@@ -16,9 +16,7 @@ const PortfolioItemModal = ({ showModal, setShowModal, item }) => {
       contentClassName={styles.content_modal}
       className={styles.content_modal}
     >
-      <ModalHeader toggle={() => setShowModal(!showModal)}>
-        {item?.title}
-      </ModalHeader>
+      <ModalHeader toggle={() => setShowModal(!showModal)}>{item?.title}</ModalHeader>
       <ModalBody>
         <div className={styles.modal_content}>
           {item?.file_type?.includes("image") ? (

@@ -30,9 +30,8 @@
 }
 .general-widget {
   @each $text-light-name, $text-light-color in (primary, $primary-color),
-    (secondary, $secondary-color), (success, $success-color),
-    (danger, $danger-color), (info, $info-color), (light, $light-color),
-    (dark, $dark-color), (warning, $warning-color)
+    (secondary, $secondary-color), (success, $success-color), (danger, $danger-color),
+    (info, $info-color), (light, $light-color), (dark, $dark-color), (warning, $warning-color)
   {
     .header-text-#{$text-light-name} {
       color: $text-light-color !important;
@@ -516,8 +515,7 @@
     height: 175px;
     width: 175px;
     display: block;
-    background: url(../../images/other-images/clock-face.png) 5% center
-      no-repeat;
+    background: url(../../images/other-images/clock-face.png) 5% center no-repeat;
   }
   .sec {
     @extend %clock-widget;

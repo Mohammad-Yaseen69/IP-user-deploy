@@ -67,24 +67,14 @@ const normalizeNetwork = (network, address = "") => {
 };
 
 const getCryptoList = (withdrawal) => {
-  if (Array.isArray(withdrawal?.crypto) && withdrawal.crypto.length > 0)
-    return withdrawal.crypto;
-  if (
-    Array.isArray(withdrawal?.crypto_wallet) &&
-    withdrawal.crypto_wallet.length > 0
-  )
+  if (Array.isArray(withdrawal?.crypto) && withdrawal.crypto.length > 0) return withdrawal.crypto;
+  if (Array.isArray(withdrawal?.crypto_wallet) && withdrawal.crypto_wallet.length > 0)
     return withdrawal.crypto_wallet;
   return [];
 };
 
 const hasOtherWithdrawalChannels = (withdrawal) => {
-  return [
-    "bank_details",
-    "mobile_wallet",
-    "cash_pickup",
-    "card",
-    "payment_card",
-  ].some(
+  return ["bank_details", "mobile_wallet", "cash_pickup", "card", "payment_card"].some(
     (key) => Array.isArray(withdrawal?.[key]) && withdrawal[key].length > 0,
   );
 };
@@ -102,8 +92,7 @@ const getErrorMessage = (error, fallback) => {
 const CryptoWithdrawalChannel = () => {
   const { t } = useTranslation();
   const can = usePermission();
-  const { authHeader, userDetails, cryptoWithdrawals, getWithdrawals } =
-    useContext(UserContext);
+  const { authHeader, userDetails, cryptoWithdrawals, getWithdrawals } = useContext(UserContext);
   const [showForm, setShowForm] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [form, setForm] = useState(EMPTY_FORM);
@@ -161,11 +150,9 @@ const CryptoWithdrawalChannel = () => {
 
     const duplicate = cryptoAccounts.some((account) => {
       const sameAccount =
-        editingAccount?.accountId &&
-        account.accountId === editingAccount.accountId;
+        editingAccount?.accountId && account.accountId === editingAccount.accountId;
       return (
-        !sameAccount &&
-        account.wallet_address?.trim()?.toLowerCase() === address.toLowerCase()
+        !sameAccount && account.wallet_address?.trim()?.toLowerCase() === address.toLowerCase()
       );
     });
 
@@ -225,12 +212,9 @@ const CryptoWithdrawalChannel = () => {
         : existingAccountTypes.filter((item) => item !== "crypto");
 
     return {
-      first_name:
-        userDetails?.user?.first_name ?? sourceWithdrawal?.first_name ?? "",
-      last_name:
-        userDetails?.user?.last_name ?? sourceWithdrawal?.last_name ?? "",
-      company_name:
-        userDetails?.company_name ?? sourceWithdrawal?.company_name ?? "",
+      first_name: userDetails?.user?.first_name ?? sourceWithdrawal?.first_name ?? "",
+      last_name: userDetails?.user?.last_name ?? sourceWithdrawal?.last_name ?? "",
+      company_name: userDetails?.company_name ?? sourceWithdrawal?.company_name ?? "",
       email: userDetails?.email ?? sourceWithdrawal?.email ?? "",
       phone: userDetails?.phone ?? sourceWithdrawal?.phone ?? "",
       address: userDetails?.address ?? sourceWithdrawal?.address ?? "",
@@ -270,16 +254,11 @@ const CryptoWithdrawalChannel = () => {
     setIsSaving(true);
     try {
       if (editingAccount?.withdrawalId) {
-        const cryptoList = getCryptoList(editingAccount.withdrawal).map(
-          (crypto, index) => {
-            if (index !== editingAccount.cryptoIndex) return crypto;
-            return buildCryptoPayload(form, crypto);
-          },
-        );
-        const data = buildWithdrawalPayload(
-          cryptoList,
-          editingAccount.withdrawal,
-        );
+        const cryptoList = getCryptoList(editingAccount.withdrawal).map((crypto, index) => {
+          if (index !== editingAccount.cryptoIndex) return crypto;
+          return buildCryptoPayload(form, crypto);
+        });
+        const data = buildWithdrawalPayload(cryptoList, editingAccount.withdrawal);
         const encrypted = encryptData(data);
 
         await axios.post(
@@ -312,9 +291,7 @@ const CryptoWithdrawalChannel = () => {
       toast.error(
         getErrorMessage(
           error,
-          t(
-            "We cannot process your request at the moment, please try again later.",
-          ),
+          t("We cannot process your request at the moment, please try again later."),
         ),
       );
     } finally {
@@ -340,8 +317,7 @@ const CryptoWithdrawalChannel = () => {
     try {
       const cryptoList = getCryptoList(deleteTarget.withdrawal);
       const shouldDeleteWholeWithdrawal =
-        cryptoList.length <= 1 &&
-        !hasOtherWithdrawalChannels(deleteTarget.withdrawal);
+        cryptoList.length <= 1 && !hasOtherWithdrawalChannels(deleteTarget.withdrawal);
 
       if (shouldDeleteWholeWithdrawal) {
         await axios.delete(
@@ -367,13 +343,8 @@ const CryptoWithdrawalChannel = () => {
           { headers: authHeader },
         );
       } else {
-        const remainingCrypto = cryptoList.filter(
-          (_, index) => index !== deleteTarget.cryptoIndex,
-        );
-        const data = buildWithdrawalPayload(
-          remainingCrypto,
-          deleteTarget.withdrawal,
-        );
+        const remainingCrypto = cryptoList.filter((_, index) => index !== deleteTarget.cryptoIndex);
+        const data = buildWithdrawalPayload(remainingCrypto, deleteTarget.withdrawal);
         const encrypted = encryptData(data);
 
         await axios.post(
@@ -392,9 +363,7 @@ const CryptoWithdrawalChannel = () => {
       toast.error(
         getErrorMessage(
           error,
-          t(
-            "Something went wrong while deleting the crypto receiving account.",
-          ),
+          t("Something went wrong while deleting the crypto receiving account."),
         ),
       );
     } finally {
@@ -407,11 +376,7 @@ const CryptoWithdrawalChannel = () => {
       <div className={styles.header}>
         <div>
           <h1>{t("Crypto Receiving Accounts")}</h1>
-          <p>
-            {t(
-              "Add up to 3 USDT wallet addresses for supported crypto receiving networks.",
-            )}
-          </p>
+          <p>{t("Add up to 3 USDT wallet addresses for supported crypto receiving networks.")}</p>
         </div>
         <Button
           className={styles.addButton}
@@ -464,9 +429,7 @@ const CryptoWithdrawalChannel = () => {
                 </div>
                 <div>
                   <span>{t("Wallet Address")}</span>
-                  <strong className={styles.address}>
-                    {account.wallet_address}
-                  </strong>
+                  <strong className={styles.address}>{account.wallet_address}</strong>
                 </div>
               </div>
             </div>
@@ -480,11 +443,7 @@ const CryptoWithdrawalChannel = () => {
               "Add your first USDT wallet to receive crypto withdrawals on TRON, Ethereum, or BNB Smart Chain.",
             )}
           </p>
-          <Button
-            className={styles.addButton}
-            disabled={!canAdd || isSaving}
-            onClick={openAddForm}
-          >
+          <Button className={styles.addButton} disabled={!canAdd || isSaving} onClick={openAddForm}>
             <Plus size={16} />
             <span>{t("Add New")}</span>
           </Button>
@@ -493,9 +452,7 @@ const CryptoWithdrawalChannel = () => {
 
       <Modal isOpen={showForm} toggle={closeForm} centered>
         <ModalHeader toggle={closeForm}>
-          {editingAccount
-            ? t("Edit Crypto Receiving Account")
-            : t("Add Crypto Receiving Account")}
+          {editingAccount ? t("Edit Crypto Receiving Account") : t("Add Crypto Receiving Account")}
         </ModalHeader>
         <ModalBody>
           <div className={styles.formGrid}>
@@ -581,19 +538,10 @@ const CryptoWithdrawalChannel = () => {
       </Modal>
 
       <Modal isOpen={showDelete} toggle={closeDeleteModal} centered>
-        <ModalHeader toggle={closeDeleteModal}>
-          {t("Delete Crypto Receiving Account")}
-        </ModalHeader>
-        <ModalBody>
-          {t("Are you sure you want to delete this crypto receiving account?")}
-        </ModalBody>
+        <ModalHeader toggle={closeDeleteModal}>{t("Delete Crypto Receiving Account")}</ModalHeader>
+        <ModalBody>{t("Are you sure you want to delete this crypto receiving account?")}</ModalBody>
         <ModalFooter>
-          <Button
-            color="secondary"
-            outline
-            disabled={isSaving}
-            onClick={closeDeleteModal}
-          >
+          <Button color="secondary" outline disabled={isSaving} onClick={closeDeleteModal}>
             {t("Cancel")}
           </Button>
           <Button color="danger" disabled={isSaving} onClick={deleteAccount}>

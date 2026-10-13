@@ -155,18 +155,10 @@ const CreditCard = ({
         <div className={styles.pcontainer}>
           <div className={styles.secure}>
             <div className={styles.sectio1}>
-              <img
-                src={lockIcon}
-                alt="lock"
-                style={{ width: "20px", height: "20px" }}
-              />
+              <img src={lockIcon} alt="lock" style={{ width: "20px", height: "20px" }} />
               <p>{t("Payments are secure and encrypted by")}</p>
             </div>
-            <img
-              src={mainIcon}
-              alt="pci"
-              style={{ width: "60px", height: "25px" }}
-            />
+            <img src={mainIcon} alt="pci" style={{ width: "60px", height: "25px" }} />
           </div>
         </div>
         {showSave && (
@@ -194,8 +186,7 @@ const CreditCard = ({
             </label>
           </div>
         )}
-        {data.cardTransactionDetails?.intlToken ||
-        data.cardTransactionDetails?.w2w_data ? (
+        {data.cardTransactionDetails?.intlToken || data.cardTransactionDetails?.w2w_data ? (
           <TrustpaymentPage
             amount={data.exchange_rate?.total ?? data.amount}
             card_cvc={data.cvc}

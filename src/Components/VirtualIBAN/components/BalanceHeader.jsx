@@ -3,18 +3,12 @@ import { ArrowRight, Copy, Eye, EyeOff } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { usePermission } from "../../../hooks/GeneralUse/usePermission";
-import {
-  useBalanceHideApi,
-  useSyncVirtualIbanBalance,
-} from "../../../hooks/useVirtualIban";
+import { useBalanceHideApi, useSyncVirtualIbanBalance } from "../../../hooks/useVirtualIban";
 import useWindowWidth from "../../../utils/useWindowWidth";
 import Malta_Image from "../files/images/Malta.svg";
 import UK_Image from "../files/images/UK.svg";
 import styles from "../styles/Balanceheader.module.css";
-import {
-  getVirtualIbanCountry,
-  normalizeVirtualIban,
-} from "../utils/virtualIban";
+import { getVirtualIbanCountry, normalizeVirtualIban } from "../utils/virtualIban";
 import { useState } from "react";
 import PasswordConfirmModal from "../../../Common/Component/passwordVerifications/PasswordConfirmModal";
 
@@ -32,14 +26,12 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
   const mappedIban = normalizeVirtualIban(iban) || {};
   const ibanId = mappedIban?._id || mappedIban?.id;
   const { data: syncedBalance } = useSyncVirtualIbanBalance(ibanId);
-  const { mutate: toggleHideBalance, isPending: isToggling } =
-    useBalanceHideApi();
+  const { mutate: toggleHideBalance, isPending: isToggling } = useBalanceHideApi();
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const currentBalance = syncedBalance?.balance ?? mappedIban?.balance ?? 0;
   const status = syncedBalance?.status || mappedIban?.status || "ACTIVE";
   const isBlocked =
-    String(status).toUpperCase() === "BLOCKED" ||
-    String(status).toUpperCase() === "INACTIVE";
+    String(status).toUpperCase() === "BLOCKED" || String(status).toUpperCase() === "INACTIVE";
   const bic = mappedIban?.bank?.bic || mappedIban?.swift_code || "-";
   const currency = syncedBalance?.currency || mappedIban?.currency || "EUR";
   const country = getVirtualIbanCountry(mappedIban);
@@ -49,8 +41,7 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
   const canViewDetails = can("virtual-iban.details.view");
   const canViewBalance = can("virtual-iban.details.balance");
   const canCopyDetails = can("virtual-iban.details.copy");
-  const isHiddenByUser =
-    syncedBalance?.isHideBalance ?? mappedIban?.isHideBalance ?? false;
+  const isHiddenByUser = syncedBalance?.isHideBalance ?? mappedIban?.isHideBalance ?? false;
   const shouldMaskBalance = !canViewBalance || isHiddenByUser;
   const handleEyeClick = () => {
     if (!ibanId || isToggling) return;
@@ -101,9 +92,7 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
                 <Tooltip
                   title={
                     isBlocked
-                      ? t(
-                          "This virtual IBAN is paused. Reactivate it to view deposit details.",
-                        )
+                      ? t("This virtual IBAN is paused. Reactivate it to view deposit details.")
                       : ""
                   }
                   arrow
@@ -136,9 +125,7 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
         <div className={styles.balanceSection}>
           <div>
             <h1 className={styles.balance}>
-              {shouldMaskBalance
-                ? "****"
-                : formatAmount(currentBalance, currency)}
+              {shouldMaskBalance ? "****" : formatAmount(currentBalance, currency)}
             </h1>
             {/* <h1 className={styles.balance}>{canViewBalance ? formatAmount(currentBalance, currency) : "****"}</h1> */}
             {canViewBalance && (
@@ -176,15 +163,9 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
             <div className={styles.item}>
               <span className={styles.label}>{t("BIC")}</span>
               <div>
-                <span className={styles.value}>
-                  {canViewDetails ? bic : "****"}
-                </span>
+                <span className={styles.value}>{canViewDetails ? bic : "****"}</span>
                 {canCopyDetails && (
-                  <Copy
-                    size={16}
-                    className={styles.copyIcon}
-                    onClick={() => handleCopy(bic)}
-                  />
+                  <Copy size={16} className={styles.copyIcon} onClick={() => handleCopy(bic)} />
                 )}
               </div>
             </div>
@@ -251,15 +232,9 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
           <div className={styles.item}>
             <span className={styles.label}>{t("BIC")}</span>
             <div>
-              <span className={styles.value}>
-                {canViewDetails ? bic : "****"}
-              </span>
+              <span className={styles.value}>{canViewDetails ? bic : "****"}</span>
               {canCopyDetails && (
-                <Copy
-                  size={16}
-                  className={styles.copyIcon}
-                  onClick={() => handleCopy(bic)}
-                />
+                <Copy size={16} className={styles.copyIcon} onClick={() => handleCopy(bic)} />
               )}
             </div>
           </div>

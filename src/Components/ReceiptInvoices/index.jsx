@@ -61,12 +61,7 @@ const ReceiptInvoice = () => {
   }, [location.search]);
 
   const { isLoading, data, isRefetching } = useQuery({
-    queryKey: [
-      "GetInvoicesList",
-      debouncedSearch.trim().toLowerCase(),
-      page,
-      limit,
-    ],
+    queryKey: ["GetInvoicesList", debouncedSearch.trim().toLowerCase(), page, limit],
     queryFn: () =>
       getInvoiceList(
         userDetails?._id,
@@ -111,8 +106,7 @@ const ReceiptInvoice = () => {
           style={{
             cursor: "pointer",
             padding: "10px 20px",
-            background:
-              activeTab === "invoice" ? "#5926F0" : "rgb(221 218 218)",
+            background: activeTab === "invoice" ? "#5926F0" : "rgb(221 218 218)",
             fontWeight: 600,
             color: activeTab === "invoice" ? "white" : "black",
             borderRadius: "6px",
@@ -138,8 +132,7 @@ const ReceiptInvoice = () => {
           style={{
             cursor: "pointer",
             padding: "10px 20px",
-            background:
-              activeTab === "direct_card" ? "#5926F0" : "rgb(221 218 218)",
+            background: activeTab === "direct_card" ? "#5926F0" : "rgb(221 218 218)",
             fontWeight: 600,
             color: activeTab === "direct_card" ? "white" : "black",
             borderRadius: "6px",
@@ -172,9 +165,7 @@ const ReceiptInvoice = () => {
                     : {}
                 }
                 onClick={() =>
-                  activeTab === "direct_card"
-                    ? setShowDirectCardModal(true)
-                    : setShowModal(true)
+                  activeTab === "direct_card" ? setShowDirectCardModal(true) : setShowModal(true)
                 }
               >
                 <span
@@ -215,18 +206,11 @@ const ReceiptInvoice = () => {
             <InstaPayLoader />
           ) : visibleInvoices.length < 1 ? (
             <NoInvoiceScreen
-              setShowModal={
-                activeTab === "direct_card"
-                  ? setShowDirectCardModal
-                  : setShowModal
-              }
+              setShowModal={activeTab === "direct_card" ? setShowDirectCardModal : setShowModal}
             />
           ) : (
             <>
-              <InvoiceTable
-                setEditModal={setEditModal}
-                filteredInvoices={visibleInvoices}
-              />
+              <InvoiceTable setEditModal={setEditModal} filteredInvoices={visibleInvoices} />
 
               <Paginations
                 page={page}

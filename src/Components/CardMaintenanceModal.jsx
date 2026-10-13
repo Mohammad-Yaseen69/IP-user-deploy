@@ -86,9 +86,7 @@ const CardMaintenanceModal = ({ isOpen, toggle }) => {
               "Card processing is under maintenance at the moment, please use a different payment method.",
             )}
           </p>
-          <p style={{ margin: 0, color: "#6B6B6B", fontSize: "0.9rem" }}>
-            {t("Thank you")}
-          </p>
+          <p style={{ margin: 0, color: "#6B6B6B", fontSize: "0.9rem" }}>{t("Thank you")}</p>
           <button
             type="button"
             onClick={toggle}

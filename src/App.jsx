@@ -53,9 +53,7 @@ const App = () => {
         if (messageText === "App is already in use!") {
           // Only show the broadcast page if current path is not one of the excluded paths
           if (
-            !paths.some((item) =>
-              window.location.href.toLowerCase().includes(item.toLowerCase()),
-            )
+            !paths.some((item) => window.location.href.toLowerCase().includes(item.toLowerCase()))
           ) {
             appInUse = true;
             setShowOtherTabError(true);

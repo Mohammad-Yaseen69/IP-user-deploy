@@ -60,10 +60,7 @@ const QuoteDetails = ({ item, type = "receive" }) => {
         {item?.revised_amount && (
           <div className={styles.er_item}>
             <span>
-              {t("Revised Amount").replace(
-                "Revised",
-                type === "receive" ? "Revised" : "Bargained",
-              )}
+              {t("Revised Amount").replace("Revised", type === "receive" ? "Revised" : "Bargained")}
               :{" "}
               {Number(item?.revised_amount ?? 0)?.toLocaleString("en-US", {
                 minimumFractionDigits: 2,
@@ -93,30 +90,19 @@ const QuoteDetails = ({ item, type = "receive" }) => {
                 }
               >
                 <div className={styles.dp}>
-                  {item?.[type === "receive" ? "sender" : "reciever"]
-                    ?.account_type === "individual"
-                    ? item?.[type === "receive" ? "sender" : "reciever"]?.user
-                        ?.first_name[0]
-                    : item?.[type === "receive" ? "sender" : "reciever"]
-                        ?.company?.company_name[0]}
+                  {item?.[type === "receive" ? "sender" : "reciever"]?.account_type === "individual"
+                    ? item?.[type === "receive" ? "sender" : "reciever"]?.user?.first_name[0]
+                    : item?.[type === "receive" ? "sender" : "reciever"]?.company?.company_name[0]}
                 </div>
                 <div className={styles.r_details}>
                   <h5>
-                    {item?.[type === "receive" ? "sender" : "reciever"]
-                      ?.account_type === "individual"
+                    {item?.[type === "receive" ? "sender" : "reciever"]?.account_type ===
+                    "individual"
                       ? `${item?.[type === "receive" ? "sender" : "reciever"]?.user?.first_name} ${item?.[type === "receive" ? "sender" : "reciever"]?.user?.last_name}`
-                      : item?.[type === "receive" ? "sender" : "reciever"]
-                          ?.company?.company_name}
+                      : item?.[type === "receive" ? "sender" : "reciever"]?.company?.company_name}
                   </h5>
-                  {item?.[type === "receive" ? "sender" : "reciever"]
-                    ?.username && (
-                    <p>
-                      @
-                      {
-                        item?.[type === "receive" ? "sender" : "reciever"]
-                          ?.username
-                      }
-                    </p>
+                  {item?.[type === "receive" ? "sender" : "reciever"]?.username && (
+                    <p>@{item?.[type === "receive" ? "sender" : "reciever"]?.username}</p>
                   )}
                 </div>
               </div>
@@ -150,9 +136,7 @@ const QuoteDetails = ({ item, type = "receive" }) => {
                   </span>
                 </div>
                 <img
-                  src={
-                    "https://www.pakimag.com/files/2013/02/Map-Sukkur-District.jpg"
-                  }
+                  src={"https://www.pakimag.com/files/2013/02/Map-Sukkur-District.jpg"}
                   alt=""
                   className={styles.map_img}
                 />
@@ -170,10 +154,7 @@ const QuoteDetails = ({ item, type = "receive" }) => {
           </div>
           {item?.images && item?.images?.length > 0 ? (
             <>
-              <span
-                className={styles.open_btn}
-                onClick={() => setShowImgPreview(true)}
-              >
+              <span className={styles.open_btn} onClick={() => setShowImgPreview(true)}>
                 {t("Open")}
               </span>
               {showImgPreview && (

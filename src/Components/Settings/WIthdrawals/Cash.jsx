@@ -28,9 +28,8 @@ const Cash = ({
 }) => {
   const { t } = useTranslation();
   const isAfricanCountry =
-    citiesData.find(
-      (item) => item.iso3 === country?.alpha3 || item.iso3 === alpha3,
-    )?.region === "Africa";
+    citiesData.find((item) => item.iso3 === country?.alpha3 || item.iso3 === alpha3)?.region ===
+    "Africa";
   useEffect(() => {
     if (payers.length === 1) {
       changeHandler({ target: { name: "cash_payer", value: payers?.[0]?.id } });
@@ -70,12 +69,9 @@ const Cash = ({
         </div>
       ) : (
         <>
-          <FormGroup
-            style={{ flex: 1, margin: 0, width: "100%", marginBottom: "1rem" }}
-          >
+          <FormGroup style={{ flex: 1, margin: 0, width: "100%", marginBottom: "1rem" }}>
             <Label className="col-form-label">
-              {t("Please Select A Payer")}{" "}
-              <span className="req_star">*</span>{" "}
+              {t("Please Select A Payer")} <span className="req_star">*</span>{" "}
             </Label>
             <Input
               disabled={!isEditMode}
@@ -118,14 +114,11 @@ const Cash = ({
                     changeHandler(e);
                     if (
                       userWithdrawals?.some(
-                        (item) =>
-                          item?.cash_pickup?.[0]?.document_type ===
-                          e.target.value,
+                        (item) => item?.cash_pickup?.[0]?.document_type === e.target.value,
                       ) &&
                       userWithdrawals?.some(
                         (item) =>
-                          item?.cash_pickup?.[0]?.document_number ===
-                          values.document_number,
+                          item?.cash_pickup?.[0]?.document_number === values.document_number,
                       )
                     ) {
                       setBankError("You can't add same withdrawal twice.");
@@ -206,8 +199,7 @@ const Cash = ({
               </FormGroup>
               <FormGroup style={{ flex: 1, margin: 0 }}>
                 <Label className="col-form-label">
-                  {t("Postal Code")}{" "}
-                  {!isAfricanCountry && <span className="req_star">*</span>}
+                  {t("Postal Code")} {!isAfricanCountry && <span className="req_star">*</span>}
                 </Label>
                 <Input
                   disabled={!isEditMode}
@@ -227,18 +219,13 @@ const Cash = ({
               {Object.keys(cashExtras)?.map(
                 (item) =>
                   serviceFieldInfoValidate(
-                    services?.find((item) =>
-                      item?.method?.toLowerCase()?.includes("cash"),
-                    ),
+                    services?.find((item) => item?.method?.toLowerCase()?.includes("cash")),
                     "credit_party_identifiers_accepted",
                     item,
                   ) && (
-                    <FormGroup
-                      style={{ flex: 1, margin: 0, minWidth: "250px" }}
-                    >
+                    <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                       <Label className="col-form-label">
-                        {t(service_name_formatter(item))}{" "}
-                        <span className="req_star">*</span>
+                        {t(service_name_formatter(item))} <span className="req_star">*</span>
                       </Label>
                       <Input
                         className="form-control"

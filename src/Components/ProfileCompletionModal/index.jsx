@@ -6,16 +6,9 @@ import LanguagePicker from "../LanguagePicker";
 import { useTranslation } from "react-i18next";
 import { useContext, useEffect } from "react";
 import { UserContext } from "../../Context/UserContext";
-import {
-  clearAuthStorage,
-  getLoginPath,
-} from "../../utils/Functions/loginPage";
+import { clearAuthStorage, getLoginPath } from "../../utils/Functions/loginPage";
 
-const ProfileCompletionModal = ({
-  setShowModal,
-  profileIncompleteReason,
-  kyc = false,
-}) => {
+const ProfileCompletionModal = ({ setShowModal, profileIncompleteReason, kyc = false }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { clearData } = useContext(UserContext);
@@ -61,9 +54,7 @@ const ProfileCompletionModal = ({
                 objectFit: "contain",
               }}
             />
-            <span
-              style={{ color: "white", fontSize: "1rem", fontWeight: "500" }}
-            >
+            <span style={{ color: "white", fontSize: "1rem", fontWeight: "500" }}>
               {t("Logout")}
             </span>
           </div>
@@ -88,9 +79,7 @@ const ProfileCompletionModal = ({
             >
               <LanguagePicker size={"16"} />
             </div>
-            <span
-              style={{ color: "white", fontSize: "1rem", fontWeight: "500" }}
-            >
+            <span style={{ color: "white", fontSize: "1rem", fontWeight: "500" }}>
               {t("Language")}
             </span>
           </div>

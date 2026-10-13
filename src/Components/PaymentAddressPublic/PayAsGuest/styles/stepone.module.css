@@ -8,8 +8,8 @@
 }
 
 .item {
-  padding: var(--RADIUS-radius-3, 12px) var(--SPACING-spacing-2, 18px)
-    var(--RADIUS-radius-3, 12px) var(--SPACING-spacing-1, 12px);
+  padding: var(--RADIUS-radius-3, 12px) var(--SPACING-spacing-2, 18px) var(--RADIUS-radius-3, 12px)
+    var(--SPACING-spacing-1, 12px);
   display: flex;
   align-items: center;
   gap: 1.2rem;

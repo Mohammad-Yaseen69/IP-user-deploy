@@ -128,10 +128,10 @@ const ExtraContentOnFee = ({ data, fxRate, fxCurrency, fxAmount }) => {
           }}
         >
           1.00 {data.wallet?.currency?.code} ={" "}
-          {Number(fxRate || data.paypal_fx?.exchange_rate)?.toLocaleString(
-            "en-US",
-            { minimumFractionDigits: 2, maximumFractionDigits: 4 },
-          )}{" "}
+          {Number(fxRate || data.paypal_fx?.exchange_rate)?.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 4,
+          })}{" "}
           {fxCurrency || "USD"}
         </strong>
       </div>
@@ -168,16 +168,12 @@ const ExtraContentOnFee = ({ data, fxRate, fxCurrency, fxAmount }) => {
           }}
         >
           {Number(
-            data?.exchange_rate?.sendFromMobileWallet?.amount ||
-              fxAmount ||
-              data.paypal_fx?.amount,
+            data?.exchange_rate?.sendFromMobileWallet?.amount || fxAmount || data.paypal_fx?.amount,
           )?.toLocaleString("en-US", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })}{" "}
-          {data?.exchange_rate?.sendFromMobileWallet?.currency ||
-            fxCurrency ||
-            "USD"}
+          {data?.exchange_rate?.sendFromMobileWallet?.currency || fxCurrency || "USD"}
         </strong>
       </div>
     </div>
@@ -271,9 +267,7 @@ const WalletFundsFlow = ({ setAction }) => {
     }
   };
 
-  const getMobileWalletServices = async (
-    service_name = data.channel?.sub_name,
-  ) => {
+  const getMobileWalletServices = async (service_name = data.channel?.sub_name) => {
     dataHandler("loading", true);
     try {
       const res = await axios.get(
@@ -357,8 +351,7 @@ const WalletFundsFlow = ({ setAction }) => {
           console.log(dec);
           dataHandler(
             "exchange_rate_error",
-            dec?.message ??
-              "We cannot process your request at the moment, please try again later.",
+            dec?.message ?? "We cannot process your request at the moment, please try again later.",
           );
         } finally {
           dataHandler("loading", false);
@@ -405,8 +398,7 @@ const WalletFundsFlow = ({ setAction }) => {
           const dec = decryptData(error?.response?.data?.data);
           dataHandler(
             "exchange_rate_error",
-            dec?.message ??
-              "We cannot process your request at the moment, please try again later.",
+            dec?.message ?? "We cannot process your request at the moment, please try again later.",
           );
           console.log(dec);
         } finally {
@@ -445,8 +437,7 @@ const WalletFundsFlow = ({ setAction }) => {
           const dec = decryptData(error?.response?.data?.data);
           dataHandler(
             "exchange_rate_error",
-            dec?.message ??
-              "We cannot process your request at the moment, please try again later.",
+            dec?.message ?? "We cannot process your request at the moment, please try again later.",
           );
           console.log(dec);
         } finally {
@@ -490,13 +481,11 @@ const WalletFundsFlow = ({ setAction }) => {
           const dec = decryptData(error?.response?.data?.data);
           dataHandler(
             "exchange_rate_error",
-            dec?.message ??
-              "We cannot process your request at the moment, please try again later.",
+            dec?.message ?? "We cannot process your request at the moment, please try again later.",
           );
           dataHandler(
             "error",
-            dec?.message ??
-              "We cannot process your request at the moment, please try again later.",
+            dec?.message ?? "We cannot process your request at the moment, please try again later.",
           );
           console.log(dec);
         } finally {
@@ -547,9 +536,7 @@ const WalletFundsFlow = ({ setAction }) => {
           const dec = decryptData(error?.response?.data?.data);
           if (
             dec?.message &&
-            dec?.message
-              ?.toLowerCase()
-              ?.includes("can not find fee configuration")
+            dec?.message?.toLowerCase()?.includes("can not find fee configuration")
           ) {
             dataHandler(
               "error",
@@ -558,8 +545,7 @@ const WalletFundsFlow = ({ setAction }) => {
           }
           dataHandler(
             "exchange_rate_error",
-            dec?.message ??
-              "We cannot process your request at the moment, please try again later.",
+            dec?.message ?? "We cannot process your request at the moment, please try again later.",
           );
           console.log(dec);
         } finally {
@@ -585,17 +571,13 @@ const WalletFundsFlow = ({ setAction }) => {
           const isPlaidConverted = !PlaidCurrencies.includes(walletCurrency);
 
           if (!dec?.status) {
-            dataHandler(
-              "exchange_rate_error",
-              dec?.message || "Failed to calculate fee of plaid",
-            );
+            dataHandler("exchange_rate_error", dec?.message || "Failed to calculate fee of plaid");
             dataHandler("loading", false);
             return;
           }
 
           const originalAmount =
-            dec?.data?.amount ??
-            Number(String(data?.amount)?.replaceAll(",", ""));
+            dec?.data?.amount ?? Number(String(data?.amount)?.replaceAll(",", ""));
 
           const feeInWallet = isPlaidConverted
             ? (dec?.data?.fee_in_original ?? dec?.data?.fee ?? 0)
@@ -630,10 +612,7 @@ const WalletFundsFlow = ({ setAction }) => {
           const dec = decryptData(error?.response?.data?.data);
           console.log("Plaid fee error:", dec);
 
-          dataHandler(
-            "exchange_rate_error",
-            dec?.message ?? "Failed to calculate fee of plaid.",
-          );
+          dataHandler("exchange_rate_error", dec?.message ?? "Failed to calculate fee of plaid.");
           dataHandler("loading", false);
         } finally {
           dataHandler("loading", false);
@@ -739,23 +718,15 @@ const WalletFundsFlow = ({ setAction }) => {
       case 2:
         return (
           !data.amount ||
-          data.amount <
-            parseFloat(
-              String(data.limits.min ?? "0.00")?.replaceAll(",", ""),
-            ) ||
-          data.amount >
-            parseFloat(
-              String(data.limits.max ?? "0.00")?.replaceAll(",", ""),
-            ) ||
+          data.amount < parseFloat(String(data.limits.min ?? "0.00")?.replaceAll(",", "")) ||
+          data.amount > parseFloat(String(data.limits.max ?? "0.00")?.replaceAll(",", "")) ||
           data.error
         );
       case 3:
         return !data.channel?.value || data.exchange_rate_error || data.error;
       case 4:
         if (data.channel?.value === "card") {
-          const [contentMonth, contentYear] = data.expiry
-            .split("/")
-            .map(Number);
+          const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
           const currentDate = new Date();
           const currentMonth = currentDate.getMonth() + 1;
           const currentYear = currentDate.getFullYear() % 100;
@@ -881,9 +852,7 @@ const WalletFundsFlow = ({ setAction }) => {
                         totalLabel="Amount To Pay"
                       />
                       {data.channel?.value === "paypal" &&
-                      !PaypalCurrencies.some(
-                        (item) => item === data.wallet?.currency?.code,
-                      ) ? (
+                      !PaypalCurrencies.some((item) => item === data.wallet?.currency?.code) ? (
                         <>
                           <div
                             style={{
@@ -915,9 +884,7 @@ const WalletFundsFlow = ({ setAction }) => {
                           <ExtraContentOnFee data={data} />
                         </>
                       ) : data.channel?.value === "bank_transfer" &&
-                        !PlaidCurrencies.includes(
-                          data.wallet?.currency?.code,
-                        ) ? (
+                        !PlaidCurrencies.includes(data.wallet?.currency?.code) ? (
                         <>
                           <div
                             style={{
@@ -939,8 +906,7 @@ const WalletFundsFlow = ({ setAction }) => {
                             <span>
                               {t("plaid_currency_not_supported", {
                                 currency: data.wallet?.currency?.code,
-                                defaultCurrency:
-                                  data?.exchange_rate?.plaid_currency,
+                                defaultCurrency: data?.exchange_rate?.plaid_currency,
                               })}
                             </span>
                           </div>
@@ -952,8 +918,7 @@ const WalletFundsFlow = ({ setAction }) => {
                           />
                         </>
                       ) : data.channel?.value === "mobile_wallet" &&
-                        data?.exchange_rate?.sendFromMobileWallet
-                          ?.isConverted ? (
+                        data?.exchange_rate?.sendFromMobileWallet?.isConverted ? (
                         <ExtraContentOnFee
                           data={data}
                           fxRate={data.exchange_rate?.rate?.amount}
@@ -978,11 +943,7 @@ const WalletFundsFlow = ({ setAction }) => {
                       : data.mobile_wallet_service
                   }
                   setSubStep={(e) => dataHandler("step", e)}
-                  type={
-                    data.channel?.value === "paypal"
-                      ? "Payment Type"
-                      : "Mobile Wallet"
-                  }
+                  type={data.channel?.value === "paypal" ? "Payment Type" : "Mobile Wallet"}
                   externalLink={data.externalLink}
                 />
               ) : data.show_confirmation ? (
@@ -1014,9 +975,7 @@ const WalletFundsFlow = ({ setAction }) => {
                 />
               ) : (
                 <>
-                  {data.step === 1 && (
-                    <Wallets data={data} dataHandler={dataHandler} />
-                  )}
+                  {data.step === 1 && <Wallets data={data} dataHandler={dataHandler} />}
 
                   {data.step === 2 &&
                     (data.loading ? (
@@ -1048,9 +1007,7 @@ const WalletFundsFlow = ({ setAction }) => {
                         channel={data.channel}
                         provider={data.mobile_wallet_service}
                         providers={data.mobile_wallet_services}
-                        setProvider={(e) =>
-                          dataHandler("mobile_wallet_service", e)
-                        }
+                        setProvider={(e) => dataHandler("mobile_wallet_service", e)}
                       />
                     ) : data.channel?.value === "card" ? (
                       <CreditCard
@@ -1073,11 +1030,9 @@ const WalletFundsFlow = ({ setAction }) => {
                           walletCurrency: data.wallet?.currency?.code,
                           fee: data.exchange_rate?.fee?.amount ?? 0,
                           plaidAmount:
-                            data.exchange_rate?.plaid_amount ??
-                            data.exchange_rate?.sending?.amount,
+                            data.exchange_rate?.plaid_amount ?? data.exchange_rate?.sending?.amount,
                           plaidCurrency:
-                            data.exchange_rate?.plaid_currency ??
-                            data.wallet?.currency?.code,
+                            data.exchange_rate?.plaid_currency ?? data.wallet?.currency?.code,
                         })}
                       />
                     ) : null
@@ -1085,8 +1040,7 @@ const WalletFundsFlow = ({ setAction }) => {
                     ""
                   )}
 
-                  {((data.channel?.value !== "bank" &&
-                    data.channel?.value !== "bank_transfer") ||
+                  {((data.channel?.value !== "bank" && data.channel?.value !== "bank_transfer") ||
                     data.step < 4) && (
                     <div className={styles.bottom}>
                       <Link
@@ -1161,14 +1115,10 @@ const WalletFundsFlow = ({ setAction }) => {
                     : t(headings[data.step - 1])}
             </h2>
           </div>
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: ".7rem" }}
-          >
+          <div style={{ display: "flex", flexDirection: "column", gap: ".7rem" }}>
             {data.step === 3 && !data.show_confirmation ? (
               data.loading ? (
-                <div
-                  style={{ height: "100px", width: "100px", margin: "0 auto" }}
-                >
+                <div style={{ height: "100px", width: "100px", margin: "0 auto" }}>
                   <InstaPayLoader />
                 </div>
               ) : (
@@ -1182,9 +1132,7 @@ const WalletFundsFlow = ({ setAction }) => {
                     totalLabel="Amount To Pay"
                   />
                   {data.channel?.value === "paypal" &&
-                  !PaypalCurrencies.some(
-                    (item) => item === data.wallet?.currency?.code,
-                  ) ? (
+                  !PaypalCurrencies.some((item) => item === data.wallet?.currency?.code) ? (
                     <>
                       <div
                         style={{
@@ -1255,9 +1203,7 @@ const WalletFundsFlow = ({ setAction }) => {
                             }}
                           >
                             1.00 {data.wallet?.currency?.code} ={" "}
-                            {Number(
-                              data.paypal_fx?.exchange_rate,
-                            )?.toLocaleString("en-US", {
+                            {Number(data.paypal_fx?.exchange_rate)?.toLocaleString("en-US", {
                               minimumFractionDigits: 2,
                               maximumFractionDigits: 4,
                             })}{" "}
@@ -1296,13 +1242,10 @@ const WalletFundsFlow = ({ setAction }) => {
                               letterSpacing: "-0.8px",
                             }}
                           >
-                            {Number(data.paypal_fx?.amount)?.toLocaleString(
-                              "en-US",
-                              {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                              },
-                            )}{" "}
+                            {Number(data.paypal_fx?.amount)?.toLocaleString("en-US", {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })}{" "}
                             {t("USD")}
                           </strong>
                         </div>
@@ -1327,11 +1270,7 @@ const WalletFundsFlow = ({ setAction }) => {
                       : data.mobile_wallet_service
                   }
                   setSubStep={(e) => dataHandler("step", e)}
-                  type={
-                    data.channel?.value === "paypal"
-                      ? "Payment Type"
-                      : "Mobile Wallet"
-                  }
+                  type={data.channel?.value === "paypal" ? "Payment Type" : "Mobile Wallet"}
                   externalLink={data.externalLink}
                 />
               ) : data.show_confirmation ? (
@@ -1363,9 +1302,7 @@ const WalletFundsFlow = ({ setAction }) => {
                 />
               ) : (
                 <>
-                  {data.step === 1 && (
-                    <Wallets data={data} dataHandler={dataHandler} />
-                  )}
+                  {data.step === 1 && <Wallets data={data} dataHandler={dataHandler} />}
 
                   {data.step === 2 &&
                     (data.loading ? (
@@ -1397,9 +1334,7 @@ const WalletFundsFlow = ({ setAction }) => {
                         channel={data.channel}
                         provider={data.mobile_wallet_service}
                         providers={data.mobile_wallet_services}
-                        setProvider={(e) =>
-                          dataHandler("mobile_wallet_service", e)
-                        }
+                        setProvider={(e) => dataHandler("mobile_wallet_service", e)}
                       />
                     ) : data.channel?.value === "card" ? (
                       <CreditCard
@@ -1412,10 +1347,7 @@ const WalletFundsFlow = ({ setAction }) => {
                     ) : data.channel.value === "bank" ? (
                       <BankDeposit data={data} dataHandler={dataHandler} />
                     ) : data.channel.value === "bank_transfer" ? (
-                      <PlaidBankTransfer
-                        data={data}
-                        dataHandler={dataHandler}
-                      />
+                      <PlaidBankTransfer data={data} dataHandler={dataHandler} />
                     ) : null
                   ) : (
                     ""
@@ -1424,8 +1356,7 @@ const WalletFundsFlow = ({ setAction }) => {
               )}
             </div>
 
-            {((data.channel?.value !== "bank" &&
-              data.channel?.value !== "bank_transfer") ||
+            {((data.channel?.value !== "bank" && data.channel?.value !== "bank_transfer") ||
               data.step < 4) &&
               !data.show_confirmation && (
                 <div className={styles.bottom}>
@@ -1443,10 +1374,7 @@ const WalletFundsFlow = ({ setAction }) => {
                   </Link>
                   <div className={styles.buttons}>
                     {data.step > 1 && (
-                      <button
-                        disabled={data.loading}
-                        onClick={onBackClickHandler}
-                      >
+                      <button disabled={data.loading} onClick={onBackClickHandler}>
                         <ChevronLeft />
                       </button>
                     )}

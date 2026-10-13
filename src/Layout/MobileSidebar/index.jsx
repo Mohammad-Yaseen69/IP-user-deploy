@@ -24,8 +24,7 @@ const getGreeting = () => {
 };
 
 const MobileSidebar = ({ setShowModal }) => {
-  const { userDetails, verifyToken, profileCompletedPercentage, logout } =
-    useContext(UserContext);
+  const { userDetails, verifyToken, profileCompletedPercentage, logout } = useContext(UserContext);
   const { t } = useTranslation();
   const { toggleSidebar, mobileSidebar } = useContext(MobileSbContext);
   const checkPermission = usePermission();
@@ -45,9 +44,7 @@ const MobileSidebar = ({ setShowModal }) => {
     return true;
   });
   return (
-    <div
-      className={`${styles.sidebar} ${mobileSidebar ? styles.sidebar_in_view : ""}`}
-    >
+    <div className={`${styles.sidebar} ${mobileSidebar ? styles.sidebar_in_view : ""}`}>
       <div className={styles.content_wrapper}>
         <div className={styles.top}>
           <img src={logo} alt="Instapay" width={140} />
@@ -114,17 +111,13 @@ const MobileSidebar = ({ setShowModal }) => {
                         ? item.activeIcon
                         : item.icon}
                     <span>{t(item.title)}</span>
-                    {window.location.pathname === item.url && (
-                      <div className={styles.dot}></div>
-                    )}
+                    {window.location.pathname === item.url && <div className={styles.dot}></div>}
                   </Link>
                 )}
               </li>
             ))}
           </ul>
-          <div
-            style={{ marginTop: "2rem", color: "#848484", fontSize: ".6rem" }}
-          >
+          <div style={{ marginTop: "2rem", color: "#848484", fontSize: ".6rem" }}>
             <span>
               {t("Powered By")}{" "}
               <Link

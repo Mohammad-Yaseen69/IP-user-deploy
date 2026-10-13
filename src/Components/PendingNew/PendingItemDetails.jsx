@@ -10,13 +10,7 @@ import PaymentsFlow from "./PaymentsFlow/index";
 import { Button } from "reactstrap";
 import ReviewModal from "./ReviewModal";
 
-const PendingItemDetails = ({
-  item,
-  allRating,
-  allReviews,
-  badgeColor,
-  type = "received",
-}) => {
+const PendingItemDetails = ({ item, allRating, allReviews, badgeColor, type = "received" }) => {
   const { t } = useTranslation();
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showImgPreview, setShowImgPreview] = useState(false);
@@ -26,10 +20,7 @@ const PendingItemDetails = ({
       ? "Bargain-Accepted"
       : str
           .split(" ")
-          .map(
-            (word) =>
-              word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
-          )
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
           .join(" ");
   }
   return (
@@ -76,13 +67,11 @@ const PendingItemDetails = ({
                 <div className={styles.rc_top}>
                   <div className={styles.rct_left}>
                     <div className={styles.rctl_dp}>
-                      {item?.buyer?.user?.first_name?.[0] ||
-                        item?.buyer?.user?.company_name?.[0]}
+                      {item?.buyer?.user?.first_name?.[0] || item?.buyer?.user?.company_name?.[0]}
                     </div>
                     <div className={styles.rctl_dets}>
                       <h5>
-                        {item?.buyer?.user?.first_name ??
-                          item?.buyer?.user?.company_name}{" "}
+                        {item?.buyer?.user?.first_name ?? item?.buyer?.user?.company_name}{" "}
                         {item?.buyer?.user?.last_name}
                       </h5>
                       <span>{item?.buyer?.account_type}</span>
@@ -101,9 +90,7 @@ const PendingItemDetails = ({
               </div>
             ))
           ) : (
-            <div style={{ margin: "1rem auto", textAlign: "center" }}>
-              {t("No Reviews")}
-            </div>
+            <div style={{ margin: "1rem auto", textAlign: "center" }}>{t("No Reviews")}</div>
           )}
         </div>
       </div>
@@ -112,8 +99,7 @@ const PendingItemDetails = ({
           <div className={styles.row_left}>
             <div className={styles.r_item}>
               <span>
-                {item?.payment_type === "conversion" ||
-                item?.service_type === "withdrawal"
+                {item?.payment_type === "conversion" || item?.service_type === "withdrawal"
                   ? t("Wallet ID")
                   : t("Recipient")}
                 :{" "}
@@ -122,10 +108,7 @@ const PendingItemDetails = ({
                 {item?.sender?.profileImage?.url ? (
                   <img
                     src={item?.sender?.profileImage?.url}
-                    alt={
-                      item?.sender?.user?.first_name ||
-                      item?.sender?.user?.company_name
-                    }
+                    alt={item?.sender?.user?.first_name || item?.sender?.user?.company_name}
                     className={styles.dp}
                     style={{ background: "none" }}
                   />
@@ -175,10 +158,7 @@ const PendingItemDetails = ({
               </div>
               {item?.attachments && item?.attachments?.length > 0 ? (
                 <>
-                  <span
-                    className={styles.open_btn}
-                    onClick={() => setShowImgPreview(true)}
-                  >
+                  <span className={styles.open_btn} onClick={() => setShowImgPreview(true)}>
                     {t("Open")}
                   </span>
                   {showImgPreview && (
@@ -201,10 +181,7 @@ const PendingItemDetails = ({
                   <span>{t("Transaction Map")}:</span>
                   <img src={arrow} alt="" />
                 </div>
-                <div
-                  className={styles.address}
-                  style={{ alignItems: "center" }}
-                >
+                <div className={styles.address} style={{ alignItems: "center" }}>
                   <img src={location} alt="" />
                   <span>{item?.display_name}</span>
                 </div>
@@ -241,9 +218,7 @@ const PendingItemDetails = ({
               :{" "}
             </span>
             <Button onClick={() => setShowReviewModal(!showReviewModal)}>
-              {item?.buyer_comment || item?.seller_reply
-                ? t("Check Now")
-                : t("Leave A Review")}
+              {item?.buyer_comment || item?.seller_reply ? t("Check Now") : t("Leave A Review")}
             </Button>
             <ReviewModal
               isOpen={showReviewModal}

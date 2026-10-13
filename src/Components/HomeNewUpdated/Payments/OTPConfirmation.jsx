@@ -164,9 +164,7 @@ const OTPConfirmation = ({
             })
             .catch((err) => {
               // console.log(decryptData(err.response.data.data))
-              setOtpError(
-                "We cannot process your request at the moment, please try again later.",
-              );
+              setOtpError("We cannot process your request at the moment, please try again later.");
             });
         }
         if (requestObject.paymentType.value === "subscription") {
@@ -184,9 +182,7 @@ const OTPConfirmation = ({
             purpose: requestObject.reason ?? "family support",
             sender: userDetails?._id,
             receiver: ben._id,
-            cycles: requestObject.unlimited
-              ? "unlimited"
-              : +requestObject.recCycle,
+            cycles: requestObject.unlimited ? "unlimited" : +requestObject.recCycle,
             date,
           };
           // console.log(data)
@@ -211,9 +207,7 @@ const OTPConfirmation = ({
                 // exchange rate api
                 const data = {
                   request_id: decrypted?.subscribtionDetails?._id,
-                  currency:
-                    decrypted?.subscribtionDetails?.request_payment?.currency
-                      ?.code,
+                  currency: decrypted?.subscribtionDetails?.request_payment?.currency?.code,
                 };
                 const encrypted = encryptData(data);
                 setTimeout(() => {
@@ -223,9 +217,7 @@ const OTPConfirmation = ({
             })
             .catch((err) => {
               // console.log(decryptData(err.response.data.data))
-              setOtpError(
-                "We cannot process your request at the moment, please try again later.",
-              );
+              setOtpError("We cannot process your request at the moment, please try again later.");
             });
         }
         if (requestObject.paymentType.value === "schedule") {
@@ -268,9 +260,7 @@ const OTPConfirmation = ({
                 // exchange rate api
                 const data = {
                   request_id: decrypted?.subscribtionDetails?._id,
-                  currency:
-                    decrypted?.subscribtionDetails?.request_payment?.currency
-                      ?.code,
+                  currency: decrypted?.subscribtionDetails?.request_payment?.currency?.code,
                 };
                 const encrypted = encryptData(data);
                 setTimeout(() => {
@@ -280,9 +270,7 @@ const OTPConfirmation = ({
             })
             .catch((err) => {
               // console.log(decryptData(err.response.data.data))
-              setOtpError(
-                "We cannot process your request at the moment, please try again later.",
-              );
+              setOtpError("We cannot process your request at the moment, please try again later.");
             });
         }
       });
@@ -341,9 +329,7 @@ const OTPConfirmation = ({
           })
           .catch((err) => {
             const decrypted = decryptData(err.response.data.data);
-            setOtpError(
-              "We cannot process your request at the moment, please try again later.",
-            );
+            setOtpError("We cannot process your request at the moment, please try again later.");
             // console.log(decrypted)
           });
       }
@@ -359,9 +345,7 @@ const OTPConfirmation = ({
           sender_wallet_id: paymentDetails.sender_wallet_id,
           purpose: paymentDetails.purpose,
           amount: paymentDetails.amount,
-          cycles: paymentDetails.unlimited
-            ? "unlimited"
-            : +paymentDetails.recCycle,
+          cycles: paymentDetails.unlimited ? "unlimited" : +paymentDetails.recCycle,
           date,
         };
 
@@ -388,9 +372,7 @@ const OTPConfirmation = ({
           })
           .catch((err) => {
             const decrypted = decryptData(err.response.data.data);
-            setOtpError(
-              "We cannot process your request at the moment, please try again later.",
-            );
+            setOtpError("We cannot process your request at the moment, please try again later.");
             // console.log(decrypted)
           });
       }
@@ -434,9 +416,7 @@ const OTPConfirmation = ({
           })
           .catch((err) => {
             const decrypted = decryptData(err.response.data.data);
-            setOtpError(
-              "We cannot process your request at the moment, please try again later.",
-            );
+            setOtpError("We cannot process your request at the moment, please try again later.");
             // console.log(decrypted)
           });
       }
@@ -465,8 +445,7 @@ const OTPConfirmation = ({
           padding: "14px",
           // gap: '14px',
           paddingBottom: "1rem",
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
         className="otp_cont"
       >
@@ -518,18 +497,12 @@ const OTPConfirmation = ({
             </h4>
             <p style={{ maxWidth: "212px", fontSize: "14px", fontWeight: 600 }}>
               {verified
-                ? t(
-                    "Verification code has been verified, You'll be redirected to the next step.",
-                  )
-                : t(
-                    "A Verification code has been sent to your email and number.",
-                  )}
+                ? t("Verification code has been verified, You'll be redirected to the next step.")
+                : t("A Verification code has been sent to your email and number.")}
             </p>
           </div>
           {verified ? (
-            <span
-              style={{ fontSize: "12px", color: "#aeaeae", fontWeight: 600 }}
-            >
+            <span style={{ fontSize: "12px", color: "#aeaeae", fontWeight: 600 }}>
               {t("Moving To Next Step in")}{" "}
               <span style={{ color: "#5926f0", fontWeight: 800 }}>{timer}</span>
             </span>
@@ -561,15 +534,9 @@ const OTPConfirmation = ({
                 ))}
               </div>
               {otpError && (
-                <span
-                  style={{ fontSize: ".8rem", fontWeight: 700, color: "red" }}
-                >
-                  {otpError}
-                </span>
+                <span style={{ fontSize: ".8rem", fontWeight: 700, color: "red" }}>{otpError}</span>
               )}
-              <span
-                style={{ fontSize: "12px", color: "#aeaeae", fontWeight: 600 }}
-              >
+              <span style={{ fontSize: "12px", color: "#aeaeae", fontWeight: 600 }}>
                 {resendTimer > 0 ? (
                   t("Resend available in ") + resendTimer + " seconds"
                 ) : (

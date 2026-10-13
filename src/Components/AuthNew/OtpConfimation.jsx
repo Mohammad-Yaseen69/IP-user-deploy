@@ -10,14 +10,7 @@ import { useNavigate } from "react-router";
 import { countries } from "country-list-json";
 import { useTranslation } from "react-i18next";
 
-const OtpConfimation = ({
-  email,
-  password,
-  token,
-  isEmail,
-  setServiceError,
-  resendHandler,
-}) => {
+const OtpConfimation = ({ email, password, token, isEmail, setServiceError, resendHandler }) => {
   const { t } = useTranslation();
   const [verified, setVerified] = useState(false);
   const numberOfFields = 6;
@@ -32,8 +25,7 @@ const OtpConfimation = ({
   const [isPressed, setIsPressed] = useState(false);
   const [resendTimer, setResendTimer] = useState(90);
   const [isLoginError, setIsLoginError] = useState("");
-  const { setUserDetails, profileLockTIme, setProfileLockTime } =
-    useContext(UserContext);
+  const { setUserDetails, profileLockTIme, setProfileLockTime } = useContext(UserContext);
   const navigate = useNavigate();
 
   // old func
@@ -83,19 +75,14 @@ const OtpConfimation = ({
 
   const getUserInfo = async () => {
     try {
-      const res = await axios.get(
-        `https://ipinfo.io?token=${import.meta.env.VITE_IP_INFO_TOKEN}`,
-      );
+      const res = await axios.get(`https://ipinfo.io?token=${import.meta.env.VITE_IP_INFO_TOKEN}`);
       const location = res.data;
       if (location) {
-        const country_name = countries.find(
-          (item) => item?.code === location?.country,
-        )?.name;
+        const country_name = countries.find((item) => item?.code === location?.country)?.name;
         return {
           browser_name: navigator?.userAgentData?.brands[0]?.brand ?? "N/A",
           platform: navigator?.userAgentData?.platform,
-          browser_version:
-            navigator?.userAgentData?.brands[0]?.version ?? "N/A",
+          browser_version: navigator?.userAgentData?.brands[0]?.version ?? "N/A",
           is_mobile_user: navigator?.userAgentData?.mobile,
           IPv4: location?.ip,
           city: location?.city,
@@ -116,8 +103,7 @@ const OtpConfimation = ({
             browser_name: navigator?.userAgentData?.brands[0]?.brand ?? "N/A",
             platform: navigator?.userAgentData?.platform,
             ...location,
-            browser_version:
-              navigator?.userAgentData?.brands[0]?.version ?? "N/A",
+            browser_version: navigator?.userAgentData?.brands[0]?.version ?? "N/A",
             is_mobile_user: navigator?.userAgentData?.mobile,
           };
         }
@@ -146,9 +132,7 @@ const OtpConfimation = ({
         // console.log(decrypted)
         const token = decrypted?.token;
         axios
-          .get(
-            `${import.meta.env.VITE_IP_DEV_API}/api/account/auth/${decrypted?.token}`,
-          )
+          .get(`${import.meta.env.VITE_IP_DEV_API}/api/account/auth/${decrypted?.token}`)
           .then(async (res) => {
             const decrypted = decryptData(res.data.data);
             const data = await getUserInfo();
@@ -157,20 +141,15 @@ const OtpConfimation = ({
               ...data,
             });
             axios
-              .post(
-                `${import.meta.env.VITE_IP_DEV_API}/api/login/create-login-history`,
-                {
-                  data: encrypted,
-                },
-              )
+              .post(`${import.meta.env.VITE_IP_DEV_API}/api/login/create-login-history`, {
+                data: encrypted,
+              })
               .then((res) => {
                 const decrypted = decryptData(res.data.data);
 
                 if (decrypted?.status) {
                   axios
-                    .get(
-                      `${import.meta.env.VITE_IP_DEV_API}/api/account/auth/${token}`,
-                    )
+                    .get(`${import.meta.env.VITE_IP_DEV_API}/api/account/auth/${token}`)
                     .then((res) => {
                       const dec = decryptData(res.data.data);
                       if (dec?.country?.status) {
@@ -186,9 +165,7 @@ const OtpConfimation = ({
                           "country_status_error",
                           "Service not available in your country!",
                         );
-                        setServiceError(
-                          "Service not available in your country!",
-                        );
+                        setServiceError("Service not available in your country!");
                       }
                     })
                     .catch((err) => {
@@ -210,10 +187,8 @@ const OtpConfimation = ({
         console.log(decrypted);
         setIsPressed(false);
         if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-          const time =
-            decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
-          const timeInSec =
-            +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
+          const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+          const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
           setProfileLockTime(timeInSec);
         } else {
           setIsLoginError("Uh-Oh! You entered incorrect OTP.");
@@ -332,9 +307,7 @@ const OtpConfimation = ({
       )}
       <button
         className={styles.form_btn}
-        disabled={
-          isPressed || isAnyFieldEmpty || otpValues.some((item) => !item)
-        }
+        disabled={isPressed || isAnyFieldEmpty || otpValues.some((item) => !item)}
         onClick={loginHandler}
       >
         <span>{isPressed ? t("Verifying") : t("Verify")}</span>

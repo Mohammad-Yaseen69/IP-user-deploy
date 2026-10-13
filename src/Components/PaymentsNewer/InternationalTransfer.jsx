@@ -220,10 +220,7 @@ const InternationalTransfer = ({
         <div
           style={{
             display: "flex",
-            width:
-              sendPaymentType === "international"
-                ? "calc(100% - 130px)"
-                : "fit-content",
+            width: sendPaymentType === "international" ? "calc(100% - 130px)" : "fit-content",
             transition: "500ms",
           }}
           className="i_t_con"
@@ -281,30 +278,18 @@ const InternationalTransfer = ({
                   >
                     <div style={{ height: "100%" }}>
                       <h4 className="head_left_side">
-                        {subStep === 1 &&
-                          t(
-                            "Select the country where you want to send the money!",
-                          )}
+                        {subStep === 1 && t("Select the country where you want to send the money!")}
                         {subStep === 2 && t("Select Payout Channel")}
-                        {payoutChannel?.value === "bank" &&
-                          subStep === 3 &&
-                          t("Select The Bank")}
+                        {payoutChannel?.value === "bank" && subStep === 3 && t("Select The Bank")}
                         {payoutChannel?.value === "mobile" &&
                           subStep === 3 &&
                           t("Select The Mobile Wallet")}
-                        {payoutChannel?.value === "bank" &&
-                          subStep === 4 &&
-                          t("Bank Transfer")}
+                        {payoutChannel?.value === "bank" && subStep === 4 && t("Bank Transfer")}
                         {subStep === 5 && t("Select Payment Type")}
                         {subStep === 6 && t("Choose the Beneficiary")}
-                        {subStep === 7 &&
-                          confirmed &&
-                          t("Authenticate Your Payments")}
+                        {subStep === 7 && confirmed && t("Authenticate Your Payments")}
                       </h4>
-                      {subStep === 2 &&
-                        t(
-                          "Select your most convenient option to send the money.",
-                        )}
+                      {subStep === 2 && t("Select your most convenient option to send the money.")}
                       {subStep === 4 &&
                         payoutChannel?.value === "bank" &&
                         t(
@@ -400,10 +385,7 @@ const InternationalTransfer = ({
                       }}
                     >
                       {country && subStep > 1 && subStep < 7 && (
-                        <SelectedCountry
-                          country={country}
-                          setSubStep={setSubStep}
-                        />
+                        <SelectedCountry country={country} setSubStep={setSubStep} />
                       )}
                       {payoutChannel && subStep > 3 && subStep < 7 && (
                         <SelectedPayoutChannel
@@ -411,16 +393,14 @@ const InternationalTransfer = ({
                           setSubStep={setSubStep}
                         />
                       )}
-                      {payoutChannel.value === "bank" &&
-                        subStep > 4 &&
-                        subStep < 7 && (
-                          <SelectedAmountAndCurrency
-                            amount={amount}
-                            currency={currency}
-                            setSubStep={setSubStep}
-                            step={3}
-                          />
-                        )}
+                      {payoutChannel.value === "bank" && subStep > 4 && subStep < 7 && (
+                        <SelectedAmountAndCurrency
+                          amount={amount}
+                          currency={currency}
+                          setSubStep={setSubStep}
+                          step={3}
+                        />
+                      )}
                       {paymentMethod && subStep > 5 && subStep < 7 && (
                         <SelectedPaymentType
                           paymentType={paymentMethod}
@@ -510,60 +490,52 @@ const InternationalTransfer = ({
                       setNotInstant={setNotInstant}
                     />
                   )}
-                  {subStep === 5 &&
-                    paymentMethod.value === "subscription" &&
-                    notInstant && (
-                      <Recursive
-                        setSubStep={setSubStep}
-                        recursiveType={recursiveType}
-                        setRecursiveType={setRecursiveType}
-                        unlimited={unlimited}
-                        setUnlimited={setUnlimited}
-                        recDay={recDay}
-                        setRecDay={setRecDay}
-                        recCycle={recCycle}
-                        setRecCycle={setRecCycle}
-                        recStartDate={recStartDate}
-                        setRecStartDate={setRecStartDate}
-                      />
-                    )}
-                  {subStep === 5 &&
-                    paymentMethod.value === "schedule" &&
-                    notInstant && (
-                      <SchedulePayment
-                        scheduleDate={scheduleDate}
-                        setScheduleDate={setScheduleDate}
-                        scheduleTime={scheduleTime}
-                        setScheduleTime={setScheduleTime}
-                        setSubStep={setSubStep}
-                      />
-                    )}
-                  {subStep === 5 &&
-                    paymentMethod.value === "instalment" &&
-                    notInstant && (
-                      <InstalmentPayment
-                        amount={amount}
-                        currency={currency}
-                        numOfTerms={numOfTerms}
-                        setNumOfTerms={setNumOfTerms}
-                        billingDate={billingDate}
-                        setBillingDate={setBillingDate}
-                        setSubStep={setSubStep}
-                      />
-                    )}
-                  {subStep === 5 &&
-                    paymentMethod.value === "split" &&
-                    notInstant && (
-                      <SplitPayment
-                        amount={amount}
-                        currency={currency}
-                        numOfSplits={numOfSplits}
-                        setNumOfSplits={setNumOfSplits}
-                        splitAmount={splitAmount}
-                        setSplitAmount={setSplitAmount}
-                        setSubStep={setSubStep}
-                      />
-                    )}
+                  {subStep === 5 && paymentMethod.value === "subscription" && notInstant && (
+                    <Recursive
+                      setSubStep={setSubStep}
+                      recursiveType={recursiveType}
+                      setRecursiveType={setRecursiveType}
+                      unlimited={unlimited}
+                      setUnlimited={setUnlimited}
+                      recDay={recDay}
+                      setRecDay={setRecDay}
+                      recCycle={recCycle}
+                      setRecCycle={setRecCycle}
+                      recStartDate={recStartDate}
+                      setRecStartDate={setRecStartDate}
+                    />
+                  )}
+                  {subStep === 5 && paymentMethod.value === "schedule" && notInstant && (
+                    <SchedulePayment
+                      scheduleDate={scheduleDate}
+                      setScheduleDate={setScheduleDate}
+                      scheduleTime={scheduleTime}
+                      setScheduleTime={setScheduleTime}
+                      setSubStep={setSubStep}
+                    />
+                  )}
+                  {subStep === 5 && paymentMethod.value === "instalment" && notInstant && (
+                    <InstalmentPayment
+                      amount={amount}
+                      currency={currency}
+                      numOfTerms={numOfTerms}
+                      setNumOfTerms={setNumOfTerms}
+                      billingDate={billingDate}
+                      setBillingDate={setBillingDate}
+                      setSubStep={setSubStep}
+                    />
+                  )}
+                  {subStep === 5 && paymentMethod.value === "split" && notInstant && (
+                    <SplitPayment
+                      amount={amount}
+                      currency={currency}
+                      numOfSplits={numOfSplits}
+                      setNumOfSplits={setNumOfSplits}
+                      splitAmount={splitAmount}
+                      setSplitAmount={setSplitAmount}
+                      setSubStep={setSubStep}
+                    />
+                  )}
                   {subStep === 6 && (
                     <PaymentsBeneficiary
                       beneficiary={beneficiary}
@@ -621,9 +593,8 @@ const InternationalTransfer = ({
                       }}
                       intSendType={sendType}
                       intCardPayment={{
-                        wallet_id: userWallets.filter(
-                          (item) => item.currency.code === currency,
-                        )[0]?._id,
+                        wallet_id: userWallets.filter((item) => item.currency.code === currency)[0]
+                          ?._id,
                         amount: +amount,
                         saveCard,
                       }}

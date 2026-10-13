@@ -78,10 +78,7 @@ const QuotationSentItem = ({ item, activeItem, setActiveItem, index }) => {
       ? "Bargain-Accepted"
       : str
           .split(" ")
-          .map(
-            (word) =>
-              word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
-          )
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
           .join(" ");
   }
 
@@ -165,8 +162,7 @@ const QuotationSentItem = ({ item, activeItem, setActiveItem, index }) => {
             {t(capitalizeStatus(item?.status))}
           </div>
         </div>
-        {status?.toLowerCase() !== "accepted" &&
-        status?.toLowerCase() !== "declined" ? (
+        {status?.toLowerCase() !== "accepted" && status?.toLowerCase() !== "declined" ? (
           <div
             style={{
               display: "flex",
@@ -238,9 +234,7 @@ const QuotationSentItem = ({ item, activeItem, setActiveItem, index }) => {
           {activeItem === index + 1 ? <ChevronDown /> : <ChevronRight />}
         </div>
       </div>
-      {activeItem === index + 1 && (
-        <QuoteDetails item={item} key={item?._id} type="send" />
-      )}
+      {activeItem === index + 1 && <QuoteDetails item={item} key={item?._id} type="send" />}
     </div>
   );
 };

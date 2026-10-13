@@ -23,13 +23,8 @@ import OtpVerification from "../../Common/Component/OtpVerification";
 import { useTranslation } from "react-i18next";
 
 const SecurityQuestions = () => {
-  const {
-    userSecurityQues,
-    authHeader,
-    userDetails,
-    setUserRefresh,
-    getSecurityQuestions,
-  } = useContext(UserContext);
+  const { userSecurityQues, authHeader, userDetails, setUserRefresh, getSecurityQuestions } =
+    useContext(UserContext);
   useEffect(() => {
     if (userDetails) {
       getSecurityQuestions();
@@ -94,19 +89,13 @@ const SecurityQuestions = () => {
       });
   };
 
-  const isValidAnswer = (answer) =>
-    !answer?.startsWith(" ") && !answer?.endsWith(" ");
+  const isValidAnswer = (answer) => !answer?.startsWith(" ") && !answer?.endsWith(" ");
 
   return (
     <Form className="card" id="security">
-      <SuccessModal
-        isOpen={showSuccess}
-        toggle={() => setShowSuccess(!showSuccess)}
-      />
+      <SuccessModal isOpen={showSuccess} toggle={() => setShowSuccess(!showSuccess)} />
       <CardHeader className={`pb-0 expanded`}>
-        <H4 attrH4={{ className: "card-title mb-0" }}>
-          {t("Security Questions")}
-        </H4>
+        <H4 attrH4={{ className: "card-title mb-0" }}>{t("Security Questions")}</H4>
       </CardHeader>
       <div className={`accordion-body expanded`}>
         <CardBody>
@@ -125,10 +114,7 @@ const SecurityQuestions = () => {
                     <option
                       value={que._id}
                       key={que._id}
-                      disabled={
-                        selectedQuesThree === que._id ||
-                        selectedQuesTwo === que._id
-                      }
+                      disabled={selectedQuesThree === que._id || selectedQuesTwo === que._id}
                     >
                       {que.question}
                     </option>
@@ -161,10 +147,7 @@ const SecurityQuestions = () => {
                     <option
                       value={que._id}
                       key={que._id}
-                      disabled={
-                        selectedQuesOne === que._id ||
-                        selectedQuesThree === que._id
-                      }
+                      disabled={selectedQuesOne === que._id || selectedQuesThree === que._id}
                     >
                       {que.question}
                     </option>
@@ -197,10 +180,7 @@ const SecurityQuestions = () => {
                     <option
                       value={que._id}
                       key={que._id}
-                      disabled={
-                        selectedQuesOne === que._id ||
-                        selectedQuesTwo === que._id
-                      }
+                      disabled={selectedQuesOne === que._id || selectedQuesTwo === que._id}
                     >
                       {que.question}
                     </option>
@@ -262,9 +242,7 @@ const SecurityQuestions = () => {
             />
           )}
           <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-            <ModalHeader toggle={() => setShowOtp(!showOtp)}>
-              {t("Confirm")}
-            </ModalHeader>
+            <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
             <ModalBody>
               <OtpVerification
                 variant="card"

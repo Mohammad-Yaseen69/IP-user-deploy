@@ -53,15 +53,7 @@ const industries = [
   "Other",
 ];
 
-export const sourceOfFunds = [
-  "Cash",
-  "Business",
-  "Gift",
-  "Salary",
-  "Lottery",
-  "Savings",
-  "Other",
-];
+export const sourceOfFunds = ["Cash", "Business", "Gift", "Salary", "Lottery", "Savings", "Other"];
 
 const Verification = () => {
   const { t } = useTranslation();
@@ -122,25 +114,17 @@ const Verification = () => {
 
       const decrypted = decryptData(response.data.data);
       if (decrypted?.status) {
-        const verificationLink = decryptData(
-          response.data.data,
-        )?.tokenized_link;
+        const verificationLink = decryptData(response.data.data)?.tokenized_link;
         const newWindow = window.open(verificationLink, "_blank");
 
-        if (
-          !newWindow ||
-          newWindow.closed ||
-          typeof newWindow.closed == "undefined"
-        ) {
+        if (!newWindow || newWindow.closed || typeof newWindow.closed == "undefined") {
           window.location.href = verificationLink;
         }
       }
 
       // console.log("try ran in handlesend");
     } catch (error) {
-      toast.error(
-        "We cannot process your request at the moment, please try again later.",
-      );
+      toast.error("We cannot process your request at the moment, please try again later.");
       // console.log("try ran in error", error);
       // console.log(decryptData(error?.response?.data?.data));
     } finally {
@@ -197,9 +181,7 @@ const Verification = () => {
   const scroll = queryParams.get("scroll");
   const [statusModal, setStatusModal] = useState(false);
   const [processing, setProcessing] = useState("");
-  const [showRefreshScreen, setShowRefreshScreen] = useState(
-    refreshData === "true",
-  );
+  const [showRefreshScreen, setShowRefreshScreen] = useState(refreshData === "true");
 
   useEffect(() => {
     if (scroll === "additional-files") {
@@ -245,10 +227,7 @@ const Verification = () => {
       userDetails?.user?.kyc_status !== "approved" &&
       userDetails?.user?.kyc_status !== "verified"
     ) {
-      if (
-        userDetails?.paypal_transaction !== "processing" &&
-        payment_through === "paypal"
-      ) {
+      if (userDetails?.paypal_transaction !== "processing" && payment_through === "paypal") {
         updateProcessingCheck();
         setProcessing("processing");
       }
@@ -343,8 +322,7 @@ const Verification = () => {
         </p>
         <Button
           style={{
-            background:
-              "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
             border: "none",
             outline: "none",
             borderRadius: "10px",
@@ -368,10 +346,7 @@ const Verification = () => {
   return (
     <Card id="verification">
       {showGuide && (
-        <Modal
-          isOpen={showGuide}
-          style={{ width: "100vw", maxWidth: "1200px" }}
-        >
+        <Modal isOpen={showGuide} style={{ width: "100vw", maxWidth: "1200px" }}>
           <ModalHeader
             toggle={() => {
               setShowGuide(false);
@@ -479,9 +454,7 @@ const Verification = () => {
       )}
       <CardHeader className={`pb-0 expanded`}>
         <div>
-          <H4 attrH4={{ className: "card-title mb-0" }}>
-            {t("Identity Verification")}
-          </H4>
+          <H4 attrH4={{ className: "card-title mb-0" }}>{t("Identity Verification")}</H4>
           {/* {
                                     userDetails &&
                                         (
@@ -548,11 +521,7 @@ const Verification = () => {
                         : "red",
               }}
             >
-              {userDetails?.user?.kyc_status === "declined" ? (
-                <VerificationAlert />
-              ) : (
-                ""
-              )}
+              {userDetails?.user?.kyc_status === "declined" ? <VerificationAlert /> : ""}
               {`${
                 userDetails?.user?.kyc_status === "approved"
                   ? t("Verified")
@@ -571,9 +540,7 @@ const Verification = () => {
           <Col md="12" className="mb-4">
             <div>
               <Label className="form-label">
-                {t(
-                  "Briefly describe yourself and explain your reasons for using InstaPay.",
-                )}
+                {t("Briefly describe yourself and explain your reasons for using InstaPay.")}
               </Label>
               <Input
                 type="textarea"
@@ -604,9 +571,7 @@ const Verification = () => {
                     {t(item)}
                   </option>
                 ))}
-                {occupationOther && (
-                  <option value={occupationOther}>{occupationOther}</option>
-                )}
+                {occupationOther && <option value={occupationOther}>{occupationOther}</option>}
               </Input>
               {occupation === "Other" && (
                 <Input
@@ -646,9 +611,7 @@ const Verification = () => {
             </p>
           </Col>
           <Col md="12" className="mb-4">
-            <p style={{ marginBottom: 0, fontSize: "110%" }}>
-              {t("Accepted Documents")}:
-            </p>
+            <p style={{ marginBottom: 0, fontSize: "110%" }}>{t("Accepted Documents")}:</p>
             <ul style={{ listStyleType: "initial", paddingLeft: "1rem" }}>
               <li>{t("A national identity card")}</li>
               <li>{t("A valid passport")}</li>
@@ -657,11 +620,7 @@ const Verification = () => {
                   "Valid residence permits (accepted only if issued by a European country or in Switzerland)",
                 )}
               </li>
-              <li>
-                {t(
-                  "Biometric Facial Recognition: Comparing video with passport photograph",
-                )}
-              </li>
+              <li>{t("Biometric Facial Recognition: Comparing video with passport photograph")}</li>
             </ul>
           </Col>
           <Col md="12" className="mb-4">
@@ -695,17 +654,13 @@ const Verification = () => {
               verifyToken={verifyToken}
             />
           )}
-          <Col
-            className="mb-4"
-            style={{ display: "flex", justifyContent: "flex-end" }}
-          >
+          <Col className="mb-4" style={{ display: "flex", justifyContent: "flex-end" }}>
             {userDetails?.user?.kyc_status !== "approved" &&
             userDetails?.user?.kyc_status !== "needs-review" &&
             userDetails?.paypal_transaction !== "processing" ? (
               <Button
                 style={{
-                  background:
-                    "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                  background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                   border: "none",
                   outline: "none",
                   borderRadius: "10px",

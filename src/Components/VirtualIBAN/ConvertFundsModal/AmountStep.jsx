@@ -35,15 +35,10 @@ const AmountStep = ({
   const amountError = (() => {
     if (!amountEntered) return null;
     if (min !== null && numericAmount < min)
-      return t(
-        `Minimum transfer amount is ${symbol}${min.toLocaleString("en-US")}`,
-      );
+      return t(`Minimum transfer amount is ${symbol}${min.toLocaleString("en-US")}`);
     if (max !== null && numericAmount > max)
-      return t(
-        `Maximum transfer amount is ${symbol}${max.toLocaleString("en-US")}`,
-      );
-    if (numericAmount > sourceBalance)
-      return t("Amount cannot exceed available balance");
+      return t(`Maximum transfer amount is ${symbol}${max.toLocaleString("en-US")}`);
+    if (numericAmount > sourceBalance) return t("Amount cannot exceed available balance");
     return null;
   })();
 
@@ -70,10 +65,7 @@ const AmountStep = ({
             autoFocus
           />
         </div>
-        <div
-          style={{ display: "flex", flexDirection: "column" }}
-          className={styles.availableText}
-        >
+        <div style={{ display: "flex", flexDirection: "column" }} className={styles.availableText}>
           <span>
             {t("Available")} &middot; {symbol}
             {formatAmountValue(sourceBalance)}
@@ -87,9 +79,7 @@ const AmountStep = ({
             </span>
           )}
         </div>
-        {amountError && (
-          <div className={styles.balanceError}>{amountError}</div>
-        )}
+        {amountError && <div className={styles.balanceError}>{amountError}</div>}
         <div className={styles.quickAmounts}>
           {quickAmounts.map(({ percent, value }) => (
             <button

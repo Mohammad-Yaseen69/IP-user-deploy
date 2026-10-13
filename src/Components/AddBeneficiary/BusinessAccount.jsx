@@ -43,11 +43,7 @@ import InstaPayLoader from "../Loader";
 import { useLocation, useNavigate, useParams } from "react-router";
 import SuccessModal from "./SuccessModal";
 import NestedDropdown from "../NestedDropdown";
-import {
-  handleNameInput,
-  preventEdgeSpaces,
-  preventEmailSpaces,
-} from "../../hooks/useTrimInput";
+import { handleNameInput, preventEdgeSpaces, preventEmailSpaces } from "../../hooks/useTrimInput";
 
 const BusinessAccount = ({
   isInternational,
@@ -77,8 +73,7 @@ const BusinessAccount = ({
   const [showSuccess, setShowSuccess] = useState(false);
   const location = useLocation();
   const [isEditMode, setIsEditMode] = useState(false);
-  const isAddBeneficiary =
-    location.pathname === "/beneficiaries/add" || isInternational;
+  const isAddBeneficiary = location.pathname === "/beneficiaries/add" || isInternational;
   const queryParams = new URLSearchParams(location.search);
   const user_id = queryParams.get("user_id");
   const edit = queryParams.get("edit");
@@ -87,9 +82,7 @@ const BusinessAccount = ({
   const [walletError, setWalletError] = useState("");
 
   const [instapayWalletsLength, setInstapayWalletsLength] = useState(1);
-  const [instapayWallets, setInstapayWallets] = useState(
-    Array(instapayWalletsLength).fill(""),
-  );
+  const [instapayWallets, setInstapayWallets] = useState(Array(instapayWalletsLength).fill(""));
   const [walletIds, setWalletIds] = useState([]);
   const [cashPickupType, setCashPickupType] = useState("");
   const [cashPickupNumber, setCashPickupNumber] = useState("");
@@ -181,8 +174,7 @@ const BusinessAccount = ({
   const [user, setUser] = useState(null);
   const [clicked, setClicked] = useState(false);
   const [missingFields, setMissingFields] = useState([]);
-  const { allowedCountries, authHeader, beneficiaries, userDetails } =
-    useContext(UserContext);
+  const { allowedCountries, authHeader, beneficiaries, userDetails } = useContext(UserContext);
   const {
     getBankDetails,
     bankCountry,
@@ -205,19 +197,14 @@ const BusinessAccount = ({
     errorOnInvalid,
     error,
   });
-  const {
-    fieldsInfo,
-    services,
-    mobileProviders,
-    selectedCountryDetails,
-    getCountryFields,
-  } = useChannels({
-    setLoading,
-    setActive,
-    countryIsoCode,
-    countryId,
-    isBusiness: true,
-  });
+  const { fieldsInfo, services, mobileProviders, selectedCountryDetails, getCountryFields } =
+    useChannels({
+      setLoading,
+      setActive,
+      countryIsoCode,
+      countryId,
+      isBusiness: true,
+    });
 
   const mobileExtras = {
     msisdn: "",
@@ -261,32 +248,23 @@ const BusinessAccount = ({
         relationC2B: user?.relationC2B ?? prev.relationC2B,
         account_type: user?.account_type ?? prev.account_type,
         account_holder_name:
-          user?.bank_details?.[0]?.account_holder_name ??
-          prev.account_holder_name,
+          user?.bank_details?.[0]?.account_holder_name ?? prev.account_holder_name,
         bank_name: user?.bank_details?.[0]?.name ?? prev.bank_name,
         branch_name: user?.bank_details?.[0]?.branch_name ?? prev.branch_name,
-        bank_account_number:
-          user?.bank_details?.[0]?.account_number ?? prev.bank_account_number,
-        bank_branch_street:
-          user?.bank_details?.[0]?.branch_street ?? prev.bank_branch_street,
+        bank_account_number: user?.bank_details?.[0]?.account_number ?? prev.bank_account_number,
+        bank_branch_street: user?.bank_details?.[0]?.branch_street ?? prev.bank_branch_street,
         bank_city: user?.bank_details?.[0]?.city ?? prev.bank_city,
         bank_province: user?.bank_details?.[0]?.province ?? prev.bank_province,
-        bank_postal_code:
-          user?.bank_details?.[0]?.postal_code ?? prev.bank_postal_code,
+        bank_postal_code: user?.bank_details?.[0]?.postal_code ?? prev.bank_postal_code,
         mobile_wallet_provider:
-          user?.mobile_wallet?.[0]?.money_provider ??
-          prev.mobile_wallet_provider,
-        mobile_wallet_number:
-          user?.mobile_wallet?.[0]?.wallet_number ?? prev.mobile_wallet_number,
+          user?.mobile_wallet?.[0]?.money_provider ?? prev.mobile_wallet_provider,
+        mobile_wallet_number: user?.mobile_wallet?.[0]?.wallet_number ?? prev.mobile_wallet_number,
         mobile_wallet_name:
-          user?.mobile_wallet?.[0]?.wallet_name ??
-          (user?.company_name || prev.mobile_wallet_name),
+          user?.mobile_wallet?.[0]?.wallet_name ?? (user?.company_name || prev.mobile_wallet_name),
         mobile_wallet_account_number:
-          user?.mobile_wallet?.[0]?.wallet_account_number ??
-          prev.mobile_wallet_account_number,
+          user?.mobile_wallet?.[0]?.wallet_account_number ?? prev.mobile_wallet_account_number,
         crypto_currency: user?.crypto?.[0]?.currency ?? prev.crypto_currency,
-        crypto_wallet_address:
-          user?.crypto?.[0]?.wallet_address ?? prev.crypto_wallet_address,
+        crypto_wallet_address: user?.crypto?.[0]?.wallet_address ?? prev.crypto_wallet_address,
         card_holder_one: user?.card?.[0]?.card_name ?? prev.card_holder_one,
         card_number_one: user?.card?.[0]?.card_number ?? prev.card_number_one,
         card_expiry_one: user?.card?.[0]?.card_expiry ?? prev.card_expiry_one,
@@ -294,10 +272,8 @@ const BusinessAccount = ({
         card_number_two: user?.card?.[1]?.card_number ?? prev.card_number_two,
         card_expiry_two: user?.card?.[1]?.card_expiry ?? prev.card_expiry_two,
         card_holder_three: user?.card?.[2]?.card_name ?? prev.card_holder_three,
-        card_number_three:
-          user?.card?.[2]?.card_number ?? prev.card_number_three,
-        card_expiry_three:
-          user?.card?.[2]?.card_expiry ?? prev.card_expiry_three,
+        card_number_three: user?.card?.[2]?.card_number ?? prev.card_number_three,
+        card_expiry_three: user?.card?.[2]?.card_expiry ?? prev.card_expiry_three,
       }));
 
       setMobileNumber(user?.phone || "");
@@ -334,10 +310,8 @@ const BusinessAccount = ({
 
       setAdditionFields((prev) => ({
         ...prev,
-        registration_number:
-          user?.extras?.registration_number ?? prev.registration_number,
-        date_of_incorporation:
-          user?.extras?.date_of_incorporation ?? prev.date_of_incorporation,
+        registration_number: user?.extras?.registration_number ?? prev.registration_number,
+        date_of_incorporation: user?.extras?.date_of_incorporation ?? prev.date_of_incorporation,
         tax_id: user?.extras?.tax_id ?? prev.tax_id,
       }));
 
@@ -347,11 +321,7 @@ const BusinessAccount = ({
       }));
 
       const wallets = user?.wallet || [];
-      setWalletIds(
-        wallets
-          .map((w) => (typeof w === "string" ? w : w?._id))
-          .filter(Boolean),
-      );
+      setWalletIds(wallets.map((w) => (typeof w === "string" ? w : w?._id)).filter(Boolean));
     }
   }, [user, accNumType, setBankCountry, setBankCountryCode, setIbanSwift]);
 
@@ -406,82 +376,75 @@ const BusinessAccount = ({
       showSuccess ? navigate("/beneficiaries") : setShowSuccess(true);
     }
   };
-  const { setIsCountryInFocus, addresses, addressInFocus, setAddressInFocus } =
-    useAddress({ countryIsoCode, formData });
-
-  const {
-    addBeneficiaryHandler,
-    benLoading,
-    mobileError,
-    walletMobileError,
-    setMobileError,
-  } = useBenCreateFunc({
-    services,
-    completedCrypto,
-    instapayWallets,
-    completedBank,
-    completedCard,
-    completedWallet,
-    cashPickupCompleted,
-    formData,
-    companyName,
-    mobileNumber,
-    city,
-    country,
-    countryId,
+  const { setIsCountryInFocus, addresses, addressInFocus, setAddressInFocus } = useAddress({
     countryIsoCode,
-    walletIds,
-    representativeFields,
-    additionFields,
-    bankExtras,
-    cashExtras,
-    accNumType,
-    ibanSwift,
-    cashPickupType,
-    cashPickupNumber,
-    walletError,
-    toggleSuccess,
-    inBusiness: true,
+    formData,
   });
 
-  const {
-    editBeneficiaryHandler,
-    mobileNumberError,
-    walletNumberError,
-    saveloading,
-  } = useBenEditFunc({
-    services,
-    completedCrypto,
-    instapayWallets,
-    completedBank,
-    completedCard,
-    completedWallet,
-    cashPickupCompleted,
-    formData,
-    mobileNumber,
-    city,
-    country,
-    countryId,
-    countryIsoCode,
-    walletIds,
-    additionFields,
-    bankExtras,
-    cardExtras,
-    cashExtras,
-    accNumType,
-    ibanSwift,
-    cashPickupType,
-    cashPickupNumber,
-    walletError,
-    toggleSuccess,
-    mobileExtras,
-    inBusiness: true,
-    setClicked,
-    setMissingFields,
-    user,
-    companyName,
-    representativeFields,
-  });
+  const { addBeneficiaryHandler, benLoading, mobileError, walletMobileError, setMobileError } =
+    useBenCreateFunc({
+      services,
+      completedCrypto,
+      instapayWallets,
+      completedBank,
+      completedCard,
+      completedWallet,
+      cashPickupCompleted,
+      formData,
+      companyName,
+      mobileNumber,
+      city,
+      country,
+      countryId,
+      countryIsoCode,
+      walletIds,
+      representativeFields,
+      additionFields,
+      bankExtras,
+      cashExtras,
+      accNumType,
+      ibanSwift,
+      cashPickupType,
+      cashPickupNumber,
+      walletError,
+      toggleSuccess,
+      inBusiness: true,
+    });
+
+  const { editBeneficiaryHandler, mobileNumberError, walletNumberError, saveloading } =
+    useBenEditFunc({
+      services,
+      completedCrypto,
+      instapayWallets,
+      completedBank,
+      completedCard,
+      completedWallet,
+      cashPickupCompleted,
+      formData,
+      mobileNumber,
+      city,
+      country,
+      countryId,
+      countryIsoCode,
+      walletIds,
+      additionFields,
+      bankExtras,
+      cardExtras,
+      cashExtras,
+      accNumType,
+      ibanSwift,
+      cashPickupType,
+      cashPickupNumber,
+      walletError,
+      toggleSuccess,
+      mobileExtras,
+      inBusiness: true,
+      setClicked,
+      setMissingFields,
+      user,
+      companyName,
+      representativeFields,
+    });
 
   const inputChangeHandler = (e) => {
     let { name, value } = e.target;
@@ -572,11 +535,7 @@ const BusinessAccount = ({
   // }, [bankCountry, country])
 
   useEffect(() => {
-    if (
-      formData.bank_name &&
-      formData.branch_name &&
-      formData.bank_account_number
-    ) {
+    if (formData.bank_name && formData.branch_name && formData.bank_account_number) {
       setCompletedBank(true);
     } else {
       setCompletedBank(false);
@@ -609,10 +568,7 @@ const BusinessAccount = ({
 
   const isAfricanBank = useMemo(() => {
     if (country) {
-      return (
-        citiesData.find((item) => item.iso3 === bankCountryCode)?.region ===
-        "Africa"
-      );
+      return citiesData.find((item) => item.iso3 === bankCountryCode)?.region === "Africa";
     }
   }, [bankCountryCode]);
 
@@ -639,9 +595,7 @@ const BusinessAccount = ({
               ? t("Beneficiary has been updated successfully.")
               : t("Beneficiary has been successfully added.")
           }
-          subMessage={
-            edit ? t("Beneficiary Updated.") : t("Beneficiary Added.")
-          }
+          subMessage={edit ? t("Beneficiary Updated.") : t("Beneficiary Added.")}
         />
 
         <CardBody>
@@ -669,9 +623,7 @@ const BusinessAccount = ({
                   pattern="[A-Za-z\\s]+"
                   title={t("Only alphabetic characters are allowed")}
                   value={companyName}
-                  onChange={(e) =>
-                    setCompanyName(e.target.value.replace(/[^A-Za-z\s]/g, ""))
-                  }
+                  onChange={(e) => setCompanyName(e.target.value.replace(/[^A-Za-z\s]/g, ""))}
                   disabled={isFieldsDisabled}
                   readOnly={isFieldsDisabled}
                 />
@@ -711,24 +663,17 @@ const BusinessAccount = ({
                 </Label>
                 <CountryDropDown
                   onSelect={(selectedCountry) => {
-                    if (
-                      selectedCountry?.name?.toLowerCase()?.includes("bolivia")
-                    ) {
-                      selectedCountry.name =
-                        "Bolivia, Plurinational State of bolivia";
+                    if (selectedCountry?.name?.toLowerCase()?.includes("bolivia")) {
+                      selectedCountry.name = "Bolivia, Plurinational State of bolivia";
                     }
                     const filtered = countries.filter((item) =>
-                      selectedCountry?.name
-                        ?.toLowerCase()
-                        ?.includes(item?.name?.toLowerCase()),
+                      selectedCountry?.name?.toLowerCase()?.includes(item?.name?.toLowerCase()),
                     )?.[0];
                     setCountryCode(filtered?.code);
                     setCountry(selectedCountry?.name);
                     setCountryIsoCode(selectedCountry?.alpha3);
                     const country_id = filteringCountries.filter((item) =>
-                      item?.country_name
-                        ?.toLowerCase()
-                        ?.includes(filtered?.name?.toLowerCase()),
+                      item?.country_name?.toLowerCase()?.includes(filtered?.name?.toLowerCase()),
                     )?.[0]?._id;
                     setCountryId(country_id);
                   }}
@@ -822,9 +767,7 @@ const BusinessAccount = ({
                 gap: "1rem",
               }}
             >
-              <FormGroup
-                style={{ flex: 1, margin: 0, transform: "translateY(-4px)" }}
-              >
+              <FormGroup style={{ flex: 1, margin: 0, transform: "translateY(-4px)" }}>
                 <Label className="col-form-label" htmlFor="mobile_number">
                   {t("Mobile Number")} <span className="req_star">*</span>
                 </Label>
@@ -903,13 +846,8 @@ const BusinessAccount = ({
           >
             {Object.keys(representativeFields).map((item, key) =>
               item === "id_type" ? (
-                <FormGroup
-                  key={key}
-                  style={{ flex: 1, margin: 0, minWidth: "250px" }}
-                >
-                  <Label className="col-form-label">
-                    {t(service_name_formatter(item))}
-                  </Label>
+                <FormGroup key={key} style={{ flex: 1, margin: 0, minWidth: "250px" }}>
+                  <Label className="col-form-label">{t(service_name_formatter(item))}</Label>
                   <Input
                     className="form-control"
                     style={{ flex: 1, minWidth: "250px" }}
@@ -929,22 +867,13 @@ const BusinessAccount = ({
                   </Input>
                 </FormGroup>
               ) : item?.toLowerCase()?.includes("date") ? (
-                <FormGroup
-                  key={key}
-                  style={{ flex: 1, margin: 0, minWidth: "250px" }}
-                >
-                  <Label className="col-form-label">
-                    {t(service_name_formatter(item))}
-                  </Label>
+                <FormGroup key={key} style={{ flex: 1, margin: 0, minWidth: "250px" }}>
+                  <Label className="col-form-label">{t(service_name_formatter(item))}</Label>
                   <DatePicker
                     format="DD/MM/YYYY"
                     disabled={isFieldsDisabled}
-                    disableFuture={
-                      item?.toLowerCase()?.includes("delivery") ? true : false
-                    }
-                    disablePast={
-                      item?.toLowerCase()?.includes("expiration") ? true : false
-                    }
+                    disableFuture={item?.toLowerCase()?.includes("delivery") ? true : false}
+                    disablePast={item?.toLowerCase()?.includes("expiration") ? true : false}
                     readOnly={isFieldsDisabled}
                     className="form-control custom-datepicker"
                     style={{
@@ -994,13 +923,8 @@ const BusinessAccount = ({
                   />
                 </FormGroup>
               ) : (
-                <FormGroup
-                  key={key}
-                  style={{ flex: 1, margin: 0, minWidth: "250px" }}
-                >
-                  <Label className="col-form-label">
-                    {t(service_name_formatter(item))}
-                  </Label>
+                <FormGroup key={key} style={{ flex: 1, margin: 0, minWidth: "250px" }}>
+                  <Label className="col-form-label">{t(service_name_formatter(item))}</Label>
                   <Input
                     className="form-control"
                     style={{ flex: 1, minWidth: "250px" }}
@@ -1009,9 +933,7 @@ const BusinessAccount = ({
                     maxLength={50}
                     name={item}
                     pattern={
-                      item === "first_name" || item === "last_name"
-                        ? "[A-Za-z\\s]+"
-                        : undefined
+                      item === "first_name" || item === "last_name" ? "[A-Za-z\\s]+" : undefined
                     }
                     title={
                       item === "first_name" || item === "last_name"
@@ -1020,9 +942,7 @@ const BusinessAccount = ({
                     }
                     disabled={isFieldsDisabled}
                     readOnly={isFieldsDisabled}
-                    onKeyDown={
-                      item === "id_number" ? preventEdgeSpaces : undefined
-                    }
+                    onKeyDown={item === "id_number" ? preventEdgeSpaces : undefined}
                     onChange={handleRepresentativeFieldChange}
                   />
                 </FormGroup>
@@ -1048,13 +968,9 @@ const BusinessAccount = ({
           >
             {Object.keys(additionFields).map((item, key) =>
               item?.toLowerCase()?.includes("date") ? (
-                <FormGroup
-                  key={key}
-                  style={{ flex: 1, margin: 0, minWidth: "250px" }}
-                >
+                <FormGroup key={key} style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                   <Label className="col-form-label">
-                    {t(service_name_formatter(item))}{" "}
-                    <span className="req_star">*</span>
+                    {t(service_name_formatter(item))} <span className="req_star">*</span>
                   </Label>
                   <DatePicker
                     format="DD/MM/YYYY"
@@ -1110,13 +1026,9 @@ const BusinessAccount = ({
                   />
                 </FormGroup>
               ) : (
-                <FormGroup
-                  key={key}
-                  style={{ flex: 1, margin: 0, minWidth: "250px" }}
-                >
+                <FormGroup key={key} style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                   <Label className="col-form-label">
-                    {t(service_name_formatter(item))}{" "}
-                    <span className="req_star">*</span>
+                    {t(service_name_formatter(item))} <span className="req_star">*</span>
                   </Label>
                   <Input
                     disabled={isFieldsDisabled}
@@ -1343,9 +1255,7 @@ const BusinessAccount = ({
                   !completedCrypto &&
                   !completedWallet &&
                   !cashPickupCompleted &&
-                  instapayWallets.some(
-                    (item) => item.length < 8 || item.length > 8,
-                  ))
+                  instapayWallets.some((item) => item.length < 8 || item.length > 8))
               }
               onClick={addBeneficiaryHandler}
             >
@@ -1441,8 +1351,7 @@ const BusinessAccount = ({
                       cursor: "pointer",
                       type: "button",
                       borderRadius: "10px",
-                      background:
-                        "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                      background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                       color: "white",
                       display: "flex",
                       alignItems: "center",

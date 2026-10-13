@@ -36,12 +36,10 @@ const Auth = () => {
     const token = localStorage.getItem("token");
     if (token) {
       const path =
-        sessionStorage.getItem("path") &&
-        sessionStorage.getItem("path") !== "undefined"
+        sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined"
           ? sessionStorage.getItem("path")
           : redirect || "";
-      window.location.href =
-        path && path !== "undefined" ? path : "/dashboard/default";
+      window.location.href = path && path !== "undefined" ? path : "/dashboard/default";
     }
   }, []);
 
@@ -70,22 +68,12 @@ const Auth = () => {
   const showText = width > 1100 || width <= 810;
   return (
     <>
-      {registrationCompleted &&
-      window.location.pathname.toLowerCase().includes("signup") ? (
-        <RegistrationCompleted
-          setStep={setStep}
-          setIsLoginForm={setIsLoginForm}
-        />
+      {registrationCompleted && window.location.pathname.toLowerCase().includes("signup") ? (
+        <RegistrationCompleted setStep={setStep} setIsLoginForm={setIsLoginForm} />
       ) : (
         <section className={styles.container}>
           <div className={styles.leftSide}>
-            <img
-              src={rightImage}
-              width={"100%"}
-              height={"100%"}
-              loading="lazy"
-              alt=""
-            />
+            <img src={rightImage} width={"100%"} height={"100%"} loading="lazy" alt="" />
             <img
               src={ShortLogo}
               className={styles.logo}
@@ -128,9 +116,7 @@ const Auth = () => {
               </div>
             )}
           </div>
-          <div
-            className={`${styles.form} ${!isLoginForm && styles.registerFormContainer}`}
-          >
+          <div className={`${styles.form} ${!isLoginForm && styles.registerFormContainer}`}>
             <img
               src={FullLogo}
               alt="Instapay"

@@ -1,13 +1,7 @@
 // import { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 // import Loader from "../Layout/Loader";
-import {
-  AgentCommissionRoutes,
-  authRoutes,
-  guestRoutes,
-  publicRoutes,
-  routes,
-} from "./Routes";
+import { AgentCommissionRoutes, authRoutes, guestRoutes, publicRoutes, routes } from "./Routes";
 import Layout from "../Layout/Layout";
 import AgentLayout from "../Layout/AgentLayout";
 

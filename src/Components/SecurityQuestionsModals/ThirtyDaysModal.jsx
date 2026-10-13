@@ -27,8 +27,7 @@ const ThirtyDaysModal = ({ isOpen, toggle }) => {
         </p>
         <div>
           <Button onClick={addNow}>
-            {t("Setup Security Questions")}{" "}
-            <ChevronRight color="white" size={20} />
+            {t("Setup Security Questions")} <ChevronRight color="white" size={20} />
           </Button>
         </div>
       </ModalBody>

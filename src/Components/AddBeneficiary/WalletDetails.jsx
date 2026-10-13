@@ -36,19 +36,14 @@ const WalletDetails = ({
 
           if (!firstName && !lastName && setFirstName && setLastName) {
             setFirstName(
-              decrypted.walletDetails.first_name ??
-                decrypted?.walletDetails?.company_name,
+              decrypted.walletDetails.first_name ?? decrypted?.walletDetails?.company_name,
             );
             setLastName(decrypted.walletDetails.last_name ?? "");
           }
           setDetails(decrypted.walletDetails);
-          const filtered = walletIds.filter(
-            (item) => item === decrypted?.walletDetails?._id,
-          );
+          const filtered = walletIds.filter((item) => item === decrypted?.walletDetails?._id);
           setWalletIds(
-            filtered.length === 0
-              ? [...walletIds, decrypted?.walletDetails?._id]
-              : walletIds,
+            filtered.length === 0 ? [...walletIds, decrypted?.walletDetails?._id] : walletIds,
           );
           // setDuplicateWallet(filtered.length === 0 || firstTime ? false : true)
           setWalletError("");

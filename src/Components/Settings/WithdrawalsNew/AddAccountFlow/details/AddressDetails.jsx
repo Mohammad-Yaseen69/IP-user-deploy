@@ -31,9 +31,7 @@ const AddressDetails = ({ names, optional, values, onChange, country }) => {
         title={t("Your address in {{country}}", {
           country: country?.name ?? "",
         })}
-        why={t(
-          "The payout provider needs your address in the country you withdraw to.",
-        )}
+        why={t("The payout provider needs your address in the country you withdraw to.")}
       />
       <FieldGrid
         names={names}

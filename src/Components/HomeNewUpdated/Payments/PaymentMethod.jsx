@@ -45,21 +45,15 @@ const PaymentMethod = ({ setPaymentMethod, item, setStep }) => {
 
   const localCurrency = () => {
     const cont = CitiesData.find(
-      (item) =>
-        item.iso3?.toUpperCase() ===
-        userDetails?.country_iso_code?.toUpperCase(),
+      (item) => item.iso3?.toUpperCase() === userDetails?.country_iso_code?.toUpperCase(),
     );
     return cont.currency;
   };
   const getWallet = () => {
-    const wallet = userWallets?.find(
-      (item) => item?.currency?.code === localCurrency(),
-    );
+    const wallet = userWallets?.find((item) => item?.currency?.code === localCurrency());
     if (wallet?.currency?.code) {
       return {
-        ...currencies.find(
-          (item) => item.currency_code === wallet?.currency?.code,
-        ),
+        ...currencies.find((item) => item.currency_code === wallet?.currency?.code),
         ...wallet,
       };
     }
@@ -151,9 +145,7 @@ const PaymentMethod = ({ setPaymentMethod, item, setStep }) => {
                   }}
                 />
               </div>
-              <h5
-                style={{ marginBottom: 0, fontSize: "1.2rem", color: "black" }}
-              >
+              <h5 style={{ marginBottom: 0, fontSize: "1.2rem", color: "black" }}>
                 {t(channel?.name)}
               </h5>
             </div>

@@ -7,10 +7,7 @@ const usePlainFx = () => {
     mutationFn: (payload) =>
       apiWrapper({
         endpoint: `/api/wallet/get-plain-exchange-rate?from=${payload.from}&to=${payload.to}&amount=${payload.amount}`,
-      }).then(
-        (dec) =>
-          dec?.exchangeRate?.result ?? dec?.exchangeRate?.exchanged_amount,
-      ),
+      }).then((dec) => dec?.exchangeRate?.result ?? dec?.exchangeRate?.exchanged_amount),
   });
 
   const getExchangeRate = useCallback(

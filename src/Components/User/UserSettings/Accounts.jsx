@@ -18,25 +18,17 @@ const Accounts = ({ isCollapsed, setIsCollapsed }) => {
         onClick={toggleAccordion}
       >
         <div>
-          <H4 attrH4={{ className: "card-title mb-0" }}>
-            {t("Social Accounts")}
-          </H4>
+          <H4 attrH4={{ className: "card-title mb-0" }}>{t("Social Accounts")}</H4>
           <p style={{ marginTop: ".5rem", color: "black", fontWeight: "300" }}>
             {t("Here you can setup and manage your integration settings.")}
           </p>
         </div>
-        <div className="card-options">
-          {isCollapsed ? <ChevronDown /> : <ChevronUp />}
-        </div>
+        <div className="card-options">{isCollapsed ? <ChevronDown /> : <ChevronUp />}</div>
       </CardHeader>
-      <div
-        className={`accordion-body ${isCollapsed ? "collapsed" : "expanded"}`}
-      >
+      <div className={`accordion-body ${isCollapsed ? "collapsed" : "expanded"}`}>
         <CardBody>
           {AccountsData.map((data) => {
-            return (
-              <AccountItem key={data.name} data={data} ssa={setIsCollapsed} />
-            );
+            return <AccountItem key={data.name} data={data} ssa={setIsCollapsed} />;
           })}
         </CardBody>
       </div>

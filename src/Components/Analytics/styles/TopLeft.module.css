@@ -40,9 +40,7 @@
   height: 23.268px;
   flex-shrink: 0;
   border-radius: 6.323px;
-  background:
-    linear-gradient(341deg, #e64067 -4.84%, #5926f0 90.69%, #4828a0 166.81%),
-    #000;
+  background: linear-gradient(341deg, #e64067 -4.84%, #5926f0 90.69%, #4828a0 166.81%), #000;
   box-shadow: 0px 4.216px 7.377px 0px rgba(172, 53, 159, 0.31);
   display: flex;
   justify-content: center;

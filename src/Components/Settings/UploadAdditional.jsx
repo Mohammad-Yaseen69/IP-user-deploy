@@ -1,26 +1,10 @@
 import React, { useState, useEffect, useContext, useMemo } from "react";
-import {
-  Badge,
-  Col,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-  Row,
-} from "reactstrap";
+import { Badge, Col, Modal, ModalBody, ModalFooter, ModalHeader, Row } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
-import {
-  FileText,
-  Info,
-  ChevronRight,
-  UploadCloud,
-  X,
-  Video,
-  Image,
-} from "react-feather";
+import { FileText, Info, ChevronRight, UploadCloud, X, Video, Image } from "react-feather";
 import { toast } from "react-toastify";
 
 const UploadAdditional = ({ isOpen, toggle, files, user_id }) => {
@@ -36,9 +20,7 @@ const UploadAdditional = ({ isOpen, toggle, files, user_id }) => {
     return [...(files || [])]
       .filter(
         (item) =>
-          item?.status === "requested" ||
-          item?.status === "decline" ||
-          item?.status === "declined",
+          item?.status === "requested" || item?.status === "decline" || item?.status === "declined",
       )
       .sort((a, b) => (b.isRequired ? 1 : 0) - (a.isRequired ? 1 : 0));
   }, [files]);
@@ -77,10 +59,7 @@ const UploadAdditional = ({ isOpen, toggle, files, user_id }) => {
     if (!file || !fileType) return true;
     const type = fileType.toLowerCase();
     if (type === "pdf") {
-      return (
-        file.type === "application/pdf" ||
-        file.name.toLowerCase().endsWith(".pdf")
-      );
+      return file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
     }
     if (type === "image") {
       return file.type.startsWith("image/");
@@ -150,13 +129,9 @@ const UploadAdditional = ({ isOpen, toggle, files, user_id }) => {
         toggle();
       }
     } catch (error) {
-      const dec = error?.response?.data?.data
-        ? decryptData(error.response.data.data)
-        : null;
+      const dec = error?.response?.data?.data ? decryptData(error.response.data.data) : null;
       const errMsg =
-        dec?.message ||
-        error?.response?.data?.message ||
-        t("Upload failed. Please try again.");
+        dec?.message || error?.response?.data?.message || t("Upload failed. Please try again.");
       toast.error(errMsg);
     } finally {
       setIsUploading(false);
@@ -189,9 +164,7 @@ const UploadAdditional = ({ isOpen, toggle, files, user_id }) => {
       <Modal isOpen={isOpen} toggle={toggle} centered>
         <ModalHeader toggle={toggle}>{t("Upload Requested Files")}</ModalHeader>
         <ModalBody style={{ padding: "24px", textAlign: "center" }}>
-          <p style={{ color: "#64748b", margin: 0 }}>
-            {t("No requested files need upload.")}
-          </p>
+          <p style={{ color: "#64748b", margin: 0 }}>{t("No requested files need upload.")}</p>
         </ModalBody>
       </Modal>
     );
@@ -210,9 +183,7 @@ const UploadAdditional = ({ isOpen, toggle, files, user_id }) => {
         className="border-bottom-0 pb-0"
       >
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <span
-            style={{ fontWeight: "700", fontSize: "18px", color: "#0f172a" }}
-          >
+          <span style={{ fontWeight: "700", fontSize: "18px", color: "#0f172a" }}>
             {t("Upload Requested Files")}
           </span>
           <span
@@ -267,9 +238,7 @@ const UploadAdditional = ({ isOpen, toggle, files, user_id }) => {
                     fontSize: "10px",
                     padding: "4px 8px",
                     borderRadius: "6px",
-                    border: isCurrentRequired
-                      ? "1px solid #fecaca"
-                      : "1px solid #cbd5e1",
+                    border: isCurrentRequired ? "1px solid #fecaca" : "1px solid #cbd5e1",
                     textTransform: "uppercase",
                     letterSpacing: "0.02em",
                     flexShrink: 0,
@@ -301,9 +270,7 @@ const UploadAdditional = ({ isOpen, toggle, files, user_id }) => {
                   color: "#475569",
                 }}
               >
-                <span style={{ fontWeight: "600" }}>
-                  {t("Allowed Format:")}
-                </span>
+                <span style={{ fontWeight: "600" }}>{t("Allowed Format:")}</span>
                 <span
                   style={{
                     backgroundColor: "#f1f5f9",
@@ -566,9 +533,7 @@ const UploadAdditional = ({ isOpen, toggle, files, user_id }) => {
               display: "flex",
               alignItems: "center",
               gap: "4px",
-              boxShadow: selectedFile
-                ? "0 4px 12px rgba(89, 38, 240, 0.2)"
-                : "none",
+              boxShadow: selectedFile ? "0 4px 12px rgba(89, 38, 240, 0.2)" : "none",
               transition: "all 0.2s ease",
             }}
           >

@@ -35,8 +35,7 @@ const TransDetails = ({ selectedWallet }) => {
   //     },
   // ]
 
-  const { userDetails, userWallets, authHeader, totalReferralAmount } =
-    useContext(UserContext);
+  const { userDetails, userWallets, authHeader, totalReferralAmount } = useContext(UserContext);
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -63,8 +62,7 @@ const TransDetails = ({ selectedWallet }) => {
         const defaultWalletCurrency = userWallets?.filter(
           (item) => item?._id === selectedWallet?._id,
         )?.[0]?.currency;
-        const currentData =
-          decrypted?.transactionSummary?.[defaultWalletCurrency?.code]?.total;
+        const currentData = decrypted?.transactionSummary?.[defaultWalletCurrency?.code]?.total;
         setData([
           {
             name: "Number of Transactions",

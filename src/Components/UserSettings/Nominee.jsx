@@ -26,12 +26,9 @@ const Nominee = ({ isCollapsed, setIsCollapsed }) => {
     if (userDetails) {
       const getNomineeDetails = () => {
         axios
-          .get(
-            `${import.meta.env.VITE_IP_DEV_API}/api/nominee/get-nominee/${userDetails?._id}`,
-            {
-              headers: authHeader,
-            },
-          )
+          .get(`${import.meta.env.VITE_IP_DEV_API}/api/nominee/get-nominee/${userDetails?._id}`, {
+            headers: authHeader,
+          })
           .then((res) => {
             const decrypted = decryptData(res.data.data);
             setNominee(decrypted?.nomineeDetails);
@@ -53,23 +50,16 @@ const Nominee = ({ isCollapsed, setIsCollapsed }) => {
         onClick={toggleAccordion}
       >
         <H4 attrH4={{ className: "card-title mb-0" }}>{t("Nominee")}</H4>
-        <div className="card-options">
-          {isCollapsed ? <ChevronDown /> : <ChevronUp />}
-        </div>
+        <div className="card-options">{isCollapsed ? <ChevronDown /> : <ChevronUp />}</div>
       </CardHeader>
-      <div
-        className={`accordion-body ${isCollapsed ? "collapsed" : "expanded"}`}
-      >
+      <div className={`accordion-body ${isCollapsed ? "collapsed" : "expanded"}`}>
         <CardBody>
           {nominee?.full_name ? (
             <NomineeDetails nominee={nominee} setNominee={setNominee} />
           ) : (
             <>
               {addNominee ? (
-                <AddNominee
-                  setNominee={setNominee}
-                  setAddNominee={setAddNominee}
-                />
+                <AddNominee setNominee={setNominee} setAddNominee={setAddNominee} />
               ) : (
                 <div
                   style={{
@@ -86,8 +76,7 @@ const Nominee = ({ isCollapsed, setIsCollapsed }) => {
                   </p>
                   <Button
                     style={{
-                      background:
-                        "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                      background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                       border: "none",
                       outline: "none",
                       borderRadius: "10px",

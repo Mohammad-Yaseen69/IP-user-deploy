@@ -60,8 +60,7 @@ export const subscribeToPush = async (accountId, authHeader) => {
   if (!isSecure) {
     return {
       success: false,
-      error:
-        "Push notifications require a secure context (HTTPS or localhost).",
+      error: "Push notifications require a secure context (HTTPS or localhost).",
     };
   }
 
@@ -86,13 +85,9 @@ export const subscribeToPush = async (accountId, authHeader) => {
     const registration = await navigator.serviceWorker.register("/sw.js");
     await navigator.serviceWorker.ready;
 
-    const keyRes = await axios.get(
-      `${import.meta.env.VITE_IP_DEV_API}/api/web-push/public-key`,
-    );
+    const keyRes = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/web-push/public-key`);
 
-    const keyData = keyRes?.data?.data
-      ? decryptData(keyRes.data.data)
-      : keyRes.data;
+    const keyData = keyRes?.data?.data ? decryptData(keyRes.data.data) : keyRes.data;
     const rawPublicKey = keyData?.publicKey || keyRes.data?.publicKey;
 
     if (!rawPublicKey) {
@@ -127,18 +122,13 @@ export const subscribeToPush = async (accountId, authHeader) => {
       }
       return {
         success: false,
-        error:
-          subErr?.message || "Failed to subscribe to browser push service.",
+        error: subErr?.message || "Failed to subscribe to browser push service.",
       };
     }
 
-    const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(
-      navigator.userAgent,
-    );
+    const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
     const resolvedAccountId =
-      accountId ||
-      localStorage.getItem("account_id") ||
-      localStorage.getItem("user_id");
+      accountId || localStorage.getItem("account_id") || localStorage.getItem("user_id");
 
     const subscriptionPayload = {
       accountId: resolvedAccountId,
@@ -165,9 +155,7 @@ export const subscribeToPush = async (accountId, authHeader) => {
     return {
       success: false,
       error:
-        error?.response?.data?.message ||
-        error?.message ||
-        "Failed to complete push subscription.",
+        error?.response?.data?.message || error?.message || "Failed to complete push subscription.",
     };
   }
 };

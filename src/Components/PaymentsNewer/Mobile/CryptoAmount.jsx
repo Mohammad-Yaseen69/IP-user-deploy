@@ -124,9 +124,7 @@ const CryptoAmount = ({ setStep, amount, setAmount, cryptoCurrency }) => {
         }}
         className="m_t_1_05"
       >
-        <span style={{ color: "#808080", fontWeight: 500 }}>
-          {t("Transaction Fee: $1.32")}
-        </span>
+        <span style={{ color: "#808080", fontWeight: 500 }}>{t("Transaction Fee: $1.32")}</span>
       </div>
       <div
         style={{
@@ -143,10 +141,7 @@ const CryptoAmount = ({ setStep, amount, setAmount, cryptoCurrency }) => {
         className="m_t_1_05"
       >
         <AiFillInfoCircle size={50} />
-        <p
-          style={{ marginBottom: 0, lineHeight: "1.5" }}
-          className="orange_warning"
-        >
+        <p style={{ marginBottom: 0, lineHeight: "1.5" }} className="orange_warning">
           {t(
             "Note: Crypto prices frequently change. Refer to the final quotation on the confirm order page.",
           )}

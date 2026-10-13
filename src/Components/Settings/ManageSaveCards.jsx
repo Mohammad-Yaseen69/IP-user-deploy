@@ -48,9 +48,7 @@ const ManageSaveCards = () => {
       );
       await decryptData(res.data.data);
       toast.success("Deleted card successfully!");
-      setCards((prev) =>
-        prev.filter((item) => item?._id !== deleteData.current?._id),
-      );
+      setCards((prev) => prev.filter((item) => item?._id !== deleteData.current?._id));
       setDeleteData({ show: false, current: {} });
     } catch (error) {
     } finally {
@@ -147,17 +145,12 @@ const ManageSaveCards = () => {
         ))}
       </div>
 
-      <Modal
-        isOpen={deleteData.show}
-        toggle={() => setDeleteData({ show: false, current: {} })}
-      >
+      <Modal isOpen={deleteData.show} toggle={() => setDeleteData({ show: false, current: {} })}>
         <ModalHeader toggle={() => setDeleteData({ show: false, current: {} })}>
           {t("Delete Card Info")}
         </ModalHeader>
         <ModalBody>
-          {t(
-            "Are you sure you want to delete the Credit/Debit card ending with",
-          )}{" "}
+          {t("Are you sure you want to delete the Credit/Debit card ending with")}{" "}
           {deleteData.current?.last4}?
         </ModalBody>
         <ModalFooter>

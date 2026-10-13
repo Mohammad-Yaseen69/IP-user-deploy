@@ -1,12 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import {
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-} from "reactstrap";
+import { Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
@@ -14,14 +7,7 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { Camera, Check, Clock, X } from "react-feather";
 import GradientButton from "./GradientButton";
 
-const UploadAdditionalKYB = ({
-  isOpen,
-  toggle,
-  files,
-  user_id,
-  type = "kyb",
-  partner_id = "",
-}) => {
+const UploadAdditionalKYB = ({ isOpen, toggle, files, user_id, type = "kyb", partner_id = "" }) => {
   const { t } = useTranslation();
   const { authHeader, checkAuth } = useContext(UserContext);
   const [isUploading, setIsUploading] = useState(false);
@@ -105,9 +91,7 @@ const UploadAdditionalKYB = ({
                 key={item?._id}
               >
                 <div style={{ flex: 1 }}>
-                  <Label style={{ fontWeight: 600 }}>
-                    {item?.document_type}
-                  </Label>
+                  <Label style={{ fontWeight: 600 }}>{item?.document_type}</Label>
                   <p>{item?.desc}</p>
                 </div>
                 <div
@@ -148,9 +132,7 @@ const UploadAdditionalKYB = ({
                     type="file"
                     name={item?._id}
                     id={`inp_${item?._id}`}
-                    onChange={(e) =>
-                      handleFileChange(item?._id, e.target.files[0])
-                    }
+                    onChange={(e) => handleFileChange(item?._id, e.target.files[0])}
                   />
                 </div>
               </div>
@@ -168,12 +150,8 @@ const UploadAdditionalKYB = ({
                   gap: ".5rem",
                 }}
               >
-                {item?.status === "approved" && (
-                  <Check size={15} color="green" />
-                )}
-                {item?.status === "needs-review" && (
-                  <Clock size={15} color="orange" />
-                )}
+                {item?.status === "approved" && <Check size={15} color="green" />}
+                {item?.status === "needs-review" && <Clock size={15} color="orange" />}
                 {item?.status === "declined" && <X size={15} color="red" />}
                 {item?.document_type}({item?.status})
               </div>

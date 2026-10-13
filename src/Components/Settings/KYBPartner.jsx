@@ -1,22 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { ModalFooter } from "react-bootstrap";
-import {
-  CheckCircle,
-  Edit,
-  File,
-  RefreshCw,
-  Trash2,
-  Mail,
-} from "react-feather";
-import {
-  Button,
-  FormGroup,
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalHeader,
-} from "reactstrap";
+import { CheckCircle, Edit, File, RefreshCw, Trash2, Mail } from "react-feather";
+import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { UserContext } from "../../Context/UserContext";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import axios from "axios";
@@ -29,15 +14,9 @@ import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
 
-const KYB_ACTION_BLOCKED_STATUSES = [
-  "verified",
-  "approved",
-  "needs-review",
-  "needs_review",
-];
+const KYB_ACTION_BLOCKED_STATUSES = ["verified", "approved", "needs-review", "needs_review"];
 
-const isKybActionBlocked = (status) =>
-  KYB_ACTION_BLOCKED_STATUSES.includes(status);
+const isKybActionBlocked = (status) => KYB_ACTION_BLOCKED_STATUSES.includes(status);
 
 const KYBPartner = ({
   partner,
@@ -51,13 +30,10 @@ const KYBPartner = ({
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [updating, setUpdating] = useState(false);
-  const { authHeader, userDetails, checkAuth, verifyToken } =
-    useContext(UserContext);
+  const { authHeader, userDetails, checkAuth, verifyToken } = useContext(UserContext);
   const [partnerName, setPartnerName] = useState(partner?.name);
   const [partnerEmail, setPartnerEmail] = useState(partner?.email);
-  const [partnerDesignation, setPartnerDesignation] = useState(
-    partner?.designation,
-  );
+  const [partnerDesignation, setPartnerDesignation] = useState(partner?.designation);
   const [emailSent, setEmailSent] = useState(false);
   const [showAdditionalModal, setShowAdditionalModal] = useState(false);
   const { t } = useTranslation();
@@ -69,18 +45,13 @@ const KYBPartner = ({
       }),
     onError: (error) => {
       const dec = decryptData(error?.response?.data?.data);
-      toast.error(
-        dec?.message ||
-          "We are unable to process your request. Please try again later.",
-      );
+      toast.error(dec?.message || "We are unable to process your request. Please try again later.");
     },
   });
 
   const updatePartnerHandler = async () => {
     if (isKybActionBlocked(userDetails?.company?.kyb_status)) {
-      toast.error(
-        t("No action is allowed for the current business verification status."),
-      );
+      toast.error(t("No action is allowed for the current business verification status."));
       return;
     }
 
@@ -90,10 +61,7 @@ const KYBPartner = ({
     }
 
     if (
-      partners.find(
-        (p, i) =>
-          p.email.toLowerCase() === partnerEmail.toLowerCase() && i !== index,
-      )
+      partners.find((p, i) => p.email.toLowerCase() === partnerEmail.toLowerCase() && i !== index)
     ) {
       toast.error(t("A director with this email already exists."));
       return;
@@ -157,9 +125,7 @@ const KYBPartner = ({
 
   const deletePartnerHandler = async () => {
     if (isKybActionBlocked(userDetails?.company?.kyb_status)) {
-      toast.error(
-        t("No action is allowed for the current business verification status."),
-      );
+      toast.error(t("No action is allowed for the current business verification status."));
       return;
     }
 
@@ -193,9 +159,7 @@ const KYBPartner = ({
 
   const sendEmailVerification = async () => {
     if (isKybActionBlocked(userDetails?.company?.kyb_status)) {
-      toast.error(
-        "No action is allowed for the current business verification status.",
-      );
+      toast.error("No action is allowed for the current business verification status.");
       return;
     }
     setUpdating(true);
@@ -241,9 +205,7 @@ const KYBPartner = ({
 
   const handleRepayment = async () => {
     if (isKybActionBlocked(userDetails?.company?.kyb_status)) {
-      toast.error(
-        "No action is allowed for the current business verification status.",
-      );
+      toast.error("No action is allowed for the current business verification status.");
       return;
     }
 
@@ -259,9 +221,7 @@ const KYBPartner = ({
     }
   };
 
-  const isCompanyActionBlocked = isKybActionBlocked(
-    userDetails?.company?.kyb_status,
-  );
+  const isCompanyActionBlocked = isKybActionBlocked(userDetails?.company?.kyb_status);
   const isIndividualPartnerPaymentPending =
     partner?.addedIndividually === true && !partner?.kyc_verification_paid;
   const canSendVerificationEmail =
@@ -292,8 +252,7 @@ const KYBPartner = ({
               <Button
                 color="primary"
                 style={{
-                  background:
-                    "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                  background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                   border: "none",
                   outline: "none",
                   borderRadius: "5px",
@@ -309,8 +268,7 @@ const KYBPartner = ({
               <Button
                 color="primary"
                 style={{
-                  background:
-                    "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                  background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                   border: "none",
                   outline: "none",
                   borderRadius: "5px",
@@ -333,8 +291,7 @@ const KYBPartner = ({
               <Button
                 color="primary"
                 style={{
-                  background:
-                    "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                  background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                   border: "none",
                   outline: "none",
                   borderRadius: "5px",
@@ -356,8 +313,7 @@ const KYBPartner = ({
           <Button
             color="primary"
             style={{
-              background:
-                "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+              background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
               border: "none",
               outline: "none",
               borderRadius: "5px",
@@ -374,9 +330,7 @@ const KYBPartner = ({
           </Button>
         )}
         {shouldShowNoAction && (
-          <span style={{ fontWeight: 600, color: "darkgray" }}>
-            {t("No Action Allowed")}{" "}
-          </span>
+          <span style={{ fontWeight: 600, color: "darkgray" }}>{t("No Action Allowed")} </span>
         )}
         {!isCompanyActionBlocked &&
           partnerFiles?.length > 0 &&
@@ -384,8 +338,7 @@ const KYBPartner = ({
             <Button
               color="primary"
               style={{
-                background:
-                  "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                 border: "none",
                 outline: "none",
                 borderRadius: "5px",
@@ -447,10 +400,7 @@ const KYBPartner = ({
         />
       )}
 
-      <Modal
-        isOpen={showEditModal}
-        toggle={() => setShowEditModal(!showEditModal)}
-      >
+      <Modal isOpen={showEditModal} toggle={() => setShowEditModal(!showEditModal)}>
         <ModalHeader toggle={() => setShowEditModal(!showEditModal)}>
           {t("Edit Director")}
         </ModalHeader>
@@ -483,14 +433,11 @@ const KYBPartner = ({
         <ModalFooter>
           <Button
             style={{
-              background:
-                "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+              background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
               border: "none",
               outline: "none",
             }}
-            disabled={
-              updating || !partnerName || !partnerEmail || !partnerDesignation
-            }
+            disabled={updating || !partnerName || !partnerEmail || !partnerDesignation}
             onClick={updatePartnerHandler}
           >
             {updating ? "Updating" : "Update"}
@@ -498,24 +445,19 @@ const KYBPartner = ({
         </ModalFooter>
       </Modal>
 
-      <Modal
-        isOpen={showDeleteModal}
-        toggle={() => setShowDeleteModal(!showDeleteModal)}
-      >
+      <Modal isOpen={showDeleteModal} toggle={() => setShowDeleteModal(!showDeleteModal)}>
         <ModalHeader toggle={() => setShowDeleteModal(!showDeleteModal)}>
           {t("Delete Director")}
         </ModalHeader>
         <ModalBody>
           <p>
-            {t("Are you sure, you want to remove")} {partner?.name}{" "}
-            {t("as partner?")}
+            {t("Are you sure, you want to remove")} {partner?.name} {t("as partner?")}
           </p>
         </ModalBody>
         <ModalFooter>
           <Button
             style={{
-              background:
-                "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+              background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
               border: "none",
               outline: "none",
             }}
@@ -525,8 +467,7 @@ const KYBPartner = ({
           </Button>
           <Button
             style={{
-              background:
-                "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+              background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
               border: "none",
               outline: "none",
             }}

@@ -1,10 +1,4 @@
-import {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import InstapayLogo from "../../../assets/images/logo/logo_white.png";
@@ -22,13 +16,7 @@ import { UserContext } from "../../../Context/UserContext";
 import * as rdd from "react-device-detect";
 import useWindowWidth from "../../../utils/useWindowWidth";
 import BiometricSvg from "../../../assets/icons/fingerprint.png";
-import {
-  authIcon,
-  instaIcon,
-  smsIcon,
-  whatsappIcon,
-  email as emailIcon,
-} from "../files";
+import { authIcon, instaIcon, smsIcon, whatsappIcon, email as emailIcon } from "../files";
 import localforage from "localforage";
 import { logger } from "@sentry/react";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
@@ -37,10 +25,7 @@ import { startAuthentication } from "@simplewebauthn/browser";
 import VpnModal from "../VpnModal";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import LocationDeniedModal from "../LocationDeniedModal";
-import {
-  LOGIN_PAGE_TYPES,
-  setLastLoginUsedPage,
-} from "../../../utils/Functions/loginPage";
+import { LOGIN_PAGE_TYPES, setLastLoginUsedPage } from "../../../utils/Functions/loginPage";
 
 const Index = () => {
   const {
@@ -58,8 +43,7 @@ const Index = () => {
   const isQuickLoginRef = useRef(false);
   const redirectQuery = params.get("redirect");
   const redirect =
-    location?.state?.redirect ??
-    (redirectQuery ? decodeURIComponent(redirectQuery) : null);
+    location?.state?.redirect ?? (redirectQuery ? decodeURIComponent(redirectQuery) : null);
   const isPhoneNumber = /^\d{9,20}$/;
   const isEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const [emailVerified, setEmailVerified] = useState(false);
@@ -85,8 +69,7 @@ const Index = () => {
   const [currentOtpMethod, setCurrentOtpMethod] = useState("auth");
   const [pendingOtpMethod, setPendingOtpMethod] = useState(null);
   const [isMobile] = useState(
-    ((rdd.isMobile || rdd.isMobileSafari) && (!rdd.isAndroid || !rdd.isIOS)) ??
-      false,
+    ((rdd.isMobile || rdd.isMobileSafari) && (!rdd.isAndroid || !rdd.isIOS)) ?? false,
   );
   const [isInstagramBrowser, setisInstagramBrowser] = useState();
   const [lastOtpSentTo, setLastOtpSentTo] = useState(null);
@@ -108,8 +91,7 @@ const Index = () => {
   const [capturedSecurityData, setCapturedSecurityData] = useState(null);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const { country } = useCountryLocation();
-  const normalizeCredential = (value) =>
-    (value ?? "").toString().trim().toLowerCase();
+  const normalizeCredential = (value) => (value ?? "").toString().trim().toLowerCase();
   const getResolvedCredential = () => {
     const fromState = normalizeCredential(email);
     if (fromState) return fromState;
@@ -269,8 +251,7 @@ const Index = () => {
     }
     const credential = getResolvedCredential();
     const credentialIsEmail = isEmail.test(credential);
-    const isCredentialValid =
-      isPhoneNumber.test(credential) || credentialIsEmail;
+    const isCredentialValid = isPhoneNumber.test(credential) || credentialIsEmail;
 
     if (!isCredentialValid) {
       setIsLoginError("Uh-Oh! Please enter a valid email or phone number.");
@@ -290,13 +271,9 @@ const Index = () => {
     const isInsta = method
       ? method === "insta"
       : currentOtpMethod === "insta" ||
-        (currentOtpMethod !== "sms" &&
-          currentOtpMethod !== "email" &&
-          currentOtpMethod !== "wp");
+        (currentOtpMethod !== "sms" && currentOtpMethod !== "email" && currentOtpMethod !== "wp");
     const isWp = method ? method === "wp" : currentOtpMethod === "wp";
-    const isEmailOtp = method
-      ? method === "email"
-      : currentOtpMethod === "email";
+    const isEmailOtp = method ? method === "email" : currentOtpMethod === "email";
 
     const credentials = credentialIsEmail
       ? {
@@ -389,15 +366,10 @@ const Index = () => {
         const handleMethods = () => {
           if (method === undefined) {
             if (decrypted?.biometric && !isInstagramBrowser) return "biometric";
-            if (decrypted?.tfa && decrypted?.message === "authenticator")
-              return "auth";
-            if (decrypted?.message === "instagram" && !isInstagramBrowser)
-              return "insta";
+            if (decrypted?.tfa && decrypted?.message === "authenticator") return "auth";
+            if (decrypted?.message === "instagram" && !isInstagramBrowser) return "insta";
             if (decrypted?.message === "whatsapp") return "wp";
-            if (
-              decrypted?.otpMethod === "email" ||
-              (decrypted?.email && !decrypted?.phone)
-            )
+            if (decrypted?.otpMethod === "email" || (decrypted?.email && !decrypted?.phone))
               return "email";
             return "sms";
           } else {
@@ -524,18 +496,13 @@ const Index = () => {
           setIsLoginError(`Uh-Oh! Your account is onhold.`);
         } else if (decrypted.message?.toLowerCase()?.includes("delete")) {
           setIsLoginError(decrypted?.message);
-        } else if (
-          decrypted.message?.toLowerCase()?.includes("account is locked")
-        ) {
-          const time =
-            decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
-          const timeInSec =
-            +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
+        } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+          const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+          const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
           setProfileLockTime(timeInSec);
         } else {
           setIsLoginError(
-            decrypted?.message ||
-              "We're unable to process your request. Please try again",
+            decrypted?.message || "We're unable to process your request. Please try again",
           );
         }
       });
@@ -568,11 +535,7 @@ const Index = () => {
     }
     if (email.startsWith("92")) return;
     const newEmail = email;
-    if (
-      /^\d+$/.test(newEmail.slice(0, 6)) &&
-      newEmail.startsWith(0) &&
-      newEmail.length >= 6
-    ) {
+    if (/^\d+$/.test(newEmail.slice(0, 6)) && newEmail.startsWith(0) && newEmail.length >= 6) {
       if (country) {
         const formatted = `${country?.country_code?.split("+")[1] ?? "41"}${newEmail.slice(1)}`;
         setEmail(formatted);
@@ -616,12 +579,9 @@ const Index = () => {
         };
       }
     } catch (error) {
-      logger.error(
-        `IP Locate api failed at ${Date.now().toLocaleString()} for user: ${username}`,
-        {
-          error: error,
-        },
-      );
+      logger.error(`IP Locate api failed at ${Date.now().toLocaleString()} for user: ${username}`, {
+        error: error,
+      });
       console.log("ip locate failed");
       try {
         const res = await fetch("https://geolocation-db.com/json");
@@ -654,9 +614,7 @@ const Index = () => {
     };
 
     if (
-      (ipInfo?.privacy?.is_proxy ||
-        ipInfo?.privacy?.is_tor ||
-        ipInfo?.privacy?.is_vpn) &&
+      (ipInfo?.privacy?.is_proxy || ipInfo?.privacy?.is_tor || ipInfo?.privacy?.is_vpn) &&
       !isVpnAllowed
     ) {
       setShowNoticeModal(true);
@@ -747,8 +705,7 @@ const Index = () => {
       console.error("Login history creation failed:", err);
     } finally {
       const path =
-        sessionStorage.getItem("path") &&
-        sessionStorage.getItem("path") !== "undefined"
+        sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined"
           ? sessionStorage.getItem("path")
           : redirect || "";
       if (path && path !== "undefined") {
@@ -859,9 +816,7 @@ const Index = () => {
           })
           .catch((err) => {
             setIsPressed(false);
-            setIsLoginError(
-              "Something went wrong while getting account details",
-            );
+            setIsLoginError("Something went wrong while getting account details");
           });
       })
       .catch((error) => {
@@ -873,10 +828,8 @@ const Index = () => {
         console.log(decrypted);
         setIsPressed(false);
         if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-          const time =
-            decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
-          const timeInSec =
-            +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
+          const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+          const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
           setProfileLockTime(timeInSec);
         } else {
           setIsLoginError("Uh-Oh! You entered incorrect OTP.");
@@ -924,10 +877,7 @@ const Index = () => {
     if (
       resendTimer > 0 &&
       lastOtpSentTo &&
-      (method === "sms" ||
-        method === "insta" ||
-        method === "wp" ||
-        method === "email")
+      (method === "sms" || method === "insta" || method === "wp" || method === "email")
     ) {
       if (!hasChangedMethodOnce || lastOtpSentTo === method) {
         setHasChangedMethodOnce(true);
@@ -940,10 +890,7 @@ const Index = () => {
         setPendingOtpMethod(method);
         return;
       }
-    } else if (
-      method !== "biometric" &&
-      (method === "auth" || resendTimer === 0)
-    ) {
+    } else if (method !== "biometric" && (method === "auth" || resendTimer === 0)) {
       shouldCallLoginHandler = true;
       setCurrentOtpMethod(method);
     }
@@ -967,9 +914,7 @@ const Index = () => {
       setBiometricLoading(true);
       const credential = getResolvedCredential();
 
-      const emailOrPhone = isEmail.test(credential)
-        ? { email: credential }
-        : { phone: credential };
+      const emailOrPhone = isEmail.test(credential) ? { email: credential } : { phone: credential };
 
       const dec1 = await biometricChallenge.mutateAsync(emailOrPhone);
       let credentials;
@@ -998,9 +943,7 @@ const Index = () => {
           const dec2 = await biometricVerify.mutateAsync(verificationData);
           return dec2;
         } catch (err) {
-          const serverErr = err?.response?.data?.data
-            ? decryptData(err.response.data.data)
-            : err;
+          const serverErr = err?.response?.data?.data ? decryptData(err.response.data.data) : err;
           logger.error(`Biometric verification failed! for ${credential}`, {
             credentials,
             serverError: serverErr,
@@ -1013,10 +956,7 @@ const Index = () => {
               verificationData.credentials = freshCreds;
               return await tryVerify(attempt + 1);
             } catch (innerErr) {
-              console.error(
-                "biometric retry startAuthentication failed:",
-                innerErr,
-              );
+              console.error("biometric retry startAuthentication failed:", innerErr);
               throw err;
             }
           }
@@ -1172,11 +1112,7 @@ const Index = () => {
         }}
       />
 
-      <Modal
-        isOpen={showRestoreModal}
-        toggle={() => setShowRestoreModal(false)}
-        centered
-      >
+      <Modal isOpen={showRestoreModal} toggle={() => setShowRestoreModal(false)} centered>
         <ModalHeader toggle={() => setShowRestoreModal(false)}>
           {t("Account Restoration")}
         </ModalHeader>
@@ -1187,9 +1123,7 @@ const Index = () => {
             )}
           </p>
         </ModalBody>
-        <ModalFooter
-          style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}
-        >
+        <ModalFooter style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
           <Button
             color="secondary"
             onClick={resetLoginStates}
@@ -1208,8 +1142,7 @@ const Index = () => {
             onClick={(e) => loginHandler(e, undefined, true)}
             disabled={restoreLoading}
             style={{
-              background:
-                "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+              background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
               border: "none",
               borderRadius: "10px",
               padding: "10px 20px",
@@ -1221,13 +1154,7 @@ const Index = () => {
       </Modal>
 
       <div className={styles.child1}>
-        <img
-          src={rightImage}
-          width={"100%"}
-          height={"100%"}
-          loading="lazy"
-          alt=""
-        />
+        <img src={rightImage} width={"100%"} height={"100%"} loading="lazy" alt="" />
         <img
           src={InstapayLogo}
           className={styles.childLogo}

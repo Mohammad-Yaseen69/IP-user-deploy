@@ -40,8 +40,7 @@ const PrevModal = ({ isOpen, toggle, isMobile }) => {
 
   const { data, isLoading, isFetching, isError, error } = useQuery({
     queryKey: ["esims", userDetails?._id, skip, limit],
-    queryFn: () =>
-      getEsims({ userId: userDetails._id, authHeader, skip, limit }),
+    queryFn: () => getEsims({ userId: userDetails._id, authHeader, skip, limit }),
     enabled: isOpen && !!userDetails?._id,
     placeholderData: keepPreviousData,
     staleTime: 30 * 1000,
@@ -76,9 +75,7 @@ const PrevModal = ({ isOpen, toggle, isMobile }) => {
       className="prevModal"
       centered
     >
-      <ModalHeader toggle={toggle}>
-        {t("Previously purchases sSim")}
-      </ModalHeader>
+      <ModalHeader toggle={toggle}>{t("Previously purchases sSim")}</ModalHeader>
 
       <ModalBody>
         <div className={styles.modal}>
@@ -156,10 +153,7 @@ const PrevModal = ({ isOpen, toggle, isMobile }) => {
                       </button>
                     </div>
                   </div>
-                  <div
-                    style={{ width: isMobile && "100%" }}
-                    className={styles.right}
-                  >
+                  <div style={{ width: isMobile && "100%" }} className={styles.right}>
                     <div className={styles.card}>
                       <span>{t("Price")}</span>
                       <p>
@@ -178,10 +172,7 @@ const PrevModal = ({ isOpen, toggle, isMobile }) => {
                       <span>{t("Availability")}</span>
                       <p>{esim.availability}</p>
                     </div>
-                    <div
-                      style={{ gridColumn: "span 2" }}
-                      className={styles.card}
-                    >
+                    <div style={{ gridColumn: "span 2" }} className={styles.card}>
                       <span>{t("Lpa")}</span>
                       <p>{esim.lpa}</p>
                     </div>
@@ -207,9 +198,7 @@ const PrevModal = ({ isOpen, toggle, isMobile }) => {
           toggle={() => setQrModalContent({ show: false, url: "" })}
           isOpen={qrModalContent.show}
         >
-          <ModalHeader
-            toggle={() => setQrModalContent({ show: false, url: "" })}
-          >
+          <ModalHeader toggle={() => setQrModalContent({ show: false, url: "" })}>
             {t("Your Esim QR Code")}
           </ModalHeader>
           <ModalBody>

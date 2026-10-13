@@ -81,8 +81,7 @@ const PaymentType = ({
           padding: "1.5rem",
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
         className="i_t_pt"
       >
@@ -91,11 +90,7 @@ const PaymentType = ({
             key={item.name}
             style={{ marginBottom: 0, borderRadius: "12px" }}
             onClick={() => {
-              if (
-                !(sendType === "card"
-                  ? item?.value !== "instant"
-                  : item?.coming_soon)
-              ) {
+              if (!(sendType === "card" ? item?.value !== "instant" : item?.coming_soon)) {
                 setPaymentMethod(item);
               }
             }}
@@ -107,11 +102,7 @@ const PaymentType = ({
                 gap: ".5rem",
                 padding: "15px",
                 justifyContent: "space-between",
-                cursor: (
-                  sendType === "card"
-                    ? item?.value !== "instant"
-                    : item?.coming_soon
-                )
+                cursor: (sendType === "card" ? item?.value !== "instant" : item?.coming_soon)
                   ? "not-allowed"
                   : "pointer",
               }}
@@ -151,9 +142,7 @@ const PaymentType = ({
                   style={{ marginBottom: 0, fontSize: "1.2rem" }}
                 >{`${t(item.name.split(" ")[0])} ${t(item.name.split(" ")[1])}`}</h5>
               </div>
-              {(sendType === "card"
-                ? item?.value !== "instant"
-                : item?.coming_soon) && (
+              {(sendType === "card" ? item?.value !== "instant" : item?.coming_soon) && (
                 <div
                   style={{
                     padding: "5px 8px",

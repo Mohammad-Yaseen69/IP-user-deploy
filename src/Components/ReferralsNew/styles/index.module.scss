@@ -11,13 +11,7 @@
     h4 {
       font-size: 3vw;
       background:
-        linear-gradient(
-          3.1deg,
-          #e64067 -102.47%,
-          #5926f0 25.82%,
-          #4828a0 128.05%
-        ),
-        #ffffff;
+        linear-gradient(3.1deg, #e64067 -102.47%, #5926f0 25.82%, #4828a0 128.05%), #ffffff;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -38,8 +32,7 @@
     .total_refs {
       flex: 1;
       border-radius: 30px;
-      background:
-        linear-gradient(278deg, #5926f0 8.85%, #fc60ff 126.18%), #d9d9d9;
+      background: linear-gradient(278deg, #5926f0 8.85%, #fc60ff 126.18%), #d9d9d9;
       padding: 1.5rem;
       color: white;
       container-type: inline-size;
@@ -153,8 +146,7 @@
 
           div {
             display: flex;
-            background:
-              linear-gradient(0deg, #5926f0 0%, #5926f0 100%), #ececec;
+            background: linear-gradient(0deg, #5926f0 0%, #5926f0 100%), #ececec;
             padding: 10px 14px;
             gap: 0.6rem;
             align-items: center;
@@ -419,13 +411,7 @@
       h4 {
         font-size: 1.4rem;
         background:
-          linear-gradient(
-            3.1deg,
-            #e64067 -102.47%,
-            #5926f0 25.82%,
-            #4828a0 128.05%
-          ),
-          #ffffff;
+          linear-gradient(3.1deg, #e64067 -102.47%, #5926f0 25.82%, #4828a0 128.05%), #ffffff;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;

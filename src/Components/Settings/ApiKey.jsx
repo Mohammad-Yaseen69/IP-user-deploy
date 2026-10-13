@@ -192,8 +192,7 @@ const ApiKey = () => {
     if (data) {
       setFeatures(data?.userKey?.features?.user_selected);
       setAdminFeatures(
-        data?.userKey?.features?.admin_enabled ||
-          data?.userKey?.features?.user_selected,
+        data?.userKey?.features?.admin_enabled || data?.userKey?.features?.user_selected,
       );
       setWebHookUrl(data.userKey?.webhook_url);
     }
@@ -235,11 +234,7 @@ const ApiKey = () => {
                 <div>
                   <h3>{t("You haven't created an API key yet.")}</h3>
 
-                  <span>
-                    {t(
-                      "Generate one to start using our APIs and receive webhooks.",
-                    )}
-                  </span>
+                  <span>{t("Generate one to start using our APIs and receive webhooks.")}</span>
                 </div>
 
                 <button
@@ -247,9 +242,7 @@ const ApiKey = () => {
                   style={{ opacity: createMutation.isPending && 0.6 }}
                   disabled={createMutation.isPending}
                 >
-                  {createMutation.isPending
-                    ? t("Creating...")
-                    : t("Create Api Key")}
+                  {createMutation.isPending ? t("Creating...") : t("Create Api Key")}
                 </button>
               </div>
 
@@ -272,9 +265,7 @@ const ApiKey = () => {
                         boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.13)",
                       }}
                       type={showKey ? "text" : "password"}
-                      placeholder={
-                        isBusy ? "Loading..." : t("API key will be rendered")
-                      }
+                      placeholder={isBusy ? "Loading..." : t("API key will be rendered")}
                       readOnly
                       disabled
                       value={apiKey || ""}
@@ -325,14 +316,9 @@ const ApiKey = () => {
                     <button
                       className={styles.btn}
                       onClick={handleUpdateWebhook}
-                      disabled={
-                        featureStatus !== "enabled" ||
-                        updateWebhookMutation.isPending
-                      }
+                      disabled={featureStatus !== "enabled" || updateWebhookMutation.isPending}
                     >
-                      {updateWebhookMutation.isPending
-                        ? t("Saving...")
-                        : t("Update URL")}
+                      {updateWebhookMutation.isPending ? t("Saving...") : t("Update URL")}
                     </button>
                   </div>
                 </div>
@@ -341,10 +327,7 @@ const ApiKey = () => {
               <Col md="12" className={styles.sectionRow}>
                 <h5 className={styles.sectionTitle}>{t("Api Key Status")}</h5>
 
-                <div
-                  className={styles.inlineControls}
-                  style={{ flex: 1, maxWidth: "100%" }}
-                >
+                <div className={styles.inlineControls} style={{ flex: 1, maxWidth: "100%" }}>
                   <div style={{ width: "100%" }} className={styles.featureRow}>
                     <div className={styles.featureContent}>
                       <span className={styles.featureLabel}>{t("Status")}</span>
@@ -352,9 +335,7 @@ const ApiKey = () => {
                     <Toggle
                       checked={selectedStatus === "enabled" ? true : false}
                       onChange={() => {
-                        setSelectedStatus((prev) =>
-                          prev === "enabled" ? "disabled" : "enabled",
-                        );
+                        setSelectedStatus((prev) => (prev === "enabled" ? "disabled" : "enabled"));
                       }}
                     />
                   </div>
@@ -384,17 +365,13 @@ const ApiKey = () => {
                           <span className={styles.featureLabel}>
                             {t(feature.label)}
                             {!isAdminEnabled && (
-                              <span className={styles.adminBadge}>
-                                {t("Admin Disabled")}
-                              </span>
+                              <span className={styles.adminBadge}>{t("Admin Disabled")}</span>
                             )}
                           </span>
                         </div>
                         <Toggle
                           checked={isEnabled && isAdminEnabled}
-                          onChange={() =>
-                            !isLocked && handleUpdateFeatureToggle(feature.id)
-                          }
+                          onChange={() => !isLocked && handleUpdateFeatureToggle(feature.id)}
                           style={{
                             pointerEvents: isLocked ? "none" : "auto",
                             opacity: isLocked ? 0.5 : 1,
@@ -413,17 +390,13 @@ const ApiKey = () => {
                   onClick={handleDelete}
                   disabled={deleteKeyMutation.isPending}
                 >
-                  {deleteKeyMutation.isPending
-                    ? t("Deleting...")
-                    : t("Delete Key")}
+                  {deleteKeyMutation.isPending ? t("Deleting...") : t("Delete Key")}
                 </button>
                 <button
                   className={styles.btn}
                   style={{ padding: "13px 26px" }}
                   onClick={handleUpdateFeatures}
-                  disabled={
-                    updateFeatures.isPending || featureStatus !== "enabled"
-                  }
+                  disabled={updateFeatures.isPending || featureStatus !== "enabled"}
                 >
                   {updateFeatures.isPending ? t("Saving...") : t("Save")}
                 </button>

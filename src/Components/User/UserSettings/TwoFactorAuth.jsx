@@ -113,16 +113,10 @@ const TwoFactorAuth = ({ isCollapsed, setIsCollapsed }) => {
         className={`pb-0 ${isCollapsed ? "collapsed" : "expanded"}`}
         onClick={toggleAccordion}
       >
-        <H4 attrH4={{ className: "card-title mb-0" }}>
-          {t("Two Factor Authentication")}
-        </H4>
-        <div className="card-options">
-          {isCollapsed ? <ChevronDown /> : <ChevronUp />}
-        </div>
+        <H4 attrH4={{ className: "card-title mb-0" }}>{t("Two Factor Authentication")}</H4>
+        <div className="card-options">{isCollapsed ? <ChevronDown /> : <ChevronUp />}</div>
       </CardHeader>
-      <div
-        className={`accordion-body ${isCollapsed ? "collapsed" : "expanded"}`}
-      >
+      <div className={`accordion-body ${isCollapsed ? "collapsed" : "expanded"}`}>
         <CardBody>
           <div
             style={{
@@ -196,8 +190,7 @@ const TwoFactorAuth = ({ isCollapsed, setIsCollapsed }) => {
                 ) : (
                   <Button
                     style={{
-                      background:
-                        "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                      background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                       border: "none",
                       outline: "none",
                       borderRadius: "10px",
@@ -212,8 +205,7 @@ const TwoFactorAuth = ({ isCollapsed, setIsCollapsed }) => {
             ) : (
               <Button
                 style={{
-                  background:
-                    "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                  background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                   border: "none",
                   outline: "none",
                   borderRadius: "10px",

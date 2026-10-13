@@ -29,8 +29,7 @@ const ThreeDaysModal = ({ isOpen, toggle }) => {
             {t("Remind me later")}
           </button>
           <Button onClick={addNow}>
-            {t("Setup Security Questions")}{" "}
-            <ChevronRight color="white" size={20} />
+            {t("Setup Security Questions")} <ChevronRight color="white" size={20} />
           </Button>
         </div>
       </ModalBody>

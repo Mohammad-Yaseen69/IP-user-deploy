@@ -10,9 +10,7 @@ const SessionItem = ({ session, index }) => {
   return (
     <div className={styles.session}>
       <Modal isOpen={showModal} toggle={() => setShowModal(!showModal)}>
-        <ModalHeader toggle={() => setShowModal(!showModal)}>
-          {t("Session Details")}
-        </ModalHeader>
+        <ModalHeader toggle={() => setShowModal(!showModal)}>{t("Session Details")}</ModalHeader>
         <ModalBody>
           <div
             style={{
@@ -28,11 +26,7 @@ const SessionItem = ({ session, index }) => {
               margin: "0 auto",
             }}
           >
-            {session?.platform === "Windows" ? (
-              <Monitor size={70} />
-            ) : (
-              <Smartphone size={70} />
-            )}
+            {session?.platform === "Windows" ? <Monitor size={70} /> : <Smartphone size={70} />}
           </div>
           <ul
             style={{
@@ -119,9 +113,7 @@ const SessionItem = ({ session, index }) => {
               }}
             >
               <span>{t("Country")}</span>
-              <h5 style={{ marginBottom: 0 }}>
-                {session?.location?.country_name}
-              </h5>
+              <h5 style={{ marginBottom: 0 }}>{session?.location?.country_name}</h5>
             </li>
             <li
               style={{
@@ -133,8 +125,8 @@ const SessionItem = ({ session, index }) => {
             >
               <span>{t("Coordinates")}</span>
               <h5 style={{ marginBottom: 0 }}>
-                {t("Longitude")}: {session?.location?.longitude},{" "}
-                {t("Latitude")}: {session?.location?.latitude}
+                {t("Longitude")}: {session?.location?.longitude}, {t("Latitude")}:{" "}
+                {session?.location?.latitude}
               </h5>
             </li>
           </ul>
@@ -144,8 +136,7 @@ const SessionItem = ({ session, index }) => {
         {session?.platform === "Windows" ? <Monitor /> : <Smartphone />}
         <p>
           <span>
-            {session?.browser_name} <span>v{session?.browser_version}</span>{" "}
-            {t("on")}{" "}
+            {session?.browser_name} <span>v{session?.browser_version}</span> {t("on")}{" "}
             {session?.platform === "Linux" ? "Mobile" : session?.platform}
           </span>
           {/* <span>{session?.isActive ? "Your current session" : ""}</span> */}
@@ -167,8 +158,7 @@ const SessionItem = ({ session, index }) => {
           </Badges>
         )}
         <p style={{ margin: 0 }}>
-          {session?.location?.city}, {session?.location?.state},{" "}
-          {session?.location?.country_name}
+          {session?.location?.city}, {session?.location?.state}, {session?.location?.country_name}
         </p>
         <p
           style={{

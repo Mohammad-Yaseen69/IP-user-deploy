@@ -101,9 +101,7 @@ const AddBeneficiaryRequiredFields = ({
       );
       const dec = decryptData(res.data.data);
       console.log(dec);
-      toast.success(
-        `Fields updated for "${beneficiary?.first_name} ${beneficiary?.last_name}"`,
-      );
+      toast.success(`Fields updated for "${beneficiary?.first_name} ${beneficiary?.last_name}"`);
       dataHandler("beneficiary", dec?.beneficiaryData);
       close();
       toggle();
@@ -130,9 +128,7 @@ const AddBeneficiaryRequiredFields = ({
             width: "100%",
           }}
         >
-          <p style={{ marginBottom: "0" }}>
-            {t("Add Required Fields For Beneficiary")}
-          </p>
+          <p style={{ marginBottom: "0" }}>{t("Add Required Fields For Beneficiary")}</p>
           <X onClick={close} />
         </div>
       </ModalHeader>
@@ -159,13 +155,9 @@ const AddBeneficiaryRequiredFields = ({
             </div>
           </div>
           {fields.map((field, index) => (
-            <FormGroup
-              key={index}
-              className={service_name_formatter(field.name)}
-            >
+            <FormGroup key={index} className={service_name_formatter(field.name)}>
               <Label>
-                {t("Please Enter")} {service_name_formatter(field.name)}{" "}
-                {t("to Proceed")}
+                {t("Please Enter")} {service_name_formatter(field.name)} {t("to Proceed")}
               </Label>
               <Input
                 type="text"

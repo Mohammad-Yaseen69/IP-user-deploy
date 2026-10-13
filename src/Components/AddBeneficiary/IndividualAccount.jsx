@@ -1,12 +1,4 @@
-import {
-  Button,
-  CardBody,
-  CardFooter,
-  FormGroup,
-  Input,
-  Label,
-  Form,
-} from "reactstrap";
+import { Button, CardBody, CardFooter, FormGroup, Input, Label, Form } from "reactstrap";
 import "react-phone-input-2/lib/style.css";
 import "./req_star.css";
 import { useContext, useEffect, useMemo, useState } from "react";
@@ -39,10 +31,7 @@ import {
 import PaymentChannelUI from "./PaymentChannelUI";
 import NeemaBenExtrasFields from "./NeemaBenExtrasFields";
 import citiesData from "../CitiesDropDown/CitiesData.json";
-import {
-  preventEdgeSpaces,
-  preventEmailSpaces,
-} from "../../hooks/useTrimInput";
+import { preventEdgeSpaces, preventEmailSpaces } from "../../hooks/useTrimInput";
 
 const IndividualAccount = ({
   nameRegex,
@@ -72,9 +61,7 @@ const IndividualAccount = ({
 
   const [walletError, setWalletError] = useState("");
   const [instapayWalletsLength] = useState(1);
-  const [instapayWallets, setInstapayWallets] = useState(
-    Array(instapayWalletsLength).fill(""),
-  );
+  const [instapayWallets, setInstapayWallets] = useState(Array(instapayWalletsLength).fill(""));
   const [walletIds, setWalletIds] = useState([]);
   const [cashPickupType, setCashPickupType] = useState("");
   const [cashPickupNumber, setCashPickupNumber] = useState("");
@@ -89,11 +76,7 @@ const IndividualAccount = ({
     if (fieldsInfo === null) return false;
     let isInThere = false;
     for (const service in fieldsInfo) {
-      if (
-        fieldsInfo[service]?.[field_name]?.some(
-          (item) => item.name === sub_field_name,
-        )
-      ) {
+      if (fieldsInfo[service]?.[field_name]?.some((item) => item.name === sub_field_name)) {
         isInThere = true;
         break;
       }
@@ -199,13 +182,8 @@ const IndividualAccount = ({
     errorOnInvalid,
     error,
   });
-  const {
-    fieldsInfo,
-    services,
-    mobileProviders,
-    selectedCountryDetails,
-    getCountryFields,
-  } = useChannels({ setLoading, setActive, countryIsoCode, countryId });
+  const { fieldsInfo, services, mobileProviders, selectedCountryDetails, getCountryFields } =
+    useChannels({ setLoading, setActive, countryIsoCode, countryId });
 
   useEffect(() => {
     setFormData((prev) => ({
@@ -239,27 +217,18 @@ const IndividualAccount = ({
 
   const isAfricanBank = useMemo(() => {
     if (country) {
-      return (
-        citiesData.find((item) => item.iso3 === bankCountryCode)?.region ===
-        "Africa"
-      );
+      return citiesData.find((item) => item.iso3 === bankCountryCode)?.region === "Africa";
     }
   }, [bankCountryCode]);
   useEffect(() => {
-    const fields = services?.find((item) =>
-      item?.method?.toLowerCase()?.includes("bank"),
-    );
+    const fields = services?.find((item) => item?.method?.toLowerCase()?.includes("bank"));
 
     const bankCountryFields = fieldsInfo?.bank_country_fields;
 
     const resultKeys = Object.keys(bankExtras)
       .filter((item) =>
-        serviceFieldInfoValidate(
-          fields,
-          "credit_party_identifiers_accepted",
-          item,
-          fieldsInfo,
-        ) || bankCountryFields
+        serviceFieldInfoValidate(fields, "credit_party_identifiers_accepted", item, fieldsInfo) ||
+        bankCountryFields
           ? serviceFieldInfoValidate(
               "bank_country_fields",
               "credit_party_identifiers_accepted",
@@ -305,9 +274,7 @@ const IndividualAccount = ({
       Object.keys(cashExtras)
         .filter((item) =>
           serviceFieldInfoValidate(
-            services?.find((item) =>
-              item?.method?.toLowerCase()?.includes("cash"),
-            ),
+            services?.find((item) => item?.method?.toLowerCase()?.includes("cash")),
             "credit_party_identifiers_accepted",
             item,
             fieldsInfo,
@@ -340,9 +307,7 @@ const IndividualAccount = ({
       Object.keys(cardExtras)
         .filter((item) =>
           serviceFieldInfoValidate(
-            services?.find((item) =>
-              item?.method?.toLowerCase()?.includes("card"),
-            ),
+            services?.find((item) => item?.method?.toLowerCase()?.includes("card")),
             "credit_party_identifiers_accepted",
             item,
             fieldsInfo,
@@ -368,52 +333,47 @@ const IndividualAccount = ({
     if (bankCountryCode !== countryIsoCode) {
       getCountryFields(
         countryIsoCode,
-        services.find((service) =>
-          service.method?.toLowerCase()?.includes("bank"),
-        ),
+        services.find((service) => service.method?.toLowerCase()?.includes("bank")),
         bankCountryCode,
       );
     }
   }, [bankCountryCode]);
 
-  const { setIsCountryInFocus, addresses, addressInFocus, setAddressInFocus } =
-    useAddress({ countryIsoCode, formData });
-
-  const {
-    addBeneficiaryHandler,
-    benLoading,
-    mobileError,
-    walletMobileError,
-    setMobileError,
-  } = useBenCreateFunc({
-    services,
-    completedCrypto,
-    instapayWallets,
-    completedBank,
-    completedCard,
-    completedWallet,
-    cashPickupCompleted,
-    formData,
-    firstName,
-    lastName,
-    mobileNumber,
-    city,
-    country,
-    countryId,
+  const { setIsCountryInFocus, addresses, addressInFocus, setAddressInFocus } = useAddress({
     countryIsoCode,
-    walletIds,
-    basicExtras,
-    additionFields,
-    bankExtras,
-    cardExtras,
-    cashExtras,
-    accNumType,
-    ibanSwift,
-    cashPickupType,
-    cashPickupNumber,
-    walletError,
-    toggleSuccess,
+    formData,
   });
+
+  const { addBeneficiaryHandler, benLoading, mobileError, walletMobileError, setMobileError } =
+    useBenCreateFunc({
+      services,
+      completedCrypto,
+      instapayWallets,
+      completedBank,
+      completedCard,
+      completedWallet,
+      cashPickupCompleted,
+      formData,
+      firstName,
+      lastName,
+      mobileNumber,
+      city,
+      country,
+      countryId,
+      countryIsoCode,
+      walletIds,
+      basicExtras,
+      additionFields,
+      bankExtras,
+      cardExtras,
+      cashExtras,
+      accNumType,
+      ibanSwift,
+      cashPickupType,
+      cashPickupNumber,
+      walletError,
+      toggleSuccess,
+    });
   const [hoverErrors, setHoverErrors] = useState({
     city: false,
     postal_code: false,
@@ -431,10 +391,7 @@ const IndividualAccount = ({
           <MuiPickersUtilsProvider utils={DateMomentUtils}>
             <Form onSubmit={(e) => e.preventDefault()}>
               <CardBody>
-                <FormGroup
-                  onSubmit={(e) => e.preventDefault()}
-                  className="mb-3"
-                >
+                <FormGroup onSubmit={(e) => e.preventDefault()} className="mb-3">
                   <div
                     style={{
                       display: "flex",
@@ -459,17 +416,10 @@ const IndividualAccount = ({
                         pattern="[A-Za-z\s]+"
                         title={t("Only letters and spaces are allowed")}
                         value={firstName}
-                        onChange={(e) =>
-                          setFirstName(
-                            e.target.value.replace(/[^A-Za-z\s]/g, ""),
-                          )
-                        }
+                        onChange={(e) => setFirstName(e.target.value.replace(/[^A-Za-z\s]/g, ""))}
                       />{" "}
                     </FormGroup>
-                    {fieldInfoValidate(
-                      "required_receiving_entity_fields",
-                      "middlename",
-                    ) && (
+                    {fieldInfoValidate("required_receiving_entity_fields", "middlename") && (
                       <FormGroup style={{ flex: 1, margin: 0 }}>
                         <Label className="col-form-label" htmlFor="middlename">
                           {t("Middle Name")} <span className="req_star">*</span>
@@ -502,11 +452,7 @@ const IndividualAccount = ({
                         pattern="[A-Za-z\s]+"
                         title={t("Only letters and spaces are allowed")}
                         value={lastName}
-                        onChange={(e) =>
-                          setLastName(
-                            e.target.value.replace(/[^A-Za-z\s]/g, ""),
-                          )
-                        }
+                        onChange={(e) => setLastName(e.target.value.replace(/[^A-Za-z\s]/g, ""))}
                       />
                     </FormGroup>
                   </div>
@@ -519,14 +465,8 @@ const IndividualAccount = ({
                       gap: "1rem",
                     }}
                   >
-                    {fieldInfoValidate(
-                      "required_receiving_entity_fields",
-                      "id_type",
-                    ) ||
-                    fieldInfoValidate(
-                      "required_receiving_entity_fields",
-                      "id_number",
-                    ) ? (
+                    {fieldInfoValidate("required_receiving_entity_fields", "id_type") ||
+                    fieldInfoValidate("required_receiving_entity_fields", "id_number") ? (
                       <>
                         <FormGroup style={{ flex: 1, margin: 0 }}>
                           <Label className="col-form-label" htmlFor="id_type">
@@ -579,27 +519,19 @@ const IndividualAccount = ({
                       gap: "1rem",
                     }}
                   >
-                    <FormGroup
-                      style={{ flex: 1, margin: 0, minWidth: "250px" }}
-                    >
+                    <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                       <Label className="col-form-label" htmlFor="country">
                         {t("Country")} <span className="req_star">*</span>
                       </Label>
                       <CountryDropDown
                         onSelect={(selectedCountry) => {
-                          if (
-                            selectedCountry?.name
-                              ?.toLowerCase()
-                              ?.includes("bolivia")
-                          ) {
-                            selectedCountry.name =
-                              "Bolivia, Plurinational State of bolivia";
+                          if (selectedCountry?.name?.toLowerCase()?.includes("bolivia")) {
+                            selectedCountry.name = "Bolivia, Plurinational State of bolivia";
                           }
                           setCountry(selectedCountry?.name);
                           setCountryIsoCode(selectedCountry?.alpha3);
                           const country_id = filteringCountries.find(
-                            (item) =>
-                              item?.country_iso_code === selectedCountry.alpha3,
+                            (item) => item?.country_iso_code === selectedCountry.alpha3,
                           )?._id;
                           setCountryId(country_id);
                           setCity("");
@@ -706,10 +638,7 @@ const IndividualAccount = ({
                         placeholder={t("Postal Code")}
                         value={formData.postal_code}
                         onChange={(e) => {
-                          const value = e.target.value.replace(
-                            /[^a-zA-Z0-9]/g,
-                            "",
-                          );
+                          const value = e.target.value.replace(/[^a-zA-Z0-9]/g, "");
 
                           inputChangeHandler({
                             target: {
@@ -767,8 +696,7 @@ const IndividualAccount = ({
                   }
                 >
                   <Label className="col-form-label" htmlFor="address">
-                    {t("Address Line")}{" "}
-                    {isAddressRequired && <span className="req_star">*</span>}
+                    {t("Address Line")} {isAddressRequired && <span className="req_star">*</span>}
                   </Label>
                   <Input
                     className="form-control"
@@ -913,8 +841,7 @@ const IndividualAccount = ({
                     </FormGroup>
                     <FormGroup style={{ flex: 1, margin: 0 }}>
                       <label className="col-form-label" htmlFor="relation">
-                        {t("Relationship With Beneficiary")}{" "}
-                        <span className="req_star">*</span>
+                        {t("Relationship With Beneficiary")} <span className="req_star">*</span>
                       </label>
                       {userDetails?.account_type === "individual" ? (
                         <NestedDropdown
@@ -936,14 +863,12 @@ const IndividualAccount = ({
                           onChange={inputChangeHandler}
                         >
                           <option value="">{t("Select Relationship")}</option>
-                          {Object.keys(BUSINESS_RELATIONSHIPS).map(
-                            (option, idx) => (
-                              <option key={idx} value={option}>
-                                {" "}
-                                {BUSINESS_RELATIONSHIPS[option]}{" "}
-                              </option>
-                            ),
-                          )}
+                          {Object.keys(BUSINESS_RELATIONSHIPS).map((option, idx) => (
+                            <option key={idx} value={option}>
+                              {" "}
+                              {BUSINESS_RELATIONSHIPS[option]}{" "}
+                            </option>
+                          ))}
                         </Input>
                       )}
                     </FormGroup>
@@ -978,9 +903,7 @@ const IndividualAccount = ({
                         FormGroup
                         style={{ flex: 1, margin: 0, minWidth: "250px" }}
                       >
-                        <Label className="col-form-label">
-                          {t(service_name_formatter(item))}
-                        </Label>
+                        <Label className="col-form-label">{t(service_name_formatter(item))}</Label>
                         <Input
                           type="select"
                           className="form-control"
@@ -998,13 +921,8 @@ const IndividualAccount = ({
                         </Input>
                       </FormGroup>
                     ) : item === "date_of_birth" ? (
-                      <FormGroup
-                        FormGroup
-                        style={{ flex: 1, margin: 0, minWidth: "250px" }}
-                      >
-                        <Label className="col-form-label">
-                          {t(service_name_formatter(item))}
-                        </Label>
+                      <FormGroup FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
+                        <Label className="col-form-label">{t(service_name_formatter(item))}</Label>
 
                         <DatePicker
                           format="DD/MM/YYYY"
@@ -1056,22 +974,12 @@ const IndividualAccount = ({
                         />
                       </FormGroup>
                     ) : item === "nationality" ? (
-                      <FormGroup
-                        FormGroup
-                        style={{ flex: 1, margin: 0, minWidth: "250px" }}
-                      >
-                        <Label className="col-form-label">
-                          {t(service_name_formatter(item))}
-                        </Label>
+                      <FormGroup FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
+                        <Label className="col-form-label">{t(service_name_formatter(item))}</Label>
                         <CountryDropDown
                           onSelect={(selectedCountry) => {
-                            if (
-                              selectedCountry?.name
-                                ?.toLowerCase()
-                                ?.includes("bolivia")
-                            ) {
-                              selectedCountry.name =
-                                "Bolivia, Plurinational State of bolivia";
+                            if (selectedCountry?.name?.toLowerCase()?.includes("bolivia")) {
+                              selectedCountry.name = "Bolivia, Plurinational State of bolivia";
                             }
                             handleAddtionalFieldChange({
                               target: {
@@ -1085,13 +993,8 @@ const IndividualAccount = ({
                         />
                       </FormGroup>
                     ) : (
-                      <FormGroup
-                        FormGroup
-                        style={{ flex: 1, margin: 0, minWidth: "250px" }}
-                      >
-                        <Label className="col-form-label">
-                          {t(service_name_formatter(item))}
-                        </Label>
+                      <FormGroup FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
+                        <Label className="col-form-label">{t(service_name_formatter(item))}</Label>
                         <Input
                           className="form-control"
                           style={{ flex: 1, minWidth: "250px" }}
@@ -1110,14 +1013,8 @@ const IndividualAccount = ({
                       </FormGroup>
                     ),
                   )}
-                  {!fieldInfoValidate(
-                    "required_receiving_entity_fields",
-                    "id_type",
-                  ) &&
-                  !fieldInfoValidate(
-                    "required_receiving_entity_fields",
-                    "id_number",
-                  ) ? (
+                  {!fieldInfoValidate("required_receiving_entity_fields", "id_type") &&
+                  !fieldInfoValidate("required_receiving_entity_fields", "id_number") ? (
                     <>
                       <FormGroup style={{ flex: 1, margin: 0 }}>
                         <Label className="col-form-label" htmlFor="id_type">
@@ -1227,9 +1124,7 @@ const IndividualAccount = ({
                   }}
                 />
               </CardBody>
-              <CardFooter
-                style={{ display: "flex", justifyContent: "flex-end" }}
-              >
+              <CardFooter style={{ display: "flex", justifyContent: "flex-end" }}>
                 <Button
                   style={{
                     border: "none",
@@ -1260,9 +1155,7 @@ const IndividualAccount = ({
                       !completedCrypto &&
                       !completedWallet &&
                       !cashPickupCompleted &&
-                      instapayWallets.some(
-                        (item) => item.length < 8 || item.length > 8,
-                      )) ||
+                      instapayWallets.some((item) => item.length < 8 || item.length > 8)) ||
                     !formData.relation ||
                     (isAddressRequired ? !formData.address : false)
                   }

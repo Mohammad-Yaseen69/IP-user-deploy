@@ -353,9 +353,7 @@
 
   .verifyBtn {
     border-radius: var(--sm, 6px);
-    background:
-      linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%),
-      #4a32e3;
+    background: linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%), #4a32e3;
     margin-top: 16px;
   }
 

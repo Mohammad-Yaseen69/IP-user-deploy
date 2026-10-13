@@ -34,9 +34,7 @@ const Card = ({ cardType, isActive, handleSelect }) => {
   return (
     <div className={styles.cardContainer} onClick={handleSelect}>
       <div className={styles.top}>
-        <div
-          className={`${styles.iconContainer} ${isActive && styles.activeIconContainer}`}
-        >
+        <div className={`${styles.iconContainer} ${isActive && styles.activeIconContainer}`}>
           {isIndividual ? (
             <User color={isActive ? "#fff" : "#5926F0"} />
           ) : (
@@ -53,28 +51,18 @@ const Card = ({ cardType, isActive, handleSelect }) => {
             )}
           </span>
         </div>
-        <Radio
-          checkedIcon={<RadioChecked />}
-          checked={!!isActive}
-          sx={{ color: "#CECED2" }}
-        />
+        <Radio checkedIcon={<RadioChecked />} checked={!!isActive} sx={{ color: "#CECED2" }} />
       </div>
       <div className={styles.bottom}>
         <div className={styles.detailsList}>
           {isIndividual ? <IdDoc /> : <Documents />}
           <span>
-            {t(
-              isIndividual
-                ? "You'll need an ID document"
-                : "You'll need company documents",
-            )}
+            {t(isIndividual ? "You'll need an ID document" : "You'll need company documents")}
           </span>
         </div>
         <div className={styles.detailsList}>
           <TimerClock />
-          <span>
-            {t(isIndividual ? "About 8 minutes" : "About 15 minutes")}
-          </span>
+          <span>{t(isIndividual ? "About 8 minutes" : "About 15 minutes")}</span>
         </div>
       </div>
     </div>

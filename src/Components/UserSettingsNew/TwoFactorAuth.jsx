@@ -106,9 +106,7 @@ const TwoFactorAuth = () => {
   return (
     <Card id="two_factor">
       <CardHeader className={"pb-0 expanded"}>
-        <H4 attrH4={{ className: "card-title mb-0" }}>
-          {t("Two Factor Authentication")}
-        </H4>
+        <H4 attrH4={{ className: "card-title mb-0" }}>{t("Two Factor Authentication")}</H4>
       </CardHeader>
       <div className={"accordion-body expanded"}>
         <CardBody>
@@ -189,8 +187,7 @@ const TwoFactorAuth = () => {
                 ) : (
                   <Button
                     style={{
-                      background:
-                        "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                      background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                       border: "none",
                       outline: "none",
                       borderRadius: "10px",
@@ -205,8 +202,7 @@ const TwoFactorAuth = () => {
             ) : (
               <Button
                 style={{
-                  background:
-                    "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                  background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                   border: "none",
                   outline: "none",
                   borderRadius: "10px",

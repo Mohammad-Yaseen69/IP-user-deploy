@@ -9,12 +9,7 @@ import security from "../files/security.png";
 import instalment from "../files/instalment.png";
 import split from "../files/split.png";
 
-const RequestType = ({
-  setStep,
-  paymentMethod,
-  setPaymentMethod,
-  setNotInstant,
-}) => {
+const RequestType = ({ setStep, paymentMethod, setPaymentMethod, setNotInstant }) => {
   const { t } = useTranslation();
   const data = [
     {
@@ -91,8 +86,7 @@ const RequestType = ({
                       width: "fit-content",
                       height: "fit-content",
                       borderRadius: "6px",
-                      whiteSpace:
-                        window.innerWidth > 400 ? "nowrap" : "initial",
+                      whiteSpace: window.innerWidth > 400 ? "nowrap" : "initial",
                     }}
                   >
                     {t("Coming Soon")}

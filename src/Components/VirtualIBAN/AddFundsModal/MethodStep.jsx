@@ -1,21 +1,10 @@
 import { useTranslation } from "react-i18next";
-import {
-  FUNDING_METHODS,
-  MOCK_WALLETS,
-} from "../../../stateMachines/addFundsFlow";
+import { FUNDING_METHODS, MOCK_WALLETS } from "../../../stateMachines/addFundsFlow";
 import styles from "./addFundsModal.module.scss";
 
 const WalletIcon = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-    <rect
-      x="2"
-      y="4"
-      width="12"
-      height="10"
-      rx="1.5"
-      stroke="#F2EEFF"
-      strokeWidth="1.2"
-    />
+    <rect x="2" y="4" width="12" height="10" rx="1.5" stroke="#F2EEFF" strokeWidth="1.2" />
     <path d="M2 6.5H14" stroke="#F2EEFF" strokeWidth="1.2" />
     <circle cx="11.5" cy="9.5" r="1" fill="#F2EEFF" />
   </svg>
@@ -23,28 +12,10 @@ const WalletIcon = () => (
 
 const CreditCardIcon = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-    <rect
-      x="1.5"
-      y="3.5"
-      width="13"
-      height="9"
-      rx="1.5"
-      stroke="#F2EEFF"
-      strokeWidth="1.2"
-    />
+    <rect x="1.5" y="3.5" width="13" height="9" rx="1.5" stroke="#F2EEFF" strokeWidth="1.2" />
     <path d="M1.5 6.5H14.5" stroke="#F2EEFF" strokeWidth="1.2" />
-    <path
-      d="M4 9.5H7"
-      stroke="#F2EEFF"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-    <path
-      d="M4 11H5.5"
-      stroke="#F2EEFF"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
+    <path d="M4 9.5H7" stroke="#F2EEFF" strokeWidth="1.2" strokeLinecap="round" />
+    <path d="M4 11H5.5" stroke="#F2EEFF" strokeWidth="1.2" strokeLinecap="round" />
   </svg>
 );
 
@@ -69,21 +40,8 @@ const PaypalIcon = () => (
 
 const MobileIcon = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-    <rect
-      x="4"
-      y="1.5"
-      width="8"
-      height="13"
-      rx="1.5"
-      stroke="#F2EEFF"
-      strokeWidth="1.2"
-    />
-    <path
-      d="M7 12H9"
-      stroke="#F2EEFF"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
+    <rect x="4" y="1.5" width="8" height="13" rx="1.5" stroke="#F2EEFF" strokeWidth="1.2" />
+    <path d="M7 12H9" stroke="#F2EEFF" strokeWidth="1.2" strokeLinecap="round" />
     <path d="M4 10.5H12" stroke="#F2EEFF" strokeWidth="1.2" />
   </svg>
 );
@@ -97,42 +55,12 @@ const BankIcon = () => (
       strokeLinecap="round"
       strokeLinejoin="round"
     />
-    <path
-      d="M3.5 6.5V11"
-      stroke="#F2EEFF"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-    <path
-      d="M6.5 6.5V11"
-      stroke="#F2EEFF"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-    <path
-      d="M9.5 6.5V11"
-      stroke="#F2EEFF"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-    <path
-      d="M12.5 6.5V11"
-      stroke="#F2EEFF"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-    <path
-      d="M2 11H14"
-      stroke="#F2EEFF"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-    <path
-      d="M1.5 13H14.5"
-      stroke="#F2EEFF"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
+    <path d="M3.5 6.5V11" stroke="#F2EEFF" strokeWidth="1.2" strokeLinecap="round" />
+    <path d="M6.5 6.5V11" stroke="#F2EEFF" strokeWidth="1.2" strokeLinecap="round" />
+    <path d="M9.5 6.5V11" stroke="#F2EEFF" strokeWidth="1.2" strokeLinecap="round" />
+    <path d="M12.5 6.5V11" stroke="#F2EEFF" strokeWidth="1.2" strokeLinecap="round" />
+    <path d="M2 11H14" stroke="#F2EEFF" strokeWidth="1.2" strokeLinecap="round" />
+    <path d="M1.5 13H14.5" stroke="#F2EEFF" strokeWidth="1.2" strokeLinecap="round" />
   </svg>
 );
 
@@ -144,12 +72,7 @@ const METHOD_ICONS = {
   bank: BankIcon,
 };
 
-const MethodStep = ({
-  fundingMethod,
-  setFundingMethod,
-  selectedWallet,
-  setSelectedWallet,
-}) => {
+const MethodStep = ({ fundingMethod, setFundingMethod, selectedWallet, setSelectedWallet }) => {
   const { t } = useTranslation();
 
   const showWalletSelection = fundingMethod === "instapay_wallet";
@@ -169,9 +92,7 @@ const MethodStep = ({
               onClick={() => setFundingMethod(method.id)}
             >
               <div className={styles.radioBtn} />
-              <div className={styles.methodIconBox}>
-                {IconComponent && <IconComponent />}
-              </div>
+              <div className={styles.methodIconBox}>{IconComponent && <IconComponent />}</div>
               <span className={styles.methodLabel}>{t(method.label)}</span>
             </div>
           );
@@ -195,29 +116,17 @@ const MethodStep = ({
                     <p>{wallet.code}</p>
                   </div>
                 </div>
-                <div
-                  className={styles.walletCard}
-                  style={{ background: wallet.gradient }}
-                >
+                <div className={styles.walletCard} style={{ background: wallet.gradient }}>
                   <div className={styles.walletCardBalance}>
                     <span className={styles.balanceLabel}>{t("Balance")}</span>
-                    <span className={styles.balanceAmount}>
-                      {wallet.balance}
-                    </span>
+                    <span className={styles.balanceAmount}>{wallet.balance}</span>
                   </div>
                   <div className={styles.walletCardLimit}>
-                    <span className={styles.limitLabel}>
-                      {t("Monthly Limit")}
-                    </span>
-                    <span className={styles.limitAmount}>
-                      {wallet.monthlyLimit}
-                    </span>
+                    <span className={styles.limitLabel}>{t("Monthly Limit")}</span>
+                    <span className={styles.limitAmount}>{wallet.monthlyLimit}</span>
                   </div>
                   <div className={styles.walletLimitBar}>
-                    <div
-                      className={styles.walletLimitFill}
-                      style={{ width: "70%" }}
-                    />
+                    <div className={styles.walletLimitFill} style={{ width: "70%" }} />
                   </div>
                 </div>
               </div>

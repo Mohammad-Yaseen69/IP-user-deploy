@@ -1,12 +1,4 @@
-import {
-  Button,
-  Card,
-  CardBody,
-  Input,
-  Modal,
-  ModalBody,
-  ModalHeader,
-} from "reactstrap";
+import { Button, Card, CardBody, Input, Modal, ModalBody, ModalHeader } from "reactstrap";
 import review from "./review.png";
 import styles from "./ReviewModal.module.css";
 import Rating from "react-rating";
@@ -21,13 +13,7 @@ import replyStyles from "../PendingNew/ReviewModal.module.css";
 import { useTranslation } from "react-i18next";
 import InstaPayLoader from "../Loader";
 
-const ReviewModal = ({
-  title = "Review History",
-  isOpen,
-  toggle,
-  item,
-  type,
-}) => {
+const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) => {
   const { t } = useTranslation();
   const [rating, setRating] = useState(0);
   const [message, setMessage] = useState("");
@@ -224,8 +210,7 @@ const ReviewModal = ({
       toggle={toggle}
       style={{
         minWidth: window.innerWidth > 1150 ? "1150px" : "90vw",
-        transform:
-          window.innerWidth > 1000 ? `scale(${scaleFactor})` : "scale(1)",
+        transform: window.innerWidth > 1000 ? `scale(${scaleFactor})` : "scale(1)",
       }}
     >
       <ModalHeader toggle={toggle}>{t(title)}</ModalHeader>
@@ -247,10 +232,7 @@ const ReviewModal = ({
         ) : (
           type === "Received" && (
             <div className={styles.right_rm}>
-              <Card
-                className={styles.rating_container}
-                style={{ marginBottom: 0 }}
-              >
+              <Card className={styles.rating_container} style={{ marginBottom: 0 }}>
                 <CardBody className={styles.rating_body}>
                   <div className={styles.left}>
                     <p></p>
@@ -270,11 +252,7 @@ const ReviewModal = ({
                   <Card style={{ marginBottom: 0 }} className={styles.right}>
                     <CardBody className={styles.right_body}>
                       <div className={styles.rb_top}>
-                        <span>
-                          {step > 1
-                            ? t("You Rated") + ":"
-                            : t("Leave A Review") + ":"}{" "}
-                        </span>
+                        <span>{step > 1 ? t("You Rated") + ":" : t("Leave A Review") + ":"} </span>
                         {reviewMessage && (
                           <Button
                             color="success"
@@ -290,9 +268,7 @@ const ReviewModal = ({
                         )}
                         {step < 2 && (
                           <button
-                            disabled={
-                              rating == 0 || !message || isSaving || step > 1
-                            }
+                            disabled={rating == 0 || !message || isSaving || step > 1}
                             onClick={createInitialReview}
                           >
                             {isSaving ? "Posting Review" : t("Save And Post")}
@@ -340,8 +316,7 @@ const ReviewModal = ({
                             </div>
                             <div className={styles.rctl_dets}>
                               <h5>
-                                {item?.sender?.user?.first_name ||
-                                  item?.sender?.user?.company_name}{" "}
+                                {item?.sender?.user?.first_name || item?.sender?.user?.company_name}{" "}
                                 {item?.sender?.user?.last_name || ""}
                               </h5>
                               <span>{item?.sender?.account_type}</span>
@@ -402,15 +377,11 @@ const ReviewModal = ({
         )}
         {type === "Send" && (
           <div className={styles.right_rm}>
-            <Card
-              className={styles.rating_container}
-              style={{ marginBottom: 0 }}
-            >
+            <Card className={styles.rating_container} style={{ marginBottom: 0 }}>
               <CardBody className={styles.rating_body}>
                 <div className={styles.left}>
                   <p style={{ maxWidth: "15ch", textAlign: "center" }}>
-                    {item?.receiver?.user?.first_name}{" "}
-                    {t("has left the review.")}
+                    {item?.receiver?.user?.first_name} {t("has left the review.")}
                   </p>
                   <span style={{ maxWidth: "15ch", textAlign: "center" }}>
                     {t("Rate and Review them to reveal their review.")}
@@ -420,9 +391,7 @@ const ReviewModal = ({
                   <CardBody className={styles.right_body}>
                     <div className={styles.rb_top}>
                       <span>
-                        {sellerStep > 1
-                          ? t("You Rated") + ":"
-                          : t("Leave A Review") + ":"}{" "}
+                        {sellerStep > 1 ? t("You Rated") + ":" : t("Leave A Review") + ":"}{" "}
                       </span>
                       {reviewMessage && (
                         <Button
@@ -440,10 +409,7 @@ const ReviewModal = ({
                       {sellerStep < 2 && (
                         <button
                           disabled={
-                            sellerRating == 0 ||
-                            !sellerMessage ||
-                            isSaving ||
-                            sellerStep > 1
+                            sellerRating == 0 || !sellerMessage || isSaving || sellerStep > 1
                           }
                           onClick={createSellerReview}
                         >
@@ -514,9 +480,7 @@ const ReviewModal = ({
                           readOnly={sellerStep > 2}
                         />
                         <div>
-                          <Button onClick={() => setShowReplyForm(false)}>
-                            {t("Cancel")}
-                          </Button>
+                          <Button onClick={() => setShowReplyForm(false)}>{t("Cancel")}</Button>
                           <Button
                             onClick={createReplyToBuyerReview}
                             disabled={!sellerReply || isSavingReply}

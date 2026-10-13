@@ -5,12 +5,7 @@ import { useTranslation } from "react-i18next";
 import { BeneficiaryCard } from "./StepOne";
 import useWindowWidth from "../../../utils/useWindowWidth";
 
-const RecentBeneficiary = ({
-  data,
-  dataHandler,
-  setExpandRecent,
-  expandRecent,
-}) => {
+const RecentBeneficiary = ({ data, dataHandler, setExpandRecent, expandRecent }) => {
   const { registeredBeneficiaries } = useContext(UserContext);
   const [benWalletsFound, setBenWalletsFound] = useState([]);
   const { beneficiaries, userDetails } = useContext(UserContext);
@@ -44,38 +39,23 @@ const RecentBeneficiary = ({
         existType: "wallet",
       }));
 
-    const uniqueEmailBen = registeredBeneficiaries?.filter(
-      (item, index, self) => {
-        return (
-          index === self.findIndex((b) => b.email === item.email) &&
-          item.existType === "email"
-        );
-      },
-    );
+    const uniqueEmailBen = registeredBeneficiaries?.filter((item, index, self) => {
+      return index === self.findIndex((b) => b.email === item.email) && item.existType === "email";
+    });
 
-    const uniquePhoneBen = registeredBeneficiaries?.filter(
-      (item, index, self) => {
-        return (
-          index === self.findIndex((b) => b.phone === item.phone) &&
-          item.existType === "phone"
-        );
-      },
-    );
+    const uniquePhoneBen = registeredBeneficiaries?.filter((item, index, self) => {
+      return index === self.findIndex((b) => b.phone === item.phone) && item.existType === "phone";
+    });
 
     if (uniqueEmailBen && uniquePhoneBen) {
       const uniqueArray = [...uniqueEmailBen, ...uniquePhoneBen];
       const allBens = [
-        ...uniqueArray.filter(
-          (ben) => !ipWalletBens.find((b) => b?._id === ben?._id),
-        ),
+        ...uniqueArray.filter((ben) => !ipWalletBens.find((b) => b?._id === ben?._id)),
         ...ipWalletBens,
       ];
 
       const ownAccountFilteration = allBens.filter((item) => {
-        return (
-          item?.phone !== userDetails?.phone &&
-          item?.email !== userDetails?.email
-        );
+        return item?.phone !== userDetails?.phone && item?.email !== userDetails?.email;
         // return true
       });
 
@@ -101,8 +81,7 @@ const RecentBeneficiary = ({
           onClick={() => setExpandRecent(!expandRecent)}
           style={{ fontWeight: 600, cursor: "pointer" }}
         >
-          {uniqueBeneficiaries?.length > 1 &&
-            (expandRecent ? t("Show Less") : t("Show More"))}
+          {uniqueBeneficiaries?.length > 1 && (expandRecent ? t("Show Less") : t("Show More"))}
         </p>
       </div>
 

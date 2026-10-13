@@ -36,9 +36,7 @@ const CardNumberInput = ({
       const preCaretRange = range.cloneRange();
       preCaretRange.selectNodeContents(divRef.current);
       preCaretRange.setEnd(range.endContainer, range.endOffset);
-      caretPositionRef.current = preCaretRange
-        .toString()
-        .replace(/\D/g, "").length;
+      caretPositionRef.current = preCaretRange.toString().replace(/\D/g, "").length;
     }
   };
 
@@ -135,16 +133,11 @@ const CardNumberInput = ({
           {content}
         </div>
         {content.length < 1 && (
-          <span
-            style={{ display: isinVVC && "none" }}
-            className={styles.placeholder}
-          >
+          <span style={{ display: isinVVC && "none" }} className={styles.placeholder}>
             {t("Card Number")}
           </span>
         )}
-        {cardError && content.length > 3 && (
-          <div className={styles.error}>{cardError}</div>
-        )}
+        {cardError && content.length > 3 && <div className={styles.error}>{cardError}</div>}
       </div>
     </>
   );

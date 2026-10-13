@@ -21,14 +21,12 @@ const ASSET_SYMBOLS = {
 
 /* One glyph, for the circles too small to spell the code out. */
 export const getAssetSymbol = (code) =>
-  ASSET_SYMBOLS[String(code || "").toUpperCase()] ||
-  String(code || "").charAt(0);
+  ASSET_SYMBOLS[String(code || "").toUpperCase()] || String(code || "").charAt(0);
 
 export const getWalletAccentColor = (code) =>
   CRYPTO_COLORS[String(code || "").toUpperCase()] || "#5926F0";
 
-export const getAssetFullName = (code) =>
-  ASSET_NAMES[String(code || "").toUpperCase()] || "";
+export const getAssetFullName = (code) => ASSET_NAMES[String(code || "").toUpperCase()] || "";
 
 export const formatCryptoAmount = (value) => {
   const num = Number(value);

@@ -1,11 +1,4 @@
-import React, {
-  useContext,
-  useEffect,
-  useMemo,
-  useReducer,
-  useRef,
-  useState,
-} from "react";
+import React, { useContext, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import ApexCharts from "apexcharts";
 import { Card, CardHeader, CardBody } from "reactstrap";
 import { useTranslation } from "react-i18next";
@@ -45,11 +38,7 @@ export function getDateRange(monthsAgo) {
   const monthName = getMonthName(targetDate.toISOString());
 
   const startDate = targetDate.toISOString().slice(0, 10);
-  const endDate = new Date(
-    targetDate.getFullYear(),
-    targetDate.getMonth() + 1,
-    0,
-  )
+  const endDate = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0)
     .toISOString()
     .slice(0, 10);
 
@@ -381,10 +370,7 @@ const Stats = ({ currentWallet }) => {
     // Mobile chart: create once, then update
     if (chartRefMobile.current) {
       if (!chartInstanceMobileRef.current) {
-        chartInstanceMobileRef.current = new ApexCharts(
-          chartRefMobile.current,
-          options,
-        );
+        chartInstanceMobileRef.current = new ApexCharts(chartRefMobile.current, options);
         chartInstanceMobileRef.current.render().then(() => {
           chartInstanceMobileRef.current?.updateSeries(
             [
@@ -428,9 +414,7 @@ const Stats = ({ currentWallet }) => {
   const yearsToShow = useMemo(() => {
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
-    const sixMonthsAgo = new Date(
-      currentDate.getTime() - 6 * 30 * 24 * 60 * 60 * 1000,
-    );
+    const sixMonthsAgo = new Date(currentDate.getTime() - 6 * 30 * 24 * 60 * 60 * 1000);
     const sixMonthsYear = sixMonthsAgo.getFullYear();
 
     if (sixMonthsYear < currentYear) {

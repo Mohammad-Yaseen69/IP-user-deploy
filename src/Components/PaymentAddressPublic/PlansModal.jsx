@@ -112,11 +112,7 @@ const PlansModal = ({
   console.log(showGuestModal, "guest modal");
   return (
     <>
-      <Modal
-        isOpen={isOpen}
-        style={{ minWidth: width > 1000 && "900px" }}
-        toggle={toggle}
-      >
+      <Modal isOpen={isOpen} style={{ minWidth: width > 1000 && "900px" }} toggle={toggle}>
         <ModalBody style={{ padding: "0px" }}>
           <div className={styles.container}>
             <div className={styles.top}>
@@ -125,9 +121,7 @@ const PlansModal = ({
 
             <div className={styles.main}>
               <div className={styles.left}>
-                {isLoading && (
-                  <div style={{ padding: 16 }}>{t("Loading plans...")}</div>
-                )}
+                {isLoading && <div style={{ padding: 16 }}>{t("Loading plans...")}</div>}
                 {!isLoading && plans?.length === 0 && (
                   <div style={{ padding: 16, color: "#777", fontWeight: 600 }}>
                     {t("No plans available")}
@@ -138,11 +132,7 @@ const PlansModal = ({
                     const isActive = selectedPlan?._id === plan._id;
                     const wallet = plan?.receivingWallet?.currency;
                     const onClick = () =>
-                      setSelectedPlan(
-                        selectedPlan?._id === plan._id && width < 1000
-                          ? null
-                          : plan,
-                      );
+                      setSelectedPlan(selectedPlan?._id === plan._id && width < 1000 ? null : plan);
                     return (
                       <div
                         key={plan._id}
@@ -153,12 +143,9 @@ const PlansModal = ({
                             <h3>{truncate(plan?.title, 20)}</h3>
                             <div className={styles.price}>
                               <h5>
-                                {wallet.symbol || wallet?.code}{" "}
-                                {formatCurrency(plan.price, true)}
+                                {wallet.symbol || wallet?.code} {formatCurrency(plan.price, true)}
                               </h5>
-                              <span>
-                                / {t(plan?.billingCycle)?.toLowerCase()}
-                              </span>
+                              <span>/ {t(plan?.billingCycle)?.toLowerCase()}</span>
                             </div>
                           </div>
                           {width < 1000 && chevron(isActive)}
@@ -167,13 +154,9 @@ const PlansModal = ({
                         {width < 1000 && isActive && (
                           <div className={styles.right}>
                             <div className={styles.heading}>{plan?.title}</div>
-                            <div className={styles.desc}>
-                              {plan?.description}
-                            </div>
+                            <div className={styles.desc}>{plan?.description}</div>
 
-                            <div className={styles.termsLabel}>
-                              {t("Terms & Conditions")}:
-                            </div>
+                            <div className={styles.termsLabel}>{t("Terms & Conditions")}:</div>
                             <div
                               style={{
                                 fontSize: "14px",
@@ -207,9 +190,7 @@ const PlansModal = ({
                             )}
 
                             <div style={{ marginTop: "15px" }}>
-                              <span
-                                style={{ fontWeight: 600, fontSize: "16px" }}
-                              >
+                              <span style={{ fontWeight: 600, fontSize: "16px" }}>
                                 {t("Select a payment option to continue:")}{" "}
                               </span>
                               <div style={{ margin: "10px 0 30px 0" }}>
@@ -225,8 +206,7 @@ const PlansModal = ({
                             <div className={styles.footer}>
                               <div className={styles.priceWrap}>
                                 <span className={styles.price}>
-                                  {plan?.receivingWallet?.currency?.code ||
-                                    "USD"}{" "}
+                                  {plan?.receivingWallet?.currency?.code || "USD"}{" "}
                                   {formatCurrency(plan.price, true)}
                                 </span>
                                 <span className={styles.cycle}>
@@ -275,13 +255,9 @@ const PlansModal = ({
                   {selectedPlan && (
                     <>
                       <div className={styles.heading}>{selectedPlan.title}</div>
-                      <div className={styles.desc}>
-                        {selectedPlan.description}
-                      </div>
+                      <div className={styles.desc}>{selectedPlan.description}</div>
 
-                      <div className={styles.termsLabel}>
-                        {t("Terms & Conditions")}:
-                      </div>
+                      <div className={styles.termsLabel}>{t("Terms & Conditions")}:</div>
                       <div
                         style={{
                           fontSize: "14px",
@@ -327,8 +303,7 @@ const PlansModal = ({
                       <div className={styles.footer}>
                         <div className={styles.priceWrap}>
                           <span className={styles.price}>
-                            {selectedPlan?.receivingWallet?.currency?.code ||
-                              "USD"}{" "}
+                            {selectedPlan?.receivingWallet?.currency?.code || "USD"}{" "}
                             {formatCurrency(selectedPlan.price, true)}
                           </span>
                           <span className={styles.cycle}>
@@ -342,10 +317,7 @@ const PlansModal = ({
               )}
             </div>
 
-            <div
-              style={{ paddingTop: width < 1000 && "0px" }}
-              className={styles.actions}
-            >
+            <div style={{ paddingTop: width < 1000 && "0px" }} className={styles.actions}>
               <button
                 style={{ width: width < 1000 && "100%" }}
                 className={styles.cancelBtn}
@@ -385,9 +357,7 @@ const PlansModal = ({
         size="lg"
         style={{ zIndex: 1060 }}
       >
-        <ModalHeader toggle={() => setShowTermsModal(false)}>
-          {t("Terms & Conditions")}
-        </ModalHeader>
+        <ModalHeader toggle={() => setShowTermsModal(false)}>{t("Terms & Conditions")}</ModalHeader>
         <ModalBody style={{ padding: "20px" }}>
           <div
             style={{

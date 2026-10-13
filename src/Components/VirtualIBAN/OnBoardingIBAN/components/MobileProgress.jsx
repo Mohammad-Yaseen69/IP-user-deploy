@@ -7,13 +7,7 @@ import { ArrowRight, Check } from "react-feather";
 import AlertBox from "./AlertBox";
 import Badge from "./badge";
 
-const MobileProgress = ({
-  percent,
-  stepsLeft,
-  doneCount,
-  checklist,
-  getStatus,
-}) => {
+const MobileProgress = ({ percent, stepsLeft, doneCount, checklist, getStatus }) => {
   const { t } = useTranslation();
 
   const getIcon = (status) => {
@@ -75,15 +69,11 @@ const MobileProgress = ({
       <div className={styles.checklist}>
         {checklist.map((item) => {
           const status = getStatus(item.key);
-          const { label, statusBgColor, icon, textColor, iconBgColor } =
-            getIcon(status);
+          const { label, statusBgColor, icon, textColor, iconBgColor } = getIcon(status);
           return (
             <div className={styles.checklistRow} key={item.key}>
               <div className={styles.checklistItem}>
-                <div
-                  className={styles.iconContainer}
-                  style={{ backgroundColor: iconBgColor }}
-                >
+                <div className={styles.iconContainer} style={{ backgroundColor: iconBgColor }}>
                   {icon}
                 </div>
                 <span>{item.label}</span>
@@ -100,13 +90,7 @@ const MobileProgress = ({
 
       <button
         className={styles.askAIBtn}
-        onClick={() =>
-          window.open(
-            "https://wa.me/41783192428",
-            "_blank",
-            "noopener,noreferrer",
-          )
-        }
+        onClick={() => window.open("https://wa.me/41783192428", "_blank", "noopener,noreferrer")}
       >
         <img src={AskAiIcon} alt="Ask Assistant Icon" width={16} height={16} />
         <span>{t("Ask the assistant")}</span>

@@ -9,14 +9,8 @@ import IbanBreadcrumb from "../../components/IbanBreadcrumb";
 import CryptoTopupModal from "../../CryptoTopupModal";
 import IbanToCryptoModal from "../../IbanToCryptoModal";
 import IbanCryptoPayoutModal from "../../IbanCryptoPayoutModal";
-import {
-  useSyncVirtualIbanBalance,
-  useVirtualIbans,
-} from "../../../../hooks/useVirtualIban";
-import {
-  asVirtualIbanArray,
-  isVirtualIbanOutboundBlocked,
-} from "../../utils/virtualIban";
+import { useSyncVirtualIbanBalance, useVirtualIbans } from "../../../../hooks/useVirtualIban";
+import { asVirtualIbanArray, isVirtualIbanOutboundBlocked } from "../../utils/virtualIban";
 import { UserContext } from "../../../../Context/UserContext";
 import { usePermission } from "../../../../hooks/GeneralUse/usePermission";
 import MobileHeader from "../../../../Common/Component/MobileHeader";
@@ -39,9 +33,7 @@ const CryptoActions = () => {
   const { data: rawIbans = [] } = useVirtualIbans(userDetails?._id);
   const ibans = useMemo(() => asVirtualIbanArray(rawIbans), [rawIbans]);
   const selectedIban = useMemo(
-    () =>
-      ibans.find((iban) => (iban?._id || iban?.id) === selectedAccount) ||
-      ibans[0],
+    () => ibans.find((iban) => (iban?._id || iban?.id) === selectedAccount) || ibans[0],
     [ibans, selectedAccount],
   );
   const ibanId = selectedIban?._id || selectedIban?.id;
@@ -49,8 +41,7 @@ const CryptoActions = () => {
   const currentBalance = syncedBalance?.balance ?? selectedIban?.balance ?? 0;
 
   const isOutboundBlocked =
-    isVirtualIbanOutboundBlocked(syncedBalance) ||
-    isVirtualIbanOutboundBlocked(selectedIban);
+    isVirtualIbanOutboundBlocked(syncedBalance) || isVirtualIbanOutboundBlocked(selectedIban);
   const canConvert = can("virtual-iban.funds.convert") && !isOutboundBlocked;
   const convertTooltip = isOutboundBlocked
     ? t("Outgoing transfers are disabled for this virtual IBAN.")
@@ -93,15 +84,9 @@ const CryptoActions = () => {
           <div className={styles.top}>
             <div className={styles.headerTitle}>
               <h1>{t("Crypto")}</h1>
-              <p>
-                {t(
-                  "Top up with crypto, convert your balance to crypto, and send it out.",
-                )}
-              </p>
+              <p>{t("Top up with crypto, convert your balance to crypto, and send it out.")}</p>
             </div>
-            <div className={styles.topright}>
-              {width > 1000 && <TopRight />}
-            </div>
+            <div className={styles.topright}>{width > 1000 && <TopRight />}</div>
           </div>
         )}
 
@@ -126,25 +111,16 @@ const CryptoActions = () => {
             <>
               <div className={styles.headerTitle}>
                 <IbanBreadcrumb
-                  items={[
-                    { label: "My virtual bank", path: "/virtual-IBAN" },
-                    { label: "Crypto" },
-                  ]}
+                  items={[{ label: "My virtual bank", path: "/virtual-IBAN" }, { label: "Crypto" }]}
                 />
                 <h1>{t("What would you like to do with crypto?")}</h1>
-                <p>
-                  {t(
-                    "Move money between your virtual IBAN and crypto — pick one to begin.",
-                  )}
-                </p>
+                <p>{t("Move money between your virtual IBAN and crypto — pick one to begin.")}</p>
               </div>
 
               <div className={styles.sectionBlock}>
                 <div className={styles.sectionLabel}>
                   {t("Crypto actions")}{" "}
-                  <span>
-                    {t("Add, convert and send crypto from your virtual IBAN")}
-                  </span>
+                  <span>{t("Add, convert and send crypto from your virtual IBAN")}</span>
                 </div>
                 <div className={styles.cardsGrid3}>
                   <div
@@ -156,18 +132,12 @@ const CryptoActions = () => {
                       <ArrowDownCircle size={20} />
                     </div>
                     <div className={styles.cardBody}>
-                      <h3 className={styles.cardTitle}>
-                        {t("Top up with crypto")}
-                      </h3>
+                      <h3 className={styles.cardTitle}>{t("Top up with crypto")}</h3>
                       <p className={styles.cardDesc}>
-                        {t(
-                          "Pay in USDT and receive euro on your virtual IBAN.",
-                        )}
+                        {t("Pay in USDT and receive euro on your virtual IBAN.")}
                       </p>
                       <div className={styles.badgeRow}>
-                        <span className={`${styles.tag} ${styles.tagBlue}`}>
-                          {t("USDT")}
-                        </span>
+                        <span className={`${styles.tag} ${styles.tagBlue}`}>{t("USDT")}</span>
                         <span className={`${styles.tag} ${styles.tagGray}`}>
                           {t("Crypto to EUR")}
                         </span>
@@ -177,30 +147,22 @@ const CryptoActions = () => {
                   <Tooltip title={convertTooltip} arrow>
                     <div
                       className={`${styles.card} ${canConvert ? "" : styles.cardDisabled}`}
-                      onClick={
-                        canConvert ? () => setShowConvert(true) : undefined
-                      }
+                      onClick={canConvert ? () => setShowConvert(true) : undefined}
                       style={{ cursor: canConvert ? "pointer" : "not-allowed" }}
                     >
                       <div className={`${styles.iconBox} ${styles.bgGreen}`}>
                         <RefreshCw size={20} />
                       </div>
                       <div className={styles.cardBody}>
-                        <h3 className={styles.cardTitle}>
-                          {t("IBAN to crypto wallet")}
-                        </h3>
+                        <h3 className={styles.cardTitle}>{t("IBAN to crypto wallet")}</h3>
                         <p className={styles.cardDesc}>
-                          {t(
-                            "Convert euro from your virtual IBAN into your InstaPay USDT wallet.",
-                          )}
+                          {t("Convert euro from your virtual IBAN into your InstaPay USDT wallet.")}
                         </p>
                         <div className={styles.badgeRow}>
                           <span className={`${styles.tag} ${styles.tagBlue}`}>
                             {t("EUR to USDT")}
                           </span>
-                          <span className={`${styles.tag} ${styles.tagGreen}`}>
-                            {t("Minutes")}
-                          </span>
+                          <span className={`${styles.tag} ${styles.tagGreen}`}>{t("Minutes")}</span>
                         </div>
                       </div>
                     </div>
@@ -208,30 +170,22 @@ const CryptoActions = () => {
                   <Tooltip title={payoutTooltip} arrow>
                     <div
                       className={`${styles.card} ${canPayout ? "" : styles.cardDisabled}`}
-                      onClick={
-                        canPayout ? () => setShowPayout(true) : undefined
-                      }
+                      onClick={canPayout ? () => setShowPayout(true) : undefined}
                       style={{ cursor: canPayout ? "pointer" : "not-allowed" }}
                     >
                       <div className={`${styles.iconBox} ${styles.bgYellow}`}>
                         <Send size={20} />
                       </div>
                       <div className={styles.cardBody}>
-                        <h3 className={styles.cardTitle}>
-                          {t("External crypto payout")}
-                        </h3>
+                        <h3 className={styles.cardTitle}>{t("External crypto payout")}</h3>
                         <p className={styles.cardDesc}>
-                          {t(
-                            "Send from your virtual IBAN straight to an external crypto wallet.",
-                          )}
+                          {t("Send from your virtual IBAN straight to an external crypto wallet.")}
                         </p>
                         <div className={styles.badgeRow}>
                           <span className={`${styles.tag} ${styles.tagBlue}`}>
                             {t("EUR to USDT / USDC")}
                           </span>
-                          <span className={`${styles.tag} ${styles.tagGreen}`}>
-                            {t("Minutes")}
-                          </span>
+                          <span className={`${styles.tag} ${styles.tagGreen}`}>{t("Minutes")}</span>
                         </div>
                       </div>
                     </div>

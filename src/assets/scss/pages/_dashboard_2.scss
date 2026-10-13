@@ -503,9 +503,8 @@
   }
 
   @each $text-light-name, $text-light-color in (primary, $primary-color),
-    (secondary, $secondary-color), (success, $success-color),
-    (danger, $danger-color), (info, $info-color), (light, $light-color),
-    (dark, $dark-color), (warning, $warning-color)
+    (secondary, $secondary-color), (success, $success-color), (danger, $danger-color),
+    (info, $info-color), (light, $light-color), (dark, $dark-color), (warning, $warning-color)
   {
     .header-text-#{$text-light-name} {
       color: $text-light-color;
@@ -888,10 +887,9 @@
         z-index: 0;
       }
 
-      @each $circle-name, $circle-color in (primary, $primary-color),
-        (secondary, $secondary-color), (success, $success-color),
-        (danger, $danger-color), (info, $info-color), (light, $light-color),
-        (dark, $dark-color), (warning, $warning-color)
+      @each $circle-name, $circle-color in (primary, $primary-color), (secondary, $secondary-color),
+        (success, $success-color), (danger, $danger-color), (info, $info-color),
+        (light, $light-color), (dark, $dark-color), (warning, $warning-color)
       {
         .circle-dot-#{$circle-name} {
           background-color: rgba($circle-color, 0.25);
@@ -970,9 +968,8 @@
   }
 
   @each $activity-dot-name, $activity-dot-color in (primary, $primary-color),
-    (secondary, $secondary-color), (success, $success-color),
-    (danger, $danger-color), (info, $info-color), (light, $light-color),
-    (dark, $dark-color), (warning, $warning-color)
+    (secondary, $secondary-color), (success, $success-color), (danger, $danger-color),
+    (info, $info-color), (light, $light-color), (dark, $dark-color), (warning, $warning-color)
   {
     .activity-dot-#{$activity-dot-name} {
       width: 16px;

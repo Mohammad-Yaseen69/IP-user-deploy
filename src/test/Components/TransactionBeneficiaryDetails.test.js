@@ -150,9 +150,9 @@ describe("buildTransactionBeneficiaryDetails", () => {
 
 describe("getBeneficiaryDisplayName", () => {
   it("never renders undefined", () => {
-    expect(
-      getBeneficiaryDisplayName({ first_name: "Khalid", last_name: "Chouhan" }),
-    ).toBe("Khalid Chouhan");
+    expect(getBeneficiaryDisplayName({ first_name: "Khalid", last_name: "Chouhan" })).toBe(
+      "Khalid Chouhan",
+    );
     expect(getBeneficiaryDisplayName({ first_name: "Khalid" })).toBe("Khalid");
     expect(
       getBeneficiaryDisplayName({
@@ -162,8 +162,6 @@ describe("getBeneficiaryDisplayName", () => {
       }),
     ).toBe("noor trading");
     expect(getBeneficiaryDisplayName({})).toBe("");
-    expect(getBeneficiaryDisplayName(undefined, "Recipient's")).toBe(
-      "Recipient's",
-    );
+    expect(getBeneficiaryDisplayName(undefined, "Recipient's")).toBe("Recipient's");
   });
 });

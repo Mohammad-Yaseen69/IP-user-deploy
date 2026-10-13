@@ -72,8 +72,7 @@ const questionsArray = [
 const FinancialInfo = () => {
   const [questions, setQuestions] = useState(questionsArray);
   const [countriesWithRegion, setCountriesWithRegion] = useState({});
-  const [filteredCountriesWithRegion, setFilteredCountriesWithRegion] =
-    useState({});
+  const [filteredCountriesWithRegion, setFilteredCountriesWithRegion] = useState({});
   const [activeDropdown, setActiveDropdown] = useState(1);
   const [search, setSearch] = useState();
   const { userDetails, allowedCountries, authHeader } = useContext(UserContext);
@@ -86,16 +85,12 @@ const FinancialInfo = () => {
 
   useEffect(() => {
     const countryFilteration = () => {
-      const countryAnswers = questions.find(
-        (q) => q?.question_key === "country",
-      );
+      const countryAnswers = questions.find((q) => q?.question_key === "country");
       const filteredCountries = editMode
         ? CitiesData.filter((cont) =>
             allowedCountries?.find((c) => c.country_iso_code === cont.iso3),
           )
-        : CitiesData.filter((cont) =>
-            countryAnswers?.answers?.includes(cont?.iso3),
-          );
+        : CitiesData.filter((cont) => countryAnswers?.answers?.includes(cont?.iso3));
       const regionCountries = filteredCountries?.reduce((acc, country) => {
         const region = country?.region;
         if (!acc[region]) {
@@ -137,17 +132,13 @@ const FinancialInfo = () => {
     if (userDetails) {
       let filterations = questionsArray
         .filter((q) =>
-          userDetails?.user?.financial_answers?.some(
-            (a) => a?.question_key === q?.question_key,
-          ),
+          userDetails?.user?.financial_answers?.some((a) => a?.question_key === q?.question_key),
         )
         ?.map((answers) => {
           const userAnswer = userDetails?.user?.financial_answers?.find(
             (a) => a?.question_key === answers?.question_key,
           );
-          return userAnswer
-            ? { ...answers, answers: userAnswer?.answers }
-            : answers;
+          return userAnswer ? { ...answers, answers: userAnswer?.answers } : answers;
         });
 
       filterations = filterations.map((q) =>
@@ -166,17 +157,11 @@ const FinancialInfo = () => {
     if (field === "country") {
       setQuestions(
         questions.map((q) =>
-          q.question_key === field
-            ? { ...q, answers: [...q.answers, value] }
-            : q,
+          q.question_key === field ? { ...q, answers: [...q.answers, value] } : q,
         ),
       );
     } else {
-      setQuestions(
-        questions.map((q) =>
-          q.question_key === field ? { ...q, answers: value } : q,
-        ),
-      );
+      setQuestions(questions.map((q) => (q.question_key === field ? { ...q, answers: value } : q)));
     }
   };
 
@@ -223,11 +208,7 @@ const FinancialInfo = () => {
   return (
     <div style={{ backgroundColor: "white" }} className={styles.container}>
       {!editMode && (
-        <button
-          onClick={() => setEditMode(true)}
-          disabled={!isEdit}
-          className={styles.editBtn}
-        >
+        <button onClick={() => setEditMode(true)} disabled={!isEdit} className={styles.editBtn}>
           {t("Edit")}
         </button>
       )}
@@ -268,10 +249,7 @@ const FinancialInfo = () => {
                     control: (base) => ({ ...base, fontWeight: 600 }),
                   }}
                   onChange={(option) =>
-                    updateData(
-                      question.question_key,
-                      option ? option.value : "",
-                    )
+                    updateData(question.question_key, option ? option.value : "")
                   }
                 />
               )
@@ -280,9 +258,7 @@ const FinancialInfo = () => {
             <div style={{ position: "relative", width: "100%" }}>
               <textarea
                 onChange={(e) =>
-                  editMode
-                    ? updateData("keeps_busy", e.target.value)
-                    : e.preventDefault()
+                  editMode ? updateData("keeps_busy", e.target.value) : e.preventDefault()
                 }
                 value={question?.answers}
                 placeholder={t("Type your answer")}
@@ -299,10 +275,7 @@ const FinancialInfo = () => {
                     color: "#888",
                   }}
                 >
-                  {
-                    questions.find((q) => q.question_key === "keeps_busy")
-                      .answers?.length
-                  }
+                  {questions.find((q) => q.question_key === "keeps_busy").answers?.length}
                   {" / 250"}
                 </span>
               )}
@@ -316,11 +289,7 @@ const FinancialInfo = () => {
               >
                 {Array.isArray(question.answers) &&
                   question?.answers?.map((item, idx2) => (
-                    <div
-                      key={idx2}
-                      style={{ flex: 1, minWidth: "45%" }}
-                      className={styles.option}
-                    >
+                    <div key={idx2} style={{ flex: 1, minWidth: "45%" }} className={styles.option}>
                       <span>{t(item)}</span>
                     </div>
                   ))}
@@ -331,14 +300,10 @@ const FinancialInfo = () => {
                   options={selectOptions.profession}
                   value={selectOptions.profession.filter(
                     (opt) =>
-                      Array.isArray(question.answers) &&
-                      question.answers.includes(opt.value),
+                      Array.isArray(question.answers) && question.answers.includes(opt.value),
                   )}
                   onChange={(options) =>
-                    updateData(
-                      "profession",
-                      options ? options.map((opt) => opt.value) : [],
-                    )
+                    updateData("profession", options ? options.map((opt) => opt.value) : [])
                   }
                   isMulti
                   styles={{
@@ -389,60 +354,47 @@ const FinancialInfo = () => {
               </div>
 
               <div className={styles.dropDownCont}>
-                {Object.entries(filteredCountriesWithRegion)?.map(
-                  ([region, countries], idx) => (
+                {Object.entries(filteredCountriesWithRegion)?.map(([region, countries], idx) => (
+                  <div
+                    style={{ overflow: "auto" }}
+                    key={`${idx}-${region}`}
+                    className={styles.dropdown}
+                  >
                     <div
-                      style={{ overflow: "auto" }}
-                      key={`${idx}-${region}`}
-                      className={styles.dropdown}
+                      className={styles.head}
+                      onClick={() => setActiveDropdown(activeDropdown === idx + 1 ? null : idx + 1)}
+                      style={{ cursor: "pointer" }}
                     >
-                      <div
-                        className={styles.head}
-                        onClick={() =>
-                          setActiveDropdown(
-                            activeDropdown === idx + 1 ? null : idx + 1,
-                          )
-                        }
-                        style={{ cursor: "pointer" }}
-                      >
-                        <span>{t(region)}</span>
-                        <ChevronRight
-                          style={{
-                            transition: "0.3s",
-                            transform:
-                              activeDropdown === idx + 1
-                                ? "rotate(90deg)"
-                                : undefined,
-                          }}
-                        />
-                      </div>
-                      {activeDropdown === idx + 1 && (
-                        <div className={styles.countries}>
-                          {countries?.map((cont, i) => (
-                            <div
-                              onClick={() => updateData("country", cont.iso3)}
-                              key={i}
-                              className={styles.option}
-                              style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                borderColor:
-                                  !question.answers.includes(cont.iso3) &&
-                                  "transparent",
-                              }}
-                            >
-                              <span>{t(cont?.name)}</span>
-                              {question.answers.includes(cont.iso3) && (
-                                <Check width={15} />
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      )}
+                      <span>{t(region)}</span>
+                      <ChevronRight
+                        style={{
+                          transition: "0.3s",
+                          transform: activeDropdown === idx + 1 ? "rotate(90deg)" : undefined,
+                        }}
+                      />
                     </div>
-                  ),
-                )}
+                    {activeDropdown === idx + 1 && (
+                      <div className={styles.countries}>
+                        {countries?.map((cont, i) => (
+                          <div
+                            onClick={() => updateData("country", cont.iso3)}
+                            key={i}
+                            className={styles.option}
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              borderColor: !question.answers.includes(cont.iso3) && "transparent",
+                            }}
+                          >
+                            <span>{t(cont?.name)}</span>
+                            {question.answers.includes(cont.iso3) && <Check width={15} />}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           )}
@@ -451,11 +403,7 @@ const FinancialInfo = () => {
             (!editMode ? (
               <div className={`${styles.option}`}>
                 <span>
-                  {question.answers === true
-                    ? t("Yes")
-                    : question.answers === false
-                      ? t("No")
-                      : ""}
+                  {question.answers === true ? t("Yes") : question.answers === false ? t("No") : ""}
                 </span>
               </div>
             ) : (

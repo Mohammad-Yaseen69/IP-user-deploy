@@ -26,23 +26,10 @@ const PLACEHOLDER_CARD_TYPE = {
   cvcLength: 3,
 };
 
-const PaymentModal = ({
-  isOpen,
-  vvcCardType,
-  setIsOpen,
-  setStepParent,
-  applePay,
-  googlePay,
-}) => {
+const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay, googlePay }) => {
   const [step, setStep] = useState(1);
-  const {
-    userWallets,
-    getUserWallets,
-    userDetails,
-    authHeader,
-    setProfileLockTime,
-    checkAuth,
-  } = useContext(UserContext);
+  const { userWallets, getUserWallets, userDetails, authHeader, setProfileLockTime, checkAuth } =
+    useContext(UserContext);
   const [walletState, setWalletState] = useState({});
   const [paymentType, setPaymentType] = useState("");
   const [loading, setLoading] = useState(false);
@@ -97,11 +84,7 @@ const PaymentModal = ({
         break;
       case 2:
         paymentType === "card"
-          ? setSideText(
-              window.innerWidth > 1000
-                ? t("Enter card Details")
-                : t("Payment Details"),
-            )
+          ? setSideText(window.innerWidth > 1000 ? t("Enter card Details") : t("Payment Details"))
           : paymentType === "wallet" && setSideText(t("Choose The Wallet"));
         break;
       case 3:
@@ -179,10 +162,7 @@ const PaymentModal = ({
           currency: "USD",
           expdate: formattedDate,
           token: feeDetails?.token,
-          cardType:
-            vvcCardType === "premium"
-              ? "vcc_premium_virtual"
-              : "vcc_standard_virtual",
+          cardType: vvcCardType === "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual",
           apple_pay: false,
           google_pay: false,
         },
@@ -213,10 +193,7 @@ const PaymentModal = ({
         data: {
           account_id: userDetails?._id,
           wallet_id: walletState?.wallet_id,
-          cardType:
-            vvcCardType === "premium"
-              ? "vcc_premium_virtual"
-              : "vcc_standard_virtual",
+          cardType: vvcCardType === "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual",
           currency: "USD",
           expdate: formattedDate,
           apple_pay: false,
@@ -262,9 +239,7 @@ const PaymentModal = ({
     } catch (error) {
       const dec = decryptData(error?.response?.data?.data);
       console.log(dec);
-      toast.error(
-        "Something went wrong while creating your virtual card! please try again.",
-      );
+      toast.error("Something went wrong while creating your virtual card! please try again.");
     } finally {
       setLoading(false);
     }
@@ -285,8 +260,7 @@ const PaymentModal = ({
     console.log(decrypted);
     setError(decrypted?.message ?? "Invalid Verification Code");
     if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-      const time =
-        decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+      const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
       const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
       setProfileLockTime(timeInSec);
       const coun = localStorage.getItem("ip_country");
@@ -442,10 +416,7 @@ const PaymentModal = ({
         currency: "USD",
         expdate: formattedDate,
         token: feeDetails?.token,
-        cardType:
-          vvcCardType === "premium"
-            ? "vcc_premium_virtual"
-            : "vcc_standard_virtual",
+        cardType: vvcCardType === "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual",
         apple_pay: false,
         google_pay: false,
       },
@@ -523,10 +494,7 @@ const PaymentModal = ({
   };
 
   const renderData = () => (
-    <div
-      className={styles.paymentContent}
-      style={{ display: "flex", alignItems: "center" }}
-    >
+    <div className={styles.paymentContent} style={{ display: "flex", alignItems: "center" }}>
       <div
         style={{
           flex: (step === 4 && 0.8) || (step === 2 && 1.2),
@@ -563,14 +531,10 @@ const PaymentModal = ({
               </svg>
             </div>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <span
-                style={{ fontSize: "10px", fontWeight: 600, color: "#6F6F6F" }}
-              >
+              <span style={{ fontSize: "10px", fontWeight: 600, color: "#6F6F6F" }}>
                 {t("Having Troubles?")}
               </span>
-              <span
-                style={{ fontSize: "12px", fontWeight: 600, color: "black" }}
-              >
+              <span style={{ fontSize: "12px", fontWeight: 600, color: "black" }}>
                 {t("Contact Us")}
               </span>
             </div>
@@ -702,14 +666,10 @@ const PaymentModal = ({
               </svg>
             </div>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <span
-                style={{ fontSize: "10px", fontWeight: 600, color: "#6F6F6F" }}
-              >
+              <span style={{ fontSize: "10px", fontWeight: 600, color: "#6F6F6F" }}>
                 {t("Having Troubles?")}
               </span>
-              <span
-                style={{ fontSize: "12px", fontWeight: 600, color: "black" }}
-              >
+              <span style={{ fontSize: "12px", fontWeight: 600, color: "black" }}>
                 {t("Contact Us")}
               </span>
             </div>
@@ -783,10 +743,7 @@ const PaymentModal = ({
       </div>
 
       <Modal isOpen={showOtpModal}>
-        <ModalHeader toggle={() => setshowOtpModal(false)}>
-          {" "}
-          {t("Confirm")}{" "}
-        </ModalHeader>
+        <ModalHeader toggle={() => setshowOtpModal(false)}> {t("Confirm")} </ModalHeader>
         <ModalBody>
           <OTPConfirmation
             variant="card"

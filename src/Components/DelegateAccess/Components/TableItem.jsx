@@ -112,10 +112,7 @@ function TableItem({
   });
 
   return (
-    <div
-      className={`${styles.tr} ${styles.dataRow}`}
-      onClick={() => setMenuOpenFor(null)}
-    >
+    <div className={`${styles.tr} ${styles.dataRow}`} onClick={() => setMenuOpenFor(null)}>
       {width > 700 ? (
         isRole ? (
           <>
@@ -128,18 +125,12 @@ function TableItem({
               </div>
             )}
 
-            <div
-              style={{ flex: isPhone ? 0.4 : 0.25, ...ellipsisStyle }}
-              className={styles.td}
-            >
+            <div style={{ flex: isPhone ? 0.4 : 0.25, ...ellipsisStyle }} className={styles.td}>
               {truncate(item?.title, 15) || "—"}
             </div>
 
             {width > 700 && (
-              <div
-                style={{ flex: 0.35, ...ellipsisStyle }}
-                className={styles.td}
-              >
+              <div style={{ flex: 0.35, ...ellipsisStyle }} className={styles.td}>
                 {truncate(item?.description, 35)}
               </div>
             )}
@@ -174,33 +165,21 @@ function TableItem({
               </div>
             )}
 
-            <div
-              style={{ flex: isPhone ? 0.25 : 0.18, ...ellipsisStyle }}
-              className={styles.td}
-            >
+            <div style={{ flex: isPhone ? 0.25 : 0.18, ...ellipsisStyle }} className={styles.td}>
               {item?.first_name + " " + item?.last_name || "—"}
             </div>
 
-            <div
-              style={{ flex: isPhone ? 0.4 : 0.18, ...ellipsisStyle }}
-              className={styles.td}
-            >
+            <div style={{ flex: isPhone ? 0.4 : 0.18, ...ellipsisStyle }} className={styles.td}>
               {item?.phone || "—"}
             </div>
 
             {width > 700 && (
-              <div
-                style={{ flex: 0.26, ...ellipsisStyle }}
-                className={styles.td}
-              >
+              <div style={{ flex: 0.26, ...ellipsisStyle }} className={styles.td}>
                 {truncate(item?.email, 20) || "—"}
               </div>
             )}
 
-            <div
-              style={{ flex: isPhone ? 0.2 : 0.12 }}
-              className={`${styles.td} ${styles.amount}`}
-            >
+            <div style={{ flex: isPhone ? 0.2 : 0.12 }} className={`${styles.td} ${styles.amount}`}>
               {truncate(item?.role?.title, 15) || "—"}
             </div>
 
@@ -272,22 +251,16 @@ function TableItem({
       ) : isRole ? (
         <>
           <div className={styles.td}>
-            <div style={{ color: "#6E7687", fontWeight: "500" }}>
-              {t("Title")}
-            </div>{" "}
+            <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Title")}</div>{" "}
             {truncate(item?.title, 15) || "—"}
           </div>
           <div className={styles.td}>
-            <div style={{ color: "#6E7687", fontWeight: "500" }}>
-              {t("Description")}
-            </div>{" "}
+            <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Description")}</div>{" "}
             {truncate(item?.description, 35)}
           </div>
 
           <div className={styles.td}>
-            <div style={{ color: "#6E7687", fontWeight: "500" }}>
-              {t("Permissions")}
-            </div>
+            <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Permissions")}</div>
             <span
               style={{
                 background: "#f0f0f0",
@@ -375,10 +348,7 @@ function TableItem({
                   </select>
                 )}
               </div>
-              <div
-                className={`${styles.actions}`}
-                onClick={(e) => e.stopPropagation()}
-              >
+              <div className={`${styles.actions}`} onClick={(e) => e.stopPropagation()}>
                 <button
                   className={styles.threeDotsBtn}
                   style={{
@@ -391,19 +361,14 @@ function TableItem({
                   }}
                   onClick={(e) => {
                     e.stopPropagation();
-                    setMenuOpenFor((prev) =>
-                      prev === item?._id ? null : item?._id,
-                    );
+                    setMenuOpenFor((prev) => (prev === item?._id ? null : item?._id));
                   }}
                 >
                   <MoreHorizontal size={18} />
                 </button>
 
                 {menuOpenFor === item?._id && (
-                  <div
-                    className={styles.actionsMenu}
-                    onClick={(e) => e.stopPropagation()}
-                  >
+                  <div className={styles.actionsMenu} onClick={(e) => e.stopPropagation()}>
                     {hasPermission(
                       isRole
                         ? "delegate-access.roles.view-details"
@@ -420,9 +385,7 @@ function TableItem({
                       </div>
                     )}
                     {hasPermission(
-                      isRole
-                        ? "delegate-access.roles.edit"
-                        : "delegate-access.agents.edit",
+                      isRole ? "delegate-access.roles.edit" : "delegate-access.agents.edit",
                     ) && (
                       <div
                         className={styles.menuItem}
@@ -438,17 +401,12 @@ function TableItem({
                     {!isRole &&
                       item?.status === "pending" &&
                       hasPermission("delegate-access.agents.email.resend") && (
-                        <div
-                          className={styles.menuItem}
-                          onClick={() => resendEmail()}
-                        >
+                        <div className={styles.menuItem} onClick={() => resendEmail()}>
                           {isResending ? t("Resending...") : t("Resend Email")}
                         </div>
                       )}
                     {hasPermission(
-                      isRole
-                        ? "delegate-access.roles.delete"
-                        : "delegate-access.agents.delete",
+                      isRole ? "delegate-access.roles.delete" : "delegate-access.agents.delete",
                     ) && (
                       <div
                         className={`${styles.menuItem} ${styles.danger}`}
@@ -487,23 +445,17 @@ function TableItem({
           </div>
 
           <div className={styles.td}>
-            <div style={{ color: "#6E7687", fontWeight: "500" }}>
-              {t("Phone")}
-            </div>
+            <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Phone")}</div>
             <div> {item?.phone || "—"}</div>
           </div>
 
           <div className={styles.td}>
-            <div style={{ color: "#6E7687", fontWeight: "500" }}>
-              {t("Email")}
-            </div>
+            <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Email")}</div>
             <div>{truncate(item?.email, 20) || "—"}</div>
           </div>
 
           <div className={`${styles.td}`}>
-            <div style={{ color: "#6E7687", fontWeight: "500" }}>
-              {t("Role")}
-            </div>
+            <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Role")}</div>
             <div> {truncate(item?.role?.title, 15) || "—"}</div>
           </div>
         </>
@@ -538,10 +490,7 @@ function TableItem({
           </button>
 
           {menuOpenFor === item?._id && (
-            <div
-              className={styles.actionsMenu}
-              onClick={(e) => e.stopPropagation()}
-            >
+            <div className={styles.actionsMenu} onClick={(e) => e.stopPropagation()}>
               {hasPermission(
                 isRole
                   ? "delegate-access.roles.view-details"
@@ -558,9 +507,7 @@ function TableItem({
                 </div>
               )}
               {hasPermission(
-                isRole
-                  ? "delegate-access.roles.edit"
-                  : "delegate-access.agents.edit",
+                isRole ? "delegate-access.roles.edit" : "delegate-access.agents.edit",
               ) && (
                 <div
                   className={styles.menuItem}
@@ -576,17 +523,12 @@ function TableItem({
               {!isRole &&
                 item?.status === "pending" &&
                 hasPermission("delegate-access.agents.email.resend") && (
-                  <div
-                    className={styles.menuItem}
-                    onClick={() => resendEmail()}
-                  >
+                  <div className={styles.menuItem} onClick={() => resendEmail()}>
                     {isResending ? t("Resending...") : t("Resend Email")}
                   </div>
                 )}
               {hasPermission(
-                isRole
-                  ? "delegate-access.roles.delete"
-                  : "delegate-access.agents.delete",
+                isRole ? "delegate-access.roles.delete" : "delegate-access.agents.delete",
               ) && (
                 <div
                   className={`${styles.menuItem} ${styles.danger}`}

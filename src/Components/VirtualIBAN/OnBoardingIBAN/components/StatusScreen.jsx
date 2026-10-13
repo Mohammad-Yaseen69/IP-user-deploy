@@ -139,14 +139,10 @@ const StatusScreen = ({
   const isMobile = useMediaQuery("(max-width:600px)");
 
   const kybFiles =
-    userDetails?.company?.kyb_additional_file ||
-    activationData?.kyb_additional_file ||
-    [];
+    userDetails?.company?.kyb_additional_file || activationData?.kyb_additional_file || [];
   const ibanFiles =
     activationData?.iban_additional_file ||
-    (Array.isArray(additionalFiles) && additionalFiles.length > 0
-      ? additionalFiles
-      : []);
+    (Array.isArray(additionalFiles) && additionalFiles.length > 0 ? additionalFiles : []);
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [partnerName, setPartnerName] = useState("");
@@ -173,11 +169,7 @@ const StatusScreen = ({
       return;
     }
 
-    if (
-      partners?.find(
-        (p) => p?.email?.toLowerCase() === partnerEmail.toLowerCase(),
-      )
-    ) {
+    if (partners?.find((p) => p?.email?.toLowerCase() === partnerEmail.toLowerCase())) {
       toast.error(t("A director with this email already exists."));
       return;
     }
@@ -348,26 +340,25 @@ const StatusScreen = ({
             </div>
 
             <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-              {cfg.primaryLabel &&
-                cfg.primaryLabel !== "View submitted info" && (
-                  <button
-                    type="button"
-                    style={{
-                      background: "#5B3DF5",
-                      color: "#FFFFFF",
-                      border: "none",
-                      padding: "10px 24px",
-                      borderRadius: "8px",
-                      fontWeight: 600,
-                      fontSize: "14px",
-                      cursor: "pointer",
-                      transition: "background 0.2s",
-                    }}
-                    onClick={onAction}
-                  >
-                    {t(cfg.primaryLabel)}
-                  </button>
-                )}
+              {cfg.primaryLabel && cfg.primaryLabel !== "View submitted info" && (
+                <button
+                  type="button"
+                  style={{
+                    background: "#5B3DF5",
+                    color: "#FFFFFF",
+                    border: "none",
+                    padding: "10px 24px",
+                    borderRadius: "8px",
+                    fontWeight: 600,
+                    fontSize: "14px",
+                    cursor: "pointer",
+                    transition: "background 0.2s",
+                  }}
+                  onClick={onAction}
+                >
+                  {t(cfg.primaryLabel)}
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -442,9 +433,7 @@ const StatusScreen = ({
             }}
           >
             <div>
-              <span style={{ fontSize: "13px", color: "#6B7280" }}>
-                {t("Legal Company Name")}
-              </span>
+              <span style={{ fontSize: "13px", color: "#6B7280" }}>{t("Legal Company Name")}</span>
               <div
                 style={{
                   fontSize: "15px",
@@ -457,9 +446,7 @@ const StatusScreen = ({
               </div>
             </div>
             <div>
-              <span style={{ fontSize: "13px", color: "#6B7280" }}>
-                {t("Registration Number")}
-              </span>
+              <span style={{ fontSize: "13px", color: "#6B7280" }}>{t("Registration Number")}</span>
               <div
                 style={{
                   fontSize: "15px",
@@ -472,9 +459,7 @@ const StatusScreen = ({
               </div>
             </div>
             <div>
-              <span style={{ fontSize: "13px", color: "#6B7280" }}>
-                {t("Registered Address")}
-              </span>
+              <span style={{ fontSize: "13px", color: "#6B7280" }}>{t("Registered Address")}</span>
               <div
                 style={{
                   fontSize: "15px",
@@ -487,9 +472,7 @@ const StatusScreen = ({
               </div>
             </div>
             <div>
-              <span style={{ fontSize: "13px", color: "#6B7280" }}>
-                {t("Website")}
-              </span>
+              <span style={{ fontSize: "13px", color: "#6B7280" }}>{t("Website")}</span>
               <div
                 style={{
                   fontSize: "15px",
@@ -502,9 +485,7 @@ const StatusScreen = ({
               </div>
             </div>
             <div>
-              <span style={{ fontSize: "13px", color: "#6B7280" }}>
-                {t("Industry")}
-              </span>
+              <span style={{ fontSize: "13px", color: "#6B7280" }}>{t("Industry")}</span>
               <div
                 style={{
                   fontSize: "15px",
@@ -552,9 +533,7 @@ const StatusScreen = ({
           >
             {t("Documents")}
           </h3>
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "16px" }}
-          >
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             <div>
               <div
                 style={{
@@ -687,14 +666,11 @@ const StatusScreen = ({
             <ModalFooter>
               <Button
                 style={{
-                  background:
-                    "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                  background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                   border: "none",
                   outline: "none",
                 }}
-                disabled={
-                  adding || !partnerName || !partnerEmail || !partnerDesignation
-                }
+                disabled={adding || !partnerName || !partnerEmail || !partnerDesignation}
                 onClick={addPartnerHandler}
               >
                 {adding ? t("Adding...") : t("Add Now")}

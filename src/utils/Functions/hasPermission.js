@@ -29,19 +29,13 @@ export const hasPermission = ({
     if (roleDenied.some((rule) => rule === permission)) return false;
     if (
       adminAllowed.some(
-        (rule) =>
-          rule === "*" ||
-          rule === permission ||
-          rule.startsWith(permission + "."),
+        (rule) => rule === "*" || rule === permission || rule.startsWith(permission + "."),
       )
     )
       return true;
     if (
       roleAllowed.some(
-        (rule) =>
-          rule === "*" ||
-          rule === permission ||
-          rule.startsWith(permission + "."),
+        (rule) => rule === "*" || rule === permission || rule.startsWith(permission + "."),
       )
     )
       return true;

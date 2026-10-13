@@ -13,14 +13,7 @@ import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { ButtonForRequests } from "./UI/FormElements";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
-const InvoiceItem = ({
-  sn,
-  inv,
-  badgeClass,
-  setEditModal,
-  setMenuOpenFor,
-  menuOpenFor,
-}) => {
+const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOpenFor }) => {
   const [expanded, setExpanded] = useState({});
   const [showConfirm, setShowConfirm] = useState(false);
   const { t } = useTranslation();
@@ -99,10 +92,7 @@ const InvoiceItem = ({
         <div style={{ flex: isPhone ? 0.25 : 0.18 }} className={styles.td}>
           {formatDateTime(inv.createdAt)}
         </div>
-        <div
-          style={{ flex: isPhone ? 0.4 : 0.24, ...ellipsisStyle }}
-          className={styles.td}
-        >
+        <div style={{ flex: isPhone ? 0.4 : 0.24, ...ellipsisStyle }} className={styles.td}>
           {truncate(inv.title, 20)}
         </div>
         {width > 700 && (
@@ -121,9 +111,7 @@ const InvoiceItem = ({
         )}
         {width > 700 && (
           <div style={{ flex: 0.13 }} className={styles.td}>
-            <span className={`${styles.badge} ${badgeClass}`}>
-              {t(inv.status)}
-            </span>
+            <span className={`${styles.badge} ${badgeClass}`}>{t(inv.status)}</span>
           </div>
         )}
         <div
@@ -145,19 +133,14 @@ const InvoiceItem = ({
             }}
             onClick={(e) => {
               e.stopPropagation();
-              setMenuOpenFor((prev) =>
-                prev === inv.invoiceId ? null : inv.invoiceId,
-              );
+              setMenuOpenFor((prev) => (prev === inv.invoiceId ? null : inv.invoiceId));
             }}
           >
             <MoreHorizontal size={18} />
           </button>
 
           {menuOpenFor === inv.invoiceId && (
-            <div
-              className={styles.actionsMenu}
-              onClick={(e) => e.stopPropagation()}
-            >
+            <div className={styles.actionsMenu} onClick={(e) => e.stopPropagation()}>
               <div
                 className={styles.menuItem}
                 onClick={() => {
@@ -190,34 +173,29 @@ const InvoiceItem = ({
               )}
 
               {/* Permission: invoices.delete */}
-              {can("invoices.delete") &&
-                inv.status?.toLowerCase() !== "accepted" && (
-                  <div
-                    className={`${styles.menuItem} ${styles.danger}`}
-                    onClick={() => {
-                      setMenuOpenFor(null);
-                      setExpanded((prev) => ({
-                        ...prev,
-                        [inv.invoiceId]: false,
-                      }));
-                      setShowConfirm(true);
-                    }}
-                  >
-                    {t("Delete")}
-                  </div>
-                )}
+              {can("invoices.delete") && inv.status?.toLowerCase() !== "accepted" && (
+                <div
+                  className={`${styles.menuItem} ${styles.danger}`}
+                  onClick={() => {
+                    setMenuOpenFor(null);
+                    setExpanded((prev) => ({
+                      ...prev,
+                      [inv.invoiceId]: false,
+                    }));
+                    setShowConfirm(true);
+                  }}
+                >
+                  {t("Delete")}
+                </div>
+              )}
             </div>
           )}
         </div>
       </div>
 
       <Modal isOpen={showConfirm} toggle={() => setShowConfirm(false)}>
-        <ModalHeader toggle={() => setShowConfirm(false)}>
-          {t("Confirm Deletion")}
-        </ModalHeader>
-        <ModalBody>
-          {t("Are you sure you want to delete this invoice?")}
-        </ModalBody>
+        <ModalHeader toggle={() => setShowConfirm(false)}>{t("Confirm Deletion")}</ModalHeader>
+        <ModalBody>{t("Are you sure you want to delete this invoice?")}</ModalBody>
         <ModalFooter>
           <button
             onClick={() => setShowConfirm(false)}
@@ -232,21 +210,20 @@ const InvoiceItem = ({
             {t("Cancel")}
           </button>
           {/* Permission: invoices.delete */}
-          {can("invoices.delete") &&
-            inv.status?.toLowerCase() !== "accepted" && (
-              <ButtonForRequests
-                onClick={() => {
-                  if (!isPending) {
-                    mutateAsync(inv.invoiceId).finally(() => {
-                      setShowConfirm(false);
-                    });
-                  }
-                }}
-                isLoading={isPending}
-              >
-                {t("Delete")}
-              </ButtonForRequests>
-            )}
+          {can("invoices.delete") && inv.status?.toLowerCase() !== "accepted" && (
+            <ButtonForRequests
+              onClick={() => {
+                if (!isPending) {
+                  mutateAsync(inv.invoiceId).finally(() => {
+                    setShowConfirm(false);
+                  });
+                }
+              }}
+              isLoading={isPending}
+            >
+              {t("Delete")}
+            </ButtonForRequests>
+          )}
         </ModalFooter>
       </Modal>
 
@@ -286,13 +263,8 @@ const InvoiceItem = ({
                   zIndex: 100,
                 }}
               >
-                <h4 style={{ width: "90%", wordWrap: "break-word" }}>
-                  {inv.title}
-                </h4>
-                <X
-                  onClick={() => toggleExpand(inv.invoiceId)}
-                  cursor={"pointer"}
-                />
+                <h4 style={{ width: "90%", wordWrap: "break-word" }}>{inv.title}</h4>
+                <X onClick={() => toggleExpand(inv.invoiceId)} cursor={"pointer"} />
               </div>
               <InvoiceItemDetails inv={inv} />
             </div>

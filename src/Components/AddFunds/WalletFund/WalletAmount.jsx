@@ -129,16 +129,11 @@ const WalletAmount = ({
           overflow: "hidden",
           padding: isBig ? "30px 20px" : "5px",
           paddingBottom: 0,
-          boxShadow: isBig
-            ? "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)"
-            : "none",
+          boxShadow: isBig ? "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)" : "none",
         }}
         className="i_t_pt"
       >
-        <h4
-          style={{ textAlign: "center", color: "#7d7d7d" }}
-          className="c_f_a_head"
-        >
+        <h4 style={{ textAlign: "center", color: "#7d7d7d" }} className="c_f_a_head">
           {t("Enter the Amount")}
         </h4>
         <div
@@ -149,10 +144,7 @@ const WalletAmount = ({
           }}
           className="m_t_1_0"
         >
-          <h4
-            style={{ fontWeight: 600, marginBottom: 0 }}
-            className="c_f_a_amount"
-          >
+          <h4 style={{ fontWeight: 600, marginBottom: 0 }} className="c_f_a_amount">
             {wallet?.currency?.code}{" "}
           </h4>
           {/* <input type="text" value={amount} onChange={(e) => {
@@ -301,10 +293,7 @@ const WalletAmount = ({
           className="m_t_1_05"
         >
           <AiFillInfoCircle size={50} />
-          <p
-            style={{ marginBottom: 0, lineHeight: "1.5" }}
-            className="orange_warning"
-          >
+          <p style={{ marginBottom: 0, lineHeight: "1.5" }} className="orange_warning">
             {t(
               "ℹ️ The price of currency changes frequently based on market conditions. Please refer to the price on the confirm order page as your final quotation",
             ).replace("ℹ️ ", "")}
@@ -314,8 +303,7 @@ const WalletAmount = ({
       <div
         style={{
           display: "flex",
-          justifyContent:
-            window.innerWidth > 1000 ? "flex-end" : "space-between",
+          justifyContent: window.innerWidth > 1000 ? "flex-end" : "space-between",
           alignItems: "center",
           gap: "1.5rem",
           flexWrap: "wrap-reverse",

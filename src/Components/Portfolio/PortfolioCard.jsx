@@ -88,8 +88,7 @@ const PortfolioCard = ({
       onDragEnter={() => (dragOverRef.current = index)}
       onDragOver={(e) => e.preventDefault()}
       onClick={() => {
-        if (item?.jw_media?.status && item?.jw_media?.status !== "ready")
-          return;
+        if (item?.jw_media?.status && item?.jw_media?.status !== "ready") return;
         if (!publicP) {
           setShowModal(true);
         }
@@ -110,11 +109,7 @@ const PortfolioCard = ({
         borderRadius: publicP || (pAddress && !publicP) ? "12px" : "",
       }}
     >
-      <PortfolioItemModal
-        item={item}
-        setShowModal={setShowModal}
-        showModal={showModal}
-      />
+      <PortfolioItemModal item={item} setShowModal={setShowModal} showModal={showModal} />
 
       {publicP && (
         <div className="p-address-123456">
@@ -134,38 +129,33 @@ const PortfolioCard = ({
                   controls={true}
                   autoStart={playingMediaId === item?.jw_media?.mediaId}
                   onReady={() => {
-                    playerRefs.current[item?.jw_media?.mediaId] =
-                      window.jwplayer(
-                        `${import.meta.env.VITE_JW_PLAYER_ID}_${item?.jw_media?.mediaId}`,
-                      );
+                    playerRefs.current[item?.jw_media?.mediaId] = window.jwplayer(
+                      `${import.meta.env.VITE_JW_PLAYER_ID}_${item?.jw_media?.mediaId}`,
+                    );
                   }}
                   onPlay={() => {
-                    Object.entries(playerRefs.current).forEach(
-                      ([id, player]) => {
-                        if (
-                          id !== item?.jw_media?.mediaId &&
-                          player &&
-                          player.getState() === "playing"
-                        ) {
-                          player.pause();
-                        }
-                      },
-                    );
+                    Object.entries(playerRefs.current).forEach(([id, player]) => {
+                      if (
+                        id !== item?.jw_media?.mediaId &&
+                        player &&
+                        player.getState() === "playing"
+                      ) {
+                        player.pause();
+                      }
+                    });
 
                     setPlayingMediaId(item?.jw_media?.mediaId);
                   }}
                   onResume={() => {
-                    Object.entries(playerRefs.current).forEach(
-                      ([id, player]) => {
-                        if (
-                          id !== item?.jw_media?.mediaId &&
-                          player &&
-                          player.getState() === "playing"
-                        ) {
-                          player.pause();
-                        }
-                      },
-                    );
+                    Object.entries(playerRefs.current).forEach(([id, player]) => {
+                      if (
+                        id !== item?.jw_media?.mediaId &&
+                        player &&
+                        player.getState() === "playing"
+                      ) {
+                        player.pause();
+                      }
+                    });
 
                     setPlayingMediaId(item?.jw_media?.mediaId);
                   }}
@@ -192,27 +182,21 @@ const PortfolioCard = ({
                 src={pdfPl}
                 alt="img"
                 style={{ background: "black", objectFit: "contain" }}
-                onClick={() =>
-                  window.open(item?.document_details?.url, "_blank")
-                }
+                onClick={() => window.open(item?.document_details?.url, "_blank")}
               />
             ) : item?.file_type?.includes("doc") ? (
               <img
                 src={docPl}
                 alt="img"
                 style={{ background: "black", objectFit: "contain" }}
-                onClick={() =>
-                  window.open(item?.document_details?.url, "_blank")
-                }
+                onClick={() => window.open(item?.document_details?.url, "_blank")}
               />
             ) : (
               <img
                 src={file_img}
                 alt="img"
                 style={{ background: "black", objectFit: "contain" }}
-                onClick={() =>
-                  window.open(item?.document_details?.url, "_blank")
-                }
+                onClick={() => window.open(item?.document_details?.url, "_blank")}
               />
             )}
             <div>
@@ -251,9 +235,7 @@ const PortfolioCard = ({
                   {t("Processing")}
                 </Badge>
                 <span style={{ fontSize: ".8rem", fontWeight: "700" }}>
-                  {t(
-                    "Please refresh the page to get the latest status of the uploaded file.",
-                  )}
+                  {t("Please refresh the page to get the latest status of the uploaded file.")}
                 </span>
               </div>
             ) : (
@@ -283,9 +265,7 @@ const PortfolioCard = ({
                       toggleShowMenu();
                     }}
                   />
-                  <div
-                    className={`${styles.card_menu} ${showMenu ? styles.card_menu_active : ""}`}
-                  >
+                  <div className={`${styles.card_menu} ${showMenu ? styles.card_menu_active : ""}`}>
                     {canEditPortfolio && (
                       <div
                         className={styles.card_menu_item}
@@ -354,46 +334,31 @@ const PortfolioCard = ({
               )}
             </div>
             {item?.file_type?.includes("image") ? (
-              <img
-                src={item?.document_details?.url}
-                className={styles.item_img}
-              />
+              <img src={item?.document_details?.url} className={styles.item_img} />
             ) : item?.file_type?.includes("video") ? (
               <div style={{ position: "relative" }}>
-                {item?.jw_media?.status &&
-                  item?.jw_media?.status === "ready" && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        width: "100%",
-                        height: "100%",
-                        left: 0,
-                        top: pAddress && !publicP ? -32 : 0,
-                        backgroundColor: "rgba(0,0,0,0.2)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        zIndex: 99,
-                      }}
-                    >
-                      <Play
-                        color="white"
-                        size={40}
-                        style={{ cursor: "pointer" }}
-                      />
-                    </div>
-                  )}
+                {item?.jw_media?.status && item?.jw_media?.status === "ready" && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      width: "100%",
+                      height: "100%",
+                      left: 0,
+                      top: pAddress && !publicP ? -32 : 0,
+                      backgroundColor: "rgba(0,0,0,0.2)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      zIndex: 99,
+                    }}
+                  >
+                    <Play color="white" size={40} style={{ cursor: "pointer" }} />
+                  </div>
+                )}
                 {item?.jw_media?.thumbnail_url?.endsWith("mp4") ? (
-                  <video
-                    src={item?.jw_media?.thumbnail_url}
-                    className={styles.item_img}
-                  ></video>
+                  <video src={item?.jw_media?.thumbnail_url} className={styles.item_img}></video>
                 ) : (
-                  <img
-                    src={item?.jw_media?.thumbnail_url}
-                    alt=""
-                    className={styles.item_img}
-                  />
+                  <img src={item?.jw_media?.thumbnail_url} alt="" className={styles.item_img} />
                 )}
               </div>
             ) : item?.file_type?.includes("audio") ? (
@@ -424,16 +389,10 @@ const PortfolioCard = ({
               <img src={file_img} alt="img" style={{ background: "black" }} />
             )}
           </div>
-          <div
-            style={{ display: pAddress && "none" }}
-            className={styles.item_card_body}
-          >
+          <div style={{ display: pAddress && "none" }} className={styles.item_card_body}>
             <h5>{item?.title}</h5>
             <div style={{ position: "relative" }}>
-              <p
-                onMouseMove={() => setTooltip(true)}
-                onMouseLeave={() => setTooltip(false)}
-              >
+              <p onMouseMove={() => setTooltip(true)} onMouseLeave={() => setTooltip(false)}>
                 {item?.description}
               </p>
               {tooltip && (

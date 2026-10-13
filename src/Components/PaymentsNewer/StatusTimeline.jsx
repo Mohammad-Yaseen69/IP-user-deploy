@@ -1,8 +1,5 @@
 import React from "react";
-import {
-  VerticalTimeline,
-  VerticalTimelineElement,
-} from "react-vertical-timeline-component";
+import { VerticalTimeline, VerticalTimelineElement } from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
 import "./styles/Timeline.css";
 import { Check } from "react-feather";
@@ -16,8 +13,7 @@ const Timeline = ({ items }) => {
           animate={true}
           iconStyle={{
             boxShadow: "none",
-            background:
-              "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
             height: "25px",
             width: "25px",
           }}
@@ -46,9 +42,7 @@ const Timeline = ({ items }) => {
           }}
         >
           <div style={{ flex: 1 }}>
-            <h5 style={{ fontSize: "1rem", marginBottom: ".25rem" }}>
-              {item.name}
-            </h5>
+            <h5 style={{ fontSize: "1rem", marginBottom: ".25rem" }}>{item.name}</h5>
             <span
               style={{
                 color: "#979797",

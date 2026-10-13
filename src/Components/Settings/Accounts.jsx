@@ -56,9 +56,7 @@ const Accounts = () => {
           }}
         >
           <div>
-            <h4>
-              {t(!isPinAdded ? "Set Your Security PIN" : "Update Your Pin")}
-            </h4>
+            <h4>{t(!isPinAdded ? "Set Your Security PIN" : "Update Your Pin")}</h4>
             <p style={{ width: !isPinAdded ? "50%" : "auto" }}>
               {!isPinAdded ? t(``) : t("Need to change your PIN?")}
             </p>
@@ -71,9 +69,7 @@ const Accounts = () => {
               marginTop: window.innerWidth < 1000 && "10px",
               borderRadius: window.innerWidth < 1000 && "4px",
             }}
-            onClick={() =>
-              navigate(!isPinAdded ? "/create-pin" : "/update-pin")
-            }
+            onClick={() => navigate(!isPinAdded ? "/create-pin" : "/update-pin")}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

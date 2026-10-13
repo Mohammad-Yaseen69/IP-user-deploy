@@ -1,13 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
-import {
-  Button,
-  Input,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-} from "reactstrap";
+import { Button, Input, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import { NumberInputValidator } from "../../Helper/NumberInput";
 import { Link, useNavigate } from "react-router-dom";
@@ -28,14 +21,8 @@ const CommissionWithdraw = ({
   const { t } = useTranslation();
   const [amount, setAmount] = useState(1);
   const [currency, setCurrency] = useState(defaultCurrency || "USD");
-  const {
-    userWallets,
-    authHeader,
-    userDetails,
-    userWithdrawals,
-    verifyToken,
-    setProfileLockTime,
-  } = useContext(UserContext);
+  const { userWallets, authHeader, userDetails, userWithdrawals, verifyToken, setProfileLockTime } =
+    useContext(UserContext);
   const navigate = useNavigate();
   const [withdrawal, setWithdrawal] = useState("");
   const [saving, setSaving] = useState(false);
@@ -123,15 +110,12 @@ const CommissionWithdraw = ({
       verifyToken();
     } catch (err) {
       const decrypted = decryptData(err.response.data.data);
-      setError(
-        "We cannot process your request at the moment, please try again later.",
-      );
+      setError("We cannot process your request at the moment, please try again later.");
       if (decrypted?.message?.toLowerCase()?.includes("otp")) {
         setError("Invalid Verification Code!");
       }
       if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-        const time =
-          decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+        const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
         const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
         setProfileLockTime(timeInSec);
         const coun = localStorage.getItem("ip_country");
@@ -146,9 +130,7 @@ const CommissionWithdraw = ({
 
   return (
     <Modal isOpen={isOpen}>
-      <ModalHeader toggle={toggle}>
-        {t("Withdraw Commission Externally")}
-      </ModalHeader>
+      <ModalHeader toggle={toggle}>{t("Withdraw Commission Externally")}</ModalHeader>
       <ModalBody>
         {!complete ? (
           <>
@@ -165,9 +147,7 @@ const CommissionWithdraw = ({
                     <option value={"bank_details"}>{t("Bank Deposit")}</option>
                   )}
                   {userWithdrawals?.mobile_wallet?.length > 0 && (
-                    <option value={"mobile_wallet"}>
-                      {t("Mobile Wallet")}
-                    </option>
+                    <option value={"mobile_wallet"}>{t("Mobile Wallet")}</option>
                   )}
                   {userWithdrawals?.card_payment?.length > 0 && (
                     <option value={"card_payment"}>{t("Card Payment")}</option>
@@ -176,11 +156,7 @@ const CommissionWithdraw = ({
                     <option value={"cash_pickup"}>{t("Cash Pickup")}</option>
                   )}
                 </Input>
-                {error && (
-                  <div style={{ color: "red", marginTop: ".6rem" }}>
-                    {error}
-                  </div>
-                )}
+                {error && <div style={{ color: "red", marginTop: ".6rem" }}>{error}</div>}
               </>
             ) : (
               <div style={{ marginTop: "1rem" }}>

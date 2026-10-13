@@ -51,11 +51,7 @@ const ActivationStep = ({ asset, onChangeSelection }) => {
         )}
       </Callout>
 
-      <Callout>
-        {t(
-          "Network fees on transfers are charged separately by the blockchain.",
-        )}
-      </Callout>
+      <Callout>{t("Network fees on transfers are charged separately by the blockchain.")}</Callout>
     </>
   );
 };

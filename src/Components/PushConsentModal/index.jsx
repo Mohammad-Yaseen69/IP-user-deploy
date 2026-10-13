@@ -5,13 +5,7 @@ import { toast } from "react-toastify";
 import styles from "./PushConsentModal.module.css";
 import { subscribeToPush } from "../../Services/PushNotificationService";
 
-const PushConsentModal = ({
-  isOpen,
-  onClose,
-  accountId,
-  authHeader,
-  onSuccess,
-}) => {
+const PushConsentModal = ({ isOpen, onClose, accountId, authHeader, onSuccess }) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
 
@@ -49,9 +43,7 @@ const PushConsentModal = ({
           <Bell size={32} />
         </div>
 
-        <h3 className={styles.title}>
-          {t("Stay Updated with Instant Alerts")}
-        </h3>
+        <h3 className={styles.title}>{t("Stay Updated with Instant Alerts")}</h3>
 
         <p className={styles.description}>
           {t(
@@ -82,9 +74,7 @@ const PushConsentModal = ({
             disabled={loading}
           >
             <Bell size={16} />
-            <span>
-              {loading ? t("Enabling...") : t("Enable Notifications")}
-            </span>
+            <span>{loading ? t("Enabling...") : t("Enable Notifications")}</span>
           </button>
 
           <button

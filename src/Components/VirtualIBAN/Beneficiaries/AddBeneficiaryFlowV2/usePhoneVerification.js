@@ -38,8 +38,7 @@ export const usePhoneVerification = (number, enabled = true) => {
     if (digits !== debouncedDigits || status === "checking") {
       return { state: "checking", message: "Checking the number..." };
     }
-    if (status === "valid")
-      return { state: "valid", message: "Number verified" };
+    if (status === "valid") return { state: "valid", message: "Number verified" };
     if (status === "invalid") {
       return {
         state: "invalid",

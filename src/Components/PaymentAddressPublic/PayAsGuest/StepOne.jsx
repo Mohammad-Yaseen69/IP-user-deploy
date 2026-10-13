@@ -10,8 +10,7 @@ import { PlaidCurrencies } from "../../AddFunds/WalletFundsFlow";
 import CardMaintenanceModal from "../../CardMaintenanceModal";
 
 const StepOne = ({ data, dataHandler, allowed, wallet }) => {
-  const [showCardMaintenanceModal, setShowCardMaintenanceModal] =
-    useState(false);
+  const [showCardMaintenanceModal, setShowCardMaintenanceModal] = useState(false);
   const payouts = [
     {
       name: "Payment Card",
@@ -83,16 +82,11 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
             {/* <img src={data?.payment_type?.id === item?.id ? item.active_icon : item.icon} alt="" /> */}
             {data?.payment_type?.id === item?.id ? item.active_icon : item.icon}
             <span>{t(item?.name)}</span>
-            {item.coming_soon && (
-              <div className={styles.badge}>{t("Coming Soon")}</div>
-            )}
+            {item.coming_soon && <div className={styles.badge}>{t("Coming Soon")}</div>}
           </div>
         ))
       ) : (
-        <div
-          className={`${styles.item}`}
-          style={{ justifyContent: "space-between" }}
-        >
+        <div className={`${styles.item}`} style={{ justifyContent: "space-between" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             {data?.payment_type?.active_icon}
             <span>{t(data.payment_type?.name)}</span>
@@ -138,9 +132,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                   <div className={styles.card_dets}>
                     <div className={styles.cd_top}>
                       <span>{t("You are using")}</span>
-                      <button onClick={() => dataHandler("step", 3)}>
-                        {t("Change")}
-                      </button>
+                      <button onClick={() => dataHandler("step", 3)}>{t("Change")}</button>
                     </div>
                     <div className={styles.cd_bot}>
                       <h5>
@@ -161,9 +153,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
               }
             />
             {data.payment_type?.value === "paypal" &&
-            !PaypalCurrencies.some(
-              (item) => item === wallet?.currency?.code,
-            ) ? (
+            !PaypalCurrencies.some((item) => item === wallet?.currency?.code) ? (
               <>
                 <div
                   style={{
@@ -187,10 +177,8 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                       letterSpacing: "-0.28px",
                     }}
                   >
-                    <strong>{wallet?.currency?.code} </strong>{" "}
-                    {t("is not supported by Paypal,")}{" "}
-                    <strong>{t("USD")}</strong>{" "}
-                    {t("will be used as the default currency.")}
+                    <strong>{wallet?.currency?.code} </strong> {t("is not supported by Paypal,")}{" "}
+                    <strong>{t("USD")}</strong> {t("will be used as the default currency.")}
                   </span>
                 </div>
                 <div
@@ -235,8 +223,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                         letterSpacing: "-0.14px",
                       }}
                     >
-                      1.00 {wallet?.currency?.code} ={" "}
-                      {Number(data.paypal_fx?.exchange_rate)}
+                      1.00 {wallet?.currency?.code} = {Number(data.paypal_fx?.exchange_rate)}
                       {t("USD")}
                     </strong>
                   </div>

@@ -17,8 +17,7 @@ const RemoveAccountModal = ({ account, onClose, onConfirm }) => {
   };
 
   const freesSlot = account && !account.isCrypto && account.isLastInRecord;
-  const target =
-    account?.subtitle?.split(" · ").slice(1).join(" · ") || account?.title;
+  const target = account?.subtitle?.split(" · ").slice(1).join(" · ") || account?.title;
 
   return (
     <Modal

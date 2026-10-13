@@ -73,8 +73,7 @@ const ReviewStep = ({
   isRefreshing,
 }) => {
   const { t } = useTranslation();
-  const remaining = () =>
-    Math.round(((quoteExpiresAt || 0) - Date.now()) / 1000);
+  const remaining = () => Math.round(((quoteExpiresAt || 0) - Date.now()) / 1000);
   const [secondsLeft, setSecondsLeft] = useState(remaining);
 
   useEffect(() => {
@@ -107,9 +106,7 @@ const ReviewStep = ({
             ) : (
               <>
                 {t("Quote valid for")}{" "}
-                <strong className={styles.timerSeconds}>
-                  {formatClock(secondsLeft)}
-                </strong>
+                <strong className={styles.timerSeconds}>{formatClock(secondsLeft)}</strong>
               </>
             )}
           </span>
@@ -126,9 +123,7 @@ const ReviewStep = ({
       </div>
 
       <div className={ibanToCrypto.receiveCard}>
-        <span className={ibanToCrypto.receiveLabel}>
-          {t("Recipient receives (estimate)")}
-        </span>
+        <span className={ibanToCrypto.receiveLabel}>{t("Recipient receives (estimate)")}</span>
         <span className={ibanToCrypto.receiveValue}>
           ≈ {formatMoney(recipient?.value, recipient?.currency || asset, 6)}
         </span>
@@ -147,9 +142,7 @@ const ReviewStep = ({
           </span>
         </div>
         <div className={styles.reviewRow}>
-          <span className={styles.reviewRowLabel}>
-            {t("Debited from your IBAN")}
-          </span>
+          <span className={styles.reviewRowLabel}>{t("Debited from your IBAN")}</span>
           <span className={styles.reviewRowValue}>
             {formatMoney(feeDetails?.total?.value, feeDetails?.total?.currency)}
           </span>
@@ -163,19 +156,13 @@ const ReviewStep = ({
         <div className={styles.reviewRow}>
           <span className={styles.reviewRowLabel}>{t("Network fee")}</span>
           <span className={styles.reviewRowValue}>
-            {formatMoney(
-              feeDetails?.network_fee?.value,
-              feeDetails?.network_fee?.currency,
-            )}
+            {formatMoney(feeDetails?.network_fee?.value, feeDetails?.network_fee?.currency)}
           </span>
         </div>
         <div className={styles.reviewRow}>
           <span className={styles.reviewRowLabel}>{t("Amount converted")}</span>
           <span className={styles.reviewRowValue}>
-            {formatMoney(
-              feeDetails?.sending?.value,
-              feeDetails?.sending?.currency,
-            )}
+            {formatMoney(feeDetails?.sending?.value, feeDetails?.sending?.currency)}
           </span>
         </div>
         <div className={styles.reviewRow}>
@@ -199,9 +186,7 @@ const ReviewStep = ({
           </span>
         </div>
         <div className={styles.reviewRow}>
-          <span className={styles.reviewRowLabel}>
-            {t("Destination address")}
-          </span>
+          <span className={styles.reviewRowLabel}>{t("Destination address")}</span>
           <span className={`${styles.reviewRowValue} ${local.mono}`}>
             {boundaryAddress(address)}
           </span>
@@ -221,9 +206,8 @@ const ReviewStep = ({
           onChange={(event) => setConfirmedNetwork(event.target.checked)}
         />
         <span>
-          {t("I confirm the recipient supports")}{" "}
-          <strong>{recipient?.currency || asset}</strong> {t("on")}{" "}
-          <strong>{networkLabel}</strong>
+          {t("I confirm the recipient supports")} <strong>{recipient?.currency || asset}</strong>{" "}
+          {t("on")} <strong>{networkLabel}</strong>
         </span>
       </label>
     </div>

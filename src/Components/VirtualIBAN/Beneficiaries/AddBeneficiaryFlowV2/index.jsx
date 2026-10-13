@@ -12,11 +12,7 @@ import StepMethod from "./steps/StepMethod";
 import StepDetails from "./steps/StepDetails";
 import StepConfirm from "./steps/StepConfirm";
 import StepView from "./steps/StepView";
-import {
-  BVNK_METHODS,
-  INITIAL_FORM,
-  THUNES_SERVICE_BY_METHOD,
-} from "./constants";
+import { BVNK_METHODS, INITIAL_FORM, THUNES_SERVICE_BY_METHOD } from "./constants";
 import {
   buildBeneficiaryPayload,
   buildBeneficiaryUpdatePayload,
@@ -24,16 +20,8 @@ import {
   prefillBeneficiaryBag,
   prefillEditBag,
 } from "./buildPayloads";
-import {
-  useAvailableMethods,
-  useRequiredFields,
-  useRequirements,
-} from "./useVendorRequirements";
-import {
-  BANK_COUNTRY_FIELD,
-  getEditRequirements,
-  getFieldDef,
-} from "./vendorFields";
+import { useAvailableMethods, useRequiredFields, useRequirements } from "./useVendorRequirements";
+import { BANK_COUNTRY_FIELD, getEditRequirements, getFieldDef } from "./vendorFields";
 import { apiWrapper } from "../../../../utils/Functions/apiWrapper";
 import { UserContext } from "../../../../Context/UserContext";
 import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError";
@@ -84,9 +72,7 @@ const AddBeneficiaryFlowV2 = ({
   /* A flow that already knows how the money leaves does not ask again. */
   const stages = useMemo(() => {
     const modeStages = MODE_STAGES[mode] || MODE_STAGES.create;
-    return fixedMethod
-      ? modeStages.filter((item) => item !== "method")
-      : modeStages;
+    return fixedMethod ? modeStages.filter((item) => item !== "method") : modeStages;
   }, [mode, fixedMethod]);
   const { allowedCountries, setProfileLockTime } = useContext(UserContext);
   const navigate = useNavigate();
@@ -110,12 +96,7 @@ const AddBeneficiaryFlowV2 = ({
   useEffect(() => {
     let cancelled = false;
 
-    if (
-      !isCryptoChannel ||
-      !debouncedAddress ||
-      !cryptoNetwork ||
-      !cryptoAsset
-    ) {
+    if (!isCryptoChannel || !debouncedAddress || !cryptoNetwork || !cryptoAsset) {
       setAddressStatus("");
       return undefined;
     }
@@ -159,13 +140,7 @@ const AddBeneficiaryFlowV2 = ({
       };
     }
     return null;
-  }, [
-    isCryptoChannel,
-    walletAddress,
-    debouncedAddress,
-    addressStatus,
-    cryptoNetwork,
-  ]);
+  }, [isCryptoChannel, walletAddress, debouncedAddress, addressStatus, cryptoNetwork]);
 
   useEffect(() => {
     if (!open) return;
@@ -178,9 +153,7 @@ const AddBeneficiaryFlowV2 = ({
     const fixed = fixedMethod
       ? {
           method: fixedMethod,
-          vendor:
-            BVNK_METHODS.find((item) => item.value === fixedMethod)?.vendor ||
-            "",
+          vendor: BVNK_METHODS.find((item) => item.value === fixedMethod)?.vendor || "",
         }
       : {};
 
@@ -217,10 +190,7 @@ const AddBeneficiaryFlowV2 = ({
       ...fixed,
       recipient_type: recipientType,
       country:
-        existingBeneficiary.country_iso_code ||
-        existingBeneficiary.country ||
-        initialCountry ||
-        "",
+        existingBeneficiary.country_iso_code || existingBeneficiary.country || initialCountry || "",
       service_id: channelDetails?.service_id,
       method: channelDetails?.method,
       channel: channelDetails || {},
@@ -241,15 +211,7 @@ const AddBeneficiaryFlowV2 = ({
         company_name: companyVal,
       },
     });
-  }, [
-    open,
-    mode,
-    existingBeneficiary,
-    fixedMethod,
-    initialCountry,
-    isBeneficiaryMode,
-    stages,
-  ]);
+  }, [open, mode, existingBeneficiary, fixedMethod, initialCountry, isBeneficiaryMode, stages]);
 
   const isTransferMethod = !!THUNES_SERVICE_BY_METHOD[form.method];
 
@@ -275,16 +237,11 @@ const AddBeneficiaryFlowV2 = ({
   /* Only a mobile wallet asks the sender to name the provider. */
   const payers = useMemo(() => {
     if (form.method !== "mobile_wallet") return [];
-    const service = methods.transfer.find(
-      (entry) => entry.serviceId === form.service_id,
-    );
+    const service = methods.transfer.find((entry) => entry.serviceId === form.service_id);
     return service?.payers || [];
   }, [methods, form.method, form.service_id]);
 
-  const phoneCheck = usePhoneVerification(
-    form.channel?.msisdn,
-    form.method === "mobile_wallet",
-  );
+  const phoneCheck = usePhoneVerification(form.channel?.msisdn, form.method === "mobile_wallet");
 
   /* Whichever identifier this channel turns on gets checked in the same place. */
   const channelCheck = isCryptoChannel ? addressCheck : phoneCheck;
@@ -314,9 +271,7 @@ const AddBeneficiaryFlowV2 = ({
   useEffect(() => {
     if (!form.country || !lockedFields.length) return;
 
-    const stale = lockedFields.filter(
-      (name) => form.beneficiary[name] !== form.country,
-    );
+    const stale = lockedFields.filter((name) => form.beneficiary[name] !== form.country);
     if (!stale.length) return;
 
     setForm((prev) => ({
@@ -328,13 +283,10 @@ const AddBeneficiaryFlowV2 = ({
     }));
   }, [form.country, form.beneficiary, lockedFields]);
 
-  const asksBankCountry = (requirements?.channelFields || []).includes(
-    BANK_COUNTRY_FIELD,
-  );
+  const asksBankCountry = (requirements?.channelFields || []).includes(BANK_COUNTRY_FIELD);
 
   useEffect(() => {
-    if (!asksBankCountry || !form.country || form.channel[BANK_COUNTRY_FIELD])
-      return;
+    if (!asksBankCountry || !form.country || form.channel[BANK_COUNTRY_FIELD]) return;
 
     setForm((prev) => ({
       ...prev,
@@ -366,9 +318,7 @@ const AddBeneficiaryFlowV2 = ({
       channel: { ...prev.channel, ...patch, [name]: value },
     }));
     setErrors((prev) =>
-      prev.channel?.[name]
-        ? { ...prev, channel: { ...prev.channel, [name]: undefined } }
-        : prev,
+      prev.channel?.[name] ? { ...prev, channel: { ...prev.channel, [name]: undefined } } : prev,
     );
   }, []);
 
@@ -387,29 +337,20 @@ const AddBeneficiaryFlowV2 = ({
     if (isChannelMode) {
       return (
         existingBeneficiary.company_name ||
-        [existingBeneficiary.first_name, existingBeneficiary.last_name]
-          .filter(Boolean)
-          .join(" ") ||
+        [existingBeneficiary.first_name, existingBeneficiary.last_name].filter(Boolean).join(" ") ||
         "Beneficiary"
       );
     }
 
     const first = form.beneficiary.firstname || form.beneficiary.firstName;
     const last = form.beneficiary.lastname || form.beneficiary.lastName;
-    if (form.recipient_type === "business")
-      return form.beneficiary.legalName || "New company";
+    if (form.recipient_type === "business") return form.beneficiary.legalName || "New company";
     return [first, last].filter(Boolean).join(" ") || "New recipient";
-  }, [
-    isChannelMode,
-    existingBeneficiary,
-    form.recipient_type,
-    form.beneficiary,
-  ]);
+  }, [isChannelMode, existingBeneficiary, form.recipient_type, form.beneficiary]);
 
   const countryLabel = useMemo(
     () =>
-      (allowedCountries || []).find((c) => c.country_iso_code === form.country)
-        ?.country_name || "",
+      (allowedCountries || []).find((c) => c.country_iso_code === form.country)?.country_name || "",
     [allowedCountries, form.country],
   );
 
@@ -451,13 +392,8 @@ const AddBeneficiaryFlowV2 = ({
       });
     }
 
-    if (
-      isCryptoChannel &&
-      !next.channel.wallet_address &&
-      addressStatus === "invalid"
-    ) {
-      next.channel.wallet_address =
-        "This address is not valid on the selected network.";
+    if (isCryptoChannel && !next.channel.wallet_address && addressStatus === "invalid") {
+      next.channel.wallet_address = "This address is not valid on the selected network.";
     }
 
     if (!next.channel.msisdn && phoneCheck?.state === "invalid") {
@@ -467,11 +403,7 @@ const AddBeneficiaryFlowV2 = ({
     if (requirements) {
       const fieldType = (name) => getFieldDef(name, requirements.defs).type;
       next.channel = {
-        ...collectIdentifierErrors(
-          requirements.channelFields,
-          form.channel,
-          fieldType,
-        ),
+        ...collectIdentifierErrors(requirements.channelFields, form.channel, fieldType),
         ...next.channel,
       };
 
@@ -500,10 +432,7 @@ const AddBeneficiaryFlowV2 = ({
     }
 
     setErrors(next);
-    return (
-      Object.keys(next.beneficiary).length === 0 &&
-      Object.keys(next.channel).length === 0
-    );
+    return Object.keys(next.beneficiary).length === 0 && Object.keys(next.channel).length === 0;
   };
 
   const stageAt = (offset) => stages[stages.indexOf(stage) + offset];
@@ -593,8 +522,7 @@ const AddBeneficiaryFlowV2 = ({
           isEncrypted: true,
           isDecrypted: true,
         });
-        beneficiaryRecord =
-          updated?.data || updated?.beneficiaryData || beneficiaryRecord;
+        beneficiaryRecord = updated?.data || updated?.beneficiaryData || beneficiaryRecord;
       } else {
         const created = await apiWrapper({
           endpoint: "/api/beneficiary/v2/add",
@@ -604,8 +532,7 @@ const AddBeneficiaryFlowV2 = ({
           isDecrypted: true,
         });
 
-        beneficiaryRecord =
-          created?.data || created?.beneficiaryData || created;
+        beneficiaryRecord = created?.data || created?.beneficiaryData || created;
         beneficiaryId = beneficiaryRecord?._id;
 
         if (!beneficiaryId) {
@@ -614,9 +541,7 @@ const AddBeneficiaryFlowV2 = ({
       }
       try {
         await saveChannel(beneficiaryId, beneficiaryRecord, !isChannelMode);
-        toast.success(
-          isChannelMode ? "Payout channel added." : "Beneficiary saved.",
-        );
+        toast.success(isChannelMode ? "Payout channel added." : "Beneficiary saved.");
         if (handleClose) handleClose();
       } catch (e) {
         toast.error(e?.message ?? "Failed to add beneficiary!");
@@ -679,8 +604,7 @@ const AddBeneficiaryFlowV2 = ({
 
   const primaryDisabled = () => {
     if (saving) return true;
-    if (stage === "method")
-      return !form.method || (isTransferMethod && fieldsLoading);
+    if (stage === "method") return !form.method || (isTransferMethod && fieldsLoading);
     if (stage === "details" && channelCheck?.state === "invalid") return true;
     return false;
   };
@@ -688,9 +612,7 @@ const AddBeneficiaryFlowV2 = ({
   const renderBody = () => {
     switch (stage) {
       case "recipient":
-        return (
-          <StepRecipient form={form} setField={setField} errors={errors} />
-        );
+        return <StepRecipient form={form} setField={setField} errors={errors} />;
 
       case "method":
         return (
@@ -710,20 +632,13 @@ const AddBeneficiaryFlowV2 = ({
             ]
               .filter(Boolean)
               .join(", ")}
-            onChangeRecipient={
-              isChannelMode ? undefined : () => setStage("recipient")
-            }
+            onChangeRecipient={isChannelMode ? undefined : () => setStage("recipient")}
           />
         );
 
       case "details":
         if (isViewMode) {
-          return (
-            <StepView
-              beneficiary={existingBeneficiary}
-              recipientName={recipientName}
-            />
-          );
+          return <StepView beneficiary={existingBeneficiary} recipientName={recipientName} />;
         }
 
         return (
@@ -741,9 +656,7 @@ const AddBeneficiaryFlowV2 = ({
             payersLoading={methodsLoading}
             beneficiary={isEditMode ? existingBeneficiary : null}
             disabled={isViewMode}
-            onChangeMethod={
-              isBeneficiaryMode || fixedMethod ? null : () => setStage("method")
-            }
+            onChangeMethod={isBeneficiaryMode || fixedMethod ? null : () => setStage("method")}
           />
         );
 
@@ -763,11 +676,7 @@ const AddBeneficiaryFlowV2 = ({
   };
 
   return (
-    <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="add-beneficiary-v2"
-    >
+    <Modal open={open} onClose={handleClose} aria-labelledby="add-beneficiary-v2">
       <MuiPickersUtilsProvider utils={DateMomentUtils}>
         <div className={styles.root}>
           <div className={styles.modal}>
@@ -779,11 +688,7 @@ const AddBeneficiaryFlowV2 = ({
                   </h2>
                   <p className={styles.subtitle}>{subtitle()}</p>
                 </div>
-                <button
-                  type="button"
-                  className={styles.closeBtn}
-                  onClick={handleClose}
-                >
+                <button type="button" className={styles.closeBtn} onClick={handleClose}>
                   <X size={16} />
                 </button>
               </div>

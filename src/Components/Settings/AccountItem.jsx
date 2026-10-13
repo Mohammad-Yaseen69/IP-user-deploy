@@ -67,9 +67,7 @@ const AccountItem = ({ data }) => {
     const type = typeof method === "string" ? method : codeType;
     const payload = {
       data: {
-        type: data.name.toLowerCase().includes("whatsapp")
-          ? "unlink-whatsapp"
-          : "unlink-insta",
+        type: data.name.toLowerCase().includes("whatsapp") ? "unlink-whatsapp" : "unlink-insta",
       },
       type,
     };
@@ -119,21 +117,17 @@ const AccountItem = ({ data }) => {
         .catch((error) => {
           const dec = decryptData(error?.response?.data?.data);
           setError(
-            dec?.message ??
-              "We cannot process your request at the moment, please try again later.",
+            dec?.message ?? "We cannot process your request at the moment, please try again later.",
           );
           toast.error(
-            dec?.message ??
-              "We cannot process your request at the moment, please try again later.",
+            dec?.message ?? "We cannot process your request at the moment, please try again later.",
           );
         })
         .finally(() => setSaving(false));
       return;
     }
 
-    const socialType = data.name.toLowerCase().includes("insta")
-      ? "insta"
-      : "telegram";
+    const socialType = data.name.toLowerCase().includes("insta") ? "insta" : "telegram";
     const requestData = { token, otp, type: codeType };
     axios
       .post(
@@ -151,12 +145,10 @@ const AccountItem = ({ data }) => {
       .catch((error) => {
         const dec = decryptData(error?.response?.data?.data);
         setError(
-          dec?.message ??
-            "We cannot process your request at the moment, please try again later.",
+          dec?.message ?? "We cannot process your request at the moment, please try again later.",
         );
         toast.error(
-          dec?.message ??
-            "We cannot process your request at the moment, please try again later.",
+          dec?.message ?? "We cannot process your request at the moment, please try again later.",
         );
       })
       .finally(() => setSaving(false));
@@ -205,11 +197,7 @@ const AccountItem = ({ data }) => {
           setShowModal(true);
         }
       } else if (data.name.toLowerCase().includes("telegram")) {
-        if (
-          redirect &&
-          !userDetails?.telegram_bot &&
-          userDetails?.insta_username
-        ) {
+        if (redirect && !userDetails?.telegram_bot && userDetails?.insta_username) {
           setShowModal(true);
         }
       }
@@ -324,15 +312,9 @@ const AccountItem = ({ data }) => {
   };
 
   return (
-    <div
-      className={styles.card}
-      ref={data.name.toLowerCase().includes("insta") ? conRef : null}
-    >
+    <div className={styles.card} ref={data.name.toLowerCase().includes("insta") ? conRef : null}>
       <div className={styles.top}>
-        <div
-          style={{ justifyContent: "space-between", width: "100%" }}
-          className={styles.left}
-        >
+        <div style={{ justifyContent: "space-between", width: "100%" }} className={styles.left}>
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <img src={data.img} alt={data.name} />
 
@@ -345,16 +327,9 @@ const AccountItem = ({ data }) => {
             <>
               {checked ? (
                 <>
-                  <Tooltip
-                    title={
-                      channelEnabled ? "Disable Channel" : "Enable Channel"
-                    }
-                  >
+                  <Tooltip title={channelEnabled ? "Disable Channel" : "Enable Channel"}>
                     <div style={{ display: "inline-flex" }}>
-                      <Toggle
-                        checked={channelEnabled}
-                        onChange={handleChannelToggle}
-                      />
+                      <Toggle checked={channelEnabled} onChange={handleChannelToggle} />
                     </div>
                   </Tooltip>
                   <button
@@ -375,10 +350,7 @@ const AccountItem = ({ data }) => {
                   </button>
                 </>
               ) : (
-                <Info
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setShowModal(true)}
-                />
+                <Info style={{ cursor: "pointer" }} onClick={() => setShowModal(true)} />
               )}
             </>
           )}
@@ -395,11 +367,7 @@ const AccountItem = ({ data }) => {
               ) : (
                 <>
                   <label className="switch">
-                    <input
-                      type="checkbox"
-                      checked={checked}
-                      onChange={onChange}
-                    />
+                    <input type="checkbox" checked={checked} onChange={onChange} />
                     <span className="slider round"></span>
                   </label>
                   {/* <span style={{
@@ -414,9 +382,7 @@ const AccountItem = ({ data }) => {
             <span style={{ fontWeight: 600 }}>{t("Coming Soon")}</span>
           )}
           <Modal isOpen={showDelOtp} toggle={() => setShowDelOtp(!showDelOtp)}>
-            <ModalHeader toggle={() => setShowDelOtp(!showDelOtp)}>
-              {t("Confirm")}
-            </ModalHeader>
+            <ModalHeader toggle={() => setShowDelOtp(!showDelOtp)}>{t("Confirm")}</ModalHeader>
             <ModalBody>
               <OTPConfirmation
                 variant="card"
@@ -434,11 +400,9 @@ const AccountItem = ({ data }) => {
       </div>
       <div className={styles.middle}>
         <P>
-          {userDetails?.insta_username &&
-          data.name.toLowerCase().includes("insta")
+          {userDetails?.insta_username && data.name.toLowerCase().includes("insta")
             ? `${userDetails?.insta_username}`
-            : userDetails?.telegram_username &&
-                data.name.toLowerCase().includes("telegram")
+            : userDetails?.telegram_username && data.name.toLowerCase().includes("telegram")
               ? `${userDetails?.telegram_username}`
               : t("Add Your Account")}
         </P>
@@ -546,9 +510,7 @@ const AccountItem = ({ data }) => {
         </ModalBody>
       </Modal>
       <Modal isOpen={noUser} toggle={() => setNoUser(!noUser)}>
-        <ModalHeader toggle={() => setNoUser(!noUser)}>
-          {t("No Username")}
-        </ModalHeader>
+        <ModalHeader toggle={() => setNoUser(!noUser)}>{t("No Username")}</ModalHeader>
         <ModalBody>
           <h5>
             {t("You haven't set the username yet.")}{" "}

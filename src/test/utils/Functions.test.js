@@ -1,8 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import {
-  getExtractedPhone,
-  serviceFieldInfoValidate,
-} from "../../utils/Functions/index.js";
+import { getExtractedPhone, serviceFieldInfoValidate } from "../../utils/Functions/index.js";
 
 // Mock the CountryBasedPhone data
 vi.mock("../../Components/PhoneInput/PhoneNumberBasedOnCountry.json", () => ({
@@ -184,12 +181,7 @@ describe("serviceFieldInfoValidate", () => {
   });
 
   it("should return false when fieldsInfo is null", () => {
-    const result = serviceFieldInfoValidate(
-      "bank_country_fields",
-      "field1",
-      "sub_field1",
-      null,
-    );
+    const result = serviceFieldInfoValidate("bank_country_fields", "field1", "sub_field1", null);
 
     expect(result).toBe(false);
   });

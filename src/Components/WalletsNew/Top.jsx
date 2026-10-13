@@ -65,12 +65,8 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
 
   useEffect(() => {
     if (wallet_address && userWallets?.length > 0) {
-      const wallet = userWallets?.find(
-        (item) => item?.wallet_id === wallet_address,
-      );
-      const index = userWallets?.findIndex(
-        (item) => item?.wallet_id === wallet_address,
-      );
+      const wallet = userWallets?.find((item) => item?.wallet_id === wallet_address);
+      const index = userWallets?.findIndex((item) => item?.wallet_id === wallet_address);
       if (wallet?.wallet_id && index !== -1) {
         setActiveDot(index);
         setCurrentWallet(wallet);
@@ -108,8 +104,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
   const [showAddCurrencyModal, setShowAddCurrencyModal] = useState(false);
   const [showWithdrawalModal, setShowWithdrawalModal] = useState(false);
   const [showConversionModal, setShowConversionModal] = useState(false);
-  const [showDownloadStatementModal, setShowDownloadStatementModal] =
-    useState(false);
+  const [showDownloadStatementModal, setShowDownloadStatementModal] = useState(false);
   const [showSendCryptoModal, setShowSendCryptoModal] = useState(false);
   const [sendCryptoWallet, setSendCryptoWallet] = useState(null);
 
@@ -121,8 +116,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
   useEffect(() => {
     if (action === "convert") setShowConversionModal(true);
     else if (action === "withdraw") {
-      if (currentWallet?.wallet_type === "crypto")
-        openSendCryptoModal(currentWallet);
+      if (currentWallet?.wallet_type === "crypto") openSendCryptoModal(currentWallet);
       else setShowWithdrawalModal(true);
     } else if (action === "add-currency") setShowAddCurrencyModal(true);
     else if (action === "statement") setShowDownloadStatementModal(true);
@@ -146,9 +140,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
           setCurrentActive(false);
         })
         .catch((err) => {
-          toast.error(
-            "We cannot process your request at the moment, please try again later.",
-          );
+          toast.error("We cannot process your request at the moment, please try again later.");
         });
     } else {
       axios
@@ -162,9 +154,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
           setCurrentActive(true);
         })
         .catch((err) => {
-          toast.error(
-            "We cannot process your request at the moment, please try again later.",
-          );
+          toast.error("We cannot process your request at the moment, please try again later.");
         });
     }
   };
@@ -184,9 +174,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
           getUserWallets(true);
         })
         .catch((err) => {
-          toast.error(
-            "We cannot process your request at the moment, please try again later.",
-          );
+          toast.error("We cannot process your request at the moment, please try again later.");
         })
         .finally(() => {
           setBlocking(false);
@@ -204,9 +192,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
           getUserWallets(true);
         })
         .catch((err) => {
-          toast.error(
-            "We cannot process your request at the moment, please try again later.",
-          );
+          toast.error("We cannot process your request at the moment, please try again later.");
         })
         .finally(() => {
           setBlocking(false);
@@ -215,10 +201,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
   };
   const [savedWallet, setSavedWalelt] = useState({});
 
-  const isCryptoWallet = useMemo(
-    () => currentWallet?.wallet_type === "crypto",
-    [currentWallet],
-  );
+  const isCryptoWallet = useMemo(() => currentWallet?.wallet_type === "crypto", [currentWallet]);
 
   const blockedWallet = useMemo(() => {
     return (
@@ -293,9 +276,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                   }
                 }}
               >
-                <div
-                  className={`${styles.thumb} ${currentDefault ? styles.active : ""}`}
-                ></div>
+                <div className={`${styles.thumb} ${currentDefault ? styles.active : ""}`}></div>
               </div>
             </div>
           ) : null}
@@ -564,9 +545,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                 whiteSpace: "nowrap",
               }}
               className={styles.action}
-              onClick={() =>
-                setShowDownloadStatementModal(!showDownloadStatementModal)
-              }
+              onClick={() => setShowDownloadStatementModal(!showDownloadStatementModal)}
               id={"download_statement"}
             >
               <img style={{ height: "20px" }} src={download} alt="" />
@@ -590,9 +569,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                   color: "white",
                 }}
                 className={styles.action}
-                onClick={() =>
-                  setShowDownloadStatementModal(!showDownloadStatementModal)
-                }
+                onClick={() => setShowDownloadStatementModal(!showDownloadStatementModal)}
                 id={"download_statement"}
               >
                 <img style={{ height: "20px" }} src={download} alt="" />
@@ -618,9 +595,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                 style={{
                   opacity: currentDefault ? 0.7 : 1,
                   cursor: currentDefault ? "not-allowed" : "pointer",
-                  backgroundColor: currentDefault
-                    ? "grey"
-                    : "rgba(230, 64, 103, 0.16)",
+                  backgroundColor: currentDefault ? "grey" : "rgba(230, 64, 103, 0.16)",
                   color: currentDefault ? "white" : "#E64067",
                 }}
                 id={"block_the_wallet"}
@@ -645,9 +620,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
             >
               <button
                 className={`${styles.action} ${styles.status}`}
-                onClick={
-                  currentDefault ? console.log("Lol") : handleChangeStatus
-                }
+                onClick={currentDefault ? console.log("Lol") : handleChangeStatus}
                 disabled={currentDefault}
                 style={{
                   opacity: currentDefault ? 0.7 : 1,
@@ -659,12 +632,8 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                 id={"status_of_wallet"}
               >
                 {t("Wallet Status")}
-                <div
-                  className={`${styles.switch} ${currentDefault ? styles.disabled : ""}`}
-                >
-                  <div
-                    className={`${styles.thumb} ${currentActive ? styles.active : ""}`}
-                  ></div>
+                <div className={`${styles.switch} ${currentDefault ? styles.disabled : ""}`}>
+                  <div className={`${styles.thumb} ${currentActive ? styles.active : ""}`}></div>
                 </div>
               </button>
             </Tooltip>
@@ -683,11 +652,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
         setSavedWalelt={setSavedWalelt}
       />
       {userWithdrawals?.length > 0 ? (
-        <Withdraw
-          wallet={currentWallet}
-          isOpen={showWithdrawalModal}
-          toggle={handleClose}
-        />
+        <Withdraw wallet={currentWallet} isOpen={showWithdrawalModal} toggle={handleClose} />
       ) : (
         <>
           {showWithdrawalModal && (
@@ -713,16 +678,11 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
         wallet={currentWallet}
       />
       <Modal isOpen={showConversionModal}>
-        <ModalHeader
-          toggle={() => setShowConversionModal(!showConversionModal)}
-        >
+        <ModalHeader toggle={() => setShowConversionModal(!showConversionModal)}>
           {t("convert funds ")}
         </ModalHeader>
         <ModalBody>
-          <CurConversion
-            extCurrency={currentWallet?.currency?.code}
-            extWallet={currentWallet}
-          />
+          <CurConversion extCurrency={currentWallet?.currency?.code} extWallet={currentWallet} />
         </ModalBody>
       </Modal>
     </div>

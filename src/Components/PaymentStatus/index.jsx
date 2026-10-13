@@ -6,8 +6,7 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import axios from "axios";
 
 const PaymentStatus = () => {
-  const { getUserBeneficiaries, beneficiaries, authHeader } =
-    useContext(UserContext);
+  const { getUserBeneficiaries, beneficiaries, authHeader } = useContext(UserContext);
   const { type, status, code } = useParams();
   const navigate = useNavigate();
   const location = useLocation();

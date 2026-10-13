@@ -14,11 +14,7 @@ import {
 
 const STATE_NAME_FIELD = "state_name";
 const PROVIDER_NAME_FIELD = "mobile_wallet_name";
-const ACCOUNT_NUMBER_FIELDS = [
-  "bank_account_number",
-  "account_number",
-  "accountNumber",
-];
+const ACCOUNT_NUMBER_FIELDS = ["bank_account_number", "account_number", "accountNumber"];
 
 /* A valid IBAN carries the account number inside it, so an empty account field beside it
    is filled in rather than asked for twice. Anything already typed is left alone. */
@@ -28,9 +24,7 @@ const accountNumberPatch = (kind, value, siblingNames, values) => {
   const parsed = parseIban(value);
   if (!parsed?.accountNumber) return {};
 
-  const target = ACCOUNT_NUMBER_FIELDS.find((name) =>
-    siblingNames.includes(name),
-  );
+  const target = ACCOUNT_NUMBER_FIELDS.find((name) => siblingNames.includes(name));
   if (!target || String(values[target] || "").trim()) return {};
 
   return { [target]: parsed.accountNumber };
@@ -136,10 +130,7 @@ const DynamicField = ({
         value={value || ""}
         onChange={(next) => {
           const cleaned = sanitise(next, def);
-          onChange(
-            cleaned,
-            accountNumberPatch(def.type, cleaned, siblingNames, values),
-          );
+          onChange(cleaned, accountNumberPatch(def.type, cleaned, siblingNames, values));
         }}
         placeholder={def.placeholder}
         disabled={disabled}
@@ -158,9 +149,7 @@ const DynamicField = ({
         label={label}
         value={value || ""}
         onChange={(payerId) => {
-          const payer = payers.find(
-            (item) => String(item?.id) === String(payerId),
-          );
+          const payer = payers.find((item) => String(item?.id) === String(payerId));
           onChange(payerId, { [PROVIDER_NAME_FIELD]: payer?.name || "" });
         }}
         disabled={disabled || payersLoading || payers.length === 0}
@@ -181,32 +170,15 @@ const DynamicField = ({
 
   if (def.type === "tel") {
     return (
-      <FieldShell
-        id={id}
-        label={label}
-        error={error}
-        hint={def.hint}
-        flex={flex}
-      >
-        <PhoneField
-          value={value}
-          onChange={onChange}
-          country={countryIso3}
-          disabled={disabled}
-        />
+      <FieldShell id={id} label={label} error={error} hint={def.hint} flex={flex}>
+        <PhoneField value={value} onChange={onChange} country={countryIso3} disabled={disabled} />
       </FieldShell>
     );
   }
 
   if (def.type === "state") {
     return (
-      <FieldShell
-        id={id}
-        label={label}
-        error={error}
-        hint={def.hint}
-        flex={flex}
-      >
+      <FieldShell id={id} label={label} error={error} hint={def.hint} flex={flex}>
         <CitiesDropDown
           isState
           stateData={stateData}
@@ -226,13 +198,7 @@ const DynamicField = ({
 
   if (def.type === "city") {
     return (
-      <FieldShell
-        id={id}
-        label={label}
-        error={error}
-        hint={def.hint}
-        flex={flex}
-      >
+      <FieldShell id={id} label={label} error={error} hint={def.hint} flex={flex}>
         <CitiesDropDown
           iso_3={countryIso3}
           stateCode={values.province_state || ""}
@@ -248,16 +214,8 @@ const DynamicField = ({
 
   if (def.type === "date") {
     return (
-      <FieldShell
-        id={id}
-        label={label}
-        error={error}
-        hint={def.hint}
-        flex={flex}
-      >
-        <div
-          className={`${styles.inputShell} ${error ? styles.inputShellError : ""}`}
-        >
+      <FieldShell id={id} label={label} error={error} hint={def.hint} flex={flex}>
+        <div className={`${styles.inputShell} ${error ? styles.inputShellError : ""}`}>
           <DatePicker
             id={id}
             format="DD/MM/YYYY"
@@ -281,13 +239,7 @@ const DynamicField = ({
 
   if (def.type === "country") {
     return (
-      <FieldShell
-        id={id}
-        label={label}
-        error={error}
-        hint={def.hint}
-        flex={flex}
-      >
+      <FieldShell id={id} label={label} error={error} hint={def.hint} flex={flex}>
         <CountryDropDown
           country={value || ""}
           disabled={disabled}

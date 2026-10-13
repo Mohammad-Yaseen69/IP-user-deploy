@@ -58,16 +58,13 @@ const StepFive = ({ data, sending_currency = "", showMid = true }) => {
         <h5>{data.exchange_rate?.receiver?.currency}</h5>
       </div>
       <div className={styles.exchange_rate_details}>
-        {data.wallet?.currency?.code !==
-          data?.currency_wallet?.currency?.code &&
+        {data.wallet?.currency?.code !== data?.currency_wallet?.currency?.code &&
           data.payment_type?.value === "wallet" && (
             <div className={styles.wallet_conversion}>
               <div className={styles.left}>
                 <span>{t("Sending")}</span>
                 <h5>
-                  {data.amount}{" "}
-                  {sending_currency ||
-                    data.currency_wallet?.currency?.code}{" "}
+                  {data.amount} {sending_currency || data.currency_wallet?.currency?.code}{" "}
                 </h5>
               </div>
               {showMid && (
@@ -76,8 +73,7 @@ const StepFive = ({ data, sending_currency = "", showMid = true }) => {
                   <span>
                     1.00 {data?.currency_wallet?.currency?.code} ={" "}
                     {formatCurrency(
-                      exchangedAmount /
-                        Number(String(data.amount)?.replace(/,/g, "")),
+                      exchangedAmount / Number(String(data.amount)?.replace(/,/g, "")),
                       true,
                     )}{" "}
                     {data.payment_type?.value === "card"
@@ -90,13 +86,9 @@ const StepFive = ({ data, sending_currency = "", showMid = true }) => {
                 <div className={styles.wc_pt}>
                   <div>
                     <img src={data.payment_type?.icon} alt="" />
-                    <span style={{ whiteSpace: "nowrap" }}>
-                      {data.payment_type?.name}
-                    </span>
+                    <span style={{ whiteSpace: "nowrap" }}>{data.payment_type?.name}</span>
                   </div>
-                  <span style={{ textAlign: "right" }}>
-                    {data?.wallet?.wallet_id}
-                  </span>
+                  <span style={{ textAlign: "right" }}>{data?.wallet?.wallet_id}</span>
                 </div>
                 {/* <h5>{exchangedAmount?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data.payment_type?.value === "card" ? data.currency_wallet?.currency?.code : data.wallet?.currency?.code} </h5> */}
                 <h5>
@@ -110,8 +102,7 @@ const StepFive = ({ data, sending_currency = "", showMid = true }) => {
           )}
 
         <div className={styles.amount_and_others}>
-          {data.wallet?.currency?.code !==
-            data?.currency_wallet?.currency?.code && (
+          {data.wallet?.currency?.code !== data?.currency_wallet?.currency?.code && (
             <div className={styles.aao_item}>
               <span>{t("Sending")}</span>
               <span>
@@ -120,8 +111,7 @@ const StepFive = ({ data, sending_currency = "", showMid = true }) => {
               </span>
             </div>
           )}
-          {data.exchange_rate?.sending?.currency !==
-            data?.exchange_rate?.receiver?.currency && (
+          {data.exchange_rate?.sending?.currency !== data?.exchange_rate?.receiver?.currency && (
             <div className={styles.aao_item}>
               <span>{t("Exchange Rate")}</span>
               <span>
@@ -149,9 +139,7 @@ const StepFive = ({ data, sending_currency = "", showMid = true }) => {
                 <div className={styles.aao_item}>
                   <span>{t("Scheduled Date")}</span>
                   <span>
-                    {new Date(
-                      data?.payment_duration?.scheduleDate,
-                    )?.toLocaleDateString()}
+                    {new Date(data?.payment_duration?.scheduleDate)?.toLocaleDateString()}
                   </span>
                 </div>
               )}
@@ -168,9 +156,7 @@ const StepFive = ({ data, sending_currency = "", showMid = true }) => {
                 <div className={styles.aao_item}>
                   <span>{t("Starts From")}</span>
                   <span>
-                    {new Date(
-                      data?.payment_duration?.recStartDate,
-                    )?.toLocaleDateString()}
+                    {new Date(data?.payment_duration?.recStartDate)?.toLocaleDateString()}
                   </span>
                 </div>
               )}
@@ -190,17 +176,14 @@ const StepFive = ({ data, sending_currency = "", showMid = true }) => {
           <span>{t("Total")}</span>
           <span>
             {formatCurrency(data.exchange_rate?.total, true)}{" "}
-            {data.wallet?.currency?.code !==
-            data?.currency_wallet?.currency?.code
-              ? (data.wallet?.currency?.code ??
-                data?.currency_wallet?.currency?.code)
+            {data.wallet?.currency?.code !== data?.currency_wallet?.currency?.code
+              ? (data.wallet?.currency?.code ?? data?.currency_wallet?.currency?.code)
               : data.currency?.currency?.code}{" "}
           </span>
         </div>
         {(data?.payment_duration?.value === "schedule" ||
           data?.payment_duration?.value === "subscription") &&
-        data.exchange_rate?.sending?.currency !==
-          data?.exchange_rate?.receiver?.currency ? (
+        data.exchange_rate?.sending?.currency !== data?.exchange_rate?.receiver?.currency ? (
           <div className={styles.info}>
             <Info color="#FFAA29" />
             <span>

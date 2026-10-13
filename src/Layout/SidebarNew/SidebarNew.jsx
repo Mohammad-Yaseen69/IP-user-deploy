@@ -113,16 +113,13 @@ const SidebarNew = ({ setShowModal, showModal }) => {
         height: "calc(100vh - 2rem)",
         boxShadow: "15.1463px 4.32752px 242.341px rgba(0, 0, 0, 0.07)",
         display:
-          (location.pathname === "/create-pin" ||
-            location.pathname === "/update-pin") &&
-          "none",
+          (location.pathname === "/create-pin" || location.pathname === "/update-pin") && "none",
       }}
       onMouseEnter={() => setInheritSize(true)}
       onMouseLeave={() => setInheritSize(false)}
     >
       <div>
-        <SidebarIcon />{" "}
-        {(!togglSidebar && userDetails?._id) || inheritSize ? "" : ""}
+        <SidebarIcon /> {(!togglSidebar && userDetails?._id) || inheritSize ? "" : ""}
         <nav className="sidebar-main">
           <div
             className={`left-arrow ${leftArrow ? "d-none" : ""}`}
@@ -139,19 +136,10 @@ const SidebarNew = ({ setShowModal, showModal }) => {
                 : { margin: "0px", transform: "translateY(-90px)" }
             }
           >
-            <ul
-              className="sidebar-links"
-              style={{ display: "block" }}
-              id="simple-bar"
-            >
+            <ul className="sidebar-links" style={{ display: "block" }} id="simple-bar">
               <SimpleBar
                 style={{
-                  height:
-                    window.innerWidth > 1200
-                      ? "300px"
-                      : !togglSidebar
-                        ? "300px"
-                        : "550px",
+                  height: window.innerWidth > 1200 ? "300px" : !togglSidebar ? "300px" : "550px",
                 }}
               >
                 <BackBtn />
@@ -171,9 +159,7 @@ const SidebarNew = ({ setShowModal, showModal }) => {
                             setIsOpen={setIsOpen}
                             level={0}
                             setShowModal={setShowModal}
-                            profileCompletedPercentage={
-                              profileCompletedPercentage
-                            }
+                            profileCompletedPercentage={profileCompletedPercentage}
                             showModal={showModal}
                             inheritSize={inheritSize}
                           />
@@ -189,8 +175,7 @@ const SidebarNew = ({ setShowModal, showModal }) => {
                         display: "flex",
                         alignItems: "center",
                         gap: "1.2rem",
-                        background:
-                          "linear-gradient(to right, #E64067, #5926F0, #4828A0)",
+                        background: "linear-gradient(to right, #E64067, #5926F0, #4828A0)",
                         padding: "10px 16px",
                         borderRadius: "10px",
                         marginTop: "3rem",
@@ -229,9 +214,7 @@ const SidebarNew = ({ setShowModal, showModal }) => {
                         </defs>
                       </svg>
                       <span>{t("Sign Up")}</span>
-                      <ChevronRight
-                        style={{ position: "absolute", right: ".5rem" }}
-                      />
+                      <ChevronRight style={{ position: "absolute", right: ".5rem" }} />
                     </Link>
                     <Link
                       to={"/login"}
@@ -239,8 +222,7 @@ const SidebarNew = ({ setShowModal, showModal }) => {
                         display: "flex",
                         alignItems: "center",
                         gap: "1.2rem",
-                        background:
-                          "linear-gradient(to right, #E640673e, #5926F03e, #4828A03e)",
+                        background: "linear-gradient(to right, #E640673e, #5926F03e, #4828A03e)",
                         padding: "10px 16px",
                         borderRadius: "10px",
                         marginTop: "1rem",
@@ -292,10 +274,7 @@ const SidebarNew = ({ setShowModal, showModal }) => {
               </SimpleBar>
             </ul>
           </div>
-          <div
-            className={`right-arrow ${rightArrow ? "d-none" : ""}`}
-            onClick={scrollToRight}
-          >
+          <div className={`right-arrow ${rightArrow ? "d-none" : ""}`} onClick={scrollToRight}>
             <ArrowRight />
           </div>
         </nav>

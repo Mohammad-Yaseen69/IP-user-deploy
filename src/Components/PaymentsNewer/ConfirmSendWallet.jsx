@@ -117,9 +117,7 @@ const ConfirmSendWallet = ({
               sender_wallet_id: paymentDetails.sender_wallet_id,
               purpose: paymentDetails.purpose,
               amount: paymentDetails.amount,
-              cycles: paymentDetails.unlimited
-                ? "unlimited"
-                : +paymentDetails.recCycle,
+              cycles: paymentDetails.unlimited ? "unlimited" : +paymentDetails.recCycle,
               date: date,
               description: paymentDetails.comment,
               timezone: userDetails?.timezone,
@@ -165,9 +163,7 @@ const ConfirmSendWallet = ({
         setConfirmed(true);
         setToken(dec?.token);
       } catch (error) {
-        toast.error(
-          t("Something went wrong while confirming the transaction!"),
-        );
+        toast.error(t("Something went wrong while confirming the transaction!"));
         // console.log(decryptData(error?.response?.data?.data))
       }
     };
@@ -195,17 +191,11 @@ const ConfirmSendWallet = ({
           padding: "20px 30px",
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
       >
-        <div
-          style={{ display: "flex", flexDirection: "column" }}
-          className="conf_cont"
-        >
-          <h4 className="text-center">
-            {t("You Have Selected Wallet to Wallet Transfer")}
-          </h4>
+        <div style={{ display: "flex", flexDirection: "column" }} className="conf_cont">
+          <h4 className="text-center">{t("You Have Selected Wallet to Wallet Transfer")}</h4>
           <SelectedPaymentType
             paymentType={paymentType}
             setSubStep={setSubStep}

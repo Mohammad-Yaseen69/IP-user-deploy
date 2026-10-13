@@ -114,30 +114,23 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
           isDecrypted: true,
         });
         const dec = res?.data || res;
-        if (
-          dec &&
-          (dec.account_type || dec.email || dec.phone || dec.company_name)
-        ) {
+        if (dec && (dec.account_type || dec.email || dec.phone || dec.company_name)) {
           if (dec.account_type) dataHandler("account_type", dec.account_type);
           if (dec.email) dataHandler("email", dec.email);
           if (dec.phone) dataHandler("phone", dec.phone);
           if (dec.first_name) dataHandler("first_name", dec.first_name);
           if (dec.last_name) dataHandler("last_name", dec.last_name);
           if (dec.company_name) dataHandler("company_name", dec.company_name);
-          if (dec.fee_pack_code)
-            dataHandler("referral_code", dec.fee_pack_code);
+          if (dec.fee_pack_code) dataHandler("referral_code", dec.fee_pack_code);
 
-          const targetCountryStr =
-            dec.country_iso3 || dec.country_iso2 || dec.country;
+          const targetCountryStr = dec.country_iso3 || dec.country_iso2 || dec.country;
           if (targetCountryStr) {
             if (allowedCountries?.length > 0) {
               const matched = allowedCountries.find(
                 (c) =>
-                  c.country_iso_code?.toLowerCase() ===
-                    targetCountryStr.toLowerCase() ||
+                  c.country_iso_code?.toLowerCase() === targetCountryStr.toLowerCase() ||
                   c.alpha3?.toLowerCase() === targetCountryStr.toLowerCase() ||
-                  c.country_name?.toLowerCase() ===
-                    targetCountryStr.toLowerCase() ||
+                  c.country_name?.toLowerCase() === targetCountryStr.toLowerCase() ||
                   c.name?.toLowerCase() === targetCountryStr.toLowerCase(),
               );
               if (matched) {
@@ -190,9 +183,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
       }
       case 3:
         return data.account_type === "individual"
-          ? !data.phone ||
-              data.phone.length < 9 ||
-              !/^\d{9,20}$/g.test(data.phone)
+          ? !data.phone || data.phone.length < 9 || !/^\d{9,20}$/g.test(data.phone)
           : !emailRegex.test(data.email);
       case 4:
         return (
@@ -227,10 +218,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
         dataHandler("phone_error", null);
         return true;
       }
-      dataHandler(
-        "phone_error",
-        "Incorrect phone number, please enter a valid number.",
-      );
+      dataHandler("phone_error", "Incorrect phone number, please enter a valid number.");
       return false;
     } finally {
       dataHandler("loading", false);
@@ -238,16 +226,13 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
   };
 
   const checkEmailAndPhone = async () => {
-    const isPhoneValid =
-      data.account_type === "individual" ? await checkIfPhoneIsValid() : null;
+    const isPhoneValid = data.account_type === "individual" ? await checkIfPhoneIsValid() : null;
 
     if (isPhoneValid || data.account_type === "business") {
       dataHandler("loading", true);
       try {
         const payload =
-          data.email.length > 0
-            ? { email: data.email, phone: data.phone }
-            : { phone: data.phone };
+          data.email.length > 0 ? { email: data.email, phone: data.phone } : { phone: data.phone };
         const enc = encryptData(payload);
 
         const res = await axios.post(
@@ -262,8 +247,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
         }
       } catch (error) {
         const dec = decryptData(error?.response?.data?.data);
-        const rawMessage =
-          dec?.message ?? "Something went wrong while verifying details.";
+        const rawMessage = dec?.message ?? "Something went wrong while verifying details.";
 
         const lowerMsg = rawMessage.toLowerCase();
         let userFriendlyError = rawMessage;
@@ -272,17 +256,11 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
           userFriendlyError =
             data.email.length > 0
               ? t("Email already exists. Please use a different email.")
-              : t(
-                  "Phone number already exists. Please use a different number.",
-                );
+              : t("Phone number already exists. Please use a different number.");
         } else if (lowerMsg.includes("email")) {
-          userFriendlyError = t(
-            "Email already exists. Please use a different email.",
-          );
+          userFriendlyError = t("Email already exists. Please use a different email.");
         } else if (lowerMsg.includes("phone")) {
-          userFriendlyError = t(
-            "Phone number already exists. Please use a different number.",
-          );
+          userFriendlyError = t("Phone number already exists. Please use a different number.");
         }
 
         dataHandler("error", userFriendlyError);
@@ -297,9 +275,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
 
     setIsSubmitting(true);
     dataHandler("loading", true);
-    const coun = allowedCountries.find(
-      (item) => item.country_iso_code === data.country,
-    );
+    const coun = allowedCountries.find((item) => item.country_iso_code === data.country);
 
     try {
       const payload = {
@@ -327,8 +303,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
         delete payload.phone;
         payload.category_id = data.category_id;
         payload.company_name = data.company_name;
-        payload.country_iso_code =
-          data.country?.alpha3 || data.country?.country_iso_code;
+        payload.country_iso_code = data.country?.alpha3 || data.country?.country_iso_code;
         payload.country = data.country?._id;
         payload.country_name = data.country?.country_name;
       }
@@ -351,14 +326,10 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
         dataHandler("show_email_otp", true);
       }
     } catch (error) {
-      const dec = error?.response?.data?.data
-        ? decryptData(error.response.data.data)
-        : null;
+      const dec = error?.response?.data?.data ? decryptData(error.response.data.data) : null;
       dataHandler(
         "error",
-        dec?.message ??
-          error?.message ??
-          t("Something went wrong while sending OTP."),
+        dec?.message ?? error?.message ?? t("Something went wrong while sending OTP."),
       );
     } finally {
       dataHandler("loading", false);
@@ -430,10 +401,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
       setOtp(Array(numberOfFields).fill(""));
       console.log(error);
       const dec = decryptData(error?.response?.data?.data);
-      dataHandler(
-        "error",
-        dec?.message ?? "Something went wrong while sending OTP.",
-      );
+      dataHandler("error", dec?.message ?? "Something went wrong while sending OTP.");
     } finally {
       dataHandler("loading", false);
     }
@@ -477,10 +445,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
       console.log(error);
       setOtp(Array(numberOfFields).fill(""));
       const dec = decryptData(error?.response?.data?.data);
-      dataHandler(
-        "error",
-        dec?.message ?? "Something went wrong while sending OTP.",
-      );
+      dataHandler("error", dec?.message ?? "Something went wrong while sending OTP.");
     } finally {
       dataHandler("loading", false);
     }
@@ -539,10 +504,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
             controls={false}
           ></video>
           <h3 className="mb-4 mt-4">{t("Phone Number Verified")}</h3>
-          <button
-            onClick={() => dataHandler("show_email_otp", true)}
-            className={styles.form_btn}
-          >
+          <button onClick={() => dataHandler("show_email_otp", true)} className={styles.form_btn}>
             <span>{t("Verify Email Now")}</span>
           </button>
         </div>
@@ -566,19 +528,11 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
               dataHandler={dataHandler}
               resendHandler={
                 data.account_type === "individual"
-                  ? () =>
-                      verifyPhoneOtp(
-                        data.phone_otp_values?.split(""),
-                        () => {},
-                        6,
-                        true,
-                      )
+                  ? () => verifyPhoneOtp(data.phone_otp_values?.split(""), () => {}, 6, true)
                   : signupHandler
               }
               verifyOTpHandler={
-                data.account_type === "individual"
-                  ? verifyEmailOtp
-                  : verifyPhoneOtp
+                data.account_type === "individual" ? verifyEmailOtp : verifyPhoneOtp
               }
               timer={300}
               type="email"
@@ -599,21 +553,13 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
               <div className={styles.registerFormTop}>
                 <h1>{t("How will you use InstaPay?")}</h1>
                 {data.step === 1 && (
-                  <p>
-                    {t(
-                      "Pick one to start. The steps after this are tailored to your choice.",
-                    )}
-                  </p>
+                  <p>{t("Pick one to start. The steps after this are tailored to your choice.")}</p>
                 )}
               </div>
               <div className={styles.right} style={{ height: "100%" }}>
                 <div>
-                  {data.step === 1 && (
-                    <Stepone data={data} dataHandler={dataHandler} />
-                  )}
-                  {data.step === 2 && (
-                    <Steptwo data={data} dataHandler={dataHandler} />
-                  )}
+                  {data.step === 1 && <Stepone data={data} dataHandler={dataHandler} />}
+                  {data.step === 2 && <Steptwo data={data} dataHandler={dataHandler} />}
                   {data.step === 3 && (
                     <Stepthree
                       data={data}
@@ -622,16 +568,10 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
                       onFocus={recordTelemetryFocus}
                     />
                   )}
-                  {data.step === 4 && (
-                    <Stepfour data={data} dataHandler={dataHandler} />
-                  )}
-                  {data.step === 5 && (
-                    <Stepfive data={data} dataHandler={dataHandler} />
-                  )}
+                  {data.step === 4 && <Stepfour data={data} dataHandler={dataHandler} />}
+                  {data.step === 5 && <Stepfive data={data} dataHandler={dataHandler} />}
                   <div className={styles.bottom_text}>
-                    <span>
-                      {t("Already Have an Account?").split("?")?.[0]}{" "}
-                    </span>
+                    <span>{t("Already Have an Account?").split("?")?.[0]} </span>
                     <Link onClick={() => setIsLoginForm(true)} to={"/login"}>
                       {t("Login")}
                     </Link>

@@ -3,16 +3,9 @@ import { useTranslation } from "react-i18next";
 import { AlertTriangle, Clock } from "react-feather";
 import { toast } from "react-toastify";
 import { UserContext } from "../../../../Context/UserContext";
-import {
-  createCryptoWalletChannel,
-  getWalletNetworks,
-} from "../api/cryptoWallets";
+import { createCryptoWalletChannel, getWalletNetworks } from "../api/cryptoWallets";
 import styles from "../cryptoPage.module.scss";
-import {
-  formatCryptoAmount,
-  getAssetFullName,
-  getWalletAccentColor,
-} from "../utils/format";
+import { formatCryptoAmount, getAssetFullName, getWalletAccentColor } from "../utils/format";
 import DepositAddress from "./DepositAddress";
 import NetworkSelector from "./NetworkSelector";
 
@@ -49,9 +42,7 @@ const WalletDetail = ({ wallet, pending = 0, isStale = false }) => {
         getUserWallets?.();
       }
     } catch {
-      toast.error(
-        t("Failed to create deposit channel. Please try again later."),
-      );
+      toast.error(t("Failed to create deposit channel. Please try again later."));
     } finally {
       setGenerating(false);
     }
@@ -60,10 +51,7 @@ const WalletDetail = ({ wallet, pending = 0, isStale = false }) => {
   return (
     <div className={styles.detail}>
       <div className={styles.detailHead}>
-        <span
-          className={styles.detailMark}
-          style={{ background: getWalletAccentColor(code) }}
-        >
+        <span className={styles.detailMark} style={{ background: getWalletAccentColor(code) }}>
           {code}
         </span>
         <div>
@@ -71,8 +59,7 @@ const WalletDetail = ({ wallet, pending = 0, isStale = false }) => {
             {code} {t(getAssetFullName(code))}
           </h4>
           <p className={styles.detailSub}>
-            {t("Custodial BVNK Wallet")} •{" "}
-            {isActive ? t("Active") : t("Pending")}
+            {t("Custodial BVNK Wallet")} • {isActive ? t("Active") : t("Pending")}
           </p>
         </div>
 
@@ -80,10 +67,7 @@ const WalletDetail = ({ wallet, pending = 0, isStale = false }) => {
           <div className={styles.detailBalance}>
             <div>
               <div className={styles.balanceLabel}>{t("Pending")}</div>
-              <div
-                className={styles.pendingAmount}
-                style={{ textAlign: "right", marginTop: 2 }}
-              >
+              <div className={styles.pendingAmount} style={{ textAlign: "right", marginTop: 2 }}>
                 + {formatCryptoAmount(pending)} {code}
               </div>
             </div>
@@ -94,11 +78,7 @@ const WalletDetail = ({ wallet, pending = 0, isStale = false }) => {
       {isStale ? (
         <div className={`${styles.notice} ${styles.noticeStale}`}>
           <AlertTriangle size={16} style={{ flexShrink: 0 }} />
-          <span>
-            {t(
-              "Live balance check temporarily delayed. Showing latest cached balance.",
-            )}
-          </span>
+          <span>{t("Live balance check temporarily delayed. Showing latest cached balance.")}</span>
         </div>
       ) : null}
 
@@ -107,9 +87,7 @@ const WalletDetail = ({ wallet, pending = 0, isStale = false }) => {
           <span className={styles.placeholderIcon}>
             <Clock size={28} />
           </span>
-          <h5 className={styles.placeholderTitle}>
-            {t("Wallet Activation in Progress")}
-          </h5>
+          <h5 className={styles.placeholderTitle}>{t("Wallet Activation in Progress")}</h5>
           <p className={styles.placeholderText}>
             {t(
               "Your custodial crypto wallet request has been submitted to BVNK. It is currently being provisioned. Once approved, your deposit addresses and networks will automatically appear here.",

@@ -34,11 +34,7 @@ const walletOption = (wallet, t) => {
       <>
         <span
           className={styles.railAvatar}
-          style={
-            crypto
-              ? { background: getWalletAccentColor(code), color: "#fff" }
-              : undefined
-          }
+          style={crypto ? { background: getWalletAccentColor(code), color: "#fff" } : undefined}
         >
           {crypto ? getAssetSymbol(code) : code?.slice(0, 2)}
         </span>
@@ -72,9 +68,7 @@ const ConvertCryptoPanel = ({ wallet }) => {
       return undefined;
     }
     const tick = () =>
-      setSecondsLeft(
-        Math.max(0, Math.round((fx.quoteExpiresAt - Date.now()) / 1000)),
-      );
+      setSecondsLeft(Math.max(0, Math.round((fx.quoteExpiresAt - Date.now()) / 1000)));
     tick();
     const timer = setInterval(tick, 1000);
     return () => clearInterval(timer);
@@ -116,9 +110,7 @@ const ConvertCryptoPanel = ({ wallet }) => {
         <div className={styles.placeholder}>
           <h5 className={styles.placeholderTitle}>{t("Convert")}</h5>
           <p className={styles.placeholderText}>
-            {t(
-              "You need one crypto wallet and one fiat wallet to convert here.",
-            )}
+            {t("You need one crypto wallet and one fiat wallet to convert here.")}
           </p>
         </div>
       </div>
@@ -229,28 +221,17 @@ const ConvertCryptoPanel = ({ wallet }) => {
           </div>
           <div className={styles.quoteRow}>
             <span>{t("You convert")}</span>
-            <strong>
-              {fx.numericAmount > 0
-                ? money(fx.numericAmount, fromCode, 6)
-                : "-"}
-            </strong>
+            <strong>{fx.numericAmount > 0 ? money(fx.numericAmount, fromCode, 6) : "-"}</strong>
           </div>
           <div className={styles.quoteRow}>
             <span>{t("Conversion fee")}</span>
-            <strong>
-              {quote ? money(quote.fee?.amount, feeCurrency) : "-"}
-            </strong>
+            <strong>{quote ? money(quote.fee?.amount, feeCurrency) : "-"}</strong>
           </div>
           <span className={styles.quoteDivider} />
           <div className={`${styles.quoteRow} ${styles.quoteRowTotal}`}>
             <span>{t("You receive")}</span>
             <strong>
-              {quote
-                ? money(
-                    quote.receiver?.amount,
-                    quote.receiver?.currency || toCode,
-                  )
-                : "-"}
+              {quote ? money(quote.receiver?.amount, quote.receiver?.currency || toCode) : "-"}
             </strong>
           </div>
           <div className={styles.quoteRow}>
@@ -279,9 +260,7 @@ const ConvertCryptoPanel = ({ wallet }) => {
 
       <ConversionModal
         isOpen={confirmOpen}
-        toggleModal={() =>
-          confirmOpen ? closeConfirm() : setConfirmOpen(true)
-        }
+        toggleModal={() => (confirmOpen ? closeConfirm() : setConfirmOpen(true))}
         onSuccess={onConverted}
         amount={String(fx.numericAmount)}
         exchangeAmount={quote?.receiver?.amount}

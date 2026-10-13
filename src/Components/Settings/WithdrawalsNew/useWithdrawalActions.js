@@ -13,18 +13,13 @@ import {
   hasOtherWithdrawalChannels,
 } from "./withdrawalPayload";
 
-const FALLBACK =
-  "We cannot process your request at the moment, please try again later.";
+const FALLBACK = "We cannot process your request at the moment, please try again later.";
 
 /* Every write the withdrawal accounts page makes. Each resolves true on success. */
 const useWithdrawalActions = () => {
   const { t } = useTranslation();
-  const {
-    userDetails,
-    getWithdrawals,
-    setMissingTabsData,
-    setProfileLockTime,
-  } = useContext(UserContext);
+  const { userDetails, getWithdrawals, setMissingTabsData, setProfileLockTime } =
+    useContext(UserContext);
   const navigate = useNavigate();
   const location = useLocation();
   const ft = new URLSearchParams(location.search).get("ft");
@@ -53,14 +48,7 @@ const useWithdrawalActions = () => {
   };
 
   /* A new country is a new record; a method added to or edited on a country updates it. */
-  const saveFiatAccount = async ({
-    record,
-    country,
-    method,
-    channel,
-    vendor,
-    address,
-  }) => {
+  const saveFiatAccount = async ({ record, country, method, channel, vendor, address }) => {
     const payload = buildWithdrawalPayload({
       userDetails,
       record,
@@ -93,9 +81,7 @@ const useWithdrawalActions = () => {
     const record = editing?.record ?? null;
     const cryptoList = record
       ? getCryptoList(record).map((crypto, index) =>
-          index === editing.cryptoIndex
-            ? buildCryptoPayload(channel, crypto)
-            : crypto,
+          index === editing.cryptoIndex ? buildCryptoPayload(channel, crypto) : crypto,
         )
       : [buildCryptoPayload(channel)];
     const payload = buildCryptoWithdrawalPayload({
@@ -134,8 +120,7 @@ const useWithdrawalActions = () => {
 
     if (account.isCrypto) {
       const cryptoList = getCryptoList(record);
-      const removeRecord =
-        cryptoList.length <= 1 && !hasOtherWithdrawalChannels(record);
+      const removeRecord = cryptoList.length <= 1 && !hasOtherWithdrawalChannels(record);
 
       return run(
         () => {
@@ -153,9 +138,7 @@ const useWithdrawalActions = () => {
               isEncrypted: true,
             });
           }
-          const remaining = cryptoList.filter(
-            (_, index) => index !== account.cryptoIndex,
-          );
+          const remaining = cryptoList.filter((_, index) => index !== account.cryptoIndex);
           return apiWrapper({
             endpoint: `/api/withdrawal/update-withdrawal/${record._id}`,
             method: "POST",

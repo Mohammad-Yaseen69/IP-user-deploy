@@ -91,9 +91,7 @@ const SecurityQuestions = () => {
 
     if (
       userDetails?.user
-        ? userDetails.user.question1 ||
-          userDetails.user.question2 ||
-          userDetails.user.question3
+        ? userDetails.user.question1 || userDetails.user.question2 || userDetails.user.question3
         : userDetails?.company?.answer1 ||
           userDetails?.company?.answer2 ||
           userDetails?.company?.answer3
@@ -142,13 +140,8 @@ const SecurityQuestions = () => {
           }
         })
         .catch((err) => {
-          const decrypted = err?.response?.data?.data
-            ? decryptData(err.response.data.data)
-            : null;
-          toast.error(
-            decrypted?.message ??
-              "Something went wrong while adding questions!",
-          );
+          const decrypted = err?.response?.data?.data ? decryptData(err.response.data.data) : null;
+          toast.error(decrypted?.message ?? "Something went wrong while adding questions!");
         })
         .finally(() => setSaving(false));
     }
@@ -156,29 +149,17 @@ const SecurityQuestions = () => {
 
   useEffect(() => {
     if (!isEditable && userDetails) {
-      setSelectedQuesOne(
-        userDetails?.user?.question1 ?? userDetails?.company?.question1 ?? "",
-      );
-      setSelectedQuesTwo(
-        userDetails?.user?.question2 ?? userDetails?.company?.question2 ?? "",
-      );
-      setSelectedQuesThree(
-        userDetails?.user?.question3 ?? userDetails?.company?.question3 ?? "",
-      );
+      setSelectedQuesOne(userDetails?.user?.question1 ?? userDetails?.company?.question1 ?? "");
+      setSelectedQuesTwo(userDetails?.user?.question2 ?? userDetails?.company?.question2 ?? "");
+      setSelectedQuesThree(userDetails?.user?.question3 ?? userDetails?.company?.question3 ?? "");
       setAnswerOne(
-        (userDetails?.user?.answer1 ?? userDetails?.company?.answer1)
-          ? "**************"
-          : "",
+        (userDetails?.user?.answer1 ?? userDetails?.company?.answer1) ? "**************" : "",
       );
       setAnswerTwo(
-        (userDetails?.user?.answer2 ?? userDetails?.company?.answer2)
-          ? "**************"
-          : "",
+        (userDetails?.user?.answer2 ?? userDetails?.company?.answer2) ? "**************" : "",
       );
       setAnswerThree(
-        (userDetails?.user?.answer3 ?? userDetails?.company?.answer3)
-          ? "**************"
-          : "",
+        (userDetails?.user?.answer3 ?? userDetails?.company?.answer3) ? "**************" : "",
       );
     }
   }, [userDetails, isEditable]);
@@ -214,19 +195,15 @@ const SecurityQuestions = () => {
         const decrypted = decryptData(err.response.data.data);
         console.log(decrypted);
         if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-          const time =
-            decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
-          const timeInSec =
-            +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
+          const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+          const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
           setProfileLockTime(timeInSec);
           const coun = localStorage.getItem("ip_country");
           localStorage.clear();
           localStorage.setItem("ip_country", coun);
           navigate("/login");
         }
-        error(
-          "We cannot process your request at the moment, please try again later.",
-        );
+        error("We cannot process your request at the moment, please try again later.");
       })
       .finally(() => setSaving(false));
   };
@@ -246,9 +223,7 @@ const SecurityQuestions = () => {
   return (
     <Form className="card" id="security">
       <CardHeader className={`pb-0`}>
-        <H4 attrH4={{ className: "card-title mb-0" }}>
-          {t("Security Questions")}
-        </H4>
+        <H4 attrH4={{ className: "card-title mb-0" }}>{t("Security Questions")}</H4>
       </CardHeader>
       <CardBody>
         <Row>
@@ -287,10 +262,7 @@ const SecurityQuestions = () => {
                   <option
                     value={que._id}
                     key={que._id}
-                    disabled={
-                      selectedQuesThree === que._id ||
-                      selectedQuesTwo === que._id
-                    }
+                    disabled={selectedQuesThree === que._id || selectedQuesTwo === que._id}
                   >
                     {que.question}
                   </option>
@@ -360,10 +332,7 @@ const SecurityQuestions = () => {
                   <option
                     value={que._id}
                     key={que._id}
-                    disabled={
-                      selectedQuesOne === que._id ||
-                      selectedQuesThree === que._id
-                    }
+                    disabled={selectedQuesOne === que._id || selectedQuesThree === que._id}
                   >
                     {que.question}
                   </option>
@@ -432,9 +401,7 @@ const SecurityQuestions = () => {
                   <option
                     value={que._id}
                     key={que._id}
-                    disabled={
-                      selectedQuesOne === que._id || selectedQuesTwo === que._id
-                    }
+                    disabled={selectedQuesOne === que._id || selectedQuesTwo === que._id}
                   >
                     {que.question}
                   </option>
@@ -483,8 +450,7 @@ const SecurityQuestions = () => {
         {isEditable && (
           <Button
             style={{
-              background:
-                "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+              background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
               border: "none",
               outline: "none",
               borderRadius: "10px",
@@ -498,8 +464,7 @@ const SecurityQuestions = () => {
         {isEditable ? (
           <Button
             style={{
-              background:
-                "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+              background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
               border: "none",
               outline: "none",
               borderRadius: "10px",
@@ -527,8 +492,7 @@ const SecurityQuestions = () => {
             type="button"
             disabled={!isEdit}
             style={{
-              background:
-                "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+              background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
               border: "none",
               outline: "none",
               borderRadius: "10px",
@@ -538,9 +502,7 @@ const SecurityQuestions = () => {
           </Button>
         )}
         <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-          <ModalHeader toggle={() => setShowOtp(!showOtp)}>
-            {t("Confirm")}
-          </ModalHeader>
+          <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
           <ModalBody>
             <OTPConfirmation
               variant="card"

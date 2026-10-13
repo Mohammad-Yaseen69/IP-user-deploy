@@ -7,8 +7,7 @@ import AlertBox from "./AlertBox";
 import { useMediaQuery } from "@mui/material";
 
 const DOC_TITLE_MAP = {
-  commercial_register:
-    "Commercial Register Extract / Certificate of Incorporation",
+  commercial_register: "Commercial Register Extract / Certificate of Incorporation",
   articles_association: "Articles of Association",
   authority_letter: "Proof of Legal Representative's Authority",
   good_standing: "Certificate of Good Standing",
@@ -16,8 +15,7 @@ const DOC_TITLE_MAP = {
   domiciliation_certificate: "Certificate of Domiciliation",
   lease_agreement: "Professional Lease Agreement",
   utility_bill: "Utility Bill",
-  tax_authority_letter:
-    "Official Letter from an Administration / Tax Authority",
+  tax_authority_letter: "Official Letter from an Administration / Tax Authority",
   bank_statement: "Recent Business Bank Statement",
   shareholders_register: "Register of Shareholders / Members",
   ownership_chart: "Group Ownership Structure Chart",
@@ -28,14 +26,7 @@ const DOC_TITLE_MAP = {
   aml_policy: "AML & Compliance Policy Document",
 };
 
-const ReviewStep = ({
-  onSubmit,
-  onBack,
-  allData = {},
-  onNext,
-  userType,
-  currentStep,
-}) => {
+const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType, currentStep }) => {
   const { t } = useTranslation();
   const [agreed, setAgreed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -54,10 +45,7 @@ const ReviewStep = ({
 
   const providedDocs = Object.entries(rawDocs).filter(([_, file]) => {
     if (!file) return false;
-    if (
-      typeof file === "object" &&
-      (file.name || file instanceof File || file instanceof Blob)
-    )
+    if (typeof file === "object" && (file.name || file instanceof File || file instanceof Blob))
       return true;
     if (typeof file === "string" && file.trim().length > 0) return true;
     return false;
@@ -125,9 +113,7 @@ const ReviewStep = ({
         <StepProgress percent={100} currentStep={currentStep} />
       </div>
       <div style={{ width: "100%" }} className={styles.activityHeader}>
-        <h2 className={styles.formHeading}>
-          {t("Review your activation request")}
-        </h2>
+        <h2 className={styles.formHeading}>{t("Review your activation request")}</h2>
         <p className={styles.formSubheading}>
           {t(
             "Check everything below before you submit. You can jump back to any step to make changes.",
@@ -140,10 +126,7 @@ const ReviewStep = ({
           <div className={styles.summaryCard}>
             <div className={styles.cardHeader}>
               <h4>{t("Company details")}</h4>
-              <span
-                className={styles.edit}
-                onClick={() => onBack && onBack("company")}
-              >
+              <span className={styles.edit} onClick={() => onBack && onBack("company")}>
                 {t("Edit")}
               </span>
             </div>
@@ -174,9 +157,7 @@ const ReviewStep = ({
               {(company.legalStructure || company.legalForm) && (
                 <div className={styles.item}>
                   <label>{t("Legal form")}</label>
-                  <span>
-                    {formatVal(company.legalStructure || company.legalForm)}
-                  </span>
+                  <span>{formatVal(company.legalStructure || company.legalForm)}</span>
                 </div>
               )}
 
@@ -220,10 +201,7 @@ const ReviewStep = ({
           <div className={styles.summaryCard}>
             <div className={styles.cardHeader}>
               <h4>{t("Activity & intended use")}</h4>
-              <span
-                className={styles.edit}
-                onClick={() => onBack && onBack("activity")}
-              >
+              <span className={styles.edit} onClick={() => onBack && onBack("activity")}>
                 {t("Edit")}
               </span>
             </div>
@@ -231,11 +209,7 @@ const ReviewStep = ({
             <div className={styles.grid}>
               <div className={styles.item}>
                 <label>{t("Sector / Industry")}</label>
-                <span>
-                  {formatVal(
-                    activity.industry || activity.industryReference?.name,
-                  )}
-                </span>
+                <span>{formatVal(activity.industry || activity.industryReference?.name)}</span>
               </div>
 
               {activity.businessDescription && (
@@ -344,10 +318,7 @@ const ReviewStep = ({
           <div className={styles.summaryCard}>
             <div className={styles.cardHeader}>
               <h4>{t("Ownership & control")}</h4>
-              <span
-                className={styles.edit}
-                onClick={() => onBack && onBack("ownership")}
-              >
+              <span className={styles.edit} onClick={() => onBack && onBack("ownership")}>
                 {t("Edit")}
               </span>
             </div>
@@ -396,10 +367,7 @@ const ReviewStep = ({
                           : t("Signatory")}
                       </span>
                     </div>
-                    <div
-                      className={styles.grid}
-                      style={{ columnGap: "24px", rowGap: "8px" }}
-                    >
+                    <div className={styles.grid} style={{ columnGap: "24px", rowGap: "8px" }}>
                       <div className={styles.item}>
                         <label>{t("Role")}</label>
                         <span>{o.role || "Director / UBO"}</span>
@@ -412,9 +380,7 @@ const ReviewStep = ({
                       )}
                       <div className={styles.item}>
                         <label>{t("PEP Status")}</label>
-                        <span>
-                          {o.isPep || o.pep ? t("Yes (PEP)") : t("No")}
-                        </span>
+                        <span>{o.isPep || o.pep ? t("Yes (PEP)") : t("No")}</span>
                       </div>
                     </div>
                   </div>
@@ -433,18 +399,13 @@ const ReviewStep = ({
           <div className={styles.summaryCard}>
             <div className={styles.cardHeader}>
               <h4>{t("Documents")}</h4>
-              <span
-                className={styles.edit}
-                onClick={() => onBack && onBack("documents")}
-              >
+              <span className={styles.edit} onClick={() => onBack && onBack("documents")}>
                 {t("Edit")}
               </span>
             </div>
 
             {providedDocs.length > 0 ? (
-              <div
-                style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-              >
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                 <div className={styles.item} style={{ marginBottom: "6px" }}>
                   <label>{t("Provided documents")}</label>
                   <span style={{ fontWeight: 600 }}>
@@ -455,15 +416,9 @@ const ReviewStep = ({
                   providedDocs.map(([key, file]) => {
                     const title =
                       DOC_TITLE_MAP[key] ||
-                      t(
-                        key
-                          .replace(/_/g, " ")
-                          .replace(/\b\w/g, (c) => c.toUpperCase()),
-                      );
+                      t(key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()));
                     const fileName =
-                      typeof file === "object" && file?.name
-                        ? file.name
-                        : String(file);
+                      typeof file === "object" && file?.name ? file.name : String(file);
                     return (
                       <div
                         key={key}
@@ -557,10 +512,7 @@ const ReviewStep = ({
       </div>
 
       <div className={styles.navigationFooter}>
-        <button
-          onClick={() => onBack && onBack()}
-          className={styles.backButton}
-        >
+        <button onClick={() => onBack && onBack()} className={styles.backButton}>
           <ArrowLeft size={16} />
           {t("Back")}
         </button>

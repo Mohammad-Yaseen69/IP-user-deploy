@@ -23,12 +23,9 @@ const DeleteAccount = () => {
 
   const deleteAccountHandler = async () => {
     axios
-      .delete(
-        `${import.meta.env.VITE_IP_DEV_API}/api/account/delete-account/${userDetails?._id}`,
-        {
-          headers: authHeader,
-        },
-      )
+      .delete(`${import.meta.env.VITE_IP_DEV_API}/api/account/delete-account/${userDetails?._id}`, {
+        headers: authHeader,
+      })
       .then((res) => {
         const decrypted = decryptData(res.data.data);
         handleLogout();
@@ -48,10 +45,7 @@ const DeleteAccount = () => {
         <h4>{t("Delete Your Account")}</h4>
       </CardHeader>
       <CardBody style={{ padding: "0 30px 30px" }}>
-        <div
-          style={{ flexDirection: "column" }}
-          className="container p-sm-5 p-0"
-        >
+        <div style={{ flexDirection: "column" }} className="container p-sm-5 p-0">
           <div className="mt-4">
             <h4>{t("Ask us to delete your data and close this account")}</h4>
             <p className="text-secondary">
@@ -77,9 +71,7 @@ const DeleteAccount = () => {
                 )}
               </li>
               <li style={{ textAlign: "left" }}>
-                {t(
-                  "If you have a negative balance, click the Resolve link next to your balance.",
-                )}
+                {t("If you have a negative balance, click the Resolve link next to your balance.")}
               </li>
             </ul>
           </div>
@@ -88,9 +80,7 @@ const DeleteAccount = () => {
               "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need \nto retain some of your data for legal and regulatory reasons. To learn more, see our",
             )}
             &nbsp;
-            <span className="text-primary cursor-pointer">
-              {t("privacy statement")}
-            </span>
+            <span className="text-primary cursor-pointer">{t("privacy statement")}</span>
             <br />
             {t(
               "We'll email you to let you know the status, and if there are any other steps you need to take.",
@@ -110,24 +100,14 @@ const DeleteAccount = () => {
             </span>
           </div>
           <div className="d-flex mt-3 gap-1">
-            <Input
-              type="checkbox"
-              checked={check}
-              onChange={(e) => setCheck(e.target.checked)}
-            />
+            <Input type="checkbox" checked={check} onChange={(e) => setCheck(e.target.checked)} />
             <span className="text-secondary" onClick={() => setCheck(!check)}>
-              {t(
-                "I understand that account deletion is permanent and can't be reversed.",
-              )}
+              {t("I understand that account deletion is permanent and can't be reversed.")}
             </span>
           </div>
           <div className="d-flex justify-content-center flex-column align-items-center gap-2 mt-4">
             <span>{t("Are you sure you want to close your account?")}</span>
-            <Button
-              color="danger"
-              disabled={!check || !isEdit}
-              onClick={deleteAccountHandler}
-            >
+            <Button color="danger" disabled={!check || !isEdit} onClick={deleteAccountHandler}>
               {t("Yes, Continue")}
             </Button>
           </div>

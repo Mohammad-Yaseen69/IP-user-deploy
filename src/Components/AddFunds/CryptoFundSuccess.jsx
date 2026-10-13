@@ -50,11 +50,7 @@ const CryptoFundSuccess = () => {
       className={styles.container}
     >
       {showShare && (
-        <SocialModal
-          isOpen={showShare}
-          toggle={() => setShowShare(!showShare)}
-          link={base_url}
-        />
+        <SocialModal isOpen={showShare} toggle={() => setShowShare(!showShare)} link={base_url} />
       )}
       <div className={styles.top}>
         <img src={logo} alt="InstaPay" />
@@ -62,9 +58,7 @@ const CryptoFundSuccess = () => {
 
       <div className={styles.confirmed}>
         <div className={styles.c_left}>
-          <h3 style={{ maxWidth: "18ch" }}>
-            {t("Your Crypto Top-up is Completed!")}
-          </h3>
+          <h3 style={{ maxWidth: "18ch" }}>{t("Your Crypto Top-up is Completed!")}</h3>
           <p>{t("Thanks for Using InstaPay")}</p>
           <p
             style={{
@@ -82,9 +76,7 @@ const CryptoFundSuccess = () => {
               fontWeight: 500,
             }}
           >
-            {isFromIban
-              ? t("Redirecting to IBAN in")
-              : t("Redirecting to wallets in")}
+            {isFromIban ? t("Redirecting to IBAN in") : t("Redirecting to wallets in")}
             <span
               style={{
                 fontWeight: 800,
@@ -115,11 +107,7 @@ const CryptoFundSuccess = () => {
         <div className={styles.td_top}>
           <h4>{t("Status")}</h4>
           <div className={styles.actions}>
-            <button
-              onClick={() =>
-                window.open("https://guide.insta-pay.ch", "_blank")
-              }
-            >
+            <button onClick={() => window.open("https://guide.insta-pay.ch", "_blank")}>
               <img src={help} alt="" />
               <span>{t("Need help?")}</span>
             </button>

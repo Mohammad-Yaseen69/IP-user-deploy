@@ -188,8 +188,7 @@ const SearchComponent = ({ showS = false, showOthers = true }) => {
                                   flexShrink: 0,
                                 }}
                               >
-                                {user?.first_name?.[0] ??
-                                  user?.company_name?.[0]}
+                                {user?.first_name?.[0] ?? user?.company_name?.[0]}
                               </div>
                             )}
                             <div
@@ -270,9 +269,7 @@ const SearchComponent = ({ showS = false, showOthers = true }) => {
             <Search />
           </Col>
           {showOthers && (
-            <div
-              style={{ display: "flex", alignItems: "center", gap: ".6rem" }}
-            >
+            <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
               {/* <Col xs="auto" style={{
                                 padding: ".5rem",
                                 boxShadow: "0px 9.94788px 10.7769px rgba(109, 41, 220, 0.17)",

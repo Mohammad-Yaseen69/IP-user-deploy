@@ -105,8 +105,7 @@ rect {
   animation-duration: $baseAnimationDuration / 4;
 }
 
-.climacon_componentWrap_sunSpoke
-  .climacon_component-stroke_sunSpoke:nth-child(even) {
+.climacon_componentWrap_sunSpoke .climacon_component-stroke_sunSpoke:nth-child(even) {
   animation-delay: $baseAnimationDuration / 4;
 }
 
@@ -192,11 +191,7 @@ rect {
 
 @for $i from 1 through 3 {
   .climacon_component-stroke_drizzle:nth-child(#{$i}) {
-    animation-delay: $baseAnimationDuration *
-      0.05 *
-      $i -
-      $baseAnimationDuration *
-      0.05;
+    animation-delay: $baseAnimationDuration * 0.05 * $i - $baseAnimationDuration * 0.05;
   }
 }
 
@@ -251,13 +246,7 @@ rect {
 
 @for $i from 1 through 6 {
   .climacon_component-stroke_hailAlt:nth-child(#{$i}) {
-    animation-delay: $baseAnimationDuration /
-      18 /
-      6 *
-      $i -
-      $baseAnimationDuration /
-      18 /
-      6;
+    animation-delay: $baseAnimationDuration / 18 / 6 * $i - $baseAnimationDuration / 18 / 6;
   }
 }
 
@@ -276,13 +265,7 @@ rect {
 
 @for $i from 1 through 3 {
   .climacon_component-stroke_snow:nth-child(#{$i}) {
-    animation-delay: $baseAnimationDuration /
-      2 /
-      3 *
-      $i -
-      $baseAnimationDuration /
-      2 /
-      3;
+    animation-delay: $baseAnimationDuration / 2 / 3 * $i - $baseAnimationDuration / 2 / 3;
   }
 }
 
@@ -418,10 +401,8 @@ rect {
   animation-fill-mode: both;
 }
 
-.climacon_componentWrap-sunrise
-  .climacon_component-stroke_sunSpoke:nth-child(even),
-.climacon_componentWrap-sunset
-  .climacon_component-stroke_sunSpoke:nth-child(even) {
+.climacon_componentWrap-sunrise .climacon_component-stroke_sunSpoke:nth-child(even),
+.climacon_componentWrap-sunset .climacon_component-stroke_sunSpoke:nth-child(even) {
   animation-delay: $baseAnimationDuration / 4;
 }
 
@@ -447,8 +428,7 @@ rect {
   animation-fill-mode: both;
 }
 
-.climacon_componentWrap-sunriseAlt
-  .climacon_component-stroke_sunSpoke:nth-child(even) {
+.climacon_componentWrap-sunriseAlt .climacon_component-stroke_sunSpoke:nth-child(even) {
   animation-delay:
     $baseAnimationDuration / 4,
     $baseAnimationDuration / 4;
@@ -683,8 +663,7 @@ $t: 0;
   @while $i <= 100 {
     #{$i}% {
       $eq: sin($t);
-      transform: translateY($svgSize * 0.25 * $i * 0.01)
-        translateX(-$eq * ($i - 50) * 1px / 4);
+      transform: translateY($svgSize * 0.25 * $i * 0.01) translateX(-$eq * ($i - 50) * 1px / 4);
     }
     $t: $t + $increase * $animationStep;
     $i: $i + $animationStep;
@@ -698,8 +677,7 @@ $t: 0;
   @while $i <= 100 {
     #{$i}% {
       $eq: sin($t);
-      transform: translateY($svgSize * 0.25 * $i * 0.01)
-        translateX($eq * ($i - 50) * 1px / 4);
+      transform: translateY($svgSize * 0.25 * $i * 0.01) translateX($eq * ($i - 50) * 1px / 4);
     }
     $t: $t + $increase * $animationStep;
     $i: $i + $animationStep;

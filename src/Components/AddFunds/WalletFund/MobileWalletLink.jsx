@@ -6,18 +6,12 @@ function convertSecondsToTime(seconds) {
   let minutes = Math.floor(seconds / 60);
   let remainingSeconds = seconds % 60;
   minutes = minutes < 10 ? "0" + minutes : minutes;
-  remainingSeconds =
-    remainingSeconds < 10 ? "0" + remainingSeconds : remainingSeconds;
+  remainingSeconds = remainingSeconds < 10 ? "0" + remainingSeconds : remainingSeconds;
 
   return `${minutes}:${remainingSeconds}`;
 }
 
-const MobileWalletLink = ({
-  externalLink,
-  setSubStep,
-  data,
-  type = "Mobile Wallet",
-}) => {
+const MobileWalletLink = ({ externalLink, setSubStep, data, type = "Mobile Wallet" }) => {
   const { t } = useTranslation();
   const [timer, setTimer] = useState(900); // 15 minutes in seconds
   const [reduceTimer, setReduceTimer] = useState(false);
@@ -164,8 +158,7 @@ const MobileWalletLink = ({
             textOverflow: "ellipsis",
           }}
         >
-          {convertSecondsToTime(timer)}{" "}
-          <span style={{ fontSize: "1rem" }}>{t("(MM:SS)")}</span>
+          {convertSecondsToTime(timer)} <span style={{ fontSize: "1rem" }}>{t("(MM:SS)")}</span>
         </span>
       </div>
 

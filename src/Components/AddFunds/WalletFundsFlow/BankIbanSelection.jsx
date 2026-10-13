@@ -42,16 +42,12 @@ const BankIbanSelection = ({
                     <span style={{ fontSize: ".75rem", opacity: 0.85 }}>
                       {bank.bankName || "Bank Account"}
                     </span>
-                    <span style={{ fontSize: ".7rem" }}>
-                      {bank.recipientIbanMasked}
-                    </span>
+                    <span style={{ fontSize: ".7rem" }}>{bank.recipientIbanMasked}</span>
                     <span style={{ fontSize: ".65rem", opacity: 0.85 }}>
                       {bank.transactionCount} {t("transactions")}
                     </span>
                   </div>
-                  {selectedBankId === bank._id && (
-                    <Check style={{ color: "white" }} size={20} />
-                  )}
+                  {selectedBankId === bank._id && <Check style={{ color: "white" }} size={20} />}
                 </div>
               </div>
             ))}
@@ -61,9 +57,7 @@ const BankIbanSelection = ({
 
       <div style={{ padding: "0", border: "none" }}>
         <h5 style={{ fontWeight: 700 }}>
-          {savedBanks.length > 0
-            ? t("Add bank details")
-            : t("Enter your bank IBAN")}
+          {savedBanks.length > 0 ? t("Add bank details") : t("Enter your bank IBAN")}
         </h5>
         <div
           style={{
@@ -82,9 +76,7 @@ const BankIbanSelection = ({
                 color: "#8A8A8A",
               }}
             >
-              {t(
-                "Type in the IBAN of the bank account you'll be transferring from:",
-              )}
+              {t("Type in the IBAN of the bank account you'll be transferring from:")}
             </label>
 
             <input

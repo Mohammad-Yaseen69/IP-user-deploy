@@ -52,9 +52,7 @@ const SubscribersModal = ({
         </ModalHeader>
         <ModalBody style={{ padding: "12px" }}>
           {subscribers.length === 0 ? (
-            <div
-              style={{ textAlign: "center", padding: "40px 0", color: "#666" }}
-            >
+            <div style={{ textAlign: "center", padding: "40px 0", color: "#666" }}>
               <p>{t("No subscribers found for this plan.")}</p>
             </div>
           ) : (
@@ -75,33 +73,15 @@ const SubscribersModal = ({
                       fontSize: "13px",
                     }}
                   >
-                    <th style={{ padding: "12px 10px", fontWeight: 600 }}>
-                      {t("Name")}
-                    </th>
-                    <th style={{ padding: "12px 10px", fontWeight: 600 }}>
-                      {t("Contact")}
-                    </th>
-                    <th style={{ padding: "12px 10px", fontWeight: 600 }}>
-                      {t("Amount")}
-                    </th>
-                    <th style={{ padding: "12px 10px", fontWeight: 600 }}>
-                      {t("Method")}
-                    </th>
-                    <th style={{ padding: "12px 10px", fontWeight: 600 }}>
-                      {t("Cycle")}
-                    </th>
-                    <th style={{ padding: "12px 10px", fontWeight: 600 }}>
-                      {t("Next Billing")}
-                    </th>
-                    <th style={{ padding: "12px 10px", fontWeight: 600 }}>
-                      {t("Joined")}
-                    </th>
-                    <th style={{ padding: "12px 10px", fontWeight: 600 }}>
-                      {t("Status")}
-                    </th>
-                    <th style={{ padding: "12px 10px", fontWeight: 600 }}>
-                      {t("Actions")}
-                    </th>
+                    <th style={{ padding: "12px 10px", fontWeight: 600 }}>{t("Name")}</th>
+                    <th style={{ padding: "12px 10px", fontWeight: 600 }}>{t("Contact")}</th>
+                    <th style={{ padding: "12px 10px", fontWeight: 600 }}>{t("Amount")}</th>
+                    <th style={{ padding: "12px 10px", fontWeight: 600 }}>{t("Method")}</th>
+                    <th style={{ padding: "12px 10px", fontWeight: 600 }}>{t("Cycle")}</th>
+                    <th style={{ padding: "12px 10px", fontWeight: 600 }}>{t("Next Billing")}</th>
+                    <th style={{ padding: "12px 10px", fontWeight: 600 }}>{t("Joined")}</th>
+                    <th style={{ padding: "12px 10px", fontWeight: 600 }}>{t("Status")}</th>
+                    <th style={{ padding: "12px 10px", fontWeight: 600 }}>{t("Actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -130,9 +110,7 @@ const SubscribersModal = ({
                       >
                         {sub?.paymentMethod || "-"}
                       </td>
-                      <td style={{ padding: "12px 10px" }}>
-                        {t(sub?.billingCycle)}
-                      </td>
+                      <td style={{ padding: "12px 10px" }}>{t(sub?.billingCycle)}</td>
                       <td
                         style={{
                           padding: "12px 10px",
@@ -145,9 +123,7 @@ const SubscribersModal = ({
                           : "-"}
                       </td>
                       <td style={{ padding: "12px 10px", color: "#999" }}>
-                        {sub?.createdAt
-                          ? new Date(sub.createdAt).toLocaleDateString()
-                          : "-"}
+                        {sub?.createdAt ? new Date(sub.createdAt).toLocaleDateString() : "-"}
                       </td>
                       <td style={{ padding: "12px 10px" }}>
                         <span
@@ -157,10 +133,8 @@ const SubscribersModal = ({
                             fontSize: "10px",
                             fontWeight: 700,
                             textTransform: "uppercase",
-                            background:
-                              sub?.status === "active" ? "#DCFCE7" : "#FEE2E2",
-                            color:
-                              sub?.status === "active" ? "#166534" : "#991B1B",
+                            background: sub?.status === "active" ? "#DCFCE7" : "#FEE2E2",
+                            color: sub?.status === "active" ? "#166534" : "#991B1B",
                           }}
                         >
                           {t(sub?.status)}

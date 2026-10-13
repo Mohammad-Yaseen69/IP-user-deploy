@@ -18,9 +18,7 @@ const SubAgents = () => {
         <div className={styles.headerTitle}>
           <h1>{t("Sub-Agents")}</h1>
           <p>
-            {t(
-              "Grow your network. Assign leads, set commission splits and track performance.",
-            )}
+            {t("Grow your network. Assign leads, set commission splits and track performance.")}
           </p>
         </div>
         <div className={styles.topright}>{width > 1000 && <TopRight />}</div>
@@ -30,11 +28,7 @@ const SubAgents = () => {
         <div className={styles.controlsRow}>
           <div className={styles.searchWrapper}>
             <Search className={styles.searchIcon} size={16} />
-            <input
-              type="text"
-              placeholder={t("Search...")}
-              className={styles.searchInput}
-            />
+            <input type="text" placeholder={t("Search...")} className={styles.searchInput} />
           </div>
 
           <div className={styles.actionGroup}>
@@ -73,10 +67,7 @@ const SubAgents = () => {
               {t("Sort By")}
             </button>
 
-            <button
-              className={styles.primaryBtn}
-              onClick={() => setIsModalOpen(true)}
-            >
+            <button className={styles.primaryBtn} onClick={() => setIsModalOpen(true)}>
               <span>+ {t("Add sub-agent")}</span>
             </button>
           </div>
@@ -93,17 +84,13 @@ const SubAgents = () => {
                 <span>{t("San Pedro, CA")}</span>
               </div>
 
-              <span className={`${styles.statusBadge} ${styles.active}`}>
-                {t("Active")}
-              </span>
+              <span className={`${styles.statusBadge} ${styles.active}`}>{t("Active")}</span>
             </div>
 
             <div className={styles.cardRows}>
               <div className={styles.infoRow}>
                 <span>{t("Type")}</span>
-                <span className={`${styles.typeBadge} ${styles.private}`}>
-                  {t("Private")}
-                </span>
+                <span className={`${styles.typeBadge} ${styles.private}`}>{t("Private")}</span>
               </div>
 
               <div className={styles.infoRow}>
@@ -126,9 +113,7 @@ const SubAgents = () => {
             </div>
 
             <div className={styles.cardActions}>
-              <button className={styles.lightButton}>
-                {t("Assign leads")}
-              </button>
+              <button className={styles.lightButton}>{t("Assign leads")}</button>
               <button className={styles.lightButton}>{t("Payouts")}</button>
               <button className={styles.dangerButton}>{t("Disable")}</button>
             </div>
@@ -145,17 +130,13 @@ const SubAgents = () => {
                 <span>{t("Accra, GH")}</span>
               </div>
 
-              <span className={`${styles.statusBadge} ${styles.active}`}>
-                {t("Active")}
-              </span>
+              <span className={`${styles.statusBadge} ${styles.active}`}>{t("Active")}</span>
             </div>
 
             <div className={styles.cardRows}>
               <div className={styles.infoRow}>
                 <span>{t("Type")}</span>
-                <span className={`${styles.typeBadge} ${styles.corporate}`}>
-                  {t("Corporate")}
-                </span>
+                <span className={`${styles.typeBadge} ${styles.corporate}`}>{t("Corporate")}</span>
               </div>
 
               <div className={styles.infoRow}>
@@ -178,9 +159,7 @@ const SubAgents = () => {
             </div>
 
             <div className={styles.cardActions}>
-              <button className={styles.lightButton}>
-                {t("Assign leads")}
-              </button>
+              <button className={styles.lightButton}>{t("Assign leads")}</button>
               <button className={styles.lightButton}>{t("Payouts")}</button>
               <button className={styles.dangerButton}>{t("Disable")}</button>
             </div>
@@ -197,17 +176,13 @@ const SubAgents = () => {
                 <span>{t("Dakar, SN")}</span>
               </div>
 
-              <span className={`${styles.statusBadge} ${styles.suspended}`}>
-                {t("Suspended")}
-              </span>
+              <span className={`${styles.statusBadge} ${styles.suspended}`}>{t("Suspended")}</span>
             </div>
 
             <div className={styles.cardRows}>
               <div className={styles.infoRow}>
                 <span>{t("Type")}</span>
-                <span className={`${styles.typeBadge} ${styles.private}`}>
-                  {t("Private")}
-                </span>
+                <span className={`${styles.typeBadge} ${styles.private}`}>{t("Private")}</span>
               </div>
 
               <div className={styles.infoRow}>
@@ -230,9 +205,7 @@ const SubAgents = () => {
             </div>
 
             <div className={styles.cardActions}>
-              <button className={styles.lightButton}>
-                {t("Assign leads")}
-              </button>
+              <button className={styles.lightButton}>{t("Assign leads")}</button>
               <button className={styles.lightButton}>{t("Payouts")}</button>
               <button className={styles.enableButton}>{t("Enable")}</button>
             </div>

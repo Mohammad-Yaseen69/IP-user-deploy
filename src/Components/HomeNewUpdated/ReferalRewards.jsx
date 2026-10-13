@@ -8,8 +8,7 @@ import { Link } from "react-router-dom";
 
 const ReferalRewards = () => {
   const { t } = useTranslation();
-  const { getReferralCommission, totalReferralAmount, userDetails } =
-    useContext(UserContext);
+  const { getReferralCommission, totalReferralAmount, userDetails } = useContext(UserContext);
 
   useEffect(() => {
     if (userDetails) {

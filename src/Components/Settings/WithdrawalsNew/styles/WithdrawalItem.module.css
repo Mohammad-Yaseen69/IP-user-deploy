@@ -44,8 +44,7 @@
   align-items: center;
   gap: 8px;
   border-radius: 4.5px;
-  background:
-    linear-gradient(296deg, #d1245f 0%, #453ac1 50.9%, #400fe8 100%), #d9d9d9;
+  background: linear-gradient(296deg, #d1245f 0%, #453ac1 50.9%, #400fe8 100%), #d9d9d9;
   box-shadow: 0px 3.313px 5.797px 0px rgba(172, 53, 159, 0.31);
   height: fit-content;
   cursor: pointer;

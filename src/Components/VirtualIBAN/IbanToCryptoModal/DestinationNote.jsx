@@ -1,13 +1,7 @@
 import { useTranslation } from "react-i18next";
 import CoinMark from "../CryptoWallet/components/CoinMark";
-import {
-  getAssetSymbol,
-  getWalletAccentColor,
-} from "../CryptoWallet/utils/format";
-import {
-  formatWalletAmount,
-  getWalletAvailable,
-} from "../CryptoWallet/instapay/wallets";
+import { getAssetSymbol, getWalletAccentColor } from "../CryptoWallet/utils/format";
+import { formatWalletAmount, getWalletAvailable } from "../CryptoWallet/instapay/wallets";
 import styles from "./ibanToCrypto.module.scss";
 
 const DestinationNote = ({ wallet, onCreate }) => {
@@ -16,9 +10,7 @@ const DestinationNote = ({ wallet, onCreate }) => {
   if (!wallet) {
     return (
       <div className={`${styles.destination} ${styles.destinationMissing}`}>
-        <p>
-          {t("You need an active USDT wallet to receive the converted funds.")}
-        </p>
+        <p>{t("You need an active USDT wallet to receive the converted funds.")}</p>
         <button type="button" className={styles.linkBtn} onClick={onCreate}>
           {t("Create a USDT wallet")}
         </button>
@@ -30,11 +22,7 @@ const DestinationNote = ({ wallet, onCreate }) => {
 
   return (
     <div className={styles.destination}>
-      <CoinMark
-        symbol={getAssetSymbol(code)}
-        color={getWalletAccentColor(code)}
-        size="sm"
-      />
+      <CoinMark symbol={getAssetSymbol(code)} color={getWalletAccentColor(code)} size="sm" />
       <div className={styles.destinationText}>
         <span className={styles.destinationLabel}>{t("Converted into")}</span>
         <span className={styles.destinationName}>

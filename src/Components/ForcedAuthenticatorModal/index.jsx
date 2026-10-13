@@ -39,16 +39,11 @@ const ForcedAuthenticatorModal = () => {
         setAuthenticatorDetails(decrypted.data);
         setShowSetupModal(true);
       } else {
-        toast.error(
-          decrypted?.message || t("Unable to initialize Google Authenticator."),
-        );
+        toast.error(decrypted?.message || t("Unable to initialize Google Authenticator."));
       }
     } catch (error) {
       const decrypted = decryptData(error?.response?.data?.data);
-      toast.error(
-        decrypted?.message ||
-          t("Something went wrong while setting up authenticator."),
-      );
+      toast.error(decrypted?.message || t("Something went wrong while setting up authenticator."));
     } finally {
       setEnablingAuth(false);
     }
@@ -100,9 +95,7 @@ const ForcedAuthenticatorModal = () => {
         <div className={authStyles.auth_details}>
           <div className={authStyles.left}>
             <h5>
-              {t(
-                "Two-factor authentication (2FA) is the best way to protect yourself online.",
-              )}
+              {t("Two-factor authentication (2FA) is the best way to protect yourself online.")}
             </h5>
             <p>
               {t(
@@ -147,16 +140,9 @@ const ForcedAuthenticatorModal = () => {
           zIndex: 1,
         }}
       >
-        <Button
-          className={styles.btnPrimary}
-          disabled={enablingAuth}
-          onClick={enableAuthenticator}
-        >
+        <Button className={styles.btnPrimary} disabled={enablingAuth} onClick={enableAuthenticator}>
           {enablingAuth ? (
-            <div
-              className="spinner-border spinner-border-sm text-light"
-              role="status"
-            />
+            <div className="spinner-border spinner-border-sm text-light" role="status" />
           ) : (
             t("Enable Google Authenticator")
           )}

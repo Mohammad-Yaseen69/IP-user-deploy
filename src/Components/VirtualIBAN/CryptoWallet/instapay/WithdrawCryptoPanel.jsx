@@ -16,10 +16,7 @@ import {
   handleAmountInputChange,
   handleAmountInputKeyUp,
 } from "../../utils/amount";
-import {
-  getAmountNumber,
-  MIN_PAYOUT_AMOUNT,
-} from "../../../../stateMachines/cryptoPayout";
+import { getAmountNumber, MIN_PAYOUT_AMOUNT } from "../../../../stateMachines/cryptoPayout";
 import {
   getChannelAddress,
   getChannelAsset,
@@ -71,18 +68,11 @@ const WithdrawCryptoPanel = ({ wallets = [], wallet, onSelectWallet }) => {
     destinationError,
   } = flow;
 
-  const groups = useMemo(
-    () => buildCountryGroups(userWithdrawals),
-    [userWithdrawals],
-  );
-  const cryptoRows = useMemo(
-    () => buildCryptoRows(cryptoWithdrawals),
-    [cryptoWithdrawals],
-  );
+  const groups = useMemo(() => buildCountryGroups(userWithdrawals), [userWithdrawals]);
+  const cryptoRows = useMemo(() => buildCryptoRows(cryptoWithdrawals), [cryptoWithdrawals]);
   const canAddWallet = cryptoRows.length < MAX_CRYPTO_WALLETS;
 
-  const countryName =
-    countries.find((country) => country.iso === countryIso)?.name || "";
+  const countryName = countries.find((country) => country.iso === countryIso)?.name || "";
   const destinationName = selectedDestination
     ? [
         `${t("My")} ${getChannelAsset(selectedDestination.entry) || cryptoCurrency} ${t("wallet")}`,
@@ -133,9 +123,7 @@ const WithdrawCryptoPanel = ({ wallets = [], wallet, onSelectWallet }) => {
 
   const quickAmounts = QUICK_PERCENTAGES.map((percent) => ({
     percent,
-    value: Number(
-      ((getAmountNumber(availableBalance) * percent) / 100).toFixed(2),
-    ),
+    value: Number(((getAmountNumber(availableBalance) * percent) / 100).toFixed(2)),
   })).filter(({ value }) => value > 0);
 
   const otpModal = (
@@ -145,9 +133,7 @@ const WithdrawCryptoPanel = ({ wallets = [], wallet, onSelectWallet }) => {
       centered
       style={{ maxWidth: "520px" }}
     >
-      <ModalHeader toggle={flow.back}>
-        {t("Confirm your withdrawal")}
-      </ModalHeader>
+      <ModalHeader toggle={flow.back}>{t("Confirm your withdrawal")}</ModalHeader>
       <ModalBody>
         <OtpVerification
           fullHeight
@@ -299,9 +285,7 @@ const WithdrawCryptoPanel = ({ wallets = [], wallet, onSelectWallet }) => {
 
         {countryIso && (
           <div>
-            <span className={styles.railLabel}>
-              {t("Crypto withdrawal account")}
-            </span>
+            <span className={styles.railLabel}>{t("Crypto withdrawal account")}</span>
             {destinationOptions.length > 0 ? (
               <RailSelect
                 small
@@ -313,13 +297,10 @@ const WithdrawCryptoPanel = ({ wallets = [], wallet, onSelectWallet }) => {
               />
             ) : (
               <p className={styles.railFieldError}>
-                {t(
-                  "You have no {{currency}} crypto withdrawal account in {{country}}.",
-                  {
-                    currency: cryptoCurrency,
-                    country: countryName,
-                  },
-                )}
+                {t("You have no {{currency}} crypto withdrawal account in {{country}}.", {
+                  currency: cryptoCurrency,
+                  country: countryName,
+                })}
               </p>
             )}
 
@@ -335,19 +316,15 @@ const WithdrawCryptoPanel = ({ wallets = [], wallet, onSelectWallet }) => {
                   )}
                   {addressStatus === "invalid" && (
                     <span className={styles.railBad}>
-                      {t(
-                        "This address is not valid on the network saved for this wallet.",
-                      )}
+                      {t("This address is not valid on the network saved for this wallet.")}
                     </span>
                   )}
-                  {!addressStatus &&
-                    t("Taken from your saved withdrawal account.")}
+                  {!addressStatus && t("Taken from your saved withdrawal account.")}
                 </span>
 
                 {isProtocolLocked && protocol ? (
                   <span className={styles.railNetwork}>
-                    {t("Network")}:{" "}
-                    <strong>{getProtocolLabel(protocol)}</strong>
+                    {t("Network")}: <strong>{getProtocolLabel(protocol)}</strong>
                   </span>
                 ) : protocolOptions.length > 0 ? (
                   <span className={styles.railNetworkChips}>
@@ -364,17 +341,13 @@ const WithdrawCryptoPanel = ({ wallets = [], wallet, onSelectWallet }) => {
                   </span>
                 ) : (
                   <span className={styles.railBad}>
-                    {t(
-                      "We could not work out which network this address belongs to.",
-                    )}
+                    {t("We could not work out which network this address belongs to.")}
                   </span>
                 )}
               </div>
             )}
 
-            {destinationError && (
-              <p className={styles.railFieldError}>{destinationError}</p>
-            )}
+            {destinationError && <p className={styles.railFieldError}>{destinationError}</p>}
           </div>
         )}
 
@@ -386,9 +359,7 @@ const WithdrawCryptoPanel = ({ wallets = [], wallet, onSelectWallet }) => {
             disabled={!wallet}
           >
             <Plus size={15} />
-            {hasAnyDestination
-              ? t("Add crypto wallet")
-              : t("Add a crypto withdrawal account")}
+            {hasAnyDestination ? t("Add crypto wallet") : t("Add a crypto withdrawal account")}
           </button>
         )}
 

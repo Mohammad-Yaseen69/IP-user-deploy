@@ -13,13 +13,7 @@ import { cleanString } from "../../../Helper/cleanString";
 import useWindowWidth from "../../../utils/useWindowWidth";
 
 let api_timeout;
-const StepTwo = ({
-  data,
-  dataHandler,
-  getExchangeRate,
-  showFee,
-  inNonInstapay = false,
-}) => {
+const StepTwo = ({ data, dataHandler, getExchangeRate, showFee, inNonInstapay = false }) => {
   const { userDetails, userWallets } = useContext(UserContext);
   const { t } = useTranslation();
   const [limitType, setLimitType] = useState("");
@@ -53,9 +47,7 @@ const StepTwo = ({
           : userWallets?.find((item) => item?.default);
       const wallet = {
         ...def,
-        ...currencies.find(
-          (item) => item.currency_code === def?.currency?.code,
-        ),
+        ...currencies.find((item) => item.currency_code === def?.currency?.code),
       };
 
       dataHandler("currency", wallet);
@@ -100,9 +92,7 @@ const StepTwo = ({
           item?.status === "active",
       )
       .map((item) => {
-        const currency = currencies.find(
-          (it) => it.currency_code === item?.currency?.code,
-        );
+        const currency = currencies.find((it) => it.currency_code === item?.currency?.code);
         return {
           ...item,
           ...currency,
@@ -288,13 +278,7 @@ const StepTwo = ({
               dataHandler("currency", item);
               dataHandler("currency_wallet", item);
               if (data?.amount && item?.currency_code) {
-                await getExchangeRate(
-                  data.amount,
-                  "",
-                  "instant",
-                  item.currency_code,
-                  setter,
-                );
+                await getExchangeRate(data.amount, "", "instant", item.currency_code, setter);
               }
             }}
             toggle={() => setShowCurrency(false)}
@@ -342,9 +326,7 @@ const StepTwo = ({
               `Amount needs to be greater than ${data?.exchange_rate?.fee?.amount} ${data?.currency}`,
             )}
           {data?.exchange_rate_error === "sww" &&
-            t(
-              "We are unable to process your request at the moment. please try again later",
-            )}
+            t("We are unable to process your request at the moment. please try again later")}
           {data?.exchange_rate_error === "payer_unavailable" &&
             t(
               `Unable to conduct the transaction to ${data?.payer?.name} at the moment. Please try again later.`,
@@ -355,8 +337,7 @@ const StepTwo = ({
             t("You have entered an amount that exceeds payer limits.")}
           {data?.exchange_rate_error === "min payer" &&
             t("You have entered an amount that is below the payer range.")}
-          {data?.exchange_rate_error === "Invalid Amount.." &&
-            t("Invalid Amount")}
+          {data?.exchange_rate_error === "Invalid Amount.." && t("Invalid Amount")}
           {!inNonInstapay &&
             (t(
               possibleErrors?.[
@@ -366,28 +347,22 @@ const StepTwo = ({
               ],
             ) ??
               "")}
-          {data?.exchange_rate_error &&
-            inNonInstapay &&
-            data?.exchange_rate_error}
+          {data?.exchange_rate_error && inNonInstapay && data?.exchange_rate_error}
         </div>
       ) : (
         <div
           className={styles.exchange_rate}
           style={{ justifyContent: width > 1000 ? "inherit" : "center" }}
         >
-          {data?.exchange_rate?.receiver?.currency ===
-          data?.currency?.currency?.code ? (
+          {data?.exchange_rate?.receiver?.currency === data?.currency?.currency?.code ? (
             ""
           ) : (
             <div className={styles.er_item}>
               <img src={er_icon} alt="" />
 
               <span>
-                1.00 {data?.currency?.currency?.code} =
-                {data?.exchange_rate?.exchange_rate ?? "?"}
-                {data?.receivingCurrency ??
-                  data?.exchange_rate?.receiver?.currency ??
-                  ""}
+                1.00 {data?.currency?.currency?.code} ={data?.exchange_rate?.exchange_rate ?? "?"}
+                {data?.receivingCurrency ?? data?.exchange_rate?.receiver?.currency ?? ""}
               </span>
             </div>
           )}
@@ -395,10 +370,10 @@ const StepTwo = ({
             <div className={styles.er_item}>
               <span>
                 {t("Min Amount")}:{" "}
-                {Number(data?.exchange_rate?.min_amount)?.toLocaleString(
-                  "en-US",
-                  { minimumFractionDigits: 2, maximumFractionDigits: 2 },
-                )}{" "}
+                {Number(data?.exchange_rate?.min_amount)?.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}{" "}
                 {data?.currency}
               </span>
             </div>
@@ -409,10 +384,10 @@ const StepTwo = ({
             <div className={styles.er_item}>
               <span>
                 {t("Max Amount")}:{" "}
-                {Number(data?.exchange_rate?.max_amount)?.toLocaleString(
-                  "en-US",
-                  { minimumFractionDigits: 2, maximumFractionDigits: 2 },
-                )}{" "}
+                {Number(data?.exchange_rate?.max_amount)?.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}{" "}
                 {data?.currency}
               </span>
             </div>
@@ -472,8 +447,7 @@ const StepTwo = ({
             background: width > 1000 ? "transparent" : "rgba(0, 0, 0, 0.02)",
           }}
         >
-          {data?.exchange_rate?.receiver?.currency ===
-          data?.currency?.currency?.code ? (
+          {data?.exchange_rate?.receiver?.currency === data?.currency?.currency?.code ? (
             ""
           ) : (
             <div
@@ -486,8 +460,7 @@ const StepTwo = ({
             >
               <span>{t("Exchange rate")}</span>
               <span>
-                1.00 {data?.currency?.currency?.code} =
-                {data?.exchange_rate?.exchange_rate ?? "?"}{" "}
+                1.00 {data?.currency?.currency?.code} ={data?.exchange_rate?.exchange_rate ?? "?"}{" "}
                 {data?.exchange_rate?.receiver?.currency ?? ""}
               </span>
             </div>
@@ -515,9 +488,7 @@ const StepTwo = ({
             >
               <strong>{t("Fee")}</strong>
               <strong>
-                {Number(
-                  cleanString(data.exchange_rate?.fee?.amount),
-                )?.toLocaleString("en-US", {
+                {Number(cleanString(data.exchange_rate?.fee?.amount))?.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}{" "}
@@ -537,10 +508,10 @@ const StepTwo = ({
             >
               <strong>{t("Total to pay")}</strong>
               <strong>
-                {Number(cleanString(data.exchange_rate?.total))?.toLocaleString(
-                  "en-US",
-                  { minimumFractionDigits: 2, maximumFractionDigits: 2 },
-                )}{" "}
+                {Number(cleanString(data.exchange_rate?.total))?.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}{" "}
                 {data.currency?.currency?.code}{" "}
               </strong>
               {/* <strong>{Number(data.exchange_rate?.total)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data.currency?.currency?.code} </strong> */}

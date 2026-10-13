@@ -1,9 +1,4 @@
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useMemo, useState } from "react";
 import { Check } from "react-feather";
@@ -19,16 +14,10 @@ import mw from "../../PaymentsNewer/files/mw.png";
 import pc from "../../PaymentsNewer/files/pc.png";
 import TypingSpan from "../../TypingSpan";
 
-const Channels = ({
-  setChannel,
-  channel,
-  thunesServices,
-  thunesProviders = [],
-}) => {
+const Channels = ({ setChannel, channel, thunesServices, thunesProviders = [] }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
-  const [showCardMaintenanceModal, setShowCardMaintenanceModal] =
-    useState(false);
+  const [showCardMaintenanceModal, setShowCardMaintenanceModal] = useState(false);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const { data: methods, isLoading } = useQuery({
     queryKey: ["AvailableMethods"],
@@ -45,8 +34,7 @@ const Channels = ({
           id: 5,
           icon: pc,
           value: "card",
-          coming_soon:
-            userDetails?.level?.topup_channel?.card_payment === "coming_soon",
+          coming_soon: userDetails?.level?.topup_channel?.card_payment === "coming_soon",
         }
       : {},
     userDetails?.level?.topup_channel?.paypal
@@ -55,8 +43,7 @@ const Channels = ({
           id: 5,
           icon: pc,
           value: "paypal",
-          coming_soon:
-            userDetails?.level?.topup_channel?.paypal === "coming_soon",
+          coming_soon: userDetails?.level?.topup_channel?.paypal === "coming_soon",
         }
       : {},
     userDetails?.level?.topup_channel?.bank_deposit
@@ -65,8 +52,7 @@ const Channels = ({
           id: 2,
           icon: bd,
           value: "bank",
-          coming_soon:
-            userDetails?.level?.topup_channel?.bank_deposit === "coming_soon",
+          coming_soon: userDetails?.level?.topup_channel?.bank_deposit === "coming_soon",
         }
       : {},
     userDetails?.level?.topup_channel?.bank
@@ -85,8 +71,7 @@ const Channels = ({
           id: 2,
           icon: bd,
           value: "crypto",
-          coming_soon:
-            userDetails?.level?.topup_channel?.crypto === "coming_soon",
+          coming_soon: userDetails?.level?.topup_channel?.crypto === "coming_soon",
         }
       : {},
   ];
@@ -105,15 +90,12 @@ const Channels = ({
   ];
 
   const filteredChannels = useMemo(() => {
-    const allChannels = [...thunesAllowed, ...payoutChannelData].filter(
-      (item) => item?.name,
-    );
+    const allChannels = [...thunesAllowed, ...payoutChannelData].filter((item) => item?.name);
 
     if (!methods || isLoading) return allChannels;
 
     return allChannels.filter(
-      (item) =>
-        methods?.includes(item.value) || methods?.includes(item.api_val),
+      (item) => methods?.includes(item.value) || methods?.includes(item.api_val),
     );
   }, [payoutChannelData, thunesAllowed, methods, isLoading]);
   return (
@@ -200,16 +182,10 @@ const Channels = ({
                   <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>
                     {t(item?.name) + " "}
                     {window.innerWidth < 1000 && <br />}
-                    {thunesProviders?.length > 0 &&
-                    item?.sub_name === "wallet" ? (
+                    {thunesProviders?.length > 0 && item?.sub_name === "wallet" ? (
                       <>
                         (
-                        <TypingSpan
-                          words={thunesProviders.map(
-                            (item) => item?.name ?? "",
-                          )}
-                        />
-                        )
+                        <TypingSpan words={thunesProviders.map((item) => item?.name ?? "")} />)
                       </>
                     ) : (
                       ""
@@ -219,11 +195,7 @@ const Channels = ({
                 {item?.coming_soon ? (
                   <Badge color="primary">{t("Coming Soon")}</Badge>
                 ) : channel?.name === item?.name ? (
-                  <Check
-                    color="green"
-                    size={24}
-                    style={{ position: "absolute", right: "20px" }}
-                  />
+                  <Check color="green" size={24} style={{ position: "absolute", right: "20px" }} />
                 ) : (
                   <img
                     src={i}
@@ -253,9 +225,7 @@ const Channels = ({
           <DialogTitle>{t("Verification Required")}</DialogTitle>
 
           <DialogContent>
-            {t(
-              "Please complete and get your KYC and KYB approved before using Crypto Transfer.",
-            )}
+            {t("Please complete and get your KYC and KYB approved before using Crypto Transfer.")}
           </DialogContent>
 
           <DialogActions>

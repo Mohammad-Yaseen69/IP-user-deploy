@@ -9,14 +9,7 @@ const StepProgress = ({ currentStep, percent }) => {
   const [openAIDrawer, setOpenAIDrawer] = useState(false);
   const toggleAiDrawer = () => setOpenAIDrawer((prev) => !prev);
 
-  const steps = [
-    "account",
-    "company",
-    "activity",
-    "ownership",
-    "documents",
-    "review",
-  ];
+  const steps = ["account", "company", "activity", "ownership", "documents", "review"];
 
   const totalSteps = steps.length;
   const currentStepNo = steps.findIndex((x) => x === currentStep) + 1;

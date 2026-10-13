@@ -1,12 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Check, ChevronDown, ChevronRight, X } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router";
@@ -44,21 +38,15 @@ const PendingItem = ({
   console.log(item);
 
   useEffect(() => setStatus(item?.status), [item]);
-  useEffect(
-    () => setStep(item?.status?.toLowerCase() === "completed" ? 3 : 1),
-    [item, activeItem],
-  );
+  useEffect(() => setStep(item?.status?.toLowerCase() === "completed" ? 3 : 1), [item, activeItem]);
   useEffect(() => {
     const filtered = countries.filter(
-      (coun) =>
-        coun.name.toLowerCase() === item?.sender?.country_name?.toLowerCase(),
+      (coun) => coun.name.toLowerCase() === item?.sender?.country_name?.toLowerCase(),
     )[0];
     setCountry(filtered);
   }, [item]);
 
-  const currentWallet = userWallets.filter(
-    (it) => it.wallet_id === item?.wallet_id,
-  )[0];
+  const currentWallet = userWallets.filter((it) => it.wallet_id === item?.wallet_id)[0];
 
   const rejectRequest = async () => {
     try {
@@ -107,10 +95,7 @@ const PendingItem = ({
           const decrypted = decryptData(res.data.data);
           console.log(decrypted);
           if (decrypted?.reviews?.length > 0) {
-            const overAllRating = decrypted.reviews?.reduce(
-              (acc, rat) => (acc += rat.rating),
-              0,
-            );
+            const overAllRating = decrypted.reviews?.reduce((acc, rat) => (acc += rat.rating), 0);
             setAllRating(overAllRating / decrypted?.reviewsCount);
             // console.log(decrypted)
             setAllReviews(decrypted?.reviews);
@@ -160,10 +145,7 @@ const PendingItem = ({
       ? "Bargain-Accepted"
       : str
           .split(" ")
-          .map(
-            (word) =>
-              word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
-          )
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
           .join(" ");
   }
 
@@ -242,8 +224,7 @@ const PendingItem = ({
                   borderRadius: "9.938px",
                   background:
                     "linear-gradient(341deg, #E64067 -4.84%, #5926F0 90.69%, #4828A0 166.81%), #D9D9D9",
-                  boxShadow:
-                    "0px 3.3125px 5.79688px 0px rgba(172, 53, 159, 0.31)",
+                  boxShadow: "0px 3.3125px 5.79688px 0px rgba(172, 53, 159, 0.31)",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
@@ -263,10 +244,8 @@ const PendingItem = ({
                 style={{
                   borderRadius: "9.938px",
                   flex: "none",
-                  background:
-                    "linear-gradient(to top left,#e1e1e1,#e2e2e2,#b5b5b5)",
-                  boxShadow:
-                    "0px 3.3125px 5.79688px 0px rgba(172, 53, 159, 0.31)",
+                  background: "linear-gradient(to top left,#e1e1e1,#e2e2e2,#b5b5b5)",
+                  boxShadow: "0px 3.3125px 5.79688px 0px rgba(172, 53, 159, 0.31)",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
@@ -331,14 +310,9 @@ const PendingItem = ({
               </div>
             </div>
             {item?.status.toLowerCase().includes("complete") && (
-              <div
-                className={more_info.smr_right}
-                style={{ justifyContent: "space-between" }}
-              >
+              <div className={more_info.smr_right} style={{ justifyContent: "space-between" }}>
                 <span>
-                  {item?.seller_comment
-                    ? t("You Left A Review")
-                    : t("How Was Your Experience?")}
+                  {item?.seller_comment ? t("You Left A Review") : t("How Was Your Experience?")}
                 </span>
                 <Button onClick={() => setShowReviewModal(!showReviewModal)}>
                   {item?.seller_comment || item?.seller_reply

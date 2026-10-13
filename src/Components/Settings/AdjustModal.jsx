@@ -7,16 +7,7 @@ import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { UserContext } from "../../Context/UserContext";
 import { useTranslation } from "react-i18next";
 
-const AdjustModal = ({
-  isOpen,
-  toggle,
-  imageUrl,
-  accountId,
-  authHeader,
-  type,
-  name,
-  pId,
-}) => {
+const AdjustModal = ({ isOpen, toggle, imageUrl, accountId, authHeader, type, name, pId }) => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [modalPixels, setModalPixels] = useState();
@@ -67,11 +58,7 @@ const AdjustModal = ({
   const cropSize = isCover ? undefined : { width: 242, height: 242 };
 
   return (
-    <Modal
-      style={{ minWidth: isCover ? "90%" : undefined }}
-      isOpen={isOpen}
-      toggle={toggle}
-    >
+    <Modal style={{ minWidth: isCover ? "90%" : undefined }} isOpen={isOpen} toggle={toggle}>
       <ModalBody>
         <div
           style={{

@@ -7,11 +7,7 @@ export const usePermission = () => {
 
   return useCallback(
     (permission) => {
-      if (
-        !userDetails ||
-        userDetails?.account_type === "individual" ||
-        !isAgentLogin
-      ) {
+      if (!userDetails || userDetails?.account_type === "individual" || !isAgentLogin) {
         return true;
       }
 

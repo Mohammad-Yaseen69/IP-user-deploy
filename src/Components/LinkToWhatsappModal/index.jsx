@@ -94,15 +94,11 @@ const LinkToWhatsappModal = ({ isOpen, toggle }) => {
         >
           <ModalBody className={styles.container} ref={modalRef}>
             <div className={styles.left}>
-              {window.innerWidth > 900 && (
-                <h1>{t("Link Your WhatsApp Account to InstaPay")}</h1>
-              )}
+              {window.innerWidth > 900 && <h1>{t("Link Your WhatsApp Account to InstaPay")}</h1>}
               <div className={styles.guide}>
                 {steps.map((item) => (
                   <div className={styles.guide_item} key={item.step}>
-                    <h2 className={styles.step_count}>
-                      {t(item.step).split(" – ")[0]}
-                    </h2>
+                    <h2 className={styles.step_count}>{t(item.step).split(" – ")[0]}</h2>
                     <div className={styles.gi_right}>
                       <h3>{t(item.name).split(" – ")[1]}</h3>
                       <p>{t(item.desc)}</p>

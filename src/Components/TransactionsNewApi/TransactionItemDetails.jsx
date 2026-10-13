@@ -1,13 +1,6 @@
 import { useTranslation } from "react-i18next";
 import styles from "./styles/TransactionItemDetails.module.css";
-import React, {
-  useContext,
-  useMemo,
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
-} from "react";
+import React, { useContext, useMemo, useState, useRef, useEffect, useCallback } from "react";
 import countries from "../PaymentsNewer/CountriesData.json";
 import { service_name_formatter } from "./TransactionItem";
 import CatDown from "./CatDown";
@@ -71,9 +64,7 @@ const TransactionItemDetails = ({
       const n = item?.timeline?.length || 0;
       if (!timelineContainerRef.current || n === 0) return;
       const containerEl = timelineContainerRef.current;
-      const labelW = timelineLabelRef.current
-        ? timelineLabelRef.current.offsetWidth
-        : 0;
+      const labelW = timelineLabelRef.current ? timelineLabelRef.current.offsetWidth : 0;
       const containerW = containerEl.clientWidth;
 
       const safety = 0;
@@ -85,12 +76,8 @@ const TransactionItemDetails = ({
     };
 
     measure();
-    const ro =
-      typeof ResizeObserver !== "undefined"
-        ? new ResizeObserver(measure)
-        : null;
-    if (ro && timelineContainerRef.current)
-      ro.observe(timelineContainerRef.current);
+    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(measure) : null;
+    if (ro && timelineContainerRef.current) ro.observe(timelineContainerRef.current);
     window.addEventListener("resize", measure);
     return () => {
       if (ro) ro.disconnect();
@@ -102,15 +89,11 @@ const TransactionItemDetails = ({
     "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.";
 
   const asLabel = useMemo(() => {
-    if (
-      item?.service_type === "withdraw_by_admin" ||
-      item?.service_type === "deposite_by_admin"
-    )
+    if (item?.service_type === "withdraw_by_admin" || item?.service_type === "deposite_by_admin")
       return "Admin Funds";
     if (item?.payment_type?.includes("bank")) return "Bank Transfer";
     if (item?.payment_type?.includes("mobile")) return "Mobile Money";
-    if (item?.payment_type?.toLowerCase() === "commission")
-      return "Referral Commission";
+    if (item?.payment_type?.toLowerCase() === "commission") return "Referral Commission";
     return (
       service_name_formatter(item?.payment_type) ||
       service_name_formatter(item?.transaction_type)?.replace("Mastercard", "")
@@ -118,13 +101,9 @@ const TransactionItemDetails = ({
   }, [item]);
 
   const recipientName = useMemo(() => {
-    if (item?.guest_details?.name && item?.guest_details)
-      return item?.guest_details?.name;
+    if (item?.guest_details?.name && item?.guest_details) return item?.guest_details?.name;
     if (item?.service_type === "airtime") return item?.airtime_number;
-    if (
-      item?.payment_type === "conversion" ||
-      item?.service_type === "withdrawal"
-    )
+    if (item?.payment_type === "conversion" || item?.service_type === "withdrawal")
       return item?.wallet_id;
 
     const isDebit = (item?.transaction_type ?? "")?.toLowerCase() === "debit";
@@ -151,13 +130,9 @@ const TransactionItemDetails = ({
   }, [item, internationalReceiver, userDetails]);
 
   const recipientInitial = useMemo(() => {
-    if (item?.guest_details?.name && item?.guest_details)
-      return item?.guest_details?.name?.[0];
+    if (item?.guest_details?.name && item?.guest_details) return item?.guest_details?.name?.[0];
     if (item?.service_type === "airtime") return item?.airtime_number?.[1];
-    if (
-      item?.payment_type === "conversion" ||
-      item?.service_type === "withdrawal"
-    )
+    if (item?.payment_type === "conversion" || item?.service_type === "withdrawal")
       return item?.wallet_id?.[0];
 
     const isDebit = (item?.transaction_type ?? "")?.toLowerCase() === "debit";
@@ -206,26 +181,24 @@ const TransactionItemDetails = ({
             </div>
           </div>
           <h5>
-            {item?.payment_type?.toLowerCase() === "commission" &&
-            fromReferral ? (
+            {item?.payment_type?.toLowerCase() === "commission" && fromReferral ? (
               <>
-                {Number(item?.replacement_currency?.value)?.toLocaleString(
-                  "en-US",
-                  { minimumFractionDigits: 2, maximumFractionDigits: 2 },
-                )}{" "}
+                {Number(item?.replacement_currency?.value)?.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}{" "}
                 {item?.replacement_currency?.code}
               </>
             ) : (
               <>
-                {Number(
-                  item?.billAmount ? item?.billAmount : item?.total,
-                )?.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}{" "}
-                {item?.billCurrency
-                  ? item?.billCurrency
-                  : item?.currency?.code || item?.currency}
+                {Number(item?.billAmount ? item?.billAmount : item?.total)?.toLocaleString(
+                  "en-US",
+                  {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  },
+                )}{" "}
+                {item?.billCurrency ? item?.billCurrency : item?.currency?.code || item?.currency}
               </>
             )}
           </h5>
@@ -258,9 +231,7 @@ const TransactionItemDetails = ({
         <div className={styles.er_item}>
           <span>
             {t("Fees")}: {formatCurrency(item?.fee, true)}{" "}
-            {item?.billCurrency
-              ? item?.billCurrency
-              : item?.currency?.code || item?.currency}{" "}
+            {item?.billCurrency ? item?.billCurrency : item?.currency?.code || item?.currency}{" "}
           </span>
         </div>
         {item?.payment_type?.toLowerCase() === "commission" &&
@@ -280,10 +251,10 @@ const TransactionItemDetails = ({
           <div className={styles.er_item}>
             <span>
               1.00 {item?.currency?.code} ={" "}
-              {Number(item?.replacement_currency?.rate)?.toLocaleString(
-                "en-US",
-                { minimumFractionDigits: 2, maximumFractionDigits: 7 },
-              )}{" "}
+              {Number(item?.replacement_currency?.rate)?.toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 7,
+              })}{" "}
               {item?.replacement_currency?.code}
             </span>
           </div>
@@ -303,10 +274,10 @@ const TransactionItemDetails = ({
           <div className={styles.er_item}>
             <span>
               {t("Destination Amount")}:{" "}
-              {Number(item?.recipient_received_amount)?.toLocaleString(
-                "en-US",
-                { minimumFractionDigits: 2, maximumFractionDigits: 2 },
-              )}{" "}
+              {Number(item?.recipient_received_amount)?.toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}{" "}
               {item?.recipient_received_currency}
             </span>
           </div>
@@ -314,8 +285,7 @@ const TransactionItemDetails = ({
         {item?.agent?.first_name && (
           <div style={{ background: "#6f2ad9" }} className={styles.er_item}>
             <span style={{ color: "white" }}>
-              {t("Performed By:")} {item?.agent?.first_name}{" "}
-              {item?.agent?.last_name}
+              {t("Performed By:")} {item?.agent?.first_name} {item?.agent?.last_name}
             </span>
           </div>
         )}
@@ -325,9 +295,7 @@ const TransactionItemDetails = ({
             <span>{t("Description")}</span>
             <p>
               {desc && item.status?.toLowerCase() === "reversed"
-                ? desc +
-                  " " +
-                  t(reversedText)?.replace("CHF", item?.currency?.code)
+                ? desc + " " + t(reversedText)?.replace("CHF", item?.currency?.code)
                 : desc || t(reversedText)?.replace("CHF", item?.currency?.code)}
             </p>
           </div>
@@ -358,8 +326,7 @@ const TransactionItemDetails = ({
                   navigator.clipboard.writeText(item?.metadata?.crypto_tx_hash);
                 }}
                 style={{
-                  background:
-                    "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                  background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                   border: "none",
                   outline: "none",
                   borderRadius: "8px",
@@ -413,17 +380,13 @@ const TransactionItemDetails = ({
         {item?.guest_details?.email && (
           <div className={styles.er_item}>
             <span>{t("Sender Email")}</span>
-            <p style={{ wordBreak: "break-all" }}>
-              {item?.guest_details?.email}
-            </p>
+            <p style={{ wordBreak: "break-all" }}>{item?.guest_details?.email}</p>
           </div>
         )}
         {item?.guest_details?.phone && (
           <div className={styles.er_item}>
             <span>{t("Sender Phone")}</span>
-            <p style={{ wordBreak: "break-all" }}>
-              {item?.guest_details?.phone}
-            </p>
+            <p style={{ wordBreak: "break-all" }}>{item?.guest_details?.phone}</p>
           </div>
         )}
       </div>
@@ -432,8 +395,7 @@ const TransactionItemDetails = ({
           <div className={styles.row_left}>
             <div className={styles.r_item}>
               <span>
-                {item?.payment_type === "conversion" ||
-                item?.service_type === "withdrawal"
+                {item?.payment_type === "conversion" || item?.service_type === "withdrawal"
                   ? t("Wallet ID")
                   : t("Recipient")}
                 :{" "}
@@ -443,8 +405,7 @@ const TransactionItemDetails = ({
                 {
                   <div className={styles.r_details}>
                     <h5>{recipientName}</h5>
-                    {(item?.service_type === "payment_address" &&
-                      item?.guest_details) ||
+                    {(item?.service_type === "payment_address" && item?.guest_details) ||
                     item?.cardNo ? (
                       ""
                     ) : (
@@ -501,36 +462,28 @@ const TransactionItemDetails = ({
               <p className={styles.p_type}>{t(asLabel)}</p>
             </div>
 
-            {vvc &&
-              item?.merchantName &&
-              item?.transaction_type === "card_to_merchant" && (
-                <div className={styles.er_item}>
-                  <span>{t("Merchant Name")}</span>
-                  <p>{item?.merchantName}</p>
-                </div>
-              )}
-            {vvc &&
-              item?.merchantCategory &&
-              item?.transaction_type === "card_to_merchant" && (
-                <div className={styles.er_item}>
-                  <span>{t("Merchant Category")}</span>
-                  <p>{item?.merchantCategory}</p>
-                </div>
-              )}
-            {vvc &&
-              item?.merchantCountry &&
-              item?.transaction_type === "card_to_merchant" && (
-                <div className={styles.er_item}>
-                  <span>{t("Merchant Country")}</span>
-                  <p>
-                    {countries.find(
-                      (item) => item.alpha3 === item?.merchantCountry,
-                    )?.name ||
-                      item?.merchantCountry ||
-                      "N/A"}
-                  </p>
-                </div>
-              )}
+            {vvc && item?.merchantName && item?.transaction_type === "card_to_merchant" && (
+              <div className={styles.er_item}>
+                <span>{t("Merchant Name")}</span>
+                <p>{item?.merchantName}</p>
+              </div>
+            )}
+            {vvc && item?.merchantCategory && item?.transaction_type === "card_to_merchant" && (
+              <div className={styles.er_item}>
+                <span>{t("Merchant Category")}</span>
+                <p>{item?.merchantCategory}</p>
+              </div>
+            )}
+            {vvc && item?.merchantCountry && item?.transaction_type === "card_to_merchant" && (
+              <div className={styles.er_item}>
+                <span>{t("Merchant Country")}</span>
+                <p>
+                  {countries.find((item) => item.alpha3 === item?.merchantCountry)?.name ||
+                    item?.merchantCountry ||
+                    "N/A"}
+                </p>
+              </div>
+            )}
           </div>
           {item?.display_name && item?.lat && item?.long ? (
             <div className={styles.row_right}>
@@ -539,10 +492,7 @@ const TransactionItemDetails = ({
                   <span>{t("Transaction Map")}:</span>
                   <img src={arrow} alt="" />
                 </div>
-                <div
-                  className={styles.address}
-                  style={{ alignItems: "center" }}
-                >
+                <div className={styles.address} style={{ alignItems: "center" }}>
                   <img src={location} alt="" />
                   <span>{item?.display_name}</span>
                 </div>
@@ -580,10 +530,7 @@ const TransactionItemDetails = ({
               </div>
               {item?.attachments && item?.attachments?.length > 0 ? (
                 <>
-                  <span
-                    className={styles.open_btn}
-                    onClick={() => setShowImgPreview(true)}
-                  >
+                  <span className={styles.open_btn} onClick={() => setShowImgPreview(true)}>
                     {t("Open")}
                   </span>
                   {showImgPreview && (
@@ -655,17 +602,11 @@ const TransactionItemDetails = ({
                   <div
                     className={status_styles.status_item}
                     style={{
-                      backgroundColor:
-                        window.innerWidth > 1000 ? "white" : "inherit",
+                      backgroundColor: window.innerWidth > 1000 ? "white" : "inherit",
                       "--width": "5rem",
                     }}
                   >
-                    <h5>
-                      {t("Transfer created").replace(
-                        "created",
-                        it?.status?.toLowerCase(),
-                      )}
-                    </h5>
+                    <h5>{t("Transfer created").replace("created", it?.status?.toLowerCase())}</h5>
                     <p>{new Date(it?.date).toLocaleString()}</p>
                   </div>
                   {i + 1 < item?.timeline?.length && (
@@ -686,26 +627,19 @@ const TransactionItemDetails = ({
               alignItems: "center",
             }}
           >
-            {message ? (
-              <span style={{ fontWeight: 700 }}>{message}</span>
-            ) : (
-              <div></div>
-            )}
+            {message ? <span style={{ fontWeight: 700 }}>{message}</span> : <div></div>}
             {isEditMode ? (
               <>
                 {can("transactions.category.add") && (
                   <Button
                     style={{
-                      background:
-                        "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                      background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                       border: "none",
                       outline: "none",
                       borderRadius: "10px",
                     }}
                     onClick={addCategoriesToTransaction}
-                    disabled={
-                      isSaving || (selectedCategory.length < 1 && !note)
-                    }
+                    disabled={isSaving || (selectedCategory.length < 1 && !note)}
                   >
                     {isSaving ? t("Saving") : t("Save")}
                   </Button>
@@ -716,8 +650,7 @@ const TransactionItemDetails = ({
                 {can("transactions.category.add") && (
                   <Button
                     style={{
-                      background:
-                        "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                      background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                       border: "none",
                       outline: "none",
                       borderRadius: "10px",

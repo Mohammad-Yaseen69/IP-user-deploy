@@ -19,8 +19,7 @@ const LogActivity = () => {
   const [limit, setLimit] = useState(10);
   const [selectedEntity, setSelectedEntity] = useState("");
   const [selectedActions, setSelectedActions] = useState([]);
-  const fmt = (str) =>
-    str?.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) ?? str;
+  const fmt = (str) => str?.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) ?? str;
 
   const { data: ActivityData, isLoading: Loading } = useQuery({
     queryKey: ["activity-logs", page, limit, search],
@@ -44,12 +43,9 @@ const LogActivity = () => {
   const data = ActivityData?.data?.logs || [];
   const totalPages = ActivityData?.data?.totalPages || 1;
   const filteredData = data.filter((item) => {
-    const entityMatch = selectedEntity
-      ? item.entityType === selectedEntity
-      : true;
+    const entityMatch = selectedEntity ? item.entityType === selectedEntity : true;
 
-    const actionMatch =
-      selectedActions.length > 0 ? selectedActions.includes(item.action) : true;
+    const actionMatch = selectedActions.length > 0 ? selectedActions.includes(item.action) : true;
 
     return entityMatch && actionMatch;
   });

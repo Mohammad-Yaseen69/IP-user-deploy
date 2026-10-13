@@ -36,12 +36,7 @@ export function isInIframe() {
   }
 }
 
-export const serviceFieldInfoValidate = (
-  service,
-  field_name,
-  sub_field_name,
-  fieldsInfo,
-) => {
+export const serviceFieldInfoValidate = (service, field_name, sub_field_name, fieldsInfo) => {
   if (fieldsInfo === null) return false;
   let isInThere = false;
 
@@ -50,9 +45,7 @@ export const serviceFieldInfoValidate = (
     (sub_field_name === "aba_routing_number" && item.name === "routing_code");
   if (
     fieldsInfo?.[
-      service === "bank_country_fields"
-        ? "bank_country_fields"
-        : service?.method?.split(" ")[0]
+      service === "bank_country_fields" ? "bank_country_fields" : service?.method?.split(" ")[0]
     ]?.[field_name]?.some(matches)
   ) {
     isInThere = true;
@@ -62,11 +55,8 @@ export const serviceFieldInfoValidate = (
 
 export const getExtractedPhone = (formData, countryIsoCode, phoneNumber) => {
   if (!formData.mobile_wallet_account_number && !phoneNumber) return "";
-  const dialCode =
-    CountryBasedPhone[countryIsoCode]?.dial_code?.replace("+", "") ?? "";
-  const cleanNumber = (
-    formData.mobile_wallet_account_number || phoneNumber
-  ).replace("+", "");
+  const dialCode = CountryBasedPhone[countryIsoCode]?.dial_code?.replace("+", "") ?? "";
+  const cleanNumber = (formData.mobile_wallet_account_number || phoneNumber).replace("+", "");
   const extractWalletNum = cleanNumber?.slice(dialCode.length);
 
   return extractWalletNum;
@@ -74,11 +64,7 @@ export const getExtractedPhone = (formData, countryIsoCode, phoneNumber) => {
 
 export const openInNewTab = (url) => {
   const newWindow = window.open(url, "_blank", "noopener,noreferrer");
-  if (
-    !newWindow ||
-    newWindow.closed ||
-    typeof newWindow.closed === "undefined"
-  ) {
+  if (!newWindow || newWindow.closed || typeof newWindow.closed === "undefined") {
     const a = document.createElement("a");
     a.href = url;
     a.target = "_blank";
@@ -94,8 +80,7 @@ export const flagCheck = (destination = "", details = {}, type) => {
   console.log(details, "flags ");
   const parts = destination.split(".");
 
-  let cursor =
-    type === "invoice" ? details?.invoiceFlags : details?.paymentAddressFlags;
+  let cursor = type === "invoice" ? details?.invoiceFlags : details?.paymentAddressFlags;
 
   for (let i = 0; i < parts.length - 1; i++) {
     cursor = cursor?.[parts[i]];
@@ -108,8 +93,7 @@ export const flagCheck = (destination = "", details = {}, type) => {
 
 export const localCurrency = (userDetails) => {
   const cont = CitiesData.find(
-    (item) =>
-      item.iso3?.toUpperCase() === userDetails?.country_iso_code?.toUpperCase(),
+    (item) => item.iso3?.toUpperCase() === userDetails?.country_iso_code?.toUpperCase(),
   );
   return cont.currency;
 };

@@ -37,9 +37,7 @@ const ndjson = (events) => ({
   body: new ReadableStream({
     start(controller) {
       const encoder = new TextEncoder();
-      events.forEach((event) =>
-        controller.enqueue(encoder.encode(`${JSON.stringify(event)}\n`)),
-      );
+      events.forEach((event) => controller.enqueue(encoder.encode(`${JSON.stringify(event)}\n`)));
       controller.close();
     },
   }),
@@ -63,9 +61,7 @@ const sessionOk = {
  */
 const mockApi = (chatResponse) => {
   globalThis.fetch.mockImplementation((url) =>
-    Promise.resolve(
-      String(url).includes("/session") ? sessionOk : chatResponse,
-    ),
+    Promise.resolve(String(url).includes("/session") ? sessionOk : chatResponse),
   );
 };
 
@@ -90,14 +86,10 @@ const renderWidget = (userValue = SIGNED_IN) =>
     </MemoryRouter>,
   );
 
-const open = (user) =>
-  user.click(screen.getByRole("button", { name: "Open assistant" }));
+const open = (user) => user.click(screen.getByRole("button", { name: "Open assistant" }));
 
 const ask = async (user, text) => {
-  await user.type(
-    screen.getByPlaceholderText("Ask about payments, limits, verification…"),
-    text,
-  );
+  await user.type(screen.getByPlaceholderText("Ask about payments, limits, verification…"), text);
   await user.click(screen.getByRole("button", { name: "Send" }));
 };
 
@@ -113,24 +105,17 @@ describe("AssistantWidget", () => {
     it.each([
       ["no user and no token", { userDetails: null, token: "" }],
       ["a token but no user id", { userDetails: null, token: "jwt-abc" }],
-      [
-        "a user id but no token",
-        { userDetails: { _id: "user-123" }, token: "" },
-      ],
+      ["a user id but no token", { userDetails: { _id: "user-123" }, token: "" }],
     ])("renders nothing with %s", (_label, userValue) => {
       renderWidget(userValue);
 
-      expect(
-        screen.queryByRole("button", { name: "Open assistant" }),
-      ).not.toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: "Open assistant" })).not.toBeInTheDocument();
     });
 
     it("renders the launcher once signed in", () => {
       renderWidget();
 
-      expect(
-        screen.getByRole("button", { name: "Open assistant" }),
-      ).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Open assistant" })).toBeInTheDocument();
     });
   });
 
@@ -160,26 +145,20 @@ describe("AssistantWidget", () => {
 
       await user.keyboard("{Escape}");
 
-      await waitFor(() =>
-        expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
-      );
+      await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
     });
   });
 
   describe("conversation", () => {
     it("sends the question and shows the reply", async () => {
       const user = userEvent.setup();
-      mockApi(
-        reply({ reply: "Fees show before you confirm.", navigateTo: null }),
-      );
+      mockApi(reply({ reply: "Fees show before you confirm.", navigateTo: null }));
       renderWidget();
       await open(user);
 
       await ask(user, "what are the fees");
 
-      expect(
-        await screen.findByText("Fees show before you confirm."),
-      ).toBeInTheDocument();
+      expect(await screen.findByText("Fees show before you confirm.")).toBeInTheDocument();
 
       const [url, init] = chatCalls()[0];
       expect(url).toContain("/api/assistant/chat");
@@ -280,9 +259,7 @@ describe("AssistantWidget", () => {
 
       await ask(user, "go somewhere");
 
-      expect(
-        await screen.findByText(/couldn't open that page/i),
-      ).toBeInTheDocument();
+      expect(await screen.findByText(/couldn't open that page/i)).toBeInTheDocument();
       expect(location).toBe("/dashboard/default");
     });
 
@@ -305,9 +282,7 @@ describe("AssistantWidget", () => {
 
       await ask(user, "what are the fees");
 
-      expect(
-        await screen.findByText("Fees are shown before you confirm."),
-      ).toBeInTheDocument();
+      expect(await screen.findByText("Fees are shown before you confirm.")).toBeInTheDocument();
     });
 
     // A dropped chunk must not leave a half-written message on screen.
@@ -324,9 +299,7 @@ describe("AssistantWidget", () => {
 
       await ask(user, "anything");
 
-      expect(
-        await screen.findByText("the complete answer"),
-      ).toBeInTheDocument();
+      expect(await screen.findByText("the complete answer")).toBeInTheDocument();
       expect(screen.queryByText("partial")).not.toBeInTheDocument();
     });
 
@@ -361,9 +334,7 @@ describe("AssistantWidget", () => {
 
       await ask(user, "anything");
 
-      expect(
-        await screen.findByText(/assistant is unavailable/i),
-      ).toBeInTheDocument();
+      expect(await screen.findByText(/assistant is unavailable/i)).toBeInTheDocument();
     });
 
     it("clears the conversation on reset", async () => {
@@ -374,13 +345,9 @@ describe("AssistantWidget", () => {
       await ask(user, "a question");
       await screen.findByText("an answer");
 
-      await user.click(
-        screen.getByRole("button", { name: "Start a new chat" }),
-      );
+      await user.click(screen.getByRole("button", { name: "Start a new chat" }));
 
-      await waitFor(() =>
-        expect(screen.queryByText("an answer")).not.toBeInTheDocument(),
-      );
+      await waitFor(() => expect(screen.queryByText("an answer")).not.toBeInTheDocument());
       expect(screen.getByText("Try one of these")).toBeInTheDocument();
     });
   });

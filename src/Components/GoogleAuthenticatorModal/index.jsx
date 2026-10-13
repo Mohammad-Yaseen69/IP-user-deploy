@@ -29,8 +29,7 @@ const GoogleAuthenticatorModal = ({
   thresholdFunc,
 }) => {
   const { t } = useTranslation();
-  const { userDetails, authHeader, setMissingTabsData, setUserDetails } =
-    useContext(UserContext);
+  const { userDetails, authHeader, setMissingTabsData, setUserDetails } = useContext(UserContext);
   const [step, setStep] = useState(1);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -105,9 +104,7 @@ const GoogleAuthenticatorModal = ({
     } catch (error) {
       const dec = decryptData(error?.response?.data?.data);
       console.log(dec);
-      toast.error(
-        dec?.message ?? "Something went wrong while verifying password.",
-      );
+      toast.error(dec?.message ?? "Something went wrong while verifying password.");
     } finally {
       setEnablingAuth(false);
     }
@@ -146,9 +143,7 @@ const GoogleAuthenticatorModal = ({
     } catch (error) {
       const dec = decryptData(error?.response?.data?.data);
       console.log(dec);
-      toast.error(
-        dec?.message ?? "Something went wrong while enabling authenticator.",
-      );
+      toast.error(dec?.message ?? "Something went wrong while enabling authenticator.");
     } finally {
       setEnablingAuth(false);
     }
@@ -156,10 +151,7 @@ const GoogleAuthenticatorModal = ({
   const handlePaste = (e) => {
     e.preventDefault();
 
-    const pastedData = e.clipboardData
-      .getData("text")
-      .replace(/\D/g, "")
-      .slice(0, numberOfFields);
+    const pastedData = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, numberOfFields);
 
     if (!pastedData) return;
 
@@ -255,21 +247,15 @@ const GoogleAuthenticatorModal = ({
                       <div></div>
                     </div>
                     <div className={styles.auth_secret}>
-                      <Label>
-                        {t("Paste This Key In The Googe Authenticator App")}
-                      </Label>
+                      <Label>{t("Paste This Key In The Googe Authenticator App")}</Label>
                       <button onClick={() => setShowSecret(!showSecret)}>
-                        {showSecret
-                          ? t("Hide secret key")
-                          : t("Show Secret Key")}
+                        {showSecret ? t("Hide secret key") : t("Show Secret Key")}
                       </button>
                       <div className={styles.secret_key}>
                         <span>
                           {showSecret
                             ? authenticatorDetails?.secret
-                            : authenticatorDetails?.secret
-                                ?.split("")
-                                ?.map((_) => "*")}
+                            : authenticatorDetails?.secret?.split("")?.map((_) => "*")}
                         </span>
                         <span
                           style={{
@@ -281,28 +267,18 @@ const GoogleAuthenticatorModal = ({
                             alignItems: "center",
                           }}
                           onClick={() => {
-                            navigator?.clipboard?.writeText(
-                              authenticatorDetails?.secret,
-                            );
-                            toast.success(
-                              `"${authenticatorDetails?.secret}" copied to clipboard.`,
-                            );
+                            navigator?.clipboard?.writeText(authenticatorDetails?.secret);
+                            toast.success(`"${authenticatorDetails?.secret}" copied to clipboard.`);
                           }}
                         >
                           {/* <Copy color='white' /> */}
-                          <img
-                            src={copy}
-                            alt=""
-                            style={{ height: "20px", width: "20px" }}
-                          />
+                          <img src={copy} alt="" style={{ height: "20px", width: "20px" }} />
                         </span>
                       </div>
                     </div>
                   </div>
                   <div className={styles.auth_code_details}>
-                    <h2>
-                      {t("Enter The Six-Digit Code From The Application")}
-                    </h2>
+                    <h2>{t("Enter The Six-Digit Code From The Application")}</h2>
                     <p>
                       {t(
                         "After Scanning The Barcode Image, The App Will Display A Six-Digit Code That You Can Enter Below",
@@ -380,9 +356,7 @@ const GoogleAuthenticatorModal = ({
                       type="submit"
                       disabled={
                         enablingAuth ||
-                        (step === 1
-                          ? password.length < 8
-                          : otpValues.some((item) => !item))
+                        (step === 1 ? password.length < 8 : otpValues.some((item) => !item))
                       }
                       style={{
                         opacity: enablingAuth ? 0.7 : 1,

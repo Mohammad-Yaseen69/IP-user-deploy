@@ -117,10 +117,7 @@ const QuickQrPay = () => {
     formData.append("file", selectedFile);
 
     axios
-      .post(
-        `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-qr-details`,
-        formData,
-      )
+      .post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-qr-details`, formData)
       .then((res) => {
         const decrypted = decryptData(res.data.data);
         getDetails(decrypted?.walletDetails?.wallet_id);
@@ -185,19 +182,11 @@ const QuickQrPay = () => {
             <div className={styles.instructions}>
               <div>
                 <h5>{t("Keep the QR Code Flat and Visible")}</h5>
-                <p>
-                  {t(
-                    "Make sure the QR code is not bent, wrinkled, or partially hidden.",
-                  )}
-                </p>
+                <p>{t("Make sure the QR code is not bent, wrinkled, or partially hidden.")}</p>
               </div>
               <div>
                 <h5>{t("Good Lighting is Key")}</h5>
-                <p>
-                  {t(
-                    "Scan in a well-lit environment. Avoid shadows or glare on the QR code.",
-                  )}
-                </p>
+                <p>{t("Scan in a well-lit environment. Avoid shadows or glare on the QR code.")}</p>
               </div>
               <div>
                 <h5>{t("Center the QR Code in the Frame")}</h5>
@@ -217,17 +206,11 @@ const QuickQrPay = () => {
               </div>
               <div>
                 <h5>{t("Clean Your Camera Lens")}</h5>
-                <p>
-                  {t(
-                    "A dirty or smudged lens can blur the image. Wipe it gently if needed.",
-                  )}
-                </p>
+                <p>{t("A dirty or smudged lens can blur the image. Wipe it gently if needed.")}</p>
               </div>
               <div>
                 <h5>{t("Check for Damage")}</h5>
-                <p>
-                  {t("Make sure the QR code isn't torn, faded, or distorted.")}
-                </p>
+                <p>{t("Make sure the QR code isn't torn, faded, or distorted.")}</p>
               </div>
             </div>
           </div>
@@ -262,9 +245,7 @@ const QuickQrPay = () => {
                 onClick={() => setMethod("qr")}
                 className={styles.tab}
               >
-                <span style={{ color: method === "qr" && "#FFF" }}>
-                  {t("Scan Qr")}
-                </span>
+                <span style={{ color: method === "qr" && "#FFF" }}>{t("Scan Qr")}</span>
               </div>
 
               <div
@@ -402,10 +383,7 @@ const QuickQrPay = () => {
                     </button>
                   </div>
                   {error && (
-                    <p
-                      className={styles.error}
-                      style={{ fontWeight: 600, color: "red" }}
-                    >
+                    <p className={styles.error} style={{ fontWeight: 600, color: "red" }}>
                       {t(error)}
                     </p>
                   )}
@@ -428,11 +406,7 @@ const QuickQrPay = () => {
               <div className={styles.info}>
                 {walletDetails?.coverPicture && (
                   <div className={styles.banner}>
-                    <img
-                      src={walletDetails?.coverPicture}
-                      alt=""
-                      loading="lazy"
-                    />
+                    <img src={walletDetails?.coverPicture} alt="" loading="lazy" />
                   </div>
                 )}
 
@@ -509,9 +483,7 @@ const QuickQrPay = () => {
                   <button
                     className={styles.gradientBtn}
                     disabled={disable}
-                    onClick={() =>
-                      navigate(`/profile/${walletDetails?.username}`)
-                    }
+                    onClick={() => navigate(`/profile/${walletDetails?.username}`)}
                   >
                     {t("View Profile")}
                   </button>
@@ -550,12 +522,7 @@ const QuickQrPay = () => {
                     gap: "20px",
                   }}
                 >
-                  <img
-                    style={{ width: "180px" }}
-                    src={gif}
-                    alt=""
-                    loading="lazy"
-                  />
+                  <img style={{ width: "180px" }} src={gif} alt="" loading="lazy" />
                   <p
                     style={{
                       width: "100%",

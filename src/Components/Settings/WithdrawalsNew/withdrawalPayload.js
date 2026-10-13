@@ -37,19 +37,10 @@ const SERVICE_ID_BY_CHANNEL_KEY = {
   card: 4,
 };
 
-export const FIAT_CHANNEL_KEYS = [
-  "bank_details",
-  "mobile_wallet",
-  "cash_pickup",
-  "card",
-];
+export const FIAT_CHANNEL_KEYS = ["bank_details", "mobile_wallet", "cash_pickup", "card"];
 
 /* The money-transfer methods a new withdrawal can use, in the order the design lists them. */
-export const TRANSFER_METHODS = [
-  "bank_account",
-  "mobile_wallet",
-  "cash_pickup",
-];
+export const TRANSFER_METHODS = ["bank_account", "mobile_wallet", "cash_pickup"];
 
 export const MAX_COUNTRIES = 3;
 export const MAX_CRYPTO_WALLETS = 3;
@@ -115,24 +106,14 @@ export const normalizeNetwork = (network, address = "") => {
 };
 
 export const getCryptoList = (withdrawal) => {
-  if (Array.isArray(withdrawal?.crypto) && withdrawal.crypto.length > 0)
-    return withdrawal.crypto;
-  if (
-    Array.isArray(withdrawal?.crypto_wallet) &&
-    withdrawal.crypto_wallet.length > 0
-  )
+  if (Array.isArray(withdrawal?.crypto) && withdrawal.crypto.length > 0) return withdrawal.crypto;
+  if (Array.isArray(withdrawal?.crypto_wallet) && withdrawal.crypto_wallet.length > 0)
     return withdrawal.crypto_wallet;
   return [];
 };
 
 export const hasOtherWithdrawalChannels = (withdrawal) => {
-  return [
-    "bank_details",
-    "mobile_wallet",
-    "cash_pickup",
-    "card",
-    "payment_card",
-  ].some(
+  return ["bank_details", "mobile_wallet", "cash_pickup", "card", "payment_card"].some(
     (key) => Array.isArray(withdrawal?.[key]) && withdrawal[key].length > 0,
   );
 };
@@ -144,12 +125,7 @@ export const getDialCode = (dialCodes, iso3) =>
   (dialCodes?.[iso3]?.dial_code ?? "").replace("+", "");
 
 /* Address fields asked on the details step, in the order the design shows them. */
-export const ADDRESS_FIELDS = [
-  "address",
-  "province_state",
-  "city",
-  "postal_code",
-];
+export const ADDRESS_FIELDS = ["address", "province_state", "city", "postal_code"];
 
 /* A country other than the user's own always needs an address there. */
 export const CROSS_BORDER_ADDRESS_FIELDS = ["address", "city", "postal_code"];
@@ -168,8 +144,7 @@ export const prefillChannel = ({ method, record, userDetails }) => {
 
   switch (method) {
     case "bank_account": {
-      const accNumType =
-        entry && !entry?.iban && entry?.swift_code ? "Swift" : "IBAN";
+      const accNumType = entry && !entry?.iban && entry?.swift_code ? "Swift" : "IBAN";
       return {
         payer_id: entry?.payer_id ?? "",
         accNumType,
@@ -181,8 +156,7 @@ export const prefillChannel = ({ method, record, userDetails }) => {
         bank_city: entry?.city ?? "",
         bank_province: entry?.province ?? "",
         bank_postal_code: entry?.postal_code ?? "",
-        account_holder_name:
-          entry?.account_holder_name ?? getHolderName(userDetails),
+        account_holder_name: entry?.account_holder_name ?? getHolderName(userDetails),
         extras: {
           ...bankExtrasInitial,
           ...(entry?.extras ? normalizeBankExtras(entry.extras) : {}),
@@ -283,13 +257,10 @@ export const buildWithdrawalPayload = ({
 }) => {
   const channelKey = CHANNEL_KEY_BY_METHOD[method];
   const existing = record?.[channelKey]?.[0];
-  const entry = channel
-    ? buildChannelEntry({ method, channel, vendor, existing })
-    : null;
+  const entry = channel ? buildChannelEntry({ method, channel, vendor, existing }) : null;
 
   /* An address typed for this country wins; otherwise the record's, then the profile's. */
-  const address =
-    typed.address || record?.address || userDetails?.address || "";
+  const address = typed.address || record?.address || userDetails?.address || "";
   const city =
     typed.city ||
     (method === "bank_account" && channel?.bank_city
@@ -299,10 +270,7 @@ export const buildWithdrawalPayload = ({
     typed.postal_code ||
     (method === "bank_account" && channel?.bank_postal_code
       ? channel.bank_postal_code
-      : record?.postal_code ||
-        record?.postalCode ||
-        userDetails?.postal_code ||
-        "");
+      : record?.postal_code || record?.postalCode || userDetails?.postal_code || "");
   const stateExtras = typed.province_state
     ? {
         province_state: typed.province_state,
@@ -352,14 +320,8 @@ export const buildCryptoPayload = (channel, existingCrypto = {}) => ({
   wallet_address: channel.wallet_address.trim(),
 });
 
-export const buildCryptoWithdrawalPayload = ({
-  userDetails,
-  cryptoList,
-  record = null,
-}) => {
-  const existingAccountTypes = Array.isArray(record?.account_type)
-    ? record.account_type
-    : [];
+export const buildCryptoWithdrawalPayload = ({ userDetails, cryptoList, record = null }) => {
+  const existingAccountTypes = Array.isArray(record?.account_type) ? record.account_type : [];
   const accountTypes =
     cryptoList.length > 0
       ? [...new Set([...existingAccountTypes, "crypto"])]

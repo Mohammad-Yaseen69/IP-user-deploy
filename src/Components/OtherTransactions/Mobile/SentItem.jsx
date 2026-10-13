@@ -9,20 +9,7 @@ import { UserContext } from "../../../Context/UserContext";
 import { calculateFinalDate } from "../SubscriptionDetails";
 import { useQueryClient } from "@tanstack/react-query";
 
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 const SentItem = ({ item, activeItem, setActiveItem, index, currentUser }) => {
   const { t } = useTranslation();
@@ -32,9 +19,7 @@ const SentItem = ({ item, activeItem, setActiveItem, index, currentUser }) => {
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
 
   const startMonth = +item_date.split("-")[1] - 1;
-  const startYear = new Date(
-    item_date?.split("-")?.reverse()?.join("-"),
-  ).getFullYear();
+  const startYear = new Date(item_date?.split("-")?.reverse()?.join("-")).getFullYear();
   const cycles = item?.cycles;
 
   const handleNextYear = () => {
@@ -78,11 +63,10 @@ const SentItem = ({ item, activeItem, setActiveItem, index, currentUser }) => {
   };
 
   const recipient = useMemo(() => {
-    return item?.[item?.type === "payment" ? "payment" : "request_payment"]
-      ?.receiver?.account_type === "individual"
+    return item?.[item?.type === "payment" ? "payment" : "request_payment"]?.receiver
+      ?.account_type === "individual"
       ? `${item?.[item?.type === "payment" ? "payment" : "request_payment"]?.receiver?.first_name} ${item?.[item?.type === "payment" ? "payment" : "request_payment"]?.receiver?.last_name}`
-      : item?.[item?.type === "payment" ? "payment" : "request_payment"]
-          ?.receiver?.company_name;
+      : item?.[item?.type === "payment" ? "payment" : "request_payment"]?.receiver?.company_name;
   }, [item]);
   return (
     <div className={styles.item}>
@@ -99,10 +83,7 @@ const SentItem = ({ item, activeItem, setActiveItem, index, currentUser }) => {
         </div>
         <div className={styles.right}>
           <h5 className={styles.amount}>
-            {
-              item?.["payment" in item ? "payment" : "request_payment"]
-                ?.currency?.code
-            }{" "}
+            {item?.["payment" in item ? "payment" : "request_payment"]?.currency?.code}{" "}
             {item?.payment?.amount
               ? item?.payment?.amount.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
@@ -137,9 +118,7 @@ const SentItem = ({ item, activeItem, setActiveItem, index, currentUser }) => {
                 )}
                 <div className={styles.tmdr_item}>
                   <span>{t("Payment Type")}:</span>
-                  <h4>
-                    {item?.recursive ? t("Subscription") : t("Scheduled")}
-                  </h4>
+                  <h4>{item?.recursive ? t("Subscription") : t("Scheduled")}</h4>
                 </div>
               </div>
               <div className={styles.tmd_row}>
@@ -216,17 +195,12 @@ const SentItem = ({ item, activeItem, setActiveItem, index, currentUser }) => {
                 )}
                 <div className={styles.tmdr_item}>
                   <span>{t("Payment Type")}:</span>
-                  <h4>
-                    {item?.recursive ? t("Subscription") : t("Scheduled")}
-                  </h4>
+                  <h4>{item?.recursive ? t("Subscription") : t("Scheduled")}</h4>
                 </div>
               </div>
             </>
           )}
-          <div
-            className={styles.tmd_row}
-            style={{ alignItems: "flex-end", marginTop: "1rem" }}
-          >
+          <div className={styles.tmd_row} style={{ alignItems: "flex-end", marginTop: "1rem" }}>
             {/* <Link>{t("See more") + ">"}</Link> */}
             <div></div>
             {(item?.status?.toLowerCase() === "pending" ||
@@ -235,12 +209,7 @@ const SentItem = ({ item, activeItem, setActiveItem, index, currentUser }) => {
                 color="danger"
                 style={{ padding: "3px 18px" }}
                 onClick={() =>
-                  cancelSubscriptionOrSchedulePayment(
-                    item,
-                    authHeader,
-                    verifyToken,
-                    queryClient,
-                  )
+                  cancelSubscriptionOrSchedulePayment(item, authHeader, verifyToken, queryClient)
                 }
               >
                 {t("Cancel")}

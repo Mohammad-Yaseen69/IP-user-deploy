@@ -35,11 +35,7 @@ $white: #fff;
 $theme-medium-color: #eae8ff;
 $sidebar-color: #171829;
 // gradient colors
-$gradient-primary: linear-gradient(
-  26deg,
-  var(--theme-default) 0%,
-  #a26cf8 100%
-);
+$gradient-primary: linear-gradient(26deg, var(--theme-default) 0%, #a26cf8 100%);
 //social colors
 $fb: #4867aa;
 $twitter: #5da9dd;

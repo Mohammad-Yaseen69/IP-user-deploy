@@ -23,9 +23,7 @@ const Error = ({ linkText = "Try Again.", link = "/add-funds" }) => {
         }}
       >
         <XCircle color="red" size={90} />
-        <h4
-          style={{ color: "red", margin: "10px 0 10px", fontSize: "1.25rem" }}
-        >
+        <h4 style={{ color: "red", margin: "10px 0 10px", fontSize: "1.25rem" }}>
           Transactions Failed!
         </h4>
         <p style={{ color: "#a8a8a8", textAlign: "center", fontWeight: 600 }}>

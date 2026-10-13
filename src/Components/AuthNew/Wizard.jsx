@@ -23,10 +23,7 @@ const Wizard = ({ total, current, complete = false }) => {
 
       <div className={styles["incompleted-steps"]}>
         {Array.from({ length: incompletedSteps }, (_, index) => (
-          <div
-            key={index}
-            className={`${styles.step} ${styles.incompleted}`}
-          ></div>
+          <div key={index} className={`${styles.step} ${styles.incompleted}`}></div>
         ))}
       </div>
     </div>

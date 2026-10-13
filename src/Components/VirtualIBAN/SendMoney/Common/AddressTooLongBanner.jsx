@@ -6,11 +6,7 @@ import styles from "./AddressTooLongBanner.module.css";
 import { apiWrapper } from "../../../../utils/Functions/apiWrapper";
 import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError";
 import { UserContext } from "../../../../Context/UserContext";
-import {
-  ADDRESS_LINE_MAX,
-  getBeneficiaryAddress,
-  getBeneficiaryName,
-} from "./beneficiaryHelpers";
+import { ADDRESS_LINE_MAX, getBeneficiaryAddress, getBeneficiaryName } from "./beneficiaryHelpers";
 
 const AddressTooLongBanner = ({ beneficiary, onAddressSaved }) => {
   const { t } = useTranslation();
@@ -101,12 +97,7 @@ const AddressTooLongBanner = ({ beneficiary, onAddressSaved }) => {
             </small>
           )}
         </label>
-        <button
-          type="button"
-          className={styles.saveBtn}
-          disabled={!canSave}
-          onClick={handleSave}
-        >
+        <button type="button" className={styles.saveBtn} disabled={!canSave} onClick={handleSave}>
           {saving ? t("Updating...") : t("Update")}
         </button>
       </div>

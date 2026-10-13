@@ -16,13 +16,7 @@ const ClockIcon = () => (
 );
 
 const RefreshSpinnerIcon = () => (
-  <svg
-    className={styles.spinIcon}
-    width="16"
-    height="16"
-    viewBox="0 0 16 16"
-    fill="none"
-  >
+  <svg className={styles.spinIcon} width="16" height="16" viewBox="0 0 16 16" fill="none">
     <path
       d="M14 8C14 11.3137 11.3137 14 8 14C4.68629 14 2 11.3137 2 8C2 4.68629 4.68629 2 8 2C10.0537 2 11.8724 3.03057 12.9554 4.6"
       stroke="#5926F0"
@@ -58,13 +52,7 @@ const RefreshIcon = () => (
 );
 
 const WarningIcon = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 16 16"
-    fill="none"
-    style={{ flexShrink: 0 }}
-  >
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
     <path
       d="M8 1.5C4.41 1.5 1.5 4.41 1.5 8C1.5 11.59 4.41 14.5 8 14.5C11.59 14.5 14.5 11.59 14.5 8C14.5 4.41 11.59 1.5 8 1.5ZM8 10.75C7.59 10.75 7.25 10.41 7.25 10C7.25 9.59 7.59 9.25 8 9.25C8.41 9.25 8.75 9.59 8.75 10C8.75 10.41 8.41 10.75 8 10.75ZM8.75 7.75H7.25V5.25H8.75V7.75Z"
       fill="#d97706"
@@ -72,13 +60,7 @@ const WarningIcon = () => (
   </svg>
 );
 
-const ReviewStep = ({
-  amount,
-  feeDetails,
-  selectedIban,
-  onRefreshFee,
-  isRefreshing,
-}) => {
+const ReviewStep = ({ amount, feeDetails, selectedIban, onRefreshFee, isRefreshing }) => {
   const { t } = useTranslation();
   const [timeLeft, setTimeLeft] = useState(60);
 
@@ -108,9 +90,7 @@ const ReviewStep = ({
 
   return (
     <div>
-      <div className={styles.reviewLabel}>
-        {t("Review Topup & Fee Details")}
-      </div>
+      <div className={styles.reviewLabel}>{t("Review Topup & Fee Details")}</div>
 
       <div className={styles.quoteTimerBox}>
         <div className={styles.timerContent}>
@@ -124,8 +104,7 @@ const ReviewStep = ({
               <ClockIcon />
               <span className={styles.timerText}>
                 {t("Quote will reset in")}{" "}
-                <strong className={styles.timerSeconds}>{timeLeft}</strong>{" "}
-                {t("seconds")}
+                <strong className={styles.timerSeconds}>{timeLeft}</strong> {t("seconds")}
               </span>
             </>
           )}
@@ -134,9 +113,7 @@ const ReviewStep = ({
 
       <div className={styles.reviewTable}>
         <div className={styles.reviewRow}>
-          <div className={styles.reviewRowLabel}>
-            {t("Gross Deposit Amount")}
-          </div>
+          <div className={styles.reviewRowLabel}>{t("Gross Deposit Amount")}</div>
           <div className={styles.reviewRowValue}>${totalVal} USDT</div>
         </div>
 
@@ -158,10 +135,7 @@ const ReviewStep = ({
         </div>
 
         <div className={styles.reviewRow} style={{ background: "#f2eeff" }}>
-          <div
-            className={styles.reviewRowLabel}
-            style={{ fontWeight: 600, color: "#5926f0" }}
-          >
+          <div className={styles.reviewRowLabel} style={{ fontWeight: 600, color: "#5926f0" }}>
             {t("Recipient IBAN Receives")}
           </div>
           <div
@@ -174,9 +148,7 @@ const ReviewStep = ({
 
         <div className={styles.reviewRow}>
           <div className={styles.reviewRowLabel}>{t("Destination IBAN")}</div>
-          <div className={styles.reviewRowValue}>
-            {selectedIban?.iban || "Virtual IBAN"}
-          </div>
+          <div className={styles.reviewRowValue}>{selectedIban?.iban || "Virtual IBAN"}</div>
         </div>
       </div>
 

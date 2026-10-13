@@ -34,8 +34,7 @@ const TransactionsTable = ({
   const [showDatePicker, setShowDatePicker] = useState(false);
   const datePickerRef = useRef(null);
   // const [searchQuery, setSearchQuery] = useState("")
-  const [filteredTransactions, setFilteredTransactions] =
-    useState(transactions);
+  const [filteredTransactions, setFilteredTransactions] = useState(transactions);
   const width = useWindowWidth();
 
   console.log("transactions", transactions);
@@ -92,11 +91,7 @@ const TransactionsTable = ({
 
   if (width < 1000) {
     return (
-      <div
-        ref={ref ?? null}
-        style={{ marginTop: "1rem" }}
-        className={styles.table}
-      >
+      <div ref={ref ?? null} style={{ marginTop: "1rem" }} className={styles.table}>
         <div className={styles.menu}>
           <div className={styles.right}>
             {menuData.map((item) => (
@@ -135,11 +130,7 @@ const TransactionsTable = ({
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <img
-              src={calendar}
-              alt={t("calendar")}
-              onClick={handleDatePickerClick}
-            />
+            <img src={calendar} alt={t("calendar")} onClick={handleDatePickerClick} />
             {showDatePicker && (
               <div
                 ref={datePickerRef}
@@ -169,9 +160,7 @@ const TransactionsTable = ({
             style={{ minHeight: "300px" }}
           >
             {isLoading ? (
-              <div style={{ textAlign: "center", marginTop: "2rem" }}>
-                {t("Loading...")}
-              </div>
+              <div style={{ textAlign: "center", marginTop: "2rem" }}>{t("Loading...")}</div>
             ) : filteredTransactions.length > 0 ? (
               filteredTransactions.map((item, index) => (
                 <MobileTransactionItem
@@ -184,9 +173,7 @@ const TransactionsTable = ({
                 />
               ))
             ) : (
-              <span style={{ textAlign: "center", marginTop: "2rem" }}>
-                {t("No Transactions")}
-              </span>
+              <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No Transactions")}</span>
             )}
           </div>
         </div>
@@ -195,11 +182,7 @@ const TransactionsTable = ({
   }
 
   return (
-    <div
-      ref={ref ?? null}
-      style={{ marginTop: "1rem" }}
-      className={styles.table}
-    >
+    <div ref={ref ?? null} style={{ marginTop: "1rem" }} className={styles.table}>
       <div className={styles.menu}>
         <div className={styles.right}>
           {menuData.map((item) => (
@@ -238,11 +221,7 @@ const TransactionsTable = ({
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <img
-            src={calendar}
-            alt={t("calendar")}
-            onClick={handleDatePickerClick}
-          />
+          <img src={calendar} alt={t("calendar")} onClick={handleDatePickerClick} />
           {showDatePicker && (
             <div
               ref={datePickerRef}
@@ -256,11 +235,7 @@ const TransactionsTable = ({
                 zIndex: 10000000,
               }}
             >
-              <DateRangePicker
-                maxDate={new Date()}
-                ranges={[dateRange]}
-                onChange={handleChange}
-              />
+              <DateRangePicker maxDate={new Date()} ranges={[dateRange]} onChange={handleChange} />
             </div>
           )}
         </div>
@@ -278,9 +253,7 @@ const TransactionsTable = ({
         </div>
         <div className={styles.table_body} ref={tableWrapperRef}>
           {isLoading ? (
-            <div style={{ textAlign: "center", marginTop: "2rem" }}>
-              {t("Loading...")}
-            </div>
+            <div style={{ textAlign: "center", marginTop: "2rem" }}>{t("Loading...")}</div>
           ) : filteredTransactions.length > 0 ? (
             filteredTransactions.map((item, index) => (
               <TransactionItem
@@ -303,9 +276,7 @@ const TransactionsTable = ({
               />
             ))
           ) : (
-            <span style={{ textAlign: "center", marginTop: "2rem" }}>
-              {t("No Transactions")}
-            </span>
+            <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No Transactions")}</span>
           )}
         </div>
       </div>

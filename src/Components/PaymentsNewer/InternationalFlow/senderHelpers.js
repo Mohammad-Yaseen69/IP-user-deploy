@@ -40,9 +40,7 @@ export const buildSenderFormData = (values) => {
   const payload = cleanSenderPayload(values);
 
   formData.append("data", JSON.stringify(payload));
-  senderFileFields.forEach((fieldName) =>
-    appendFileIfSelected(formData, values, fieldName),
-  );
+  senderFileFields.forEach((fieldName) => appendFileIfSelected(formData, values, fieldName));
 
   return formData;
 };

@@ -5,15 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import {
-  Button,
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-} from "reactstrap";
+import { Button, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
@@ -24,8 +16,7 @@ import { LimitsErrorMessage } from "../../utils/Functions/paymentLimits";
 import OTPConfirmation from "../../Common/Component/OtpVerification";
 
 const AcceptModal = ({ isOpen, toggle, item }) => {
-  const { userWallets, authHeader, userDetails, verifyToken } =
-    useContext(UserContext);
+  const { userWallets, authHeader, userDetails, verifyToken } = useContext(UserContext);
   const { t } = useTranslation();
   const [saving, setSaving] = useState(false);
   const [currentWallet, setCurrentWallet] = useState("");
@@ -120,13 +111,9 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
     data.append("type", codeType);
 
     axios
-      .post(
-        `${import.meta.env.VITE_IP_DEV_API}/api/wallet/accept-payment-request`,
-        data,
-        {
-          headers: authHeader,
-        },
-      )
+      .post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/accept-payment-request`, data, {
+        headers: authHeader,
+      })
       .then((res) => {
         const decrypted = decryptData(res.data.data);
         // console.log(decrypted)
@@ -142,9 +129,7 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
         } else if (dec?.message?.toLowerCase()?.includes("otp")) {
           setError("Invalid Verification Code");
         } else {
-          setError(
-            "We cannot process your request at the moment, please try again later.",
-          );
+          setError("We cannot process your request at the moment, please try again later.");
         }
       })
       .finally(() => {
@@ -183,10 +168,7 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
           })
           .catch((err) => {
             const decrypted = decryptData(err.response.data.data);
-            setError(
-              decrypted?.message ??
-                "We are unable to process your request at the moment.",
-            );
+            setError(decrypted?.message ?? "We are unable to process your request at the moment.");
             console.log(decrypted);
           })
           .finally(() => setSaving(false));
@@ -212,12 +194,7 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
           verifyToken(true);
         }}
       />
-      <ErrorModal
-        isOpen={error}
-        toggle={toggle}
-        heading="Transaction failed!"
-        message={error}
-      />
+      <ErrorModal isOpen={error} toggle={toggle} heading="Transaction failed!" message={error} />
       <Modal isOpen={isOpen}>
         <ModalHeader toggle={toggle}>{t("Accept Request")}</ModalHeader>
         {showOtp ? (
@@ -284,8 +261,7 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
                   >
                     <span style={{ color: "#a0a0a0" }}>{t("Balance")}:</span>
                     <span style={{ color: "#a0a0a0" }}>
-                      {wallet?.balance?.available?.toFixed(2)}{" "}
-                      {wallet?.currency?.code}{" "}
+                      {wallet?.balance?.available?.toFixed(2)} {wallet?.currency?.code}{" "}
                     </span>
                   </p>
                   {wallet?.currency?.code !== item?.currency?.code && (
@@ -296,9 +272,7 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
                         justifyContent: "space-between",
                       }}
                     >
-                      <span style={{ color: "#a0a0a0" }}>
-                        {t("Exchange Rate:")}
-                      </span>
+                      <span style={{ color: "#a0a0a0" }}>{t("Exchange Rate:")}</span>
                       <span style={{ color: "#a0a0a0" }}>
                         {exchangeRate} {wallet?.currency?.code}{" "}
                       </span>
@@ -330,9 +304,7 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
                   </p>
                 </div>
               ) : (
-                <div
-                  style={{ height: "70px", width: "70px", margin: "1rem auto" }}
-                >
+                <div style={{ height: "70px", width: "70px", margin: "1rem auto" }}>
                   <InstaPayLoader />
                 </div>
               )}
@@ -340,16 +312,10 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
             <ModalFooter>
               {wallet?.balance?.available >= total ? (
                 <Button
-                  disabled={
-                    saving ||
-                    !currentWallet ||
-                    !String(commision) ||
-                    !String(exchangeRate)
-                  }
+                  disabled={saving || !currentWallet || !String(commision) || !String(exchangeRate)}
                   onClick={sendOtp}
                   style={{
-                    background:
-                      "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                     border: "none",
                     outline: "none",
                     borderRadius: "10px",

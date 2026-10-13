@@ -38,9 +38,7 @@ describe("getPaymentReference", () => {
 
     const ibanWithout = { virtualIbanId: "" };
     const userDetails = { username: "ref special_ref" };
-    expect(getPaymentReference(ibanWithout, userDetails)).toBe(
-      "ref special_ref",
-    );
+    expect(getPaymentReference(ibanWithout, userDetails)).toBe("ref special_ref");
   });
 
   it("falls back to iban id if neither virtualIbanId nor username exists", () => {

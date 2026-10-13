@@ -43,9 +43,7 @@ const JsonNode = ({ label, value, level = 0 }) => {
             <span>: </span>
           </>
         ) : null}
-        <span
-          style={{ color: typeof value === "string" ? "#10b981" : "#3b82f6" }}
-        >
+        <span style={{ color: typeof value === "string" ? "#10b981" : "#3b82f6" }}>
           {JSON.stringify(value)}
         </span>
       </div>
@@ -76,9 +74,7 @@ const JsonNode = ({ label, value, level = 0 }) => {
         </span>
         {label !== undefined ? (
           <>
-            <span style={{ color: "#6b7280", marginRight: 4 }}>
-              {String(label)}
-            </span>
+            <span style={{ color: "#6b7280", marginRight: 4 }}>{String(label)}</span>
             <span>: </span>
           </>
         ) : null}
@@ -87,20 +83,14 @@ const JsonNode = ({ label, value, level = 0 }) => {
           {!isArray ? Object.keys(value).length : ""}
           {!isArray ? "}" : ""}
         </span>
-        <span style={{ color: "#6b7280", marginLeft: 8 }}>
-          {isArray ? "Array" : "Object"}
-        </span>
+        <span style={{ color: "#6b7280", marginLeft: 8 }}>{isArray ? "Array" : "Object"}</span>
       </div>
       {expanded && (
         <div>
           {entries.length === 0 ? (
-            <div style={{ paddingLeft: indent, color: "#6b7280" }}>
-              {TEXT_EMPTY}
-            </div>
+            <div style={{ paddingLeft: indent, color: "#6b7280" }}>{TEXT_EMPTY}</div>
           ) : (
-            entries.map(([k, v]) => (
-              <JsonNode key={k} label={k} value={v} level={level + 1} />
-            ))
+            entries.map(([k, v]) => <JsonNode key={k} label={k} value={v} level={level + 1} />)
           )}
         </div>
       )}
@@ -155,18 +145,10 @@ const AccessGateModal = ({ open, onSuccess, onDenied }) => {
   };
 
   return (
-    <Dialog
-      open={open}
-      disableEscapeKeyDown
-      onClose={() => {}}
-      fullWidth
-      maxWidth="xs"
-    >
+    <Dialog open={open} disableEscapeKeyDown onClose={() => {}} fullWidth maxWidth="xs">
       <DialogTitle>{TEXT_TITLE}</DialogTitle>
       <DialogContent>
-        <p style={{ marginTop: 0, color: "#6b7280", fontSize: 14 }}>
-          {TEXT_DESC}
-        </p>
+        <p style={{ marginTop: 0, color: "#6b7280", fontSize: 14 }}>{TEXT_DESC}</p>
         <TextField
           autoFocus
           fullWidth
@@ -182,12 +164,7 @@ const AccessGateModal = ({ open, onSuccess, onDenied }) => {
         />
       </DialogContent>
       <DialogActions>
-        <Button
-          onClick={handleSubmit}
-          variant="contained"
-          color="primary"
-          fullWidth
-        >
+        <Button onClick={handleSubmit} variant="contained" color="primary" fullWidth>
           {TEXT_SUBMIT}
         </Button>
       </DialogActions>
@@ -307,9 +284,7 @@ const DataDecrypt = () => {
               </button>
             )}
           </div>
-          {error ? (
-            <div style={{ color: "#ef4444", marginBottom: 12 }}>{error}</div>
-          ) : null}
+          {error ? <div style={{ color: "#ef4444", marginBottom: 12 }}>{error}</div> : null}
           {data !== null ? (
             <JsonViewer data={data} />
           ) : (

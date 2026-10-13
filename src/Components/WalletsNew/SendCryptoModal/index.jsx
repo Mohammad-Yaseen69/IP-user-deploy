@@ -82,27 +82,14 @@ const CoinsIcon = () => (
 
 const IdBadgeIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-    <rect
-      x="3"
-      y="2.25"
-      width="12"
-      height="13.5"
-      rx="1.5"
-      stroke="#F8F9FC"
-      strokeWidth="1.2"
-    />
+    <rect x="3" y="2.25" width="12" height="13.5" rx="1.5" stroke="#F8F9FC" strokeWidth="1.2" />
     <circle cx="9" cy="8.25" r="2.25" stroke="#F8F9FC" strokeWidth="1.2" />
     <path
       d="M5.25 14.25C5.25 12.1789 6.92893 10.5 9 10.5C11.0711 10.5 12.75 12.1789 12.75 14.25"
       stroke="#F8F9FC"
       strokeWidth="1.2"
     />
-    <path
-      d="M7.5 3.75H10.5"
-      stroke="#F8F9FC"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
+    <path d="M7.5 3.75H10.5" stroke="#F8F9FC" strokeWidth="1.2" strokeLinecap="round" />
   </svg>
 );
 
@@ -168,16 +155,8 @@ const SIDEBAR_ICONS = {
 };
 
 const getBeneficiaryName = (beneficiary) => {
-  const name = [beneficiary?.first_name, beneficiary?.last_name]
-    .filter(Boolean)
-    .join(" ");
-  return (
-    name ||
-    beneficiary?.company_name ||
-    beneficiary?.legalName ||
-    beneficiary?.name ||
-    "-"
-  );
+  const name = [beneficiary?.first_name, beneficiary?.last_name].filter(Boolean).join(" ");
+  return name || beneficiary?.company_name || beneficiary?.legalName || beneficiary?.name || "-";
 };
 
 const getBeneficiaryId = (beneficiary) => beneficiary?._id || beneficiary?.id;
@@ -205,12 +184,8 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
   const { t } = useTranslation();
   const width = useWindowWidth();
   const navigate = useNavigate();
-  const {
-    userDetails,
-    beneficiaries,
-    getUserBeneficiaries,
-    setProfileLockTime,
-  } = useContext(UserContext);
+  const { userDetails, beneficiaries, getUserBeneficiaries, setProfileLockTime } =
+    useContext(UserContext);
 
   const walletId = wallet?._id;
   const cryptoCurrency = String(wallet?.currency?.code || "").toUpperCase();
@@ -266,9 +241,7 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
 
   const cryptoBeneficiaries = useMemo(
     () =>
-      (beneficiaries || []).filter((beneficiary) =>
-        hasCryptoChannel(beneficiary, cryptoCurrency),
-      ),
+      (beneficiaries || []).filter((beneficiary) => hasCryptoChannel(beneficiary, cryptoCurrency)),
     [beneficiaries, cryptoCurrency],
   );
 
@@ -283,16 +256,12 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
 
   const address = getChannelAddress(selectedChannel);
 
-  const savedProtocol = useMemo(
-    () => getChannelProtocol(selectedChannel),
-    [selectedChannel],
-  );
+  const savedProtocol = useMemo(() => getChannelProtocol(selectedChannel), [selectedChannel]);
 
   const protocolOptions = useMemo(() => {
     if (!address) return [];
     if (savedProtocol) return [savedProtocol];
-    if (apiProtocols.length)
-      return filterProtocolsForAddress(apiProtocols, address);
+    if (apiProtocols.length) return filterProtocolsForAddress(apiProtocols, address);
     const fromAddress = getProtocolsForAddress(address);
     if (fromAddress.length) return fromAddress;
     const initial = getInitialProtocol(selectedChannel);
@@ -340,11 +309,7 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
     if (userDetails?.tfa) setAuthType("authenticator");
     else if (userDetails?.email_verification) setAuthType("email");
     else if (userDetails?.whatsapp_verification) setAuthType("whatsapp");
-  }, [
-    userDetails?.tfa,
-    userDetails?.email_verification,
-    userDetails?.whatsapp_verification,
-  ]);
+  }, [userDetails?.tfa, userDetails?.email_verification, userDetails?.whatsapp_verification]);
 
   useEffect(() => {
     setSelectedChannel(cryptoChannels[0] || null);
@@ -622,8 +587,7 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
             cryptoCurrency={cryptoCurrency}
             errorMessage={beneficiaryError}
             onEditBeneficiary={
-              (isMissingBeneficiaryDetailsError(beneficiaryError) ||
-                addressStatus === "invalid") &&
+              (isMissingBeneficiaryDetailsError(beneficiaryError) || addressStatus === "invalid") &&
               selectedBeneficiary
                 ? () => {
                     handleClose();
@@ -688,11 +652,7 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      style={{ minWidth: width > 1000 ? "940px" : "0%" }}
-      toggle={handleClose}
-    >
+    <Modal isOpen={isOpen} style={{ minWidth: width > 1000 ? "940px" : "0%" }} toggle={handleClose}>
       <ModalBody style={{ padding: "20px" }}>
         <div
           className={convertStyles.modalLayout}
@@ -705,15 +665,11 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
                   <SendIcon />
                 </div>
                 <h2>
-                  {t("Send Crypto")}{" "}
-                  {cryptoCurrency ? `(${cryptoCurrency})` : ""}
+                  {t("Send Crypto")} {cryptoCurrency ? `(${cryptoCurrency})` : ""}
                 </h2>
               </div>
 
-              <div
-                className={withdrawStyles.progressEffect}
-                style={{ marginTop: "2rem" }}
-              >
+              <div className={withdrawStyles.progressEffect} style={{ marginTop: "2rem" }}>
                 {SIDEBAR_STEPS.map((item, index) => {
                   const IconComponent = SIDEBAR_ICONS[item.stepName];
                   return (
@@ -746,19 +702,11 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
 
             {showFooter && (
               <div className={convertStyles.footer}>
-                <button
-                  type="button"
-                  className={convertStyles.cancelBtn}
-                  onClick={handleClose}
-                >
+                <button type="button" className={convertStyles.cancelBtn} onClick={handleClose}>
                   {t("Cancel")}
                 </button>
                 <div className={convertStyles.footerNav}>
-                  <button
-                    type="button"
-                    className={convertStyles.backBtn}
-                    onClick={handleBack}
-                  >
+                  <button type="button" className={convertStyles.backBtn} onClick={handleBack}>
                     <ChevronLeft />
                     {t("Back")}
                   </button>
@@ -768,9 +716,7 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
                     disabled={disabled}
                     onClick={handleContinue}
                   >
-                    {isProcessing
-                      ? t("Processing...")
-                      : getContinueLabel(currentStep, t)}
+                    {isProcessing ? t("Processing...") : getContinueLabel(currentStep, t)}
                     <ChevronRight />
                   </button>
                 </div>

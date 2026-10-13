@@ -43,9 +43,7 @@ const PaymentAddressPublic = () => {
 
     const getUserDetails = () => {
       axios
-        .get(
-          `${import.meta.env.VITE_IP_DEV_API}/api/user/get-user-details/${user_name}`,
-        )
+        .get(`${import.meta.env.VITE_IP_DEV_API}/api/user/get-user-details/${user_name}`)
         .then((res) => {
           const decrypted = decryptData(res.data.data);
           setUserDetails(decrypted?.userProfileInfo);
@@ -96,8 +94,7 @@ const PaymentAddressPublic = () => {
             isGuest={true}
             data={{
               beneficiary: {
-                first_name:
-                  userDetails?.first_name || userDetails?.company_name,
+                first_name: userDetails?.first_name || userDetails?.company_name,
                 last_name: userDetails?.last_name || "",
               },
             }}
@@ -184,10 +181,7 @@ const PaymentAddressPublic = () => {
             ) : currentUser ? (
               currentUser?.level?.payment_address?.send ? (
                 userDetails ? (
-                  <PaymentAddressComponent
-                    userVideos={userVideos}
-                    userDetails={userDetails}
-                  />
+                  <PaymentAddressComponent userVideos={userVideos} userDetails={userDetails} />
                 ) : (
                   <NotFound type="Page" />
                 )
@@ -197,14 +191,10 @@ const PaymentAddressPublic = () => {
                 //         <CardText>Page Unavailable.<Link onClick={verifyToken} to={"/"} style={{ textDecoration: "underline", fontWeight: 600 }}>Go back to Home.</Link></CardText>
                 //     </CardBody>
                 // </Card>
-                <Card
-                  style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}
-                >
+                <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
                   <CardBody>
                     <CardText>
-                      {t(
-                        "Sending to a payment address is not available on this level.",
-                      )}
+                      {t("Sending to a payment address is not available on this level.")}
                       <Link
                         onClick={verifyToken}
                         to={"/"}
@@ -217,10 +207,7 @@ const PaymentAddressPublic = () => {
                 </Card>
               )
             ) : userDetails ? (
-              <PaymentAddressComponent
-                userVideos={userVideos}
-                userDetails={userDetails}
-              />
+              <PaymentAddressComponent userVideos={userVideos} userDetails={userDetails} />
             ) : (
               <NotFound type="Page" />
             )
@@ -244,10 +231,7 @@ const PaymentAddressPublic = () => {
                                                         </span>
                                                     </div> */}
 
-                  <PaymentAddressComponent
-                    userVideos={userVideos}
-                    userDetails={userDetails}
-                  />
+                  <PaymentAddressComponent userVideos={userVideos} userDetails={userDetails} />
                 </>
               ) : (
                 <NotFound type="Page" />
@@ -261,9 +245,7 @@ const PaymentAddressPublic = () => {
               <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
                 <CardBody>
                   <CardText>
-                    {t(
-                      "Sending to a payment address is not available on this level.",
-                    )}
+                    {t("Sending to a payment address is not available on this level.")}
                     <Link
                       onClick={verifyToken}
                       to={"/"}
@@ -279,10 +261,7 @@ const PaymentAddressPublic = () => {
             currentUser?.level?.payment_address?.send ? (
               userDetails ? (
                 <>
-                  <PaymentAddressComponent
-                    userVideos={userVideos}
-                    userDetails={userDetails}
-                  />
+                  <PaymentAddressComponent userVideos={userVideos} userDetails={userDetails} />
                 </>
               ) : (
                 <NotFound type="Page" />
@@ -291,9 +270,7 @@ const PaymentAddressPublic = () => {
               <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
                 <CardBody>
                   <CardText>
-                    {t(
-                      "Sending to a payment address is not available on this level.",
-                    )}
+                    {t("Sending to a payment address is not available on this level.")}
                     <Link
                       onClick={verifyToken}
                       to={"/"}
@@ -306,10 +283,7 @@ const PaymentAddressPublic = () => {
               </Card>
             )
           ) : userDetails ? (
-            <PaymentAddressComponent
-              userVideos={userVideos}
-              userDetails={userDetails}
-            />
+            <PaymentAddressComponent userVideos={userVideos} userDetails={userDetails} />
           ) : (
             <NotFound type="Page" />
           )}

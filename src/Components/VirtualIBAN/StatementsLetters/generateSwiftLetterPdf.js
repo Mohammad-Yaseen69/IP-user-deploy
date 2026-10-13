@@ -3,10 +3,7 @@ import html2canvas from "html2canvas";
 import QRCodeStyling from "qr-code-styling";
 import logoImg from "../../../assets/images/logo/logo2.webp";
 import signatureImg from "./signatur.png";
-import {
-  getPaymentReference,
-  INTL_DEPOSIT_ACCOUNTS,
-} from "../utils/virtualIban";
+import { getPaymentReference, INTL_DEPOSIT_ACCOUNTS } from "../utils/virtualIban";
 
 export const INTL_SWIFT_DATA = INTL_DEPOSIT_ACCOUNTS;
 
@@ -188,19 +185,14 @@ const buildSwiftLetterPagesHtml = ({
       ? formatDate(userDetails.dob)
       : "24 November 2020";
   const regAddress = getSafeString(
-    iban?.registeredAddress ||
-      userDetails?.address ||
-      userDetails?.formattedAddress,
+    iban?.registeredAddress || userDetails?.address || userDetails?.formattedAddress,
     "Solonos 7, Kolossi, 4632, Limassol, Cyprus",
   );
   const orgNumber = getSafeString(
     userDetails?.company?.registration_number || userDetails?.company?.tax_id,
     "---",
   );
-  const virtualIbanId = getSafeString(
-    iban?.virtualIbanId || iban?._id || iban?.id,
-    "",
-  );
+  const virtualIbanId = getSafeString(iban?.virtualIbanId || iban?._id || iban?.id, "");
   const customerId = virtualIbanId;
   const paymentReference = getPaymentReference(iban, userDetails, currency);
 
@@ -499,9 +491,7 @@ const generateSwiftLetterPdf = async (iban, userDetails = {}, options = {}) => {
     toBase64(logoImg),
     generateQrBase64(qrUrl),
     toBase64(signatureImg),
-  ]).then((results) =>
-    results.map((r) => (r.status === "fulfilled" ? r.value : null)),
-  );
+  ]).then((results) => results.map((r) => (r.status === "fulfilled" ? r.value : null)));
 
   const pagesHtml = buildSwiftLetterPagesHtml({
     logoBase64,
@@ -515,8 +505,7 @@ const generateSwiftLetterPdf = async (iban, userDetails = {}, options = {}) => {
   });
 
   const wrapper = document.createElement("div");
-  wrapper.style.cssText =
-    "position:absolute;left:-9999px;top:0;z-index:-1;width:794px;";
+  wrapper.style.cssText = "position:absolute;left:-9999px;top:0;z-index:-1;width:794px;";
   wrapper.innerHTML = pagesHtml.join("");
   document.body.appendChild(wrapper);
 
@@ -549,16 +538,7 @@ const generateSwiftLetterPdf = async (iban, userDetails = {}, options = {}) => {
       if (i > 0) {
         doc.addPage();
       }
-      doc.addImage(
-        imgData,
-        "JPEG",
-        0,
-        0,
-        pdfWidth,
-        pdfHeight,
-        undefined,
-        "FAST",
-      );
+      doc.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight, undefined, "FAST");
     }
 
     if (options.isPreview) {

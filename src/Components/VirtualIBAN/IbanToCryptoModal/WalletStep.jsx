@@ -2,14 +2,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import OptionRow from "../CryptoWallet/components/OptionRow";
 import CoinMark from "../CryptoWallet/components/CoinMark";
-import {
-  getAssetSymbol,
-  getWalletAccentColor,
-} from "../CryptoWallet/utils/format";
-import {
-  formatWalletAmount,
-  getWalletAvailable,
-} from "../CryptoWallet/instapay/wallets";
+import { getAssetSymbol, getWalletAccentColor } from "../CryptoWallet/utils/format";
+import { formatWalletAmount, getWalletAvailable } from "../CryptoWallet/instapay/wallets";
 import styles from "./ibanToCrypto.module.scss";
 
 const WalletStep = ({ wallets, wallet, setWallet, onClose }) => {
@@ -19,9 +13,7 @@ const WalletStep = ({ wallets, wallet, setWallet, onClose }) => {
   return (
     <div>
       <div className={styles.stepTitle}>{t("Choose the crypto wallet")}</div>
-      <p className={styles.stepHint}>
-        {t("The converted amount lands in this wallet.")}
-      </p>
+      <p className={styles.stepHint}>{t("The converted amount lands in this wallet.")}</p>
 
       {wallets.length === 0 ? (
         <div className={styles.emptyWallets}>
@@ -45,10 +37,7 @@ const WalletStep = ({ wallets, wallet, setWallet, onClose }) => {
               <OptionRow
                 key={item?._id}
                 leading={
-                  <CoinMark
-                    symbol={getAssetSymbol(code)}
-                    color={getWalletAccentColor(code)}
-                  />
+                  <CoinMark symbol={getAssetSymbol(code)} color={getWalletAccentColor(code)} />
                 }
                 title={`${code} ${t("Wallet")}`}
                 badge={item?.default ? t("Default") : undefined}

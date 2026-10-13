@@ -54,12 +54,7 @@ const SendActionCard = ({
         setter(setterValue);
       }}
     >
-      <img
-        src={bg}
-        alt={title}
-        className={styles.bg}
-        style={{ right: right }}
-      />
+      <img src={bg} alt={title} className={styles.bg} style={{ right: right }} />
       <div
         className={styles.item_dets}
         style={

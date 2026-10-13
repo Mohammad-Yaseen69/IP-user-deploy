@@ -8,25 +8,17 @@ import { AgentRoute } from "../hooks/GeneralUse/useAgent";
 const QrCode = lazy(() => import("../Components/QrCode"));
 const QRScan = lazy(() => import("../Components/QrScan"));
 const ChatbotQrCode = lazy(() => import("../Components/ChatbotQrCode"));
-const PanTransaction = lazy(
-  () => import("../Components/Chatbot/PanTransaction"),
-);
-const PanTransactionStatus = lazy(
-  () => import("../Components/Chatbot/PanTransactionStatus"),
-);
+const PanTransaction = lazy(() => import("../Components/Chatbot/PanTransaction"));
+const PanTransactionStatus = lazy(() => import("../Components/Chatbot/PanTransactionStatus"));
 const PaymentStatus = lazy(() => import("../Components/PaymentStatus"));
 const DataDecrypt = lazy(() => import("../Components/DataDecrypt"));
 const NotFound = lazy(() => import("../Components/NotFound"));
-const PaypalTransactions = lazy(
-  () => import("../Components/Chatbot/PaypalTransactions"),
-);
+const PaypalTransactions = lazy(() => import("../Components/Chatbot/PaypalTransactions"));
 const GetLocation = lazy(() => import("../Components/Chatbot/GetLocation"));
 const ShowLocation = lazy(() => import("../Components/Chatbot/ShowLocation"));
 const AddBeneficiary = lazy(() => import("../Components/AddBeneficiary"));
 const AddFunds = lazy(() => import("../Components/AddFunds"));
-const CryptoFundSuccess = lazy(
-  () => import("../Components/AddFunds/CryptoFundSuccess"),
-);
+const CryptoFundSuccess = lazy(() => import("../Components/AddFunds/CryptoFundSuccess"));
 const Analytics = lazy(() => import("../Components/Analytics"));
 const AuthNew = lazy(() => import("../Components/AuthNew"));
 const Beneficiaries = lazy(() => import("../Components/Beneficiaries"));
@@ -37,13 +29,9 @@ const ChipsInNew = lazy(() => import("../Components/ChipsInNew"));
 const EditBeneficiary = lazy(() => import("../Components/EditBeneficiary"));
 const HomeNewUpdated = lazy(() => import("../Components/HomeNewUpdated"));
 const OtherTransactions = lazy(() => import("../Components/OtherTransactions"));
-const PartnerVerificationPage = lazy(
-  () => import("../Components/PartnerVerification"),
-);
+const PartnerVerificationPage = lazy(() => import("../Components/PartnerVerification"));
 const PaymentAddress = lazy(() => import("../Components/PaymentAddress"));
-const PaymentAddressPublic = lazy(
-  () => import("../Components/PaymentAddressPublic"),
-);
+const PaymentAddressPublic = lazy(() => import("../Components/PaymentAddressPublic"));
 const PaymentsNewer = lazy(() => import("../Components/PaymentsNewer"));
 const PendingNew = lazy(() => import("../Components/PendingNew"));
 const Portfolio = lazy(() => import("../Components/Portfolio"));
@@ -51,9 +39,7 @@ const ProfileTest = lazy(() => import("../Components/Profile"));
 const Quotations = lazy(() => import("../Components/QuotationsNew"));
 const ReferralsNew = lazy(() => import("../Components/ReferralsNew"));
 // const Settings = lazy(() => import('../Components/Settings'));
-const TransactionsNewApi = lazy(
-  () => import("../Components/TransactionsNewApi"),
-);
+const TransactionsNewApi = lazy(() => import("../Components/TransactionsNewApi"));
 const UserProfile = lazy(() => import("../Components/UserProfile"));
 const UserProfilePublic = lazy(() => import("../Components/UserProfilePublic"));
 const UserSettingsNew = lazy(() => import("../Components/UserSettings"));
@@ -63,15 +49,9 @@ const Settings = lazy(() => import("../Components/Settings"));
 const WalletsNew = lazy(() => import("../Components/WalletsNew"));
 const CardPayment = lazy(() => import("../Components/CardPayment"));
 const Auth = lazy(() => import("../Components/Auth"));
-const ScheduleCalendar = lazy(
-  () => import("../Components/Chatbot/schedule-calendar"),
-);
-const SubscriptionCalendar = lazy(
-  () => import("../Components/Chatbot/subscription-calendar"),
-);
-const RequestCalendar = lazy(
-  () => import("../Components/Chatbot/schedule-payment-request"),
-);
+const ScheduleCalendar = lazy(() => import("../Components/Chatbot/schedule-calendar"));
+const SubscriptionCalendar = lazy(() => import("../Components/Chatbot/subscription-calendar"));
+const RequestCalendar = lazy(() => import("../Components/Chatbot/schedule-payment-request"));
 const SubscriptionRequest = lazy(
   () => import("../Components/Chatbot/subscription-payment-request"),
 );
@@ -81,107 +61,63 @@ const SubscriptionCalendarEndDate = lazy(
 const SubscriptionRequestEndDate = lazy(
   () => import("../Components/Chatbot/subscription-request-end-date"),
 );
-const CreatePassword = lazy(
-  () => import("../Components/CreatePassword/CreatePassword"),
-);
+const CreatePassword = lazy(() => import("../Components/CreatePassword/CreatePassword"));
 const GeoFencing = lazy(() => import("../Components/GeoFencing"));
 const MyMasterCard = lazy(() => import("../Components/MyMasterCard"));
 const CreatePin = lazy(() => import("../Components/CreatePin"));
 const UpdatePin = lazy(() => import("../Components/UpdatePin"));
-const CreatePinChatBot = lazy(
-  () => import("../Components/Chatbot/Pin/CreatePin"),
-);
-const VerifyPinChatBot = lazy(
-  () => import("../Components/Chatbot/Pin/VerifyPin"),
-);
+const CreatePinChatBot = lazy(() => import("../Components/Chatbot/Pin/CreatePin"));
+const VerifyPinChatBot = lazy(() => import("../Components/Chatbot/Pin/VerifyPin"));
 const QuickQrPay = lazy(() => import("../Components/QuickQrPay"));
 const QrQuickerPay = lazy(() => import("../Components/QrQuickerPay"));
 const ReceiptInvoice = lazy(() => import("../Components/ReceiptInvoices"));
-const InvoicePayment = lazy(
-  () => import("../Components/ReceiptInvoices/InvoicePayment"),
-);
-const InvoicePaymentQr = lazy(
-  () => import("../Components/ReceiptInvoices/InvoicePaymentQr"),
-);
-const PlansSubscription = lazy(
-  () => import("../Components/PlansSubscriptions"),
-);
+const InvoicePayment = lazy(() => import("../Components/ReceiptInvoices/InvoicePayment"));
+const InvoicePaymentQr = lazy(() => import("../Components/ReceiptInvoices/InvoicePaymentQr"));
+const PlansSubscription = lazy(() => import("../Components/PlansSubscriptions"));
 const PlanPaymentLink = lazy(() => import("../Components/PlanPaymentLink"));
 const StoreCreate = lazy(() => import("../Components/StoreCreate"));
 const GuestLogin = lazy(() => import("../Components/guestDashboard/auth"));
 const DelegateAccess = lazy(() => import("../Components/DelegateAccess"));
-const CreateAgentPassword = lazy(
-  () => import("../Components/CreateAgentPassword"),
-);
+const CreateAgentPassword = lazy(() => import("../Components/CreateAgentPassword"));
 const AgentLogin = lazy(() => import("../Components/Auth/agentAuth/index"));
 const LogActivity = lazy(() => import("../Components/LogActivity"));
 const VirtyalBank = lazy(() => import("../Components/VirtualIBAN"));
 // const KYBOnboarding = lazy(() => import("../Components/KYBOnboarding/index"))
 const ThirdPartySenders = lazy(() => import("../Components/ThirdPartySenders"));
-const OnboardingIBAN = lazy(
-  () => import("../Components/VirtualIBAN/OnBoardingIBAN"),
-);
+const OnboardingIBAN = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN"));
 const PriceActivation = lazy(
-  () =>
-    import("../Components/VirtualIBAN/OnBoardingIBAN/PriceActivation/PriceActivation.jsx"),
+  () => import("../Components/VirtualIBAN/OnBoardingIBAN/PriceActivation/PriceActivation.jsx"),
 );
 const MoveMoney = lazy(
-  () =>
-    import("../Components/VirtualIBAN/OnBoardingIBAN/moveMoney/MoveMoney.jsx"),
+  () => import("../Components/VirtualIBAN/OnBoardingIBAN/moveMoney/MoveMoney.jsx"),
 );
 const CryptoActions = lazy(
-  () =>
-    import("../Components/VirtualIBAN/OnBoardingIBAN/cryptoActions/CryptoActions.jsx"),
+  () => import("../Components/VirtualIBAN/OnBoardingIBAN/cryptoActions/CryptoActions.jsx"),
 );
-const IbanValidationPage = lazy(
-  () => import("../Components/VirtualIBAN/IbanValidationPage"),
-);
+const IbanValidationPage = lazy(() => import("../Components/VirtualIBAN/IbanValidationPage"));
 const InstaMedia = lazy(() => import("../Components/InstaMedia"));
 const StatementsLetters = lazy(
-  () =>
-    import("../Components/VirtualIBAN/StatementsLetters/StatementsLetters.jsx"),
+  () => import("../Components/VirtualIBAN/StatementsLetters/StatementsLetters.jsx"),
 );
 const CryptoWalletsPage = lazy(
   () => import("../Components/VirtualIBAN/CryptoWallet/CryptoWalletsPage.jsx"),
 );
 const BeneficiariesVirtual = lazy(
-  () =>
-    import("../Components/VirtualIBAN/Beneficiaries/BeneficiariesVirtual.jsx"),
+  () => import("../Components/VirtualIBAN/Beneficiaries/BeneficiariesVirtual.jsx"),
 );
-const AgentCommission = lazy(
-  () => import("../Components/AgentCommission/index.jsx"),
-);
-const Leads = lazy(
-  () => import("../Components/AgentCommission/Leads/Leads.jsx"),
-);
-const SubAgents = lazy(
-  () => import("../Components/AgentCommission/SubAgents/SubAgents.jsx"),
-);
-const Commissions = lazy(
-  () => import("../Components/AgentCommission/Commissions/Commissions.jsx"),
-);
-const Clients = lazy(
-  () => import("../Components/AgentCommission/Clients/Clients.jsx"),
-);
-const Documents = lazy(
-  () => import("../Components/AgentCommission/Documents/Documents.jsx"),
-);
-const Reports = lazy(
-  () => import("../Components/AgentCommission/Reports/Reports.jsx"),
-);
-const Support = lazy(
-  () => import("../Components/AgentCommission/Support/Support.jsx"),
-);
-const AgentProfile = lazy(
-  () => import("../Components/AgentCommission/Profile/Profile.jsx"),
-);
+const AgentCommission = lazy(() => import("../Components/AgentCommission/index.jsx"));
+const Leads = lazy(() => import("../Components/AgentCommission/Leads/Leads.jsx"));
+const SubAgents = lazy(() => import("../Components/AgentCommission/SubAgents/SubAgents.jsx"));
+const Commissions = lazy(() => import("../Components/AgentCommission/Commissions/Commissions.jsx"));
+const Clients = lazy(() => import("../Components/AgentCommission/Clients/Clients.jsx"));
+const Documents = lazy(() => import("../Components/AgentCommission/Documents/Documents.jsx"));
+const Reports = lazy(() => import("../Components/AgentCommission/Reports/Reports.jsx"));
+const Support = lazy(() => import("../Components/AgentCommission/Support/Support.jsx"));
+const AgentProfile = lazy(() => import("../Components/AgentCommission/Profile/Profile.jsx"));
 const FeeModelRequests = lazy(
-  () =>
-    import("../Components/AgentCommission/FeeRequests/FeeModelRequests.jsx"),
+  () => import("../Components/AgentCommission/FeeRequests/FeeModelRequests.jsx"),
 );
-const LeadClaimConfirm = lazy(
-  () => import("../Components/Auth/LeadClaimConfirm.jsx"),
-);
+const LeadClaimConfirm = lazy(() => import("../Components/Auth/LeadClaimConfirm.jsx"));
 
 const PermissionRoute = ({ permission, children }) => {
   const can = usePermission();

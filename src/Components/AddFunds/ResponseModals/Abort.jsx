@@ -9,8 +9,7 @@ const Abort = () => {
   const { t } = useTranslation();
   const error_message = () => {
     return (
-      errors?.[code] ??
-      t("We cannot process your request at the moment, please try again later.")
+      errors?.[code] ?? t("We cannot process your request at the moment, please try again later.")
     );
   };
   return (
@@ -23,9 +22,7 @@ const Abort = () => {
         }}
       >
         <XCircle color="red" size={90} />
-        <h4
-          style={{ color: "red", margin: "10px 0 20px", fontSize: "1.25rem" }}
-        >
+        <h4 style={{ color: "red", margin: "10px 0 20px", fontSize: "1.25rem" }}>
           {t("Funding Aborted!")}
         </h4>
         <p style={{ color: "#a8a8a8" }}>

@@ -4,15 +4,7 @@ import useWindowWidth from "../../../utils/useWindowWidth";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
-const ErrorModal = ({
-  error,
-  showModal,
-  limitErrors,
-  url,
-  toggle,
-  isInvoice,
-  guestClick,
-}) => {
+const ErrorModal = ({ error, showModal, limitErrors, url, toggle, isInvoice, guestClick }) => {
   const windowWidth = useWindowWidth();
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -21,9 +13,7 @@ const ErrorModal = ({
     <Modal toggle={toggle} isOpen={showModal}>
       <ModalBody>
         <h2 style={{ color: "red" }}>{t("Oops")}!</h2>
-        <p style={{ fontWeight: 600, fontSize: "15px", color: "#6f6f6f" }}>
-          {t(error)}
-        </p>
+        <p style={{ fontWeight: 600, fontSize: "15px", color: "#6f6f6f" }}>{t(error)}</p>
 
         {isInvoice ? (
           <div

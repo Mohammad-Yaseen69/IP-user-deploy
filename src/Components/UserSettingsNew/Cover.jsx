@@ -113,12 +113,7 @@ const Cover = () => {
             />
           </div>
         ) : (
-          <img
-            src={coverPhoto}
-            alt="cover"
-            loading="lazy"
-            className={styles.cover}
-          />
+          <img src={coverPhoto} alt="cover" loading="lazy" className={styles.cover} />
         )}
         {isEditing ? (
           <div
@@ -140,9 +135,7 @@ const Cover = () => {
               }}
             >
               <button
-                onClick={() =>
-                  setScale((prev) => (prev > 1 ? prev - 0.25 : prev))
-                }
+                onClick={() => setScale((prev) => (prev > 1 ? prev - 0.25 : prev))}
                 style={{
                   border: "none",
                   outline: "none",
@@ -169,9 +162,7 @@ const Cover = () => {
                 {scale}x
               </span>
               <button
-                onClick={() =>
-                  setScale((prev) => (prev < 4 ? prev + 0.25 : prev))
-                }
+                onClick={() => setScale((prev) => (prev < 4 ? prev + 0.25 : prev))}
                 style={{
                   border: "none",
                   outline: "none",
@@ -244,9 +235,7 @@ const Cover = () => {
                 }}
               >
                 <Camera size={18} />
-                <span style={{ whiteSpace: "nowrap" }}>
-                  {t("Edit Cover Photo")}
-                </span>
+                <span style={{ whiteSpace: "nowrap" }}>{t("Edit Cover Photo")}</span>
               </label>
               {userDetails?.profileImage?.url && (
                 <>
@@ -265,9 +254,7 @@ const Cover = () => {
                     }}
                   >
                     <Camera size={18} />
-                    <span style={{ whiteSpace: "nowrap" }}>
-                      {t("Adjust Cover Photo")}
-                    </span>
+                    <span style={{ whiteSpace: "nowrap" }}>{t("Adjust Cover Photo")}</span>
                   </label>
                   <label
                     style={{
@@ -284,9 +271,7 @@ const Cover = () => {
                     }}
                   >
                     <Trash2 size={18} />
-                    <span style={{ whiteSpace: "nowrap" }}>
-                      {t("Remove Cover Photo")}
-                    </span>
+                    <span style={{ whiteSpace: "nowrap" }}>{t("Remove Cover Photo")}</span>
                   </label>
                 </>
               )}

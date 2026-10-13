@@ -12,44 +12,15 @@ const WarningTriangleIcon = () => (
       strokeLinecap="round"
       strokeLinejoin="round"
     />
-    <line
-      x1="12"
-      y1="9"
-      x2="12"
-      y2="13"
-      stroke="#fff"
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
-    <line
-      x1="12"
-      y1="17"
-      x2="12.01"
-      y2="17"
-      stroke="#fff"
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
+    <line x1="12" y1="9" x2="12" y2="13" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
+    <line x1="12" y1="17" x2="12.01" y2="17" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
   </svg>
 );
 
 const LockIcon = () => (
   <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-    <rect
-      x="5"
-      y="11"
-      width="14"
-      height="10"
-      rx="2"
-      stroke="#fff"
-      strokeWidth="2"
-    />
-    <path
-      d="M8 11V7a4 4 0 018 0v4"
-      stroke="#fff"
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
+    <rect x="5" y="11" width="14" height="10" rx="2" stroke="#fff" strokeWidth="2" />
+    <path d="M8 11V7a4 4 0 018 0v4" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
   </svg>
 );
 
@@ -119,11 +90,7 @@ const UnsubscribeModal = ({
       </p>
 
       <div className={styles.actions}>
-        <button
-          type="button"
-          className={styles.cancelBtn}
-          onClick={handleClose}
-        >
+        <button type="button" className={styles.cancelBtn} onClick={handleClose}>
           {t("Cancel")}
         </button>
         <button
@@ -148,22 +115,16 @@ const UnsubscribeModal = ({
         </h2>
       </div>
 
-      <div
-        className={`${styles.iconBox} ${isBlocked ? styles.iconPurple : styles.iconRed}`}
-      >
+      <div className={`${styles.iconBox} ${isBlocked ? styles.iconPurple : styles.iconRed}`}>
         <LockIcon />
       </div>
 
       <h3 className={styles.subtitle}>
-        {isBlocked
-          ? t("This will resume account activity")
-          : t("This will pause all activity.")}
+        {isBlocked ? t("This will resume account activity") : t("This will pause all activity.")}
       </h3>
       <p className={styles.description}>
         {isBlocked
-          ? t(
-              "Your IBAN will be available again for deposits, move funds, and conversion.",
-            )
+          ? t("Your IBAN will be available again for deposits, move funds, and conversion.")
           : t(
               "Your IBAN will reject incoming transfers and you won't be able to deposit, move, or convert funds.",
             )}
@@ -171,32 +132,14 @@ const UnsubscribeModal = ({
 
       <div className={styles.consequenceTable}>
         <div className={styles.consequenceRow}>
-          <span className={styles.consequenceLabel}>
-            {t("Incoming SEPA transfers")}
-          </span>
-          <span
-            className={
-              isBlocked
-                ? styles.consequenceValuePositive
-                : styles.consequenceValue
-            }
-          >
-            {isBlocked
-              ? t("Will be accepted again")
-              : t("Will be rejected and returned")}
+          <span className={styles.consequenceLabel}>{t("Incoming SEPA transfers")}</span>
+          <span className={isBlocked ? styles.consequenceValuePositive : styles.consequenceValue}>
+            {isBlocked ? t("Will be accepted again") : t("Will be rejected and returned")}
           </span>
         </div>
         <div className={styles.consequenceRow}>
-          <span className={styles.consequenceLabel}>
-            {t("Deposit and move funds")}
-          </span>
-          <span
-            className={
-              isBlocked
-                ? styles.consequenceValuePositive
-                : styles.consequenceValue
-            }
-          >
+          <span className={styles.consequenceLabel}>{t("Deposit and move funds")}</span>
+          <span className={isBlocked ? styles.consequenceValuePositive : styles.consequenceValue}>
             {isBlocked ? t("Enabled") : t("Disabled")}
           </span>
         </div>
@@ -232,18 +175,12 @@ k                    <label className={styles.reasonLabel}>
         <label htmlFor="unsub-confirm" className={styles.checkboxLabel}>
           {isBlocked
             ? t("I understand my account activity will be re-enabled.")
-            : t(
-                "I understand my account will be frozen until I reactivate it.",
-              )}
+            : t("I understand my account will be frozen until I reactivate it.")}
         </label>
       </div>
 
       <div className={styles.actions}>
-        <button
-          type="button"
-          className={styles.cancelBtn}
-          onClick={handleClose}
-        >
+        <button type="button" className={styles.cancelBtn} onClick={handleClose}>
           {t("Cancel")}
         </button>
         <button
@@ -251,32 +188,17 @@ k                    <label className={styles.reasonLabel}>
           className={`${styles.primaryBtn} ${isBlocked ? styles.btnPurple : styles.btnRed}`}
           onClick={handleToggleStatus}
           disabled={!confirmed || isProcessing}
-          style={
-            !confirmed || isProcessing
-              ? { opacity: 0.5, cursor: "not-allowed" }
-              : {}
-          }
+          style={!confirmed || isProcessing ? { opacity: 0.5, cursor: "not-allowed" } : {}}
         >
-          {isProcessing
-            ? t("Processing...")
-            : isBlocked
-              ? t("Subscribe")
-              : t("Unsubscribe")}
+          {isProcessing ? t("Processing...") : isBlocked ? t("Subscribe") : t("Unsubscribe")}
         </button>
       </div>
     </div>
   );
 
   return (
-    <Modal
-      isOpen={isOpen}
-      toggle={handleClose}
-      centered
-      style={{ maxWidth: "480px" }}
-    >
-      <ModalBody
-        style={{ padding: 0, background: "transparent", border: "none" }}
-      >
+    <Modal isOpen={isOpen} toggle={handleClose} centered style={{ maxWidth: "480px" }}>
+      <ModalBody style={{ padding: 0, background: "transparent", border: "none" }}>
         {renderToggleStatus()}
       </ModalBody>
     </Modal>

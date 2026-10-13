@@ -6,13 +6,7 @@ import { UserContext } from "../../../Context/UserContext";
 
 const isBig = window.innerWidth > 1000;
 
-const ChooseWallet = ({
-  setSubStep,
-  wallet,
-  setWallet,
-  setAction = () => {},
-  loading,
-}) => {
+const ChooseWallet = ({ setSubStep, wallet, setWallet, setAction = () => {}, loading }) => {
   const { t } = useTranslation();
   const { userWallets } = useContext(UserContext);
   return (
@@ -34,9 +28,7 @@ const ChooseWallet = ({
           padding: isBig ? "30px" : "5px",
           gap: "1rem",
           paddingBottom: 0,
-          boxShadow: isBig
-            ? "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)"
-            : "none",
+          boxShadow: isBig ? "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)" : "none",
         }}
         className="c_f_c"
       >
@@ -81,9 +73,7 @@ const ChooseWallet = ({
               >
                 <span>{item?.currency?.code} </span>
               </div>
-              <div
-                style={{ display: "flex", flexDirection: "column", gap: "2px" }}
-              >
+              <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
                 <h5
                   style={{
                     fontSize: "1rem",
@@ -120,8 +110,7 @@ const ChooseWallet = ({
       <div
         style={{
           display: "flex",
-          justifyContent:
-            window.innerWidth > 1000 ? "flex-end" : "space-between",
+          justifyContent: window.innerWidth > 1000 ? "flex-end" : "space-between",
           alignItems: "center",
           gap: "1.5rem",
           flexWrap: "wrap-reverse",

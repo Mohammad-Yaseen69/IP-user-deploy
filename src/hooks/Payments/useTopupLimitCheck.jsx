@@ -20,17 +20,12 @@ const useTopupLimitCheck = (sendingCurrency, amount, paymentMethod) => {
       if (!userDetails) return;
 
       let thresholdLimit = userDetails?.is_external_limit
-        ? userDetails?.external_limits?.topup_min_amount ||
-          userDetails?.level?.topup_min_amount
+        ? userDetails?.external_limits?.topup_min_amount || userDetails?.level?.topup_min_amount
         : userDetails?.level?.topup_min_amount;
 
       let sendingAmount = amount;
       if (sendingCurrency !== "USD") {
-        const result = await getExchangeRate(
-          "USD",
-          sendingCurrency,
-          thresholdLimit,
-        );
+        const result = await getExchangeRate("USD", sendingCurrency, thresholdLimit);
         if (result) thresholdLimit = result;
       }
 

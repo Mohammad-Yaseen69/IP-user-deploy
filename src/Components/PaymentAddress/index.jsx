@@ -12,9 +12,7 @@ const PaymentAddress = () => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
   // modal
-  const [isOpen, setIsOpen] = useState(
-    !sessionStorage.getItem("show_pa_modal"),
-  );
+  const [isOpen, setIsOpen] = useState(!sessionStorage.getItem("show_pa_modal"));
 
   useEffect(() => {
     sessionStorage.setItem("show_pa_modal", true);
@@ -45,9 +43,7 @@ const PaymentAddress = () => {
                     setIsOpen={setIsOpen}
                   />
                 ) : (
-                  <Card
-                    style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}
-                  >
+                  <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
                     <CardBody>
                       <CardText>
                         {t(
@@ -67,13 +63,9 @@ const PaymentAddress = () => {
                   </Card>
                 )
               ) : (
-                <Card
-                  style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}
-                >
+                <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
                   <CardBody>
-                    <CardText>
-                      {t("Currently not supported on this level.")}
-                    </CardText>
+                    <CardText>{t("Currently not supported on this level.")}</CardText>
                   </CardBody>
                 </Card>
               )}
@@ -92,9 +84,7 @@ const PaymentAddress = () => {
                     setIsOpen={setIsOpen}
                   />
                 ) : (
-                  <Card
-                    style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}
-                  >
+                  <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
                     <CardBody>
                       <CardText>
                         {t(
@@ -114,13 +104,9 @@ const PaymentAddress = () => {
                   </Card>
                 )
               ) : (
-                <Card
-                  style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}
-                >
+                <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
                   <CardBody>
-                    <CardText>
-                      {t("Currently not supported on this level.")}
-                    </CardText>
+                    <CardText>{t("Currently not supported on this level.")}</CardText>
                   </CardBody>
                 </Card>
               )}

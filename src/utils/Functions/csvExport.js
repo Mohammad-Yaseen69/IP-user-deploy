@@ -88,9 +88,7 @@ export const exportToExcel = async (
       "Wallet Id",
     ];
 
-    const flatTransactions = allTransactions.map((transaction) =>
-      flattenObject(transaction),
-    );
+    const flatTransactions = allTransactions.map((transaction) => flattenObject(transaction));
 
     const formatDate = (dateString) => {
       if (!dateString) return "";
@@ -122,14 +120,12 @@ export const exportToExcel = async (
         obj["receiver.user.last_name"] ||
         obj["receiver.user.lastName"] ||
         obj["account.user.first_name"];
-      const guestDetailsName =
-        obj["guest_details.name"] || obj["guestDetails.name"];
+      const guestDetailsName = obj["guest_details.name"] || obj["guestDetails.name"];
 
       if (guestDetailsName) {
         outputRow["Recipient Name"] = guestDetailsName;
       } else if (receiverFirstName) {
-        outputRow["Recipient Name"] =
-          receiverFirstName + "" + (receiverLastName ?? "");
+        outputRow["Recipient Name"] = receiverFirstName + "" + (receiverLastName ?? "");
       } else {
         outputRow["Recipient Name"] = "";
       }
@@ -140,10 +136,7 @@ export const exportToExcel = async (
 
       Object.keys(obj).forEach((originalKey) => {
         const formatted = formatHeader(originalKey);
-        if (
-          desiredHeaders.includes(formatted) &&
-          formatted !== "Recipient Name"
-        ) {
+        if (desiredHeaders.includes(formatted) && formatted !== "Recipient Name") {
           let value = obj[originalKey];
           if (formatted === "CreatedAt" && value) {
             value = formatDate(value);

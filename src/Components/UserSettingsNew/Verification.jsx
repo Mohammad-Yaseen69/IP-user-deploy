@@ -58,18 +58,14 @@ const Verification = () => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_IP_DEV_API}/api/user/verification/user_${
-          userDetails?.user?._id
-        }`,
+        `${import.meta.env.VITE_IP_DEV_API}/api/user/verification/user_${userDetails?.user?._id}`,
         { data: encrypted },
         { headers: authHeader },
       );
 
       const decrypted = decryptData(response.data.data);
       if (decrypted?.status) {
-        const verificationLink = decryptData(
-          response.data.data,
-        )?.tokenized_link;
+        const verificationLink = decryptData(response.data.data)?.tokenized_link;
         window.open(verificationLink, "_blank");
       }
 
@@ -84,12 +80,9 @@ const Verification = () => {
     <Card id="verification">
       <CardHeader className={`pb-0 expanded`}>
         <div>
-          <H4 attrH4={{ className: "card-title mb-0" }}>
-            {t("Identity Verification")}
-          </H4>
+          <H4 attrH4={{ className: "card-title mb-0" }}>{t("Identity Verification")}</H4>
           {userDetails &&
-          (!userDetails?.use?.kyc_status ||
-            userDetails?.user?.kyc_status !== "approved") ? (
+          (!userDetails?.use?.kyc_status || userDetails?.user?.kyc_status !== "approved") ? (
             <p
               style={{
                 marginTop: ".5rem",
@@ -107,9 +100,7 @@ const Verification = () => {
               )}
             </p>
           ) : (
-            <p
-              style={{ marginTop: ".5rem", color: "black", fontWeight: "300" }}
-            >
+            <p style={{ marginTop: ".5rem", color: "black", fontWeight: "300" }}>
               {t("Identity Verified.")}
             </p>
           )}
@@ -177,11 +168,7 @@ const Verification = () => {
                 disabled={userDetails?.user?.kyc_status === "approved"}
               >
                 {occupations.map((item, index) => (
-                  <option
-                    key={index}
-                    value={item.value}
-                    disabled={item.disabled || false}
-                  >
+                  <option key={index} value={item.value} disabled={item.disabled || false}>
                     {t(item.label)}
                   </option>
                 ))}
@@ -208,23 +195,14 @@ const Verification = () => {
                   "Valid residence permits will only be accepted if issued by a European country or in Switzerland",
                 )}
               </li>
-              <li>
-                {t(
-                  "Biometric Facial Recognition comparing video with passport photograph",
-                )}
-              </li>
+              <li>{t("Biometric Facial Recognition comparing video with passport photograph")}</li>
             </ul>
           </Col>
           {userDetails?.user?.kyc_additional_file?.length > 0 &&
           userDetails?.user?.kyc_status !== "approved" &&
-          userDetails?.user?.kyc_additional_file?.some(
-            (item) => item?.status === "requested",
-          ) ? (
+          userDetails?.user?.kyc_additional_file?.some((item) => item?.status === "requested") ? (
             <>
-              <Col
-                className="mb-4"
-                style={{ display: "flex", justifyContent: "flex-end" }}
-              >
+              <Col className="mb-4" style={{ display: "flex", justifyContent: "flex-end" }}>
                 <GradientButton
                   value={
                     userDetails?.user?.kyc_additional_file?.every(
@@ -270,10 +248,7 @@ const Verification = () => {
               )}
             </p>
           </Col>
-          <Col
-            className="mb-4"
-            style={{ display: "flex", justifyContent: "flex-end" }}
-          >
+          <Col className="mb-4" style={{ display: "flex", justifyContent: "flex-end" }}>
             <GradientButton
               value={t("Start Verification")}
               size="m"

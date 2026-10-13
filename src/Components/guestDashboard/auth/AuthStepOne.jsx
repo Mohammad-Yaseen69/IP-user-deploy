@@ -16,21 +16,11 @@ const AuthStepOne = ({
   return (
     <div className={styles.authForm}>
       <div className={styles.logoContainer}>
-        <img
-          src={InstapayLogo}
-          loading="lazy"
-          width={40}
-          height={40}
-          alt="Instapay Logo"
-        />
+        <img src={InstapayLogo} loading="lazy" width={40} height={40} alt="Instapay Logo" />
       </div>
       <div>
         <h1>{t("Manage your subscription")}</h1>
-        <p>
-          {t(
-            "Enter your email address to securely access your subscription settings.",
-          )}
-        </p>
+        <p>{t("Enter your email address to securely access your subscription settings.")}</p>
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         {isEmail ? (
@@ -48,18 +38,12 @@ const AuthStepOne = ({
               })}
             />
 
-            {errors.email && (
-              <p style={{ color: "red" }}>{t(errors.email.message)}</p>
-            )}
+            {errors.email && <p style={{ color: "red" }}>{t(errors.email.message)}</p>}
           </label>
         ) : (
           <label>
             <span>{t("Enter phone")}</span>
-            <PhoneInput
-              phone={email}
-              setPhone={setEmail}
-              country={country}
-            />{" "}
+            <PhoneInput phone={email} setPhone={setEmail} country={country} />{" "}
           </label>
         )}
         <button type="submit">

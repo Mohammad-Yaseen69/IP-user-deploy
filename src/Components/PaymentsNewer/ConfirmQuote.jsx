@@ -116,9 +116,7 @@ const ConfirmQuote = ({
         setConfirmed(true);
         setToken(dec?.token);
       } catch (error) {
-        toast.error(
-          t("Something went wrong while confirming the transaction!"),
-        );
+        toast.error(t("Something went wrong while confirming the transaction!"));
         // console.log(decryptData(error?.response?.data?.data))
       }
     };
@@ -146,8 +144,7 @@ const ConfirmQuote = ({
           padding: "20px 30px",
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
         className="conf_cont"
       >
@@ -225,12 +222,8 @@ const ConfirmQuote = ({
                 {t("edit")}
               </span>
             </div>
-            <div
-              style={{ display: "flex", alignItems: "center", gap: ".6rem" }}
-            >
-              <span style={{ fontWeight: 700, fontSize: "1.4rem" }}>
-                {t(title)}
-              </span>
+            <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
+              <span style={{ fontWeight: 700, fontSize: "1.4rem" }}>{t(title)}</span>
             </div>
           </div>
           {/* desciption */}
@@ -270,13 +263,9 @@ const ConfirmQuote = ({
                 {t("edit")}
               </span>
             </div>
-            <div
-              style={{ display: "flex", alignItems: "center", gap: ".6rem" }}
-            >
+            <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
               <span style={{ fontWeight: 700, fontSize: "1.4rem" }}>
-                {description?.length > 100
-                  ? `${description.slice(0, 100)}...`
-                  : description}
+                {description?.length > 100 ? `${description.slice(0, 100)}...` : description}
               </span>
             </div>
           </div>
@@ -349,9 +338,7 @@ const ConfirmQuote = ({
                           <FaRegFileVideo size={30} color="white" />
                         </div>
                       )}
-                      {file?.type
-                        ?.toLowerCase()
-                        ?.includes("application/pdf") && (
+                      {file?.type?.toLowerCase()?.includes("application/pdf") && (
                         <div
                           style={{
                             background:

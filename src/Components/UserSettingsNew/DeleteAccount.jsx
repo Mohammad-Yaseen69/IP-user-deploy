@@ -16,12 +16,9 @@ const DeleteAccount = () => {
 
   const deleteAccountHandler = async () => {
     axios
-      .delete(
-        `${import.meta.env.VITE_IP_DEV_API}/api/account/delete-account/${userDetails?._id}`,
-        {
-          headers: authHeader,
-        },
-      )
+      .delete(`${import.meta.env.VITE_IP_DEV_API}/api/account/delete-account/${userDetails?._id}`, {
+        headers: authHeader,
+      })
       .then((res) => {
         const decrypted = decryptData(res.data.data);
         // console.log(decrypted)
@@ -35,9 +32,7 @@ const DeleteAccount = () => {
   return (
     <Card id="delete_account">
       <CardHeader className={`pb-0 expanded`}>
-        <H4 attrH4={{ className: "card-title mb-0" }}>
-          {t("Delete Your Account")}
-        </H4>
+        <H4 attrH4={{ className: "card-title mb-0" }}>{t("Delete Your Account")}</H4>
       </CardHeader>
       <div className={`accordion-body expanded`}>
         <CardBody>
@@ -78,9 +73,7 @@ const DeleteAccount = () => {
                 "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our",
               )}{" "}
               &nbsp;
-              <span className="text-primary cursor-pointer">
-                {t("privacy statement")}
-              </span>
+              <span className="text-primary cursor-pointer">{t("privacy statement")}</span>
               <br />
               {t(
                 "We'll email you to let you know the status, and if there are any other steps you need to take.",
@@ -100,24 +93,14 @@ const DeleteAccount = () => {
               </span>
             </div>
             <div className="d-flex mt-3 gap-1">
-              <Input
-                type="checkbox"
-                checked={check}
-                onChange={(e) => setCheck(e.target.checked)}
-              />
+              <Input type="checkbox" checked={check} onChange={(e) => setCheck(e.target.checked)} />
               <span className="text-secondary" onClick={() => setCheck(!check)}>
-                {t(
-                  "I understand that account deletion is permanent and can't be reversed.",
-                )}
+                {t("I understand that account deletion is permanent and can't be reversed.")}
               </span>
             </div>
             <div className="d-flex justify-content-center flex-column align-items-center gap-2 mt-4">
               <span>{t("Are you sure you want to close your account?")}</span>
-              <Button
-                color="danger"
-                disabled={!check}
-                onClick={deleteAccountHandler}
-              >
+              <Button color="danger" disabled={!check} onClick={deleteAccountHandler}>
                 {t("Yes, Continue")}
               </Button>
             </div>

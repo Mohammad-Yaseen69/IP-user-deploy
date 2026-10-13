@@ -64,9 +64,7 @@ const getAmountNumber = (amount) => {
 
 export const getDisabledState = (stepName, data) => {
   const amount = getAmountNumber(data.amount);
-  const availableBalance = getAmountNumber(
-    data.availableBalance ?? SOURCE_IBAN.balance,
-  );
+  const availableBalance = getAmountNumber(data.availableBalance ?? SOURCE_IBAN.balance);
 
   switch (stepName) {
     case STEPS.AMOUNT:
@@ -99,9 +97,7 @@ export const isSidebarStepActive = (sidebarItem, currentStep) => {
 export const isSidebarStepCompleted = (sidebarItem, currentStep) => {
   const order = [STEPS.AMOUNT, STEPS.DESTINATION, STEPS.REVIEW, STEPS.DONE];
   const currentRank =
-    currentStep === STEPS.OTP
-      ? order.indexOf(STEPS.DONE)
-      : order.indexOf(currentStep);
+    currentStep === STEPS.OTP ? order.indexOf(STEPS.DONE) : order.indexOf(currentStep);
   const itemRank = order.indexOf(sidebarItem.stepName);
   return itemRank >= 0 && itemRank < currentRank;
 };

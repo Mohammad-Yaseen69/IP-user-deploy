@@ -101,14 +101,9 @@ function reducer(state, action) {
   }
 }
 
-const NonInstapayPayment = ({
-  sendPaymentType,
-  setSendPaymentType,
-  setStep,
-}) => {
+const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) => {
   const [data, dispatch] = useReducer(reducer, initialState);
-  const { userDetails, userWallets, setProfileLockTime } =
-    useContext(UserContext);
+  const { userDetails, userWallets, setProfileLockTime } = useContext(UserContext);
   const { limitStatus, clearStatus } = useTopupLimitCheck(
     data?.currency?.currency?.code,
     +String(data?.amount)?.replaceAll(",", ""),
@@ -128,14 +123,7 @@ const NonInstapayPayment = ({
   };
 
   const { mutateAsync: getFeeDetails } = useMutation({
-    mutationFn: ({
-      receiverCountryCode,
-      sendingWalletId,
-      amount,
-      type,
-      paymentType,
-      identifier,
-    }) =>
+    mutationFn: ({ receiverCountryCode, sendingWalletId, amount, type, paymentType, identifier }) =>
       apiWrapper({
         endpoint: `/api/pre-wallet/get-fee-details?${data?.exchange_rate?.receiver?.amount ? `preserved_amount=${data?.exchange_rate?.receiver?.amount}` : ""}`,
         method: "POST",
@@ -279,9 +267,7 @@ const NonInstapayPayment = ({
       const res = await getFeeDetails({
         receiverCountryCode: data?.country?.alpha3,
         sendingWalletId:
-          data?.payment_type?.value === "wallet"
-            ? data?.wallet?._id
-            : data?.currency?._id,
+          data?.payment_type?.value === "wallet" ? data?.wallet?._id : data?.currency?._id,
         amount: Number(amount),
         type: type || "DETAILS",
         paymentType: data?.payment_type?.value,
@@ -359,17 +345,11 @@ const NonInstapayPayment = ({
       if (result === "Verified") {
         return true;
       } else {
-        dataHandler(
-          "phone_error",
-          "Incorrect phone number, please enter a valid number.",
-        );
+        dataHandler("phone_error", "Incorrect phone number, please enter a valid number.");
         return false;
       }
     } catch {
-      dataHandler(
-        "phone_error",
-        "Incorrect phone number, please enter a valid number.",
-      );
+      dataHandler("phone_error", "Incorrect phone number, please enter a valid number.");
       return false;
     } finally {
       dataHandler("loading", false);
@@ -517,11 +497,7 @@ const NonInstapayPayment = ({
   const disableNext = useMemo(() => {
     switch (data.step) {
       case 1: {
-        const extractedPhone = getExtractedPhone(
-          data,
-          data.country?.alpha3,
-          data.identifier,
-        );
+        const extractedPhone = getExtractedPhone(data, data.country?.alpha3, data.identifier);
         return !data.identifier || !extractedPhone || !data?.country?.alpha3;
       }
       case 2:
@@ -539,9 +515,7 @@ const NonInstapayPayment = ({
           : false;
       case 5:
         if (data.payment_type?.value === "card") {
-          const [contentMonth, contentYear] = data.expiry
-            .split("/")
-            .map(Number);
+          const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
           const currentDate = new Date();
           const currentMonth = currentDate.getMonth() + 1;
           const currentYear = currentDate.getFullYear() % 100;
@@ -567,9 +541,7 @@ const NonInstapayPayment = ({
 
   useEffect(() => {
     if (userDetails?.country_iso_code) {
-      const countryObj = countriesData.find(
-        (c) => c.alpha3 === userDetails?.country_iso_code,
-      );
+      const countryObj = countriesData.find((c) => c.alpha3 === userDetails?.country_iso_code);
       dataHandler("country", countryObj);
     }
   }, [userDetails?.country_iso_code]);
@@ -674,8 +646,7 @@ const NonInstapayPayment = ({
           message={data.error}
         />
       )}
-      {data.cardTransactionDetails?.intlToken ||
-      data.cardTransactionDetails?.w2w_data ? (
+      {data.cardTransactionDetails?.intlToken || data.cardTransactionDetails?.w2w_data ? (
         <TrustpaymentPage
           transaction={data.cardTransactionDetails}
           paymentWithSavedCard={data.selectedSavedCard?._id ? true : false}
@@ -757,9 +728,7 @@ const NonInstapayPayment = ({
         {data.step === 6 && (
           <div>
             <div className={styles.noticeDiv}>
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "12px" }}
-              >
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="49"
@@ -827,8 +796,7 @@ const NonInstapayPayment = ({
   };
 
   const renderBottomButtons = (isMobile = false) => {
-    if (data.step === 5 && data.payment_type?.value === "bank_transfer")
-      return null;
+    if (data.step === 5 && data.payment_type?.value === "bank_transfer") return null;
     return (
       <div className={styles.bottom}>
         <Link
@@ -895,9 +863,7 @@ const NonInstapayPayment = ({
             showDesc={sendPaymentType === "non-instapay"}
             active={sendPaymentType === "non-instapay"}
             sendPaymentType={sendPaymentType}
-            shrinkWidth={
-              data.step === 4 && data.payment_type?.value === "wallet"
-            }
+            shrinkWidth={data.step === 4 && data.payment_type?.value === "wallet"}
           />
           {sendPaymentType === "non-instapay" &&
             (data?.transaction_details ? (
@@ -921,9 +887,7 @@ const NonInstapayPayment = ({
                   width: sendPaymentType === "international" ? "100%" : "0px",
                   transition: "500ms",
                   "--min-width":
-                    data.step === 4 && data.payment_type?.value === "wallet"
-                      ? "65vw"
-                      : "55vw",
+                    data.step === 4 && data.payment_type?.value === "wallet" ? "65vw" : "55vw",
                 }}
               >
                 <div className={styles.left}>
@@ -946,11 +910,7 @@ const NonInstapayPayment = ({
                       >
                         <InstaPayLoader />
                       </div>
-                    ) : (
-                        data.payment_type?.value === "wallet"
-                          ? data.wallet?._id
-                          : true
-                      ) ? (
+                    ) : (data.payment_type?.value === "wallet" ? data.wallet?._id : true) ? (
                       <>
                         <FeesComponent data={data} paypalValues plaidValues />
                       </>
@@ -959,10 +919,7 @@ const NonInstapayPayment = ({
                     ))}
                 </div>
 
-                <div
-                  className={styles.right}
-                  style={{ "--color-white": "#fafafa" }}
-                >
+                <div className={styles.right} style={{ "--color-white": "#fafafa" }}>
                   {renderStepContent(false)}
 
                   {renderBottomButtons(false)}
@@ -971,11 +928,7 @@ const NonInstapayPayment = ({
                 {data.step === 4 &&
                 data.payment_type?.value === "wallet" &&
                 !data.show_payment_type ? (
-                  <WalletsComponent
-                    loading={data.loading}
-                    data={data}
-                    dataHandler={dataHandler}
-                  />
+                  <WalletsComponent loading={data.loading} data={data} dataHandler={dataHandler} />
                 ) : (
                   ""
                 )}

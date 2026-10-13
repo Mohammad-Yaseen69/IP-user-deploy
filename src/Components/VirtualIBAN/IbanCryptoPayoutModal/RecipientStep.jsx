@@ -9,8 +9,7 @@ import {
 import { PAYOUT_ASSETS } from "../../../stateMachines/ibanCryptoPayout";
 import styles from "./ibanCryptoPayout.module.scss";
 
-const channelKey = (channel, index) =>
-  channel?._id || `${getChannelAddress(channel)}-${index}`;
+const channelKey = (channel, index) => channel?._id || `${getChannelAddress(channel)}-${index}`;
 
 const RecipientStep = ({
   asset,
@@ -39,10 +38,9 @@ const RecipientStep = ({
       selectedBeneficiary={selectedBeneficiary}
       setSelectedBeneficiary={onSelectBeneficiary}
       onAddBeneficiary={onAddBeneficiary}
-      emptyMessage={t(
-        "No beneficiaries with a saved {{currency}} wallet address.",
-        { currency: asset },
-      )}
+      emptyMessage={t("No beneficiaries with a saved {{currency}} wallet address.", {
+        currency: asset,
+      })}
     >
       <div className={styles.field}>
         <div className={styles.fieldLabel}>{t("Recipient receives")}</div>
@@ -66,8 +64,7 @@ const RecipientStep = ({
           <div className={styles.walletList}>
             {cryptoChannels.map((channel, index) => {
               const channelAddress = getChannelAddress(channel);
-              const active =
-                getChannelAddress(selectedChannel) === channelAddress;
+              const active = getChannelAddress(selectedChannel) === channelAddress;
               return (
                 <button
                   key={channelKey(channel, index)}
@@ -99,9 +96,7 @@ const RecipientStep = ({
               {addressStatus === "invalid" && (
                 <span className={styles.bad}>
                   {isProtocolLocked
-                    ? t(
-                        "This address is not valid on the network saved for this beneficiary.",
-                      )
+                    ? t("This address is not valid on the network saved for this beneficiary.")
                     : t("This address is not valid for the selected network.")}
                 </span>
               )}
@@ -115,9 +110,7 @@ const RecipientStep = ({
         <div className={styles.field}>
           <div className={styles.fieldLabel}>
             <span>{t("Network")}</span>
-            <span className={styles.fieldHint}>
-              {t("Must match what the recipient supports")}
-            </span>
+            <span className={styles.fieldHint}>{t("Must match what the recipient supports")}</span>
           </div>
           {protocolOptions.length > 0 ? (
             <div className={styles.chips}>
@@ -147,11 +140,7 @@ const RecipientStep = ({
         <div className={styles.errorBox}>
           {errorMessage}
           {onEditBeneficiary && (
-            <button
-              type="button"
-              className={styles.linkBtn}
-              onClick={onEditBeneficiary}
-            >
+            <button type="button" className={styles.linkBtn} onClick={onEditBeneficiary}>
               {t("Edit beneficiary")}
             </button>
           )}

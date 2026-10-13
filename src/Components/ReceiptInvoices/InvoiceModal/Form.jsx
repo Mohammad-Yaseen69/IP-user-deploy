@@ -37,9 +37,7 @@ const Form = ({ data, inputFieldChange, dataHandler, directCard = false }) => {
               marginTop: 4,
             }}
           >
-            <span style={{ fontSize: 12, color: "#6b7280" }}>
-              {data?.title?.length ?? 0}/100
-            </span>
+            <span style={{ fontSize: 12, color: "#6b7280" }}>{data?.title?.length ?? 0}/100</span>
           </div>
         </div>
       </Field>
@@ -104,10 +102,7 @@ const Form = ({ data, inputFieldChange, dataHandler, directCard = false }) => {
         />
       </Field>
 
-      <Field
-        toggle={true}
-        label={t("Allow multiple payments for this invoice")}
-      >
+      <Field toggle={true} label={t("Allow multiple payments for this invoice")}>
         <Toggle
           checked={data.allowMultiple}
           onChange={() => dataHandler("allowMultiple", !data.allowMultiple)}
@@ -140,9 +135,7 @@ const Form = ({ data, inputFieldChange, dataHandler, directCard = false }) => {
         <Field label={t("Country")} required={!data.countryIsoCode}>
           <CountryDropDown
             country={data.countryIsoCode}
-            onSelect={(country) =>
-              dataHandler("countryIsoCode", country.alpha3)
-            }
+            onSelect={(country) => dataHandler("countryIsoCode", country.alpha3)}
           />
         </Field>
       )}

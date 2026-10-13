@@ -32,16 +32,9 @@ const PortfolioItem = ({ item }) => {
             <Play color="white" size={40} />
           </div>
           {item?.jw_media?.thumbnail_url?.endsWith("mp4") ? (
-            <video
-              src={item?.jw_media?.thumbnail_url}
-              className={styles.item_img}
-            ></video>
+            <video src={item?.jw_media?.thumbnail_url} className={styles.item_img}></video>
           ) : (
-            <img
-              src={item?.jw_media?.thumbnail_url}
-              alt=""
-              className={styles.item_img}
-            />
+            <img src={item?.jw_media?.thumbnail_url} alt="" className={styles.item_img} />
           )}
         </div>
       ) : item?.file_type?.includes("audio") ? (
@@ -79,11 +72,7 @@ const PortfolioItem = ({ item }) => {
             : item?.description}
         </p>
       </div>
-      <PortfolioItemModal
-        item={item}
-        setShowModal={setShowModal}
-        showModal={showModal}
-      />
+      <PortfolioItemModal item={item} setShowModal={setShowModal} showModal={showModal} />
     </div>
   );
 };

@@ -77,8 +77,8 @@
       .question {
         display: flex;
         width: 100%;
-        padding: var(--Gaps-Gap-Small, 8px) var(--Gaps-Gap-Small, 8px)
-          var(--Gaps-Gap-Large, 16px) var(--Gaps-Gap-Large, 16px);
+        padding: var(--Gaps-Gap-Small, 8px) var(--Gaps-Gap-Small, 8px) var(--Gaps-Gap-Large, 16px)
+          var(--Gaps-Gap-Large, 16px);
         align-items: flex-start;
         flex-direction: column;
         cursor: pointer;
@@ -130,8 +130,7 @@
 
     .headerInfo {
       display: flex;
-      padding: var(--SPACING-spacing-4, 32px)
-        var(--Corner-Radius-XXLarge-Roundness, 24px);
+      padding: var(--SPACING-spacing-4, 32px) var(--Corner-Radius-XXLarge-Roundness, 24px);
       align-self: stretch;
       flex-direction: column;
       gap: 12px;

@@ -148,16 +148,8 @@
     border-radius: var(--lg, 14px);
     border: 1px solid #e4dbff;
     background:
-      radial-gradient(
-        246.34% 159.6% at 111.66% 167.38%,
-        blue/blue-50 0%,
-        #fafafa 100%
-      ),
-      radial-gradient(
-        202.79% 112.89% at -25.75% -67.15%,
-        blue/blue-50 0%,
-        #fafafa 100%
-      );
+      radial-gradient(246.34% 159.6% at 111.66% 167.38%, blue/blue-50 0%, #fafafa 100%),
+      radial-gradient(202.79% 112.89% at -25.75% -67.15%, blue/blue-50 0%, #fafafa 100%);
   }
 }
 

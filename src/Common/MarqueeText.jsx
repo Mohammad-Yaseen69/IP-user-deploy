@@ -9,8 +9,7 @@ const MarqueeText = ({ text, className = "" }) => {
   useEffect(() => {
     const measure = () => {
       if (containerRef.current && textRef.current) {
-        const diff =
-          textRef.current.scrollWidth - containerRef.current.clientWidth;
+        const diff = textRef.current.scrollWidth - containerRef.current.clientWidth;
         setOverflowAmount(diff > 0 ? diff : 0);
       }
     };
@@ -34,10 +33,7 @@ const MarqueeText = ({ text, className = "" }) => {
       ref={containerRef}
       style={{ "--marquee-distance": `${overflowAmount}px` }}
     >
-      <span
-        className={`marquee-text ${isOverflowing ? "marquee-can-scroll" : ""}`}
-        ref={textRef}
-      >
+      <span className={`marquee-text ${isOverflowing ? "marquee-can-scroll" : ""}`} ref={textRef}>
         {text}
       </span>
     </span>

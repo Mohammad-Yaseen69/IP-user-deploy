@@ -30,9 +30,10 @@ const PaypalDetails = ({ wallet, data }) => {
               letterSpacing: "-0.28px",
             }}
           >
-            {t(
-              "PKR is not supported by Paypal, USD will be used as the default currency.",
-            ).replace("PKR", wallet?.currency?.code)}
+            {t("PKR is not supported by Paypal, USD will be used as the default currency.").replace(
+              "PKR",
+              wallet?.currency?.code,
+            )}
           </span>
         </div>
         <div

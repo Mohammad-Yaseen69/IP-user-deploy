@@ -1,15 +1,5 @@
 import { useContext, useState } from "react";
-import {
-  ChevronRight,
-  DollarSign,
-  Grid,
-  LogOut,
-  Tag,
-  Target,
-  User,
-  Users,
-  X,
-} from "react-feather";
+import { ChevronRight, DollarSign, Grid, LogOut, Tag, Target, User, Users, X } from "react-feather";
 import { useLocation, useNavigate } from "react-router-dom";
 import instaPay from "../../../assets/images/logo/logo2.webp";
 import { UserContext } from "../../../Context/UserContext";
@@ -42,8 +32,7 @@ export const MobileSidebar = () => {
   const { userDetails, logout } = useContext(UserContext) || {};
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const isActive = (to) =>
-    location.pathname === to || location.pathname.startsWith(`${to}/`);
+  const isActive = (to) => location.pathname === to || location.pathname.startsWith(`${to}/`);
 
   const displayName =
     userDetails?.full_name ||
@@ -67,11 +56,7 @@ export const MobileSidebar = () => {
   return (
     <div className={classes.mobileContainer}>
       <div className={classes.topHeader}>
-        <button
-          type="button"
-          className={classes.profilePill}
-          onClick={() => setIsDrawerOpen(true)}
-        >
+        <button type="button" className={classes.profilePill} onClick={() => setIsDrawerOpen(true)}>
           <div className={classes.avatarBadge}>{avatarInitial}</div>
           <span className={classes.profileName}>{displayName}</span>
           <ChevronRight size={14} className={classes.chevronIcon} />
@@ -91,11 +76,7 @@ export const MobileSidebar = () => {
           <div className={classes.drawer} onClick={(e) => e.stopPropagation()}>
             <div className={classes.drawerHeader}>
               <div className={classes.brandWrapper}>
-                <img
-                  className={classes.brandLogo}
-                  alt="InstaPay"
-                  src={instaPay}
-                />
+                <img className={classes.brandLogo} alt="InstaPay" src={instaPay} />
                 <span className={classes.businessBadge}>BUSINESS</span>
               </div>
               <button

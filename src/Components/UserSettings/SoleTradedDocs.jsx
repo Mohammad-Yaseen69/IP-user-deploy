@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  FormGroup,
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalHeader,
-} from "reactstrap";
+import { FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from "reactstrap";
 import styles from "./styles/doctype.module.css";
 import { Info } from "react-feather";
 import { useTranslation } from "react-i18next";
@@ -23,25 +16,13 @@ const SoleTradedDocs = () => {
       <div>
         <FormGroup>
           <Label>
-            {t(
-              "Sole Trader's Registry Extract (Entity's Registration/Creation Document)",
-            )}
-            <Info
-              className={styles.info_icon}
-              size={16}
-              onClick={() => setModalOne(!modalOne)}
-            />
+            {t("Sole Trader's Registry Extract (Entity's Registration/Creation Document)")}
+            <Info className={styles.info_icon} size={16} onClick={() => setModalOne(!modalOne)} />
           </Label>
           <Input type="file" />
         </FormGroup>
-        <Modal
-          isOpen={modalOne}
-          toggle={() => setModalOne(!modalOne)}
-          style={{ minWidth: "60vw" }}
-        >
-          <ModalHeader toggle={() => setModalOne(!modalOne)}>
-            {t("Details")}
-          </ModalHeader>
+        <Modal isOpen={modalOne} toggle={() => setModalOne(!modalOne)} style={{ minWidth: "60vw" }}>
+          <ModalHeader toggle={() => setModalOne(!modalOne)}>{t("Details")}</ModalHeader>
           <ModalBody>
             <div className={styles.content}>
               <p>
@@ -50,11 +31,7 @@ const SoleTradedDocs = () => {
                 )}
               </p>
               <br />
-              <p>
-                {t(
-                  "Where applicable, the document should not be older than 3 months.",
-                )}
-              </p>
+              <p>{t("Where applicable, the document should not be older than 3 months.")}</p>
               <br />
               <p>{t("The document must contain:")}</p>
               <br />
@@ -80,22 +57,12 @@ const SoleTradedDocs = () => {
         <FormGroup>
           <Label>
             {t("Collection of Identification Documents")}{" "}
-            <Info
-              className={styles.info_icon}
-              size={16}
-              onClick={() => setModalTwo(!modalTwo)}
-            />
+            <Info className={styles.info_icon} size={16} onClick={() => setModalTwo(!modalTwo)} />
           </Label>
           <Input type="file" />
         </FormGroup>
-        <Modal
-          isOpen={modalTwo}
-          toggle={() => setModalTwo(!modalTwo)}
-          style={{ minWidth: "60vw" }}
-        >
-          <ModalHeader toggle={() => setModalTwo(!modalTwo)}>
-            {t("Details")}
-          </ModalHeader>
+        <Modal isOpen={modalTwo} toggle={() => setModalTwo(!modalTwo)} style={{ minWidth: "60vw" }}>
+          <ModalHeader toggle={() => setModalTwo(!modalTwo)}>{t("Details")}</ModalHeader>
           <ModalBody>
             <div className={styles.content}>
               <p>
@@ -109,11 +76,7 @@ const SoleTradedDocs = () => {
               <ul>
                 <li>{t("Valid National Identity Card")}</li>
                 <li>{t("Valid Passport")}</li>
-                <li>
-                  {t(
-                    "Valid Resident Permits (only if issued by a European country)",
-                  )}
-                </li>
+                <li>{t("Valid Resident Permits (only if issued by a European country)")}</li>
               </ul>
               <br />
               <p>
@@ -142,9 +105,7 @@ const SoleTradedDocs = () => {
           toggle={() => setModalThree(!modalThree)}
           style={{ minWidth: "60vw" }}
         >
-          <ModalHeader toggle={() => setModalThree(!modalThree)}>
-            {t("Details")}
-          </ModalHeader>
+          <ModalHeader toggle={() => setModalThree(!modalThree)}>{t("Details")}</ModalHeader>
           <ModalBody>
             <div className={styles.content}>
               <ul>

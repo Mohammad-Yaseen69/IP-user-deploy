@@ -53,36 +53,22 @@ const Specification = ibanLib.countries?.FR?.constructor;
 if (Specification) {
   MISSING_COUNTRY_SPECS.forEach(([countryCode, length, structure, example]) => {
     if (!ibanLib.countries[countryCode]) {
-      ibanLib.countries[countryCode] = new Specification(
-        countryCode,
-        length,
-        structure,
-        example,
-      );
+      ibanLib.countries[countryCode] = new Specification(countryCode, length, structure, example);
     }
   });
 
-  CORRECTED_COUNTRY_SPECS.forEach(
-    ([countryCode, staleLength, length, structure, example]) => {
-      if (ibanLib.countries[countryCode]?.length === staleLength) {
-        ibanLib.countries[countryCode] = new Specification(
-          countryCode,
-          length,
-          structure,
-          example,
-        );
-      }
-    },
-  );
+  CORRECTED_COUNTRY_SPECS.forEach(([countryCode, staleLength, length, structure, example]) => {
+    if (ibanLib.countries[countryCode]?.length === staleLength) {
+      ibanLib.countries[countryCode] = new Specification(countryCode, length, structure, example);
+    }
+  });
 }
 
-export const toElectronicIban = (value) =>
-  ibanLib.electronicFormat(String(value || ""));
+export const toElectronicIban = (value) => ibanLib.electronicFormat(String(value || ""));
 
 export const isValidIban = (value) => ibanLib.isValid(toElectronicIban(value));
 
-export const formatIban = (value) =>
-  ibanLib.printFormat(toElectronicIban(value), " ");
+export const formatIban = (value) => ibanLib.printFormat(toElectronicIban(value), " ");
 
 const splitBban = (countryCode, bban) => {
   const structure = ibanLib.countries[countryCode]?.structure || "";
@@ -107,9 +93,7 @@ const splitBban = (countryCode, bban) => {
 const accountSegment = (segments) =>
   segments.reduce(
     (longest, segment) =>
-      !longest || segment.value.length >= longest.value.length
-        ? segment
-        : longest,
+      !longest || segment.value.length >= longest.value.length ? segment : longest,
     null,
   );
 

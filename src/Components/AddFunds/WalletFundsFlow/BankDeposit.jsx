@@ -39,8 +39,7 @@ const BankDeposit = ({
 
       dataHandler("exchange_rate", {
         fee: {
-          amount:
-            data?.exchange_rate_backup?.fee?.amount * dec.exchangeRate?.result,
+          amount: data?.exchange_rate_backup?.fee?.amount * dec.exchangeRate?.result,
         },
         sending: {
           currency: selectedBank.Currency,
@@ -57,8 +56,7 @@ const BankDeposit = ({
         ),
         exchange_rate: {
           exchange_rate_currency: selectedBank.Currency,
-          exchange_rate_sending_currency:
-            data.exchange_rate?.receiver?.currency,
+          exchange_rate_sending_currency: data.exchange_rate?.receiver?.currency,
           exchange_rate: dec.exchangeRate?.result,
         },
         total_currency: data.exchange_rate?.receiver?.currency,
@@ -66,9 +64,7 @@ const BankDeposit = ({
       });
     },
     onError: () => {
-      toast.error(
-        "We can't proceed with your request at the moment. please try again.",
-      );
+      toast.error("We can't proceed with your request at the moment. please try again.");
     },
   });
 
@@ -190,15 +186,9 @@ const BankDeposit = ({
         selectedBank["Reference (Mandatory)"] || selectedBank.reference || "",
       );
       formData.append("fee", data.exchange_rate?.fee?.amount);
-      formData.append(
-        "exchange_rate",
-        data.exchange_rate?.exchange_rate?.exchange_rate || 1,
-      );
+      formData.append("exchange_rate", data.exchange_rate?.exchange_rate?.exchange_rate || 1);
       formData.append("sendingAmount", data.exchange_rate?.sending?.amount);
-      formData.append(
-        "sendingCurrency",
-        selectedBank.Currency || selectedBank["Currency"] || "",
-      );
+      formData.append("sendingCurrency", selectedBank.Currency || selectedBank["Currency"] || "");
       formData.append("type", type);
       formData.append("guest_details", JSON.stringify(guestDetails));
       formData.append("client_reference", client_reference);
@@ -213,8 +203,7 @@ const BankDeposit = ({
   return (
     <div
       style={{
-        minHeight:
-          window.innerWidth < 1000 && type === "payment_address" && "70vh",
+        minHeight: window.innerWidth < 1000 && type === "payment_address" && "70vh",
       }}
       className={styles.container}
     >
@@ -222,18 +211,11 @@ const BankDeposit = ({
       {data.bankStep === 1 && (
         <>
           {showPaymentDets ? (
-            <PaymentDetails
-              data={data}
-              dataHandler={dataHandler}
-              isBankDeposit={true}
-            />
+            <PaymentDetails data={data} dataHandler={dataHandler} isBankDeposit={true} />
           ) : (
             <div className={styles.bankList}>
               <h4>
-                {t(
-                  "Select the InstaPay bank account that you want to transfer the funds to",
-                )}
-                :
+                {t("Select the InstaPay bank account that you want to transfer the funds to")}:
               </h4>
               {isLoading ? (
                 <div style={{ width: "200px", margin: "2rem auto" }}>
@@ -417,9 +399,7 @@ const BankDeposit = ({
               />
             </svg>
           </div>
-          <h4
-            style={{ color: "black", textAlign: "center", marginBottom: "0px" }}
-          >
+          <h4 style={{ color: "black", textAlign: "center", marginBottom: "0px" }}>
             {t(
               "We are checking your transfer details. This may take up to 1–3 business days. You’ll receive a confirmation when your wallet is credited.",
             )}

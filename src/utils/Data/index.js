@@ -223,9 +223,7 @@ export const C2B_RELATIONSHIPS = {
 };
 
 export const iso2Toiso3Convert = (iso2 = "") => {
-  const country = countries.find(
-    (item) => item.code.toLowerCase() === iso2?.toLowerCase(),
-  );
+  const country = countries.find((item) => item.code.toLowerCase() === iso2?.toLowerCase());
   const alpha3 = countriesjson.find(
     (item) =>
       item.name.toLowerCase() === country?.name?.toLowerCase() ||

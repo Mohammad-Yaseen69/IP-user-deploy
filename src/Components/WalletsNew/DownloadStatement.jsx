@@ -1,14 +1,7 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { DateRangePicker } from "react-date-range";
 import { useTranslation } from "react-i18next";
-import {
-  Button,
-  Input,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-} from "reactstrap";
+import { Button, Input, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import calendar from "./files/calendar.svg";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { UserContext } from "../../Context/UserContext";
@@ -21,12 +14,7 @@ import "jspdf-autotable";
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 import { exportToExcel } from "../../utils/Functions/csvExport";
 
-const DownloadStatement = ({
-  showModal,
-  setShowModal,
-  wallet,
-  isTransection,
-}) => {
+const DownloadStatement = ({ showModal, setShowModal, wallet, isTransection }) => {
   const { userDetails, authHeader, beneficiaries } = useContext(UserContext);
   const { t } = useTranslation();
   const [dateString, setDateString] = useState("");
@@ -51,9 +39,7 @@ const DownloadStatement = ({
         from: startDate.toISOString().split("T")[0],
         to: endDate.toISOString().split("T")[0],
       };
-      setDateString(
-        `Selected from "${startDate.toDateString()}" to "${endDate.toDateString()}"`,
-      );
+      setDateString(`Selected from "${startDate.toDateString()}" to "${endDate.toDateString()}"`);
       setApiDates(formattedDateRange);
       setDateRange(ranges.selection);
     }
@@ -62,10 +48,7 @@ const DownloadStatement = ({
   const datePickerRef = useRef(null);
 
   const handleClickOutside = useCallback((event) => {
-    if (
-      datePickerRef.current &&
-      !datePickerRef.current.contains(event.target)
-    ) {
+    if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
       setShowDatePicker(false);
     }
   }, []);
@@ -143,15 +126,12 @@ const DownloadStatement = ({
       if (item?.service_type === "withdraw_by_admin") return "Admin";
       if (item?.service_type === "kyc_verification") return "InstaPay";
       if (item?.service_type === "withdrawal") {
-        const first =
-          item?.sender?.user?.first_name ?? item?.sender?.company?.company_name;
+        const first = item?.sender?.user?.first_name ?? item?.sender?.company?.company_name;
         const last = item?.sender?.user?.last_name ?? "";
         return [first, last].filter(Boolean).join(" ");
       }
       if (item?.receiver?.user) {
-        const first =
-          item?.receiver?.user?.first_name ??
-          item?.receiver?.company?.company_name;
+        const first = item?.receiver?.user?.first_name ?? item?.receiver?.company?.company_name;
         const last = item?.receiver?.user?.last_name ?? "";
         return [first, last].filter(Boolean).join(" ");
       }
@@ -161,10 +141,7 @@ const DownloadStatement = ({
         item?.account?.user?.first_name ??
         internationalReceiver?.company_name ??
         item?.account?.company?.company_name;
-      const last =
-        internationalReceiver?.last_name ??
-        item?.account?.user?.last_name ??
-        "";
+      const last = internationalReceiver?.last_name ?? item?.account?.user?.last_name ?? "";
       return [first, last].filter(Boolean).join(" ");
     }
 
@@ -178,18 +155,12 @@ const DownloadStatement = ({
       item?.sender?.user?.first_name ??
       item?.mastercard?.account?.first_name ??
       item?.sender?.company?.company_name;
-    const last =
-      item?.sender?.user?.last_name ??
-      item?.mastercard?.account?.last_name ??
-      "";
+    const last = item?.sender?.user?.last_name ?? item?.mastercard?.account?.last_name ?? "";
     return [first, last].filter(Boolean).join(" ");
   };
 
   const renderPaymentType = (item) => {
-    if (
-      item?.service_type === "withdraw_by_admin" ||
-      item?.service_type === "deposite_by_admin"
-    ) {
+    if (item?.service_type === "withdraw_by_admin" || item?.service_type === "deposite_by_admin") {
       return "Admin Funds";
     }
     if (item?.payment_type?.includes("bank")) {
@@ -222,9 +193,7 @@ const DownloadStatement = ({
 
     doc.setFont("montserrat", "normal");
     doc.setFontSize(8);
-    !isTransection
-      ? doc.text(`Wallet ID: INSTA - ${wallet?.wallet_id}`, 14, 32)
-      : null;
+    !isTransection ? doc.text(`Wallet ID: INSTA - ${wallet?.wallet_id}`, 14, 32) : null;
 
     doc.text(
       `Name: ${userDetails?.user?.first_name ?? userDetails?.company_name} ${userDetails?.user?.last_name ?? ""} `,
@@ -232,17 +201,11 @@ const DownloadStatement = ({
       38,
     );
     // doc.text(`Address: ${userDetails?.address ?? "N/A"} `, 14, 44);
-    doc.text(
-      `Statement Duration: ${apiDates?.from} to ${apiDates?.to} `,
-      14,
-      44,
-    );
+    doc.text(`Statement Duration: ${apiDates?.from} to ${apiDates?.to} `, 14, 44);
 
     if (!isTransection && doc.autoTable) {
       doc.autoTable({
-        head: [
-          ["Wallet ID", "Wallet Currency", "Current Balance", "Wallet Status"],
-        ],
+        head: [["Wallet ID", "Wallet Currency", "Current Balance", "Wallet Status"]],
         body: [
           [
             `INSTA - ${wallet?.wallet_id}`,
@@ -282,9 +245,8 @@ const DownloadStatement = ({
         ],
         body: arr.map((item) => {
           const internationalReceiver =
-            beneficiaries.filter(
-              (benef) => benef?._id === item?.beneficiary,
-            )?.[0] || item?.beneficiaryDetails;
+            beneficiaries.filter((benef) => benef?._id === item?.beneficiary)?.[0] ||
+            item?.beneficiaryDetails;
 
           return [
             new Date(item?.createdAt)?.toLocaleString(),
@@ -321,9 +283,7 @@ const DownloadStatement = ({
       style={{ overflow: "visible", margin: "0 auto" }}
       isOpen={showModal}
     >
-      <ModalHeader toggle={() => setShowModal(!showModal)}>
-        {t("Download Statement")}
-      </ModalHeader>
+      <ModalHeader toggle={() => setShowModal(!showModal)}>{t("Download Statement")}</ModalHeader>
       <ModalBody style={{ overflow: "visible" }}>
         <div
           style={{
@@ -359,11 +319,7 @@ const DownloadStatement = ({
                 zIndex: 9999999,
               }}
             >
-              <DateRangePicker
-                maxDate={new Date()}
-                ranges={[dateRange]}
-                onChange={handleChange}
-              />
+              <DateRangePicker maxDate={new Date()} ranges={[dateRange]} onChange={handleChange} />
             </div>
           )}
         </div>
@@ -379,11 +335,7 @@ const DownloadStatement = ({
             {downloadError}
           </div>
         )}
-        <Input
-          type="select"
-          value={fileType}
-          onChange={(e) => setFileType(e.target.value)}
-        >
+        <Input type="select" value={fileType} onChange={(e) => setFileType(e.target.value)}>
           <option value="">{t("-Select-File-Type-")}</option>
           <option value="PDF">{t("PDF")}</option>
           <option value="CSV">{t("CSV")}</option>

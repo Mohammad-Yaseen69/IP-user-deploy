@@ -1,12 +1,6 @@
 import { Tooltip, useMediaQuery } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
-import {
-  AlertCircle,
-  AlertTriangle,
-  ArrowLeft,
-  ArrowRight,
-  X,
-} from "react-feather";
+import { AlertCircle, AlertTriangle, ArrowLeft, ArrowRight, X } from "react-feather";
 import { useTranslation } from "react-i18next";
 import bvnkIndustryReference from "../../../../utils/Data/bvnkIndustryReference.json";
 import CountryDropDown from "../../../AddBeneficiary/CountryDropDown";
@@ -14,9 +8,7 @@ import styles from "../style/onboardingSteps.module.css";
 import SidebarProgress from "./SidebarProgress";
 import StepProgress from "./StepProgress";
 import AlertBox from "./AlertBox";
-import useStepValidation, {
-  required,
-} from "../../../../hooks/useStepValidation";
+import useStepValidation, { required } from "../../../../hooks/useStepValidation";
 
 const getIndustryPayload = (industry) => ({
   name: industry?.name,
@@ -71,8 +63,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
 
   const [form, setForm] = useState({
     industry: data.industry || "",
-    industryReference:
-      data.industryReference || parseIndustryReference(data.industry),
+    industryReference: data.industryReference || parseIndustryReference(data.industry),
     businessDescription: data.businessDescription || "",
     monthlyVolume: data.monthlyVolume || "",
     transactionTypes: data.transactionTypes || [],
@@ -100,9 +91,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
   const industryOptions = useMemo(() => {
     return bvnkIndustryReference.map((group) => ({
       name: group.name,
-      children: (group.children || []).map((child) =>
-        getIndustryPayload(child),
-      ),
+      children: (group.children || []).map((child) => getIndustryPayload(child)),
     }));
   }, []);
 
@@ -193,9 +182,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
       const current = prev[key] || [];
       return {
         ...prev,
-        [key]: current.includes(item)
-          ? current.filter((i) => i !== item)
-          : [...current, item],
+        [key]: current.includes(item) ? current.filter((i) => i !== item) : [...current, item],
       };
     });
   };
@@ -241,9 +228,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
         }}
         className={styles.activityHeader}
       >
-        <h2 className={styles.formHeading}>
-          {t("How will you use InstaPay?")}
-        </h2>
+        <h2 className={styles.formHeading}>{t("How will you use InstaPay?")}</h2>
         <p className={styles.formSubheading}>
           {t(
             "These answers tailor your account. Some questions and documents appear dynamically based on your profile, nothing more than we need.",
@@ -266,13 +251,10 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
               marginBottom: "15px",
             }}
           >
-            <div
-              className={`${styles.onboardingForm2} ${styles.activityFormWrapper}`}
-            >
+            <div className={`${styles.onboardingForm2} ${styles.activityFormWrapper}`}>
               <div className={styles.inputGroup}>
                 <label className={styles.inputLabel}>
-                  {t("INDUSTRY / SECTOR")}{" "}
-                  <span style={{ color: "red", fontWeight: 600 }}>*</span>
+                  {t("INDUSTRY / SECTOR")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
                 </label>
 
                 <select
@@ -291,10 +273,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
                   {industryOptions.map((group) => (
                     <optgroup key={group.name} label={t(group.name)}>
                       {group.children.map((ind) => (
-                        <option
-                          key={ind.productionReference}
-                          value={ind.productionReference}
-                        >
+                        <option key={ind.productionReference} value={ind.productionReference}>
                           {t(ind.name)}
                         </option>
                       ))}
@@ -318,9 +297,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
                     "Cross-border payment orchestration and multi-currency treasury...",
                   )}
                 />
-                <span className={styles.charCount}>
-                  {form.businessDescription.length}/1000
-                </span>
+                <span className={styles.charCount}>{form.businessDescription.length}/1000</span>
               </div>
 
               <div
@@ -330,9 +307,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
                   maxWidth: "604px",
                 }}
               >
-                <label className={styles.inputLabel}>
-                  {t("MAIN COUNTRIES OF OPERATION")}
-                </label>
+                <label className={styles.inputLabel}>{t("MAIN COUNTRIES OF OPERATION")}</label>
 
                 <div
                   className={styles.chips}
@@ -356,11 +331,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
                         type="button"
                         className={isSelected ? styles.activeChip : styles.chip}
                         onClick={() => toggleArrayItem("countries", country)}
-                        style={
-                          isSelected
-                            ? { gap: "6px", marginBottom: 0 }
-                            : undefined
-                        }
+                        style={isSelected ? { gap: "6px", marginBottom: 0 } : undefined}
                       >
                         <span>{t(country)}</span>
                         {isSelected ? <X size={15} /> : null}
@@ -372,8 +343,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
                     ?.filter(
                       (country) =>
                         !MAIN_COUNTRY_OPTIONS.some(
-                          (item) =>
-                            item.toLowerCase() === country.toLowerCase(),
+                          (item) => item.toLowerCase() === country.toLowerCase(),
                         ),
                     )
                     ?.map((country) => (
@@ -450,9 +420,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
               </div>
 
               <div className={styles.inputGroup}>
-                <label className={styles.inputLabel}>
-                  {t("CURRENCIES YOU WORK WITH")}
-                </label>
+                <label className={styles.inputLabel}>{t("CURRENCIES YOU WORK WITH")}</label>
 
                 <div className={styles.chips}>
                   {["EUR", "USD", "GBP", "USDC"].map((item) => (
@@ -471,9 +439,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
               </div>
 
               <div className={styles.inputGroup}>
-                <label className={styles.inputLabel}>
-                  {t("SERVICES REQUESTED")}
-                </label>
+                <label className={styles.inputLabel}>{t("SERVICES REQUESTED")}</label>
                 <div className={styles.chips}>
                   {[
                     { label: "SEPA & SWIFT", comingSoon: false },
@@ -492,13 +458,9 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
                           type="button"
                           disabled={comingSoon}
                           className={`${styles.chip} ${
-                            form.services?.includes(label)
-                              ? styles.activeChip
-                              : ""
+                            form.services?.includes(label) ? styles.activeChip : ""
                           }`}
-                          onClick={() =>
-                            !comingSoon && toggleArrayItem("services", label)
-                          }
+                          onClick={() => !comingSoon && toggleArrayItem("services", label)}
                         >
                           {label}
                         </button>
@@ -509,9 +471,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
               </div>
 
               <div className={styles.inputGroup}>
-                <label className={styles.inputLabel}>
-                  {t("PAYMENT RAILS")}
-                </label>
+                <label className={styles.inputLabel}>{t("PAYMENT RAILS")}</label>
 
                 <div className={styles.chips}>
                   {["SEPA", "SWIFT", "Local rails"].map((item) => (
@@ -519,9 +479,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
                       key={item}
                       type="button"
                       className={`${styles.chip} ${
-                        form.paymentRails?.includes(item)
-                          ? styles.activeChip
-                          : ""
+                        form.paymentRails?.includes(item) ? styles.activeChip : ""
                       }`}
                       onClick={() => toggleArrayItem("paymentRails", item)}
                     >
@@ -547,9 +505,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
                 width: "100%",
               }}
             >
-              <h4 className={styles.sectionTitle}>
-                {t("Intended use of the account")}
-              </h4>
+              <h4 className={styles.sectionTitle}>{t("Intended use of the account")}</h4>
 
               <div className={styles.formGrid}>
                 <div className={styles.inputGroup}>
@@ -581,9 +537,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
                       ...err("paymentNature"),
                     }}
                     type="text"
-                    placeholder={t(
-                      "e.g. Invoices, consulting fees, supplier settlements",
-                    )}
+                    placeholder={t("e.g. Invoices, consulting fees, supplier settlements")}
                     className={styles.textInput}
                     value={form.paymentNature}
                     onChange={set("paymentNature")}
@@ -650,9 +604,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
                       <span
                         key={c}
                         className={styles.activeChip}
-                        onClick={() =>
-                          toggleArrayItem("destinationCountries", c)
-                        }
+                        onClick={() => toggleArrayItem("destinationCountries", c)}
                         style={{ cursor: "pointer" }}
                       >
                         <span>{c}</span>
@@ -663,16 +615,10 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
                 </div>
               </div>
 
-              <div
-                className={`${styles.formGrid} ${isMobile && styles.twoInputRow}`}
-              >
+              <div className={`${styles.formGrid} ${isMobile && styles.twoInputRow}`}>
                 <div className={styles.inputGroup}>
                   <label className={styles.inputLabel}>
-                    {t(
-                      isMobile
-                        ? "Avg transaction"
-                        : "AVERAGE TRANSACTION VALUE (EUR)",
-                    )}{" "}
+                    {t(isMobile ? "Avg transaction" : "AVERAGE TRANSACTION VALUE (EUR)")}{" "}
                     <span style={{ color: "red", fontWeight: 600 }}>*</span>
                   </label>
 
@@ -696,11 +642,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
 
                 <div className={styles.inputGroup}>
                   <label className={styles.inputLabel}>
-                    {t(
-                      isMobile
-                        ? "Max transaction"
-                        : "MAXIMUM TRANSACTION VALUE (EUR)",
-                    )}{" "}
+                    {t(isMobile ? "Max transaction" : "MAXIMUM TRANSACTION VALUE (EUR)")}{" "}
                     <span style={{ color: "red", fontWeight: 600 }}>*</span>
                   </label>
 
@@ -749,12 +691,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
                 </div>
                 {isMobile ? (
                   <div className={styles.twoInputRow}>
-                    <PaymentsFields
-                      form={form}
-                      set={set}
-                      err={err}
-                      isMobile={true}
-                    />
+                    <PaymentsFields form={form} set={set} err={err} isMobile={true} />
                   </div>
                 ) : (
                   <PaymentsFields form={form} set={set} err={err} />
@@ -884,6 +821,4 @@ const PaymentsFields = ({ form, set, isMobile, err }) => {
   );
 };
 
-const RequiredFieldIndicator = () => (
-  <span style={{ color: "red", fontWeight: 600 }}>*</span>
-);
+const RequiredFieldIndicator = () => <span style={{ color: "red", fontWeight: 600 }}>*</span>;

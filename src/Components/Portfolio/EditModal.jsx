@@ -14,8 +14,7 @@ const EditModal = ({ isOpen, toggle, item, pAddress }) => {
   const [file, setFile] = useState(null);
   const [fileType, setFileType] = useState("");
   const [isSaving, setIsSaving] = useState(false);
-  const { authHeader, getUserDocuments, getUserVideos } =
-    useContext(UserContext);
+  const { authHeader, getUserDocuments, getUserVideos } = useContext(UserContext);
   const { t } = useTranslation();
 
   const handleUpdateAndSave = () => {
@@ -88,9 +87,7 @@ const EditModal = ({ isOpen, toggle, item, pAddress }) => {
           }}
         >
           <Dropzone
-            tempFile={
-              item?.document_details?.url || item?.jw_media?.thumbnail_url
-            }
+            tempFile={item?.document_details?.url || item?.jw_media?.thumbnail_url}
             file={file}
             setFile={setFile}
             setFileType={setFileType}
@@ -186,8 +183,7 @@ const EditModal = ({ isOpen, toggle, item, pAddress }) => {
                 outline: "none",
                 padding: "9px 16px",
                 opacity: (!title && !pAddress) || isSaving ? 0.7 : 1,
-                cursor:
-                  (!title && !pAddress) || isSaving ? "not-allowed" : "pointer",
+                cursor: (!title && !pAddress) || isSaving ? "not-allowed" : "pointer",
               }}
               disabled={(!title && !pAddress) || isSaving}
               onClick={handleUpdateAndSave}

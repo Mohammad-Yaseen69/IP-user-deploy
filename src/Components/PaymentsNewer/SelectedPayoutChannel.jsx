@@ -8,9 +8,7 @@ const SelectedPayoutChannel = ({ payoutChannel, setSubStep, step = 2 }) => {
       className="i_t_selected"
     >
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <span style={{ color: "black", fontSize: ".7rem" }}>
-          {t("Payout Channel")}
-        </span>
+        <span style={{ color: "black", fontSize: ".7rem" }}>{t("Payout Channel")}</span>
         <span
           style={{
             background: "white",

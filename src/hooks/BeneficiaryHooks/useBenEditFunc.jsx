@@ -46,8 +46,7 @@ const useBenEditFunc = ({
   const [walletNumberError, setWalletNumberError] = useState("");
   const { userDetails, authHeader } = useContext(UserContext);
   const [saveloading, setsaveloading] = useState(false);
-  const isIndividualToBusiness =
-    inBusiness && userDetails?.account_type === "individual";
+  const isIndividualToBusiness = inBusiness && userDetails?.account_type === "individual";
 
   let extras = { ...basicExtras, ...additionFields };
 
@@ -59,22 +58,17 @@ const useBenEditFunc = ({
 
   const editBenFun = () => {
     const account_types = [
-      services.some((item) => item?.method?.toLowerCase()?.includes("bank")) &&
-      completedBank
+      services.some((item) => item?.method?.toLowerCase()?.includes("bank")) && completedBank
         ? "bank"
         : null,
-      services.some((item) => item?.method?.toLowerCase()?.includes("card")) &&
-      completedCard
+      services.some((item) => item?.method?.toLowerCase()?.includes("card")) && completedCard
         ? "card"
         : null,
-      services.some((item) =>
-        item?.method?.toLowerCase()?.includes("mobile"),
-      ) && completedWallet
+      services.some((item) => item?.method?.toLowerCase()?.includes("mobile")) && completedWallet
         ? "mobile"
         : null,
       completedCrypto ? "crypto" : null,
-      services.some((item) => item?.method?.toLowerCase()?.includes("cash")) &&
-      cashPickupCompleted
+      services.some((item) => item?.method?.toLowerCase()?.includes("cash")) && cashPickupCompleted
         ? "cash"
         : null,
       instapayWallets.every((item) =>
@@ -97,9 +91,7 @@ const useBenEditFunc = ({
       country: countryId ?? "",
       country_iso_code: countryIsoCode,
       relation: isIndividualToBusiness ? "OTHER" : (formData.relation ?? ""),
-      relationC2B: isIndividualToBusiness
-        ? (formData.relationC2B ?? "")
-        : undefined,
+      relationC2B: isIndividualToBusiness ? (formData.relationC2B ?? "") : undefined,
       account: userDetails._id ?? "",
       representativeDetails: representativeFields || {},
       beneficiary_type: inBusiness ? "business" : "individual",
@@ -108,9 +100,7 @@ const useBenEditFunc = ({
       wallet: walletIds ?? "",
       extras: extras,
       bank_details:
-        services.some((item) =>
-          item?.method?.toLowerCase()?.includes("bank"),
-        ) && completedBank
+        services.some((item) => item?.method?.toLowerCase()?.includes("bank")) && completedBank
           ? [
               {
                 swift_code: accNumType === "Swift" ? ibanSwift : "",
@@ -128,15 +118,12 @@ const useBenEditFunc = ({
             ]
           : [],
       mobile_wallet:
-        services.some((item) =>
-          item?.method?.toLowerCase()?.includes("mobile"),
-        ) && completedWallet
+        services.some((item) => item?.method?.toLowerCase()?.includes("mobile")) && completedWallet
           ? [
               {
                 money_provider: formData.mobile_wallet_provider ?? "",
                 wallet_name: formData.mobile_wallet_name ?? "",
-                wallet_account_number:
-                  formData.mobile_wallet_account_number ?? "",
+                wallet_account_number: formData.mobile_wallet_account_number ?? "",
                 extras: mobileExtras,
               },
             ]
@@ -150,9 +137,8 @@ const useBenEditFunc = ({
           ]
         : [],
       cash_pickup:
-        services.some((item) =>
-          item?.method?.toLowerCase()?.includes("cash"),
-        ) && cashPickupCompleted
+        services.some((item) => item?.method?.toLowerCase()?.includes("cash")) &&
+        cashPickupCompleted
           ? [
               {
                 document_type: cashPickupType,
@@ -162,9 +148,7 @@ const useBenEditFunc = ({
             ]
           : [],
       card:
-        services.some((item) =>
-          item?.method?.toLowerCase()?.includes("card"),
-        ) && completedCard
+        services.some((item) => item?.method?.toLowerCase()?.includes("card")) && completedCard
           ? [
               {
                 card_name: formData.card_holder_one ?? "",
@@ -225,22 +209,13 @@ const useBenEditFunc = ({
 
     console.log(firstName, lastName, mobileNumber, city);
     requiredFields.basic.forEach((field) => {
-      if (!firstName?.trim() && field === "first_name" && !inBusiness)
-        missing.push(field);
-      if (!lastName?.trim() && field === "last_name" && !inBusiness)
-        missing.push(field);
-      if (!companyName?.trim() && field === "company_name" && inBusiness)
-        missing.push(field);
+      if (!firstName?.trim() && field === "first_name" && !inBusiness) missing.push(field);
+      if (!lastName?.trim() && field === "last_name" && !inBusiness) missing.push(field);
+      if (!companyName?.trim() && field === "company_name" && inBusiness) missing.push(field);
       if (!mobileNumber?.trim() && field === "phone") missing.push(field);
-      if (!formData[field]?.trim() && !country?.trim() && field === "country")
-        missing.push(field);
-      if (!formData[field]?.trim() && !city?.trim() && field === "city")
-        missing.push(field);
-      if (
-        field === "relation" &&
-        isIndividualToBusiness &&
-        !formData.relationC2B?.trim()
-      )
+      if (!formData[field]?.trim() && !country?.trim() && field === "country") missing.push(field);
+      if (!formData[field]?.trim() && !city?.trim() && field === "city") missing.push(field);
+      if (field === "relation" && isIndividualToBusiness && !formData.relationC2B?.trim())
         missing.push(field);
       if (field === "relation" && isIndividualToBusiness) return;
       if (
@@ -269,14 +244,11 @@ const useBenEditFunc = ({
     setsaveloading(true);
     try {
       if (formData.mobile_wallet_account_number) {
-        await axios.post(
-          `${import.meta.env.VITE_IP_DEV_API}/api/dt/check-number-public`,
-          {
-            data: encryptData({
-              number: `+${formData.mobile_wallet_account_number}`,
-            }),
-          },
-        );
+        await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/check-number-public`, {
+          data: encryptData({
+            number: `+${formData.mobile_wallet_account_number}`,
+          }),
+        });
       }
 
       await editBenFun();
@@ -287,20 +259,12 @@ const useBenEditFunc = ({
         return;
       }
       const decrypt = decryptData(error?.response?.data?.data);
-      const decryptMsg =
-        typeof decrypt === "string" ? decrypt : decrypt?.message || "";
+      const decryptMsg = typeof decrypt === "string" ? decrypt : decrypt?.message || "";
 
-      if (
-        decryptMsg.includes("phone") &&
-        formData.mobile_wallet_account_number
-      ) {
-        setWalletNumberError(
-          "Incorrect phone number, please enter a valid number",
-        );
+      if (decryptMsg.includes("phone") && formData.mobile_wallet_account_number) {
+        setWalletNumberError("Incorrect phone number, please enter a valid number");
       } else if (decryptMsg.includes("phone")) {
-        setMobileNumberError(
-          "Incorrect phone number, please enter a valid number",
-        );
+        setMobileNumberError("Incorrect phone number, please enter a valid number");
       }
       console.log(decrypt);
     } finally {

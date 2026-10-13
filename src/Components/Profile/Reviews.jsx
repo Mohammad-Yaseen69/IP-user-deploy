@@ -32,16 +32,10 @@ const Reviews = ({
         const buyerReviewsResponse = await axios.get(
           `${import.meta.env.VITE_IP_DEV_API}/api/user/get-user-reviews/${userDetails?.username}/buyer/0/0`,
         );
-        const decryptedBuyerReviews = decryptData(
-          buyerReviewsResponse.data.data,
-        );
+        const decryptedBuyerReviews = decryptData(buyerReviewsResponse.data.data);
         setUserReviewsAsBuyer(decryptedBuyerReviews?.userReviews?.reviews);
-        setAverageRatingAsBuyer(
-          decryptedBuyerReviews?.userReviews?.averageRating,
-        );
-        setTotalReviewsAsBuyer(
-          decryptedBuyerReviews?.userReviews?.totalNumberOfReviews,
-        );
+        setAverageRatingAsBuyer(decryptedBuyerReviews?.userReviews?.averageRating);
+        setTotalReviewsAsBuyer(decryptedBuyerReviews?.userReviews?.totalNumberOfReviews);
       } catch (error) {
         // console.log(decryptData(error?.response?.data?.data))
       } finally {
@@ -55,16 +49,10 @@ const Reviews = ({
         const sellerReviewsResponse = await axios.get(
           `${import.meta.env.VITE_IP_DEV_API}/api/user/get-user-reviews/${userDetails?.username}/seller/0/0`,
         );
-        const decryptedSellerReviews = decryptData(
-          sellerReviewsResponse.data.data,
-        );
+        const decryptedSellerReviews = decryptData(sellerReviewsResponse.data.data);
         setUserReviewsAsSeller(decryptedSellerReviews?.userReviews?.reviews);
-        setAverageRatingAsSeller(
-          decryptedSellerReviews?.userReviews?.averageRating,
-        );
-        setTotalReviewsAsSeller(
-          decryptedSellerReviews?.userReviews?.totalNumberOfReviews,
-        );
+        setAverageRatingAsSeller(decryptedSellerReviews?.userReviews?.averageRating);
+        setTotalReviewsAsSeller(decryptedSellerReviews?.userReviews?.totalNumberOfReviews);
       } catch (error) {
         // console.log(decryptData(error?.response?.data?.data))
       } finally {
@@ -73,9 +61,7 @@ const Reviews = ({
     };
 
     if (userDetails) {
-      currentRevTab === "Buyer"
-        ? getUserReviewsAsBuyer()
-        : getUserReviewsAsSeller();
+      currentRevTab === "Buyer" ? getUserReviewsAsBuyer() : getUserReviewsAsSeller();
     }
   }, [currentRevTab, userDetails]);
   const navigate = useNavigate();
@@ -86,8 +72,7 @@ const Reviews = ({
       <div className={styles.tabs}>
         <div
           style={{
-            background:
-              currentRevTab === "Seller" ? "rgba(109, 41, 220, 0.1)" : "#fff",
+            background: currentRevTab === "Seller" ? "rgba(109, 41, 220, 0.1)" : "#fff",
           }}
           onClick={() => setCurrentRevTab("Seller")}
         >
@@ -95,8 +80,7 @@ const Reviews = ({
         </div>
         <div
           style={{
-            background:
-              currentRevTab === "Buyer" ? "rgba(109, 41, 220, 0.1)" : "#fff",
+            background: currentRevTab === "Buyer" ? "rgba(109, 41, 220, 0.1)" : "#fff",
           }}
           onClick={() => setCurrentRevTab("Buyer")}
         >
@@ -112,18 +96,14 @@ const Reviews = ({
           <>
             {currentRevTab === "Buyer" && userReviewsAsBuyer.length > 0
               ? userReviewsAsBuyer
-                  .sort(
-                    (a, b) => new Date(a?.createdAt) - new Date(b?.createdAt),
-                  )
+                  .sort((a, b) => new Date(a?.createdAt) - new Date(b?.createdAt))
                   .map((item) => (
                     <div key={item._id} className={styles.review_card}>
                       <div className={styles.rc_top}>
                         <div
                           className={styles.rct_left}
                           style={{ cursor: "pointer" }}
-                          onClick={() =>
-                            navigate(`/profile/${item?.buyer?.username}`)
-                          }
+                          onClick={() => navigate(`/profile/${item?.buyer?.username}`)}
                         >
                           {item?.buyer?.profileImage?.url ? (
                             <img
@@ -139,8 +119,7 @@ const Reviews = ({
                           )}
                           <div className={styles.rctl_dets}>
                             <h5>
-                              {item?.buyer?.user?.first_name ||
-                                item?.buyer?.user?.company_name}{" "}
+                              {item?.buyer?.user?.first_name || item?.buyer?.user?.company_name}{" "}
                               {item?.buyer?.user?.last_name || ""}
                             </h5>
                             <span>{item?.buyer?.account_type}</span>
@@ -165,22 +144,15 @@ const Reviews = ({
                                 <span>{t("Replied to")}</span>
                                 <div
                                   style={{ cursor: "pointer" }}
-                                  onClick={() =>
-                                    navigate(
-                                      `/profile/${item?.buyer?.username}`,
-                                    )
-                                  }
+                                  onClick={() => navigate(`/profile/${item?.buyer?.username}`)}
                                 >
-                                  {item?.buyer?.user?.first_name}{" "}
-                                  {item?.buyer?.user?.last_name}
+                                  {item?.buyer?.user?.first_name} {item?.buyer?.user?.last_name}
                                 </div>
                               </div>
                               <div
                                 className={styles.rctl_bottom}
                                 style={{ cursor: "pointer" }}
-                                onClick={() =>
-                                  navigate(`/profile/${userDetails?.username}`)
-                                }
+                                onClick={() => navigate(`/profile/${userDetails?.username}`)}
                               >
                                 {userDetails?.profileImage?.url ? (
                                   <img
@@ -201,11 +173,7 @@ const Reviews = ({
                                   </div>
                                   <h5
                                     style={{ cursor: "pointer" }}
-                                    onClick={() =>
-                                      navigate(
-                                        `/profile/${userDetails?.username}`,
-                                      )
-                                    }
+                                    onClick={() => navigate(`/profile/${userDetails?.username}`)}
                                   >
                                     {userDetails?.user?.first_name ||
                                       userDetails?.company?.company_name}{" "}
@@ -225,18 +193,14 @@ const Reviews = ({
               : ""}
             {currentRevTab === "Seller" && userReviewsAsSeller.length > 0
               ? userReviewsAsSeller
-                  .sort(
-                    (a, b) => new Date(b?.createdAt) - new Date(a?.createdAt),
-                  )
+                  .sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt))
                   .map((item) => (
                     <div key={item._id} className={styles.review_card}>
                       <div className={styles.rc_top}>
                         <div
                           className={styles.rct_left}
                           style={{ cursor: "pointer" }}
-                          onClick={() =>
-                            navigate(`/profile/${item?.seller?.username}`)
-                          }
+                          onClick={() => navigate(`/profile/${item?.seller?.username}`)}
                         >
                           {item?.seller?.profileImage?.url ? (
                             <img
@@ -252,8 +216,7 @@ const Reviews = ({
                           )}
                           <div className={styles.rctl_dets}>
                             <h5>
-                              {item?.seller?.user?.first_name ||
-                                item?.seller?.user?.company_name}{" "}
+                              {item?.seller?.user?.first_name || item?.seller?.user?.company_name}{" "}
                               {item?.seller?.user?.last_name || ""}
                             </h5>
                             <span>{item?.seller?.account_type}</span>

@@ -35,16 +35,14 @@ const AddCryptoWalletFlow = ({
   const [createdAsset, setCreatedAsset] = useState(null);
   const assets = useMemo(
     () =>
-      ASSETS.filter((asset) => !(asset.restrictedInEurope && isEuropean)).map(
-        (asset) => ({ ...asset, owned: ownedCodes.has(asset.code) }),
-      ),
+      ASSETS.filter((asset) => !(asset.restrictedInEurope && isEuropean)).map((asset) => ({
+        ...asset,
+        owned: ownedCodes.has(asset.code),
+      })),
     [isEuropean, ownedCodes],
   );
 
-  const asset = useMemo(
-    () => assets.find((a) => a.id === assetId),
-    [assets, assetId],
-  );
+  const asset = useMemo(() => assets.find((a) => a.id === assetId), [assets, assetId]);
 
   const wasOpen = useRef(false);
   useEffect(() => {
@@ -116,10 +114,7 @@ const AddCryptoWalletFlow = ({
       </p>
     </div>
   ) : (
-    <ActivationStep
-      asset={asset}
-      onChangeSelection={() => setStep(STEPS.ASSET)}
-    />
+    <ActivationStep asset={asset} onChangeSelection={() => setStep(STEPS.ASSET)} />
   );
 
   const config = {
@@ -129,9 +124,7 @@ const AddCryptoWalletFlow = ({
       secondaryLabel: t("Cancel"),
       primaryLabel: t("Continue"),
       primaryDisabled: !accountType,
-      content: (
-        <AddAccountStep accountType={accountType} onSelect={setAccountType} />
-      ),
+      content: <AddAccountStep accountType={accountType} onSelect={setAccountType} />,
     },
     [STEPS.ASSET]: {
       title: t("Add crypto wallet"),

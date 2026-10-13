@@ -55,9 +55,7 @@ export const RiskDistribution = () => {
     <div className={styles.sectionCard} style={{ width: "50%" }}>
       <div className={styles.sectionHeader}>
         <div className={styles.sectionHeaderLeft}>
-          <p className={styles.sectionTitle}>
-            {t("Risk distribution of onboarded clients")}
-          </p>
+          <p className={styles.sectionTitle}>{t("Risk distribution of onboarded clients")}</p>
         </div>
       </div>
       <div className={styles.riskChartWrap}>
@@ -105,10 +103,7 @@ export const RiskDistribution = () => {
           {RISK_DISTRIBUTION.map((item) => (
             <div key={item.label} className={styles.riskLegendItem}>
               <div className={styles.riskLegendLeft}>
-                <span
-                  className={styles.riskDot}
-                  style={{ background: item.color }}
-                />
+                <span className={styles.riskDot} style={{ background: item.color }} />
                 <span className={styles.riskLabel}>{t(item.label)}</span>
               </div>
               <span className={styles.riskCount}>{item.count}</span>

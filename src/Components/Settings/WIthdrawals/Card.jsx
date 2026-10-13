@@ -28,9 +28,8 @@ const CardP = ({
 }) => {
   const { t } = useTranslation();
   const isAfricanCountry =
-    citiesData.find(
-      (item) => item.iso3 === country?.alpha3 || item.iso3 === alpha3,
-    )?.region === "Africa";
+    citiesData.find((item) => item.iso3 === country?.alpha3 || item.iso3 === alpha3)?.region ===
+    "Africa";
 
   const handleMonthKeyPress = (event) => {
     const { key } = event;
@@ -84,9 +83,7 @@ const CardP = ({
         </div>
       ) : (
         <>
-          <FormGroup
-            style={{ flex: 1, margin: 0, width: "100%", marginBottom: "1rem" }}
-          >
+          <FormGroup style={{ flex: 1, margin: 0, width: "100%", marginBottom: "1rem" }}>
             <Label className="col-form-label">
               {t("Please Select A Payer")} <span className="req_star">*</span>
             </Label>
@@ -149,8 +146,7 @@ const CardP = ({
                     changeHandler(e);
                     if (
                       userWithdrawals?.some(
-                        (item) =>
-                          item?.card?.[0]?.card_number === e.target.value,
+                        (item) => item?.card?.[0]?.card_number === e.target.value,
                       )
                     ) {
                       setBankError("You can't add same withdrawal twice.");
@@ -233,8 +229,7 @@ const CardP = ({
               </FormGroup>
               <FormGroup style={{ flex: 1, margin: 0 }}>
                 <Label className="col-form-label">
-                  {t("Postal Code")}{" "}
-                  {!isAfricanCountry && <span className="req_star">*</span>}
+                  {t("Postal Code")} {!isAfricanCountry && <span className="req_star">*</span>}
                 </Label>
                 <Input
                   disabled={!isEditMode}
@@ -254,18 +249,13 @@ const CardP = ({
               {Object.keys(cardExtras).map(
                 (item) =>
                   serviceFieldInfoValidate(
-                    services?.find((item) =>
-                      item?.method?.toLowerCase()?.includes("card"),
-                    ),
+                    services?.find((item) => item?.method?.toLowerCase()?.includes("card")),
                     "credit_party_identifiers_accepted",
                     item,
                   ) && (
-                    <FormGroup
-                      style={{ flex: 1, margin: 0, minWidth: "250px" }}
-                    >
+                    <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                       <Label className="col-form-label">
-                        {t(service_name_formatter(item))}{" "}
-                        <span className="req_star">*</span>
+                        {t(service_name_formatter(item))} <span className="req_star">*</span>
                       </Label>
                       <Input
                         className="form-control"

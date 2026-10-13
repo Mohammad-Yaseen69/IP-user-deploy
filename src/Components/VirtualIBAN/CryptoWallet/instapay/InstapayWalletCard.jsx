@@ -6,11 +6,7 @@ import {
   getAssetSymbol,
   getWalletAccentColor,
 } from "../utils/format";
-import {
-  getWalletAvailable,
-  getWalletStatus,
-  isWalletBlocked,
-} from "./wallets";
+import { getWalletAvailable, getWalletStatus, isWalletBlocked } from "./wallets";
 
 const STATUS_PILL = {
   active: styles.pillHolding,
@@ -45,21 +41,14 @@ const InstapayWalletCard = ({ wallet, onOpen, onSend }) => {
       }}
     >
       <div className={styles.walletTop}>
-        <span
-          className={styles.walletMark}
-          style={{ background: getWalletAccentColor(code) }}
-        >
+        <span className={styles.walletMark} style={{ background: getWalletAccentColor(code) }}>
           {getAssetSymbol(code)}
         </span>
         <span>
           <span className={styles.walletName}>{code}</span>
-          <span className={styles.walletFullName}>
-            {t(getAssetFullName(code))}
-          </span>
+          <span className={styles.walletFullName}>{t(getAssetFullName(code))}</span>
         </span>
-        <span
-          className={`${styles.pill} ${STATUS_PILL[status.key] || styles.pillPending}`}
-        >
+        <span className={`${styles.pill} ${STATUS_PILL[status.key] || styles.pillPending}`}>
           {t(status.label)}
         </span>
       </div>
@@ -85,11 +74,7 @@ const InstapayWalletCard = ({ wallet, onOpen, onSend }) => {
         >
           {t("Send")}
         </button>
-        <button
-          type="button"
-          className={styles.walletBtnGhost}
-          onClick={() => onOpen(wallet)}
-        >
+        <button type="button" className={styles.walletBtnGhost} onClick={() => onOpen(wallet)}>
           {t("Open")}
         </button>
       </div>

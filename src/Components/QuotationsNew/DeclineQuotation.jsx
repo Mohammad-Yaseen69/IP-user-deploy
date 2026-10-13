@@ -46,8 +46,7 @@ const DeclineQuotation = ({ item, isOpen, toggle }) => {
     } catch (error) {
       const dec = decryptData(error?.response?.data?.data);
       setError(
-        dec?.message ??
-          "We cannot process your request at the moment, please try again later.",
+        dec?.message ?? "We cannot process your request at the moment, please try again later.",
       );
     } finally {
       setIsDeleting(false);
@@ -66,27 +65,16 @@ const DeclineQuotation = ({ item, isOpen, toggle }) => {
       <ModalBody style={{ padding: "2rem" }} className={styles.body}>
         {step === 1 && (
           <>
-            <img
-              src={decline}
-              style={{ height: "36px", width: "36px", objectFit: "contain" }}
-            />
+            <img src={decline} style={{ height: "36px", width: "36px", objectFit: "contain" }} />
             <h4>{t("Decline Offer")}</h4>
             <p>{t("Are you sure that you want to decline the offer?")}</p>
             <div className={styles.bottom}>
               <p>{error}</p>
               <div className={styles.btns}>
-                <button
-                  disabled={isDeleting}
-                  className={styles.trs}
-                  onClick={toggle}
-                >
+                <button disabled={isDeleting} className={styles.trs} onClick={toggle}>
                   {t("Cancel")}
                 </button>
-                <button
-                  onClick={declineQuotation}
-                  disabled={isDeleting}
-                  className={styles.dec}
-                >
+                <button onClick={declineQuotation} disabled={isDeleting} className={styles.dec}>
                   {t("Decline The Offer")}
                   <ChevronRight color="white" size={20} />
                 </button>
@@ -99,10 +87,7 @@ const DeclineQuotation = ({ item, isOpen, toggle }) => {
             <div className={styles.top}>
               <img src={ins} alt="" />
             </div>
-            <img
-              src={decline}
-              style={{ height: "36px", width: "36px", objectFit: "contain" }}
-            />
+            <img src={decline} style={{ height: "36px", width: "36px", objectFit: "contain" }} />
             <h4>{t("Offer Declined")}</h4>
             <button
               onClick={() => {
@@ -156,9 +141,7 @@ const DeclineQuotation = ({ item, isOpen, toggle }) => {
         <div className={paym_styles.flow}>
           <div className={paym_styles.flow_com} style={{ minHeight: "60vh" }}>
             {step === 1 && (
-              <p className={styles.p}>
-                {t("Are you sure that you want to decline the offer?")}
-              </p>
+              <p className={styles.p}>{t("Are you sure that you want to decline the offer?")}</p>
             )}
             {step === 2 && (
               <div className={styles.m_s_2}>
@@ -196,8 +179,7 @@ const DeclineQuotation = ({ item, isOpen, toggle }) => {
                     background:
                       "linear-gradient(352deg, #C5123C 6.49%, #F02629 120.74%), linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%)",
                     backgroundBlendMode: "normal, overlay, normal",
-                    boxShadow:
-                      "0px 10px 10.797px -6.748px rgba(89, 38, 240, 0.17)",
+                    boxShadow: "0px 10px 10.797px -6.748px rgba(89, 38, 240, 0.17)",
                   }}
                 >
                   {t("Decline the offer")}

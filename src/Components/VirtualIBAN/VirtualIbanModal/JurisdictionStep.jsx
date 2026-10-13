@@ -9,11 +9,7 @@ const FLAGS = {
   GB,
 };
 
-const JurisdictionStep = ({
-  jurisdiction,
-  setJurisdiction,
-  availability = {},
-}) => {
+const JurisdictionStep = ({ jurisdiction, setJurisdiction, availability = {} }) => {
   const { t } = useTranslation();
 
   return (
@@ -43,9 +39,7 @@ const JurisdictionStep = ({
                 <div className={styles.optionTitleRow}>
                   <h4>{t(option.title)}</h4>
                   {disabledReason && (
-                    <span className={styles.disabledBadge}>
-                      {t(disabledReason)}
-                    </span>
+                    <span className={styles.disabledBadge}>{t(disabledReason)}</span>
                   )}
                 </div>
                 <p>{t(option.subtitle)}</p>

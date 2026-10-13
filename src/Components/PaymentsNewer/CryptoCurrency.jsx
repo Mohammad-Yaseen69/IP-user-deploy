@@ -4,12 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Button, Card, CardBody } from "reactstrap";
 import "swiper/css";
 
-const CryptoCurrency = ({
-  cryptoCurrency,
-  setSubStep,
-  setCryptoCurrency,
-  action = "convert",
-}) => {
+const CryptoCurrency = ({ cryptoCurrency, setSubStep, setCryptoCurrency, action = "convert" }) => {
   const { t } = useTranslation();
 
   const currenciesData = [
@@ -55,13 +50,11 @@ const CryptoCurrency = ({
           padding: "30px 0",
           gap: "14px",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
       >
         <p style={{ fontSize: "1rem", color: "#7d7d7d", padding: "0 1rem" }}>
-          {t("Select the crypto currency from below that you want to")} {action}
-          .
+          {t("Select the crypto currency from below that you want to")} {action}.
         </p>
         {/* <Swiper
                     slidesPerView={"auto"}
@@ -178,8 +171,7 @@ const CryptoCurrency = ({
                   overflow: "hidden",
                   cursor: "pointer",
                   width: cryptoCurrency?.value === item.value ? "36%" : "33%",
-                  height:
-                    cryptoCurrency?.value === item.value ? "110%" : "inherit",
+                  height: cryptoCurrency?.value === item.value ? "110%" : "inherit",
                   transition: "250ms",
                 }}
               >
@@ -191,11 +183,7 @@ const CryptoCurrency = ({
                     padding: ".75rem .75rem 0",
                   }}
                 >
-                  <img
-                    src={item.img}
-                    alt={item.value}
-                    style={{ width: "1.5vw" }}
-                  />
+                  <img src={item.img} alt={item.value} style={{ width: "1.5vw" }} />
                   <h5
                     style={{
                       fontSize: ".8vw",
@@ -267,14 +255,8 @@ const CryptoCurrency = ({
             }}
             className="i_t_mt2"
           >
-            <img
-              src={cryptoCurrency.img}
-              alt={cryptoCurrency.value}
-              width={25}
-            />
-            <h5
-              style={{ fontSize: "1rem", fontWeight: "900", marginBottom: "0" }}
-            >
+            <img src={cryptoCurrency.img} alt={cryptoCurrency.value} width={25} />
+            <h5 style={{ fontSize: "1rem", fontWeight: "900", marginBottom: "0" }}>
               {cryptoCurrency.name} {t("is selected.")}
             </h5>
           </div>

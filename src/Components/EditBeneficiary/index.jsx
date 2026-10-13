@@ -1,11 +1,4 @@
-import {
-  CardBody,
-  CardHeader,
-  Form,
-  FormGroup,
-  Input,
-  Label,
-} from "reactstrap";
+import { CardBody, CardHeader, Form, FormGroup, Input, Label } from "reactstrap";
 import { countries } from "country-list-json";
 // import PhoneInput from 'react-phone-input-2'
 import "react-phone-input-2/lib/style.css";
@@ -39,10 +32,7 @@ import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 import PaymentChannelUI from "../AddBeneficiary/PaymentChannelUI";
 import useBankDetails from "../../hooks/BeneficiaryHooks/useBankDetails";
 import useChannels from "../../hooks/BeneficiaryHooks/useChannels";
-import {
-  getExtractedPhone,
-  serviceFieldInfoValidate,
-} from "../../utils/Functions";
+import { getExtractedPhone, serviceFieldInfoValidate } from "../../utils/Functions";
 import useBenEditFunc from "../../hooks/BeneficiaryHooks/useBenEditFunc";
 import NeemaBenExtrasFields from "../AddBeneficiary/NeemaBenExtrasFields";
 import citiesData from "../CitiesDropDown/CitiesData.json";
@@ -127,23 +117,14 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
     errorOnInvalid,
     error,
   });
-  const {
-    fieldsInfo,
-    services,
-    mobileProviders,
-    selectedCountryDetails,
-    getCountryFields,
-  } = useChannels({ setLoading, countryIsoCode, countryId });
+  const { fieldsInfo, services, mobileProviders, selectedCountryDetails, getCountryFields } =
+    useChannels({ setLoading, countryIsoCode, countryId });
 
   const fieldInfoValidate = (field_name, sub_field_name) => {
     if (fieldsInfo === null) return false;
     let isInThere = false;
     for (const service in fieldsInfo) {
-      if (
-        fieldsInfo[service]?.[field_name]?.some(
-          (item) => item.name === sub_field_name,
-        )
-      ) {
+      if (fieldsInfo[service]?.[field_name]?.some((item) => item.name === sub_field_name)) {
         isInThere = true;
         break;
       }
@@ -245,13 +226,8 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
     }
   };
 
-  const {
-    authHeader,
-    beneficiaries,
-    userDetails,
-    allowedCountries,
-    getUserBeneficiaries,
-  } = useContext(UserContext);
+  const { authHeader, beneficiaries, userDetails, allowedCountries, getUserBeneficiaries } =
+    useContext(UserContext);
 
   useEffect(() => {
     if (userDetails) {
@@ -295,27 +271,18 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
   // bank details
   const isAfricanBank = useMemo(() => {
     if (bankCountryCode) {
-      return (
-        citiesData.find((item) => item.iso3 === bankCountryCode)?.region ===
-        "Africa"
-      );
+      return citiesData.find((item) => item.iso3 === bankCountryCode)?.region === "Africa";
     }
   }, [bankCountryCode]);
   useEffect(() => {
-    const fields = services?.find((item) =>
-      item?.method?.toLowerCase()?.includes("bank"),
-    );
+    const fields = services?.find((item) => item?.method?.toLowerCase()?.includes("bank"));
 
     const bankCountryFields = fieldsInfo?.bank_country_fields;
 
     const resultKeys = Object.keys(bankExtras)
       .filter((item) =>
-        serviceFieldInfoValidate(
-          fields,
-          "credit_party_identifiers_accepted",
-          item,
-          fieldsInfo,
-        ) || bankCountryFields
+        serviceFieldInfoValidate(fields, "credit_party_identifiers_accepted", item, fieldsInfo) ||
+        bankCountryFields
           ? serviceFieldInfoValidate(
               "bank_country_fields",
               "credit_party_identifiers_accepted",
@@ -352,9 +319,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
       Object.keys(cashExtras)
         .filter((item) =>
           serviceFieldInfoValidate(
-            services?.find((item) =>
-              item?.method?.toLowerCase()?.includes("cash"),
-            ),
+            services?.find((item) => item?.method?.toLowerCase()?.includes("cash")),
             "credit_party_identifiers_accepted",
             item,
             fieldsInfo,
@@ -372,11 +337,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
   useEffect(() => {
     const extractWalletNum = getExtractedPhone(formData, countryIsoCode);
 
-    if (
-      formData.mobile_wallet_name &&
-      extractWalletNum &&
-      formData.mobile_wallet_provider
-    ) {
+    if (formData.mobile_wallet_name && extractWalletNum && formData.mobile_wallet_provider) {
       setCompletedWallet(true);
     } else {
       setCompletedWallet(false);
@@ -391,9 +352,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
       Object.keys(cardExtras)
         .filter((item) =>
           serviceFieldInfoValidate(
-            services?.find((item) =>
-              item?.method?.toLowerCase()?.includes("card"),
-            ),
+            services?.find((item) => item?.method?.toLowerCase()?.includes("card")),
             "credit_party_identifiers_accepted",
             item,
             fieldsInfo,
@@ -435,8 +394,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
       email: userData?.email ?? "",
       relation: userData?.relation ?? "",
       account_type: userData?.account_type ?? "",
-      account_holder_name:
-        userData?.bank_details?.[0]?.account_holder_name ?? "",
+      account_holder_name: userData?.bank_details?.[0]?.account_holder_name ?? "",
       bank_name: userData?.bank_details?.[0]?.name ?? "",
       branch_name: userData?.bank_details?.[0]?.branch_name ?? "",
       bank_account_number: userData?.bank_details?.[0]?.account_number ?? "",
@@ -444,8 +402,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
       bank_city: userData?.bank_details?.[0]?.city ?? "",
       bank_province: userData?.bank_details?.[0]?.province ?? "",
       bank_postal_code: userData?.bank_details?.[0]?.postal_code ?? "",
-      mobile_wallet_provider:
-        mobileWallet?.money_provider ?? mobileWallet?.provider ?? "",
+      mobile_wallet_provider: mobileWallet?.money_provider ?? mobileWallet?.provider ?? "",
       mobile_wallet_number:
         mobileWallet?.wallet_number ??
         mobileWallet?.wallet_account_number ??
@@ -487,16 +444,11 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
           ? "Swift"
           : "IBAN",
     );
-    if (
-      userData?.bank_details?.[0]?.iban ||
-      userData?.bank_details?.[0]?.swift_code
-    ) {
+    if (userData?.bank_details?.[0]?.iban || userData?.bank_details?.[0]?.swift_code) {
       getBankDetails(
         {
           target: {
-            value:
-              userData?.bank_details?.[0]?.iban ||
-              userData?.bank_details?.[0]?.swift_code,
+            value: userData?.bank_details?.[0]?.iban || userData?.bank_details?.[0]?.swift_code,
           },
         },
         true,
@@ -524,16 +476,12 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
         : bankExtrasInitial,
     );
     setCashxtras(userData?.cash_pickup?.[0]?.extras ?? { msisdn: "" });
-    setBankCountryCode(
-      userData?.bank_details?.[0]?.extras?.country_iso_code || "",
-    );
+    setBankCountryCode(userData?.bank_details?.[0]?.extras?.country_iso_code || "");
     setCardExtras(userData?.card?.[0]?.extras ?? { bank_account_number: "" });
 
     const accountType =
       userData?.account_type?.[0]?.toLowerCase() ||
-      (typeof userData?.account_type === "string"
-        ? userData.account_type.toLowerCase()
-        : "");
+      (typeof userData?.account_type === "string" ? userData.account_type.toLowerCase() : "");
     switch (accountType) {
       case "bank":
         setActive(1);
@@ -575,8 +523,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
 
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const toggleSuccess = () =>
-    showSuccess ? navigate("/beneficiaries") : setShowSuccess(true);
+  const toggleSuccess = () => (showSuccess ? navigate("/beneficiaries") : setShowSuccess(true));
 
   const [missingFields, setMissingFields] = useState([]);
 
@@ -586,44 +533,40 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
     setFilteringCountries(allowedCountries);
   }, [allowedCountries]);
 
-  const {
-    editBeneficiaryHandler,
-    mobileNumberError,
-    walletNumberError,
-    saveloading,
-  } = useBenEditFunc({
-    services,
-    completedCrypto,
-    instapayWallets,
-    completedBank,
-    completedCard,
-    completedWallet,
-    cashPickupCompleted,
-    formData,
-    firstName,
-    lastName,
-    mobileNumber,
-    city,
-    country,
-    countryId,
-    countryIsoCode,
-    walletIds,
-    basicExtras,
-    additionFields,
-    bankExtras,
-    cardExtras,
-    cashExtras,
-    accNumType,
-    ibanSwift,
-    cashPickupType,
-    cashPickupNumber,
-    walletError,
-    toggleSuccess,
-    active,
-    setClicked,
-    setMissingFields,
-    user,
-  });
+  const { editBeneficiaryHandler, mobileNumberError, walletNumberError, saveloading } =
+    useBenEditFunc({
+      services,
+      completedCrypto,
+      instapayWallets,
+      completedBank,
+      completedCard,
+      completedWallet,
+      cashPickupCompleted,
+      formData,
+      firstName,
+      lastName,
+      mobileNumber,
+      city,
+      country,
+      countryId,
+      countryIsoCode,
+      walletIds,
+      basicExtras,
+      additionFields,
+      bankExtras,
+      cardExtras,
+      cashExtras,
+      accNumType,
+      ibanSwift,
+      cashPickupType,
+      cashPickupNumber,
+      walletError,
+      toggleSuccess,
+      active,
+      setClicked,
+      setMissingFields,
+      user,
+    });
 
   useEffect(() => {
     if (bankCountryCode) {
@@ -638,9 +581,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
     if (bankCountryCode !== countryIsoCode) {
       getCountryFields(
         countryIsoCode,
-        services.find((service) =>
-          service.method?.toLowerCase()?.includes("bank"),
-        ),
+        services.find((service) => service.method?.toLowerCase()?.includes("bank")),
         bankCountryCode,
       );
     }
@@ -652,10 +593,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
       return true;
     }
 
-    if (
-      (extractWalletNum || formData.mobile_wallet_provider) &&
-      !completedWallet
-    ) {
+    if ((extractWalletNum || formData.mobile_wallet_provider) && !completedWallet) {
       return true;
     }
 
@@ -731,8 +669,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                           cursor: "pointer",
                           type: "button",
                           borderRadius: "10px",
-                          background:
-                            "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                          background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                           color: "white",
                           display: "flex",
                           alignItems: "center",
@@ -763,12 +700,8 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                         }}
                       >
                         <FormGroup style={{ flex: 1, margin: 0 }}>
-                          <Label
-                            className="col-form-label"
-                            htmlFor="first-name"
-                          >
-                            {t("First Name")}{" "}
-                            <span className="req_star">*</span>
+                          <Label className="col-form-label" htmlFor="first-name">
+                            {t("First Name")} <span className="req_star">*</span>
                           </Label>
                           <Input
                             name="first_name"
@@ -794,25 +727,16 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                               setFirstName(e.target.value);
                               if (e.target.value.length >= 3) {
                                 setMissingFields((prev) =>
-                                  prev.filter(
-                                    (field) => field !== "first_name",
-                                  ),
+                                  prev.filter((field) => field !== "first_name"),
                                 );
                               }
                             }}
                           />
                         </FormGroup>
-                        {fieldInfoValidate(
-                          "required_receiving_entity_fields",
-                          "middlename",
-                        ) && (
+                        {fieldInfoValidate("required_receiving_entity_fields", "middlename") && (
                           <FormGroup style={{ flex: 1, margin: 0 }}>
-                            <Label
-                              className="col-form-label"
-                              htmlFor="middlename"
-                            >
-                              {t("Middle Name")}{" "}
-                              <span className="req_star">*</span>
+                            <Label className="col-form-label" htmlFor="middlename">
+                              {t("Middle Name")} <span className="req_star">*</span>
                             </Label>
                             <Input
                               className="form-control"
@@ -872,22 +796,12 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                           gap: "1rem",
                         }}
                       >
-                        {fieldInfoValidate(
-                          "required_receiving_entity_fields",
-                          "id_type",
-                        ) ||
-                        fieldInfoValidate(
-                          "required_receiving_entity_fields",
-                          "id_number",
-                        ) ? (
+                        {fieldInfoValidate("required_receiving_entity_fields", "id_type") ||
+                        fieldInfoValidate("required_receiving_entity_fields", "id_number") ? (
                           <>
                             <FormGroup style={{ flex: 1, margin: 0 }}>
-                              <Label
-                                className="col-form-label"
-                                htmlFor="id_type"
-                              >
-                                {t("ID Type")}{" "}
-                                <span className="req_star">*</span>
+                              <Label className="col-form-label" htmlFor="id_type">
+                                {t("ID Type")} <span className="req_star">*</span>
                               </Label>
                               <Input
                                 readOnly={!isEditMode}
@@ -910,12 +824,8 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                               </Input>
                             </FormGroup>
                             <FormGroup style={{ flex: 1, margin: 0 }}>
-                              <Label
-                                className="col-form-label"
-                                htmlFor="id_number"
-                              >
-                                {t("ID Number")}{" "}
-                                <span className="req_star">*</span>
+                              <Label className="col-form-label" htmlFor="id_number">
+                                {t("ID Number")} <span className="req_star">*</span>
                               </Label>
                               <Input
                                 readOnly={!isEditMode}
@@ -944,21 +854,14 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                           gap: "1rem",
                         }}
                       >
-                        <FormGroup
-                          style={{ flex: 1, margin: 0, minWidth: "250px" }}
-                        >
+                        <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                           <Label className="col-form-label" htmlFor="country">
                             {t("Country")} <span className="req_star">*</span>
                           </Label>
                           <CountryDropDown
                             onSelect={(selectedCountry) => {
-                              if (
-                                selectedCountry?.name
-                                  ?.toLowerCase()
-                                  ?.includes("bolivia")
-                              ) {
-                                selectedCountry.name =
-                                  "Bolivia, Plurinational State of bolivia";
+                              if (selectedCountry?.name?.toLowerCase()?.includes("bolivia")) {
+                                selectedCountry.name = "Bolivia, Plurinational State of bolivia";
                               }
                               const filtered = countries.filter((item) =>
                                 selectedCountry?.name
@@ -970,9 +873,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                               setCountryIsoCode(selectedCountry?.alpha3);
                               setCity("");
                               const country_id = filteringCountries.find(
-                                (item) =>
-                                  item?.country_iso_code ===
-                                  selectedCountry.alpha3,
+                                (item) => item?.country_iso_code === selectedCountry.alpha3,
                               )?._id;
                               setCountryId(country_id);
                             }}
@@ -980,9 +881,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                             disabled={!isEditMode}
                           />
                         </FormGroup>
-                        <FormGroup
-                          style={{ flex: 1, margin: 0, minWidth: "250px" }}
-                        >
+                        <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                           <Label className="col-form-label" htmlFor="city">
                             {t("City")} <span className="req_star">*</span>
                           </Label>
@@ -1011,10 +910,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                           />
                         </FormGroup>
                         <FormGroup style={{ flex: 1, margin: 0 }}>
-                          <Label
-                            className="col-form-label"
-                            htmlFor="postal_code"
-                          >
+                          <Label className="col-form-label" htmlFor="postal_code">
                             {t("Postal Code")}
                           </Label>
                           <Input
@@ -1034,9 +930,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                     <FormGroup style={{ flex: 1, margin: 0 }}>
                       <Label className="col-form-label" htmlFor="address">
                         {t("Address Line")}{" "}
-                        {isAddressRequired && (
-                          <span className="req_star">*</span>
-                        )}
+                        {isAddressRequired && <span className="req_star">*</span>}
                       </Label>
                       <Input
                         className="form-control"
@@ -1044,9 +938,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                           flex: 1,
                           minWidth: "250px",
                           border:
-                            !formData.address && clicked
-                              ? "1px solid red"
-                              : "1px solid #e9e9e9",
+                            !formData.address && clicked ? "1px solid red" : "1px solid #e9e9e9",
                         }}
                         name="address"
                         id="address"
@@ -1098,12 +990,8 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                             transform: "translateY(-4px)",
                           }}
                         >
-                          <Label
-                            className="col-form-label"
-                            htmlFor="mobile_number"
-                          >
-                            {t("Mobile Number")}{" "}
-                            <span className="req_star">*</span>
+                          <Label className="col-form-label" htmlFor="mobile_number">
+                            {t("Mobile Number")} <span className="req_star">*</span>
                           </Label>
                           <PhoneInput
                             customStyles={{
@@ -1157,17 +1045,13 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                               value={formData.relation}
                               onChange={inputChangeHandler}
                             >
-                              <option value="">
-                                {t("Select Relationship")}
-                              </option>
-                              {Object.keys(BUSINESS_RELATIONSHIPS).map(
-                                (option, idx) => (
-                                  <option key={idx} value={option}>
-                                    {" "}
-                                    {BUSINESS_RELATIONSHIPS[option]}{" "}
-                                  </option>
-                                ),
-                              )}
+                              <option value="">{t("Select Relationship")}</option>
+                              {Object.keys(BUSINESS_RELATIONSHIPS).map((option, idx) => (
+                                <option key={idx} value={option}>
+                                  {" "}
+                                  {BUSINESS_RELATIONSHIPS[option]}{" "}
+                                </option>
+                              ))}
                             </Input>
                           )}
                         </FormGroup>
@@ -1197,10 +1081,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                     >
                       {Object.keys(additionFields).map((item) => {
                         return item === "gender" ? (
-                          <FormGroup
-                            FormGroup
-                            style={{ flex: 1, margin: 0, minWidth: "250px" }}
-                          >
+                          <FormGroup FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                             <Label className="col-form-label">
                               {t(service_name_formatter(item))}
                             </Label>
@@ -1286,22 +1167,14 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                             />
                           </FormGroup>
                         ) : item === "nationality" ? (
-                          <FormGroup
-                            FormGroup
-                            style={{ flex: 1, margin: 0, minWidth: "250px" }}
-                          >
+                          <FormGroup FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                             <Label className="col-form-label">
                               {t(service_name_formatter(item))}
                             </Label>
                             <CountryDropDown
                               onSelect={(selectedCountry) => {
-                                if (
-                                  selectedCountry?.name
-                                    ?.toLowerCase()
-                                    ?.includes("bolivia")
-                                ) {
-                                  selectedCountry.name =
-                                    "Bolivia, Plurinational State of bolivia";
+                                if (selectedCountry?.name?.toLowerCase()?.includes("bolivia")) {
+                                  selectedCountry.name = "Bolivia, Plurinational State of bolivia";
                                 }
                                 handleAddtionalFieldChange({
                                   target: {
@@ -1316,10 +1189,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                             />
                           </FormGroup>
                         ) : (
-                          <FormGroup
-                            FormGroup
-                            style={{ flex: 1, margin: 0, minWidth: "250px" }}
-                          >
+                          <FormGroup FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                             <Label className="col-form-label">
                               {t(service_name_formatter(item))}
                             </Label>
@@ -1332,9 +1202,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                               name={item}
                               onChange={handleAddtionalFieldChange}
                             >
-                              <option value="">
-                                --{t("Select Occupation")}--
-                              </option>
+                              <option value="">--{t("Select Occupation")}--</option>
                               {Object.keys(occupations).map((item) => (
                                 <option key={item} value={item}>
                                   {t(item)}
@@ -1344,14 +1212,8 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                           </FormGroup>
                         );
                       })}
-                      {!fieldInfoValidate(
-                        "required_receiving_entity_fields",
-                        "id_type",
-                      ) &&
-                      !fieldInfoValidate(
-                        "required_receiving_entity_fields",
-                        "id_number",
-                      ) ? (
+                      {!fieldInfoValidate("required_receiving_entity_fields", "id_type") &&
+                      !fieldInfoValidate("required_receiving_entity_fields", "id_number") ? (
                         <>
                           <FormGroup style={{ flex: 1, margin: 0 }}>
                             <Label className="col-form-label" htmlFor="id_type">
@@ -1377,10 +1239,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                             </Input>
                           </FormGroup>
                           <FormGroup style={{ flex: 1, margin: 0 }}>
-                            <Label
-                              className="col-form-label"
-                              htmlFor="id_number"
-                            >
+                            <Label className="col-form-label" htmlFor="id_number">
                               {t("ID Number")}
                             </Label>
                             <Input
@@ -1498,9 +1357,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                               padding: "1rem",
                               boxShadow: "0 0 3px rgba(128,128,128,0.4)",
                               textAlign: "center",
-                              cursor: handleDisable()
-                                ? "not-allowed"
-                                : "pointer",
+                              cursor: handleDisable() ? "not-allowed" : "pointer",
                               borderRadius: "10px",
                               background:
                                 "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
@@ -1518,11 +1375,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
 
                         {saveloading && (
                           <div className="d-flex justify-content-center">
-                            <div
-                              className="spinner-border"
-                              color="primary"
-                              role="status"
-                            >
+                            <div className="spinner-border" color="primary" role="status">
                               <span className="sr-only">Loading...</span>
                             </div>
                           </div>

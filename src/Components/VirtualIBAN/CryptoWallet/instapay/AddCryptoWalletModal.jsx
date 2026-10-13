@@ -23,8 +23,7 @@ const AddCryptoWalletModal = ({ isOpen, toggle }) => {
   const { t } = useTranslation();
   const width = useWindowWidth();
   const navigate = useNavigate();
-  const { userWallets, userDetails, getUserWallets, setProfileLockTime } =
-    useContext(UserContext);
+  const { userWallets, userDetails, getUserWallets, setProfileLockTime } = useContext(UserContext);
 
   const [assetId, setAssetId] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -57,10 +56,7 @@ const AddCryptoWalletModal = ({ isOpen, toggle }) => {
   const asset = assets.find((item) => item.id === assetId);
 
   useEffect(() => {
-    if (isOpen)
-      setAssetId(
-        assets.find((item) => !item.owned && !item.comingSoon)?.id || null,
-      );
+    if (isOpen) setAssetId(assets.find((item) => !item.owned && !item.comingSoon)?.id || null);
   }, [isOpen]);
 
   const close = () => {
@@ -77,11 +73,8 @@ const AddCryptoWalletModal = ({ isOpen, toggle }) => {
         method: "GET",
         isDecrypted: true,
       });
-      const currency = (list?.currencies || []).find(
-        (item) => item?.code === asset.code,
-      );
-      if (!currency?._id)
-        throw new Error(t("This currency is not available right now."));
+      const currency = (list?.currencies || []).find((item) => item?.code === asset.code);
+      if (!currency?._id) throw new Error(t("This currency is not available right now."));
 
       await apiWrapper({
         endpoint: `/api/currency/request-currency-user/${currency._id}`,
@@ -95,9 +88,7 @@ const AddCryptoWalletModal = ({ isOpen, toggle }) => {
         isDecrypted: true,
       });
 
-      toast.success(
-        t("New {{code}} wallet added successfully!", { code: asset.code }),
-      );
+      toast.success(t("New {{code}} wallet added successfully!", { code: asset.code }));
       getUserWallets?.(true);
       toggle?.();
     } catch (error) {
@@ -105,9 +96,7 @@ const AddCryptoWalletModal = ({ isOpen, toggle }) => {
         error,
         navigate,
         setProfileLockTime,
-        fallback: t(
-          "We cannot process your request at the moment, please try again later.",
-        ),
+        fallback: t("We cannot process your request at the moment, please try again later."),
         setError: (message) => toast.error(message),
       });
     } finally {
@@ -136,12 +125,7 @@ const AddCryptoWalletModal = ({ isOpen, toggle }) => {
           primaryDisabled={saving || !asset}
           locked={saving}
         >
-          <AssetStep
-            assets={assets}
-            assetId={assetId}
-            onSelect={setAssetId}
-            isEuropean={false}
-          />
+          <AssetStep assets={assets} assetId={assetId} onSelect={setAssetId} isEuropean={false} />
         </ModalShell>
       </ModalBody>
     </Modal>

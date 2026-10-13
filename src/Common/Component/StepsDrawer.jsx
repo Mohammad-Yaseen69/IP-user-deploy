@@ -50,8 +50,7 @@ const StepsDrawer = ({
   const { t } = useTranslation();
   const doneCount =
     SIDEBAR_STEPS.findIndex(
-      (x) =>
-        x.stepName === currentStep || x?.alsoActiveFor?.includes(currentStep),
+      (x) => x.stepName === currentStep || x?.alsoActiveFor?.includes(currentStep),
     ) + 1;
 
   return (
@@ -83,17 +82,13 @@ const StepsDrawer = ({
           {SIDEBAR_STEPS.map((item) => {
             const isActive = isSidebarStepActive(item, currentStep);
             const isCompleted = isSidebarStepCompleted(item, currentStep);
-            const { label, statusBgColor, icon, textColor, iconBgColor } =
-              getIcon(
-                isCompleted ? "done" : isActive ? "inprogress" : "incomplete",
-              );
+            const { label, statusBgColor, icon, textColor, iconBgColor } = getIcon(
+              isCompleted ? "done" : isActive ? "inprogress" : "incomplete",
+            );
             return (
               <div className={styles.checklistRow} key={item.stepName}>
                 <div className={styles.checklistItem}>
-                  <div
-                    className={styles.iconContainer}
-                    style={{ backgroundColor: iconBgColor }}
-                  >
+                  <div className={styles.iconContainer} style={{ backgroundColor: iconBgColor }}>
                     {icon}
                   </div>
                   <span>{item.label}</span>

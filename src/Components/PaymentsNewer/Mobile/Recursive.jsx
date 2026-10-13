@@ -75,8 +75,7 @@ const Recursive = (props) => {
               style={{
                 minHeight: "35px",
                 minWidth: "35px",
-                background:
-                  "linear-gradient(to top left, #e64067,#5926f0,#4828a0)",
+                background: "linear-gradient(to top left, #e64067,#5926f0,#4828a0)",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
@@ -127,19 +126,15 @@ const Recursive = (props) => {
                 position: "relative",
               }}
             >
-              <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>
-                {t("Timezone")}
-              </p>
+              <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>{t("Timezone")}</p>
               <select
                 style={{
                   background: "#fff",
-                  background:
-                    "linear-gradient(to right,#E64067, #5926F0, #4828A0)",
+                  background: "linear-gradient(to right,#E64067, #5926F0, #4828A0)",
                   backgroundClip: "text",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
-                  boxShadow:
-                    "0px -1px 32px -3.3496174812316895px rgba(89, 38, 240, 0.36)",
+                  boxShadow: "0px -1px 32px -3.3496174812316895px rgba(89, 38, 240, 0.36)",
                   borderRadius: "100px",
                   border: "none",
                   outline: "none",
@@ -153,10 +148,7 @@ const Recursive = (props) => {
               >
                 <option value="">{t("Select A Timezone")}</option>
                 {timezones?.map((country) => (
-                  <option
-                    value={country?.name + "-" + country?.timezone}
-                    key={country?.name}
-                  >
+                  <option value={country?.name + "-" + country?.timezone} key={country?.name}>
                     {`${country?.name} - ${country?.timezone}`}
                   </option>
                 ))}
@@ -181,8 +173,7 @@ const Recursive = (props) => {
                 readOnly
                 style={{
                   background: "#fff",
-                  background:
-                    "linear-gradient(to right,#E64067, #5926F0, #4828A0)",
+                  background: "linear-gradient(to right,#E64067, #5926F0, #4828A0)",
                   backgroundClip: "text",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
@@ -217,10 +208,7 @@ const Recursive = (props) => {
                 onClick={(_) => setShowPicker(true)}
               />
               {showPicker && (
-                <CustomDatePicker
-                  setRecStartDate={setRecStartDate}
-                  setShowPicker={setShowPicker}
-                />
+                <CustomDatePicker setRecStartDate={setRecStartDate} setShowPicker={setShowPicker} />
               )}
             </div>
             {showDateError && (
@@ -356,10 +344,7 @@ const Recursive = (props) => {
                   </div>
                 )}
               </label>
-              <label
-                htmlFor="checkbox"
-                style={{ marginBottom: 0, fontWeight: 500 }}
-              >
+              <label htmlFor="checkbox" style={{ marginBottom: 0, fontWeight: 500 }}>
                 {t("Until I stop")}
               </label>
             </div>
@@ -409,11 +394,7 @@ const Recursive = (props) => {
           onClick={() => {
             setSubStep((prev) => prev + 1);
           }}
-          disabled={
-            (!recCycle && !unlimited) ||
-            !recStartDate ||
-            (+recCycle < 0 && !unlimited)
-          }
+          disabled={(!recCycle && !unlimited) || !recStartDate || (+recCycle < 0 && !unlimited)}
         >
           {t("Confirm")} <ChevronRight size={20} />
         </Button>

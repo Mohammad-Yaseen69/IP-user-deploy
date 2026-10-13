@@ -38,8 +38,7 @@ const WalletReceipt = ({
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
           padding: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
         className="conf_cont"
       >
@@ -163,12 +162,8 @@ const WalletReceipt = ({
               borderRadius: "10px",
             }}
           >
-            <span style={{ minWidth: "30px", color: "#8a8a8a" }}>
-              {t("To")}:
-            </span>
-            <div
-              style={{ display: "flex", alignItems: "center", gap: ".6rem" }}
-            >
+            <span style={{ minWidth: "30px", color: "#8a8a8a" }}>{t("To")}:</span>
+            <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
               <span style={{ fontWeight: 600, fontSize: ".9rem" }}>
                 {`${walletDetails?.first_name || walletDetails?.company_name} ${walletDetails?.last_name}`}
                 {t("(INSTA-")}
@@ -199,14 +194,8 @@ const WalletReceipt = ({
               cursor: "pointer",
             }}
           >
-            <img
-              src={w}
-              alt="w"
-              style={{ height: "25px", width: "25px", objectFit: "contain" }}
-            />
-            <span style={{ fontWeight: "600", color: "black" }}>
-              {t("Where Is My Payment?")}
-            </span>
+            <img src={w} alt="w" style={{ height: "25px", width: "25px", objectFit: "contain" }} />
+            <span style={{ fontWeight: "600", color: "black" }}>{t("Where Is My Payment?")}</span>
           </Link>
           {downloading ? (
             <div className="d-flex justify-content-center">

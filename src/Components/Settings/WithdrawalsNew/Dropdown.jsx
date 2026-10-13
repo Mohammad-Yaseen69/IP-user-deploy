@@ -90,12 +90,7 @@
 
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-} from "reactstrap";
+import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from "reactstrap";
 
 const CountriesDropdown = ({
   onSelect,
@@ -180,9 +175,7 @@ const CountriesDropdown = ({
         ) : (
           <>
             {selectedCountry ? (
-              <div
-                style={{ display: "flex", gap: "1rem", alignItems: "center" }}
-              >
+              <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
                 <img
                   src={selectedCountry?.file_url}
                   alt={selectedCountry?.code}
@@ -205,9 +198,7 @@ const CountriesDropdown = ({
           </>
         )}
       </DropdownToggle>
-      <DropdownMenu
-        style={{ maxHeight: "350px", overflowY: "auto", width: "100%" }}
-      >
+      <DropdownMenu style={{ maxHeight: "350px", overflowY: "auto", width: "100%" }}>
         {filteredCountries.length > 0
           ? filteredCountries
               ?.sort((a, b) => a?.name?.localeCompare(b?.name))

@@ -13,9 +13,7 @@ const Header = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    const filteredCountry = countries.find(
-      (item) => item.alpha3 === userDetails?.country_iso_code,
-    );
+    const filteredCountry = countries.find((item) => item.alpha3 === userDetails?.country_iso_code);
     setUserCountry(filteredCountry);
   }, [userDetails]);
 
@@ -40,9 +38,7 @@ const Header = () => {
         <div className={styles.basic_dets}>
           <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap" }}>
             <div className={styles.badge}>
-              {userDetails?.account_type === "individual"
-                ? t("Personal")
-                : t("Business")}{" "}
+              {userDetails?.account_type === "individual" ? t("Personal") : t("Business")}{" "}
               {t("Account")}
             </div>
             {/* <div className={styles.badge} style={{ background: userDetails?.user?.kyc_status === "approved" ? "green" : "grey" }}>{userDetails?.user?.kyc_status === "approved" ? "Verified" : "Unverified"}</div> */}
@@ -86,10 +82,7 @@ const Header = () => {
                 {t("Read more")} {">"}
               </p>
             )}
-            <Modal
-              isOpen={showAboutModal}
-              toggle={() => setShowAboutModal(!showAboutModal)}
-            >
+            <Modal isOpen={showAboutModal} toggle={() => setShowAboutModal(!showAboutModal)}>
               <ModalHeader toggle={() => setShowAboutModal(!showAboutModal)}>
                 {t("About")}
               </ModalHeader>

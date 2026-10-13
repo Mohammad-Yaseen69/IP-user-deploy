@@ -81,13 +81,7 @@ export const feeCol = (label, fee, isBold = false) => (
     )}
   </div>
 );
-const CardtoCard = ({
-  setOpen,
-  isOpen,
-  card,
-  currentCardDetails,
-  setCurrentCardDetails,
-}) => {
+const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardDetails }) => {
   const width = useWindowWidth();
   const [data, dispatch] = useReducer(reducer, initialState);
   const { userDetails, authHeader } = useContext(UserContext);
@@ -133,11 +127,7 @@ const CardtoCard = ({
   };
 
   useEffect(() => {
-    if (
-      data.getFee &&
-      data.amount.replace(/,/g, "") !== "" &&
-      data.amount !== "."
-    ) {
+    if (data.getFee && data.amount.replace(/,/g, "") !== "" && data.amount !== ".") {
       let debounceTimer;
       updateHandler("feeToken", null);
       updateHandler("feeDetails", {});
@@ -174,8 +164,7 @@ const CardtoCard = ({
           const dec = decryptData(err.response.data.data);
           console.log(dec);
           toast.error(
-            dec.message ||
-              "We cannot process your request at the moment, please try again later..",
+            dec.message || "We cannot process your request at the moment, please try again later..",
           );
         } finally {
           updateHandler("loading", false);
@@ -272,8 +261,7 @@ const CardtoCard = ({
       const dec = decryptData(error?.response?.data?.data);
 
       toast.error(
-        dec.message ||
-          "Something went wrong while creating your virtual card! please try again.",
+        dec.message || "Something went wrong while creating your virtual card! please try again.",
       );
     } finally {
       updateHandler("loading", false);
@@ -317,8 +305,7 @@ const CardtoCard = ({
           "disabled",
           data.amount === "" ||
             data.amount === "0" ||
-            +data.feeDetails?.total_amount?.replace(/,/g, "") >
-              +currentCardDetails.balance ||
+            +data.feeDetails?.total_amount?.replace(/,/g, "") > +currentCardDetails.balance ||
             !data.feeDetails?.total_amount,
         );
         break;
@@ -364,8 +351,7 @@ const CardtoCard = ({
       updateHandler("step", 6);
 
       try {
-        const totalStr =
-          data.feeDetails?.total_amount?.replace(/,/g, "") || "0";
+        const totalStr = data.feeDetails?.total_amount?.replace(/,/g, "") || "0";
         const total = parseFloat(totalStr) || 0;
         setCurrentCardDetails((prev) => {
           const prevBal = parseFloat(prev?.balance) || 0;
@@ -387,8 +373,7 @@ const CardtoCard = ({
           dec.message
             .split("_")
             .map((w) => w[0].toUpperCase() + w.slice(1))
-            .join(" ") ??
-            "Something went wrong while making the transaction please try again!",
+            .join(" ") ?? "Something went wrong while making the transaction please try again!",
         );
       }
       updateHandler("showOtpModal", false);
@@ -461,11 +446,7 @@ const CardtoCard = ({
         <p style={{ color: "black" }}>{t("Fees & Charges")}</p>
         {!data.loading || data.feeDetails?.fee ? (
           <p>
-            {formatAmountWithSymbol(
-              data.feeDetails?.fee,
-              data.feeDetails?.sending_currency,
-              true,
-            )}
+            {formatAmountWithSymbol(data.feeDetails?.fee, data.feeDetails?.sending_currency, true)}
           </p>
         ) : (
           <div style={{ width: "50px" }}>
@@ -504,10 +485,7 @@ const CardtoCard = ({
             {width > 1000 && <p onClick={handleClose}>{t("Close")}</p>}
           </div>
 
-          <div
-            style={{ padding: width < 1000 && "0px" }}
-            className={styles.whiteDiv}
-          >
+          <div style={{ padding: width < 1000 && "0px" }} className={styles.whiteDiv}>
             <div className={styles.content}>
               <div className={styles.textDiv}>
                 <h2>{t("Your payment is being processed")}</h2>
@@ -554,10 +532,7 @@ const CardtoCard = ({
             minHeight: width > 1000 ? "700px" : "91vh",
           }}
         >
-          <div
-            style={{ display: width < 1000 && "none" }}
-            className={styles.left}
-          >
+          <div style={{ display: width < 1000 && "none" }} className={styles.left}>
             <div
               style={{
                 display: "flex",
@@ -595,19 +570,13 @@ const CardtoCard = ({
 
                   <div>
                     <img
-                      src={
-                        card?.type === "premium_plus"
-                          ? PremiumLabel
-                          : StandardLabel
-                      }
+                      src={card?.type === "premium_plus" ? PremiumLabel : StandardLabel}
                       alt=""
                     />
 
                     <div>
                       <div>
-                        <p>
-                          {card?.type === "premium_plus" ? t("Premium") : ""}
-                        </p>
+                        <p>{card?.type === "premium_plus" ? t("Premium") : ""}</p>
                         <span>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -644,10 +613,7 @@ const CardtoCard = ({
                             data.feeDetails?.total_amount?.replace(/,/g, "")
                               ? (
                                   currentCardDetails?.balance -
-                                  data.feeDetails?.total_amount?.replace(
-                                    /,/g,
-                                    "",
-                                  )
+                                  data.feeDetails?.total_amount?.replace(/,/g, "")
                                 ).toFixed(2)
                               : currentCardDetails?.balance,
                             card?.currency,
@@ -684,9 +650,7 @@ const CardtoCard = ({
             }}
           >
             {width < 1000 && (
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "6px" }}
-              >
+              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                 <span
                   style={{
                     padding: "7.5px",
@@ -711,14 +675,8 @@ const CardtoCard = ({
             <div
               className={styles.cont}
               style={{
-                padding:
-                  (data.step === 2 || data.step === 3) &&
-                  width > 1000 &&
-                  "24px",
-                background:
-                  (data.step === 2 || data.step === 3) &&
-                  width > 1000 &&
-                  "#FAFAFA",
+                padding: (data.step === 2 || data.step === 3) && width > 1000 && "24px",
+                background: (data.step === 2 || data.step === 3) && width > 1000 && "#FAFAFA",
                 boxShadow:
                   (data.step === 2 || data.step === 3) &&
                   width > 1000 &&
@@ -728,17 +686,13 @@ const CardtoCard = ({
                 gap: width < 1000 && "2rem",
               }}
             >
-              {data.step === 1 && (
-                <RecipientSelect dataHandler={updateHandler} data={data} />
-              )}
+              {data.step === 1 && <RecipientSelect dataHandler={updateHandler} data={data} />}
 
               {data.step === 2 && (
                 <>
                   <div className={styles.amountDiv}>
                     <div>
-                      <h2 style={{ marginBottom: "2rem" }}>
-                        {t("Enter the amount")}
-                      </h2>
+                      <h2 style={{ marginBottom: "2rem" }}>{t("Enter the amount")}</h2>
                       <div className={styles.amount}>
                         <p>{t("Amount")}</p>
                         <input
@@ -783,9 +737,7 @@ const CardtoCard = ({
                         )}
                     </div>
 
-                    {width < 1000 && (
-                      <div className={styles.feeDetails}>{feeContent()}</div>
-                    )}
+                    {width < 1000 && <div className={styles.feeDetails}>{feeContent()}</div>}
                   </div>
 
                   {width < 1000 && (
@@ -797,19 +749,13 @@ const CardtoCard = ({
 
                       <div>
                         <img
-                          src={
-                            card.type === "premium_plus"
-                              ? PremiumLabel
-                              : StandardLabel
-                          }
+                          src={card.type === "premium_plus" ? PremiumLabel : StandardLabel}
                           alt=""
                         />
 
                         <div>
                           <div>
-                            <p>
-                              {card.type === "premium_plus" ? t("Premium") : ""}
-                            </p>
+                            <p>{card.type === "premium_plus" ? t("Premium") : ""}</p>
                             <span>
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -846,10 +792,7 @@ const CardtoCard = ({
                                 data.feeDetails?.total_amount?.replace(/,/g, "")
                                   ? (
                                       currentCardDetails?.balance -
-                                      data.feeDetails.total_amount?.replace(
-                                        /,/g,
-                                        "",
-                                      )
+                                      data.feeDetails.total_amount?.replace(/,/g, "")
                                     ).toFixed(2)
                                   : currentCardDetails?.balance,
                                 card?.currency,
@@ -906,11 +849,7 @@ const CardtoCard = ({
                       />
                     </svg>
 
-                    <p>
-                      {t(
-                        "Shown in your Transactions page and shared with your recipient",
-                      )}
-                    </p>
+                    <p>{t("Shown in your Transactions page and shared with your recipient")}</p>
                   </div>
                 </div>
               )}
@@ -974,11 +913,7 @@ const CardtoCard = ({
                         >
                           <div className={styles.cardFlag}>
                             <img
-                              src={
-                                card.type === "premium_plus"
-                                  ? PremiumLabel
-                                  : StandardLabel
-                              }
+                              src={card.type === "premium_plus" ? PremiumLabel : StandardLabel}
                               alt=""
                             />
                             <span>
@@ -1034,10 +969,7 @@ const CardtoCard = ({
                     {feeCol(
                       t("Available Balance after transfer"),
                       formatAmountWithSymbol(
-                        (
-                          currentCardDetails?.balance -
-                          data.feeDetails?.total_amount
-                        ).toFixed(2),
+                        (currentCardDetails?.balance - data.feeDetails?.total_amount).toFixed(2),
                         data.feeDetails?.sending_currency,
                       ),
                     )}

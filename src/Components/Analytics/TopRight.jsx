@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./styles/TopRight.module.css";
 import chev_up from "../HomeNewUpdated/files/chev_up.png";
 import ReactApexChart from "react-apexcharts";
@@ -164,14 +158,10 @@ const TopRight = ({ data, reports, currentWallet, setApiDates, isLoading }) => {
           colors:
             currentTab === tabsData[0]
               ? categories?.length > 0
-                ? categories?.map((it) =>
-                    it.color.length > 3 ? it.color : "#444",
-                  )
+                ? categories?.map((it) => (it.color.length > 3 ? it.color : "#444"))
                 : []
               : categoriesType?.length > 0
-                ? categoriesType?.map((it) =>
-                    it.color.length > 3 ? it.color : "#444",
-                  )
+                ? categoriesType?.map((it) => (it.color.length > 3 ? it.color : "#444"))
                 : [],
         },
         legend: {
@@ -239,10 +229,7 @@ const TopRight = ({ data, reports, currentWallet, setApiDates, isLoading }) => {
   };
 
   const handleClickOutside = useCallback((event) => {
-    if (
-      datePickerRef.current &&
-      !datePickerRef.current.contains(event.target)
-    ) {
+    if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
       setShowDatePicker(false);
     }
   }, []);
@@ -288,9 +275,7 @@ const TopRight = ({ data, reports, currentWallet, setApiDates, isLoading }) => {
               maximumFractionDigits: 2,
             })}
           </h4>
-          {window.innerWidth > 1000 && (
-            <span>{t("You spent more comparing to last month")}</span>
-          )}
+          {window.innerWidth > 1000 && <span>{t("You spent more comparing to last month")}</span>}
           {/* {
                         window.innerWidth < 1000
                         &&
@@ -384,11 +369,7 @@ const TopRight = ({ data, reports, currentWallet, setApiDates, isLoading }) => {
               >
                 <X />
               </button>
-              <DateRangePicker
-                maxDate={new Date()}
-                ranges={[dateRange]}
-                onChange={handleChange}
-              />
+              <DateRangePicker maxDate={new Date()} ranges={[dateRange]} onChange={handleChange} />
             </div>
           )}
         </div>
@@ -462,8 +443,7 @@ const TopRight = ({ data, reports, currentWallet, setApiDates, isLoading }) => {
                       <div
                         className={styles.ci_circle}
                         style={{
-                          "--color":
-                            item.color.length > 3 ? item.color : "#444",
+                          "--color": item.color.length > 3 ? item.color : "#444",
                         }}
                       />
                       <span>{t(item.name)}</span>

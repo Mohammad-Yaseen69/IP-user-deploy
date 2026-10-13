@@ -16,13 +16,7 @@ export const MIN_AMOUNT = 10;
 
 export const PAYOUT_ASSETS = ["USDT", "USDC"];
 
-const ORDER = [
-  STEPS.AMOUNT,
-  STEPS.RECIPIENT,
-  STEPS.REVIEW,
-  STEPS.OTP,
-  STEPS.DONE,
-];
+const ORDER = [STEPS.AMOUNT, STEPS.RECIPIENT, STEPS.REVIEW, STEPS.OTP, STEPS.DONE];
 
 const transitions = {
   [STEPS.AMOUNT]: { next: () => STEPS.RECIPIENT, back: () => null },
@@ -53,16 +47,9 @@ export const getDisabledState = (stepName, data) => {
     case STEPS.AMOUNT:
       return !data.amount || amount < MIN_AMOUNT || amount > availableBalance;
     case STEPS.RECIPIENT:
-      return (
-        !data.selectedBeneficiary ||
-        !data.address ||
-        !data.protocol ||
-        data.isAddressInvalid
-      );
+      return !data.selectedBeneficiary || !data.address || !data.protocol || data.isAddressInvalid;
     case STEPS.REVIEW:
-      return (
-        !data.feeDetails?.token || data.quoteExpired || !data.confirmedNetwork
-      );
+      return !data.feeDetails?.token || data.quoteExpired || !data.confirmedNetwork;
     default:
       return false;
   }

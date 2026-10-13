@@ -43,8 +43,7 @@ export const getIbanFeeConfig = (fee) => {
 
 export const getActivationFeeConfig = (fee) => {
   const feeType = String(fee?.fee_type || "flat").toLowerCase();
-  const rawAmount =
-    feeType === "percentage" ? fee?.percentage_fee : fee?.flat_fee;
+  const rawAmount = feeType === "percentage" ? fee?.percentage_fee : fee?.flat_fee;
   const amount = parseAmount(rawAmount);
 
   return {
@@ -56,14 +55,10 @@ export const getActivationFeeConfig = (fee) => {
 export const getLocalOrDefaultWallet = (wallets = [], userDetails) => {
   if (!wallets?.length) return null;
 
-  const localCurrency = countries?.find(
-    (c) => c?.iso3 === userDetails?.country_iso_code,
-  )?.currency;
+  const localCurrency = countries?.find((c) => c?.iso3 === userDetails?.country_iso_code)?.currency;
 
   if (localCurrency) {
-    const wallet = wallets?.find(
-      (item) => getWalletCurrencyCode(item) === localCurrency,
-    );
+    const wallet = wallets?.find((item) => getWalletCurrencyCode(item) === localCurrency);
 
     if (
       wallet &&
@@ -76,12 +71,7 @@ export const getLocalOrDefaultWallet = (wallets = [], userDetails) => {
   }
 
   const activeWallets = getActiveInstaWallets(wallets);
-  return (
-    wallets?.find((item) => item?.default) ||
-    activeWallets?.[0] ||
-    wallets?.[0] ||
-    null
-  );
+  return wallets?.find((item) => item?.default) || activeWallets?.[0] || wallets?.[0] || null;
 };
 
 export const fetchVirtualIbanActivationFee = async (accountLevelId) => {
@@ -100,9 +90,7 @@ export const getVirtualIbanPreflight = async ({
   getPlainExchangeRate,
   skipPaymentWhenNoWalletFunds = true,
 }) => {
-  const feeConfig = await fetchVirtualIbanActivationFee(
-    userDetails?.level?._id,
-  );
+  const feeConfig = await fetchVirtualIbanActivationFee(userDetails?.level?._id);
   const activationFee = getActivationFeeConfig(feeConfig);
   const activeWallets = getActiveInstaWallets(userWallets);
   let hasFundedWallet = false;
@@ -126,10 +114,7 @@ export const getVirtualIbanPreflight = async ({
         }
       }
 
-      if (
-        requiredAmount &&
-        getWalletAvailableBalance(wallet) >= requiredAmount
-      ) {
+      if (requiredAmount && getWalletAvailableBalance(wallet) >= requiredAmount) {
         hasFundedWallet = true;
         break;
       }

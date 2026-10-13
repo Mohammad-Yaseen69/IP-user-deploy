@@ -1,12 +1,7 @@
 import React, { useEffect } from "react";
 import InstaPayLoader from "../../Loader";
 
-const DefaultWithdrawal = ({
-  withdrawals,
-  setCurrent,
-  setStep,
-  setCurrentWithdrawal,
-}) => {
+const DefaultWithdrawal = ({ withdrawals, setCurrent, setStep, setCurrentWithdrawal }) => {
   useEffect(() => {
     const setWithdrawal = () => {
       for (let withdrawal of withdrawals) {

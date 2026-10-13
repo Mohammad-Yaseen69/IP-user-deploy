@@ -7332,8 +7332,8 @@
   /* alert responsive css start here */
   $alert-name: primary, secondary, success, danger, warning, info, light, dark;
   $alert-color:
-    var(--theme-default), $secondary-color, $success-color, $danger-color,
-    $warning-color, $info-color, $light-color, $dark-color;
+    var(--theme-default), $secondary-color, $success-color, $danger-color, $warning-color,
+    $info-color, $light-color, $dark-color;
 
   @each $var in $alert-name {
     $i: index($alert-name, $var);

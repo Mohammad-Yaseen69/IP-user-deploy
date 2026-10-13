@@ -33,12 +33,7 @@ import success from "./files/success.gif";
 import signupAnim from "./files/signup_anim.gif";
 import PhoneInput from "../PhoneInput";
 
-const SIgnupForm = ({
-  step,
-  setStep,
-  setIsLoginForm,
-  setRegistrationCompleted,
-}) => {
+const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted }) => {
   const { t } = useTranslation();
   const [isPressed, setIsPressed] = useState(false);
   const [selectedAccountType, setSelectedAccountType] = useState("");
@@ -86,16 +81,11 @@ const SIgnupForm = ({
           ),
         )
         .map((item) => {
-          const country = allowedCountries?.find(
-            (it) => it?.country_iso_code === item.alpha3,
-          );
+          const country = allowedCountries?.find((it) => it?.country_iso_code === item.alpha3);
           const alpha2 = countriesList.find(
             (item) =>
-              country?.country_name?.toLowerCase() ===
-                item?.name?.toLowerCase() ||
-              country?.country_name
-                ?.toLowerCase()
-                ?.includes(item?.name?.toLowerCase()),
+              country?.country_name?.toLowerCase() === item?.name?.toLowerCase() ||
+              country?.country_name?.toLowerCase()?.includes(item?.name?.toLowerCase()),
           )?.code;
           return {
             ...item,
@@ -131,9 +121,7 @@ const SIgnupForm = ({
   const [isAnyFieldEmpty, setIsAnyFieldEmpty] = useState(true);
   const [resendTimer, setResendTimer] = useState(90);
   const [resendTimerEmail, setResendTimerEmail] = useState(900);
-  const [otpValuesPhone, setOTPValuesPhone] = useState(
-    Array(numberOfFields).fill(""),
-  );
+  const [otpValuesPhone, setOTPValuesPhone] = useState(Array(numberOfFields).fill(""));
   const inputPhoneRefs = useRef(Array(numberOfFields).fill(null));
   const [isAnyFieldEmptyPhone, setIsAnyFieldEmptyPhone] = useState(true);
 
@@ -324,9 +312,7 @@ const SIgnupForm = ({
                   // console.log("user_country", data.countryName)
                   const countryCode = data.countryCode;
                   const filteredCountry = allCountries.filter((item) =>
-                    item.name
-                      .toLowerCase()
-                      .includes(data.countryName.toLowerCase()),
+                    item.name.toLowerCase().includes(data.countryName.toLowerCase()),
                   )?.[0];
                   setCountry(filteredCountry);
                   setCountryCode(filteredCountry?.alpha3);
@@ -367,12 +353,9 @@ const SIgnupForm = ({
     const encrypted = encryptData(data);
 
     axios
-      .post(
-        `${import.meta.env.VITE_IP_DEV_API}/api/account/account-check/business`,
-        {
-          data: encrypted,
-        },
-      )
+      .post(`${import.meta.env.VITE_IP_DEV_API}/api/account/account-check/business`, {
+        data: encrypted,
+      })
       .then((res) => {
         const decrypted = decryptData(res.data.data);
         if (decrypted.message === "Account not found!") {
@@ -402,12 +385,9 @@ const SIgnupForm = ({
     const encrypted = encryptData(data);
 
     axios
-      .post(
-        `${import.meta.env.VITE_IP_DEV_API}/api/account/account-check/individual`,
-        {
-          data: encrypted,
-        },
-      )
+      .post(`${import.meta.env.VITE_IP_DEV_API}/api/account/account-check/individual`, {
+        data: encrypted,
+      })
       .then((res) => {
         const decrypted = decryptData(res.data.data);
         if (decrypted.message === "Account not found!") {
@@ -467,12 +447,9 @@ const SIgnupForm = ({
       const encrypted = encryptData(credentials);
 
       axios
-        .post(
-          `${import.meta.env.VITE_IP_DEV_API}/api/account/registration/business`,
-          {
-            data: encrypted,
-          },
-        )
+        .post(`${import.meta.env.VITE_IP_DEV_API}/api/account/registration/business`, {
+          data: encrypted,
+        })
         .then((res) => {
           const decrypted = decryptData(res.data.data);
           setToken(decrypted?.token);
@@ -536,12 +513,9 @@ const SIgnupForm = ({
       const encrypted = encryptData(credentials);
 
       axios
-        .post(
-          `${import.meta.env.VITE_IP_DEV_API}/api/account/registration/individual`,
-          {
-            data: encrypted,
-          },
-        )
+        .post(`${import.meta.env.VITE_IP_DEV_API}/api/account/registration/individual`, {
+          data: encrypted,
+        })
         .then((res) => {
           const decrypted = decryptData(res.data.data);
           setToken(decrypted?.token);
@@ -821,9 +795,7 @@ const SIgnupForm = ({
           >
             {t("Oops! Your country doesn't supports InstaPay!")}
           </p>
-          <p style={{ fontSize: ".6rem", marginTop: ".5rem" }}>
-            {t("Thanks For Using InstaPay!")}
-          </p>
+          <p style={{ fontSize: ".6rem", marginTop: ".5rem" }}>{t("Thanks For Using InstaPay!")}</p>
         </ModalBody>
       </Modal>
       {step === 1 && (
@@ -838,41 +810,29 @@ const SIgnupForm = ({
           <div className={styles.choose_acc_type}>
             <h5>{t("Account Type")}</h5>
             <div className={styles.acc_types}>
-              <div
-                className={styles.acc_type}
-                onClick={() => accTypeHandler("individual")}
-              >
+              <div className={styles.acc_type} onClick={() => accTypeHandler("individual")}>
                 <IndividualSVG
                   size={window.innerWidth > 450 ? 184 : 145}
-                  color={
-                    selectedAccountType === "individual" ? "#5926f0" : "#d5d5d5"
-                  }
+                  color={selectedAccountType === "individual" ? "#5926f0" : "#d5d5d5"}
                   isActive={selectedAccountType === "individual"}
                 />
                 <span
                   style={{
-                    color:
-                      selectedAccountType === "individual" ? "#5926f0" : "#000",
+                    color: selectedAccountType === "individual" ? "#5926f0" : "#000",
                   }}
                 >
                   {t("Individual")}
                 </span>
               </div>
-              <div
-                className={styles.acc_type}
-                onClick={() => accTypeHandler("business")}
-              >
+              <div className={styles.acc_type} onClick={() => accTypeHandler("business")}>
                 <BusinessSVG
                   size={window.innerWidth > 450 ? 184 : 145}
-                  color={
-                    selectedAccountType === "business" ? "#5926f0" : "#d5d5d5"
-                  }
+                  color={selectedAccountType === "business" ? "#5926f0" : "#d5d5d5"}
                   isActive={selectedAccountType === "business"}
                 />
                 <span
                   style={{
-                    color:
-                      selectedAccountType === "business" ? "#5926f0" : "#000",
+                    color: selectedAccountType === "business" ? "#5926f0" : "#000",
                   }}
                 >
                   {t("Business")}
@@ -966,9 +926,7 @@ const SIgnupForm = ({
               <div className={styles.top_text}>
                 <h3>
                   {t("Enter Your")}{" "}
-                  {selectedAccountType === "individual"
-                    ? t("Personal")
-                    : t("Business")}{" "}
+                  {selectedAccountType === "individual" ? t("Personal") : t("Business")}{" "}
                   {t("Details")}
                 </h3>
                 <p>{t("Start Your Instapay Journey Today!")}</p>
@@ -1083,9 +1041,7 @@ const SIgnupForm = ({
                       >
                         <Camera size={60} color="#5926f0" />
                       </div>
-                      <span style={{ color: "#5926f0" }}>
-                        {t("Take A Photo")}
-                      </span>
+                      <span style={{ color: "#5926f0" }}>{t("Take A Photo")}</span>
                       <input
                         type="file"
                         id="upload_dp"
@@ -1113,9 +1069,7 @@ const SIgnupForm = ({
                       >
                         <Upload size={60} color="#5926f0" />
                       </div>
-                      <span style={{ color: "#5926f0" }}>
-                        {t("Upload A Photo")}
-                      </span>
+                      <span style={{ color: "#5926f0" }}>{t("Upload A Photo")}</span>
                       <input
                         type="file"
                         id="dp"
@@ -1131,14 +1085,8 @@ const SIgnupForm = ({
                     onClick={() => setPhotoSelect(true)}
                     className={styles.acc_type}
                   >
-                    <IndividualSVG
-                      size={110}
-                      color={"#5926f0"}
-                      isActive={true}
-                    />
-                    <span style={{ color: "#5926f0" }}>
-                      {t("Add Photo or Logo")}
-                    </span>
+                    <IndividualSVG size={110} color={"#5926f0"} isActive={true} />
+                    <span style={{ color: "#5926f0" }}>{t("Add Photo or Logo")}</span>
                   </label>
                 )
               ) : dp ? (
@@ -1159,16 +1107,8 @@ const SIgnupForm = ({
                   onClick={() => accTypeHandler("business")}
                 >
                   <BusinessSVG size={110} color={"#5926f0"} isActive={true} />
-                  <span style={{ color: "#5926f0" }}>
-                    {t("Add Photo or Logo")}
-                  </span>
-                  <input
-                    type="file"
-                    id="dp"
-                    hidden
-                    onChange={handleFileChange}
-                    accept="image/*"
-                  />
+                  <span style={{ color: "#5926f0" }}>{t("Add Photo or Logo")}</span>
+                  <input type="file" id="dp" hidden onChange={handleFileChange} accept="image/*" />
                 </label>
               )}
               {selectedAccountType === "individual" ? (
@@ -1235,9 +1175,7 @@ const SIgnupForm = ({
                 }
                 onClick={() => {
                   setIsPressed(true);
-                  setStep((prev) =>
-                    selectedAccountType === "individual" ? prev + 2 : prev + 1,
-                  );
+                  setStep((prev) => (selectedAccountType === "individual" ? prev + 2 : prev + 1));
                   setIsPressed(false);
                 }}
               >
@@ -1283,19 +1221,12 @@ const SIgnupForm = ({
                   >
                     <IndividualSVG
                       size={window.innerWidth > 450 ? 184 : 145}
-                      color={
-                        selectedAccountType === "individual"
-                          ? "#5926f0"
-                          : "#d5d5d5"
-                      }
+                      color={selectedAccountType === "individual" ? "#5926f0" : "#d5d5d5"}
                       isActive={selectedAccountType === "individual"}
                     />
                     <span
                       style={{
-                        color:
-                          selectedAccountType === "individual"
-                            ? "#5926f0"
-                            : "#000",
+                        color: selectedAccountType === "individual" ? "#5926f0" : "#000",
                       }}
                     >
                       {t("Individual")}
@@ -1308,19 +1239,12 @@ const SIgnupForm = ({
                   >
                     <BusinessSVG
                       size={window.innerWidth > 450 ? 184 : 145}
-                      color={
-                        selectedAccountType === "business"
-                          ? "#5926f0"
-                          : "#d5d5d5"
-                      }
+                      color={selectedAccountType === "business" ? "#5926f0" : "#d5d5d5"}
                       isActive={selectedAccountType === "business"}
                     />
                     <span
                       style={{
-                        color:
-                          selectedAccountType === "business"
-                            ? "#5926f0"
-                            : "#000",
+                        color: selectedAccountType === "business" ? "#5926f0" : "#000",
                       }}
                     >
                       {t("Business")}
@@ -1342,10 +1266,7 @@ const SIgnupForm = ({
           <div className={styles.top_text}>
             <h3>
               {t("Enter Your")}{" "}
-              {selectedAccountType === "individual"
-                ? t("Personal")
-                : t("Business")}{" "}
-              {t("Details")}
+              {selectedAccountType === "individual" ? t("Personal") : t("Business")} {t("Details")}
             </h3>
             <p>{t("Start Your Instapay Journey Today!")}</p>
           </div>
@@ -1353,14 +1274,9 @@ const SIgnupForm = ({
             <div className={styles.email_verified}>
               <BusinessSVG size={56} color={"#5926f0"} isActive={true} />
               <p>{company}</p>
-              <button onClick={() => setStep((prev) => prev - 1)}>
-                {t("edit")}
-              </button>
+              <button onClick={() => setStep((prev) => prev - 1)}>{t("edit")}</button>
             </div>
-            <div
-              className={styles.input_container}
-              style={{ position: "relative" }}
-            >
+            <div className={styles.input_container} style={{ position: "relative" }}>
               <label>{t("Country")}</label>
               {country && !showCountryDropdown ? (
                 <div className={styles.selected_cd_item}>
@@ -1368,9 +1284,7 @@ const SIgnupForm = ({
                     <img src={country.file_url} alt={country.alpha3} />
                     <span>{t(country.name)}</span>
                   </div>
-                  <button onClick={() => setShowCountryDropdown(true)}>
-                    {t("edit")}
-                  </button>
+                  <button onClick={() => setShowCountryDropdown(true)}>{t("edit")}</button>
                 </div>
               ) : (
                 <input
@@ -1398,9 +1312,7 @@ const SIgnupForm = ({
                       </div>
                     ))
                   ) : (
-                    <div className="text-center font-600 py-4">
-                      {t("No Country")}
-                    </div>
+                    <div className="text-center font-600 py-4">{t("No Country")}</div>
                   )}
                 </div>
               ) : (
@@ -1410,9 +1322,7 @@ const SIgnupForm = ({
             <div className={styles.warning}>
               <Info color="#FFAA29" />
               <p>
-                {t(
-                  "You cannot change the country, once your account is verified.",
-                )}{" "}
+                {t("You cannot change the country, once your account is verified.")}{" "}
                 <Link>{t("Learn more.")}</Link>
               </p>
             </div>
@@ -1437,17 +1347,11 @@ const SIgnupForm = ({
           <div className={styles.top_text}>
             <h3>
               {t("Enter Your")}{" "}
-              {selectedAccountType === "individual"
-                ? t("Personal")
-                : t("Business")}{" "}
-              {t("Details")}
+              {selectedAccountType === "individual" ? t("Personal") : t("Business")} {t("Details")}
             </h3>
             <p>{t("Start Your Instapay Journey Today!")}</p>
           </div>
-          <div
-            className={styles.input_group}
-            style={{ marginBottom: winWidth ? "60px" : "100px" }}
-          >
+          <div className={styles.input_group} style={{ marginBottom: winWidth ? "60px" : "100px" }}>
             {selectedAccountType === "individual" ? (
               <>
                 <div className={styles.input_container}>
@@ -1457,9 +1361,7 @@ const SIgnupForm = ({
                     country={countryCode}
                     setCountry={(country) => {
                       const filteredCountry = allCountries.filter((item) =>
-                        item.name
-                          .toLowerCase()
-                          .includes(country?.name?.toLowerCase()),
+                        item.name.toLowerCase().includes(country?.name?.toLowerCase()),
                       )?.[0];
                       setCountry(filteredCountry);
                       setCountryCode(filteredCountry?.alpha3);
@@ -1525,9 +1427,7 @@ const SIgnupForm = ({
                     country={countryCode}
                     setCountry={(country) => {
                       const filteredCountry = allCountries.filter((item) =>
-                        item.name
-                          .toLowerCase()
-                          .includes(country?.name?.toLowerCase()),
+                        item.name.toLowerCase().includes(country?.name?.toLowerCase()),
                       )?.[0];
                       setCountry(filteredCountry);
                       setCountryCode(filteredCountry?.alpha3);
@@ -1566,11 +1466,7 @@ const SIgnupForm = ({
                   : phone.length < 8
                 : !emailRegex.test(email))
             }
-            onClick={
-              selectedAccountType === "individual"
-                ? checkIndividual
-                : checkBusiness
-            }
+            onClick={selectedAccountType === "individual" ? checkIndividual : checkBusiness}
           >
             <span>{isPressed ? t("Continuing") : t("Continue")}</span>
             <ChevronRight size={28} color="white" />
@@ -1604,21 +1500,14 @@ const SIgnupForm = ({
                 style={{ cursor: "pointer" }}
               />
             ) : (
-              <Eye
-                onClick={() => setShowPassword(!showPassword)}
-                style={{ cursor: "pointer" }}
-              />
+              <Eye onClick={() => setShowPassword(!showPassword)} style={{ cursor: "pointer" }} />
             )}
           </div>
           <div className={styles.password_guidance}>
             <h5>{t("Password must")}:</h5>
             <ul className={styles.pg_list}>
               <li>
-                {password.length >= 9 && password.length <= 64 ? (
-                  <Check />
-                ) : (
-                  <Cross />
-                )}
+                {password.length >= 9 && password.length <= 64 ? <Check /> : <Cross />}
                 <p>{t("Be between 9 and 64 characters")}</p>
               </li>
               <li>
@@ -1704,12 +1593,7 @@ const SIgnupForm = ({
           )}
           <button
             className={styles.form_btn}
-            disabled={
-              isPressed ||
-              !password ||
-              !confirmPassword ||
-              confirmPassword !== password
-            }
+            disabled={isPressed || !password || !confirmPassword || confirmPassword !== password}
             onClick={() => {
               setIsPressed(true);
               setStep((prev) => prev + 1);
@@ -1796,9 +1680,7 @@ const SIgnupForm = ({
                   marginTop: "10px",
                 }}
               >
-                {t(
-                  "We cannot process your request at the moment, please try again later.",
-                )}
+                {t("We cannot process your request at the moment, please try again later.")}
               </h2>
               <p
                 style={{
@@ -1864,19 +1746,14 @@ const SIgnupForm = ({
                   {t("Sign In")}
                 </Link>
                 |
-                <Link
-                  style={{ fontWeight: "600" }}
-                  to={"mailto:support@insta-pay.ch"}
-                >
+                <Link style={{ fontWeight: "600" }} to={"mailto:support@insta-pay.ch"}>
                   {t("Contact Support")}
                 </Link>
               </div>
             </>
           ) : (
             <>
-              <h4 className={styles.finalize_head}>
-                {t("Finalize Your Process")}
-              </h4>
+              <h4 className={styles.finalize_head}>{t("Finalize Your Process")}</h4>
               <div
                 className={styles.input_container}
                 style={{ width: "70%", marginTop: winWidth ? "60px" : "100px" }}
@@ -1888,9 +1765,7 @@ const SIgnupForm = ({
                   type="text"
                   placeholder="eg: IMTIAZ0307"
                   value={referralCode}
-                  onChange={(e) =>
-                    setReferralCode(e.target.value.toLowerCase())
-                  }
+                  onChange={(e) => setReferralCode(e.target.value.toLowerCase())}
                 />
               </div>
               {referralError && (
@@ -1920,11 +1795,7 @@ const SIgnupForm = ({
                 }}
               >
                 <Info color="#FFAA29" />
-                <p>
-                  {t(
-                    "It will be autofill, if you're signing up with invitation link.",
-                  )}
-                </p>
+                <p>{t("It will be autofill, if you're signing up with invitation link.")}</p>
               </div>
               <div
                 className={styles.agree_item}
@@ -1941,10 +1812,7 @@ const SIgnupForm = ({
                 </Label>
                 <p>
                   {t("I agree with")}{" "}
-                  <Link
-                    to={"https://insta-pay.ch/terms-and-conditions"}
-                    target="_blank"
-                  >
+                  <Link to={"https://insta-pay.ch/terms-and-conditions"} target="_blank">
                     {t("Terms & Conditions")}
                   </Link>
                 </p>
@@ -1961,10 +1829,7 @@ const SIgnupForm = ({
                 </Label>
                 <p>
                   {t("I agree with")}{" "}
-                  <Link
-                    to={"https://insta-pay.ch/privacy-policy"}
-                    target="_blank"
-                  >
+                  <Link to={"https://insta-pay.ch/privacy-policy"} target="_blank">
                     {t("Privacy Policy")}
                   </Link>
                 </p>
@@ -1975,11 +1840,7 @@ const SIgnupForm = ({
                 onClick={signup}
                 style={{ marginTop: winWidth ? "29px" : "50px" }}
               >
-                <span>
-                  {isPressed
-                    ? t("Creating Your Account")
-                    : "Create Your Account"}
-                </span>
+                <span>{isPressed ? t("Creating Your Account") : "Create Your Account"}</span>
                 <ChevronRight size={28} color="white" />
               </button>
               {signupError && (
@@ -2013,9 +1874,7 @@ const SIgnupForm = ({
                 }}
               />
               <div className={styles.otp_text}>
-                <h5 style={{ whiteSpace: "nowrap" }}>
-                  {t("Registration is Completed")}
-                </h5>
+                <h5 style={{ whiteSpace: "nowrap" }}>{t("Registration is Completed")}</h5>
                 <p>{t("Click below to login")}</p>
               </div>
               <Link to={"/login"} style={{ color: "white" }}>
@@ -2046,9 +1905,7 @@ const SIgnupForm = ({
                 }}
               />
               <div className={styles.otp_text}>
-                <h5 style={{ whiteSpace: "nowrap" }}>
-                  {t("Password Verified Successfully!")}
-                </h5>
+                <h5 style={{ whiteSpace: "nowrap" }}>{t("Password Verified Successfully!")}</h5>
                 <p>{t("Verify your email now.")}</p>
               </div>
               <button
@@ -2070,23 +1927,16 @@ const SIgnupForm = ({
                 <img src={otp} alt="otp" />
               </div>
               <div className={styles.otp_text}>
-                <h5>
-                  {verified ? t("Verification Code Verified") : t("Enter Code")}
-                </h5>
+                <h5>{verified ? t("Verification Code Verified") : t("Enter Code")}</h5>
                 <p>
                   {verified
-                    ? t(
-                        "Verification code has been verified, Please continue to the next step.",
-                      )
-                    : t(
-                        "A Verification code has been sent to your email and number.",
-                      )}
+                    ? t("Verification code has been verified, Please continue to the next step.")
+                    : t("A Verification code has been sent to your email and number.")}
                 </p>
               </div>
               {!verified && (
                 <>
-                  {(selectedAccountType === "individual" ? email : true) &&
-                  showEmail ? (
+                  {(selectedAccountType === "individual" ? email : true) && showEmail ? (
                     <>
                       <span
                         style={{
@@ -2123,11 +1973,7 @@ const SIgnupForm = ({
                           />
                         ))}
                       </div>
-                      {otpError && (
-                        <div style={{ margin: ".5rem", color: "red" }}>
-                          {otpError}
-                        </div>
-                      )}
+                      {otpError && <div style={{ margin: ".5rem", color: "red" }}>{otpError}</div>}
                       <span
                         style={{
                           fontSize: "12px",
@@ -2137,11 +1983,7 @@ const SIgnupForm = ({
                         className={styles.resend_text}
                       >
                         {resendTimer > 0 ? (
-                          t("Resend available in") +
-                          " " +
-                          resendTimer +
-                          " " +
-                          t("seconds")
+                          t("Resend available in") + " " + resendTimer + " " + t("seconds")
                         ) : (
                           <>
                             {t("Didn't receive OTP?")}
@@ -2168,8 +2010,7 @@ const SIgnupForm = ({
                   )}
 
                   {/* phone */}
-                  {(selectedAccountType === "business" ? phone : true) &&
-                  !showEmail ? (
+                  {(selectedAccountType === "business" ? phone : true) && !showEmail ? (
                     <>
                       <span
                         style={{
@@ -2188,13 +2029,9 @@ const SIgnupForm = ({
                             type="number"
                             maxLength={1}
                             value={value}
-                            onChange={(e) =>
-                              handleInputChangePhone(index, e.target.value)
-                            }
+                            onChange={(e) => handleInputChangePhone(index, e.target.value)}
                             onKeyDown={(e) => handleInputKeyDownPhone(index, e)}
-                            ref={(input) =>
-                              (inputPhoneRefs.current[index] = input)
-                            }
+                            ref={(input) => (inputPhoneRefs.current[index] = input)}
                             style={{
                               width: "36px",
                               height: "36px",
@@ -2207,11 +2044,7 @@ const SIgnupForm = ({
                           />
                         ))}
                       </div>
-                      {otpError && (
-                        <div style={{ margin: ".5rem", color: "red" }}>
-                          {otpError}
-                        </div>
-                      )}
+                      {otpError && <div style={{ margin: ".5rem", color: "red" }}>{otpError}</div>}
                       <span
                         style={{
                           fontSize: "12px",
@@ -2221,9 +2054,7 @@ const SIgnupForm = ({
                         className={styles.resend_text}
                       >
                         {resendTimer > 0 ? (
-                          t("Resend available in ") +
-                          resendTimer +
-                          t(" seconds")
+                          t("Resend available in ") + resendTimer + t(" seconds")
                         ) : (
                           <>
                             {"Didn't receive OTP? "}
@@ -2267,9 +2098,7 @@ const SIgnupForm = ({
             <button
               ref={buttonRef}
               className={styles.form_btn}
-              disabled={
-                isPressed || showEmail ? isAnyFieldEmpty : isAnyFieldEmptyPhone
-              }
+              disabled={isPressed || showEmail ? isAnyFieldEmpty : isAnyFieldEmptyPhone}
               onClick={showEmail ? otpEmailVerify : otpVerify}
             >
               <span>{isPressed ? t("Verifying") : t("Verify")}</span>

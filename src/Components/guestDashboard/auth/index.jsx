@@ -29,13 +29,7 @@ const Index = () => {
   return (
     <div className={styles.container}>
       <div className={styles.child1}>
-        <img
-          src={rightImage}
-          width={"100%"}
-          height={"100%"}
-          loading="lazy"
-          alt=""
-        />
+        <img src={rightImage} width={"100%"} height={"100%"} loading="lazy" alt="" />
       </div>
       <div className={styles.child2}>
         {step === 1 ? (

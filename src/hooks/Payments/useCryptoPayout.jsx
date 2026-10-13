@@ -5,11 +5,7 @@ import { apiWrapper } from "../../utils/Functions/apiWrapper";
 
 export const cryptoPayoutQueryKeys = {
   all: ["crypto-payout"],
-  validateAddress: (payload) => [
-    ...cryptoPayoutQueryKeys.all,
-    "validate-address",
-    payload,
-  ],
+  validateAddress: (payload) => [...cryptoPayoutQueryKeys.all, "validate-address", payload],
 };
 
 export const useCryptoPayoutFee = () =>

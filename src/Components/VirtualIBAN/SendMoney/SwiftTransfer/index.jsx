@@ -124,9 +124,7 @@ const DEFAULT_BENEFICIARY_FORM = {
 
 const sidebarIcons = {
   [SIDEBAR_STEP_NAMES.PAYMENT_RAIL]: Globe,
-  [SIDEBAR_STEP_NAMES.AMOUNT]: () => (
-    <span className={styles.sidebarIconText}>EUR</span>
-  ),
+  [SIDEBAR_STEP_NAMES.AMOUNT]: () => <span className={styles.sidebarIconText}>EUR</span>,
   [SIDEBAR_STEP_NAMES.BENEFICIARY]: User,
   [SIDEBAR_STEP_NAMES.PURPOSE]: List,
   [SIDEBAR_STEP_NAMES.REVIEW]: FileText,
@@ -214,13 +212,7 @@ const TextField = ({
   </label>
 );
 
-const SwiftAmountStep = ({
-  amount,
-  setAmount,
-  availableBalance,
-  currencyCode,
-  sourceIban,
-}) => {
+const SwiftAmountStep = ({ amount, setAmount, availableBalance, currencyCode, sourceIban }) => {
   const { t } = useTranslation();
   const sourceBalance = getAmountNumber(availableBalance);
   const MIN_USD_AMOUNT = 11;
@@ -278,11 +270,7 @@ const SwiftAmountStep = ({
   );
 };
 
-const MissingSwiftCodeBanner = ({
-  beneficiary,
-  authHeader,
-  onSwiftCodeSaved,
-}) => {
+const MissingSwiftCodeBanner = ({ beneficiary, authHeader, onSwiftCodeSaved }) => {
   const { t } = useTranslation();
   const rawBic = getRawSwiftCode(beneficiary);
   const [bic, setBic] = useState(rawBic || "");
@@ -303,11 +291,9 @@ const MissingSwiftCodeBanner = ({
     if (!bicValid) return;
     setSaving(true);
     try {
-      const { encryptData } =
-        await import("../../../../Helper/EssentilaMethods/Encryption");
+      const { encryptData } = await import("../../../../Helper/EssentilaMethods/Encryption");
       const bankDetails =
-        Array.isArray(beneficiary?.bank_details) &&
-        beneficiary.bank_details.length > 0
+        Array.isArray(beneficiary?.bank_details) && beneficiary.bank_details.length > 0
           ? {
               ...beneficiary.bank_details[0],
               swift_code: bicClean,
@@ -347,9 +333,7 @@ const MissingSwiftCodeBanner = ({
       <div className={styles.missingBicHeader}>
         <span className={styles.missingBicIcon}>⚠</span>
         <div>
-          <strong>
-            {t("Valid 8 or 11 character BIC / SWIFT code is required")}
-          </strong>
+          <strong>{t("Valid 8 or 11 character BIC / SWIFT code is required")}</strong>
           <p>
             {t(
               "{{name}} has an invalid or missing BIC / SWIFT code. Enter a valid 8 or 11 character code below to continue.",
@@ -392,8 +376,7 @@ const AddBeneficiaryStep = ({ amount, currencyCode, form, setForm }) => {
     .trim()
     .toUpperCase();
   const bicValid = bicValue.length === 8 || bicValue.length === 11;
-  const bicError =
-    bicValue.length > 0 && !bicValid ? t("BIC must be 8 or 11 characters") : "";
+  const bicError = bicValue.length > 0 && !bicValid ? t("BIC must be 8 or 11 characters") : "";
 
   return (
     <div className={styles.addBeneficiaryStep}>
@@ -536,9 +519,7 @@ const AddBeneficiaryStep = ({ amount, currencyCode, form, setForm }) => {
         className={styles.toggleRow}
         onClick={() => update("saveBeneficiary", !form.saveBeneficiary)}
       >
-        <span
-          className={`${styles.toggle} ${form.saveBeneficiary ? styles.toggleOn : ""}`}
-        >
+        <span className={`${styles.toggle} ${form.saveBeneficiary ? styles.toggleOn : ""}`}>
           <span />
         </span>
         {t("Save this beneficiary for next time")}
@@ -592,11 +573,7 @@ const PurposeStep = ({
         onChange={(v) => setDescription(v)}
         placeholder={t("e.g. Invoice payment, consultant fees, trade")}
         hint={
-          !descError
-            ? t(
-                "5–34 characters; letters, digits, space, comma, dot, hyphen only",
-              )
-            : ""
+          !descError ? t("5–34 characters; letters, digits, space, comma, dot, hyphen only") : ""
         }
         error={descError}
         maxLength={34}
@@ -677,9 +654,7 @@ const ReviewStep = ({
     ],
     [
       "Net after fee",
-      feeDetails?.amount
-        ? formatMoney(feeDetails.amount.value, currencyCode)
-        : "-",
+      feeDetails?.amount ? formatMoney(feeDetails.amount.value, currencyCode) : "-",
     ],
     [
       "Exchange rate",
@@ -687,10 +662,7 @@ const ReviewStep = ({
         ? `1 ${exchangeRate.from} = ${exchangeRate.value.toFixed(6)} ${exchangeRate.to}`
         : t("Calculating..."),
     ],
-    [
-      "Recipient gets",
-      recipientAmount ? formatUSD(recipientAmount.value) : t("Calculating..."),
-    ],
+    ["Recipient gets", recipientAmount ? formatUSD(recipientAmount.value) : t("Calculating...")],
     [
       "Total debited",
       totalAmount
@@ -735,9 +707,7 @@ const ReviewStep = ({
           ) : isExpired ? (
             <>
               <Clock size={16} />
-              <span>
-                {t("Quote has expired. Please refresh to get a new rate.")}
-              </span>
+              <span>{t("Quote has expired. Please refresh to get a new rate.")}</span>
             </>
           ) : (
             <>
@@ -745,8 +715,7 @@ const ReviewStep = ({
               <span>
                 {t("Rate locked for")}{" "}
                 <strong className={styles.timerSeconds}>
-                  {Math.floor(secondsLeft / 60)}:
-                  {String(secondsLeft % 60).padStart(2, "0")}
+                  {Math.floor(secondsLeft / 60)}:{String(secondsLeft % 60).padStart(2, "0")}
                 </strong>
               </span>
             </>
@@ -848,17 +817,10 @@ const downloadSwiftReceipt = ({
     ["Purpose", purpose || "-"],
     ["Additional info", additionalInfo || "-"],
     ["You sent (EUR)", formatMoney(amount, currencyCode)],
-    [
-      "Fee",
-      feeAmount
-        ? formatMoney(feeAmount.value, feeAmount.currency || currencyCode)
-        : "N/A",
-    ],
+    ["Fee", feeAmount ? formatMoney(feeAmount.value, feeAmount.currency || currencyCode) : "N/A"],
     [
       "Net after fee",
-      feeDetails?.amount
-        ? formatMoney(feeDetails.amount.value, currencyCode)
-        : "-",
+      feeDetails?.amount ? formatMoney(feeDetails.amount.value, currencyCode) : "-",
     ],
     [
       "Exchange rate",
@@ -866,15 +828,10 @@ const downloadSwiftReceipt = ({
         ? `1 ${exchangeRate.from} = ${exchangeRate.value.toFixed(6)} ${exchangeRate.to}`
         : "-",
     ],
-    [
-      "Recipient received",
-      recipientAmount ? formatUSD(recipientAmount.value) : "-",
-    ],
+    ["Recipient received", recipientAmount ? formatUSD(recipientAmount.value) : "-"],
     [
       "Total debited",
-      totalAmount
-        ? formatMoney(totalAmount.value, totalAmount.currency || currencyCode)
-        : "-",
+      totalAmount ? formatMoney(totalAmount.value, totalAmount.currency || currencyCode) : "-",
     ],
     ["Estimated arrival", "1–5 business days"],
     ["Tracking reference", trackingReference],
@@ -969,16 +926,12 @@ const DoneStep = ({
         <div className={styles.reviewRow}>
           <span>{t("Fee")}</span>
           <strong>
-            {feeAmount
-              ? formatMoney(feeAmount.value, feeAmount.currency || currencyCode)
-              : "-"}
+            {feeAmount ? formatMoney(feeAmount.value, feeAmount.currency || currencyCode) : "-"}
           </strong>
         </div>
         <div className={styles.reviewRow}>
           <span>{t("Recipient gets")}</span>
-          <strong>
-            {recipientAmount ? formatUSD(recipientAmount.value) : "-"}
-          </strong>
+          <strong>{recipientAmount ? formatUSD(recipientAmount.value) : "-"}</strong>
         </div>
         <div className={styles.reviewRow}>
           <span>{t("Estimated arrival")}</span>
@@ -1026,26 +979,17 @@ const DoneStep = ({
 };
 
 const SwiftTransfer = forwardRef(
-  (
-    { isOpen = true, toggle, selectedIban, availableBalance, isPage = false },
-    ref,
-  ) => {
+  ({ isOpen = true, toggle, selectedIban, availableBalance, isPage = false }, ref) => {
     const { t } = useTranslation();
     const width = useWindowWidth();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const {
-      userDetails,
-      setProfileLockTime,
-      getUserBeneficiaries,
-      beneficiaries,
-      authHeader,
-    } = useContext(UserContext);
+    const { userDetails, setProfileLockTime, getUserBeneficiaries, beneficiaries, authHeader } =
+      useContext(UserContext);
 
     const ibanId = selectedIban?._id || selectedIban?.id;
     const { data: syncedBalance } = useSyncVirtualIbanBalance(ibanId);
-    const liveBalance =
-      syncedBalance?.balance ?? availableBalance ?? selectedIban?.balance ?? 0;
+    const liveBalance = syncedBalance?.balance ?? availableBalance ?? selectedIban?.balance ?? 0;
     const currencyCode = selectedIban?.currency || "EUR";
     const sourceAvailableBalance = getSourceBalance(liveBalance, selectedIban);
     const getDefaultAuthType = () =>
@@ -1060,14 +1004,11 @@ const SwiftTransfer = forwardRef(
     const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT);
     const [amount, setAmount] = useState("");
     const [selectedBeneficiary, setSelectedBeneficiary] = useState(null);
-    const [beneficiaryForm, setBeneficiaryForm] = useState(
-      DEFAULT_BENEFICIARY_FORM,
-    );
+    const [beneficiaryForm, setBeneficiaryForm] = useState(DEFAULT_BENEFICIARY_FORM);
     const [isAddingBeneficiary, setIsAddingBeneficiary] = useState(false);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isChannelModalOpen, setIsChannelModalOpen] = useState(false);
-    const [channelModalBeneficiary, setChannelModalBeneficiary] =
-      useState(null);
+    const [channelModalBeneficiary, setChannelModalBeneficiary] = useState(null);
     const [purpose, setPurpose] = useState(PURPOSE_OPTIONS[0]);
     const [description, setDescription] = useState("");
     const [additionalInfo, setAdditionalInfo] = useState("");
@@ -1139,21 +1080,18 @@ const SwiftTransfer = forwardRef(
     const swiftBeneficiaries = useMemo(
       () =>
         (beneficiaries || []).filter(
-          (b) =>
-            Array.isArray(b?.account_type) && b.account_type.includes("bank"),
+          (b) => Array.isArray(b?.account_type) && b.account_type.includes("bank"),
         ),
       [beneficiaries],
     );
 
-    const isProcessing =
-      payoutFee.isPending || isSendingOtp || isRefreshingQuote;
+    const isProcessing = payoutFee.isPending || isSendingOtp || isRefreshingQuote;
     const isQuoteExpired = quoteExpiresAt
       ? new Date(quoteExpiresAt).getTime() <= Date.now()
       : false;
 
     const isAddressBlocked =
-      currentStep === STEPS.BENEFICIARY &&
-      isBeneficiaryAddressTooLong(selectedBeneficiary);
+      currentStep === STEPS.BENEFICIARY && isBeneficiaryAddressTooLong(selectedBeneficiary);
 
     const disabled =
       getDisabledState(currentStep, machineData) ||
@@ -1167,11 +1105,7 @@ const SwiftTransfer = forwardRef(
       if (userDetails?.tfa) setAuthType("authenticator");
       else if (userDetails?.email_verification) setAuthType("email");
       else if (userDetails?.whatsapp_verification) setAuthType("whatsapp");
-    }, [
-      userDetails?.tfa,
-      userDetails?.email_verification,
-      userDetails?.whatsapp_verification,
-    ]);
+    }, [userDetails?.tfa, userDetails?.email_verification, userDetails?.whatsapp_verification]);
 
     useEffect(() => {
       if (userDetails?._id) getUserBeneficiaries();
@@ -1194,9 +1128,7 @@ const SwiftTransfer = forwardRef(
       setIsAddModalOpen(false);
       setIsChannelModalOpen(false);
       setChannelModalBeneficiary(null);
-      setSavedBeneficiaryId(
-        savedBeneficiary?._id || savedBeneficiary?.id || "",
-      );
+      setSavedBeneficiaryId(savedBeneficiary?._id || savedBeneficiary?.id || "");
       await getUserBeneficiaries();
     };
 
@@ -1331,11 +1263,7 @@ const SwiftTransfer = forwardRef(
           const dupData = error?.response?.data?.data || {};
           setPayoutResult(dupData);
           setVerified(true);
-          toast.info(
-            t(
-              "This transfer was already submitted. Showing the original transaction.",
-            ),
-          );
+          toast.info(t("This transfer was already submitted. Showing the original transaction."));
           return;
         }
         handlePaymentApiError({
@@ -1358,12 +1286,10 @@ const SwiftTransfer = forwardRef(
       }
 
       if (currentStep === STEPS.BENEFICIARY) {
-        const { isValid, errors } =
-          validateSwiftBeneficiary(selectedBeneficiary);
+        const { isValid, errors } = validateSwiftBeneficiary(selectedBeneficiary);
         if (!isValid) {
           toast.error(
-            errors[0] ||
-              t("Selected beneficiary is missing required SWIFT bank details"),
+            errors[0] || t("Selected beneficiary is missing required SWIFT bank details"),
           );
           return;
         }
@@ -1395,11 +1321,7 @@ const SwiftTransfer = forwardRef(
 
       if (currentStep === STEPS.REVIEW) {
         if (isQuoteExpired) {
-          toast.warning(
-            t(
-              "Your quote has expired. Please refresh the rate before confirming.",
-            ),
-          );
+          toast.warning(t("Your quote has expired. Please refresh the rate before confirming."));
           return;
         }
         await handleSendOtp();
@@ -1444,21 +1366,18 @@ const SwiftTransfer = forwardRef(
               selectedBeneficiary={selectedBeneficiary}
               setSelectedBeneficiary={setSelectedBeneficiary}
               onAddBeneficiary={() => setIsAddModalOpen(true)}
-              emptyMessage={t(
-                "No beneficiaries found with SWIFT bank details.",
-              )}
+              emptyMessage={t("No beneficiaries found with SWIFT bank details.")}
             >
-              {selectedBeneficiary &&
-                !hasBeneficiarySwiftCode(selectedBeneficiary) && (
-                  <MissingSwiftCodeBanner
-                    beneficiary={selectedBeneficiary}
-                    authHeader={authHeader}
-                    onSwiftCodeSaved={async (updatedBeneficiary) => {
-                      setSelectedBeneficiary(updatedBeneficiary);
-                      await getUserBeneficiaries();
-                    }}
-                  />
-                )}
+              {selectedBeneficiary && !hasBeneficiarySwiftCode(selectedBeneficiary) && (
+                <MissingSwiftCodeBanner
+                  beneficiary={selectedBeneficiary}
+                  authHeader={authHeader}
+                  onSwiftCodeSaved={async (updatedBeneficiary) => {
+                    setSelectedBeneficiary(updatedBeneficiary);
+                    await getUserBeneficiaries();
+                  }}
+                />
+              )}
               {isAddressBlocked && (
                 <AddressTooLongBanner
                   beneficiary={selectedBeneficiary}
@@ -1563,10 +1482,7 @@ const SwiftTransfer = forwardRef(
                 <p>{t("International Wire — EUR → USD")}</p>
               </div>
             </div>
-            <div
-              style={{ marginTop: "2rem" }}
-              className={withdrawStyles.progressEffect}
-            >
+            <div style={{ marginTop: "2rem" }} className={withdrawStyles.progressEffect}>
               {SIDEBAR_STEPS.map((item, index) => {
                 const IconComponent = sidebarIcons[item.stepName];
                 return (
@@ -1596,19 +1512,11 @@ const SwiftTransfer = forwardRef(
 
           {showFooter && !isMobile && (
             <div className={styles.footer}>
-              <button
-                type="button"
-                className={styles.cancelBtn}
-                onClick={handleClose}
-              >
+              <button type="button" className={styles.cancelBtn} onClick={handleClose}>
                 {t("Cancel")}
               </button>
               <div className={styles.footerNav}>
-                <button
-                  type="button"
-                  className={styles.backBtn}
-                  onClick={handleBack}
-                >
+                <button type="button" className={styles.backBtn} onClick={handleBack}>
                   <ChevronLeft size={14} />
                   {t("Back")}
                 </button>
@@ -1618,9 +1526,7 @@ const SwiftTransfer = forwardRef(
                   disabled={disabled}
                   onClick={handleContinue}
                 >
-                  {isProcessing
-                    ? t("Processing...")
-                    : getContinueLabel(currentStep, t)}
+                  {isProcessing ? t("Processing...") : getContinueLabel(currentStep, t)}
                   <ChevronRight size={14} />
                 </button>
               </div>
@@ -1629,11 +1535,7 @@ const SwiftTransfer = forwardRef(
         </section>
         {isMobile && showFooter && (
           <MobileFooter
-            label={
-              isProcessing
-                ? t("Processing...")
-                : getContinueLabel(currentStep, t)
-            }
+            label={isProcessing ? t("Processing...") : getContinueLabel(currentStep, t)}
             handleBack={handleBack}
             handleAction={handleContinue}
             disabled={disabled}
@@ -1672,9 +1574,7 @@ const SwiftTransfer = forwardRef(
           <AddBeneficiaryFlowV2
             open={isAddModalOpen || isChannelModalOpen}
             fixedMethod="swift"
-            existingBeneficiary={
-              isChannelModalOpen ? channelModalBeneficiary : null
-            }
+            existingBeneficiary={isChannelModalOpen ? channelModalBeneficiary : null}
             handleClose={() => {
               setIsAddModalOpen(false);
               setIsChannelModalOpen(false);

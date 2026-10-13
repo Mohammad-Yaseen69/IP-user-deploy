@@ -7,10 +7,7 @@ const StepRecipient = ({ form, setField, errors = {} }) => {
   return (
     <>
       <div className={styles.group}>
-        <p
-          className={styles.fieldLabel}
-          style={{ fontSize: 14, color: "var(--abf-text-primary)" }}
-        >
+        <p className={styles.fieldLabel} style={{ fontSize: 14, color: "var(--abf-text-primary)" }}>
           Who are you paying?
         </p>
         <div className={`${styles.optionList} ${styles.optionListWide}`}>
@@ -37,15 +34,14 @@ const StepRecipient = ({ form, setField, errors = {} }) => {
             onSelect={(selected) => setField("country", selected?.alpha3 || "")}
           />
           <Hint error={!!errors.country}>
-            {errors.country ||
-              "This decides which payout methods and details are needed."}
+            {errors.country || "This decides which payout methods and details are needed."}
           </Hint>
         </div>
       </Fields>
 
       <Alert variant="info">
-        We only ask for the details the payout provider actually requires, so
-        the next steps change with the country and method you pick.
+        We only ask for the details the payout provider actually requires, so the next steps change
+        with the country and method you pick.
       </Alert>
     </>
   );

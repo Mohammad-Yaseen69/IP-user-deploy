@@ -3,16 +3,7 @@ import useWindowWidth from "../../../utils/useWindowWidth";
 import { useTranslation } from "react-i18next";
 import styles from "../styles/leads.module.css";
 import TopRight from "../../topRight";
-import {
-  AlertTriangle,
-  Search,
-  Send,
-  Trash2,
-  X,
-  UserPlus,
-  Eye,
-  Edit2,
-} from "react-feather";
+import { AlertTriangle, Search, Send, Trash2, X, UserPlus, Eye, Edit2 } from "react-feather";
 import LeadModal from "./LeadModal";
 import AddByNameModal from "./AddByNameModal";
 import UpdateFeePackModal from "../UpdateFeePackModal";
@@ -48,9 +39,7 @@ const Leads = () => {
   const [selectedLead, setSelectedLead] = useState(null);
   const [editingFeePackLead, setEditingFeePackLead] = useState(null);
 
-  const isManager = Boolean(
-    userDetails?.isInstapayAgent && userDetails?.isInstapayManager,
-  );
+  const isManager = Boolean(userDetails?.isInstapayAgent && userDetails?.isInstapayManager);
 
   const [search, setSearch] = useState("");
   const [selectedStage, setSelectedStage] = useState("all");
@@ -66,26 +55,25 @@ const Leads = () => {
     setIsModalOpen(false);
   };
 
-  const { data: leadsData = { leads: [], totalPages: 1 }, isLoading: loading } =
-    useQuery({
-      queryKey: ["agentLeads", search, selectedStage, page],
-      queryFn: async () => {
-        const queryParams = new URLSearchParams({
-          search,
-          stage: selectedStage,
-          page: String(page),
-          limit: "10",
-        }).toString();
+  const { data: leadsData = { leads: [], totalPages: 1 }, isLoading: loading } = useQuery({
+    queryKey: ["agentLeads", search, selectedStage, page],
+    queryFn: async () => {
+      const queryParams = new URLSearchParams({
+        search,
+        stage: selectedStage,
+        page: String(page),
+        limit: "10",
+      }).toString();
 
-        const dec = await apiWrapper({
-          endpoint: `/api/agent-leads?${queryParams}`,
-          method: "GET",
-          isDecrypted: true,
-        });
+      const dec = await apiWrapper({
+        endpoint: `/api/agent-leads?${queryParams}`,
+        method: "GET",
+        isDecrypted: true,
+      });
 
-        return dec?.data || dec || { leads: [], totalPages: 1 };
-      },
-    });
+      return dec?.data || dec || { leads: [], totalPages: 1 };
+    },
+  });
 
   const resendInviteMutation = useMutation({
     mutationFn: async (leadId) => {
@@ -167,11 +155,7 @@ const Leads = () => {
       <div className={styles.top}>
         <div className={styles.headerTitle}>
           <h1>{t("Leads")}</h1>
-          <p>
-            {t(
-              "Introduce clients and track them from onboarding to IBAN activation.",
-            )}
-          </p>
+          <p>{t("Introduce clients and track them from onboarding to IBAN activation.")}</p>
         </div>
         <div className={styles.topright}>{width > 1000 && <TopRight />}</div>
       </div>
@@ -231,10 +215,7 @@ const Leads = () => {
                 <span>{t("Add by Name")}</span>
               </button>
             )}
-            <button
-              className={styles.primaryBtn}
-              onClick={() => handleOpenModal("business")}
-            >
+            <button className={styles.primaryBtn} onClick={() => handleOpenModal("business")}>
               <span>+ {t("Add new lead")}</span>
             </button>
           </div>
@@ -288,49 +269,34 @@ const Leads = () => {
                     t("Unnamed Lead");
                   const avatarText = displayName.substring(0, 2).toUpperCase();
                   const feePackName = row.fee_pack?.name || t("Standard");
-                  const feePackSummary =
-                    row.fee_pack?.pricing_summary || feePackName;
+                  const feePackSummary = row.fee_pack?.pricing_summary || feePackName;
 
                   return (
                     <tr key={row._id} className={styles.tableDataRow}>
                       <td className={styles.tdCell} title={displayName}>
                         <div className={styles.clientCell}>
-                          <div
-                            className={`${styles.avatar} ${styles.avatarBlue}`}
-                          >
+                          <div className={`${styles.avatar} ${styles.avatarBlue}`}>
                             {avatarText}
                           </div>
-                          <span className={styles.clientName}>
-                            {truncateStr(displayName, 22)}
-                          </span>
+                          <span className={styles.clientName}>{truncateStr(displayName, 22)}</span>
                         </div>
                       </td>
 
                       <td className={styles.tdCell}>
-                        <span style={{ textTransform: "capitalize" }}>
-                          {t(row.leadType)}
-                        </span>
+                        <span style={{ textTransform: "capitalize" }}>{t(row.leadType)}</span>
                       </td>
 
-                      <td
-                        className={styles.tdCell}
-                        title={formatCountryName(row.country)}
-                      >
+                      <td className={styles.tdCell} title={formatCountryName(row.country)}>
                         {formatCountryName(row.country)}
                       </td>
 
                       <td className={styles.tdCell}>
-                        <span
-                          className={`${styles.badge} ${getStageBadgeClass(row.stage)}`}
-                        >
+                        <span className={`${styles.badge} ${getStageBadgeClass(row.stage)}`}>
                           {getStageLabel(row.stage)}
                         </span>
                       </td>
 
-                      <td
-                        className={styles.tdCell}
-                        title={row.email || row.phone || "—"}
-                      >
+                      <td className={styles.tdCell} title={row.email || row.phone || "—"}>
                         <span style={{ fontSize: "13px", color: "#555" }}>
                           {truncateStr(row.email || row.phone || "—", 22)}
                         </span>
@@ -396,12 +362,9 @@ const Leads = () => {
                         </button>
 
                         {!row.addedByManager &&
-                          (row.stage === "not-registered" ||
-                            row.stage === "claim-pending") && (
+                          (row.stage === "not-registered" || row.stage === "claim-pending") && (
                             <button
-                              onClick={() =>
-                                resendInviteMutation.mutate(row._id)
-                              }
+                              onClick={() => resendInviteMutation.mutate(row._id)}
                               disabled={resendInviteMutation.isPending}
                               className={styles.secondaryBtn}
                               style={{
@@ -414,9 +377,7 @@ const Leads = () => {
                               title={t("Resend Invitation")}
                             >
                               <Send size={12} />
-                              {resendInviteMutation.isPending
-                                ? t("Sending...")
-                                : t("Resend")}
+                              {resendInviteMutation.isPending ? t("Sending...") : t("Resend")}
                             </button>
                           )}
 
@@ -462,9 +423,7 @@ const Leads = () => {
                     </span>
                     <button
                       className={styles.pageArrow}
-                      onClick={() =>
-                        setPage((p) => Math.min(totalPages, p + 1))
-                      }
+                      onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                       disabled={page === totalPages}
                     >
                       &gt;
@@ -483,17 +442,9 @@ const Leads = () => {
         initialEntityType={initialEntityType}
       />
 
-      <AddByNameModal
-        open={isAddByNameOpen}
-        onClose={() => setIsAddByNameOpen(false)}
-      />
+      <AddByNameModal open={isAddByNameOpen} onClose={() => setIsAddByNameOpen(false)} />
 
-      <Modal
-        isOpen={!!selectedLead}
-        toggle={() => setSelectedLead(null)}
-        centered
-        size="lg"
-      >
+      <Modal isOpen={!!selectedLead} toggle={() => setSelectedLead(null)} centered size="lg">
         <ModalBody
           style={{
             padding: "24px",
@@ -843,10 +794,7 @@ const Leads = () => {
                     fontSize: "12px",
                     fontWeight: 600,
                     textTransform: "uppercase",
-                    color:
-                      selectedLead?.claimStatus === "accepted"
-                        ? "#16A34A"
-                        : "#D97706",
+                    color: selectedLead?.claimStatus === "accepted" ? "#16A34A" : "#D97706",
                   }}
                 >
                   {selectedLead?.claimStatus || "pending"}
@@ -885,11 +833,7 @@ const Leads = () => {
         </ModalBody>
       </Modal>
 
-      <Modal
-        isOpen={!!deleteConfirmLead}
-        toggle={() => setDeleteConfirmLead(null)}
-        centered
-      >
+      <Modal isOpen={!!deleteConfirmLead} toggle={() => setDeleteConfirmLead(null)} centered>
         <ModalBody
           style={{
             padding: "24px",

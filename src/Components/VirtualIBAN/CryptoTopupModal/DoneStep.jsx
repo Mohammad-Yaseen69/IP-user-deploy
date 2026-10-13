@@ -13,8 +13,7 @@ const DoneStep = ({ confirmData, selectedIban, onOpenCheckout }) => {
   const checkoutUrl = confirmData?.checkout_url || "";
   const totalAmount = confirmData?.total?.value || 0;
   const recipientEUR = confirmData?.recipient?.value || 0;
-  const refId =
-    confirmData?.transaction_ref || confirmData?.transaction_id || "";
+  const refId = confirmData?.transaction_ref || confirmData?.transaction_id || "";
 
   const handleCopyAddress = () => {
     if (!address) return;
@@ -46,18 +45,14 @@ const DoneStep = ({ confirmData, selectedIban, onOpenCheckout }) => {
         </div>
         <div className={styles.doneText}>
           <h3>{t("Topup Request Created")}</h3>
-          <p>
-            {t("Complete your payment to credit your Virtual IBAN account.")}
-          </p>
+          <p>{t("Complete your payment to credit your Virtual IBAN account.")}</p>
         </div>
       </div>
 
       <div className={styles.reviewTable}>
         {refId && (
           <div className={styles.reviewRow}>
-            <div className={styles.reviewRowLabel}>
-              {t("Transaction Reference")}
-            </div>
+            <div className={styles.reviewRowLabel}>{t("Transaction Reference")}</div>
             <div
               className={styles.reviewRowValue}
               style={{ fontSize: "12px", fontFamily: "monospace" }}
@@ -74,23 +69,14 @@ const DoneStep = ({ confirmData, selectedIban, onOpenCheckout }) => {
 
         <div className={styles.reviewRow}>
           <div className={styles.reviewRowLabel}>{t("IBAN Receives")}</div>
-          <div
-            className={styles.reviewRowValue}
-            style={{ color: "#10b981", fontWeight: 700 }}
-          >
+          <div className={styles.reviewRowValue} style={{ color: "#10b981", fontWeight: 700 }}>
             €{recipientEUR} EUR
           </div>
         </div>
 
         {checkoutUrl && (
-          <div
-            className={styles.reviewRow}
-            style={{ padding: "16px", background: "#f2eeff" }}
-          >
-            <div
-              className={styles.reviewRowLabel}
-              style={{ fontWeight: 600, color: "#5926f0" }}
-            >
+          <div className={styles.reviewRow} style={{ padding: "16px", background: "#f2eeff" }}>
+            <div className={styles.reviewRowLabel} style={{ fontWeight: 600, color: "#5926f0" }}>
               {t("Payment Checkout")}
             </div>
             <button

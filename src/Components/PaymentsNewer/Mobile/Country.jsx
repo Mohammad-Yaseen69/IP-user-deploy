@@ -11,13 +11,7 @@ import styles from "./styles/Country.module.css";
 import InstaPayLoader from "../../Loader";
 import { useLocation } from "react-router";
 
-const Country = ({
-  country,
-  setCountry,
-  setStep,
-  setServices,
-  type = "thunes",
-}) => {
+const Country = ({ country, setCountry, setStep, setServices, type = "thunes" }) => {
   const { t } = useTranslation();
   const [searchCountries, setSearchCountries] = useState([]);
   const [filtered, setFiltered] = useState([]);
@@ -41,28 +35,20 @@ const Country = ({
         const decrypted = decryptData(data.data);
 
         const countriesArray = countries.filter((item) => {
-          return decrypted.some(
-            (apiCountry) => apiCountry.countryIsoCode === item.alpha3,
-          );
+          return decrypted.some((apiCountry) => apiCountry.countryIsoCode === item.alpha3);
         });
         const allowed = countriesArray.filter((item) =>
-          allowedCountries.some((coun) =>
-            item.name.includes(coun.country_name),
-          ),
+          allowedCountries.some((coun) => item.name.includes(coun.country_name)),
         );
         setFiltered(allowed);
         setSearchCountries(allowed);
       } else {
-        const res = await fetch(
-          `${import.meta.env.VITE_IP_DEV_API}/api/dt/countries`,
-        );
+        const res = await fetch(`${import.meta.env.VITE_IP_DEV_API}/api/dt/countries`);
         const data = await res.json();
         const decrypted = decryptData(data.data);
 
         const countriesArray = countries.filter((item) => {
-          return decrypted.some(
-            (apiCountry) => apiCountry.iso_code === item.alpha3,
-          );
+          return decrypted.some((apiCountry) => apiCountry.iso_code === item.alpha3);
         });
         // const allowed = countriesArray.filter(item => allowedCountries.some(coun => item.name.includes(coun.country_name)))
         setFiltered(countriesArray);
@@ -77,10 +63,9 @@ const Country = ({
     if (country) {
       if (type === "thunes") {
         axios
-          .get(
-            `${import.meta.env.VITE_THUNES_API}/services/${country.alpha3}`,
-            { headers: authHeader },
-          )
+          .get(`${import.meta.env.VITE_THUNES_API}/services/${country.alpha3}`, {
+            headers: authHeader,
+          })
           .then((res) => {
             setServices(decryptData(res.data.data));
             setServicesLoad(true);
@@ -90,9 +75,7 @@ const Country = ({
           });
       } else {
         axios
-          .get(
-            `${import.meta.env.VITE_IP_DEV_API}/api/dt/services-in-country/${country?.alpha3}`,
-          )
+          .get(`${import.meta.env.VITE_IP_DEV_API}/api/dt/services-in-country/${country?.alpha3}`)
           .then((res) => {
             // console.log(decryptData(res.data.data))
             setServices(decryptData(res.data.data));

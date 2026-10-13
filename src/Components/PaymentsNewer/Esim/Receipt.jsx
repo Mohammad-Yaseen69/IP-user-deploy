@@ -27,10 +27,7 @@ const Receipt = ({ data, dataHandler, createTransaction }) => {
 
       <div style={{ flexDirection: "column" }} className={styles.cont}>
         <div style={{ width: "100%" }} className={styles.receipt}>
-          <div
-            style={{ background: `url(${receiptBg})` }}
-            className={styles.top}
-          >
+          <div style={{ background: `url(${receiptBg})` }} className={styles.top}>
             <img src={ipLogo} alt="" />
           </div>
 
@@ -75,8 +72,7 @@ const Receipt = ({ data, dataHandler, createTransaction }) => {
             <span>{t("Fees")}</span>
             <span>
               {" "}
-              {data.package_details?.data?.fee?.currency}{" "}
-              {data.package_details?.data?.fee?.value}
+              {data.package_details?.data?.fee?.currency} {data.package_details?.data?.fee?.value}
             </span>
           </div>
           <div>
@@ -94,10 +90,7 @@ const Receipt = ({ data, dataHandler, createTransaction }) => {
         </div>
       </div>
 
-      <div
-        className={styles2.btns}
-        style={{ justifyContent: "flex-end", marginTop: "1rem" }}
-      >
+      <div className={styles2.btns} style={{ justifyContent: "flex-end", marginTop: "1rem" }}>
         <span
           onClick={() => {
             dataHandler("step", data.step - 1);
@@ -106,11 +99,7 @@ const Receipt = ({ data, dataHandler, createTransaction }) => {
         >
           {t("Back")}
         </span>
-        <button
-          onClick={() => createTransaction()}
-          className={styles2.nxt}
-          disabled={data.loading}
-        >
+        <button onClick={() => createTransaction()} className={styles2.nxt} disabled={data.loading}>
           {t("Next")}
           <svg
             xmlns="http://www.w3.org/2000/svg"

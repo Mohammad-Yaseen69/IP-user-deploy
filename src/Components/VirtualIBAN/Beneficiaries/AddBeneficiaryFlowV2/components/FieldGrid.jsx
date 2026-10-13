@@ -15,9 +15,7 @@ const FieldGrid = ({
   payers,
   payersLoading,
 }) => {
-  const hasStateField = names.some(
-    (name) => getFieldDef(name, defs).type === "state",
-  );
+  const hasStateField = names.some((name) => getFieldDef(name, defs).type === "state");
   const rows = [];
   for (let index = 0; index < names.length; index += 2) {
     rows.push(names.slice(index, index + 2));

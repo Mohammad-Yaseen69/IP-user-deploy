@@ -39,9 +39,7 @@ const AuthStepTwo = ({
   profileLockTIme,
   resolvedCredential,
 }) => {
-  const availableMethods = methods.filter(
-    (m) => m.avail && m.attr !== currentOtpMethod,
-  );
+  const availableMethods = methods.filter((m) => m.avail && m.attr !== currentOtpMethod);
   const width = useWindowWidth();
   return (
     <div className={styles.authForm}>
@@ -52,13 +50,7 @@ const AuthStepTwo = ({
       <div className={styles.centerText}>
         <div className={styles.logoContainer}>
           <div className={styles.lockIcon}>
-            <img
-              src={lockIcon}
-              loading="lazy"
-              width={30}
-              height={30}
-              alt="lock"
-            />
+            <img src={lockIcon} loading="lazy" width={30} height={30} alt="lock" />
           </div>
         </div>
         <h1>
@@ -66,9 +58,7 @@ const AuthStepTwo = ({
             ? t("Biometric Verification")
             : t("Verify your identity")}
         </h1>
-        {currentOtpMethod !== "biometric" && (
-          <p className={styles.otpLabelText}>{getOtpLabel()}</p>
-        )}
+        {currentOtpMethod !== "biometric" && <p className={styles.otpLabelText}>{getOtpLabel()}</p>}
       </div>
 
       <form onSubmit={verifyOTpHandler}>
@@ -124,17 +114,11 @@ const AuthStepTwo = ({
               className={
                 styles.otp_inputs +
                 " " +
-                (otpVerified
-                  ? !isOtpCorrect
-                    ? styles.wrong
-                    : styles.correct
-                  : "")
+                (otpVerified ? (!isOtpCorrect ? styles.wrong : styles.correct) : "")
               }
               style={{
                 animation:
-                  otpVerified && !isOtpCorrect
-                    ? "horizontal-shaking 0.5s ease-in-out"
-                    : "",
+                  otpVerified && !isOtpCorrect ? "horizontal-shaking 0.5s ease-in-out" : "",
               }}
             >
               {otpValues.map((value, i) => (
@@ -171,9 +155,7 @@ const AuthStepTwo = ({
             {resendTimer > 0 ? (
               (methods.filter((m) => m.avail).length > 1 &&
                 lastOtpSentTo &&
-                ["sms", "insta", "wp", "email"].includes(
-                  pendingOtpMethod || currentOtpMethod,
-                ) &&
+                ["sms", "insta", "wp", "email"].includes(pendingOtpMethod || currentOtpMethod) &&
                 lastOtpSentTo !== (pendingOtpMethod || currentOtpMethod)) ||
               (pendingOtpMethod && lastOtpSentTo !== currentOtpMethod) ? (
                 <span>
@@ -218,10 +200,7 @@ const AuthStepTwo = ({
                   }}
                   onClick={() => {
                     setLastOtpSentTo(currentOtpMethod);
-                    loginHandler(
-                      { preventDefault: () => {} },
-                      currentOtpMethod,
-                    );
+                    loginHandler({ preventDefault: () => {} }, currentOtpMethod);
                     setResendTimer(120);
                   }}
                 >
@@ -234,16 +213,11 @@ const AuthStepTwo = ({
 
         {methods.filter((m) => m.avail).length > 1 && (
           <div className={styles.toggle_sms}>
-            {consecutiveCount >= 3 &&
-              !isLoginError?.includes("account is locked") && (
-                <div className={styles.input_error}>
-                  <span>
-                    {t(
-                      "Having trouble? Choose another method below or contact support.",
-                    )}
-                  </span>
-                </div>
-              )}
+            {consecutiveCount >= 3 && !isLoginError?.includes("account is locked") && (
+              <div className={styles.input_error}>
+                <span>{t("Having trouble? Choose another method below or contact support.")}</span>
+              </div>
+            )}
             <p style={{ fontSize: "13px", marginBottom: "8px" }}>
               {t("Choose your preferred method to verify your identity:")}
             </p>
@@ -257,8 +231,7 @@ const AuthStepTwo = ({
               }}
             >
               {methods.map((method, index) => {
-                if (!method.avail || method.attr === currentOtpMethod)
-                  return null;
+                if (!method.avail || method.attr === currentOtpMethod) return null;
                 return (
                   <button
                     key={index}
@@ -281,18 +254,9 @@ const AuthStepTwo = ({
             <button
               type="submit"
               className={styles.verifyBtn}
-              disabled={
-                isAnyFieldEmpty ||
-                otpValues.some((v) => !v) ||
-                isPressed ||
-                isLoginError
-              }
+              disabled={isAnyFieldEmpty || otpValues.some((v) => !v) || isPressed || isLoginError}
             >
-              <span>
-                {isPressed && !methodLoading
-                  ? t("Verifying")
-                  : t("Verify and continue")}
-              </span>
+              <span>{isPressed && !methodLoading ? t("Verifying") : t("Verify and continue")}</span>
               <ChevronRight />
             </button>
           )}

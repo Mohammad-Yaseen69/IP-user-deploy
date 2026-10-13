@@ -67,10 +67,7 @@ const AccountLimits = ({ currentWallet, data, loading, error }) => {
           </div>
           <div className={styles.used}>
             <div>
-              <div
-                className={styles.square}
-                style={{ background: "#5926F0", color: "#5926F0" }}
-              >
+              <div className={styles.square} style={{ background: "#5926F0", color: "#5926F0" }}>
                 .
               </div>
               <span>{t("Used")}</span>
@@ -79,10 +76,7 @@ const AccountLimits = ({ currentWallet, data, loading, error }) => {
           </div>
           <div className={styles.used}>
             <div>
-              <div
-                className={styles.square}
-                style={{ background: "#1E0568", color: "#1E0568" }}
-              >
+              <div className={styles.square} style={{ background: "#1E0568", color: "#1E0568" }}>
                 .
               </div>
               <span>{t("Remaining")}</span>

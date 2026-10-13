@@ -26,26 +26,16 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
     dataHandler("beneficiary", {});
     setError("");
     try {
-      const normalized = query.startsWith("@")
-        ? query.slice(1).toLowerCase()
-        : query.toLowerCase();
+      const normalized = query.startsWith("@") ? query.slice(1).toLowerCase() : query.toLowerCase();
       const res = await axios.get(
         `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-user-wallets/${normalized}`,
         { headers: authHeader },
       );
       const dec = decryptData(res.data.data);
       const isOwn = dec?.users?.find((item) => item?._id === userDetails?._id);
-      const users = dec?.users?.filter(
-        (item) => item?._id !== userDetails?._id,
-      );
+      const users = dec?.users?.filter((item) => item?._id !== userDetails?._id);
 
-      if (
-        isOwn &&
-        (invoiceId ||
-          payment_type === "payment_address" ||
-          planId ||
-          subscriptionId)
-      ) {
+      if (isOwn && (invoiceId || payment_type === "payment_address" || planId || subscriptionId)) {
         dataHandler("error", "You can't send money to yourself.");
         throw new Error("Failed");
       }
@@ -54,8 +44,7 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
       dataHandler("beneficiary", users?.[0] ?? {});
       if (users?.length > 0) {
         const defaultWal =
-          users?.[0]?.wallets?.find((it) => it?.default) ??
-          users?.[0]?.wallets?.[0];
+          users?.[0]?.wallets?.find((it) => it?.default) ?? users?.[0]?.wallets?.[0];
         dataHandler("beneficiary_wallet", defaultWal ?? {});
       } else {
         setError("No Results");
@@ -106,24 +95,9 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
     return () => {
       clearTimeout(timeout);
     };
-  }, [
-    wallet_id,
-    search,
-    data.first_time,
-    invoiceId,
-    payment_type,
-    phone,
-    planId,
-    subscriptionId,
-  ]);
+  }, [wallet_id, search, data.first_time, invoiceId, payment_type, phone, planId, subscriptionId]);
 
-  if (
-    (invoiceId ||
-      payment_type === "payment_address" ||
-      planId ||
-      subscriptionId) &&
-    !error
-  ) {
+  if ((invoiceId || payment_type === "payment_address" || planId || subscriptionId) && !error) {
     return (
       <div style={{ width: "80%", margin: "auto" }}>
         <InstaPayLoader />
@@ -140,11 +114,7 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
       }}
       className={styles.container}
     >
-      <label>
-        {t(
-          "Enter the Wallet ID, Username, Email, or Phone Number of the recipient.",
-        )}
-      </label>
+      <label>{t("Enter the Wallet ID, Username, Email, or Phone Number of the recipient.")}</label>
       <form onSubmit={handleSearch} className={styles.search}>
         <input
           type="search"
@@ -176,10 +146,7 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
                   )}
                 </>
               )}
-              <button
-                className={styles.bulk_btn}
-                onClick={() => setShowBulkModal(true)}
-              >
+              <button className={styles.bulk_btn} onClick={() => setShowBulkModal(true)}>
                 <div>
                   <Users size={12} />
                   {t("Bulk Recipients")}
@@ -215,31 +182,27 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
               />
             </div>
           )}
-          {searchedUsers.length === 0 &&
-            !error &&
-            !data.loading &&
-            !benLoading && (
-              <div className={styles.guide}>
-                <p>{t("Please follow these examples:")}</p>
-                <p>
-                  {t("Wallet ID")}: <strong>{t("GY68J782")}</strong>
-                </p>
-                <p>
-                  {t("InstaPay/Instagram Username")}:{" "}
-                  <strong>{t("instauser")}</strong>
-                </p>
-                <p>
-                  {t("Email")}: <strong>{t("user@email.com")}</strong>
-                </p>
-                <p>
-                  {t("Phone Number")}:{" "}
-                  <strong>
-                    {t("44795396600 (")}
-                    {t("With Country code")})
-                  </strong>
-                </p>
-              </div>
-            )}
+          {searchedUsers.length === 0 && !error && !data.loading && !benLoading && (
+            <div className={styles.guide}>
+              <p>{t("Please follow these examples:")}</p>
+              <p>
+                {t("Wallet ID")}: <strong>{t("GY68J782")}</strong>
+              </p>
+              <p>
+                {t("InstaPay/Instagram Username")}: <strong>{t("instauser")}</strong>
+              </p>
+              <p>
+                {t("Email")}: <strong>{t("user@email.com")}</strong>
+              </p>
+              <p>
+                {t("Phone Number")}:{" "}
+                <strong>
+                  {t("44795396600 (")}
+                  {t("With Country code")})
+                </strong>
+              </p>
+            </div>
+          )}
 
           <div className={styles.users}>
             {data.loading || benLoading ? (
@@ -276,13 +239,7 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
 
 export default StepOne;
 
-export const BeneficiaryCard = ({
-  data,
-  dataHandler,
-  item,
-  type,
-  setBenWalletsFound,
-}) => {
+export const BeneficiaryCard = ({ data, dataHandler, item, type, setBenWalletsFound }) => {
   const { t } = useTranslation();
   const [showMore, setShowMore] = useState(false);
   const { authHeader, userWallets } = useContext(UserContext);
@@ -331,10 +288,7 @@ export const BeneficiaryCard = ({
               if (item?.wallets) {
                 if (item.existType === "wallet") {
                   const filteredWallets = item?.wallets?.filter(
-                    (w) =>
-                      !userWallets.find(
-                        (userW) => userW.wallet_id === w?.wallet_id,
-                      ),
+                    (w) => !userWallets.find((userW) => userW.wallet_id === w?.wallet_id),
                   );
                   setBenWallets(filteredWallets);
                   setShowMore(true);
@@ -364,14 +318,9 @@ export const BeneficiaryCard = ({
             style={{ background: "transparent" }}
           />
         ) : (
-          <div className={styles.dp}>
-            {item?.first_name?.[0] || item?.company_name?.[0]}
-          </div>
+          <div className={styles.dp}>{item?.first_name?.[0] || item?.company_name?.[0]}</div>
         )}
-        <div
-          style={{ gap: type === "recent" && "0px" }}
-          className={styles.name_un}
-        >
+        <div style={{ gap: type === "recent" && "0px" }} className={styles.name_un}>
           <h5>
             {item?.account_type === "individual" || type === "recent"
               ? `${item?.first_name} ${item?.last_name}`
@@ -397,10 +346,7 @@ export const BeneficiaryCard = ({
               </div>
             </div>
           ) : showMore ? (
-            <ChevronDown
-              color="#7d7d7d"
-              onClick={() => setShowMore(!showMore)}
-            />
+            <ChevronDown color="#7d7d7d" onClick={() => setShowMore(!showMore)} />
           ) : (
             <ChevronRight
               color="#7d7d7d"
@@ -409,10 +355,7 @@ export const BeneficiaryCard = ({
                   if (item?.wallets) {
                     if (item.existType === "wallet") {
                       const filteredWallets = item?.wallets?.filter(
-                        (w) =>
-                          !userWallets.find(
-                            (userW) => userW.wallet_id === w?.wallet_id,
-                          ),
+                        (w) => !userWallets.find((userW) => userW.wallet_id === w?.wallet_id),
                       );
                       setBenWallets(filteredWallets);
                       setShowMore(true);
@@ -438,26 +381,20 @@ export const BeneficiaryCard = ({
       {showMore && (
         <div className={styles.wallets_con}>
           <span>{t("Available Currency")}</span>
-          <div
-            style={type === "recent" ? walletContStyles : {}}
-            className={styles.wallets}
-          >
-            {(type === "recent" ? benWallets?.length : item?.wallets?.length) >
-            0 ? (
-              (type === "recent" ? benWallets : item?.wallets)?.map(
-                (wallet) => (
-                  <div
-                    className={`${styles.wallet} ${data?.beneficiary_wallet?._id === wallet?._id ? styles.wallet_active : ""}`}
-                    key={wallet?._id}
-                    onClick={() => {
-                      dataHandler("beneficiary_wallet", wallet);
-                      dataHandler("beneficiary", item);
-                    }}
-                  >
-                    {wallet?.currency?.code}
-                  </div>
-                ),
-              )
+          <div style={type === "recent" ? walletContStyles : {}} className={styles.wallets}>
+            {(type === "recent" ? benWallets?.length : item?.wallets?.length) > 0 ? (
+              (type === "recent" ? benWallets : item?.wallets)?.map((wallet) => (
+                <div
+                  className={`${styles.wallet} ${data?.beneficiary_wallet?._id === wallet?._id ? styles.wallet_active : ""}`}
+                  key={wallet?._id}
+                  onClick={() => {
+                    dataHandler("beneficiary_wallet", wallet);
+                    dataHandler("beneficiary", item);
+                  }}
+                >
+                  {wallet?.currency?.code}
+                </div>
+              ))
             ) : (
               <div className={styles.no_r}>{t("No Wallets")}</div>
             )}

@@ -7,8 +7,7 @@ export const service_name_formatter = (service_name = "", lower = false) => {
   return service_name
     ?.split("-")
     ?.map(
-      (item) =>
-        `${item[0].toUpperCase()}${lower ? item.slice(1).toLowerCase() : item.slice(1)}`,
+      (item) => `${item[0].toUpperCase()}${lower ? item.slice(1).toLowerCase() : item.slice(1)}`,
     )
     ?.join(" ");
 };
@@ -30,8 +29,7 @@ const PermissionTree = ({
       m.module.toLowerCase().includes(permSearch.toLowerCase()) ||
       m.features.some(
         (f) =>
-          (f.feature &&
-            f.feature.toLowerCase().includes(permSearch.toLowerCase())) ||
+          (f.feature && f.feature.toLowerCase().includes(permSearch.toLowerCase())) ||
           f.actions.some(
             (a) =>
               a.description.toLowerCase().includes(permSearch.toLowerCase()) ||
@@ -101,11 +99,7 @@ const PermissionTree = ({
                   alignItems: "center",
                 }}
               >
-                {expandedModules[m.module] ? (
-                  <ChevronDown size={18} />
-                ) : (
-                  <ChevronRight size={18} />
-                )}
+                {expandedModules[m.module] ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
               </div>
               {/* <input
                                 className={addStyles.checkInput}
@@ -118,15 +112,11 @@ const PermissionTree = ({
               <Toggle
                 disabled={isSuperAdmin}
                 checked={isSelected(m.module, "module") || isSuperAdmin}
-                ref={(el) =>
-                  el && (el.indeterminate = isIndeterminate(m.module, "module"))
-                }
+                ref={(el) => el && (el.indeterminate = isIndeterminate(m.module, "module"))}
                 onChange={() => togglePermission(m.module, null, "module")}
               />
 
-              <span style={{ fontWeight: 600 }}>
-                {service_name_formatter(m.module)}
-              </span>
+              <span style={{ fontWeight: 600 }}>{service_name_formatter(m.module)}</span>
             </div>
 
             {expandedModules[m.module] && (
@@ -138,9 +128,7 @@ const PermissionTree = ({
                 }}
               >
                 {m.features.map((f) => {
-                  const fKey = f.feature
-                    ? `${m.module}.${f.feature}`
-                    : "general";
+                  const fKey = f.feature ? `${m.module}.${f.feature}` : "general";
                   return (
                     <div key={fKey} style={{ marginBottom: "0.3rem" }}>
                       <div
@@ -157,23 +145,13 @@ const PermissionTree = ({
                               className={addStyles.checkInput}
                               type="checkbox"
                               disabled={isSuperAdmin}
-                              checked={
-                                isSelected(fKey, "feature") || isSuperAdmin
-                              }
+                              checked={isSelected(fKey, "feature") || isSuperAdmin}
                               ref={(el) =>
-                                el &&
-                                (el.indeterminate = isIndeterminate(
-                                  fKey,
-                                  "feature",
-                                ))
+                                el && (el.indeterminate = isIndeterminate(fKey, "feature"))
                               }
-                              onChange={() =>
-                                togglePermission(fKey, m.module, "feature")
-                              }
+                              onChange={() => togglePermission(fKey, m.module, "feature")}
                             />
-                            <span
-                              style={{ fontWeight: 500, fontSize: "0.95rem" }}
-                            >
+                            <span style={{ fontWeight: 500, fontSize: "0.95rem" }}>
                               {service_name_formatter(f.feature)}
                             </span>
                           </>
@@ -201,12 +179,8 @@ const PermissionTree = ({
                               className={addStyles.checkInput}
                               type="checkbox"
                               disabled={isSuperAdmin || isDisabled}
-                              checked={
-                                isSelected(a.key, "action") || isSuperAdmin
-                              }
-                              onChange={() =>
-                                togglePermission(a.key, fKey, "action")
-                              }
+                              checked={isSelected(a.key, "action") || isSuperAdmin}
+                              onChange={() => togglePermission(a.key, fKey, "action")}
                             />
                             <div
                               style={{
@@ -217,9 +191,7 @@ const PermissionTree = ({
                               <span style={{ fontSize: "0.9rem" }}>
                                 {service_name_formatter(a.action)}
                               </span>
-                              <span
-                                style={{ fontSize: "0.75rem", color: "#888" }}
-                              >
+                              <span style={{ fontSize: "0.75rem", color: "#888" }}>
                                 {a.description}
                               </span>
                             </div>

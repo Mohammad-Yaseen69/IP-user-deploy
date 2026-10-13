@@ -31,27 +31,14 @@ import SealCheck from "../VirtualIbanModal/icons/SealCheck.svg";
 
 const IdBadgeIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-    <rect
-      x="3"
-      y="2.25"
-      width="12"
-      height="13.5"
-      rx="1.5"
-      stroke="#F8F9FC"
-      strokeWidth="1.2"
-    />
+    <rect x="3" y="2.25" width="12" height="13.5" rx="1.5" stroke="#F8F9FC" strokeWidth="1.2" />
     <circle cx="9" cy="8.25" r="2.25" stroke="#F8F9FC" strokeWidth="1.2" />
     <path
       d="M5.25 14.25C5.25 12.1789 6.92893 10.5 9 10.5C11.0711 10.5 12.75 12.1789 12.75 14.25"
       stroke="#F8F9FC"
       strokeWidth="1.2"
     />
-    <path
-      d="M7.5 3.75H10.5"
-      stroke="#F8F9FC"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
+    <path d="M7.5 3.75H10.5" stroke="#F8F9FC" strokeWidth="1.2" strokeLinecap="round" />
   </svg>
 );
 
@@ -121,8 +108,7 @@ const AddFundsModal = ({ isOpen, toggle }) => {
   const { t } = useTranslation();
   const width = useWindowWidth();
 
-  const { userWallets, getUserWallets, userDetails, authHeader } =
-    useContext(UserContext);
+  const { userWallets, getUserWallets, userDetails, authHeader } = useContext(UserContext);
 
   const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT);
   const [amount, setAmount] = useState("2500");
@@ -216,14 +202,7 @@ const AddFundsModal = ({ isOpen, toggle }) => {
       cardDetail,
       cardNumberError,
     }),
-    [
-      amount,
-      fundingMethod,
-      walletState,
-      selectedSaveCard,
-      cardDetail,
-      cardNumberError,
-    ],
+    [amount, fundingMethod, walletState, selectedSaveCard, cardDetail, cardNumberError],
   );
 
   const disabled = getDisabledState(currentStep, machineData);
@@ -272,8 +251,7 @@ const AddFundsModal = ({ isOpen, toggle }) => {
       setWalletState({});
       setSelectedSaveCard({});
     }
-    if (currentStep === STEPS.REVIEW && fundingMethod !== "paypal")
-      setWalletState({});
+    if (currentStep === STEPS.REVIEW && fundingMethod !== "paypal") setWalletState({});
 
     const { prevStep } = goBack(currentStep, machineData);
     if (prevStep === null) handleClose();
@@ -322,11 +300,7 @@ const AddFundsModal = ({ isOpen, toggle }) => {
         );
       case STEPS.REVIEW:
         return (
-          <ReviewStep
-            amount={amount}
-            fundingMethod={fundingMethod}
-            selectedWallet={walletState}
-          />
+          <ReviewStep amount={amount} fundingMethod={fundingMethod} selectedWallet={walletState} />
         );
       case STEPS.DONE:
         return <DoneStep />;
@@ -339,10 +313,7 @@ const AddFundsModal = ({ isOpen, toggle }) => {
   const isDone = currentStep === STEPS.DONE;
 
   const renderBody = () => (
-    <div
-      className={styles.modalLayout}
-      style={{ flexDirection: width < 1000 ? "column" : "row" }}
-    >
+    <div className={styles.modalLayout} style={{ flexDirection: width < 1000 ? "column" : "row" }}>
       {width >= 1000 && (
         <div className={addFundsStyles.left}>
           <div>
@@ -352,10 +323,7 @@ const AddFundsModal = ({ isOpen, toggle }) => {
               </div>
               <h2>{t("Add funds")}</h2>
             </div>
-            <div
-              className={addFundsStyles.progressEffect}
-              style={{ marginTop: "2rem" }}
-            >
+            <div className={addFundsStyles.progressEffect} style={{ marginTop: "2rem" }}>
               {SIDEBAR_STEPS.map((item, index) => {
                 const IconComponent = SIDEBAR_ICONS[item.stepName];
                 return (
@@ -378,28 +346,17 @@ const AddFundsModal = ({ isOpen, toggle }) => {
         </div>
       )}
 
-      <div
-        className={styles.rightPanel}
-        style={{ width: width < 1000 ? "100%" : undefined }}
-      >
+      <div className={styles.rightPanel} style={{ width: width < 1000 ? "100%" : undefined }}>
         <div className={styles.content}>{renderStepContent()}</div>
 
         {showFooter && (
           <div className={styles.footer}>
-            <button
-              type="button"
-              className={styles.cancelBtn}
-              onClick={handleClose}
-            >
+            <button type="button" className={styles.cancelBtn} onClick={handleClose}>
               {t("Cancel")}
             </button>
             <div className={styles.footerNav}>
               {!isDone && (
-                <button
-                  type="button"
-                  className={styles.backBtn}
-                  onClick={handleBack}
-                >
+                <button type="button" className={styles.backBtn} onClick={handleBack}>
                   <ChevronLeft />
                   {t("Back")}
                 </button>
@@ -431,17 +388,11 @@ const AddFundsModal = ({ isOpen, toggle }) => {
 
   return (
     <>
-      <Modal
-        isOpen={isOpen && width > 1000}
-        style={{ minWidth: "900px" }}
-        toggle={handleClose}
-      >
+      <Modal isOpen={isOpen && width > 1000} style={{ minWidth: "900px" }} toggle={handleClose}>
         <ModalBody style={{ padding: "20px" }}>{renderBody()}</ModalBody>
       </Modal>
 
-      {isOpen && width < 1000 && (
-        <div style={{ padding: "16px" }}>{renderBody()}</div>
-      )}
+      {isOpen && width < 1000 && <div style={{ padding: "16px" }}>{renderBody()}</div>}
     </>
   );
 };

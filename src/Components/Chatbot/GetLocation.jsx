@@ -214,9 +214,7 @@ const RequestLocation = ({
                 {t('From the dropdown menu, select "Open with".')}
               </li>
               <li style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
-                {t(
-                  "Choose your preferred external browser from the available options.",
-                )}
+                {t("Choose your preferred external browser from the available options.")}
               </li>
               <li style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
                 {t("Locate the website in the list or search for it.")}
@@ -249,9 +247,7 @@ const RequestLocation = ({
                 {t("Open the Chrome app.")}
               </li>
               <li style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
-                {t(
-                  "Tap the three-dot menu (top-right corner) and select Settings.",
-                )}
+                {t("Tap the three-dot menu (top-right corner) and select Settings.")}
               </li>
               <li style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
                 {t("Scroll down to Site Settings > Location.")}
@@ -287,17 +283,13 @@ const RequestLocation = ({
                 {t("Open the Firefox app.")}
               </li>
               <li style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
-                {t(
-                  "Tap the three-line menu (bottom-right corner) and go to Settings.",
-                )}
+                {t("Tap the three-line menu (bottom-right corner) and go to Settings.")}
               </li>
               <li style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
                 {t("Select Privacy & Security > Site Permissions > Location.")}
               </li>
               <li style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
-                {t(
-                  "Find the website in the list and set the permission to Allow.",
-                )}
+                {t("Find the website in the list and set the permission to Allow.")}
               </li>
             </ul>
           </div>
@@ -324,9 +316,7 @@ const RequestLocation = ({
                 {t("Open the Samsung Internet app.")}
               </li>
               <li style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
-                {t(
-                  "Tap the three-line menu (bottom-right corner) and select Settings.",
-                )}
+                {t("Tap the three-line menu (bottom-right corner) and select Settings.")}
               </li>
               <li style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
                 {t("Go to Sites and Downloads > Site Permissions > Location.")}
@@ -362,14 +352,10 @@ const RequestLocation = ({
                 {t("Scroll down and select Safari.")}
               </li>
               <li style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
-                {t(
-                  "Tap Location and set it to Ask Next Time or Allow While Using the App.",
-                )}
+                {t("Tap Location and set it to Ask Next Time or Allow While Using the App.")}
               </li>
               <li style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
-                {t(
-                  "Revisit the website, and when prompted, allow location access.",
-                )}
+                {t("Revisit the website, and when prompted, allow location access.")}
               </li>
             </ul>
           </div>

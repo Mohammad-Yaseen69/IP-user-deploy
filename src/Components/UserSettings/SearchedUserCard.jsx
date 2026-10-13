@@ -4,13 +4,7 @@ import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 
-const SearchedUserCard = ({
-  user,
-  userDetails,
-  setPartners,
-  setSearchInFocus,
-  authHeader,
-}) => {
+const SearchedUserCard = ({ user, userDetails, setPartners, setSearchInFocus, authHeader }) => {
   // add states
   const [adding, setAdding] = useState(false);
 
@@ -100,8 +94,7 @@ const SearchedUserCard = ({
       </div>
       <Button
         style={{
-          background:
-            "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+          background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
           border: "none",
           outline: "none",
         }}

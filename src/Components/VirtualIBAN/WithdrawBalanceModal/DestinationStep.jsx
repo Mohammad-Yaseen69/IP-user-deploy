@@ -34,16 +34,10 @@ const SpeedIcons = {
   speedometer: SpeedometerIcon,
 };
 
-export const getSavedBankName = (bank) =>
-  bank?.name || bank?.payer_name || "Bank account";
+export const getSavedBankName = (bank) => bank?.name || bank?.payer_name || "Bank account";
 
 export const getSavedBankSubtitle = (bank) => {
-  const identifier =
-    bank?.iban ||
-    bank?.account_number ||
-    bank?.swift_code ||
-    bank?.payer_id ||
-    "";
+  const identifier = bank?.iban || bank?.account_number || bank?.swift_code || bank?.payer_id || "";
   const country = bank?.iso_code || bank?.country || "";
 
   return [identifier, country].filter(Boolean).join(" - ");
@@ -105,15 +99,10 @@ const DestinationStep = ({
                   <div className={styles.radioBtn} />
                   <div className={styles.bankInfo}>
                     <h4>{getSavedBankName(bank)}</h4>
-                    <p>
-                      {getSavedBankSubtitle(bank) ||
-                        t("Bank withdrawal account")}
-                    </p>
+                    <p>{getSavedBankSubtitle(bank) || t("Bank withdrawal account")}</p>
                   </div>
                 </div>
-                {bank.iso_code && (
-                  <span className={styles.bankCountry}>{bank.iso_code}</span>
-                )}
+                {bank.iso_code && <span className={styles.bankCountry}>{bank.iso_code}</span>}
               </button>
             );
           })}
@@ -145,9 +134,7 @@ const DestinationStep = ({
             >
               <div className={styles.speedLeft}>
                 <div className={styles.radioBtn} />
-                <div className={styles.speedIconBox}>
-                  {SpeedIcon && <SpeedIcon />}
-                </div>
+                <div className={styles.speedIconBox}>{SpeedIcon && <SpeedIcon />}</div>
                 <div className={styles.speedInfo}>
                   <h4>{t(speed.label)}</h4>
                   <p>{t(speed.description)}</p>

@@ -207,8 +207,7 @@
 
         span {
           display: flex;
-          padding: var(--Corner-Radius-Small-Roundness, 8px)
-            var(--Gaps-Gap-Medium, 12px);
+          padding: var(--Corner-Radius-Small-Roundness, 8px) var(--Gaps-Gap-Medium, 12px);
           justify-content: center;
           align-items: center;
           gap: 10px;
@@ -304,8 +303,7 @@
   border-radius: var(--Corner-Radius-Small-Roundness, 8px);
   background:
     linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 100%),
-    linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%),
-    #e5e5e5;
+    linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%), #e5e5e5;
   background-blend-mode: overlay, normal, normal;
   color: var(--neutral-neutral-1100, #fff);
   font-size: 14px;

@@ -7,10 +7,7 @@ const UserDets = ({ step, recipientDets }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   return (
-    <div
-      style={{ margin: step !== 1 && "0 0 20px 0" }}
-      className={styles.infoBox}
-    >
+    <div style={{ margin: step !== 1 && "0 0 20px 0" }} className={styles.infoBox}>
       <div
         style={{
           display: "flex",

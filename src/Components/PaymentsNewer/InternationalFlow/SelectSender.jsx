@@ -1,15 +1,6 @@
 import { useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Briefcase,
-  CheckCircle,
-  Edit2,
-  Plus,
-  Save,
-  Trash2,
-  User,
-  Users,
-} from "react-feather";
+import { Briefcase, CheckCircle, Edit2, Plus, Save, Trash2, User, Users } from "react-feather";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { UserContext } from "../../../Context/UserContext";
 import AddSenderFormModal from "./AddSenderFormModal";
@@ -35,12 +26,9 @@ const SelectSender = ({ data, dataHandler }) => {
   const [editingSender, setEditingSender] = useState(null);
   const [pendingSavedSender, setPendingSavedSender] = useState(null);
   const [confirmDeleteSender, setConfirmDeleteSender] = useState(null);
-  const senderAccountType =
-    data?.sendingType === "B" ? "business" : "individual";
-  const selectedSavedSenderId =
-    data?.senderType === "third-party" ? data?.selectedSender?._id : "";
-  const selectedSender =
-    data?.senderType === "third-party" ? data?.selectedSender : null;
+  const senderAccountType = data?.sendingType === "B" ? "business" : "individual";
+  const selectedSavedSenderId = data?.senderType === "third-party" ? data?.selectedSender?._id : "";
+  const selectedSender = data?.senderType === "third-party" ? data?.selectedSender : null;
   const hasCreatedSenderSelected = selectedSender?.source === "created-in-flow";
 
   // useQuery({
@@ -80,75 +68,63 @@ const SelectSender = ({ data, dataHandler }) => {
       handleNewSender(normalizeAddedSender(res));
     },
     onError: (error) => {
+      toast.error(error?.response?.data?.message || t("Unable to add sender. Please try again."));
+    },
+  });
+
+  const { mutateAsync: updateSender, isPending: isUpdatingSender } = useMutation({
+    mutationFn: ({ senderId, values }) =>
+      apiWrapper({
+        endpoint: `/api/sender/update-sender/${senderId}`,
+        method: "PUT",
+        payload: buildSenderFormData(values),
+        isFormData: true,
+        isDecrypted: true,
+      }),
+    onSuccess: (res) => {
+      const updatedSender = normalizeAddedSender(res);
+      queryClient.invalidateQueries({ queryKey: senderQueryKey });
+      toast.success(t("Sender updated successfully"));
+
+      if (selectedSender?._id === (updatedSender?._id || editingSender?._id)) {
+        dataHandler(
+          "selectedSender",
+          buildSelectedSender(updatedSender || { ...editingSender }, selectedSender.source),
+        );
+      }
+
+      setEditingSender(null);
+    },
+    onError: (error) => {
       toast.error(
-        error?.response?.data?.message ||
-          t("Unable to add sender. Please try again."),
+        error?.response?.data?.message || t("Unable to update sender. Please try again."),
       );
     },
   });
 
-  const { mutateAsync: updateSender, isPending: isUpdatingSender } =
-    useMutation({
-      mutationFn: ({ senderId, values }) =>
-        apiWrapper({
-          endpoint: `/api/sender/update-sender/${senderId}`,
-          method: "PUT",
-          payload: buildSenderFormData(values),
-          isFormData: true,
-          isDecrypted: true,
-        }),
-      onSuccess: (res) => {
-        const updatedSender = normalizeAddedSender(res);
-        queryClient.invalidateQueries({ queryKey: senderQueryKey });
-        toast.success(t("Sender updated successfully"));
+  const { mutateAsync: deleteSender, isPending: isDeletingSender } = useMutation({
+    mutationFn: (sender) =>
+      apiWrapper({
+        endpoint: `/api/sender/delete-sender/${sender?._id}/${userDetails?._id}`,
+        method: "DELETE",
+        isDecrypted: true,
+      }),
+    onSuccess: (_, sender) => {
+      queryClient.invalidateQueries({ queryKey: senderQueryKey });
+      toast.success(t("Sender removed successfully"));
 
-        if (
-          selectedSender?._id === (updatedSender?._id || editingSender?._id)
-        ) {
-          dataHandler(
-            "selectedSender",
-            buildSelectedSender(
-              updatedSender || { ...editingSender },
-              selectedSender.source,
-            ),
-          );
-        }
+      if (selectedSender?._id === sender?._id) {
+        dataHandler("selectedSender", null);
+      }
 
-        setEditingSender(null);
-      },
-      onError: (error) => {
-        toast.error(
-          error?.response?.data?.message ||
-            t("Unable to update sender. Please try again."),
-        );
-      },
-    });
-
-  const { mutateAsync: deleteSender, isPending: isDeletingSender } =
-    useMutation({
-      mutationFn: (sender) =>
-        apiWrapper({
-          endpoint: `/api/sender/delete-sender/${sender?._id}/${userDetails?._id}`,
-          method: "DELETE",
-          isDecrypted: true,
-        }),
-      onSuccess: (_, sender) => {
-        queryClient.invalidateQueries({ queryKey: senderQueryKey });
-        toast.success(t("Sender removed successfully"));
-
-        if (selectedSender?._id === sender?._id) {
-          dataHandler("selectedSender", null);
-        }
-
-        setConfirmDeleteSender(null);
-      },
-      onError: (error) => {
-        toast.error(
-          error?.response?.data?.message ||
-            t("Unable to remove sender. Please try again."),
-        );
-      },
-    });
+      setConfirmDeleteSender(null);
+    },
+    onError: (error) => {
+      toast.error(
+        error?.response?.data?.message || t("Unable to remove sender. Please try again."),
+      );
+    },
+  });
 
   const filteredSavedSenders = useMemo(
     () =>
@@ -168,10 +144,7 @@ const SelectSender = ({ data, dataHandler }) => {
       }
     });
 
-    if (
-      selectedSender?._id &&
-      !list.some((item) => item._id === selectedSender._id)
-    ) {
+    if (selectedSender?._id && !list.some((item) => item._id === selectedSender._id)) {
       list.unshift(selectedSender);
     }
 
@@ -197,10 +170,7 @@ const SelectSender = ({ data, dataHandler }) => {
     console.log(sender);
 
     dataHandler("senderType", "third-party");
-    dataHandler(
-      "selectedSender",
-      buildSelectedSender(sender, sender.source || "saved"),
-    );
+    dataHandler("selectedSender", buildSelectedSender(sender, sender.source || "saved"));
   };
 
   const confirmSavedSenderSelection = () => {
@@ -209,10 +179,7 @@ const SelectSender = ({ data, dataHandler }) => {
     dataHandler("senderType", "third-party");
     dataHandler(
       "selectedSender",
-      buildSelectedSender(
-        pendingSavedSender,
-        pendingSavedSender.source || "saved",
-      ),
+      buildSelectedSender(pendingSavedSender, pendingSavedSender.source || "saved"),
     );
     setPendingSavedSender(null);
   };
@@ -300,11 +267,7 @@ const SelectSender = ({ data, dataHandler }) => {
             event.stopPropagation();
             setEditingSender({
               ...sender,
-              phone: getExtractedPhone(
-                {},
-                sender.country_iso_code,
-                sender.phone,
-              ),
+              phone: getExtractedPhone({}, sender.country_iso_code, sender.phone),
             });
           }}
           style={actionButtonStyle}
@@ -363,9 +326,7 @@ const SelectSender = ({ data, dataHandler }) => {
         }}
       >
         <div>
-          <h5 style={{ margin: 0, color: "#5926F0", fontWeight: 800 }}>
-            {t("Select Sender")}
-          </h5>
+          <h5 style={{ margin: 0, color: "#5926F0", fontWeight: 800 }}>{t("Select Sender")}</h5>
           <p
             style={{
               margin: "6px 0 0",
@@ -388,9 +349,7 @@ const SelectSender = ({ data, dataHandler }) => {
             height: "fit-content",
           }}
         >
-          {senderAccountType === "business"
-            ? t("Business sender")
-            : t("Individual sender")}
+          {senderAccountType === "business" ? t("Business sender") : t("Individual sender")}
         </div>
       </div>
 
@@ -415,27 +374,26 @@ const SelectSender = ({ data, dataHandler }) => {
           <Save size={16} color="#5926F0" />
           {t("Saved Senders")}
         </div>
-        {filteredSavedSenders.length > 0 &&
-          can("payments.send-as-third-party.add") && (
-            <button
-              type="button"
-              onClick={() => setShowAddSenderModal(true)}
-              style={{
-                border: "none",
-                borderRadius: "8px",
-                background: "#5926F0",
-                color: "#fff",
-                padding: "10px 14px",
-                fontWeight: 800,
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
-              <Plus size={16} />
-              {t("Add New Sender")}
-            </button>
-          )}
+        {filteredSavedSenders.length > 0 && can("payments.send-as-third-party.add") && (
+          <button
+            type="button"
+            onClick={() => setShowAddSenderModal(true)}
+            style={{
+              border: "none",
+              borderRadius: "8px",
+              background: "#5926F0",
+              color: "#fff",
+              padding: "10px 14px",
+              fontWeight: 800,
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+            }}
+          >
+            <Plus size={16} />
+            {t("Add New Sender")}
+          </button>
+        )}
       </div>
 
       {isLoadingSenders ? (
@@ -453,9 +411,7 @@ const SelectSender = ({ data, dataHandler }) => {
           {t("Loading saved senders")}
         </div>
       ) : displayedSenders.length > 0 ? (
-        <div
-          style={{ display: "grid", gridTemplateColumns: "1fr", gap: "10px" }}
-        >
+        <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "10px" }}>
           {displayedSenders.map((sender) => {
             return (
               <div
@@ -463,9 +419,7 @@ const SelectSender = ({ data, dataHandler }) => {
                 role="button"
                 tabIndex={0}
                 onClick={() => selectSavedSender(sender)}
-                onKeyDown={(event) =>
-                  event.key === "Enter" ? selectSavedSender(sender) : null
-                }
+                onKeyDown={(event) => (event.key === "Enter" ? selectSavedSender(sender) : null)}
                 style={cardStyle(selectedSavedSenderId === sender._id)}
               >
                 {sender.sender_type === "business" ? (
@@ -494,13 +448,9 @@ const SelectSender = ({ data, dataHandler }) => {
             gap: "12px",
           }}
         >
-          <div style={{ color: "#202020", fontWeight: 800 }}>
-            {t("No saved senders yet")}
-          </div>
+          <div style={{ color: "#202020", fontWeight: 800 }}>{t("No saved senders yet")}</div>
           <div style={{ color: "#777", fontSize: "13px", fontWeight: 600 }}>
-            {t(
-              "Add a third-party sender to save their details for the next transfer.",
-            )}
+            {t("Add a third-party sender to save their details for the next transfer.")}
           </div>
           {can("payments.send-as-third-party.add") && (
             <button
@@ -541,17 +491,11 @@ const SelectSender = ({ data, dataHandler }) => {
         data={data}
         senderAccountType={editingSender?.sender_type || senderAccountType}
         editSender={editingSender}
-        onSubmit={(values) =>
-          updateSender({ senderId: editingSender?._id, values })
-        }
+        onSubmit={(values) => updateSender({ senderId: editingSender?._id, values })}
         isSubmitting={isUpdatingSender}
       />
 
-      <Modal
-        isOpen={!!pendingSavedSender}
-        toggle={() => setPendingSavedSender(null)}
-        centered
-      >
+      <Modal isOpen={!!pendingSavedSender} toggle={() => setPendingSavedSender(null)} centered>
         <ModalHeader toggle={() => setPendingSavedSender(null)}>
           {t("Change selected sender?")}
         </ModalHeader>
@@ -560,9 +504,7 @@ const SelectSender = ({ data, dataHandler }) => {
             "You already selected a newly added sender. Selecting a saved sender will remove that selected sender from this transfer, and you will need to add it again if you want to use it.",
           )}
         </ModalBody>
-        <ModalFooter
-          style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}
-        >
+        <ModalFooter style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
           <button
             type="button"
             onClick={() => setPendingSavedSender(null)}
@@ -593,22 +535,14 @@ const SelectSender = ({ data, dataHandler }) => {
         </ModalFooter>
       </Modal>
 
-      <Modal
-        isOpen={!!confirmDeleteSender}
-        toggle={() => setConfirmDeleteSender(null)}
-        centered
-      >
-        <ModalHeader toggle={() => setConfirmDeleteSender(null)}>
-          {t("Remove sender?")}
-        </ModalHeader>
+      <Modal isOpen={!!confirmDeleteSender} toggle={() => setConfirmDeleteSender(null)} centered>
+        <ModalHeader toggle={() => setConfirmDeleteSender(null)}>{t("Remove sender?")}</ModalHeader>
         <ModalBody>
           {t(
             "This sender will be removed. If it is selected for this transfer, the selection will also be cleared.",
           )}
         </ModalBody>
-        <ModalFooter
-          style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}
-        >
+        <ModalFooter style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
           <button
             type="button"
             disabled={isDeletingSender}

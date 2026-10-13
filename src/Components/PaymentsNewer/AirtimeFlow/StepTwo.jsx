@@ -48,15 +48,11 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
         );
         const decrypted = decryptData(res.data.data);
         const countriesArray = allCountries.filter((item) => {
-          return decrypted.some(
-            (apiCountry) => apiCountry.iso_code === item?.alpha3,
-          );
+          return decrypted.some((apiCountry) => apiCountry.iso_code === item?.alpha3);
         });
         const allowed = allowedCountries
           ?.map((allowed) => {
-            const coun = countriesArray?.find(
-              (item) => item?.alpha3 == allowed?.country_iso_code,
-            );
+            const coun = countriesArray?.find((item) => item?.alpha3 == allowed?.country_iso_code);
             if (!coun) return null;
             return {
               ...coun,
@@ -65,12 +61,8 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
           })
           ?.filter((item) => item != null);
         console.log(allowed);
-        setCountries(
-          allowed?.sort((a, b) => String(a?.name)?.localeCompare(b?.name)),
-        );
-        const coun = allowed?.find(
-          (item) => item?.alpha3 === userDetails?.country_iso_code,
-        );
+        setCountries(allowed?.sort((a, b) => String(a?.name)?.localeCompare(b?.name)));
+        const coun = allowed?.find((item) => item?.alpha3 === userDetails?.country_iso_code);
         dataHandler("country", coun ?? {});
       } catch (error) {
         // dataHandler("err          or", "Something went wrong while getting countries.")
@@ -108,10 +100,7 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
       }
     } catch (error) {
       const dec = decryptData(error?.response?.data?.data);
-      dataHandler(
-        "error",
-        dec?.message || "Make sure you have entered a correct Phone Number.",
-      );
+      dataHandler("error", dec?.message || "Make sure you have entered a correct Phone Number.");
     } finally {
       dataHandler("loading", false);
     }
@@ -134,32 +123,23 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
             </div>
           )}
 
-          <div
-            className={styles.banner}
-            style={{ display: isBannerLoaded ? "flex" : "none" }}
-          >
+          <div className={styles.banner} style={{ display: isBannerLoaded ? "flex" : "none" }}>
             <div className={styles.b_left}>
               <span>{t("Send Top-up").toUpperCase()}</span>
               <div>
                 <img
                   src={data.flow === "airtime" ? airtime : esim}
                   alt=""
-                  onLoad={() =>
-                    setImagesLoaded((prev) => ({ ...prev, left: true }))
-                  }
+                  onLoad={() => setImagesLoaded((prev) => ({ ...prev, left: true }))}
                 />
-                <span>
-                  {t(`${data.flow === "airtime" ? "Mobile Airtime" : "eSim"}`)}
-                </span>
+                <span>{t(`${data.flow === "airtime" ? "Mobile Airtime" : "eSim"}`)}</span>
               </div>
             </div>
 
             <img
               src={data.flow === "airtime" ? air_dude : e_dude}
               alt=""
-              onLoad={() =>
-                setImagesLoaded((prev) => ({ ...prev, right: true }))
-              }
+              onLoad={() => setImagesLoaded((prev) => ({ ...prev, right: true }))}
             />
           </div>
         </>
@@ -173,21 +153,13 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
           <div className={styles.bottom}>
             <div className={styles.timeline}>
               <div className={styles.timeline_item}>
-                <h4>
-                  {t(
-                    "Select the country where you want to top-up a mobile phone!",
-                  )}
-                </h4>
+                <h4>{t("Select the country where you want to top-up a mobile phone!")}</h4>
                 <div
                   className={`${country_styles.country} ${styles.country}`}
                   onClick={() => setShowModal(true)}
                 >
                   <div className={country_styles.main}>
-                    <div
-                      className={
-                        data?.country?.file_url ? "" : country_styles.grad_icon
-                      }
-                    >
+                    <div className={data?.country?.file_url ? "" : country_styles.grad_icon}>
                       <img src={data?.country?.file_url ?? country} alt="" />
                     </div>
                     <span>
@@ -237,10 +209,7 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
                 </div>
               )}
               {data?.other_operators?.length > 0 && (
-                <div
-                  className={styles.timeline_item}
-                  style={{ alignItems: "flex-start" }}
-                >
+                <div className={styles.timeline_item} style={{ alignItems: "flex-start" }}>
                   <h4>{t("Other Operator")}</h4>
                   <div
                     style={{
@@ -268,18 +237,11 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
                           padding: ".8rem 1rem",
                           border: "1px solid #5926f0",
                           textAlign: "center",
-                          fontSize:
-                            window.innerWidth > 1650 ? ".7rem" : ".6rem",
+                          fontSize: window.innerWidth > 1650 ? ".7rem" : ".6rem",
                           fontWeight: 700,
                           borderRadius: "6px",
-                          color:
-                            item?.id === data?.providers?.[0]?.id
-                              ? "white"
-                              : "black",
-                          background:
-                            item?.id === data?.providers?.[0]?.id
-                              ? "#5926f0"
-                              : "white",
+                          color: item?.id === data?.providers?.[0]?.id ? "white" : "black",
+                          background: item?.id === data?.providers?.[0]?.id ? "#5926f0" : "white",
                         }}
                       >
                         {item?.name}
@@ -328,8 +290,7 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
         <ListModal
           isLoading={data.loading}
           content={{
-            heading:
-              "Select the country where do you want to top-up a mobile phone?",
+            heading: "Select the country where do you want to top-up a mobile phone?",
             list: countries,
           }}
           heading="SEND TOP-UP AND E-SIM"

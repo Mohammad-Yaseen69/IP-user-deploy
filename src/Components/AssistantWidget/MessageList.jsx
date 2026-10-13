@@ -2,13 +2,7 @@ import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./styles.module.css";
 
-const MessageList = ({
-  greeting,
-  messages,
-  isThinking,
-  starterPrompts,
-  onPick,
-}) => {
+const MessageList = ({ greeting, messages, isThinking, starterPrompts, onPick }) => {
   const { t } = useTranslation();
   const endRef = useRef(null);
 
@@ -22,9 +16,7 @@ const MessageList = ({
     <div className={styles.messages}>
       <div className={styles.row}>
         <div className={styles.block}>
-          <div className={`${styles.msg} ${styles.msgAssistant}`}>
-            {greeting}
-          </div>
+          <div className={`${styles.msg} ${styles.msgAssistant}`}>{greeting}</div>
 
           {!messages.length && (
             <>
@@ -67,9 +59,7 @@ const MessageList = ({
 
       {isThinking && (
         <div className={styles.row}>
-          <div
-            className={`${styles.msg} ${styles.msgAssistant} ${styles.typing}`}
-          >
+          <div className={`${styles.msg} ${styles.msgAssistant} ${styles.typing}`}>
             <span />
             <span />
             <span />

@@ -72,8 +72,7 @@ const StepFour = ({
 }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
-  const [showCardMaintenanceModal, setShowCardMaintenanceModal] =
-    useState(false);
+  const [showCardMaintenanceModal, setShowCardMaintenanceModal] = useState(false);
   const { data: methods, isLoading } = useQuery({
     queryKey: ["AvailableMethods"],
     queryFn: () =>
@@ -108,8 +107,7 @@ const StepFour = ({
   // console.log(types, 'dsafsadffsad')
   useEffect(() => {
     if (types.length > 0) {
-      const defaultPaymentType =
-        types.find((item) => item.value !== "card") ?? types?.[0];
+      const defaultPaymentType = types.find((item) => item.value !== "card") ?? types?.[0];
       // dataHandler("payment_type", defaultPaymentType);
       const timeout = setTimeout(() => {
         callback();
@@ -166,11 +164,8 @@ const StepFour = ({
                       letterSpacing: "-0.28px",
                     }}
                   >
-                    <strong>
-                      {data?.exchange_rate?.paypal?.fee?.currency}
-                    </strong>{" "}
-                    {t("is not supported by Paypal,")}{" "}
-                    <strong>{t("USD")}</strong>
+                    <strong>{data?.exchange_rate?.paypal?.fee?.currency}</strong>{" "}
+                    {t("is not supported by Paypal,")} <strong>{t("USD")}</strong>
                     {t("will be used as the default currency.")}
                   </span>
                 </div>
@@ -217,12 +212,13 @@ const StepFour = ({
                       }}
                     >
                       1.00 {data?.exchange_rate?.paypal?.fee?.currency} ={" "}
-                      {Number(
-                        data?.exchange_rate?.paypal?.paypal_rate?.value,
-                      )?.toLocaleString("en-US", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 4,
-                      })}{" "}
+                      {Number(data?.exchange_rate?.paypal?.paypal_rate?.value)?.toLocaleString(
+                        "en-US",
+                        {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 4,
+                        },
+                      )}{" "}
                       {t("USD")}
                     </strong>
                   </div>
@@ -258,12 +254,13 @@ const StepFour = ({
                         letterSpacing: "-0.8px",
                       }}
                     >
-                      {Number(
-                        data?.exchange_rate?.paypal?.paypal_converted?.value,
-                      )?.toLocaleString("en-US", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}{" "}
+                      {Number(data?.exchange_rate?.paypal?.paypal_converted?.value)?.toLocaleString(
+                        "en-US",
+                        {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        },
+                      )}{" "}
                       {t("USD")}
                     </strong>
                   </div>
@@ -306,10 +303,7 @@ const StepFour = ({
                 className={`${styles.item} ${item.status !== "Active" ? styles.disabled : ""}`}
                 key={item.name}
                 onClick={() => {
-                  if (
-                    item.value === "card" &&
-                    userDetails?.username !== "ahmed"
-                  ) {
+                  if (item.value === "card" && userDetails?.username !== "ahmed") {
                     setShowCardMaintenanceModal(true);
                     return;
                   }
@@ -320,23 +314,15 @@ const StepFour = ({
                   console.log(data.payment_type);
                 }}
               >
-                <img
-                  src={item.icon}
-                  alt=""
-                  className={styles.icon}
-                  loading="lazy"
-                />
+                <img src={item.icon} alt="" className={styles.icon} loading="lazy" />
                 <span>
                   {t(item.name)}
-                  {item.value === "mobile" &&
-                  data?.mobile_wallet_services?.length > 0 ? (
+                  {item.value === "mobile" && data?.mobile_wallet_services?.length > 0 ? (
                     <>
                       <br />
                       (
                       <TypingSpan
-                        words={data.mobile_wallet_services.map(
-                          (item) => item?.name ?? "",
-                        )}
+                        words={data.mobile_wallet_services.map((item) => item?.name ?? "")}
                       />
                       )
                     </>
@@ -345,18 +331,10 @@ const StepFour = ({
                   )}
                 </span>
 
-                {item.status === "Coming Soon" ? (
-                  <div>({t(item.status)})</div>
-                ) : (
-                  ""
-                )}
+                {item.status === "Coming Soon" ? <div>({t(item.status)})</div> : ""}
                 {item.status === "Active" ? (
                   data.payment_type?.name === item?.name ? (
-                    <Check
-                      color="green"
-                      size={24}
-                      style={{ marginLeft: "auto" }}
-                    />
+                    <Check color="green" size={24} style={{ marginLeft: "auto" }} />
                   ) : (
                     <img
                       src={i}

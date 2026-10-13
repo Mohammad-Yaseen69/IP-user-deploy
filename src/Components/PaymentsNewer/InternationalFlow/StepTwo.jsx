@@ -11,10 +11,7 @@ import AddBeneficiary from "../../AddBeneficiary";
 import QuickAddBeneficiary from "../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/QuickAddBeneficiary";
 import { USE_NEW_BENEFICIARY_FLOW } from "../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/constants";
 import { buildTransactionBeneficiaryDetails } from "../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/buildPayloads";
-import {
-  getBeneficiaryDisplayName,
-  getBeneficiaryInitial,
-} from "./beneficiaryHelpers";
+import { getBeneficiaryDisplayName, getBeneficiaryInitial } from "./beneficiaryHelpers";
 
 function levenshteinDistance(a, b) {
   const dp = Array(a.length + 1)
@@ -31,11 +28,7 @@ function levenshteinDistance(a, b) {
   for (let i = 1; i <= a.length; i++) {
     for (let j = 1; j <= b.length; j++) {
       const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-      dp[i][j] = Math.min(
-        dp[i - 1][j] + 1,
-        dp[i][j - 1] + 1,
-        dp[i - 1][j - 1] + cost,
-      );
+      dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost);
     }
   }
 
@@ -130,9 +123,7 @@ const StepTwo = ({ data, dataHandler }) => {
     }
 
     if (data.payoutChannel?.value === "mobile") {
-      fil = fil.filter(
-        (item) => +item?.mobile_wallet?.[0]?.money_provider === +data.payer?.id,
-      );
+      fil = fil.filter((item) => +item?.mobile_wallet?.[0]?.money_provider === +data.payer?.id);
       setMessage(
         t(`No beneficiary found from {{country}} having {{value}} details.`, {
           value: data.payer?.name,
@@ -238,9 +229,7 @@ const StepTwo = ({ data, dataHandler }) => {
       <div className={styles.container}>
         <QuickAddBeneficiary
           country={data.country}
-          recipientType={
-            data.transactionType === "C" ? "individual" : "business"
-          }
+          recipientType={data.transactionType === "C" ? "individual" : "business"}
           service={data.payoutChannel}
           payer={data.payer}
           payerRequiredFields={data.payerRequiredFields?.[0] || []}
@@ -277,9 +266,7 @@ const StepTwo = ({ data, dataHandler }) => {
       </div>
       {window.innerWidth < 1000 && (
         <div className={styles.top}>
-          <span style={{ opacity: 0, scale: 0, pointerEvents: "none" }}>
-            {t("Beneficiaries")}
-          </span>
+          <span style={{ opacity: 0, scale: 0, pointerEvents: "none" }}>{t("Beneficiaries")}</span>
           <button onClick={() => navigate("/beneficiaries")}>
             <span>{t("Manage Beneficiaries")}</span>
           </button>
@@ -287,10 +274,7 @@ const StepTwo = ({ data, dataHandler }) => {
       )}
       <div className={styles.beneficiaries}>
         {draftBeneficiary && (
-          <div
-            style={{ marginBottom: "8px" }}
-            className={`${styles.ben_card} ${styles.active}`}
-          >
+          <div style={{ marginBottom: "8px" }} className={`${styles.ben_card} ${styles.active}`}>
             <div style={{ flexShrink: 0 }} className={styles.dp}>
               {getBeneficiaryInitial(draftBeneficiary)}
             </div>
@@ -313,8 +297,7 @@ const StepTwo = ({ data, dataHandler }) => {
                       openAddForm({
                         beneficiary: draftBeneficiary.draftForm.beneficiary,
                         channel: draftBeneficiary.draftForm.channel,
-                        saveForFuture:
-                          draftBeneficiary.draftDetails?.saveForFuture,
+                        saveForFuture: draftBeneficiary.draftDetails?.saveForFuture,
                       })
                     }
                   >
@@ -408,10 +391,7 @@ const StepTwo = ({ data, dataHandler }) => {
               fontSize: ".8rem",
             }}
           >
-            {message?.replace(
-              "No",
-              data.transactionType === "C" ? "No individual" : "No business",
-            )}
+            {message?.replace("No", data.transactionType === "C" ? "No individual" : "No business")}
             <span
               onClick={() => {
                 openAddForm();
@@ -422,30 +402,24 @@ const StepTwo = ({ data, dataHandler }) => {
             </span>
           </div>
         )}
-        {filterd.length > 0 &&
-          data.payoutChannel?.value === "bank" &&
-          bankBens?.length > 0 && (
-            <div
-              onClick={() => setShowOthers(!showOthers)}
-              style={{
-                margin: "1rem 0",
-                textAlign: "center",
-                color: "#5926f0",
-                textDecoration: "underline",
-                fontSize: ".7rem",
-                cursor: "pointer",
-              }}
-            >
-              {showOthers ? t("Show Less") : t("Show More")}
-            </div>
-          )}
-        {data.payoutChannel?.value === "bank" &&
-        bankBens?.length > 0 &&
-        showOthers ? (
+        {filterd.length > 0 && data.payoutChannel?.value === "bank" && bankBens?.length > 0 && (
+          <div
+            onClick={() => setShowOthers(!showOthers)}
+            style={{
+              margin: "1rem 0",
+              textAlign: "center",
+              color: "#5926f0",
+              textDecoration: "underline",
+              fontSize: ".7rem",
+              cursor: "pointer",
+            }}
+          >
+            {showOthers ? t("Show Less") : t("Show More")}
+          </div>
+        )}
+        {data.payoutChannel?.value === "bank" && bankBens?.length > 0 && showOthers ? (
           <div style={{ marginTop: "1rem" }}>
-            <span style={{ marginTop: "1rem" }}>
-              {t("Other Beneficiaries:")}{" "}
-            </span>
+            <span style={{ marginTop: "1rem" }}>{t("Other Beneficiaries:")} </span>
             {bankBens.map((item) => (
               <div
                 key={item?._id}
@@ -456,9 +430,7 @@ const StepTwo = ({ data, dataHandler }) => {
                   console.log(item);
                 }}
               >
-                <div className={styles.dp}>
-                  {item?.first_name?.[0] ?? item?.company_name?.[0]}
-                </div>
+                <div className={styles.dp}>{item?.first_name?.[0] ?? item?.company_name?.[0]}</div>
                 <div className={styles.ben_details}>
                   <div className={styles.bd_top}>
                     <h5>
@@ -483,13 +455,11 @@ const StepTwo = ({ data, dataHandler }) => {
                     <span>
                       {t("Cash Point")} : {data?.payer?.name ?? ""}
                     </span>
-                  ) : item?.bank_details?.[0]?.bank_name ||
-                    item?.bank_details?.[0]?.name ? (
+                  ) : item?.bank_details?.[0]?.bank_name || item?.bank_details?.[0]?.name ? (
                     <span>
                       {t("Bank")} :{" "}
                       {service_name_formatter(
-                        item?.bank_details?.[0]?.bank_name ??
-                          item?.bank_details?.[0]?.name,
+                        item?.bank_details?.[0]?.bank_name ?? item?.bank_details?.[0]?.name,
                       )}
                     </span>
                   ) : null}

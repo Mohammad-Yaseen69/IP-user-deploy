@@ -38,12 +38,7 @@ export const getDisabledState = (stepName, data) => {
 
   switch (stepName) {
     case STEPS.AMOUNT:
-      return (
-        !data.wallet?._id ||
-        !data.amount ||
-        amount < MIN_AMOUNT ||
-        amount > availableBalance
-      );
+      return !data.wallet?._id || !data.amount || amount < MIN_AMOUNT || amount > availableBalance;
     case STEPS.REVIEW:
       return !data.feeDetails?.token || data.quoteExpired;
     default:

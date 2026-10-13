@@ -30,9 +30,7 @@ export const useSecurityShield = () => {
       if (recaptchaRef.current) {
         const token = await recaptchaRef.current.executeAsync();
         if (!token) {
-          logRecaptchaFailureToSentry(
-            "reCAPTCHA execution returned null token (Case 2)",
-          );
+          logRecaptchaFailureToSentry("reCAPTCHA execution returned null token (Case 2)");
         }
         return token;
       } else {
@@ -41,10 +39,7 @@ export const useSecurityShield = () => {
       }
     } catch (error) {
       console.error("reCAPTCHA execution error:", error);
-      logRecaptchaFailureToSentry(
-        "reCAPTCHA execution exception (Case 2)",
-        error,
-      );
+      logRecaptchaFailureToSentry("reCAPTCHA execution exception (Case 2)", error);
       return null;
     }
   }, []);
@@ -83,9 +78,7 @@ export const useSecurityShield = () => {
     if (SITE_KEY) {
       token = await executeRecaptcha();
       if (!token) {
-        logRecaptchaFailureToSentry(
-          "validateSecurity: Token verification failed (Case 2)",
-        );
+        logRecaptchaFailureToSentry("validateSecurity: Token verification failed (Case 2)");
         return {
           isValid: false,
           recaptchaToken: null,

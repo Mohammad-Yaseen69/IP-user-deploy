@@ -1,12 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  Card,
-  CardBody,
-  Input,
-  Modal,
-  ModalBody,
-  ModalHeader,
-} from "reactstrap";
+import { Card, CardBody, Input, Modal, ModalBody, ModalHeader } from "reactstrap";
 import QrReader from "react-qr-reader";
 import invite from "./files/invite.png";
 import { useTranslation } from "react-i18next";
@@ -35,22 +28,16 @@ const QRCodeScan = ({ setSubStep, dataHandler }) => {
   useEffect(() => {
     if (result && result?.length === 8) {
       axios
-        .get(
-          `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-user-wallets/${result}`,
-          {
-            headers: authHeader,
-          },
-        )
+        .get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-user-wallets/${result}`, {
+          headers: authHeader,
+        })
         .then((res) => {
           const dec = decryptData(res.data.data);
-          const users = dec?.users?.filter(
-            (item) => item?._id !== userDetails?._id,
-          );
+          const users = dec?.users?.filter((item) => item?._id !== userDetails?._id);
           dataHandler("beneficiary", users?.[0] ?? {});
           if (users?.length > 0) {
             const defaultWal =
-              users?.[0]?.wallets?.find((it) => it?.default) ??
-              users?.[0]?.wallets?.[0];
+              users?.[0]?.wallets?.find((it) => it?.default) ?? users?.[0]?.wallets?.[0];
             dataHandler("beneficiary_wallet", defaultWal ?? {});
             setShowQRModal(false);
             setWalletError("");
@@ -87,13 +74,9 @@ const QRCodeScan = ({ setSubStep, dataHandler }) => {
 
     setLoading(true);
     axios
-      .post(
-        `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-qr-details`,
-        formData,
-        {
-          headers: authHeader,
-        },
-      )
+      .post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-qr-details`, formData, {
+        headers: authHeader,
+      })
       .then((res) => {
         const decrypted = decryptData(res.data.data);
         // console.log(decrypted?.walletDetails?.wallet_id)
@@ -259,16 +242,14 @@ const QRCodeScan = ({ setSubStep, dataHandler }) => {
                 flexShrink: "0",
                 borderRadius: "8.523px",
                 background: "#fff",
-                boxShadow:
-                  "0px 4.79236px 7.45752px -4.79236px rgba(89, 38, 240, 0.13)",
+                boxShadow: "0px 4.79236px 7.45752px -4.79236px rgba(89, 38, 240, 0.13)",
                 marginTop: "20px",
                 cursor: "pointer",
               }}
             >
               <span
                 style={{
-                  background:
-                    "linear-gradient(to right, #E64067, #5926F0, #4828A0)",
+                  background: "linear-gradient(to right, #E64067, #5926F0, #4828A0)",
                   backgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   WebkitBackgroundClip: "text",
@@ -330,9 +311,7 @@ const QRCodeScan = ({ setSubStep, dataHandler }) => {
               marginBottom: "2rem",
             }}
           >
-            <div
-              style={{ display: "flex", alignItems: "center", gap: ".3rem" }}
-            >
+            <div style={{ display: "flex", alignItems: "center", gap: ".3rem" }}>
               <img src={invite} alt="i" width={13} height={13} />
               <span
                 style={{

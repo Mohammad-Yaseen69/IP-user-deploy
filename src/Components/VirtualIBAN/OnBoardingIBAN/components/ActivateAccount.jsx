@@ -1,11 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from "react";
-import {
-  ArrowLeft,
-  Check,
-  CreditCard,
-  Shield,
-  AlertTriangle,
-} from "react-feather";
+import { ArrowLeft, Check, CreditCard, Shield, AlertTriangle } from "react-feather";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Magicsvg from "../magicsvg";
@@ -121,9 +115,7 @@ const ActivateAccount = ({
         }
       } catch (err) {
         const decErr = decryptData(err?.response?.data?.data);
-        toast.error(
-          decErr?.message || t("Unable to fetch markup conversion rate"),
-        );
+        toast.error(decErr?.message || t("Unable to fetch markup conversion rate"));
       } finally {
         setLoadingRates(false);
       }
@@ -132,10 +124,7 @@ const ActivateAccount = ({
     fetchMarkupRates();
   }, [selectedWallet?._id]);
 
-  const isFeeReady =
-    !loadingRates &&
-    feeDetails?.convertedAmount != null &&
-    !!feeDetails?.currency;
+  const isFeeReady = !loadingRates && feeDetails?.convertedAmount != null && !!feeDetails?.currency;
 
   const totalDueLabel = !isFeeReady
     ? ""
@@ -220,8 +209,7 @@ const ActivateAccount = ({
                   </div>
                   <div style={{ textAlign: "start" }}>
                     <h5>
-                      {t(item.title)}{" "}
-                      {!item.active && <small>({t("Disabled")})</small>}
+                      {t(item.title)} {!item.active && <small>({t("Disabled")})</small>}
                     </h5>
                     <span>{t(item.subtitle)}</span>
                   </div>
@@ -239,9 +227,7 @@ const ActivateAccount = ({
               gap: isMobile && 20,
             }}
           >
-            <div
-              style={{ marginTop: "10px", width: isMobile ? "100%" : "auto" }}
-            >
+            <div style={{ marginTop: "10px", width: isMobile ? "100%" : "auto" }}>
               <label
                 style={{
                   fontWeight: 700,
@@ -271,22 +257,16 @@ const ActivateAccount = ({
                       key={wallet._id}
                       onClick={() => handleWalletSelect(wallet)}
                       style={{
-                        border: isSelected
-                          ? "2px solid #4A32E3"
-                          : "1px solid #E2E8F0",
+                        border: isSelected ? "2px solid #4A32E3" : "1px solid #E2E8F0",
                         borderRadius: "12px",
                         padding: "16px",
-                        background: isSelected
-                          ? "rgba(74, 50, 227, 0.04)"
-                          : "#FFFFFF",
+                        background: isSelected ? "rgba(74, 50, 227, 0.04)" : "#FFFFFF",
                         cursor: "pointer",
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center",
                         transition: "all 0.2s ease",
-                        boxShadow: isSelected
-                          ? "0 4px 12px rgba(74, 50, 227, 0.08)"
-                          : "none",
+                        boxShadow: isSelected ? "0 4px 12px rgba(74, 50, 227, 0.08)" : "none",
                       }}
                     >
                       <div>
@@ -340,8 +320,7 @@ const ActivateAccount = ({
                           }}
                         >
                           {t("Balance")}: {wallet.currency?.symbol || ""}
-                          {wallet.balance?.available ?? 0}{" "}
-                          {wallet.currency?.code}
+                          {wallet.balance?.available ?? 0} {wallet.currency?.code}
                         </div>
                       </div>
                       {isSelected && (
@@ -404,10 +383,7 @@ const ActivateAccount = ({
                 </div>
 
                 {feeDetails?.isKybIncluded && (
-                  <div
-                    className={styles.summaryRow}
-                    style={{ marginTop: "8px" }}
-                  >
+                  <div className={styles.summaryRow} style={{ marginTop: "8px" }}>
                     <span>{t("KYB Verification Fee")}</span>
                     <strong>
                       ${feeDetails?.kybFee || 0}
@@ -420,8 +396,7 @@ const ActivateAccount = ({
               <div
                 className={styles.dueCard}
                 style={{
-                  background:
-                    "linear-gradient(135deg, #4A32E3 0%, #5926F0 100%)",
+                  background: "linear-gradient(135deg, #4A32E3 0%, #5926F0 100%)",
                   color: "#fff",
                   padding: "20px",
                   borderRadius: "12px",
@@ -464,11 +439,7 @@ const ActivateAccount = ({
                     alignItems: "center",
                   }}
                 >
-                  <AlertTriangle
-                    color="#D97706"
-                    size={18}
-                    style={{ flexShrink: 0 }}
-                  />
+                  <AlertTriangle color="#D97706" size={18} style={{ flexShrink: 0 }} />
                   <span
                     style={{
                       color: "#92400E",
@@ -520,8 +491,7 @@ const ActivateAccount = ({
           className={styles.continueButton}
           style={{
             opacity: !selectedWallet?._id || !isFeeReady ? 0.5 : 1,
-            cursor:
-              !selectedWallet?._id || !isFeeReady ? "not-allowed" : "pointer",
+            cursor: !selectedWallet?._id || !isFeeReady ? "not-allowed" : "pointer",
           }}
         >
           {!isFeeReady

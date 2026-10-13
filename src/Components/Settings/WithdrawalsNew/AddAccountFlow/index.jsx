@@ -111,23 +111,15 @@ const AddAccountFlow = ({
   const [busy, setBusy] = useState(false);
 
   const holderName = getHolderName(userDetails);
-  const recipientType =
-    userDetails?.account_type === "business" ? "business" : "individual";
-  const transactionType = resolveTransactionType(
-    userDetails?.account_type,
-    recipientType,
-  );
+  const recipientType = userDetails?.account_type === "business" ? "business" : "individual";
+  const transactionType = resolveTransactionType(userDetails?.account_type, recipientType);
   const isCrypto = method === "crypto_wallet";
   const isEdit = mode === "edit";
 
   const resolveCountry = useCallback(
     (iso3) => {
       if (!iso3) return null;
-      return (
-        countries.find((item) => item.alpha3 === iso3) ??
-        findCountry(iso3) ??
-        null
-      );
+      return countries.find((item) => item.alpha3 === iso3) ?? findCountry(iso3) ?? null;
     },
     [countries],
   );
@@ -142,9 +134,7 @@ const AddAccountFlow = ({
 
     if (isEdit && target) {
       setMethod(target.method);
-      setCountry(
-        target.isCrypto ? null : resolveCountry(target.record?.iso_code),
-      );
+      setCountry(target.isCrypto ? null : resolveCountry(target.record?.iso_code));
       setChannel(
         target.isCrypto
           ? {
@@ -169,9 +159,7 @@ const AddAccountFlow = ({
 
     setMethod("");
     setChannel({});
-    setCountry(
-      mode === "channel" ? resolveCountry(target?.record?.iso_code) : null,
-    );
+    setCountry(mode === "channel" ? resolveCountry(target?.record?.iso_code) : null);
   }, [open]);
 
   const usedIsos = useMemo(() => groups.map((group) => group.iso3), [groups]);
@@ -180,14 +168,11 @@ const AddAccountFlow = ({
   const record = useMemo(() => {
     if (isCrypto) return null;
     if (mode !== "create") return target?.record ?? null;
-    return (
-      groups.find((group) => group.iso3 === country?.alpha3)?.record ?? null
-    );
+    return groups.find((group) => group.iso3 === country?.alpha3)?.record ?? null;
   }, [isCrypto, mode, target, groups, country]);
 
   const usedMethods = useMemo(
-    () =>
-      groups.find((group) => group.iso3 === country?.alpha3)?.usedMethods ?? [],
+    () => groups.find((group) => group.iso3 === country?.alpha3)?.usedMethods ?? [],
     [groups, country],
   );
 
@@ -202,9 +187,7 @@ const AddAccountFlow = ({
       methods.transfer.filter(
         (item) =>
           TRANSFER_METHODS.includes(item.value) &&
-          userDetails?.level?.international_transfer?.[
-            LEVEL_FLAG_BY_METHOD[item.value]
-          ],
+          userDetails?.level?.international_transfer?.[LEVEL_FLAG_BY_METHOD[item.value]],
       ),
     [methods, userDetails],
   );
@@ -225,8 +208,7 @@ const AddAccountFlow = ({
   });
 
   const identifiers = useMemo(
-    () =>
-      getThunesRequirements(fields, recipientType, method)?.channelFields ?? [],
+    () => getThunesRequirements(fields, recipientType, method)?.channelFields ?? [],
     [fields, recipientType, method],
   );
 
@@ -259,25 +241,21 @@ const AddAccountFlow = ({
     const required = flattenFieldSets(fields?.required_receiving_entity_fields);
     return ADDRESS_FIELDS.filter(
       (name) =>
-        (!isHomeCountry && CROSS_BORDER_ADDRESS_FIELDS.includes(name)) ||
-        required.includes(name),
+        (!isHomeCountry && CROSS_BORDER_ADDRESS_FIELDS.includes(name)) || required.includes(name),
     );
   }, [isCrypto, country, fields, isHomeCountry]);
 
   /* As the old form did, African countries do not require a postal code. */
   const optionalAddress = useMemo(() => {
-    const isAfrican =
-      citiesData.find((item) => item.iso3 === country?.alpha3)?.region ===
-      "Africa";
-    const providerRequires = flattenFieldSets(
-      fields?.required_receiving_entity_fields,
-    ).includes("postal_code");
+    const isAfrican = citiesData.find((item) => item.iso3 === country?.alpha3)?.region === "Africa";
+    const providerRequires = flattenFieldSets(fields?.required_receiving_entity_fields).includes(
+      "postal_code",
+    );
     return isAfrican && !providerRequires ? ["postal_code"] : [];
   }, [country, fields]);
 
   const addressValid = addressFields.every(
-    (name) =>
-      optionalAddress.includes(name) || String(address[name] ?? "").trim(),
+    (name) => optionalAddress.includes(name) || String(address[name] ?? "").trim(),
   );
 
   const setAddressField = useCallback((name, value, patch = {}) => {
@@ -297,25 +275,16 @@ const AddAccountFlow = ({
 
   /* Where the provider has no IBAN, the bank is looked up by SWIFT instead. */
   useEffect(() => {
-    if (
-      method !== "bank_account" ||
-      isEdit ||
-      channel.bank_iban ||
-      !identifiers.length
-    )
-      return;
+    if (method !== "bank_account" || isEdit || channel.bank_iban || !identifiers.length) return;
     const accNumType = identifiers.includes("iban") ? "IBAN" : "Swift";
-    if (channel.accNumType !== accNumType)
-      setChannel((prev) => ({ ...prev, accNumType }));
+    if (channel.accNumType !== accNumType) setChannel((prev) => ({ ...prev, accNumType }));
   }, [identifiers, method, isEdit]);
 
   const takenNumbers = useMemo(
     () =>
       groups
         .flatMap((group) => group.record?.mobile_wallet ?? [])
-        .filter(
-          (entry) => !(isEdit && entry?._id && entry._id === target?.channelId),
-        )
+        .filter((entry) => !(isEdit && entry?._id && entry._id === target?.channelId))
         .map((entry) => entry?.wallet_account_number)
         .filter(Boolean),
     [groups, isEdit, target],
@@ -480,17 +449,13 @@ const AddAccountFlow = ({
             identifiers={identifiers}
             requirementsLoading={methodsLoading || fieldsLoading}
             requirementsError={
-              methodsError ||
-              fieldsError ||
-              (!methodsLoading && !service && !isCrypto)
+              methodsError || fieldsError || (!methodsLoading && !service && !isCrypto)
             }
             takenNumbers={takenNumbers}
             takenAddresses={takenAddresses}
             walletError={walletError}
             onValidChange={onValidChange}
-            onChange={
-              stages.includes("method") ? () => setStage("method") : null
-            }
+            onChange={stages.includes("method") ? () => setStage("method") : null}
             addressFields={addressFields}
             optionalAddress={optionalAddress}
             address={address}
@@ -525,18 +490,11 @@ const AddAccountFlow = ({
             <div className={abf.titleRow}>
               <div className={abf.titleText}>
                 <h2 className={abf.title} id="add-withdrawal-account">
-                  {isEdit
-                    ? t("Edit withdrawal account")
-                    : t("Add withdrawal account")}
+                  {isEdit ? t("Edit withdrawal account") : t("Add withdrawal account")}
                 </h2>
                 <p className={abf.subtitle}>{subtitle()}</p>
               </div>
-              <button
-                type="button"
-                className={abf.closeBtn}
-                onClick={onClose}
-                disabled={busy}
-              >
+              <button type="button" className={abf.closeBtn} onClick={onClose} disabled={busy}>
                 <X size={16} />
               </button>
             </div>

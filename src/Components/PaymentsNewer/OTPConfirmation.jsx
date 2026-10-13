@@ -5,10 +5,7 @@ import { ChevronRight } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { Button } from "reactstrap";
-import {
-  OTP_METHOD_CONFIG,
-  getAvailableOtpMethods,
-} from "../../Common/Component/OtpVerification";
+import { OTP_METHOD_CONFIG, getAvailableOtpMethods } from "../../Common/Component/OtpVerification";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
@@ -55,17 +52,9 @@ const OTPConfirmation = ({
   }, []);
   const [verified, setVerified] = useState(false);
   const [timer, setTimer] = useState(3);
-  const [resendTimer, setResendTimer] = useState(
-    authType !== "authenticator" ? 120 : 0,
-  );
-  const {
-    authHeader,
-    userDetails,
-    userWallets,
-    verifyToken,
-    setProfileLockTime,
-    getUserWallets,
-  } = useContext(UserContext);
+  const [resendTimer, setResendTimer] = useState(authType !== "authenticator" ? 120 : 0);
+  const { authHeader, userDetails, userWallets, verifyToken, setProfileLockTime, getUserWallets } =
+    useContext(UserContext);
   const [isAnyFieldEmpty, setIsAnyFieldEmpty] = useState(true);
   const [otpError, setOtpError] = useState("");
   const { setIsExtended } = useContext(InactivityContext);
@@ -83,17 +72,12 @@ const OTPConfirmation = ({
     hasApiMethods ? otpMethods : undefined,
   );
   const hasAuthenticator = availableMethods.includes("authenticator");
-  const isCodeMethod = hasApiMethods
-    ? authType !== "authenticator"
-    : authType === "sms";
-  const getResendSeconds = (method) =>
-    hasApiMethods ? (method === "email" ? 300 : 90) : 120;
+  const isCodeMethod = hasApiMethods ? authType !== "authenticator" : authType === "sms";
+  const getResendSeconds = (method) => (hasApiMethods ? (method === "email" ? 300 : 90) : 120);
 
   useEffect(() => {
     if (hasApiMethods) {
-      setResendTimer(
-        authType === "authenticator" ? 0 : getResendSeconds(authType),
-      );
+      setResendTimer(authType === "authenticator" ? 0 : getResendSeconds(authType));
     }
   }, [authType, hasApiMethods]);
 
@@ -210,11 +194,9 @@ const OTPConfirmation = ({
         data.append("token", token || requestObject?.token);
         data.append("type", authType);
         axios
-          .post(
-            `${import.meta.env.VITE_IP_DEV_API}/api/wallet/insta-payment-request-w2w`,
-            data,
-            { headers: { ...authHeader, "idempotency-key": getKey() } },
-          )
+          .post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/insta-payment-request-w2w`, data, {
+            headers: { ...authHeader, "idempotency-key": getKey() },
+          })
           .then((res) => {
             const decrypted = decryptData(res.data.data);
             setIsSaving(false);
@@ -236,28 +218,19 @@ const OTPConfirmation = ({
             setIsSaving(false);
             const decrypted = decryptData(err.response.data.data);
             console.log(decrypted, "decrypted");
-            const error = LimitsErrorMessage(
-              decrypted?.code ?? decrypted?.message,
-            );
+            const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message);
             if (error) {
               setOtpError(error);
-            } else if (
-              decrypted.message?.toLowerCase()?.includes("account is locked")
-            ) {
-              const time =
-                decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ??
-                "0:00";
-              const timeInSec =
-                +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
+            } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+              const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+              const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
               setProfileLockTime(timeInSec);
               const coun = localStorage.getItem("ip_country");
               localStorage.clear();
               localStorage.setItem("ip_country", coun);
               navigate("/login");
             } else {
-              setOtpError(
-                decrypted?.message ?? "You have entered the wrong OTP.",
-              );
+              setOtpError(decrypted?.message ?? "You have entered the wrong OTP.");
             }
           });
       }
@@ -294,9 +267,7 @@ const OTPConfirmation = ({
               // exchange rate api
               const data = {
                 request_id: decrypted?.subscribtionDetails?._id,
-                currency:
-                  decrypted?.subscribtionDetails?.request_payment?.currency
-                    ?.code,
+                currency: decrypted?.subscribtionDetails?.request_payment?.currency?.code,
               };
               const encrypted = encryptData(data);
               setTimeout(() => {
@@ -307,19 +278,12 @@ const OTPConfirmation = ({
           .catch((err) => {
             setIsSaving(false);
             const decrypted = decryptData(err.response.data.data);
-            const error = LimitsErrorMessage(
-              decrypted?.code ?? decrypted?.message,
-            );
+            const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message);
             if (error) {
               setOtpError(error);
-            } else if (
-              decrypted.message?.toLowerCase()?.includes("account is locked")
-            ) {
-              const time =
-                decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ??
-                "0:00";
-              const timeInSec =
-                +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
+            } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+              const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+              const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
               setProfileLockTime(timeInSec);
               const coun = localStorage.getItem("ip_country");
               localStorage.clear();
@@ -362,9 +326,7 @@ const OTPConfirmation = ({
 
               const data = {
                 request_id: decrypted?.subscribtionDetails?._id,
-                currency:
-                  decrypted?.subscribtionDetails?.request_payment?.currency
-                    ?.code,
+                currency: decrypted?.subscribtionDetails?.request_payment?.currency?.code,
               };
               const encrypted = encryptData(data);
               setTimeout(() => {
@@ -375,19 +337,12 @@ const OTPConfirmation = ({
           .catch((err) => {
             setIsSaving(false);
             const decrypted = decryptData(err.response.data.data);
-            const error = LimitsErrorMessage(
-              decrypted?.code ?? decrypted?.message,
-            );
+            const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message);
             if (error) {
               setOtpError(error);
-            } else if (
-              decrypted.message?.toLowerCase()?.includes("account is locked")
-            ) {
-              const time =
-                decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ??
-                "0:00";
-              const timeInSec =
-                +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
+            } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+              const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+              const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
               setProfileLockTime(timeInSec);
               const coun = localStorage.getItem("ip_country");
               localStorage.clear();
@@ -412,11 +367,9 @@ const OTPConfirmation = ({
       });
 
       axios
-        .post(
-          `${import.meta.env.VITE_IP_DEV_API}/api/quotation/create-quotation`,
-          formdata,
-          { headers: { ...authHeader, "idempotency-key": getKey() } },
-        )
+        .post(`${import.meta.env.VITE_IP_DEV_API}/api/quotation/create-quotation`, formdata, {
+          headers: { ...authHeader, "idempotency-key": getKey() },
+        })
         .then((res) => {
           const decrypted = decryptData(res.data.data);
           setIsSaving(false);
@@ -429,19 +382,13 @@ const OTPConfirmation = ({
         .catch((err) => {
           setIsSaving(false);
           const decrypted = decryptData(err.response.data.data);
-          const error = LimitsErrorMessage(
-            decrypted?.code ?? decrypted?.message,
-          );
+          const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message);
           console.log(decrypted);
           if (error) {
             setOtpError(error);
-          } else if (
-            decrypted.message?.toLowerCase()?.includes("account is locked")
-          ) {
-            const time =
-              decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
-            const timeInSec =
-              +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
+          } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+            const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+            const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
             setProfileLockTime(timeInSec);
             const coun = localStorage.getItem("ip_country");
             localStorage.clear();
@@ -480,8 +427,7 @@ const OTPConfirmation = ({
 
       const enc = encryptData(neemaData);
       const body = { data: enc };
-      const vendorSpecificBody =
-        vendor === "neema" || isExternalWithdrawal ? body : data;
+      const vendorSpecificBody = vendor === "neema" || isExternalWithdrawal ? body : data;
       axios
         .post(url, vendorSpecificBody, {
           headers: {
@@ -500,19 +446,13 @@ const OTPConfirmation = ({
         })
         .catch((err) => {
           const decrypted = decryptData(err.response.data.data);
-          const error = LimitsErrorMessage(
-            decrypted?.code ?? decrypted?.message,
-          );
+          const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message);
           console.log(decrypted);
           if (error) {
             setOtpError(t(error));
-          } else if (
-            decrypted.message?.toLowerCase()?.includes("account is locked")
-          ) {
-            const time =
-              decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
-            const timeInSec =
-              +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
+          } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+            const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+            const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
             setProfileLockTime(timeInSec);
             const coun = localStorage.getItem("ip_country");
             localStorage.clear();
@@ -589,9 +529,7 @@ const OTPConfirmation = ({
             purpose: requestObject.reason ?? "family support",
             sender: userDetails?._id,
             receiver: requestObject?.beneficiary?.[0]._id,
-            cycles: requestObject.unlimited
-              ? "unlimited"
-              : +requestObject.recCycle,
+            cycles: requestObject.unlimited ? "unlimited" : +requestObject.recCycle,
             date: date,
             description: requestObject.comment,
             payment_type: "payment_request",
@@ -667,12 +605,9 @@ const OTPConfirmation = ({
             account_id: userDetails?._id,
             service_id: intResend?.service_id,
             payer_id: intResend?.payer_id,
-            transaction_type:
-              userDetails?.account_type === "individual" ? "C2C" : "C2B",
+            transaction_type: userDetails?.account_type === "individual" ? "C2C" : "C2B",
             wallet_id: userWallets?.filter(
-              (it) =>
-                it?.currency?.code?.toLowerCase() ===
-                intResend?.currency?.toLowerCase(),
+              (it) => it?.currency?.code?.toLowerCase() === intResend?.currency?.toLowerCase(),
             )[0]?._id,
             token: intResend.token,
             type: typeOfAuth ?? "",
@@ -701,9 +636,7 @@ const OTPConfirmation = ({
                   ? "C2C"
                   : "C2B",
               wallet_id: userWallets?.filter(
-                (it) =>
-                  it?.currency?.code?.toLowerCase() ===
-                  intResend?.currency?.toLowerCase(),
+                (it) => it?.currency?.code?.toLowerCase() === intResend?.currency?.toLowerCase(),
               )[0]?._id,
               token: intResend?.token,
             },
@@ -711,15 +644,12 @@ const OTPConfirmation = ({
           };
       if (intResend?.userWithdrawals) {
         intResend?.payoutChannel?.value?.toLowerCase()?.includes("bank")
-          ? (data.data.bank_id =
-              intResend?.userWithdrawals?.bank_details?.[0]?._id)
-          : (data.data.mobile_wallet_id =
-              intResend?.userWithdrawals?.mobile_wallet?.[0]?._id);
+          ? (data.data.bank_id = intResend?.userWithdrawals?.bank_details?.[0]?._id)
+          : (data.data.mobile_wallet_id = intResend?.userWithdrawals?.mobile_wallet?.[0]?._id);
       } else {
         intResend?.payoutChannel?.value?.toLowerCase()?.includes("bank")
           ? (data.data.bank_id = intResend?.beneficiary?.bank_details?.[0]?._id)
-          : (data.data.mobile_wallet_id =
-              intResend?.beneficiary?.mobile_wallet?.[0]?._id);
+          : (data.data.mobile_wallet_id = intResend?.beneficiary?.mobile_wallet?.[0]?._id);
       }
     }
     resendHandler(
@@ -781,8 +711,7 @@ const OTPConfirmation = ({
           padding: "14px",
           // gap: '14px',
           paddingBottom: "1rem",
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
         className="otp_cont"
       >
@@ -847,9 +776,7 @@ const OTPConfirmation = ({
             >
               {verified
                 ? isCodeMethod
-                  ? t(
-                      "Verification code has been verified, You'll be redirected to the next step.",
-                    )
+                  ? t("Verification code has been verified, You'll be redirected to the next step.")
                   : t("The code was verified and you’re good to go!")
                 : isCodeMethod
                   ? hasApiMethods
@@ -858,19 +785,13 @@ const OTPConfirmation = ({
                         "A one-time verification code has been sent to your email address and phone number.",
                       ).replace(
                         "phone",
-                        userDetails?.phone?.slice(0, 3) === "971"
-                          ? "whatsapp"
-                          : "phone",
+                        userDetails?.phone?.slice(0, 3) === "971" ? "whatsapp" : "phone",
                       )
-                  : t(
-                      "Enter a code shown in the app to make sure everything works fine.",
-                    )}
+                  : t("Enter a code shown in the app to make sure everything works fine.")}
             </p>
           </div>
           {verified ? (
-            <span
-              style={{ fontSize: "12px", color: "#aeaeae", fontWeight: 600 }}
-            >
+            <span style={{ fontSize: "12px", color: "#aeaeae", fontWeight: 600 }}>
               {t("Moving To Next Step in")}{" "}
               <span style={{ color: "#5926f0", fontWeight: 800 }}>{timer}</span>
             </span>
@@ -967,11 +888,7 @@ const OTPConfirmation = ({
                 </span>
               )}
               {otpError && (
-                <span
-                  style={{ fontSize: ".8rem", fontWeight: 700, color: "red" }}
-                >
-                  {otpError}
-                </span>
+                <span style={{ fontSize: ".8rem", fontWeight: 700, color: "red" }}>{otpError}</span>
               )}
               {isCodeMethod && (
                 <span
@@ -1024,14 +941,9 @@ const OTPConfirmation = ({
                       textAlign: "center",
                     }}
                   >
-                    {t(
-                      "Choose your preferred method to receive your verification code:",
-                    )}
+                    {t("Choose your preferred method to receive your verification code:")}
                   </div>
-                  <div
-                    className={modalStyles.otpMethods}
-                    style={{ justifyContent: "center" }}
-                  >
+                  <div className={modalStyles.otpMethods} style={{ justifyContent: "center" }}>
                     {availableMethods
                       .filter((methodId) => methodId !== authType)
                       .map((methodId) => {
@@ -1042,9 +954,7 @@ const OTPConfirmation = ({
                             type="button"
                             key={methodId}
                             className={modalStyles.otpMethod}
-                            disabled={
-                              methodId !== "authenticator" && resendTimer > 0
-                            }
+                            disabled={methodId !== "authenticator" && resendTimer > 0}
                             onClick={() => {
                               inputRefs?.current?.[0]?.focus();
                               setOTPValues(Array(numberOfFields).fill(""));

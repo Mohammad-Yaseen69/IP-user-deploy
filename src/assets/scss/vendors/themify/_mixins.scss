@@ -40,12 +40,7 @@
   border-radius: $radius;
 }
 
-@mixin icon-stack(
-  $width: 2em,
-  $height: 2em,
-  $top-font-size: 1em,
-  $base-font-size: 2em
-) {
+@mixin icon-stack($width: 2em, $height: 2em, $top-font-size: 1em, $base-font-size: 2em) {
   .icon-stack {
     position: relative;
     display: inline-block;

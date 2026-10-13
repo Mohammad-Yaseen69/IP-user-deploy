@@ -9,17 +9,9 @@ const AssetStep = ({ assets = [], assetId, onSelect, isEuropean }) => {
 
   return (
     <>
-      <div
-        className={styles.optionList}
-        role="radiogroup"
-        aria-label={t("Asset")}
-      >
+      <div className={styles.optionList} role="radiogroup" aria-label={t("Asset")}>
         {assets.map((asset) => {
-          const badge = asset.owned
-            ? t("Active")
-            : asset.comingSoon
-              ? t("Coming Soon")
-              : undefined;
+          const badge = asset.owned ? t("Active") : asset.comingSoon ? t("Coming Soon") : undefined;
 
           const asideNote = asset.owned
             ? t("Already in your portfolio")
@@ -48,9 +40,7 @@ const AssetStep = ({ assets = [], assetId, onSelect, isEuropean }) => {
       </div>
 
       {isEuropean ? (
-        <Callout variant="warning">
-          {t("USDT is not available in your region.")}
-        </Callout>
+        <Callout variant="warning">{t("USDT is not available in your region.")}</Callout>
       ) : null}
 
       {/* <Callout variant="success">

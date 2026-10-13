@@ -47,8 +47,7 @@ const Sessions = () => {
 
   useEffect(() => {
     filteredSessions.sort(
-      (sessionA, sessionB) =>
-        new Date(sessionB.createdAt) - new Date(sessionA.createdAt),
+      (sessionA, sessionB) => new Date(sessionB.createdAt) - new Date(sessionA.createdAt),
     );
   }, []);
 
@@ -66,13 +65,7 @@ const Sessions = () => {
         <CardBody>
           {filteredSessions.length > 0
             ? filteredSessions.map((session, index) => {
-                return (
-                  <SessionItem
-                    key={session._id}
-                    session={session}
-                    index={index}
-                  />
-                );
+                return <SessionItem key={session._id} session={session} index={index} />;
               })
             : ""}
         </CardBody>

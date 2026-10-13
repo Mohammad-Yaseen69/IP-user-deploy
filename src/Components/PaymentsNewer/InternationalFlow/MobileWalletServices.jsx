@@ -29,11 +29,7 @@ const MobileWalletServices = ({ data, dataHandler, loading, error = "" }) => {
               key={item.name}
               onClick={() => dataHandler("mobile_wallet_service", item)}
             >
-              <img
-                src={data.payment_type?.icon}
-                alt=""
-                className={styles.icon}
-              />
+              <img src={data.payment_type?.icon} alt="" className={styles.icon} />
               <span>{item.name}</span>
 
               {!item?.active ? (
@@ -55,9 +51,7 @@ const MobileWalletServices = ({ data, dataHandler, loading, error = "" }) => {
             </div>
           ))
         ) : (
-          <div
-            style={{ margin: "1rem auto", fontSize: "1rem", fontWeight: "700" }}
-          >
+          <div style={{ margin: "1rem auto", fontSize: "1rem", fontWeight: "700" }}>
             {t("No Services Available.")}
           </div>
         )}

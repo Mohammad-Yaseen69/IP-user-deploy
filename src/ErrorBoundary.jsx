@@ -58,9 +58,7 @@ class ErrorBoundary extends Component {
           <div className="error-box">
             <div>
               <h1>
-                {t(
-                  "Oops! We cannot process your request at the moment, please try again later.",
-                )}
+                {t("Oops! We cannot process your request at the moment, please try again later.")}
               </h1>
               <p>
                 {t(
@@ -72,12 +70,8 @@ class ErrorBoundary extends Component {
               </div>
               <p>
                 {t("If the issue continues, please email us at")}{" "}
-                <a href="mailto:support@insta-pay.ch">
-                  {t("support@insta-pay.ch")}
-                </a>{" "}
-                {t(
-                  "with the Error ID, your username, and phone number for further assistance.",
-                )}
+                <a href="mailto:support@insta-pay.ch">{t("support@insta-pay.ch")}</a>{" "}
+                {t("with the Error ID, your username, and phone number for further assistance.")}
               </p>
               <button
                 style={{ marginTop: "30px" }}

@@ -58,16 +58,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
   }, [userDetails]);
 
   const checkAll = () => {
-    if (
-      nameDob &&
-      address &&
-      email &&
-      number &&
-      bankAccount &&
-      cards &&
-      creditInfo &&
-      otherInfo
-    ) {
+    if (nameDob && address && email && number && bankAccount && cards && creditInfo && otherInfo) {
       setNameDob(false);
       setAddress(false);
       setEmail(false);
@@ -140,41 +131,25 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
               : `${userDetails?.company?.company_name}`,
           ]
         : null,
-      nameDob
-        ? ["InstaPay Username", `${userDetails?.username ?? "N/A"}`]
-        : null,
+      nameDob ? ["InstaPay Username", `${userDetails?.username ?? "N/A"}`] : null,
       nameDob ? ["Date Of Birth", `${userDetails?.dob ?? "N/A"}`] : null,
-      nameDob && userDetails?.gender
-        ? ["Gender", `${userDetails?.gender ?? "N/A"}`]
-        : null,
+      nameDob && userDetails?.gender ? ["Gender", `${userDetails?.gender ?? "N/A"}`] : null,
       email ? ["Email Address", `${userDetails?.email ?? "N/A"}`] : null,
       number ? ["Phone Number", `+${userDetails?.phone ?? "N/A"}`] : null,
       address ? ["Address", `${userDetails?.address ?? "N/A"}`] : null,
       address ? ["City", `${userDetails?.city ?? "N/A"}`] : null,
-      address
-        ? ["Postal/Zip Code", `${userDetails?.postal_code ?? "N/A"}`]
-        : null,
+      address ? ["Postal/Zip Code", `${userDetails?.postal_code ?? "N/A"}`] : null,
       address ? ["Country", `${userDetails?.country_name ?? "N/A"}`] : null,
-      userDetails?.account_type
-        ? ["Account Type", `${userDetails?.account_type ?? "N/A"}`]
-        : null,
-      userDetails?.insta_bot
-        ? ["Linked Instagram", `${userDetails?.insta_bot ?? "N/A"}`]
-        : null,
+      userDetails?.account_type ? ["Account Type", `${userDetails?.account_type ?? "N/A"}`] : null,
+      userDetails?.insta_bot ? ["Linked Instagram", `${userDetails?.insta_bot ?? "N/A"}`] : null,
       userDetails?.user?.createdAt
-        ? [
-            "Member Since",
-            `${new Date(userDetails?.user?.createdAt).toLocaleString() ?? "N/A"}`,
-          ]
+        ? ["Member Since", `${new Date(userDetails?.user?.createdAt).toLocaleString() ?? "N/A"}`]
         : null,
     ];
     if (cards) {
       if (savedCards.length > 0) {
         savedCards?.forEach((item, i) =>
-          personalBody.push([
-            `Credit Card ${i + 1}`,
-            `XXXX XXXX XXXX ${item?.last4}`,
-          ]),
+          personalBody.push([`Credit Card ${i + 1}`, `XXXX XXXX XXXX ${item?.last4}`]),
         );
       } else {
         personalBody.push([`Credit Cards`, `N/A`]);
@@ -369,11 +344,8 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
               children: [
                 new Paragraph(
                   `${
-                    userDetails?.user?.createdAt
-                      ?.split("T")[0]
-                      ?.split("-")
-                      ?.reverse()
-                      ?.join("-") ?? "N/A"
+                    userDetails?.user?.createdAt?.split("T")[0]?.split("-")?.reverse()?.join("-") ??
+                    "N/A"
                   }`,
                 ),
               ],
@@ -509,16 +481,11 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
                     onClick={() => setNameDob(!nameDob)}
                     style={{ cursor: "pointer" }}
                   >
-                    <div
-                      className="h1 text-primary"
-                      style={{ marginBottom: 0, flexShrink: 0 }}
-                    >
+                    <div className="h1 text-primary" style={{ marginBottom: 0, flexShrink: 0 }}>
                       <Calendar size={24} />
                     </div>
                     <div>
-                      <div className="text-secondary">
-                        {t("Name and Date Of Birth")}
-                      </div>
+                      <div className="text-secondary">{t("Name and Date Of Birth")}</div>
                     </div>
                   </div>
                   <Input
@@ -535,10 +502,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
                     onClick={() => setAddress(!address)}
                     style={{ cursor: "pointer" }}
                   >
-                    <div
-                      className="h1 text-primary"
-                      style={{ marginBottom: 0, flexShrink: 0 }}
-                    >
+                    <div className="h1 text-primary" style={{ marginBottom: 0, flexShrink: 0 }}>
                       <Home size={24} />
                     </div>
                     <div>
@@ -558,10 +522,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
                     onClick={() => setEmail(!email)}
                     style={{ cursor: "pointer" }}
                   >
-                    <div
-                      className="h1 text-primary"
-                      style={{ marginBottom: 0, flexShrink: 0 }}
-                    >
+                    <div className="h1 text-primary" style={{ marginBottom: 0, flexShrink: 0 }}>
                       <Mail size={24} />
                     </div>
                     <div>
@@ -581,10 +542,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
                     onClick={() => setNumber(!number)}
                     style={{ cursor: "pointer" }}
                   >
-                    <div
-                      className="h1 text-primary"
-                      style={{ marginBottom: 0, flexShrink: 0 }}
-                    >
+                    <div className="h1 text-primary" style={{ marginBottom: 0, flexShrink: 0 }}>
                       <Phone size={24} />
                     </div>
                     <div>
@@ -618,10 +576,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
                   onClick={() => setBankAccount(!bankAccount)}
                   style={{ cursor: "pointer" }}
                 >
-                  <div
-                    className="h1 text-primary"
-                    style={{ marginBottom: 0, flexShrink: 0 }}
-                  >
+                  <div className="h1 text-primary" style={{ marginBottom: 0, flexShrink: 0 }}>
                     <User size={24} />
                   </div>
                   <div>
@@ -642,16 +597,11 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
                   onClick={() => setCards(!cards)}
                   style={{ cursor: "pointer" }}
                 >
-                  <div
-                    className="h1 text-primary"
-                    style={{ marginBottom: 0, flexShrink: 0 }}
-                  >
+                  <div className="h1 text-primary" style={{ marginBottom: 0, flexShrink: 0 }}>
                     <CreditCard size={24} />
                   </div>
                   <div>
-                    <div className="text-secondary">
-                      {t("Debit or credit cards")}
-                    </div>
+                    <div className="text-secondary">{t("Debit or credit cards")}</div>
                   </div>
                 </div>
                 <Input
@@ -673,9 +623,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
                     onClick={() => setCreditInfo(!creditInfo)}
                     style={{ cursor: "pointer" }}
                   >
-                    <h6 style={{ marginBottom: "0.5rem" }}>
-                      {t("Credit Information")}
-                    </h6>
+                    <h6 style={{ marginBottom: "0.5rem" }}>{t("Credit Information")}</h6>
                     <span className="text-secondary small d-block">
                       {t("Includes your credit application information")}
                     </span>
@@ -742,8 +690,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
           <div className="mt-5 d-flex justify-content-end">
             <Button
               style={{
-                background:
-                  "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                 border: "none",
                 outline: "none",
                 borderRadius: "10px",

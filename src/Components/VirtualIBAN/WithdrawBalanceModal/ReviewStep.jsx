@@ -2,11 +2,7 @@ import { useTranslation } from "react-i18next";
 import { TRANSFER_SPEEDS } from "../../../stateMachines/withdrawBalance";
 import { Euro } from "../../MyMasterCard/files";
 import { getAmountNumber } from "../utils/amount";
-import {
-  formatWithdrawFee,
-  getSavedBankName,
-  getSavedBankSubtitle,
-} from "./DestinationStep";
+import { formatWithdrawFee, getSavedBankName, getSavedBankSubtitle } from "./DestinationStep";
 import styles from "./withdrawBalance.module.scss";
 
 const ReviewStep = ({
@@ -37,16 +33,10 @@ const ReviewStep = ({
           <span className={styles.reviewRowLabel}>{t("From")}</span>
           <div className={styles.reviewRowComplex}>
             <div className={styles.reviewRowMain}>
-              <img
-                src={Euro}
-                alt=""
-                style={{ width: 16, height: 12, borderRadius: 2 }}
-              />
+              <img src={Euro} alt="" style={{ width: 16, height: 12, borderRadius: 2 }} />
               {selectedIban?.title || `${currencyCode} IBAN`}
             </div>
-            <span className={styles.reviewRowSub}>
-              {selectedIban?.iban || "-"}
-            </span>
+            <span className={styles.reviewRowSub}>{selectedIban?.iban || "-"}</span>
           </div>
         </div>
 
@@ -78,9 +68,7 @@ const ReviewStep = ({
               {selectedBank ? getSavedBankName(selectedBank) : "-"}
             </span>
             {selectedBank && (
-              <span className={styles.reviewRowSub}>
-                {getSavedBankSubtitle(selectedBank)}
-              </span>
+              <span className={styles.reviewRowSub}>{getSavedBankSubtitle(selectedBank)}</span>
             )}
           </div>
         </div>

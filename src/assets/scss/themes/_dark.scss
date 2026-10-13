@@ -594,16 +594,12 @@ body {
     .react-datepicker__time-container {
       border-left: 1px solid $dark-card-border;
     }
-    .react-datepicker-popper[data-placement^="bottom"]
-      .react-datepicker__triangle::before,
-    .react-datepicker-popper[data-placement^="bottom"]
-      .react-datepicker__triangle::after {
+    .react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle::before,
+    .react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle::after {
       border-bottom-color: $dark-body-background;
     }
-    .react-datepicker-popper[data-placement^="top"]
-      .react-datepicker__triangle::before,
-    .react-datepicker-popper[data-placement^="top"]
-      .react-datepicker__triangle::after {
+    .react-datepicker-popper[data-placement^="top"] .react-datepicker__triangle::before,
+    .react-datepicker-popper[data-placement^="top"] .react-datepicker__triangle::after {
       border-top-color: $dark-body-background;
     }
     .react-datepicker__header {
@@ -3054,11 +3050,10 @@ body {
         }
       }
     }
-    $alert-name:
-      primary, secondary, success, danger, warning, info, light, dark;
+    $alert-name: primary, secondary, success, danger, warning, info, light, dark;
     $alert-color:
-      $primary-color, $secondary-color, $success-color, $danger-color,
-      $warning-color, $info-color, $light-color, $dark-color;
+      $primary-color, $secondary-color, $success-color, $danger-color, $warning-color, $info-color,
+      $light-color, $dark-color;
     @each $var in $alert-name {
       $i: index($alert-name, $var);
       .alert-#{$var} {
@@ -5877,18 +5872,10 @@ body {
       }
       &.fullscreen {
         &::before {
-          background: linear-gradient(
-            to right,
-            $dark-body-background 0,
-            rgba(0, 0, 0, 0) 100%
-          );
+          background: linear-gradient(to right, $dark-body-background 0, rgba(0, 0, 0, 0) 100%);
         }
         &::after {
-          background: linear-gradient(
-            to right,
-            rgba(0, 0, 0, 0) 0,
-            $dark-body-background 100%
-          );
+          background: linear-gradient(to right, rgba(0, 0, 0, 0) 0, $dark-body-background 100%);
         }
       }
     }
@@ -5975,8 +5962,7 @@ body {
         &.active {
           background-color: $dark-card-background;
           color: $dark-all-font-color;
-          border-color: $dark-card-border $dark-card-border
-            $dark-card-background;
+          border-color: $dark-card-border $dark-card-border $dark-card-background;
         }
         &:hover,
         &:focus {
@@ -5987,8 +5973,7 @@ body {
         .nav-link {
           background-color: $dark-card-background;
           color: $dark-all-font-color;
-          border-color: $dark-border-color $dark-border-color
-            $dark-card-background;
+          border-color: $dark-border-color $dark-border-color $dark-card-background;
         }
       }
     }
@@ -6013,8 +5998,7 @@ body {
           &.active,
           &.focus,
           &.hover {
-            border-color: $dark-card-background $dark-border-color
-              $dark-border-color;
+            border-color: $dark-card-background $dark-border-color $dark-border-color;
           }
         }
       }
@@ -6561,10 +6545,9 @@ body {
         }
       }
     }
-    @each $btn-name, $btn-color in (primary, var(--theme-default)),
-      (secondary, $secondary-color), (success, $success-color),
-      (danger, $danger-color), (info, $info-color), (light, $light-color),
-      (dark, $dark-color), (warning, $warning-color)
+    @each $btn-name, $btn-color in (primary, var(--theme-default)), (secondary, $secondary-color),
+      (success, $success-color), (danger, $danger-color), (info, $info-color),
+      (light, $light-color), (dark, $dark-color), (warning, $warning-color)
     {
       .radio-#{$btn-name} {
         input[type="radio"] {
@@ -6589,10 +6572,9 @@ body {
         }
       }
     }
-    @each $btn-name, $btn-color in (primary, var(--theme-default)),
-      (secondary, $secondary-color), (success, $success-color),
-      (danger, $danger-color), (info, $info-color), (light, $light-color),
-      (dark, $dark-color), (warning, $warning-color)
+    @each $btn-name, $btn-color in (primary, var(--theme-default)), (secondary, $secondary-color),
+      (success, $success-color), (danger, $danger-color), (info, $info-color),
+      (light, $light-color), (dark, $dark-color), (warning, $warning-color)
     {
       .checkbox-#{$btn-name} {
         label {
@@ -6602,10 +6584,9 @@ body {
         }
       }
     }
-    @each $btn-name, $btn-color in (primary, var(--theme-default)),
-      (secondary, $secondary-color), (success, $success-color),
-      (danger, $danger-color), (info, $info-color), (light, $light-color),
-      (dark, $dark-color), (warning, $warning-color)
+    @each $btn-name, $btn-color in (primary, var(--theme-default)), (secondary, $secondary-color),
+      (success, $success-color), (danger, $danger-color), (info, $info-color),
+      (light, $light-color), (dark, $dark-color), (warning, $warning-color)
     {
       .checkbox-solid-#{$btn-name} {
         label {

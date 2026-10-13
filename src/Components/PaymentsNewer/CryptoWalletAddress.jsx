@@ -23,8 +23,7 @@ const CryptoWalletAddress = ({ setWallet, setSubStep, wallet }) => {
           padding: "30px 20px",
           gap: "14px",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
       >
         <p style={{ fontSize: "1rem", color: "#7d7d7d", marginBottom: 0 }}>

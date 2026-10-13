@@ -180,11 +180,7 @@
 .feeCardPrimary {
   border-radius: var(--md, 15px);
   border: 1px solid var(--border-subtle, #e1e5ee);
-  background: linear-gradient(
-    145deg,
-    #5926f0 6.59%,
-    var(--blue-blue-700, #3b17a8) 93.41%
-  );
+  background: linear-gradient(145deg, #5926f0 6.59%, var(--blue-blue-700, #3b17a8) 93.41%);
 
   .feeLabel {
     color: rgba(255, 255, 255, 0.8);

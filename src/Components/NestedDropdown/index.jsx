@@ -33,10 +33,7 @@ const NestedDropdown = ({
         ...style,
       }}
     >
-      <div
-        className={styles.value}
-        onClick={() => setShowDropdown(!showDropdown)}
-      >
+      <div className={styles.value} onClick={() => setShowDropdown(!showDropdown)}>
         {t(parent?.[current] ?? child?.[current]) ||
           t(defaultValue || "Relationship With Beneficiary")}
       </div>
@@ -57,8 +54,7 @@ const NestedDropdown = ({
             >
               <div className={styles.dd_item}>
                 <span>{t(parent?.[item])}</span>
-                {parent?.[item] === subKey &&
-                  (showSub ? <ChevronUp /> : <ChevronDown />)}
+                {parent?.[item] === subKey && (showSub ? <ChevronUp /> : <ChevronDown />)}
               </div>
               {parent?.[item] === subKey && showSub
                 ? Object.keys(child).map((it) => (

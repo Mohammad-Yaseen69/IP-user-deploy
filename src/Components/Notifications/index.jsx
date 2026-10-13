@@ -64,10 +64,7 @@ const Notifications = ({ hideShadow = false }) => {
 
     window.addEventListener("instapay:new_notification", handleNewNotification);
     return () => {
-      window.removeEventListener(
-        "instapay:new_notification",
-        handleNewNotification,
-      );
+      window.removeEventListener("instapay:new_notification", handleNewNotification);
     };
   }, []);
 
@@ -77,9 +74,7 @@ const Notifications = ({ hideShadow = false }) => {
         xs="auto"
         style={{
           padding: ".5rem",
-          boxShadow: hideShadow
-            ? "none"
-            : "0px 9.94788px 10.7769px rgba(109, 41, 220, 0.17)",
+          boxShadow: hideShadow ? "none" : "0px 9.94788px 10.7769px rgba(109, 41, 220, 0.17)",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",

@@ -37,8 +37,7 @@ const Beneficiaries = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const { beneficiaries, verifyToken, getUserBeneficiaries, userDetails } =
-    useContext(UserContext);
+  const { beneficiaries, verifyToken, getUserBeneficiaries, userDetails } = useContext(UserContext);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
@@ -60,11 +59,8 @@ const Beneficiaries = () => {
     verifyToken();
 
     if (!USE_NEW_BENEFICIARY_FLOW) {
-      const businessPath =
-        beneficiary?.beneficiary_type === "business" ? "/business" : "";
-      navigate(
-        `/beneficiaries/edit${businessPath}?user_id=${beneficiary?._id}&${mode}=true`,
-      );
+      const businessPath = beneficiary?.beneficiary_type === "business" ? "/business" : "";
+      navigate(`/beneficiaries/edit${businessPath}?user_id=${beneficiary?._id}&${mode}=true`);
       return;
     }
 
@@ -78,10 +74,8 @@ const Beneficiaries = () => {
     const q = searchTerm.trim().toLowerCase();
 
     const list = (beneficiaries || []).filter((item) => {
-      if (typeFilter === "business" && item?.beneficiary_type !== "business")
-        return false;
-      if (typeFilter === "individual" && item?.beneficiary_type === "business")
-        return false;
+      if (typeFilter === "business" && item?.beneficiary_type !== "business") return false;
+      if (typeFilter === "individual" && item?.beneficiary_type === "business") return false;
 
       if (!q) return true;
       return [
@@ -101,17 +95,14 @@ const Beneficiaries = () => {
         return sortBy === "date_desc" ? -diff : diff;
       }
       if (sortBy === "type") {
-        return (a?.beneficiary_type || "").localeCompare(
-          b?.beneficiary_type || "",
-        );
+        return (a?.beneficiary_type || "").localeCompare(b?.beneficiary_type || "");
       }
       const cmp = getDisplayName(a).localeCompare(getDisplayName(b));
       return sortBy === "name_desc" ? -cmp : cmp;
     });
   }, [beneficiaries, searchTerm, typeFilter, sortBy]);
 
-  const toggleMenu = (name) =>
-    setOpenMenu((prev) => (prev === name ? null : name));
+  const toggleMenu = (name) => setOpenMenu((prev) => (prev === name ? null : name));
 
   const renderToolbar = () => (
     <div className={styles.toolbar}>
@@ -122,9 +113,7 @@ const Beneficiaries = () => {
           onClick={() => toggleMenu("filter")}
         >
           <Filter size={16} /> {t("Filter")}
-          {activeFilterCount > 0 && (
-            <span className={styles.badge}>{activeFilterCount}</span>
-          )}
+          {activeFilterCount > 0 && <span className={styles.badge}>{activeFilterCount}</span>}
         </Button>
         {openMenu === "filter" && (
           <div className={styles.menu}>

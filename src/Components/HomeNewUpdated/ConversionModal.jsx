@@ -66,9 +66,7 @@ const ConversionModal = ({
     if (!quoteExpiresAt) return undefined;
 
     const tick = () =>
-      setSecondsLeft(
-        Math.max(0, Math.round((quoteExpiresAt - Date.now()) / 1000)),
-      );
+      setSecondsLeft(Math.max(0, Math.round((quoteExpiresAt - Date.now()) / 1000)));
     tick();
     const timer = setInterval(tick, 1000);
     return () => clearInterval(timer);
@@ -81,11 +79,9 @@ const ConversionModal = ({
   }, [quoteUnavailable]);
 
   const currentWallet =
-    senderWallet ||
-    userWallets.filter((item) => item.currency.code === currency)[0];
+    senderWallet || userWallets.filter((item) => item.currency.code === currency)[0];
   const exchangedWallet =
-    receiverWallet ||
-    userWallets.filter((item) => item.currency.code === exchangeCurrency)[0];
+    receiverWallet || userWallets.filter((item) => item.currency.code === exchangeCurrency)[0];
 
   const numberOfFields = 6;
   const [otpValues, setOTPValues] = useState(Array(numberOfFields).fill(""));
@@ -235,8 +231,7 @@ const ConversionModal = ({
 
     if (+currentWallet.balance.available >= +amount) {
       const isCryptoConversion =
-        currentWallet?.wallet_type === "crypto" ||
-        exchangedWallet?.wallet_type === "crypto";
+        currentWallet?.wallet_type === "crypto" || exchangedWallet?.wallet_type === "crypto";
 
       if (isCryptoConversion && !fxDet?.token) {
         setError(t("The quoted rate has expired, please start again."));
@@ -250,9 +245,7 @@ const ConversionModal = ({
         amount: +amount,
       };
 
-      const encrpted = encryptData(
-        isCryptoConversion ? { token: fxDet?.token, ...data } : data,
-      );
+      const encrpted = encryptData(isCryptoConversion ? { token: fxDet?.token, ...data } : data);
       axios
         .post(
           `${import.meta.env.VITE_IP_DEV_API}/api/wallet/insta-wallet-conversion${isCryptoConversion ? "/transfer" : ""}`,
@@ -281,18 +274,12 @@ const ConversionModal = ({
             );
             return;
           }
-          const error = LimitsErrorMessage(
-            decrypted?.code ?? decrypted?.message,
-          );
+          const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message);
           if (error) {
             reset();
             setError(error);
           } else {
-            setError(
-              t(
-                "We cannot process your request at the moment, please try again later.",
-              ),
-            );
+            setError(t("We cannot process your request at the moment, please try again later."));
           }
         })
         .finally(() => {
@@ -325,9 +312,7 @@ const ConversionModal = ({
       >
         {t("Currency Conversion")}
       </ModalHeader>
-      <ModalBody
-        style={{ padding: step > 1 ? "0px" : "1rem", overflow: "hidden" }}
-      >
+      <ModalBody style={{ padding: step > 1 ? "0px" : "1rem", overflow: "hidden" }}>
         {step === 1 && (
           <div
             style={{
@@ -368,9 +353,7 @@ const ConversionModal = ({
             </div>
             <div className={styles.two_items} style={{ flexWrap: "wrap" }}>
               <div className={styles.currency_info}>
-                <span style={{ whiteSpace: "nowrap" }}>
-                  {t("Exchange Rate")}:
-                </span>
+                <span style={{ whiteSpace: "nowrap" }}>{t("Exchange Rate")}:</span>
                 <p style={{ whiteSpace: "nowrap" }}>
                   {Number(fxDet?.exchange_rate)?.toLocaleString("en-US", {
                     minimumFractionDigits: 2,
@@ -392,17 +375,13 @@ const ConversionModal = ({
             </div>
             <div className={styles.two_items} style={{ flexWrap: "wrap" }}>
               <div className={styles.currency_info}>
-                <span style={{ whiteSpace: "nowrap" }}>
-                  {t("Amount After Fee")}:{" "}
-                </span>
+                <span style={{ whiteSpace: "nowrap" }}>{t("Amount After Fee")}: </span>
                 <p style={{ whiteSpace: "nowrap" }}>
                   {formatCurrency(fxDet?.sending?.amount)} {currency}
                 </p>
               </div>
               <div className={styles.currency_info}>
-                <span style={{ whiteSpace: "nowrap" }}>
-                  {t("You Will Receive")}:{" "}
-                </span>
+                <span style={{ whiteSpace: "nowrap" }}>{t("You Will Receive")}: </span>
                 <p style={{ whiteSpace: "nowrap" }}>
                   {Number(fxDet?.receiver?.amount)?.toLocaleString("en-US", {
                     minimumFractionDigits: 2,
@@ -744,10 +723,7 @@ const ConversionModal = ({
             }}
             className="confirm_container"
           >
-            <h4
-              style={{ color: "#5936f0", wordBreak: "normal" }}
-              className="head_confirm"
-            >
+            <h4 style={{ color: "#5936f0", wordBreak: "normal" }} className="head_confirm">
               {t("Your funds have been credited to your wallet.")}
             </h4>
             <video
@@ -762,10 +738,7 @@ const ConversionModal = ({
               }}
             ></video>
             <div className={styles.two_items} style={{ marginBottom: "2rem" }}>
-              <div
-                className={styles.currency_info}
-                style={{ flex: 6, justifyContent: "center" }}
-              >
+              <div className={styles.currency_info} style={{ flex: 6, justifyContent: "center" }}>
                 <p
                   style={{
                     fontSize: window.innerWidth < 420 ? "13px" : "17px",
@@ -775,10 +748,7 @@ const ConversionModal = ({
                   {exchangedWallet?.wallet_id}
                 </p>
               </div>
-              <div
-                className={styles.currency_info}
-                style={{ flex: 4, justifyContent: "center" }}
-              >
+              <div className={styles.currency_info} style={{ flex: 4, justifyContent: "center" }}>
                 <p
                   style={{
                     fontSize: window.innerWidth < 420 ? "13px" : "17px",

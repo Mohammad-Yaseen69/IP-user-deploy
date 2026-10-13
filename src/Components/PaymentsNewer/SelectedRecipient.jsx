@@ -34,9 +34,7 @@ const SelectedRecipient = ({
           alignItems: "flex-start",
         }}
       >
-        <div
-          style={{ display: "flex", alignItems: "flex-start", gap: ".5rem" }}
-        >
+        <div style={{ display: "flex", alignItems: "flex-start", gap: ".5rem" }}>
           <div
             style={{
               display: "flex",
@@ -84,9 +82,7 @@ const SelectedRecipient = ({
             )}
           </div>
           <div>
-            <div
-              style={{ display: "flex", gap: ".3rem", alignItems: "center" }}
-            >
+            <div style={{ display: "flex", gap: ".3rem", alignItems: "center" }}>
               <h5
                 className="mb-0"
                 style={{
@@ -103,8 +99,7 @@ const SelectedRecipient = ({
                     : (`${user?.company_name}` ?? "")
                   : user?.user
                     ? user?.account_type === "individual"
-                      ? (`${user?.user?.first_name} ${user?.user?.last_name}` ??
-                        "")
+                      ? (`${user?.user?.first_name} ${user?.user?.last_name}` ?? "")
                       : (`${user?.company?.company_name}` ?? "")
                     : user?.account_type === "individual"
                       ? (`${user?.first_name} ${user?.last_name}` ?? "")
@@ -156,9 +151,7 @@ const SelectedRecipient = ({
                 }}
                 draggable="false"
               />
-              <span style={{ fontSize: ".6rem", fontWeight: "700" }}>
-                {country?.name}
-              </span>
+              <span style={{ fontSize: ".6rem", fontWeight: "700" }}>{country?.name}</span>
             </div>
             {/* <div style={{ display: "flex", alignItems: "center", gap: ".5rem", marginTop: ".4rem" }}>
                             <img src={countries.filter(it => user?.country ? it.name.toLowerCase().includes(user?.country_name?.toLowerCase()) : it.name.toLowerCase().includes(user?.country?.toLowerCase()))[0]?.file_url} alt="flag" style={{ borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)", width: "30px", height: "20px", objectFit: "cover" }} draggable="false" />

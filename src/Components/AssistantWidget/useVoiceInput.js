@@ -12,9 +12,7 @@ const MIME_CANDIDATES = [
 
 const pickMimeType = () => {
   if (typeof MediaRecorder === "undefined") return null;
-  return (
-    MIME_CANDIDATES.find((type) => MediaRecorder.isTypeSupported?.(type)) ?? ""
-  );
+  return MIME_CANDIDATES.find((type) => MediaRecorder.isTypeSupported?.(type)) ?? "";
 };
 
 export const isVoiceInputSupported = () =>
@@ -70,8 +68,7 @@ export const useVoiceInput = ({ authedFetch, onTranscript }) => {
           body: JSON.stringify({ audio: await blobToBase64(blob), mimeType }),
         });
 
-        if (!response.ok)
-          throw new Error(`Transcription failed with ${response.status}`);
+        if (!response.ok) throw new Error(`Transcription failed with ${response.status}`);
 
         const { data } = await response.json();
         const text = data?.text;
@@ -100,10 +97,7 @@ export const useVoiceInput = ({ authedFetch, onTranscript }) => {
       streamRef.current = stream;
 
       const mimeType = pickMimeType();
-      const recorder = new MediaRecorder(
-        stream,
-        mimeType ? { mimeType } : undefined,
-      );
+      const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
       recorderRef.current = recorder;
 
       const chunks = [];
@@ -120,13 +114,11 @@ export const useVoiceInput = ({ authedFetch, onTranscript }) => {
       if (isMountedRef.current) setStatus("recording");
 
       timeoutRef.current = setTimeout(() => {
-        if (recorderRef.current?.state === "recording")
-          recorderRef.current.stop();
+        if (recorderRef.current?.state === "recording") recorderRef.current.stop();
       }, MAX_RECORDING_MS);
     } catch (cause) {
       releaseStream();
-      const denied =
-        cause?.name === "NotAllowedError" || cause?.name === "SecurityError";
+      const denied = cause?.name === "NotAllowedError" || cause?.name === "SecurityError";
       if (isMountedRef.current) {
         setError(denied ? "permission_denied" : "recording_failed");
         setStatus("idle");

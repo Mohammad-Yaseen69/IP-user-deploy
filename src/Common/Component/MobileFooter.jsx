@@ -8,12 +8,7 @@ const MobileFooter = ({ label, disabled, handleAction, handleBack }) => {
       <button type="button" className={styles.backBtn} onClick={handleBack}>
         <ChevronLeft size={24} />
       </button>
-      <button
-        type="button"
-        className={styles.nextBtn}
-        disabled={disabled}
-        onClick={handleAction}
-      >
+      <button type="button" className={styles.nextBtn} disabled={disabled} onClick={handleAction}>
         {label}
       </button>
     </div>

@@ -20,8 +20,7 @@ import { useTranslation } from "react-i18next";
 
 const BottomNav = ({ setShowModal }) => {
   const { toggleSidebar } = useContext(MobileSbContext);
-  const { userDetails, profileCompletedPercentage, verifyToken } =
-    useContext(UserContext);
+  const { userDetails, profileCompletedPercentage, verifyToken } = useContext(UserContext);
   const [dontShow, setDontShow] = useState(false);
   const location = useLocation();
 
@@ -124,15 +123,13 @@ const BottomNav = ({ setShowModal }) => {
             <li
               key={item.icon}
               className={`${styles.bnl_item} ${
-                (location.pathname === item.link ||
-                  location.pathname === item.otherLink) &&
+                (location.pathname === item.link || location.pathname === item.otherLink) &&
                 styles.bnli_a
               }`}
             >
               {item.type === "link" ? (
                 <Link to={item.link} onClick={verifyToken}>
-                  {(location.pathname === item.link ||
-                    location.pathname === item.otherLink) && (
+                  {(location.pathname === item.link || location.pathname === item.otherLink) && (
                     <img
                       src={item.icon_active}
                       alt="icon"
@@ -140,15 +137,9 @@ const BottomNav = ({ setShowModal }) => {
                       width={item.width}
                     />
                   )}
-                  {location.pathname !== item.link &&
-                    location.pathname !== item.otherLink && (
-                      <img
-                        src={item.icon}
-                        alt="icon"
-                        height={item.height}
-                        width={item.width}
-                      />
-                    )}
+                  {location.pathname !== item.link && location.pathname !== item.otherLink && (
+                    <img src={item.icon} alt="icon" height={item.height} width={item.width} />
+                  )}
                   <div></div>
                 </Link>
               ) : item.type === "button" ? (
@@ -158,17 +149,12 @@ const BottomNav = ({ setShowModal }) => {
                     setShowFixed(true);
                   }}
                 >
-                  <img
-                    src={item.icon}
-                    alt="icon"
-                    style={{ transform: "translateX(1px)" }}
-                  />
+                  <img src={item.icon} alt="icon" style={{ transform: "translateX(1px)" }} />
                 </button>
               ) : (
                 <img
                   src={
-                    location.pathname === item.link ||
-                    location.pathname === item.otherLink
+                    location.pathname === item.link || location.pathname === item.otherLink
                       ? item.icon_active
                       : item.icon
                   }
@@ -184,19 +170,13 @@ const BottomNav = ({ setShowModal }) => {
       </nav>
       {showFixed && userDetails?.username ? (
         <div className={styles.fixed} onClick={() => setShowFixed(false)}>
-          <Link
-            to={"/payments?payment_action=send_money"}
-            onClick={verifyToken}
-          >
+          <Link to={"/payments?payment_action=send_money"} onClick={verifyToken}>
             <div className={`${styles.f_btn} ${styles.f_btn_w}`}>
               <img src={sm} alt="" />
               <span>{t("Send Payment")}</span>
             </div>
           </Link>
-          <Link
-            to={"/payments?payment_action=send_money&send_type=qr_pay"}
-            onClick={verifyToken}
-          >
+          <Link to={"/payments?payment_action=send_money&send_type=qr_pay"} onClick={verifyToken}>
             <div className={`${styles.f_btn}`}>
               <img src={qr} alt="" />
               <span>{t("Quick QR Pay")}</span>

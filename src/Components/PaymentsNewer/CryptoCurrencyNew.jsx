@@ -45,9 +45,7 @@ const CryptoCurrencyNew = ({ cryptoCurrency, setCryptoCurrency }) => {
   const currenciesData = useMemo(() => {
     if (!userWallets) return [];
 
-    const cryptoWallets = userWallets.filter(
-      (item) => item.wallet_type === "crypto",
-    );
+    const cryptoWallets = userWallets.filter((item) => item.wallet_type === "crypto");
 
     const filtered = cryptoWallets.map((wallet) => {
       const code = wallet?.currency?.code?.toLowerCase();
@@ -83,9 +81,7 @@ const CryptoCurrencyNew = ({ cryptoCurrency, setCryptoCurrency }) => {
           padding: isBig ? "30px" : "5px",
           gap: "1rem",
           paddingBottom: 0,
-          boxShadow: isBig
-            ? "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)"
-            : "none",
+          boxShadow: isBig ? "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)" : "none",
         }}
         className="c_f_c"
       >
@@ -103,9 +99,7 @@ const CryptoCurrencyNew = ({ cryptoCurrency, setCryptoCurrency }) => {
                 height: "fit-content",
                 padding: "1rem",
                 boxShadow:
-                  item.value === cryptoCurrency.value
-                    ? `0 0 10px ${item.item_bg}`
-                    : "none",
+                  item.value === cryptoCurrency.value ? `0 0 10px ${item.item_bg}` : "none",
                 opacity: item.disabled && 0.5,
               }}
             >

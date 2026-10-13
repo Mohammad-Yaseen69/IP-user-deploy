@@ -14,9 +14,7 @@ const BroadcastPage = () => {
             <p>{t("Please close this tab, or click the button below")}</p>
           </div>
 
-          <button onClick={() => window.location.reload()}>
-            {t("Open here")}
-          </button>
+          <button onClick={() => window.location.reload()}>{t("Open here")}</button>
         </div>
       </div>
     </div>

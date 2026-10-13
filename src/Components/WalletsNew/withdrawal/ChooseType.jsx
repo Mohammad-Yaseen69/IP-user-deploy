@@ -40,16 +40,13 @@ const ChooseType = ({ selected, setter }) => {
           padding: "1.5rem",
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
       >
         <Card
           style={{ marginBottom: 0, borderRadius: "12px" }}
           onClick={() => {
-            defaultWithdrawal
-              ? setter("default")
-              : navigate("/settings?tab=withdrawal");
+            defaultWithdrawal ? setter("default") : navigate("/settings?tab=withdrawal");
           }}
         >
           <CardBody
@@ -72,16 +69,10 @@ const ChooseType = ({ selected, setter }) => {
               }}
             >
               <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>
-                {defaultWithdrawal
-                  ? t("Default Receiving Account")
-                  : t("Setup Default Account")}
+                {defaultWithdrawal ? t("Default Receiving Account") : t("Setup Default Account")}
               </h5>
             </div>
-            {selected === "default" ? (
-              <Check color="green" size={24} />
-            ) : (
-              <img src={i} alt="i" />
-            )}
+            {selected === "default" ? <Check color="green" size={24} /> : <img src={i} alt="i" />}
           </CardBody>
         </Card>
         <Card
@@ -113,11 +104,7 @@ const ChooseType = ({ selected, setter }) => {
                 {t("Specify Receiving Account")}
               </h5>
             </div>
-            {selected === "specify" ? (
-              <Check color="green" size={24} />
-            ) : (
-              <img src={i} alt="i" />
-            )}
+            {selected === "specify" ? <Check color="green" size={24} /> : <img src={i} alt="i" />}
           </CardBody>
         </Card>
       </div>

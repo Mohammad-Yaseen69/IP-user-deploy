@@ -17,13 +17,7 @@ export const SIDEBAR_STEPS = [
   { stepName: STEPS.DONE, stepLabel: "STEP 04", label: "Done" },
 ];
 
-const ORDER = [
-  STEPS.AMOUNT,
-  STEPS.BENEFICIARY,
-  STEPS.REVIEW,
-  STEPS.OTP,
-  STEPS.DONE,
-];
+const ORDER = [STEPS.AMOUNT, STEPS.BENEFICIARY, STEPS.REVIEW, STEPS.OTP, STEPS.DONE];
 
 export const transitions = {
   [STEPS.AMOUNT]: { next: () => STEPS.BENEFICIARY, back: () => null },
@@ -53,11 +47,9 @@ export const getAmountNumber = (value) => {
 export const MIN_PAYOUT_AMOUNT = 10;
 
 const toCents = (value) => Math.round(getAmountNumber(value) * 100);
-const toSpendableCents = (balance) =>
-  Math.floor(getAmountNumber(balance) * 100 + 1e-6);
+const toSpendableCents = (balance) => Math.floor(getAmountNumber(balance) * 100 + 1e-6);
 
-export const getSpendableBalance = (availableBalance) =>
-  toSpendableCents(availableBalance) / 100;
+export const getSpendableBalance = (availableBalance) => toSpendableCents(availableBalance) / 100;
 
 export const getQuickAmounts = (availableBalance, percentages) => {
   const spendableCents = toSpendableCents(availableBalance);
@@ -69,16 +61,11 @@ export const getQuickAmounts = (availableBalance, percentages) => {
     .filter(({ value }) => value > 0);
 };
 
-export const getAmountError = (
-  amount,
-  availableBalance,
-  cryptoCurrency = "",
-) => {
+export const getAmountError = (amount, availableBalance, cryptoCurrency = "") => {
   const value = getAmountNumber(amount);
   if (!String(amount ?? "").trim()) return "";
   if (value <= 0) return "Enter an amount greater than zero.";
-  if (value < MIN_PAYOUT_AMOUNT)
-    return `Minimum amount is ${MIN_PAYOUT_AMOUNT} ${cryptoCurrency}.`;
+  if (value < MIN_PAYOUT_AMOUNT) return `Minimum amount is ${MIN_PAYOUT_AMOUNT} ${cryptoCurrency}.`;
   if (toCents(value) > toSpendableCents(availableBalance))
     return "Amount exceeds your available balance.";
   return "";
@@ -89,27 +76,13 @@ export const getDisabledState = (stepName, data) => {
     case STEPS.AMOUNT: {
       const amount = getAmountNumber(data.amount);
       return (
-        amount <= 0 ||
-        !!getAmountError(
-          data.amount,
-          data.availableBalance,
-          data.cryptoCurrency,
-        )
+        amount <= 0 || !!getAmountError(data.amount, data.availableBalance, data.cryptoCurrency)
       );
     }
     case STEPS.BENEFICIARY:
-      return (
-        !data.selectedBeneficiary ||
-        !data.address ||
-        !data.protocol ||
-        data.isAddressInvalid
-      );
+      return !data.selectedBeneficiary || !data.address || !data.protocol || data.isAddressInvalid;
     case STEPS.REVIEW:
-      return (
-        !data.feeDetails?.token ||
-        !data.confirmedNetwork ||
-        !!data.isQuoteExpired
-      );
+      return !data.feeDetails?.token || !data.confirmedNetwork || !!data.isQuoteExpired;
     default:
       return false;
   }

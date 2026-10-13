@@ -123,16 +123,16 @@ const Reports = () => {
       const creditTrxs = [];
       const debitTrxs = [];
       for (const type in reports) {
-        const currentCreditTrxs = reports?.[type]?.[
-          currentWallet?.currency?.code
-        ]?.filter((item) => item?.transaction_type === "credit");
+        const currentCreditTrxs = reports?.[type]?.[currentWallet?.currency?.code]?.filter(
+          (item) => item?.transaction_type === "credit",
+        );
         if (currentCreditTrxs && currentCreditTrxs.length > 0) {
           creditTrxs.push(...currentCreditTrxs);
         }
 
-        const currentDebitTrxs = reports?.[type]?.[
-          currentWallet?.currency?.code
-        ]?.filter((item) => item?.transaction_type === "debit");
+        const currentDebitTrxs = reports?.[type]?.[currentWallet?.currency?.code]?.filter(
+          (item) => item?.transaction_type === "debit",
+        );
         if (currentDebitTrxs && currentDebitTrxs.length > 0) {
           debitTrxs.push(...currentDebitTrxs);
         }

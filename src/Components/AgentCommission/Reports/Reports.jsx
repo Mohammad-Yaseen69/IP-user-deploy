@@ -1,10 +1,5 @@
 import ReactApexChart from "react-apexcharts";
-import {
-  CheckCircle,
-  ChevronDown,
-  ChevronRight,
-  RefreshCw,
-} from "react-feather";
+import { CheckCircle, ChevronDown, ChevronRight, RefreshCw } from "react-feather";
 import { useTranslation } from "react-i18next";
 import useWindowWidth from "../../../utils/useWindowWidth";
 import TopRight from "../../topRight";
@@ -38,14 +33,7 @@ const CommissionEarnedChart = () => {
         fontSize: "11px",
         fontFamily: "Inter, sans-serif",
         fontWeight: 600,
-        colors: [
-          "#FFFFFF",
-          "#FFFFFF",
-          "#FFFFFF",
-          "#FFFFFF",
-          "#FFFFFF",
-          "#FFFFFF",
-        ],
+        colors: ["#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF"],
       },
       offsetY: -20,
     },
@@ -95,9 +83,7 @@ const CommissionEarnedChart = () => {
     <div className={styles.sectionCard}>
       <div className={styles.sectionHeader}>
         <div className={styles.sectionHeaderLeft}>
-          <h3 className={styles.sectionTitle}>
-            {t("Commission earned (€, monthly)")}
-          </h3>
+          <h3 className={styles.sectionTitle}>{t("Commission earned (€, monthly)")}</h3>
           <span className={styles.stableBadge}>
             <CheckCircle size={10} />
             {t("Stable")}
@@ -176,10 +162,7 @@ const VolumeByProductChart = () => {
           {products.map((p) => (
             <div key={p.name} className={styles.productItem}>
               <div className={styles.productLeft}>
-                <span
-                  className={styles.productDot}
-                  style={{ background: p.color }}
-                />
+                <span className={styles.productDot} style={{ background: p.color }} />
                 <span className={styles.productName}>{t(p.name)}</span>
               </div>
               <span className={styles.productPrice}>{p.price}</span>
@@ -289,9 +272,7 @@ const RiskDistribution = () => {
   return (
     <div className={styles.sectionCard}>
       <div className={styles.sectionHeader}>
-        <h3 className={styles.sectionTitleSub}>
-          {t("Risk distribution of onboarded clients")}
-        </h3>
+        <h3 className={styles.sectionTitleSub}>{t("Risk distribution of onboarded clients")}</h3>
       </div>
 
       <div className={styles.riskRows}>
@@ -299,9 +280,7 @@ const RiskDistribution = () => {
           <div key={r.label} className={styles.riskRow}>
             <div className={styles.riskRowTop}>
               <span className={styles.riskLabel}>{t(r.label)}</span>
-              <span className={`${styles.riskBadge} ${r.badgeCls}`}>
-                {r.count}%
-              </span>
+              <span className={`${styles.riskBadge} ${r.badgeCls}`}>{r.count}%</span>
             </div>
             <div className={styles.riskBarTrack}>
               <div
@@ -341,9 +320,7 @@ const CommissionStatements = () => {
   return (
     <div className={styles.sectionCard}>
       <div className={styles.sectionHeader}>
-        <h3 className={styles.sectionTitle}>
-          {t("Commission statements & exports")}
-        </h3>
+        <h3 className={styles.sectionTitle}>{t("Commission statements & exports")}</h3>
       </div>
 
       <div className={styles.statementsTableWrap}>

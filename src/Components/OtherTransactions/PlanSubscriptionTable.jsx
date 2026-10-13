@@ -70,21 +70,20 @@ const PlanSubscriptionTable = ({ searchQuery = "" }) => {
   const loaderRef = useRef(null);
   const mobileLoaderRef = useRef(null);
 
-  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfiniteQuery({
-      queryKey: ["planSubscriptions", userDetails?._id, searchQuery],
-      queryFn: ({ pageParam = 1 }) =>
-        apiWrapper({
-          endpoint: `/api/plans/get-user-subscriptions/${userDetails._id}/${pageParam}/${LIMIT}${searchQuery ? `?search=${searchQuery}` : ""}`,
-          method: "GET",
-        }),
-      getNextPageParam: (lastPage, allPages) => {
-        const items = lastPage?.data || [];
-        if (items.length < LIMIT) return undefined;
-        return allPages.length + 1;
-      },
-      enabled: !!userDetails?._id,
-    });
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
+    queryKey: ["planSubscriptions", userDetails?._id, searchQuery],
+    queryFn: ({ pageParam = 1 }) =>
+      apiWrapper({
+        endpoint: `/api/plans/get-user-subscriptions/${userDetails._id}/${pageParam}/${LIMIT}${searchQuery ? `?search=${searchQuery}` : ""}`,
+        method: "GET",
+      }),
+    getNextPageParam: (lastPage, allPages) => {
+      const items = lastPage?.data || [];
+      if (items.length < LIMIT) return undefined;
+      return allPages.length + 1;
+    },
+    enabled: !!userDetails?._id,
+  });
 
   const subscriptions = data?.pages?.flatMap((p) => p?.data || []) || [];
 
@@ -157,14 +156,10 @@ const PlanSubscriptionTable = ({ searchQuery = "" }) => {
                       <div style={{ color: "#5926F0", fontWeight: 600 }}>
                         {formatDate(sub.nextBillingDate)}
                       </div>
-                      <div
-                        style={{ fontFamily: "monospace", fontSize: "12px" }}
-                      >
+                      <div style={{ fontFamily: "monospace", fontSize: "12px" }}>
                         {sub.subscriptionId || "-"}
                       </div>
-                      <div style={{ fontWeight: 600 }}>
-                        {sub.plan?.title || "-"}
-                      </div>
+                      <div style={{ fontWeight: 600 }}>{sub.plan?.title || "-"}</div>
                       <div>{t(sub.billingCycle)}</div>
                       <div>
                         <span
@@ -188,11 +183,7 @@ const PlanSubscriptionTable = ({ searchQuery = "" }) => {
                           justifyContent: "center",
                         }}
                       >
-                        {isOpen ? (
-                          <ChevronDown size={18} />
-                        ) : (
-                          <ChevronRight size={18} />
-                        )}
+                        {isOpen ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
                       </div>
                     </div>
 
@@ -206,45 +197,27 @@ const PlanSubscriptionTable = ({ searchQuery = "" }) => {
                         <div
                           style={{
                             display: "grid",
-                            gridTemplateColumns:
-                              "repeat(auto-fit, minmax(220px, 1fr))",
+                            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
                             gap: "12px",
                           }}
                         >
-                          <InfoCard
-                            label={t("Plan Name")}
-                            value={sub.plan?.title || "-"}
-                          />
+                          <InfoCard label={t("Plan Name")} value={sub.plan?.title || "-"} />
                           <InfoCard
                             label={t("Plan Price")}
                             value={`${sub.plan?.receivingWallet?.currency?.code} ${sub.plan?.price?.toLocaleString() || "-"}`}
                           />
-                          <InfoCard
-                            label={t("Billing Cycle")}
-                            value={t(sub.billingCycle)}
-                          />
-                          <InfoCard
-                            label={t("Total Payments")}
-                            value={sub.totalPayments}
-                          />
+                          <InfoCard label={t("Billing Cycle")} value={t(sub.billingCycle)} />
+                          <InfoCard label={t("Total Payments")} value={sub.totalPayments} />
                           <InfoCard
                             label={t("Total Amount Paid")}
                             value={`${sub.plan?.receivingWallet?.currency?.code} ${sub.totalAmount?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || "0.00"}`}
                           />
                           <InfoCard
                             label={t("Last Payment Method")}
-                            value={
-                              sub.lastPaymentMethod || sub.paymentMethod || "-"
-                            }
+                            value={sub.lastPaymentMethod || sub.paymentMethod || "-"}
                           />
-                          <InfoCard
-                            label={t("Start Date")}
-                            value={formatDate(sub.startDate)}
-                          />
-                          <InfoCard
-                            label={t("End Date")}
-                            value={formatDate(sub.endDate)}
-                          />
+                          <InfoCard label={t("Start Date")} value={formatDate(sub.startDate)} />
+                          <InfoCard label={t("End Date")} value={formatDate(sub.endDate)} />
                           <InfoCard
                             label={t("Next Billing")}
                             value={formatDate(sub.nextBillingDate)}
@@ -292,8 +265,7 @@ const PlanSubscriptionTable = ({ searchQuery = "" }) => {
                               WebkitTextFillColor: "transparent",
                             }}
                           >
-                            {t("Transaction History")} (
-                            {sub.transactions?.length || 0})
+                            {t("Transaction History")} ({sub.transactions?.length || 0})
                           </h5>
                           <div style={{ overflowX: "auto" }}>
                             <table
@@ -373,11 +345,7 @@ const PlanSubscriptionTable = ({ searchQuery = "" }) => {
                               <tbody>
                                 {sub.transactions?.length > 0 ? (
                                   sub.transactions
-                                    .sort(
-                                      (a, b) =>
-                                        new Date(b.createdAt) -
-                                        new Date(a.createdAt),
-                                    )
+                                    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                                     .map((tx) => (
                                       <tr
                                         key={tx._id}
@@ -386,12 +354,10 @@ const PlanSubscriptionTable = ({ searchQuery = "" }) => {
                                           transition: "background 0.15s",
                                         }}
                                         onMouseEnter={(e) =>
-                                          (e.currentTarget.style.background =
-                                            "#FAFAFA")
+                                          (e.currentTarget.style.background = "#FAFAFA")
                                         }
                                         onMouseLeave={(e) =>
-                                          (e.currentTarget.style.background =
-                                            "transparent")
+                                          (e.currentTarget.style.background = "transparent")
                                         }
                                       >
                                         <td style={{ padding: "10px 8px" }}>
@@ -443,9 +409,7 @@ const PlanSubscriptionTable = ({ searchQuery = "" }) => {
                                         <td style={{ padding: "10px 8px" }}>
                                           <span
                                             style={{
-                                              background: txStatusColor(
-                                                tx.status,
-                                              ),
+                                              background: txStatusColor(tx.status),
                                               color: "white",
                                               padding: "3px 10px",
                                               borderRadius: "20px",
@@ -582,11 +546,7 @@ const PlanSubscriptionTable = ({ searchQuery = "" }) => {
                       >
                         {t("Next")}: {formatDate(sub.nextBillingDate)}
                       </div>
-                      {isOpen ? (
-                        <ChevronDown size={16} />
-                      ) : (
-                        <ChevronRight size={16} />
-                      )}
+                      {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
                     </div>
                   </div>
 
@@ -605,22 +565,13 @@ const PlanSubscriptionTable = ({ searchQuery = "" }) => {
                           marginTop: "12px",
                         }}
                       >
-                        <MobileInfoItem
-                          label={t("Start Date")}
-                          value={formatDate(sub.startDate)}
-                        />
-                        <MobileInfoItem
-                          label={t("End Date")}
-                          value={formatDate(sub.endDate)}
-                        />
+                        <MobileInfoItem label={t("Start Date")} value={formatDate(sub.startDate)} />
+                        <MobileInfoItem label={t("End Date")} value={formatDate(sub.endDate)} />
                         <MobileInfoItem
                           label={t("Plan Price")}
                           value={sub.plan?.price?.toLocaleString() || "-"}
                         />
-                        <MobileInfoItem
-                          label={t("Total Payments")}
-                          value={sub.totalPayments}
-                        />
+                        <MobileInfoItem label={t("Total Payments")} value={sub.totalPayments} />
                         <MobileInfoItem
                           label={t("Total Paid")}
                           value={
@@ -632,14 +583,9 @@ const PlanSubscriptionTable = ({ searchQuery = "" }) => {
                         />
                         <MobileInfoItem
                           label={t("Last Method")}
-                          value={
-                            sub.lastPaymentMethod || sub.paymentMethod || "-"
-                          }
+                          value={sub.lastPaymentMethod || sub.paymentMethod || "-"}
                         />
-                        <MobileInfoItem
-                          label={t("Billing Cycle")}
-                          value={t(sub.billingCycle)}
-                        />
+                        <MobileInfoItem label={t("Billing Cycle")} value={t(sub.billingCycle)} />
                       </div>
 
                       {sub.status?.toLowerCase() === "active" && (
@@ -679,14 +625,10 @@ const PlanSubscriptionTable = ({ searchQuery = "" }) => {
                           fontSize: "14px",
                         }}
                       >
-                        {t("Transaction History")} (
-                        {sub.transactions?.length || 0})
+                        {t("Transaction History")} ({sub.transactions?.length || 0})
                       </h6>
                       {sub.transactions
-                        ?.sort(
-                          (a, b) =>
-                            new Date(b.createdAt) - new Date(a.createdAt),
-                        )
+                        ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                         .map((tx) => (
                           <div
                             key={tx._id}
@@ -705,9 +647,7 @@ const PlanSubscriptionTable = ({ searchQuery = "" }) => {
                                 marginBottom: "4px",
                               }}
                             >
-                              <span style={{ color: "#888" }}>
-                                {formatDateTime(tx.createdAt)}
-                              </span>
+                              <span style={{ color: "#888" }}>{formatDateTime(tx.createdAt)}</span>
                               <span
                                 style={{
                                   background: txStatusColor(tx.status),
@@ -732,13 +672,11 @@ const PlanSubscriptionTable = ({ searchQuery = "" }) => {
                                 {tx.currency?.code} {tx.amount?.toFixed(2)}
                               </span>
                               <span style={{ color: "#999" }}>
-                                {t("Fee")}: {tx.currency?.code}{" "}
-                                {tx.fee?.toFixed(2)}
+                                {t("Fee")}: {tx.currency?.code} {tx.fee?.toFixed(2)}
                               </span>
                             </div>
                             <div style={{ fontWeight: 700, marginTop: "2px" }}>
-                              {t("Total")}: {tx.currency?.code}{" "}
-                              {tx.total?.toFixed(2)}
+                              {t("Total")}: {tx.currency?.code} {tx.total?.toFixed(2)}
                             </div>
                           </div>
                         ))}
@@ -765,9 +703,7 @@ const PlanSubscriptionTable = ({ searchQuery = "" }) => {
             )}
           </>
         ) : (
-          <span
-            style={{ textAlign: "center", marginTop: "2rem", display: "block" }}
-          >
+          <span style={{ textAlign: "center", marginTop: "2rem", display: "block" }}>
             {t("No subscriptions found")}
           </span>
         )}
@@ -832,9 +768,7 @@ const MobileInfoItem = ({ label, value }) => (
       padding: "8px 10px",
     }}
   >
-    <div style={{ fontSize: "10px", color: "#888", fontWeight: 600 }}>
-      {label}
-    </div>
+    <div style={{ fontSize: "10px", color: "#888", fontWeight: 600 }}>{label}</div>
     <div style={{ fontSize: "13px", fontWeight: 700 }}>{value}</div>
   </div>
 );

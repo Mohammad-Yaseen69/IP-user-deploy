@@ -1,15 +1,7 @@
 import styles from "./styles/index.module.css";
 import TopRight from "../topRight";
 import { useEffect, useState } from "react";
-import {
-  Button,
-  FormGroup,
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalHeader,
-} from "reactstrap";
+import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import MainContent from "./MainContent";
@@ -50,8 +42,7 @@ const BroadcastSignup = () => {
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <Button
                 style={{
-                  background:
-                    "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                  background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                   border: "none",
                   outline: "none",
                 }}

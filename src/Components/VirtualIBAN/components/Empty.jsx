@@ -51,9 +51,7 @@ const Empty = ({ selectedIban }) => {
           <Tooltip
             title={
               isBlocked
-                ? t(
-                    "This virtual IBAN is paused. Reactivate it to view deposit details.",
-                  )
+                ? t("This virtual IBAN is paused. Reactivate it to view deposit details.")
                 : ""
             }
             arrow
@@ -75,18 +73,9 @@ const Empty = ({ selectedIban }) => {
         )}
       </div>
       {canViewDetails && openModal && (
-        <div
-          className={styles.modalOverlay}
-          onClick={() => closeModal("deposit")}
-        >
-          <div
-            className={styles.modalContent}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              className={styles.closeBtn}
-              onClick={() => closeModal("deposit")}
-            >
+        <div className={styles.modalOverlay} onClick={() => closeModal("deposit")}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <button className={styles.closeBtn} onClick={() => closeModal("deposit")}>
               <X />
             </button>
 

@@ -5,13 +5,7 @@ import useWindowWidth from "../../../utils/useWindowWidth";
 import TableItem from "./TableItem";
 import InstaPayLoader from "../../Loader";
 
-const DelegateTable = ({
-  filteredInvoices,
-  setEditData,
-  setShowModal,
-  isRole,
-  roleLoading,
-}) => {
+const DelegateTable = ({ filteredInvoices, setEditData, setShowModal, isRole, roleLoading }) => {
   const { t } = useTranslation();
   const width = useWindowWidth();
   const [menuOpenFor, setMenuOpenFor] = useState(null);
@@ -22,17 +16,11 @@ const DelegateTable = ({
           (isRole ? (
             <div className={`${styles.tr} ${styles.thead}`}>
               {width > 700 && (
-                <div
-                  style={{ flex: 0.09 }}
-                  className={`${styles.th} ${styles.serial}`}
-                >
+                <div style={{ flex: 0.09 }} className={`${styles.th} ${styles.serial}`}>
                   {t("S.No")}
                 </div>
               )}
-              <div
-                style={{ flex: width <= 700 ? 0.4 : 0.3 }}
-                className={styles.th}
-              >
+              <div style={{ flex: width <= 700 ? 0.4 : 0.3 }} className={styles.th}>
                 {t("Title")}
               </div>
               {width > 700 && (
@@ -40,10 +28,7 @@ const DelegateTable = ({
                   {t("Description")}
                 </div>
               )}
-              <div
-                style={{ flex: width <= 700 ? 0.35 : 0.25 }}
-                className={styles.th}
-              >
+              <div style={{ flex: width <= 700 ? 0.35 : 0.25 }} className={styles.th}>
                 {t("Permissions")}
               </div>
               <div
@@ -54,23 +39,14 @@ const DelegateTable = ({
           ) : (
             <div className={`${styles.tr} ${styles.thead}`}>
               {width > 700 && (
-                <div
-                  style={{ flex: 0.05 }}
-                  className={`${styles.th} ${styles.serial}`}
-                >
+                <div style={{ flex: 0.05 }} className={`${styles.th} ${styles.serial}`}>
                   {t("S.No")}
                 </div>
               )}
-              <div
-                style={{ flex: width <= 700 ? 0.25 : 0.18 }}
-                className={styles.th}
-              >
+              <div style={{ flex: width <= 700 ? 0.25 : 0.18 }} className={styles.th}>
                 {t("Name")}
               </div>
-              <div
-                style={{ flex: width <= 700 ? 0.4 : 0.18 }}
-                className={styles.th}
-              >
+              <div style={{ flex: width <= 700 ? 0.4 : 0.18 }} className={styles.th}>
                 {t("Phone")}
               </div>
               {width > 700 && (

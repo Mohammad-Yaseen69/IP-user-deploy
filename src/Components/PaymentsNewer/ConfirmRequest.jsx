@@ -49,8 +49,7 @@ const ConfirmRequest = ({
   const divRef = useRef(null);
   const svgRef = useRef(null);
   const chevRef = useRef(null);
-  const { userDetails, profileCompleted, authHeader, userWallets } =
-    useContext(UserContext);
+  const { userDetails, profileCompleted, authHeader, userWallets } = useContext(UserContext);
   const [showCompletionModal, setShowCompletionModal] = useState(false);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const navigate = useNavigate();
@@ -137,9 +136,7 @@ const ConfirmRequest = ({
               purpose: requestObject.reason ?? "family support",
               sender: userDetails?._id,
               receiver: ben._id,
-              cycles: requestObject.unlimited
-                ? "unlimited"
-                : +requestObject.recCycle,
+              cycles: requestObject.unlimited ? "unlimited" : +requestObject.recCycle,
               date: date,
               description: requestObject.comment,
               payment_type: "payment_request",
@@ -193,9 +190,7 @@ const ConfirmRequest = ({
         setConfirmed(true);
         setToken(dec?.token);
       } catch (error) {
-        toast.error(
-          t("Something went wrong while confirming the transaction!"),
-        );
+        toast.error(t("Something went wrong while confirming the transaction!"));
         // console.log(decryptData(error?.response?.data?.data))
       }
     });
@@ -227,19 +222,14 @@ const ConfirmRequest = ({
 
       if (response?.address?.country_code) {
         const country = CitiesData.find(
-          (cont) =>
-            cont.iso2.toLowerCase() ===
-            response?.address?.country_code?.toLowerCase(),
+          (cont) => cont.iso2.toLowerCase() === response?.address?.country_code?.toLowerCase(),
         );
         prefrencesFunc(country);
       } else {
         return { status: false };
       }
     } catch (error) {
-      console.error(
-        "[getCountryByCoods] Error fetching geocode data:",
-        error.message,
-      );
+      console.error("[getCountryByCoods] Error fetching geocode data:", error.message);
       return { status: false };
     }
     setShowLocation(false);
@@ -262,8 +252,8 @@ const ConfirmRequest = ({
           toggle={() => {
             if (coords) {
               console.log("asfdaf");
-              getCountryByCoods(coords?.latitude, coords?.longitude).catch(
-                (e) => console.error("getCountryByCoods error", e),
+              getCountryByCoods(coords?.latitude, coords?.longitude).catch((e) =>
+                console.error("getCountryByCoods error", e),
               );
             }
           }}
@@ -280,8 +270,7 @@ const ConfirmRequest = ({
           padding: "20px 30px",
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
         className="conf_cont"
       >

@@ -6,12 +6,10 @@ import LanguagePicker from "../LanguagePicker";
 import Notifications from "../Notifications";
 
 const TopRight = ({ position = "absolute" }) => {
-  const { userDetails, croppedImages, isAgentLogin, agentDetails } =
-    useContext(UserContext);
+  const { userDetails, croppedImages, isAgentLogin, agentDetails } = useContext(UserContext);
 
   const renderName = () => {
-    return `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}`
-      .length >= 25
+    return `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}`.length >= 25
       ? `${userDetails?.user?.first_name}`
       : `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}`;
   };

@@ -12,10 +12,7 @@ import { reasons } from "../AmountAndCurrency";
 import { Check, HelpCircle } from "react-feather";
 import cities from "../../CitiesDropDown/CitiesData.json";
 import CreditCardInput from "../../CreditInput";
-import {
-  LimitsErrorMessage,
-  possibleErrors,
-} from "../../../utils/Functions/paymentLimits";
+import { LimitsErrorMessage, possibleErrors } from "../../../utils/Functions/paymentLimits";
 import InstaPayLoader from "../../Loader";
 import { formatCurrency } from "../../../Helper/AmountFormat";
 
@@ -59,8 +56,7 @@ const AmountAndCurrency = ({
   const [exchangeRate, setExchangeRate] = useState();
   const [exchangeError, setExchangeError] = useState("");
   const [balance, setBalance] = useState(null);
-  const { userDetails, authHeader, userWallets, allowedCountries } =
-    useContext(UserContext);
+  const { userDetails, authHeader, userWallets, allowedCountries } = useContext(UserContext);
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -87,8 +83,8 @@ const AmountAndCurrency = ({
   const invalid =
     sendType === "card"
       ? false
-      : userWallets?.filter((item) => item.currency.code === currency)[0]
-          ?.balance?.available < amount;
+      : userWallets?.filter((item) => item.currency.code === currency)[0]?.balance?.available <
+        amount;
 
   useEffect(() => {
     const getSavedCards = async () => {
@@ -123,8 +119,7 @@ const AmountAndCurrency = ({
     const currentYear = currentDate.getFullYear() % 100;
 
     const isValidExpiry =
-      contentYear > currentYear ||
-      (contentYear === currentYear && contentMonth > currentMonth);
+      contentYear > currentYear || (contentYear === currentYear && contentMonth > currentMonth);
     const isValidCVC = cvc.length >= 3;
 
     setIsValid(isValidCardNumber && isValidExpiry && isValidCVC);
@@ -132,9 +127,7 @@ const AmountAndCurrency = ({
 
   const currencies = useMemo(() => {
     return cities.filter((item) =>
-      userDetails?.country_name
-        ?.toLowerCase()
-        ?.includes(item?.name?.toLowerCase()),
+      userDetails?.country_name?.toLowerCase()?.includes(item?.name?.toLowerCase()),
     );
   }, [userDetails]);
 
@@ -177,9 +170,7 @@ const AmountAndCurrency = ({
             if (argAmount && +argAmount >= 1) {
               const data = {
                 wallet_id: userWallets?.filter(
-                  (item) =>
-                    item?.currency?.code?.toLowerCase() ===
-                    currency?.toLowerCase(),
+                  (item) => item?.currency?.code?.toLowerCase() === currency?.toLowerCase(),
                 )[0]?._id,
                 transaction_type: "C2C",
                 amount: +argAmount,
@@ -225,8 +216,7 @@ const AmountAndCurrency = ({
                   const decrypted = decryptData(res.data.data);
                   // console.log(decrypted)
                   const data = {
-                    wholesale_fx_rate:
-                      decrypted?.data?.result?.exchanged_rate?.value,
+                    wholesale_fx_rate: decrypted?.data?.result?.exchanged_rate?.value,
                     destination: {
                       currency: decrypted?.data?.result?.recipient?.currency,
                       amount: decrypted?.data?.result?.recipient?.value,
@@ -236,47 +226,33 @@ const AmountAndCurrency = ({
                     limits_used: {
                       daily_receiving_limit_used:
                         decrypted?.data?.result?.limits?.daily_receiving_limit -
-                        decrypted?.data?.result?.limits
-                          ?.daily_receiving_limit_used,
+                        decrypted?.data?.result?.limits?.daily_receiving_limit_used,
                       daily_sending_limit_used:
                         decrypted?.data?.result?.limits?.daily_sending_limit -
-                        decrypted?.data?.result?.limits
-                          ?.daily_sending_limit_used,
+                        decrypted?.data?.result?.limits?.daily_sending_limit_used,
                       monthly_receiving_limit_used:
-                        decrypted?.data?.result?.limits
-                          ?.monthly_receiving_limit -
-                        decrypted?.data?.result?.limits
-                          ?.monthly_receiving_limit_used,
+                        decrypted?.data?.result?.limits?.monthly_receiving_limit -
+                        decrypted?.data?.result?.limits?.monthly_receiving_limit_used,
                       monthly_sending_limit_used:
                         decrypted?.data?.result?.limits?.monthly_sending_limit -
-                        decrypted?.data?.result?.limits
-                          ?.monthly_sending_limit_used,
+                        decrypted?.data?.result?.limits?.monthly_sending_limit_used,
                       yearly_receiving_limit_used:
-                        decrypted?.data?.result?.limits
-                          ?.yearly_receiving_limit -
-                        decrypted?.data?.result?.limits
-                          ?.yearly_receiving_limit_used,
+                        decrypted?.data?.result?.limits?.yearly_receiving_limit -
+                        decrypted?.data?.result?.limits?.yearly_receiving_limit_used,
                       yearly_sending_limit_used:
                         decrypted?.data?.result?.limits?.yearly_sending_limit -
-                        decrypted?.data?.result?.limits
-                          ?.yearly_sending_limit_used,
+                        decrypted?.data?.result?.limits?.yearly_sending_limit_used,
                     },
                   };
                   setExchangeRate(data);
                   setQuotationDetails(decrypted?.data);
-                  if (
-                    +argAmount > data?.limits_used?.daily_sending_limit_used
-                  ) {
+                  if (+argAmount > data?.limits_used?.daily_sending_limit_used) {
                     setExchangeError("exceed send");
                     setLimitType("daily");
-                  } else if (
-                    +argAmount > data?.limits_used?.monthly_sending_limit_used
-                  ) {
+                  } else if (+argAmount > data?.limits_used?.monthly_sending_limit_used) {
                     setExchangeError("exceed send");
                     setLimitType("monthly");
-                  } else if (
-                    +argAmount > data?.limits_used?.yearly_sending_limit_used
-                  ) {
+                  } else if (+argAmount > data?.limits_used?.yearly_sending_limit_used) {
                     setExchangeError("exceed send");
                     setLimitType("yearly");
                   } else {
@@ -300,13 +276,9 @@ const AmountAndCurrency = ({
                     const error = LimitsErrorMessage(dec?.code ?? dec?.message);
                     if (error) {
                       setExchangeError(error);
-                    } else if (
-                      dec?.message?.toLowerCase()?.includes("insufficient")
-                    ) {
+                    } else if (dec?.message?.toLowerCase()?.includes("insufficient")) {
                       setExchangeError("insufficient balance payer");
-                    } else if (
-                      dec?.message?.toLowerCase()?.includes("exceeds max")
-                    ) {
+                    } else if (dec?.message?.toLowerCase()?.includes("exceeds max")) {
                       setExchangeError("max payer");
                     } else if (
                       dec?.message?.toLowerCase()?.includes("below the min") ||
@@ -352,42 +324,32 @@ const AmountAndCurrency = ({
                     limits_used: {
                       daily_receiving_limit_used:
                         decrypted?.data?.limits?.daily_receiving_limit -
-                        decrypted?.data?.limits_used
-                          ?.daily_receiving_limit_used,
+                        decrypted?.data?.limits_used?.daily_receiving_limit_used,
                       daily_sending_limit_used:
                         decrypted?.data?.limits?.daily_sending_limit -
                         decrypted?.data?.limits_used?.daily_sending_limit_used,
                       monthly_receiving_limit_used:
                         decrypted?.data?.limits?.monthly_receiving_limit -
-                        decrypted?.data?.limits_used
-                          ?.monthly_receiving_limit_used,
+                        decrypted?.data?.limits_used?.monthly_receiving_limit_used,
                       monthly_sending_limit_used:
                         decrypted?.data?.limits?.monthly_sending_limit -
-                        decrypted?.data?.limits_used
-                          ?.monthly_sending_limit_used,
+                        decrypted?.data?.limits_used?.monthly_sending_limit_used,
                       yearly_receiving_limit_used:
                         decrypted?.data?.limits?.yearly_receiving_limit -
-                        decrypted?.data?.limits_used
-                          ?.yearly_receiving_limit_used,
+                        decrypted?.data?.limits_used?.yearly_receiving_limit_used,
                       yearly_sending_limit_used:
                         decrypted?.data?.limits?.yearly_sending_limit -
                         decrypted?.data?.limits_used?.yearly_sending_limit_used,
                     },
                   };
                   setExchangeRate(data);
-                  if (
-                    +argAmount > data?.limits_used?.daily_sending_limit_used
-                  ) {
+                  if (+argAmount > data?.limits_used?.daily_sending_limit_used) {
                     setExchangeError("exceed send");
                     setLimitType("daily");
-                  } else if (
-                    +argAmount > data?.limits_used?.monthly_sending_limit_used
-                  ) {
+                  } else if (+argAmount > data?.limits_used?.monthly_sending_limit_used) {
                     setExchangeError("exceed send");
                     setLimitType("monthly");
-                  } else if (
-                    +argAmount > data?.limits_used?.yearly_sending_limit_used
-                  ) {
+                  } else if (+argAmount > data?.limits_used?.yearly_sending_limit_used) {
                     setExchangeError("exceed send");
                     setLimitType("yearly");
                   } else {
@@ -404,9 +366,7 @@ const AmountAndCurrency = ({
                   const error = LimitsErrorMessage(dec?.code ?? dec?.message);
                   if (error) {
                     setExchangeError(error);
-                  } else if (
-                    dec?.message?.toLowerCase()?.includes("insufficient")
-                  ) {
+                  } else if (dec?.message?.toLowerCase()?.includes("insufficient")) {
                     setExchangeError("insufficient balance");
                   } else {
                     setExchangeError("sww");
@@ -423,9 +383,7 @@ const AmountAndCurrency = ({
     };
 
     const getTopupFees = async () => {
-      const wallet = userWallets?.find(
-        (item) => item?.currency?.code === currency,
-      );
+      const wallet = userWallets?.find((item) => item?.currency?.code === currency);
       try {
         const res = await axios.get(
           `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/get-tbc-fee/${wallet?._id}/${amount?.toString()?.split(".")?.[0]}`,
@@ -513,10 +471,7 @@ const AmountAndCurrency = ({
       <div className={styles.top}>
         <label htmlFor="Amount">{t("Enter the amount")}</label>
         <div>
-          <select
-            value={currency}
-            onChange={(e) => setCurrency(e.target.value)}
-          >
+          <select value={currency} onChange={(e) => setCurrency(e.target.value)}>
             {sendType === "wallet"
               ? userWallets
                   ?.filter(
@@ -529,10 +484,7 @@ const AmountAndCurrency = ({
                       item?.status === "active",
                   )
                   ?.map((item) => (
-                    <option
-                      value={item.currency?.code}
-                      key={item.currency?.code}
-                    >
+                    <option value={item.currency?.code} key={item.currency?.code}>
                       {item.currency?.code}{" "}
                     </option>
                   ))
@@ -572,9 +524,7 @@ const AmountAndCurrency = ({
             fontSize: ".7rem",
             cursor: "pointer",
           }}
-          onClick={() =>
-            setSendType((prev) => (prev === "card" ? "wallet" : "card"))
-          }
+          onClick={() => setSendType((prev) => (prev === "card" ? "wallet" : "card"))}
         >
           {t("Pay via")} {sendType === "card" ? "wallet" : "card"}
         </div>
@@ -599,9 +549,7 @@ const AmountAndCurrency = ({
                 flexDirection: "column",
                 gap: ".4rem",
                 minHeight:
-                  !exchangeError && type !== "Requesting" && type !== "Quoting"
-                    ? "103px"
-                    : 0,
+                  !exchangeError && type !== "Requesting" && type !== "Quoting" ? "103px" : 0,
               }}
             >
               {!exchangeError ? (
@@ -616,9 +564,7 @@ const AmountAndCurrency = ({
                             justifyContent: "space-between",
                           }}
                         >
-                          <span style={{ color: "#a0a0a0" }}>
-                            {t("Exchange Rate")}:
-                          </span>
+                          <span style={{ color: "#a0a0a0" }}>{t("Exchange Rate")}:</span>
                           <span style={{ color: "#a0a0a0" }}>
                             {exchangeRate?.wholesale_fx_rate ?? ""}{" "}
                             {exchangeRate?.destination?.currency ?? ""}
@@ -636,8 +582,7 @@ const AmountAndCurrency = ({
                       >
                         <span style={{ color: "#a0a0a0" }}>{t("Fees")}</span>
                         <span style={{ color: "#a0a0a0" }}>
-                          {Number(exchangeRate?.fee?.amount)?.toFixed(2) ?? ""}{" "}
-                          {currency}
+                          {Number(exchangeRate?.fee?.amount)?.toFixed(2) ?? ""} {currency}
                         </span>
                       </p>
                       <p
@@ -650,12 +595,8 @@ const AmountAndCurrency = ({
                         <span style={{ fontWeight: "600" }}>
                           {t("Amount the recipient will receive")}:
                         </span>
-                        <span
-                          style={{ fontWeight: "600", whiteSpace: "nowrap" }}
-                        >
-                          {Number(exchangeRate?.destination?.amount)?.toFixed(
-                            2,
-                          ) ?? ""}{" "}
+                        <span style={{ fontWeight: "600", whiteSpace: "nowrap" }}>
+                          {Number(exchangeRate?.destination?.amount)?.toFixed(2) ?? ""}{" "}
                           {exchangeRate?.destination?.currency ?? ""}
                         </span>
                       </p>
@@ -666,12 +607,8 @@ const AmountAndCurrency = ({
                           justifyContent: "space-between",
                         }}
                       >
-                        <span style={{ fontWeight: "600" }}>
-                          {t("Total Sent").split(" ")[0]}:
-                        </span>
-                        <span
-                          style={{ fontWeight: "600", whiteSpace: "nowrap" }}
-                        >
+                        <span style={{ fontWeight: "600" }}>{t("Total Sent").split(" ")[0]}:</span>
+                        <span style={{ fontWeight: "600", whiteSpace: "nowrap" }}>
                           {Number(exchangeRate?.total)?.toFixed(2)} {currency}
                         </span>
                       </p>
@@ -680,9 +617,7 @@ const AmountAndCurrency = ({
                 </>
               ) : (
                 <>
-                  {exchangeError?.includes(
-                    "strictly positive value expected",
-                  ) && (
+                  {exchangeError?.includes("strictly positive value expected") && (
                     <>
                       <p
                         style={{
@@ -799,9 +734,7 @@ const AmountAndCurrency = ({
                           fontWeight: 600,
                         }}
                       >
-                        {t(
-                          "You have entered an amount that exceeds payer limits.",
-                        )}
+                        {t("You have entered an amount that exceeds payer limits.")}
                       </p>
                     </>
                   )}
@@ -815,15 +748,11 @@ const AmountAndCurrency = ({
                           fontWeight: 600,
                         }}
                       >
-                        {t(
-                          "You have entered an amount that is below the payer range.",
-                        )}
+                        {t("You have entered an amount that is below the payer range.")}
                       </p>
                     </>
                   )}
-                  {exchangeError?.includes(
-                    "over maximum of the selected payer",
-                  ) ||
+                  {exchangeError?.includes("over maximum of the selected payer") ||
                     (exchangeError?.includes("1003012") && (
                       <>
                         {/* <p style={{ marginBottom: 0, textAlign: "center", fontSize: ".8rem", fontWeight: 600 }}>Maximum transaction amount should be</p>
@@ -838,14 +767,10 @@ const AmountAndCurrency = ({
                         >
                           {t("This amount exceeds our limit of")}{" "}
                           <b>
-                            {
-                              +subService?.transaction_types?.C2C
-                                ?.maximum_transaction_amount
-                            }{" "}
+                            {+subService?.transaction_types?.C2C?.maximum_transaction_amount}{" "}
                             {subService?.currency}{" "}
                           </b>{" "}
-                          {t("for a single transfer to")}{" "}
-                          <b> {subService.name}</b>.
+                          {t("for a single transfer to")} <b> {subService.name}</b>.
                         </p>
                       </>
                     ))}
@@ -859,9 +784,7 @@ const AmountAndCurrency = ({
                           fontWeight: 600,
                         }}
                       >
-                        {t(
-                          "You have entered an amount that exceeds our limit at the moment.",
-                        )}
+                        {t("You have entered an amount that exceeds our limit at the moment.")}
                       </p>
                     </>
                   )}
@@ -893,9 +816,7 @@ const AmountAndCurrency = ({
                       </h2>
                     </>
                   )}
-                  {exchangeError?.includes(
-                    "An error occurred while creating the quotation",
-                  ) && (
+                  {exchangeError?.includes("An error occurred while creating the quotation") && (
                     <>
                       <h2
                         style={{
@@ -905,9 +826,7 @@ const AmountAndCurrency = ({
                           fontWeight: 800,
                         }}
                       >
-                        {t(
-                          "We cannot process your request at the moment, please try again later.",
-                        )}
+                        {t("We cannot process your request at the moment, please try again later.")}
                       </h2>
                       <p style={{ marginBottom: 0, textAlign: "center" }}>
                         {t("Please try again later")}
@@ -916,11 +835,7 @@ const AmountAndCurrency = ({
                   )}
                   {Object.keys(possibleErrors).some(
                     (item) => possibleErrors[item] === exchangeError,
-                  ) && (
-                    <p style={{ marginBottom: 0, textAlign: "center" }}>
-                      {t(exchangeError)}
-                    </p>
-                  )}
+                  ) && <p style={{ marginBottom: 0, textAlign: "center" }}>{t(exchangeError)}</p>}
                   {exchangeError === "sww" && (
                     <p style={{ marginBottom: 0, textAlign: "center" }}>
                       {t(
@@ -965,9 +880,7 @@ const AmountAndCurrency = ({
         <div>
           {type !== "Requesting" && (
             <>
-              <Label style={{ fontWeight: "600", marginBottom: ".5rem" }}>
-                {t("Remarks:")}
-              </Label>
+              <Label style={{ fontWeight: "600", marginBottom: ".5rem" }}>{t("Remarks:")}</Label>
               <Input
                 type="select"
                 value={reason}
@@ -1030,24 +943,20 @@ const AmountAndCurrency = ({
                 top: "14px",
                 right: "10px",
                 cursor: "pointer",
-                boxShadow:
-                  "0px -1px 32px -3.3496174812316895px rgba(89, 38, 240, 0.36)",
+                boxShadow: "0px -1px 32px -3.3496174812316895px rgba(89, 38, 240, 0.36)",
               }}
             >
               <span
                 style={{
                   fontSize: ".6rem",
                   fontWeight: "600",
-                  background:
-                    "linear-gradient(346deg, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
+                  background: "linear-gradient(346deg, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
                   backgroundClip: "text",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                 }}
               >
-                {files.length > 0
-                  ? files[0].name?.slice(0, 10)
-                  : t("Attach Files")}
+                {files.length > 0 ? files[0].name?.slice(0, 10) : t("Attach Files")}
               </span>
               <img src={file} alt="f" style={{ width: "14px" }} />
             </Label>
@@ -1064,9 +973,7 @@ const AmountAndCurrency = ({
       {sendType === "card" && !showOthers && (
         <>
           {savedCards?.length > 0 && (
-            <div
-              style={{ display: "flex", gap: ".5rem", alignItems: "center" }}
-            >
+            <div style={{ display: "flex", gap: ".5rem", alignItems: "center" }}>
               <span style={{ whiteSpace: "nowrap" }}>{t("Saved Cards:")} </span>
               <div
                 style={{
@@ -1158,12 +1065,7 @@ const AmountAndCurrency = ({
           disabled={
             type === "Requesting"
               ? !amount || !currency || amount < 1
-              : !amount ||
-                !currency ||
-                !reason ||
-                exchangeError ||
-                loading ||
-                !exchangeRate
+              : !amount || !currency || !reason || exchangeError || loading || !exchangeRate
           }
           onClick={() => setStep((prev) => prev + 1)}
         >

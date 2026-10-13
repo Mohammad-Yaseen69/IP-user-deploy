@@ -29,8 +29,7 @@ const AddFundChannel = ({
           id: 5,
           icon: pc,
           value: "card",
-          coming_soon:
-            userDetails?.level?.topup_channel?.card_payment === "coming_soon",
+          coming_soon: userDetails?.level?.topup_channel?.card_payment === "coming_soon",
         }
       : {},
     userDetails?.level?.topup_channel?.paypal
@@ -39,8 +38,7 @@ const AddFundChannel = ({
           id: 5,
           icon: pc,
           value: "paypal",
-          coming_soon:
-            userDetails?.level?.topup_channel?.paypal === "coming_soon",
+          coming_soon: userDetails?.level?.topup_channel?.paypal === "coming_soon",
         }
       : {},
   ];
@@ -69,9 +67,7 @@ const AddFundChannel = ({
         }
       : {},
   ].map((item) =>
-    thunesServices.some((it) => it?.id == item.id)
-      ? item
-      : { ...item, coming_soon: true },
+    thunesServices.some((it) => it?.id == item.id) ? item : { ...item, coming_soon: true },
   );
 
   return (
@@ -92,9 +88,7 @@ const AddFundChannel = ({
           padding: isBig ? "1.5rem" : "5px",
           background: isBig ? "rgba(0,0,0,.03)" : "transparent",
           paddingBottom: 0,
-          boxShadow: isBig
-            ? "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)"
-            : "none",
+          boxShadow: isBig ? "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)" : "none",
         }}
       >
         {[...thunesAllowed, ...payoutChannelData]
@@ -154,16 +148,10 @@ const AddFundChannel = ({
                   <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>
                     {t(item?.name) + " "}
                     {window.innerWidth < 1000 && <br />}
-                    {thunesProviders?.length > 0 &&
-                    item?.sub_name === "wallet" ? (
+                    {thunesProviders?.length > 0 && item?.sub_name === "wallet" ? (
                       <>
                         (
-                        <TypingSpan
-                          words={thunesProviders.map(
-                            (item) => item?.name ?? "",
-                          )}
-                        />
-                        )
+                        <TypingSpan words={thunesProviders.map((item) => item?.name ?? "")} />)
                       </>
                     ) : (
                       ""
@@ -173,11 +161,7 @@ const AddFundChannel = ({
                 {item?.coming_soon ? (
                   <Badge color="primary">{t("Coming Soon")}</Badge>
                 ) : channel?.name === item?.name ? (
-                  <Check
-                    color="green"
-                    size={24}
-                    style={{ position: "absolute", right: "20px" }}
-                  />
+                  <Check color="green" size={24} style={{ position: "absolute", right: "20px" }} />
                 ) : (
                   <img
                     src={i}
@@ -197,8 +181,7 @@ const AddFundChannel = ({
       <div
         style={{
           display: "flex",
-          justifyContent:
-            window.innerWidth > 1000 ? "flex-end" : "space-between",
+          justifyContent: window.innerWidth > 1000 ? "flex-end" : "space-between",
           alignItems: "center",
           gap: "1.5rem",
           flexWrap: "wrap-reverse",

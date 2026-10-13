@@ -2,20 +2,11 @@ import { useContext, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { apiWrapper } from "../../../../utils/Functions/apiWrapper";
 import { UserContext } from "../../../../Context/UserContext";
-import {
-  getBvnkRequirements,
-  getThunesRequirements,
-  resolveTransactionType,
-} from "./vendorFields";
-import {
-  BVNK_METHODS,
-  getDestinationType,
-  methodFromServiceName,
-} from "./constants";
+import { getBvnkRequirements, getThunesRequirements, resolveTransactionType } from "./vendorFields";
+import { BVNK_METHODS, getDestinationType, methodFromServiceName } from "./constants";
 
 const normalisePayers = (data) => {
-  if (Array.isArray(data))
-    return data.filter((payer) => payer?.id || payer?.name);
+  if (Array.isArray(data)) return data.filter((payer) => payer?.id || payer?.name);
 
   if (Array.isArray(data?.destinations)) {
     return data.destinations.map((payer) => ({
@@ -44,8 +35,7 @@ const fetchPayers = ({ countryIso3, serviceName, vendor, transactionType }) =>
    check the international transfer makes before listing a receiving method. */
 export const useAvailableMethods = (countryIso3, transactionType) => {
   const { userDetails } = useContext(UserContext);
-  const senderIso3 =
-    userDetails?.country?.country_iso_code || userDetails?.country_iso_code;
+  const senderIso3 = userDetails?.country?.country_iso_code || userDetails?.country_iso_code;
 
   const { data, isFetching, error } = useQuery({
     queryKey: ["abfServices", countryIso3, senderIso3, transactionType],
@@ -66,10 +56,7 @@ export const useAvailableMethods = (countryIso3, transactionType) => {
           return {
             value: method,
             serviceId: service.id,
-            serviceName:
-              serviceName?.toLowerCase() === "cards"
-                ? "payment card"
-                : serviceName,
+            serviceName: serviceName?.toLowerCase() === "cards" ? "payment card" : serviceName,
             vendor: (vendor || "thunes").trim().toLowerCase(),
           };
         })
@@ -97,10 +84,7 @@ export const useAvailableMethods = (countryIso3, transactionType) => {
     staleTime: 5 * 60 * 1000,
   });
 
-  const methods = useMemo(
-    () => ({ transfer: data || [], virtualIban: BVNK_METHODS }),
-    [data],
-  );
+  const methods = useMemo(() => ({ transfer: data || [], virtualIban: BVNK_METHODS }), [data]);
 
   return { methods, isLoading: isFetching, error };
 };
@@ -113,20 +97,11 @@ export const useRequiredFields = ({
   enabled = true,
 }) => {
   const { userDetails } = useContext(UserContext);
-  const transactionType = resolveTransactionType(
-    userDetails?.account_type,
-    recipientType,
-  );
+  const transactionType = resolveTransactionType(userDetails?.account_type, recipientType);
   const destinationType = getDestinationType(method, serviceId);
 
   const { data, isFetching, error } = useQuery({
-    queryKey: [
-      "abfRequiredFields",
-      countryIso3,
-      serviceId,
-      destinationType,
-      transactionType,
-    ],
+    queryKey: ["abfRequiredFields", countryIso3, serviceId, destinationType, transactionType],
     queryFn: () =>
       apiWrapper({
         endpoint: `/api/payment/get-required-fields/${countryIso3}/${serviceId}/${transactionType}?destinationType=${destinationType}`,
@@ -142,13 +117,7 @@ export const useRequiredFields = ({
   return { fields, transactionType, isLoading: isFetching, error };
 };
 
-export const useRequirements = ({
-  method,
-  vendor,
-  fields,
-  recipientType,
-  channel,
-}) => {
+export const useRequirements = ({ method, vendor, fields, recipientType, channel }) => {
   const cryptoAsset = channel?.crypto_asset;
 
   return useMemo(() => {

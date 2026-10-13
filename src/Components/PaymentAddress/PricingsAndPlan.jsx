@@ -7,12 +7,7 @@ import SubscribersModal from "./SubscribersModal";
 import { formatCurrency } from "../../Helper/AmountFormat";
 import { UserContext } from "../../Context/UserContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  addPlan,
-  deletePlan as deletePlanApi,
-  getUserPlans,
-  updatePlan,
-} from "./queries/pricings";
+import { addPlan, deletePlan as deletePlanApi, getUserPlans, updatePlan } from "./queries/pricings";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
@@ -40,14 +35,8 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
   const menuRefs = useRef({});
 
   const { data, isLoading } = useQuery({
-    queryKey: [
-      "GetUserPlans",
-      userDetails?.username,
-      debouncedSearch,
-      isInvoicePage,
-    ],
-    queryFn: () =>
-      getUserPlans(userDetails?.username, !isInvoicePage, debouncedSearch),
+    queryKey: ["GetUserPlans", userDetails?.username, debouncedSearch, isInvoicePage],
+    queryFn: () => getUserPlans(userDetails?.username, !isInvoicePage, debouncedSearch),
     enabled: !!userDetails?.username,
     staleTime: 0,
     gcTime: 0,
@@ -62,9 +51,7 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
     const handleDocumentClick = (e) => {
       if (!openMenuPlanId) return;
       const trigger = menuRefs.current[openMenuPlanId];
-      const portalEl = document.querySelector(
-        '[data-portal-menu-id="' + openMenuPlanId + '"]',
-      );
+      const portalEl = document.querySelector('[data-portal-menu-id="' + openMenuPlanId + '"]');
       const clickedInsideTrigger = trigger && trigger.contains(e.target);
       const clickedInsidePortal = portalEl && portalEl.contains(e.target);
       if (!clickedInsideTrigger && !clickedInsidePortal) {
@@ -119,13 +106,12 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
     },
   });
 
-  const { mutateAsync: getSubscribers, isPending: isGettingSubscribers } =
-    useMutation({
-      mutationFn: (planId) =>
-        apiWrapper({
-          endpoint: `/api/plans/get-subscribers/${planId}`,
-        }).then((dec) => dec?.data || []),
-    });
+  const { mutateAsync: getSubscribers, isPending: isGettingSubscribers } = useMutation({
+    mutationFn: (planId) =>
+      apiWrapper({
+        endpoint: `/api/plans/get-subscribers/${planId}`,
+      }).then((dec) => dec?.data || []),
+  });
 
   const handleViewSubscription = async (planId) => {
     setOpenMenuPlanId(null);
@@ -212,9 +198,7 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
     <div className={styles.container}>
       <div className={styles.top}>
         <div>
-          <h1
-            style={isInvoicePage ? { fontSize: "20px", fontWeight: 600 } : {}}
-          >
+          <h1 style={isInvoicePage ? { fontSize: "20px", fontWeight: 600 } : {}}>
             {isInvoicePage ? t("My recent Plans:") : t("Plans & Pricing")}
           </h1>
           {canAddPaymentPlan && plans?.length > 0 && isInvoicePage && (
@@ -237,11 +221,7 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
           )}
         </div>
         {!isInvoicePage && (
-          <p>
-            {t(
-              "The plans shown here are currently synced to your public payment address.",
-            )}
-          </p>
+          <p>{t("The plans shown here are currently synced to your public payment address.")}</p>
         )}
         {isInvoicePage && (
           <p>
@@ -306,23 +286,13 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
             zIndex: openMenuPlanId ? 0 : 20,
           }}
         >
-          <table
-            style={{ width: "100%", borderCollapse: "collapse", minWidth: 680 }}
-          >
+          <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 680 }}>
             <thead>
               <tr style={{ color: "#5B5B5B", fontWeight: 600, fontSize: 14 }}>
-                <th style={{ padding: "14px 8px", textAlign: "left" }}>
-                  {t("Title")}
-                </th>
-                <th style={{ padding: "14px 8px", textAlign: "left" }}>
-                  {t("Description")}
-                </th>
-                <th style={{ padding: "14px 8px", textAlign: "left" }}>
-                  {t("Price")}
-                </th>
-                <th style={{ padding: "14px 8px", textAlign: "left" }}>
-                  {t("Billing Cycle")}
-                </th>
+                <th style={{ padding: "14px 8px", textAlign: "left" }}>{t("Title")}</th>
+                <th style={{ padding: "14px 8px", textAlign: "left" }}>{t("Description")}</th>
+                <th style={{ padding: "14px 8px", textAlign: "left" }}>{t("Price")}</th>
+                <th style={{ padding: "14px 8px", textAlign: "left" }}>{t("Billing Cycle")}</th>
                 <th
                   style={{
                     padding: "14px 8px",
@@ -344,17 +314,13 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
                     position: "relative",
                   }}
                 >
-                  <td style={{ padding: "12px 8px", fontWeight: 500 }}>
-                    {plan.title}
-                  </td>
+                  <td style={{ padding: "12px 8px", fontWeight: 500 }}>{plan.title}</td>
                   <td style={{ padding: "12px 8px" }}>{plan.description}</td>
                   <td style={{ padding: "12px 8px", whiteSpace: "nowrap" }}>
                     {plan.currency || plan?.receivingWallet?.currency?.code}{" "}
                     {Number(plan.price).toFixed(2)}
                   </td>
-                  <td style={{ padding: "12px 8px" }}>
-                    {t(plan.billingCycle)}
-                  </td>
+                  <td style={{ padding: "12px 8px" }}>{t(plan.billingCycle)}</td>
                   <td
                     style={{
                       padding: "12px 8px",
@@ -370,25 +336,15 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
                         borderRadius: 6,
                         padding: 5,
                         transition: "background .15s",
-                        background:
-                          openMenuPlanId === plan._id
-                            ? "#eceaff"
-                            : "transparent",
+                        background: openMenuPlanId === plan._id ? "#eceaff" : "transparent",
                       }}
                       onClick={() =>
                         setOpenMenuPlanId(
-                          openMenuPlanId === (plan.id || plan._id)
-                            ? null
-                            : plan.id || plan._id,
+                          openMenuPlanId === (plan.id || plan._id) ? null : plan.id || plan._id,
                         )
                       }
                     >
-                      <svg
-                        width="22"
-                        height="22"
-                        viewBox="0 0 22 22"
-                        fill="none"
-                      >
+                      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
                         <circle cx="11" cy="5" r="1.5" fill="#888" />
                         <circle cx="11" cy="11" r="1.5" fill="#888" />
                         <circle cx="11" cy="17" r="1.5" fill="#888" />
@@ -410,9 +366,7 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
           const menuWidth = 170;
           const top = rect.bottom + window.scrollY + 6;
           const left = Math.max(8, rect.right + window.scrollX - menuWidth + 8);
-          const plan = filteredPlans.find(
-            (p) => (p.id || p._id) === openMenuPlanId,
-          );
+          const plan = filteredPlans.find((p) => (p.id || p._id) === openMenuPlanId);
           if (!plan) return null;
 
           return createPortal(
@@ -569,9 +523,7 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
                           marginLeft: "5px",
                           cursor: "pointer",
                         }}
-                        onClick={() =>
-                          handleViewSubscription(plan.id || plan._id)
-                        }
+                        onClick={() => handleViewSubscription(plan.id || plan._id)}
                       >
                         {t("Subscribers")}
                       </span>
@@ -611,29 +563,16 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
         </div>
       )}
 
-      <Modal
-        isOpen={showRemoveSyncModal}
-        toggle={() => setShowRemoveSyncModal(false)}
-      >
+      <Modal isOpen={showRemoveSyncModal} toggle={() => setShowRemoveSyncModal(false)}>
         <ModalHeader toggle={() => setShowRemoveSyncModal(false)}>
           {t("Remove from Payment Address")}
         </ModalHeader>
         <ModalBody>
-          <p>
-            {t(
-              "Are you sure you want to remove this plan from your public Payment Address?",
-            )}
-          </p>
+          <p>{t("Are you sure you want to remove this plan from your public Payment Address?")}</p>
           <ul>
             <li>{t("The plan will still exist in your Plans dashboard.")}</li>
-            <li>
-              {t(
-                "It will no longer be visible to clients visiting your public page.",
-              )}
-            </li>
-            <li>
-              {t("You can re-sync it anytime from the Plans tab in Invoices.")}
-            </li>
+            <li>{t("It will no longer be visible to clients visiting your public page.")}</li>
+            <li>{t("You can re-sync it anytime from the Plans tab in Invoices.")}</li>
           </ul>
         </ModalBody>
         <ModalFooter>
@@ -643,11 +582,7 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
           >
             {t("Cancel")}
           </button>
-          <ButtonForRequests
-            color="danger"
-            onClick={handleRemoveSync}
-            isLoading={isEditing}
-          >
+          <ButtonForRequests color="danger" onClick={handleRemoveSync} isLoading={isEditing}>
             {t("Remove Sync")}
           </ButtonForRequests>
         </ModalFooter>

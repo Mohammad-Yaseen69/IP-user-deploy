@@ -1,15 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { ModalFooter } from "react-bootstrap";
 import { CheckCircle, Edit, File, RefreshCw, Trash2 } from "react-feather";
-import {
-  Button,
-  FormGroup,
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalHeader,
-} from "reactstrap";
+import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { UserContext } from "../../Context/UserContext";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import axios from "axios";
@@ -25,9 +17,7 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
   const { authHeader, userDetails, checkAuth } = useContext(UserContext);
   const [partnerName, setPartnerName] = useState(partner?.name);
   const [partnerEmail, setPartnerEmail] = useState(partner?.email);
-  const [partnerDesignation, setPartnerDesignation] = useState(
-    partner?.designation,
-  );
+  const [partnerDesignation, setPartnerDesignation] = useState(partner?.designation);
   const [emailSent, setEmailSent] = useState(false);
   const [showAdditionalModal, setShowAdditionalModal] = useState(false);
 
@@ -142,8 +132,7 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
         <Button
           color="primary"
           style={{
-            background:
-              "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
             border: "none",
             outline: "none",
             borderRadius: "5px",
@@ -159,8 +148,7 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
         <Button
           color="primary"
           style={{
-            background:
-              "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
             border: "none",
             outline: "none",
             borderRadius: "5px",
@@ -179,8 +167,7 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
           <Button
             color="primary"
             style={{
-              background:
-                "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+              background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
               border: "none",
               outline: "none",
               borderRadius: "5px",
@@ -196,49 +183,47 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
             <RefreshCw size={15} />
           </Button>
         )}
-        {partnerFiles?.length > 0 &&
-          partnerFiles?.some((item) => item?.status === "requested") && (
-            <Button
-              color="primary"
+        {partnerFiles?.length > 0 && partnerFiles?.some((item) => item?.status === "requested") && (
+          <Button
+            color="primary"
+            style={{
+              background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+              border: "none",
+              outline: "none",
+              borderRadius: "5px",
+              padding: "5px",
+              fontSize: ".7rem",
+              display: "flex",
+              alignItems: "center",
+              position: "relative",
+            }}
+            title="Send Verification Email"
+            disabled={updating}
+            onClick={() => setShowAdditionalModal(true)}
+          >
+            <File size={15} />
+            <div
               style={{
-                background:
-                  "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                border: "none",
-                outline: "none",
-                borderRadius: "5px",
-                padding: "5px",
-                fontSize: ".7rem",
+                position: "absolute",
+                top: "-7.5px",
+                right: "-7.5px",
+                boxShadow: "0 0 3px #1111113e",
+                color: "black",
+                background: "white",
+                height: "15px",
+                width: "15px",
+                borderRadius: "10px",
+                containerType: "inline-size",
+                fontSize: "9px",
                 display: "flex",
+                justifyContent: "center",
                 alignItems: "center",
-                position: "relative",
               }}
-              title="Send Verification Email"
-              disabled={updating}
-              onClick={() => setShowAdditionalModal(true)}
             >
-              <File size={15} />
-              <div
-                style={{
-                  position: "absolute",
-                  top: "-7.5px",
-                  right: "-7.5px",
-                  boxShadow: "0 0 3px #1111113e",
-                  color: "black",
-                  background: "white",
-                  height: "15px",
-                  width: "15px",
-                  borderRadius: "10px",
-                  containerType: "inline-size",
-                  fontSize: "9px",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                {partnerFiles.length}
-              </div>
-            </Button>
-          )}
+              {partnerFiles.length}
+            </div>
+          </Button>
+        )}
       </td>
       {partnerFiles.length > 0 && (
         <UploadAdditionalKYB
@@ -252,10 +237,7 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
       )}
 
       {/* edit modal */}
-      <Modal
-        isOpen={showEditModal}
-        toggle={() => setShowEditModal(!showEditModal)}
-      >
+      <Modal isOpen={showEditModal} toggle={() => setShowEditModal(!showEditModal)}>
         <ModalHeader toggle={() => setShowEditModal(!showEditModal)}>
           {t("Edit Partner")}
         </ModalHeader>
@@ -288,14 +270,11 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
         <ModalFooter>
           <Button
             style={{
-              background:
-                "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+              background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
               border: "none",
               outline: "none",
             }}
-            disabled={
-              updating || !partnerName || !partnerEmail || !partnerDesignation
-            }
+            disabled={updating || !partnerName || !partnerEmail || !partnerDesignation}
             onClick={updatePartnerHandler}
           >
             {updating ? t("Updating") : t("Update")}
@@ -304,24 +283,19 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
       </Modal>
 
       {/* delete modal */}
-      <Modal
-        isOpen={showDeleteModal}
-        toggle={() => setShowDeleteModal(!showDeleteModal)}
-      >
+      <Modal isOpen={showDeleteModal} toggle={() => setShowDeleteModal(!showDeleteModal)}>
         <ModalHeader toggle={() => setShowDeleteModal(!showDeleteModal)}>
           {t("Delete Partner")}
         </ModalHeader>
         <ModalBody>
           <p>
-            {t("Are you sure, you want to remove")} {partner?.name}{" "}
-            {t("as partner?")}
+            {t("Are you sure, you want to remove")} {partner?.name} {t("as partner?")}
           </p>
         </ModalBody>
         <ModalFooter>
           <Button
             style={{
-              background:
-                "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+              background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
               border: "none",
               outline: "none",
             }}
@@ -331,8 +305,7 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
           </Button>
           <Button
             style={{
-              background:
-                "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+              background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
               border: "none",
               outline: "none",
             }}

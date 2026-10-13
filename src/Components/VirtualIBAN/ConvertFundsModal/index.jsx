@@ -63,27 +63,14 @@ const WalletIcon = () => (
 
 const IdBadgeIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-    <rect
-      x="3"
-      y="2.25"
-      width="12"
-      height="13.5"
-      rx="1.5"
-      stroke="#F8F9FC"
-      strokeWidth="1.2"
-    />
+    <rect x="3" y="2.25" width="12" height="13.5" rx="1.5" stroke="#F8F9FC" strokeWidth="1.2" />
     <circle cx="9" cy="8.25" r="2.25" stroke="#F8F9FC" strokeWidth="1.2" />
     <path
       d="M5.25 14.25C5.25 12.1789 6.92893 10.5 9 10.5C11.0711 10.5 12.75 12.1789 12.75 14.25"
       stroke="#F8F9FC"
       strokeWidth="1.2"
     />
-    <path
-      d="M7.5 3.75H10.5"
-      stroke="#F8F9FC"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
+    <path d="M7.5 3.75H10.5" stroke="#F8F9FC" strokeWidth="1.2" strokeLinecap="round" />
   </svg>
 );
 
@@ -169,12 +156,7 @@ const SIDEBAR_ICONS = {
   [STEPS.DONE]: () => <SealCheckSmall />,
 };
 
-const ConvertFundsModal = ({
-  isOpen,
-  toggle,
-  selectedIban,
-  availableBalance,
-}) => {
+const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) => {
   const { t } = useTranslation();
   const width = useWindowWidth();
   const isMobile = width <= 600;
@@ -287,9 +269,7 @@ const ConvertFundsModal = ({
         setCurrentStep(nextStep);
       }
     } catch (error) {
-      toast.error(
-        getErrorMessage(error, t("Unable to process convert funds request")),
-      );
+      toast.error(getErrorMessage(error, t("Unable to process convert funds request")));
     }
   };
 
@@ -341,12 +321,7 @@ const ConvertFundsModal = ({
         );
       case STEPS.REVIEW:
         return (
-          <ReviewStep
-            amount={amount}
-            wallet={wallet}
-            feeDetails={feeDetails}
-            iban={selectedIban}
-          />
+          <ReviewStep amount={amount} wallet={wallet} feeDetails={feeDetails} iban={selectedIban} />
         );
       case STEPS.DONE:
         return <DoneStep />;
@@ -360,10 +335,7 @@ const ConvertFundsModal = ({
   const footerDisabled = disabled || isProcessing || !selectedIban;
 
   const renderBody = () => (
-    <div
-      className={styles.modalLayout}
-      style={{ flexDirection: width < 1000 ? "column" : "row" }}
-    >
+    <div className={styles.modalLayout} style={{ flexDirection: width < 1000 ? "column" : "row" }}>
       {!isMobile && (
         <div className={addFundsStyles.left}>
           <div
@@ -385,10 +357,7 @@ const ConvertFundsModal = ({
                 <h2>{t("Move funds to InstaPay wallet")}</h2>
               )}
             </div>
-            <div
-              className={addFundsStyles.progressEffect}
-              style={{ marginTop: "2rem" }}
-            >
+            <div className={addFundsStyles.progressEffect} style={{ marginTop: "2rem" }}>
               {SIDEBAR_STEPS.map((item, index) => {
                 const IconComponent = SIDEBAR_ICONS[item.stepName];
                 return (
@@ -413,31 +382,18 @@ const ConvertFundsModal = ({
         </div>
       )}
 
-      <div
-        className={styles.rightPanel}
-        style={{ width: width < 1000 ? "100%" : undefined }}
-      >
+      <div className={styles.rightPanel} style={{ width: width < 1000 ? "100%" : undefined }}>
         <div className={styles.content}>{renderStepContent()}</div>
         {isMobile ? (
           <MobileFooter
-            label={
-              isProcessing
-                ? t("Processing...")
-                : isDone
-                  ? t("Convert more")
-                  : continueLabel
-            }
+            label={isProcessing ? t("Processing...") : isDone ? t("Convert more") : continueLabel}
             handleBack={!isDone && handleBack}
             handleAction={handleContinue}
             disabled={footerDisabled}
           />
         ) : (
           <div className={styles.footer}>
-            <button
-              type="button"
-              className={styles.cancelBtn}
-              onClick={handleClose}
-            >
+            <button type="button" className={styles.cancelBtn} onClick={handleClose}>
               {t("Cancel")}
             </button>
             <div className={styles.footerNav}>
@@ -458,11 +414,7 @@ const ConvertFundsModal = ({
                 disabled={footerDisabled}
                 onClick={handleContinue}
               >
-                {isProcessing
-                  ? t("Processing...")
-                  : isDone
-                    ? t("Convert more")
-                    : continueLabel}
+                {isProcessing ? t("Processing...") : isDone ? t("Convert more") : continueLabel}
                 <ChevronRight />
               </button>
             </div>

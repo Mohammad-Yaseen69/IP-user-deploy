@@ -14,8 +14,7 @@ const InquiryResponseModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
 
   if (!isOpen || !inquiry) return null;
 
-  const requiresFile =
-    inquiry.inquiry_type === "FILE" || inquiry.inquiry_type === "BOTH";
+  const requiresFile = inquiry.inquiry_type === "FILE" || inquiry.inquiry_type === "BOTH";
   const requiresAnswer = inquiry.inquiry_type === "QUESTION";
 
   const handleFileChange = (e) => {
@@ -28,19 +27,12 @@ const InquiryResponseModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
     e?.preventDefault();
 
     if (requiresFile && !selectedFile) {
-      toast.error(
-        t("compliance.fileRequired", "Please attach the requested document."),
-      );
+      toast.error(t("compliance.fileRequired", "Please attach the requested document."));
       return;
     }
 
     if (requiresAnswer && !userAnswer.trim()) {
-      toast.error(
-        t(
-          "compliance.answerRequired",
-          "Please provide an answer to the inquiry.",
-        ),
-      );
+      toast.error(t("compliance.answerRequired", "Please provide an answer to the inquiry."));
       return;
     }
 
@@ -63,8 +55,7 @@ const InquiryResponseModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
       });
 
       toast.success(
-        res?.message ||
-          t("compliance.uploadSuccess", "Response submitted successfully."),
+        res?.message || t("compliance.uploadSuccess", "Response submitted successfully."),
       );
       if (onSuccess) onSuccess();
       toggle();
@@ -81,9 +72,7 @@ const InquiryResponseModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
 
   return (
     <Modal isOpen={isOpen} toggle={toggle} centered size="md">
-      <ModalBody
-        style={{ padding: "24px", background: "#ffffff", borderRadius: "16px" }}
-      >
+      <ModalBody style={{ padding: "24px", background: "#ffffff", borderRadius: "16px" }}>
         <div
           style={{
             display: "flex",
@@ -104,8 +93,7 @@ const InquiryResponseModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
               {inquiry.title}
             </h4>
             <span style={{ fontSize: "12px", color: "#6b7280" }}>
-              {t("compliance.inquiryType", "Compliance Inquiry")} ·{" "}
-              {inquiry.inquiry_type}
+              {t("compliance.inquiryType", "Compliance Inquiry")} · {inquiry.inquiry_type}
             </span>
           </div>
           <button
@@ -144,11 +132,8 @@ const InquiryResponseModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
           onSubmit={handleSubmit}
           style={{ display: "flex", flexDirection: "column", gap: "16px" }}
         >
-          {(inquiry.inquiry_type === "QUESTION" ||
-            inquiry.inquiry_type === "BOTH") && (
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "6px" }}
-            >
+          {(inquiry.inquiry_type === "QUESTION" || inquiry.inquiry_type === "BOTH") && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
               <label
                 style={{
                   fontSize: "13px",
@@ -182,9 +167,7 @@ const InquiryResponseModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
           )}
 
           {requiresFile && (
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "6px" }}
-            >
+            <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
               <label
                 style={{
                   fontSize: "13px",
@@ -203,8 +186,7 @@ const InquiryResponseModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
                       marginLeft: "6px",
                     }}
                   >
-                    ({t("compliance.allowedType", "Format")}:{" "}
-                    {inquiry.file_type})
+                    ({t("compliance.allowedType", "Format")}: {inquiry.file_type})
                   </span>
                 )}
               </label>
@@ -223,10 +205,7 @@ const InquiryResponseModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
                   transition: "all 0.2s",
                 }}
               >
-                <UploadCloud
-                  size={24}
-                  color={selectedFile ? "#059669" : "#6b7280"}
-                />
+                <UploadCloud size={24} color={selectedFile ? "#059669" : "#6b7280"} />
                 <span
                   style={{
                     fontSize: "13px",

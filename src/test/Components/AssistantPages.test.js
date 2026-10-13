@@ -1,8 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  PAGES,
-  getPageById,
-} from "../../Components/AssistantWidget/knowledge/pages";
+import { PAGES, getPageById } from "../../Components/AssistantWidget/knowledge/pages";
 
 describe("assistant page registry", () => {
   it("has a unique id for every page", () => {
@@ -26,9 +23,7 @@ describe("assistant page registry", () => {
 
   it("uses in-app absolute paths for every route", () => {
     PAGES.forEach((page) => {
-      expect(page.route.startsWith("/"), `${page.id} -> ${page.route}`).toBe(
-        true,
-      );
+      expect(page.route.startsWith("/"), `${page.id} -> ${page.route}`).toBe(true);
     });
   });
 
@@ -44,11 +39,7 @@ describe("assistant page registry", () => {
   });
 
   it("keeps deep-link query strings intact", () => {
-    expect(getPageById("send_money")?.route).toBe(
-      "/payments?payment_action=send_money",
-    );
-    expect(getPageById("verification")?.route).toBe(
-      "/settings?tab=verification",
-    );
+    expect(getPageById("send_money")?.route).toBe("/payments?payment_action=send_money");
+    expect(getPageById("verification")?.route).toBe("/settings?tab=verification");
   });
 });

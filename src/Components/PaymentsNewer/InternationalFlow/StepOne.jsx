@@ -95,8 +95,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
     payer: false,
   });
   const [isAmountLoading, setIsAmountLoading] = useState(false);
-  const [isReceivingAmountLoading, setIsReceivingAmountLoading] =
-    useState(false);
+  const [isReceivingAmountLoading, setIsReceivingAmountLoading] = useState(false);
   const [countriesLoading, setCountriesLoading] = useState(true);
 
   const toggleModalHandler = (key) => {
@@ -120,23 +119,18 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
     if (userWallets.length > 0) {
       const localCurrency = () => {
         const cont = CitiesData.find(
-          (item) =>
-            item.iso3?.toUpperCase() ===
-            userDetails?.country_iso_code?.toUpperCase(),
+          (item) => item.iso3?.toUpperCase() === userDetails?.country_iso_code?.toUpperCase(),
         );
         return cont.currency;
       };
       const getWallet = () => {
         const wallet =
-          userWallets?.find(
-            (item) => item?.currency?.code === localCurrency(),
-          ) || userWallets.find((wallet) => wallet.default);
+          userWallets?.find((item) => item?.currency?.code === localCurrency()) ||
+          userWallets.find((wallet) => wallet.default);
 
         if (wallet?.currency?.code) {
           return {
-            ...currencies.find(
-              (item) => item.currency_code === wallet?.currency?.code,
-            ),
+            ...currencies.find((item) => item.currency_code === wallet?.currency?.code),
             ...wallet,
           };
         }
@@ -161,18 +155,12 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
         const decrypted = decryptData(res.data.data);
 
         const countriesArray = allCountries.filter((item) => {
-          return decrypted.some(
-            (apiCountry) => apiCountry.countryIso3 === item?.alpha3,
-          );
+          return decrypted.some((apiCountry) => apiCountry.countryIso3 === item?.alpha3);
         });
 
         const allowed = countriesArray?.map((coun) => {
-          const currency = currencies.find(
-            (item) => item?.country_iso === coun?.alpha3,
-          );
-          const dbCont = decrypted?.find(
-            (item) => item?.countryIso3 === coun?.alpha3,
-          );
+          const currency = currencies.find((item) => item?.country_iso === coun?.alpha3);
+          const dbCont = decrypted?.find((item) => item?.countryIso3 === coun?.alpha3);
           return {
             ...coun,
             id: dbCont?._id,
@@ -180,9 +168,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
           };
         });
 
-        setCountries(
-          allowed?.sort((a, b) => String(a?.name)?.localeCompare(b?.name)),
-        );
+        setCountries(allowed?.sort((a, b) => String(a?.name)?.localeCompare(b?.name)));
       } catch (error) {
         console.log(error);
         if (call === 1) {
@@ -205,9 +191,8 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
     if (countries.length > 0) {
       const _countries = countries.map((coun) => {
         coun.name =
-          countriesInDiffLangs[i18n.language]?.find(
-            (item) => item?.alpha3 === coun.alpha3,
-          )?.name ?? coun.name;
+          countriesInDiffLangs[i18n.language]?.find((item) => item?.alpha3 === coun.alpha3)?.name ??
+          coun.name;
         return coun;
       });
 
@@ -223,9 +208,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
 
   useEffect(() => {
     if (data?.payoutChannel?.id) {
-      const selectedService = services.find(
-        (s) => s.id === data.payoutChannel.id,
-      );
+      const selectedService = services.find((s) => s.id === data.payoutChannel.id);
       if (selectedService?.payers) {
         dataHandler("payers", selectedService.payers);
 
@@ -322,12 +305,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
       const pos = cursor + (newLen - prevLen);
       e.target.setSelectionRange(pos, pos);
     });
-    if (
-      data?.currency &&
-      data?.payer?.id &&
-      data?.country?.id &&
-      data?.payoutChannel?.id
-    ) {
+    if (data?.currency && data?.payer?.id && data?.country?.id && data?.payoutChannel?.id) {
       dataHandler("exchange_rate", {});
       dataHandler("exchange_rate_error", "");
       if (api_timeout) {
@@ -340,14 +318,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
       };
       const amountForRequest = rawValue?.replaceAll(",", "");
       api_timeout = setTimeout(() => {
-        getExchangeRate(
-          amountForRequest,
-          setLimitType,
-          "",
-          data.currency,
-          true,
-          setter,
-        );
+        getExchangeRate(amountForRequest, setLimitType, "", data.currency, true, setter);
       }, 1000);
     }
   };
@@ -357,12 +328,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
 
     formatCurrency(rawValue, false, setValueR);
 
-    if (
-      data?.currency &&
-      data?.payer?.id &&
-      data?.country?.id &&
-      data?.payoutChannel?.id
-    ) {
+    if (data?.currency && data?.payer?.id && data?.country?.id && data?.payoutChannel?.id) {
       dataHandler("exchange_rate", {});
       dataHandler("exchange_rate_error", "");
       if (api_timeout) {
@@ -375,15 +341,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
       };
       const amountForRequest = rawValue?.replaceAll(",", "");
       api_timeout = setTimeout(() => {
-        getExchangeRate(
-          amountForRequest,
-          setLimitType,
-          "",
-          data.currency,
-          true,
-          setter,
-          "to",
-        );
+        getExchangeRate(amountForRequest, setLimitType, "", data.currency, true, setter, "to");
       }, 1000);
     }
   };
@@ -427,10 +385,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                 />
               )}
             </div>
-            <div
-              className={styles.currency}
-              onClick={() => toggleModalHandler("currency")}
-            >
+            <div className={styles.currency} onClick={() => toggleModalHandler("currency")}>
               <img
                 src={data.currency_wallet?.file_url}
                 alt=""
@@ -476,9 +431,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                   `Amount needs to be greater than ${data?.exchange_rate?.fee?.amount} ${data?.conversion_in}`,
                 )}
               {data?.exchange_rate_error === "sww" &&
-                t(
-                  "We cannot process your request at the moment, please try again later.",
-                )}
+                t("We cannot process your request at the moment, please try again later.")}
               {data?.exchange_rate_error === "payer_unavailable" &&
                 t(
                   `Unable to conduct the transaction to ${data?.payer?.name} at the moment. Please try again later.`,
@@ -489,8 +442,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                 `${t("Maximum Amount")}: ${data.exchange_rate_error_value} ${data?.conversion_in}`}
               {data?.exchange_rate_error === "min payer" &&
                 `${t("Minimum Amount")}: ${data.exchange_rate_error_value} ${data?.conversion_in}`}
-              {data?.exchange_rate_error === "Invalid Amount.." &&
-                t("Invalid Amount")}
+              {data?.exchange_rate_error === "Invalid Amount.." && t("Invalid Amount")}
               {possibleErrors?.[
                 Object.keys(possibleErrors).find(
                   (item) => possibleErrors[item] === data?.exchange_rate_error,
@@ -505,8 +457,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                 <div className={styles.er_item}>
                   <img src={er_icon} alt="" />
                   <span>
-                    1.00 {data?.currency}={" "}
-                    {data?.exchange_rate?.exchange_rate ?? "?"}{" "}
+                    1.00 {data?.currency}= {data?.exchange_rate?.exchange_rate ?? "?"}{" "}
                     {data?.exchange_rate?.receiver?.currency ?? ""}
                   </span>
                 </div>
@@ -515,10 +466,10 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                 <div className={styles.er_item}>
                   <span>
                     {t("Min Amount")}:{" "}
-                    {Number(data?.exchange_rate?.min_amount)?.toLocaleString(
-                      "en-US",
-                      { minimumFractionDigits: 2, maximumFractionDigits: 2 },
-                    )}{" "}
+                    {Number(data?.exchange_rate?.min_amount)?.toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}{" "}
                     {data?.currency}
                   </span>
                 </div>
@@ -529,10 +480,10 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                 <div className={styles.er_item}>
                   <span>
                     {t("Max Amount")}:{" "}
-                    {Number(data?.exchange_rate?.max_amount)?.toLocaleString(
-                      "en-US",
-                      { minimumFractionDigits: 2, maximumFractionDigits: 2 },
-                    )}{" "}
+                    {Number(data?.exchange_rate?.max_amount)?.toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}{" "}
                     {data?.currency}
                   </span>
                 </div>
@@ -596,9 +547,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                           }
                         }}
                         value={data.receiving_amount ?? 0}
-                        onChange={(e) =>
-                          dataHandler("receiving_amount", e.target.value)
-                        }
+                        onChange={(e) => dataHandler("receiving_amount", e.target.value)}
                         onKeyUp={handleKeyUpR}
                         onBlur={handleBlurR}
                         maxLength={12}
@@ -609,14 +558,9 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                   </>
                 )}
               </div>
-              <div
-                className={styles.country}
-                onClick={() => toggleModalHandler("country")}
-              >
+              <div className={styles.country} onClick={() => toggleModalHandler("country")}>
                 <div className={styles.main}>
-                  <div
-                    className={data?.country?.file_url ? "" : styles.grad_icon}
-                  >
+                  <div className={data?.country?.file_url ? "" : styles.grad_icon}>
                     <img src={data?.country?.file_url ?? country} alt="" />
                   </div>
                   <span>
@@ -650,28 +594,16 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                     <span>{t("Receiving Method")}</span>
                     <div
                       className={styles.channel_con}
-                      onClick={() =>
-                        !isLoadingServices
-                          ? toggleModalHandler("payout")
-                          : () => {}
-                      }
+                      onClick={() => (!isLoadingServices ? toggleModalHandler("payout") : () => {})}
                     >
                       <div className={styles.channel}>
-                        <div
-                          className={
-                            data?.payoutChannel?.icon ? styles.grad_icon : ""
-                          }
-                        >
-                          <img
-                            src={data?.payoutChannel?.icon ?? channel}
-                            alt=""
-                          />
+                        <div className={data?.payoutChannel?.icon ? styles.grad_icon : ""}>
+                          <img src={data?.payoutChannel?.icon ?? channel} alt="" />
                         </div>
                         <span>
                           {isLoadingServices
                             ? t("Loading Methods") + "..."
-                            : t(data?.payoutChannel?.name) ||
-                              t("Select Method")}
+                            : t(data?.payoutChannel?.name) || t("Select Method")}
                         </span>
                       </div>
                       <img className={styles.chev} src={chev_down} alt="" />
@@ -683,10 +615,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
             {data?.payoutChannel?.name && (
               <div className={styles.receiving_method}>
                 <span>{t("Payer")}</span>
-                <div
-                  className={styles.channel_con}
-                  onClick={() => toggleModalHandler("payer")}
-                >
+                <div className={styles.channel_con} onClick={() => toggleModalHandler("payer")}>
                   <div className={styles.channel}>
                     <div className={styles.grad_icon}>
                       <img src={data?.payoutChannel?.icon ?? channel} alt="" />

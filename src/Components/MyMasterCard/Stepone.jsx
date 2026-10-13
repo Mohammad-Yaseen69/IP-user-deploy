@@ -6,15 +6,8 @@ import IpLogo from "./files/ip.svg";
 import { Gb, Euro, USD, Apay, Gpay } from "./files";
 
 const Toggle = ({ checked, onChange, isCheckbox = false }) => (
-  <label
-    style={{ borderRadius: "999px" }}
-    className={isCheckbox ? styles.checkbox : styles.toggle}
-  >
-    <input
-      type={isCheckbox ? "checkbox" : "checkbox"}
-      checked={checked}
-      onChange={onChange}
-    />
+  <label style={{ borderRadius: "999px" }} className={isCheckbox ? styles.checkbox : styles.toggle}>
+    <input type={isCheckbox ? "checkbox" : "checkbox"} checked={checked} onChange={onChange} />
     <div className={isCheckbox ? styles.checkmark : styles.slider}></div>
   </label>
 );
@@ -70,27 +63,11 @@ const Stepone = ({
               viewBox="0 0 20 21"
               fill="none"
             >
-              <rect
-                x="0.5"
-                y="1.3208"
-                width="19"
-                height="19"
-                rx="9.5"
-                fill="#F9F5FF"
-              />
-              <rect
-                x="0.5"
-                y="1.3208"
-                width="19"
-                height="19"
-                rx="9.5"
-                stroke="#7F56D9"
-              />
+              <rect x="0.5" y="1.3208" width="19" height="19" rx="9.5" fill="#F9F5FF" />
+              <rect x="0.5" y="1.3208" width="19" height="19" rx="9.5" stroke="#7F56D9" />
               <circle cx="10" cy="10.8208" r="4" fill="#7F56D9" />
             </svg>
-            <span
-              style={{ fontSize: "14px", color: "#333333", fontWeight: 600 }}
-            >
+            <span style={{ fontSize: "14px", color: "#333333", fontWeight: 600 }}>
               {t("Virtual Card")}
             </span>
           </div>
@@ -103,27 +80,11 @@ const Stepone = ({
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <rect
-                x="0.5"
-                y="1.3208"
-                width="15"
-                height="15"
-                rx="7.5"
-                fill="#F5F5F5"
-              />
-              <rect
-                x="0.5"
-                y="1.3208"
-                width="15"
-                height="15"
-                rx="7.5"
-                stroke="#E9EAEB"
-              />
+              <rect x="0.5" y="1.3208" width="15" height="15" rx="7.5" fill="#F5F5F5" />
+              <rect x="0.5" y="1.3208" width="15" height="15" rx="7.5" stroke="#E9EAEB" />
             </svg>
 
-            <span
-              style={{ fontSize: "14px", color: "#A8A8A8", fontWeight: 500 }}
-            >
+            <span style={{ fontSize: "14px", color: "#A8A8A8", fontWeight: 500 }}>
               {t("Physical Card (Coming Soon)")}
             </span>
           </div>
@@ -149,13 +110,9 @@ const Stepone = ({
                   padding: "18px",
                 }}
               >
-                <div
-                  style={{ display: "flex", alignItems: "center", gap: "10px" }}
-                >
+                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                   <img src={CardIcon} alt="" />
-                  <p style={{ color: cardType === card.type && "#EC9100" }}>
-                    {card.text}
-                  </p>
+                  <p style={{ color: cardType === card.type && "#EC9100" }}>{card.text}</p>
                 </div>
 
                 {card.type === cardType && (
@@ -288,8 +245,7 @@ const Stepone = ({
             <img src={CardIcon} alt="" />
             <div>
               <h4>
-                {cardType === "standard" ? t("Standard") : t("Premium")}{" "}
-                {t("Card")}
+                {cardType === "standard" ? t("Standard") : t("Premium")} {t("Card")}
               </h4>
               <span color="#5926F0">{t("FEATURES")}</span>
             </div>
@@ -417,8 +373,7 @@ const Stepone = ({
 
             <div>
               <h2>
-                {userDetails?.first_name || userDetails?.company_name}{" "}
-                {userDetails?.last_name}
+                {userDetails?.first_name || userDetails?.company_name} {userDetails?.last_name}
               </h2>
 
               <h3>

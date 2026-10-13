@@ -1,12 +1,7 @@
 @import "variables.scss";
 @import "mixins.scss";
 .antennaio {
-  @include retina-image(
-    "../img/antenna.png",
-    "../img/antenna$2x.png",
-    60px,
-    60px
-  );
+  @include retina-image("../img/antenna.png", "../img/antenna$2x.png", 60px, 60px);
   background-repeat: no-repeat;
   color: lighten($textColor, 35%);
   width: 280px;

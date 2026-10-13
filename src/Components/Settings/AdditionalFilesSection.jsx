@@ -3,13 +3,7 @@ import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Badge, Card, CardBody, CardHeader, Col, Table } from "reactstrap";
-import {
-  CheckCircle,
-  XCircle,
-  UploadCloud,
-  FileText,
-  ExternalLink,
-} from "react-feather";
+import { CheckCircle, XCircle, UploadCloud, FileText, ExternalLink } from "react-feather";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { UserContext } from "../../Context/UserContext";
@@ -27,10 +21,7 @@ const validateFileType = (file, fileType) => {
   if (!file || !fileType) return true;
   const type = fileType.trim().toLowerCase();
   if (type === "pdf") {
-    return (
-      file.type === "application/pdf" ||
-      file.name.toLowerCase().endsWith(".pdf")
-    );
+    return file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
   }
   if (type === "image") {
     return file.type.startsWith("image/");
@@ -125,8 +116,7 @@ const getStatusBadge = (status, t) => {
       </Badge>
     );
   }
-  const displayName =
-    status.charAt(0).toUpperCase() + status.slice(1).replace(/[-_]/g, " ");
+  const displayName = status.charAt(0).toUpperCase() + status.slice(1).replace(/[-_]/g, " ");
   return (
     <Badge
       color="secondary"
@@ -243,13 +233,9 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
         verifyToken(true);
       }
     } catch (error) {
-      const dec = error?.response?.data?.data
-        ? decryptData(error.response.data.data)
-        : null;
+      const dec = error?.response?.data?.data ? decryptData(error.response.data.data) : null;
       const errMsg =
-        dec?.message ||
-        error?.response?.data?.message ||
-        t("Upload failed. Please try again.");
+        dec?.message || error?.response?.data?.message || t("Upload failed. Please try again.");
       toast.error(errMsg);
     } finally {
       setUploadingStates((prev) => ({ ...prev, [item._id]: false }));
@@ -308,12 +294,8 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
                   <th style={{ padding: "12px 16px", fontWeight: "600" }}>
                     {t("Document details")}
                   </th>
-                  <th style={{ padding: "12px 16px", fontWeight: "600" }}>
-                    {t("Allowed Format")}
-                  </th>
-                  <th style={{ padding: "12px 16px", fontWeight: "600" }}>
-                    {t("Status")}
-                  </th>
+                  <th style={{ padding: "12px 16px", fontWeight: "600" }}>{t("Allowed Format")}</th>
+                  <th style={{ padding: "12px 16px", fontWeight: "600" }}>{t("Status")}</th>
                   <th
                     style={{
                       padding: "12px 16px",
@@ -330,19 +312,14 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
                   const file = selectedFiles[item._id];
                   const preview = filePreviews[item._id];
                   const uploading = uploadingStates[item._id];
-                  const lowerStatus = item.status
-                    ? item.status.toLowerCase()
-                    : "";
+                  const lowerStatus = item.status ? item.status.toLowerCase() : "";
                   const isActionable =
                     lowerStatus === "requested" ||
                     lowerStatus === "decline" ||
                     lowerStatus === "declined";
 
                   return (
-                    <tr
-                      key={item._id}
-                      style={{ borderBottom: "1px solid #f1f5f9" }}
-                    >
+                    <tr key={item._id} style={{ borderBottom: "1px solid #f1f5f9" }}>
                       <td style={{ padding: "16px", maxWidth: "300px" }}>
                         <div
                           style={{
@@ -414,9 +391,7 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
                             : item.file_type || t("Any Format")}
                         </span>
                       </td>
-                      <td style={{ padding: "16px" }}>
-                        {getStatusBadge(item.status, t)}
-                      </td>
+                      <td style={{ padding: "16px" }}>{getStatusBadge(item.status, t)}</td>
                       <td style={{ padding: "16px", textAlign: "right" }}>
                         {isActionable ? (
                           item.input_type === "text" ? (
@@ -431,9 +406,7 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
                               <input
                                 type="text"
                                 value={textInputs[item._id] || ""}
-                                onChange={(e) =>
-                                  handleTextChange(item._id, e.target.value)
-                                }
+                                onChange={(e) => handleTextChange(item._id, e.target.value)}
                                 placeholder={t("Enter text response...")}
                                 style={{
                                   border: "1px solid #cbd5e1",
@@ -448,9 +421,7 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
                               <button
                                 type="button"
                                 onClick={() => handleUploadSingle(item)}
-                                disabled={
-                                  uploading || !textInputs[item._id]?.trim()
-                                }
+                                disabled={uploading || !textInputs[item._id]?.trim()}
                                 style={{
                                   background:
                                     "linear-gradient(135deg, #e64067 0%, #5926f0 50%, #4828a0 100%)",
@@ -503,11 +474,7 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
                                     id={`file-input-${item._id}`}
                                     accept={getAllowedAccept(item.file_type)}
                                     onChange={(e) =>
-                                      handleFileChange(
-                                        item._id,
-                                        e.target.files[0],
-                                        item.file_type,
-                                      )
+                                      handleFileChange(item._id, e.target.files[0], item.file_type)
                                     }
                                     style={{ display: "none" }}
                                   />
@@ -545,10 +512,7 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
                                         }}
                                       />
                                     ) : (
-                                      <FileText
-                                        size={14}
-                                        style={{ color: "#4f46e5" }}
-                                      />
+                                      <FileText size={14} style={{ color: "#4f46e5" }} />
                                     )}
                                     <span
                                       style={{
@@ -593,9 +557,7 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
                                       cursor: "pointer",
                                     }}
                                   >
-                                    {uploading
-                                      ? t("Uploading...")
-                                      : t("Upload")}
+                                    {uploading ? t("Uploading...") : t("Upload")}
                                   </button>
                                 </div>
                               )}
@@ -615,9 +577,7 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
                             }}
                             title={item.text_value || item.file_link}
                           >
-                            {item.text_value ||
-                              item.file_link ||
-                              t("Submitted")}
+                            {item.text_value || item.file_link || t("Submitted")}
                           </span>
                         ) : (
                           item.file_link && (

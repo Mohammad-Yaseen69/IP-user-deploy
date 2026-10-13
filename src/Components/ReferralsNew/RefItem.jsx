@@ -32,10 +32,7 @@ const RefItem = ({ item, onViewCommissions }) => {
         <div className={styles.badge}>${item?.amount}</div>
       </div>
       <div className={styles.visit}>
-        <button
-          className={styles.action_btn}
-          onClick={() => onViewCommissions(item)}
-        >
+        <button className={styles.action_btn} onClick={() => onViewCommissions(item)}>
           {t("View Commissions")}
         </button>
       </div>

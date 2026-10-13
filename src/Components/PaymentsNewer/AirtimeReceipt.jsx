@@ -24,8 +24,7 @@ const AirtimeReceipt = ({ pkgDetails, amount }) => {
           padding: "14px",
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
         className="conf_cont"
       >
@@ -68,13 +67,11 @@ const AirtimeReceipt = ({ pkgDetails, amount }) => {
           <span>{t("Total")}</span>
           {amount ? (
             <strong>
-              {String(pkgDetails?.prices?.amount)?.slice(0, 4)}{" "}
-              {pkgDetails?.prices?.unit}
+              {String(pkgDetails?.prices?.amount)?.slice(0, 4)} {pkgDetails?.prices?.unit}
             </strong>
           ) : (
             <strong>
-              {pkgDetails?.prices?.amount?.toFixed(2)}{" "}
-              {pkgDetails?.prices?.unit}
+              {pkgDetails?.prices?.amount?.toFixed(2)} {pkgDetails?.prices?.unit}
             </strong>
           )}
         </div>

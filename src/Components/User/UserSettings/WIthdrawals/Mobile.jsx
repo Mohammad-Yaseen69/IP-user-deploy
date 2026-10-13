@@ -50,10 +50,7 @@ const Mobile = ({ values, changeHandler, isEditMode }) => {
         />
       </FormGroup>
       <FormGroup style={{ flex: 1, margin: 0 }}>
-        <Label
-          className="col-form-label"
-          htmlFor="mobile_wallet_account_number"
-        >
+        <Label className="col-form-label" htmlFor="mobile_wallet_account_number">
           {t("Wallet Number")} <span className="req_star">*</span>
         </Label>
         <Input

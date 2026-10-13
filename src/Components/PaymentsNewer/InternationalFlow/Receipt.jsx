@@ -55,10 +55,7 @@ const Receipt = ({
       {data.error ? (
         ""
       ) : (
-        <div
-          style={{ width: isFullWidth && "100%" }}
-          className={styles.container}
-        >
+        <div style={{ width: isFullWidth && "100%" }} className={styles.container}>
           {showShare && (
             <SocialModal
               isOpen={showShare}
@@ -158,11 +155,7 @@ const Receipt = ({
                                         data?.transaction_details?.data?.transactionId}
                                 </div> */}
               <div className={styles.actions}>
-                <button
-                  onClick={() =>
-                    window.open("https://guide.insta-pay.ch", "_blank")
-                  }
-                >
+                <button onClick={() => window.open("https://guide.insta-pay.ch", "_blank")}>
                   <img src={help} alt="" />
                   <span>{t("Need help?")}</span>
                 </button>
@@ -212,10 +205,7 @@ const Receipt = ({
                   values={{
                     name: title
                       ? title
-                      : getBeneficiaryDisplayName(
-                          data.beneficiary,
-                          "Recipient's",
-                        ),
+                      : getBeneficiaryDisplayName(data.beneficiary, "Recipient's"),
                   }}
                   components={{
                     user: <strong />,

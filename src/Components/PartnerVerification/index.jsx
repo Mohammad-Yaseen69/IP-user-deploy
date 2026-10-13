@@ -17,16 +17,10 @@ const PartnerVerificationPage = () => {
         // console.log(data)
 
         if (data?.KYBLink) {
-          setMessage(
-            "Authenticated, redirecting you to the verification page.",
-          );
+          setMessage("Authenticated, redirecting you to the verification page.");
           const newWindow = window.open(data?.KYBLink, "_blank");
 
-          if (
-            !newWindow ||
-            newWindow.closed ||
-            typeof newWindow.closed == "undefined"
-          ) {
+          if (!newWindow || newWindow.closed || typeof newWindow.closed == "undefined") {
             window.location.href = data?.KYBLink;
           }
         }

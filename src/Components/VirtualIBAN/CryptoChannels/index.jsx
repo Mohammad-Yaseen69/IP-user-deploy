@@ -4,10 +4,7 @@ import { Inbox, Plus } from "react-feather";
 import InstaPayLoader from "../../Loader";
 import DepositAddress from "../CryptoWallet/WalletDetail/DepositAddress";
 import NetworkSelector from "../CryptoWallet/WalletDetail/NetworkSelector";
-import {
-  getAssetFullName,
-  getWalletAccentColor,
-} from "../CryptoWallet/utils/format";
+import { getAssetFullName, getWalletAccentColor } from "../CryptoWallet/utils/format";
 import styles from "../CryptoWallet/cryptoPage.module.scss";
 import { getChannelNetworks } from "./api/cryptoChannels";
 import AddChannelModal from "./components/AddChannelModal";
@@ -28,12 +25,10 @@ const CryptoChannels = ({ selectedIban }) => {
   const { t } = useTranslation();
   // The channel endpoints key off the vIBAN's public virtualIbanId, not
   // its Mongo _id — fall back to _id/id only for records missing it.
-  const virtualIbanId =
-    selectedIban?.virtualIbanId || selectedIban?._id || selectedIban?.id;
+  const virtualIbanId = selectedIban?.virtualIbanId || selectedIban?._id || selectedIban?.id;
   const displayCurrency = selectedIban?.currency || "EUR";
 
-  const { channels, isLoading, creating, createChannel } =
-    useCryptoChannels(virtualIbanId);
+  const { channels, isLoading, creating, createChannel } = useCryptoChannels(virtualIbanId);
 
   const [showInstructions, setShowInstructions] = useState(false);
   const [showAddChannel, setShowAddChannel] = useState(false);
@@ -43,8 +38,7 @@ const CryptoChannels = ({ selectedIban }) => {
   const hasChannels = channels.length > 0;
 
   const ownedCurrencies = useMemo(
-    () =>
-      new Set(channels.map((c) => String(c?.payCurrency || "").toUpperCase())),
+    () => new Set(channels.map((c) => String(c?.payCurrency || "").toUpperCase())),
     [channels],
   );
 
@@ -68,8 +62,7 @@ const CryptoChannels = ({ selectedIban }) => {
     setNetworkIndex(0);
   }, [selectedUuid]);
 
-  const selectedChannel =
-    channels.find((c) => c.uuid === selectedUuid) || channels[0];
+  const selectedChannel = channels.find((c) => c.uuid === selectedUuid) || channels[0];
   const networks = getChannelNetworks(selectedChannel);
   const currentNetwork = networks[networkIndex] || networks[0];
 
@@ -108,11 +101,7 @@ const CryptoChannels = ({ selectedIban }) => {
                 )}
               </p>
             </div>
-            <button
-              type="button"
-              className={styles.addBtn}
-              onClick={() => setShowAddChannel(true)}
-            >
+            <button type="button" className={styles.addBtn} onClick={() => setShowAddChannel(true)}>
               <Plus size={16} />
               {t("Add new channel")}
             </button>
@@ -129,17 +118,14 @@ const CryptoChannels = ({ selectedIban }) => {
               <span
                 className={styles.detailMark}
                 style={{
-                  background: getWalletAccentColor(
-                    selectedChannel?.payCurrency,
-                  ),
+                  background: getWalletAccentColor(selectedChannel?.payCurrency),
                 }}
               >
                 {selectedChannel?.payCurrency}
               </span>
               <div>
                 <h4 className={styles.detailTitle}>
-                  {selectedChannel?.payCurrency}{" "}
-                  {t(getAssetFullName(selectedChannel?.payCurrency))}
+                  {selectedChannel?.payCurrency} {t(getAssetFullName(selectedChannel?.payCurrency))}
                 </h4>
                 <p className={styles.detailSub}>
                   {t("Crypto Channel")} •{" "}
@@ -155,10 +141,7 @@ const CryptoChannels = ({ selectedIban }) => {
               selectedIndex={networkIndex}
               onSelect={setNetworkIndex}
             />
-            <DepositAddress
-              currencyCode={selectedChannel?.payCurrency}
-              network={currentNetwork}
-            />
+            <DepositAddress currencyCode={selectedChannel?.payCurrency} network={currentNetwork} />
           </div>
         </section>
       ) : (
@@ -168,9 +151,7 @@ const CryptoChannels = ({ selectedIban }) => {
           </span>
           <h3 className={styles.emptyTitle}>{t("No crypto channels yet")}</h3>
           <p className={styles.emptyText}>
-            {t(
-              "Add a crypto channel to start receiving crypto straight into this virtual IBAN.",
-            )}
+            {t("Add a crypto channel to start receiving crypto straight into this virtual IBAN.")}
           </p>
           <button
             type="button"

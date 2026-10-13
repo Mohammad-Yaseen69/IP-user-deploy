@@ -39,11 +39,7 @@ const AddByNameModal = ({ open, onClose }) => {
         method: "GET",
         isDecrypted: true,
       });
-      const list = Array.isArray(dec)
-        ? dec
-        : Array.isArray(dec?.data)
-          ? dec.data
-          : [];
+      const list = Array.isArray(dec) ? dec : Array.isArray(dec?.data) ? dec.data : [];
       const approved = list
         .filter((r) => r.status === "approved")
         .map((r) => ({
@@ -112,9 +108,7 @@ const AddByNameModal = ({ open, onClose }) => {
       });
     },
     onSuccess: () => {
-      toast.success(
-        t("Client added and linked to your portfolio successfully!"),
-      );
+      toast.success(t("Client added and linked to your portfolio successfully!"));
       queryClient.invalidateQueries({ queryKey: ["agentLeads"] });
       queryClient.invalidateQueries({ queryKey: ["agentAnalytics"] });
       handleClose();
@@ -201,15 +195,8 @@ const AddByNameModal = ({ open, onClose }) => {
   console.log(feePacks, "feepacks");
 
   return (
-    <Modal
-      isOpen={open}
-      toggle={handleClose}
-      centered
-      size={step === 2 ? "lg" : "md"}
-    >
-      <ModalBody
-        style={{ padding: "24px", background: "#FFF", borderRadius: "12px" }}
-      >
+    <Modal isOpen={open} toggle={handleClose} centered size={step === 2 ? "lg" : "md"}>
+      <ModalBody style={{ padding: "24px", background: "#FFF", borderRadius: "12px" }}>
         <div
           style={{
             display: "flex",
@@ -248,9 +235,7 @@ const AddByNameModal = ({ open, onClose }) => {
               </h3>
               <p style={{ margin: 0, fontSize: "12px", color: "#6B7280" }}>
                 {step === 1
-                  ? t(
-                      "Search existing clients or register for automatic matching",
-                    )
+                  ? t("Search existing clients or register for automatic matching")
                   : t("Select matched client or mark as not in list")}
               </p>
             </div>
@@ -284,8 +269,7 @@ const AddByNameModal = ({ open, onClose }) => {
                   marginBottom: "6px",
                 }}
               >
-                {t("Client / Company Name")}{" "}
-                <span style={{ color: "#EF4444" }}>*</span>
+                {t("Client / Company Name")} <span style={{ color: "#EF4444" }}>*</span>
               </label>
               <input
                 type="text"
@@ -313,8 +297,7 @@ const AddByNameModal = ({ open, onClose }) => {
                   marginBottom: "6px",
                 }}
               >
-                {t("Assign Fee Pack")}{" "}
-                <span style={{ color: "#EF4444" }}>*</span>
+                {t("Assign Fee Pack")} <span style={{ color: "#EF4444" }}>*</span>
               </label>
               <select
                 value={feePackId}
@@ -332,25 +315,14 @@ const AddByNameModal = ({ open, onClose }) => {
               >
                 {feePacks.length === 0 ? (
                   <option value="">
-                    {loadingPacks
-                      ? t("Loading fee models...")
-                      : t("No approved fee models found")}
+                    {loadingPacks ? t("Loading fee models...") : t("No approved fee models found")}
                   </option>
                 ) : (
                   <>
-                    <option value="">
-                      {t("Select an approved fee pack...")}
-                    </option>
+                    <option value="">{t("Select an approved fee pack...")}</option>
                     {feePacks.map((pack) => (
-                      <option
-                        key={pack._id?._id || pack?._id}
-                        value={pack._id?._id || pack?._id}
-                      >
-                        {pack.name} (
-                        {pack.pricing_summary ||
-                          pack.model_code ||
-                          "Approved Model"}
-                        )
+                      <option key={pack._id?._id || pack?._id} value={pack._id?._id || pack?._id}>
+                        {pack.name} ({pack.pricing_summary || pack.model_code || "Approved Model"})
                       </option>
                     ))}
                   </>
@@ -368,11 +340,7 @@ const AddByNameModal = ({ open, onClose }) => {
                 gap: "10px",
               }}
             >
-              <AlertCircle
-                size={18}
-                color="#2F54EB"
-                style={{ flexShrink: 0, marginTop: "2px" }}
-              />
+              <AlertCircle size={18} color="#2F54EB" style={{ flexShrink: 0, marginTop: "2px" }} />
               <div
                 style={{
                   fontSize: "12px",
@@ -433,12 +401,10 @@ const AddByNameModal = ({ open, onClose }) => {
             </div>
           </form>
         ) : (
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "16px" }}
-          >
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             <div style={{ fontSize: "13px", color: "#4B5563" }}>
-              {t("Search query:")} <strong>"{clientName}"</strong> (
-              {searchResults.length} {t("candidates found >= 60% match")})
+              {t("Search query:")} <strong>"{clientName}"</strong> ({searchResults.length}{" "}
+              {t("candidates found >= 60% match")})
             </div>
 
             <div
@@ -469,9 +435,7 @@ const AddByNameModal = ({ open, onClose }) => {
                       color: "#374151",
                     }}
                   >
-                    {t(
-                      "No existing accounts found matching this name (>= 60%).",
-                    )}
+                    {t("No existing accounts found matching this name (>= 60%).")}
                   </p>
                   <p
                     style={{
@@ -488,29 +452,21 @@ const AddByNameModal = ({ open, onClose }) => {
               ) : (
                 searchResults.map((candidate) => {
                   const isSelected = selectedUser?._id === candidate._id;
-                  const badgeStyle = getMatchBadgeStyle(
-                    candidate.similarityScore,
-                  );
+                  const badgeStyle = getMatchBadgeStyle(candidate.similarityScore);
 
                   return (
                     <div
                       key={candidate._id}
-                      onClick={() =>
-                        setSelectedUser(isSelected ? null : candidate)
-                      }
+                      onClick={() => setSelectedUser(isSelected ? null : candidate)}
                       style={{
-                        border: isSelected
-                          ? "2px solid #5926F0"
-                          : "1px solid #E5E7EB",
+                        border: isSelected ? "2px solid #5926F0" : "1px solid #E5E7EB",
                         background: isSelected ? "#F5F3FF" : "#FFF",
                         borderRadius: "10px",
                         padding: "14px",
                         cursor: "pointer",
                         transition: "all 0.15s ease",
                         position: "relative",
-                        boxShadow: isSelected
-                          ? "0 4px 12px rgba(89, 38, 240, 0.12)"
-                          : "none",
+                        boxShadow: isSelected ? "0 4px 12px rgba(89, 38, 240, 0.12)" : "none",
                       }}
                     >
                       <div
@@ -534,13 +490,8 @@ const AddByNameModal = ({ open, onClose }) => {
                               height: "28px",
                               borderRadius: "6px",
                               background:
-                                candidate.account_type === "business"
-                                  ? "#EFF6FF"
-                                  : "#FDF2F8",
-                              color:
-                                candidate.account_type === "business"
-                                  ? "#2563EB"
-                                  : "#DB2777",
+                                candidate.account_type === "business" ? "#EFF6FF" : "#FDF2F8",
+                              color: candidate.account_type === "business" ? "#2563EB" : "#DB2777",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
@@ -601,9 +552,7 @@ const AddByNameModal = ({ open, onClose }) => {
                               height: "20px",
                               borderRadius: "50%",
                               border: isSelected ? "none" : "2px solid #D1D5DB",
-                              background: isSelected
-                                ? "#5926F0"
-                                : "transparent",
+                              background: isSelected ? "#5926F0" : "transparent",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
@@ -618,8 +567,7 @@ const AddByNameModal = ({ open, onClose }) => {
                       <div
                         style={{
                           display: "grid",
-                          gridTemplateColumns:
-                            "repeat(auto-fit, minmax(160px, 1fr))",
+                          gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
                           gap: "8px",
                           fontSize: "12px",
                           color: "#4B5563",
@@ -690,10 +638,7 @@ const AddByNameModal = ({ open, onClose }) => {
                             IBAN:{" "}
                             <strong
                               style={{
-                                color:
-                                  candidate.ibanStatus === "ACTIVE"
-                                    ? "#16A34A"
-                                    : "#6B7280",
+                                color: candidate.ibanStatus === "ACTIVE" ? "#16A34A" : "#6B7280",
                               }}
                             >
                               {candidate.ibanStatus}
@@ -742,10 +687,7 @@ const AddByNameModal = ({ open, onClose }) => {
             >
               <button
                 type="button"
-                disabled={
-                  pendingAssignMutation.isPending ||
-                  directAssignMutation.isPending
-                }
+                disabled={pendingAssignMutation.isPending || directAssignMutation.isPending}
                 onClick={() => pendingAssignMutation.mutate()}
                 style={{
                   padding: "9px 16px",
@@ -758,9 +700,7 @@ const AddByNameModal = ({ open, onClose }) => {
                   cursor: "pointer",
                 }}
               >
-                {pendingAssignMutation.isPending
-                  ? t("Saving...")
-                  : t("Not in the list")}
+                {pendingAssignMutation.isPending ? t("Saving...") : t("Not in the list")}
               </button>
 
               <div style={{ display: "flex", gap: "10px" }}>
@@ -802,9 +742,7 @@ const AddByNameModal = ({ open, onClose }) => {
                     gap: "6px",
                   }}
                 >
-                  {directAssignMutation.isPending
-                    ? t("Linking...")
-                    : t("Continue")}
+                  {directAssignMutation.isPending ? t("Linking...") : t("Continue")}
                 </button>
               </div>
             </div>

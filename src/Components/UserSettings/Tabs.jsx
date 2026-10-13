@@ -296,8 +296,7 @@ const Tabs = ({ /*setters*/ setActiveTab }) => {
             )}
             {item.name.toLowerCase().includes("verify") &&
             userDetails &&
-            (!("verified" in userDetails) ||
-              userDetails?.verified == "false") ? (
+            (!("verified" in userDetails) || userDetails?.verified == "false") ? (
               <div
                 style={{
                   height: "5px",

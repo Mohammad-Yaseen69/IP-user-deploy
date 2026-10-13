@@ -7,13 +7,7 @@ import i from "./files/i.svg";
 import { Button, Card, CardBody } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import { Check, ChevronRight, HelpCircle } from "react-feather";
-import {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useContext, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import axios from "axios";
@@ -171,8 +165,7 @@ const PayoutChannel = ({
           padding: "1.5rem",
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
       >
         {channels.length > 0 ? (
@@ -226,16 +219,10 @@ const PayoutChannel = ({
                       }}
                     />
                   </div>
-                  <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>
-                    {t(item.name)}
-                  </h5>
+                  <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>{t(item.name)}</h5>
                 </div>
                 {payoutChannel?.name === item.name ? (
-                  <Check
-                    color="green"
-                    size={24}
-                    style={{ position: "absolute", right: "20px" }}
-                  />
+                  <Check color="green" size={24} style={{ position: "absolute", right: "20px" }} />
                 ) : (
                   <img
                     src={i}

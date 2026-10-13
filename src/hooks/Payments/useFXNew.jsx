@@ -5,18 +5,11 @@ import { LimitsErrorMessage } from "../../utils/Functions/paymentLimits";
 import { getFeeDetails } from "../../Components/QrQuickerPay/queries";
 
 const useFXNew = (data, dataHandler) => {
-  const { mutateAsync: getFeeDetailsMutation, isPending: feeLoading } =
-    useMutation({
-      mutationFn: (payload) => getFeeDetails(payload),
-    });
+  const { mutateAsync: getFeeDetailsMutation, isPending: feeLoading } = useMutation({
+    mutationFn: (payload) => getFeeDetails(payload),
+  });
 
-  const handleGetFeeDetails = async (
-    sender_wallet_id,
-    from,
-    tokenApi,
-    account_id,
-    level,
-  ) => {
+  const handleGetFeeDetails = async (sender_wallet_id, from, tokenApi, account_id, level) => {
     dataHandler("feeData", {});
 
     try {

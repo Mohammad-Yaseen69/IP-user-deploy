@@ -19,13 +19,7 @@ import success from "../PaymentsNewer/InternationalFlow/files/success.gif";
 const counterTypes = ["10", "25", "50", "75", "Enter Custom"];
 let timeout;
 
-const AcceptBargainedAmount = ({
-  item,
-  isOpen,
-  toggle,
-  type = "bargain",
-  badgeColor = "",
-}) => {
+const AcceptBargainedAmount = ({ item, isOpen, toggle, type = "bargain", badgeColor = "" }) => {
   const { t } = useTranslation();
   const { authHeader, verifyToken } = useContext(UserContext);
   const [saving, setSaving] = useState(false);
@@ -64,8 +58,7 @@ const AcceptBargainedAmount = ({
         setError("Receiver's receiving limit has been reached!");
       } else {
         setError(
-          dec?.message ??
-            "We cannot process your request at the moment, please try again later.",
+          dec?.message ?? "We cannot process your request at the moment, please try again later.",
         );
       }
     } finally {
@@ -74,16 +67,11 @@ const AcceptBargainedAmount = ({
   };
 
   return window.innerWidth > 1000 ? (
-    <Modal
-      isOpen={isOpen}
-      style={{ width: "100vw", maxWidth: step === 1 ? "900px" : "1200px" }}
-    >
+    <Modal isOpen={isOpen} style={{ width: "100vw", maxWidth: step === 1 ? "900px" : "1200px" }}>
       <ModalBody className={styles.body}>
         <div className={styles.left}>
           <img src={bargain} alt="" />
-          <h4>
-            {step === 1 ? t("Accpet Offer") : t("Then Offer is Accepted!")}
-          </h4>
+          <h4>{step === 1 ? t("Accpet Offer") : t("Then Offer is Accepted!")}</h4>
         </div>
         <div className={styles.right}>
           {step === 1 && (
@@ -104,18 +92,10 @@ const AcceptBargainedAmount = ({
               <div className={styles.bottom}>
                 <p>{error}</p>
                 <div className={styles.btns}>
-                  <button
-                    disabled={saving}
-                    onClick={toggle}
-                    className={styles.trs}
-                  >
+                  <button disabled={saving} onClick={toggle} className={styles.trs}>
                     {t("Cancel")}
                   </button>
-                  <button
-                    disabled={saving}
-                    onClick={counterOffer}
-                    className={styles.cou}
-                  >
+                  <button disabled={saving} onClick={counterOffer} className={styles.cou}>
                     {t("Accept the offer")}
                     <ChevronRight color="white" size={20} />
                   </button>
@@ -140,10 +120,7 @@ const AcceptBargainedAmount = ({
                   })}
                 </h5>
               </div>
-              <div
-                className={styles.bottom}
-                style={{ justifyContent: "flex-end" }}
-              >
+              <div className={styles.bottom} style={{ justifyContent: "flex-end" }}>
                 <button
                   disabled={saving}
                   onClick={() => {

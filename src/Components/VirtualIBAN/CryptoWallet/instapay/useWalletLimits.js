@@ -19,14 +19,7 @@ export const useWalletLimits = (wallet) => {
     cancelTokenRef.current?.cancel();
     cancelTokenRef.current = axios.CancelToken.source();
     setError(false);
-    getLimits(
-      wallet,
-      setData,
-      authHeader,
-      setLoading,
-      setError,
-      cancelTokenRef.current.token,
-    );
+    getLimits(wallet, setData, authHeader, setLoading, setError, cancelTokenRef.current.token);
 
     return () => cancelTokenRef.current?.cancel();
   }, [walletId]);

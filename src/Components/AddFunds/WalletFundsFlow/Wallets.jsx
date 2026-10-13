@@ -26,12 +26,7 @@ const Wallets = ({ data, dataHandler }) => {
             item?.wallet_type === "insta",
         )
         ?.map((item) => (
-          <WalletCard
-            item={item}
-            key={item?._id}
-            data={data}
-            dataHandler={dataHandler}
-          />
+          <WalletCard item={item} key={item?._id} data={data} dataHandler={dataHandler} />
         ))}
     </div>
   );
@@ -75,8 +70,7 @@ const WalletCard = ({ item, data, dataHandler }) => {
       });
       dataHandler(
         "amount",
-        formatCurrencyLocal(walletData?.min_topup_amount) ??
-          formatCurrencyLocal(data?.limits?.min),
+        formatCurrencyLocal(walletData?.min_topup_amount) ?? formatCurrencyLocal(data?.limits?.min),
       );
       dataHandler("wallet", item);
       if (wallet_address === item?.wallet_id) {
@@ -125,8 +119,7 @@ const WalletCardView = ({ wallet, walletData }) => {
       <div className={card_styles.bottom}>
         <p>{t("Monthly limit")}</p>
         <h3>
-          {walletData?.balance_limits?.total} /{" "}
-          {walletData?.balance_limits?.remaining}
+          {walletData?.balance_limits?.total} / {walletData?.balance_limits?.remaining}
         </h3>
         <div className={card_styles.bb}>
           <Progress
@@ -136,8 +129,7 @@ const WalletCardView = ({ wallet, walletData }) => {
               100
             }
             barStyle={{
-              background:
-                "linear-gradient(to right, rgba(256,256,256,.6), rgba(256,256,256,.9))",
+              background: "linear-gradient(to right, rgba(256,256,256,.6), rgba(256,256,256,.9))",
               borderRadius: "50px",
               margin: "2px",
             }}
@@ -146,9 +138,7 @@ const WalletCardView = ({ wallet, walletData }) => {
               background: "rgba(256,256,256,.3)",
             }}
           />
-          <span style={{ right: "5px" }}>
-            {walletData?.balance_limits?.remaining}
-          </span>
+          <span style={{ right: "5px" }}>{walletData?.balance_limits?.remaining}</span>
         </div>
       </div>
     </div>

@@ -1,11 +1,4 @@
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-  useMemo,
-  useRef,
-} from "react";
+import { useCallback, useContext, useEffect, useState, useMemo, useRef } from "react";
 import { UserContext } from "../../Context/UserContext";
 import { countries as CountriesList } from "country-list-json";
 import { useQuery } from "@tanstack/react-query";
@@ -81,22 +74,17 @@ const useBankDetails = ({
     },
     enabled:
       !!debouncedValue &&
-      (accNumType === "IBAN"
-        ? debouncedValue.length > 13
-        : debouncedValue.length >= 7),
+      (accNumType === "IBAN" ? debouncedValue.length > 13 : debouncedValue.length >= 7),
     retry: 0,
   });
 
   const bankNameKey = fieldKeyOverrides.bank_name || "bank_name";
   const branchNameKey = fieldKeyOverrides.branch_name || "branch_name";
-  const bankBranchStreetKey =
-    fieldKeyOverrides.bank_branch_street || "bank_branch_street";
+  const bankBranchStreetKey = fieldKeyOverrides.bank_branch_street || "bank_branch_street";
   const bankCityKey = fieldKeyOverrides.bank_city || "bank_city";
   const bankProvinceKey = fieldKeyOverrides.bank_province || "bank_province";
-  const bankPostalCodeKey =
-    fieldKeyOverrides.bank_postal_code || "bank_postal_code";
-  const bankAccountNumberKey =
-    fieldKeyOverrides.bank_account_number || "bank_account_number";
+  const bankPostalCodeKey = fieldKeyOverrides.bank_postal_code || "bank_postal_code";
+  const bankAccountNumberKey = fieldKeyOverrides.bank_account_number || "bank_account_number";
 
   useEffect(() => {
     const minLength = accNumType === "IBAN" ? 14 : 7;
@@ -186,8 +174,7 @@ const useBankDetails = ({
           if (alpha3 || countryName) {
             isValidCountry =
               (alpha3 && code === alpha3) ||
-              (countryName &&
-                countryName?.toLowerCase() === name?.toLowerCase()) ||
+              (countryName && countryName?.toLowerCase() === name?.toLowerCase()) ||
               CountriesList?.some((item) => item.code === code);
           }
         } catch (error) {
@@ -230,8 +217,7 @@ const useBankDetails = ({
 
       setFormData((prev) => {
         const valueOrPrevious = (value, key) =>
-          queryMetadata.isForEdit &&
-          (value === "" || value === undefined || value === null)
+          queryMetadata.isForEdit && (value === "" || value === undefined || value === null)
             ? prev[key]
             : value;
         const update = {
@@ -256,8 +242,7 @@ const useBankDetails = ({
             bankCityKey,
           );
           update[bankProvinceKey] = valueOrPrevious(
-            decrypted?.bicDetails?.structured_address
-              ?.country_subdivision_name ?? "",
+            decrypted?.bicDetails?.structured_address?.country_subdivision_name ?? "",
             bankProvinceKey,
           );
           update[bankPostalCodeKey] = valueOrPrevious(
@@ -265,15 +250,12 @@ const useBankDetails = ({
             bankPostalCodeKey,
           );
           update[bankAccountNumberKey] = valueOrPrevious(
-            decrypted?.ibanDetails?.account_number ??
-              queryMetadata.account_number ??
-              "",
+            decrypted?.ibanDetails?.account_number ?? queryMetadata.account_number ?? "",
             bankAccountNumberKey,
           );
         } else {
           update[branchNameKey] = valueOrPrevious(
-            decrypted?.structured_address?.country_subdivision_name ||
-              "Main Branch",
+            decrypted?.structured_address?.country_subdivision_name || "Main Branch",
             branchNameKey,
           );
           update[bankBranchStreetKey] = valueOrPrevious(
@@ -315,10 +297,7 @@ const useBankDetails = ({
         decrypted?.structured_address?.country_name ||
         "";
       if (countryNameRaw) {
-        setBankCountry(
-          countryNameRaw[0].toUpperCase() +
-            countryNameRaw.slice(1).toLowerCase(),
-        );
+        setBankCountry(countryNameRaw[0].toUpperCase() + countryNameRaw.slice(1).toLowerCase());
       }
       const extractedCode =
         decrypted?.bicDetails?.structured_address?.country_code ||

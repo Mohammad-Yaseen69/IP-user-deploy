@@ -38,8 +38,7 @@ const RequestReceipt = ({
           padding: "0",
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
         className="conf_cont"
       >
@@ -53,9 +52,7 @@ const RequestReceipt = ({
           className="transaction-receipt"
         >
           <div style={{ textAlign: "center" }}>
-            <span style={{ color: "#8a8a8a", fontSize: "1.1rem" }}>
-              {t("You are requesting")}
-            </span>
+            <span style={{ color: "#8a8a8a", fontSize: "1.1rem" }}>{t("You are requesting")}</span>
             <h4 style={{ fontSize: "2rem" }}>
               {currency}{" "}
               {Number(amount)?.toLocaleString("en-US", {
@@ -75,9 +72,7 @@ const RequestReceipt = ({
               borderRadius: "10px",
             }}
           >
-            <span style={{ minWidth: "100px", color: "#8a8a8a" }}>
-              {t("To Recipient")}:
-            </span>
+            <span style={{ minWidth: "100px", color: "#8a8a8a" }}>{t("To Recipient")}:</span>
             <Swiper
               slidesPerView="auto"
               centeredSlides
@@ -153,12 +148,8 @@ const RequestReceipt = ({
               borderRadius: "10px",
             }}
           >
-            <span style={{ minWidth: "100px", color: "#8a8a8a" }}>
-              {t("As")}:
-            </span>
-            <div
-              style={{ display: "flex", alignItems: "center", gap: ".6rem" }}
-            >
+            <span style={{ minWidth: "100px", color: "#8a8a8a" }}>{t("As")}:</span>
+            <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
               <div
                 style={{
                   minHeight: "35px",
@@ -183,9 +174,7 @@ const RequestReceipt = ({
                   }}
                 />
               </div>
-              <span style={{ fontWeight: 600, fontSize: ".8rem" }}>
-                {paymentType.name}
-              </span>
+              <span style={{ fontWeight: 600, fontSize: ".8rem" }}>{paymentType.name}</span>
             </div>
           </div>
         </div>
@@ -211,14 +200,8 @@ const RequestReceipt = ({
               cursor: "pointer",
             }}
           >
-            <img
-              src={w}
-              alt="w"
-              style={{ height: "25px", width: "25px", objectFit: "contain" }}
-            />
-            <span style={{ fontWeight: "600", color: "black" }}>
-              {t("Where Is My Payment?")}
-            </span>
+            <img src={w} alt="w" style={{ height: "25px", width: "25px", objectFit: "contain" }} />
+            <span style={{ fontWeight: "600", color: "black" }}>{t("Where Is My Payment?")}</span>
           </Link>
           {downloading ? (
             <div className="d-flex justify-content-center">

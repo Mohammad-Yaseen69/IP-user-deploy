@@ -4,20 +4,8 @@
 .btn-link {
   color: var(--theme-default);
 }
-@mixin btn-gradien(
-  $deg,
-  $leftcolor,
-  $leftcolor-per,
-  $rightcolor,
-  $rightcolor-per,
-  $font-color
-) {
-  background-image: linear-gradient(
-    to right,
-    $leftcolor 0%,
-    $rightcolor 51%,
-    $leftcolor 100%
-  );
+@mixin btn-gradien($deg, $leftcolor, $leftcolor-per, $rightcolor, $rightcolor-per, $font-color) {
+  background-image: linear-gradient(to right, $leftcolor 0%, $rightcolor 51%, $leftcolor 100%);
   border: none;
   color: $font-color;
   background-size: auto 200%;
@@ -101,14 +89,7 @@
   }
 }
 .btn-danger-gradien {
-  @include btn-gradien(
-    60,
-    lighten($danger-color, 8%),
-    0%,
-    darken($danger-color, 8%),
-    100%,
-    $white
-  );
+  @include btn-gradien(60, lighten($danger-color, 8%), 0%, darken($danger-color, 8%), 100%, $white);
   &:hover,
   &:focus,
   &:active,
@@ -153,14 +134,7 @@
   }
 }
 .btn-info-gradien {
-  @include btn-gradien(
-    60,
-    lighten($info-color, 8%),
-    0%,
-    darken($info-color, 8%),
-    100%,
-    $white
-  );
+  @include btn-gradien(60, lighten($info-color, 8%), 0%, darken($info-color, 8%), 100%, $white);
   &:hover,
   &:focus,
   &:active,
@@ -179,14 +153,7 @@
   }
 }
 .btn-light-gradien {
-  @include btn-gradien(
-    60,
-    lighten($light-color, 8%),
-    0%,
-    darken($light-color, 8%),
-    100%,
-    $white
-  );
+  @include btn-gradien(60, lighten($light-color, 8%), 0%, darken($light-color, 8%), 100%, $white);
   &:hover,
   &:focus,
   &:active,
@@ -205,14 +172,7 @@
   }
 }
 .btn-dark-gradien {
-  @include btn-gradien(
-    60,
-    lighten($dark-color, 8%),
-    0%,
-    darken($dark-color, 8%),
-    100%,
-    $white
-  );
+  @include btn-gradien(60, lighten($dark-color, 8%), 0%, darken($dark-color, 8%), 100%, $white);
   &:hover,
   &:focus,
   &:active,
@@ -265,9 +225,8 @@
   margin-bottom: -20px;
 }
 // outline buttons//
-@each $btn-name, $btn-color in (primary, $primary-color),
-  (secondary, $secondary-color), (success, $success-color),
-  (danger, $danger-color), (info, $info-color), (light, $light-color),
+@each $btn-name, $btn-color in (primary, $primary-color), (secondary, $secondary-color),
+  (success, $success-color), (danger, $danger-color), (info, $info-color), (light, $light-color),
   (dark, $dark-color), (warning, $warning-color)
 {
   .btn-air-#{$btn-name} {

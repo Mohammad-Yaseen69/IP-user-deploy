@@ -25,9 +25,7 @@ const FeesComponent = ({
 
   const _exObj = data?.exchange_rate?.exchange_rate;
   const exchangeRateValue =
-    _exObj && typeof _exObj === "object"
-      ? _exObj.exchange_rate
-      : (_exObj ?? data?.exchange_rate);
+    _exObj && typeof _exObj === "object" ? _exObj.exchange_rate : (_exObj ?? data?.exchange_rate);
   const exchangeRateSendingCurrency =
     data?.exchange_rate?.exchange_rate?.exchange_rate_sending_currency ||
     data?.exchange_rate?.sending?.currency;
@@ -60,9 +58,7 @@ const FeesComponent = ({
         >
           <span>{t(sendingLabel)}</span>
           <p>
-            {Number(
-              cleanString(data?.exchange_rate?.sending?.amount),
-            )?.toLocaleString("en-US", {
+            {Number(cleanString(data?.exchange_rate?.sending?.amount))?.toLocaleString("en-US", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 3,
             })}{" "}
@@ -82,15 +78,12 @@ const FeesComponent = ({
         >
           <span>{t(receiverLabel)}</span>
           <p>
-            {Number(
-              cleanString(data?.exchange_rate?.receiver?.amount),
-            )?.toLocaleString("en-US", {
+            {Number(cleanString(data?.exchange_rate?.receiver?.amount))?.toLocaleString("en-US", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 3,
             })}
             {data.exchange_rate?.receiver?.currency}
-            {(receiverFee ||
-              (isInvoice && data.exchange_rate?.service_fee?.amount)) &&
+            {(receiverFee || (isInvoice && data.exchange_rate?.service_fee?.amount)) &&
               ` (fee ${Number(cleanString(isInvoice ? data.exchange_rate?.service_fee?.amount || data.exchange_rate?.service_fee?.value : data?.exchange_rate?.fee?.paymentAddressFee))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 3 })} ${isInvoice ? data.exchange_rate?.service_fee?.currency : data.exchange_rate?.sending?.currency})`}
           </p>
         </div>
@@ -100,8 +93,7 @@ const FeesComponent = ({
       (data.wallet?.currency?.code ?? data.currency_wallet?.currency?.code) !==
         (data?.beneficiary_wallet?.currency?.code ?? data.recipient_currency) &&
       data.exchange_rate?.sending?.currency !==
-        (data.exchange_rate?.exchange_rate_currency ??
-          data.exchange_rate?.receiver?.currency) ? (
+        (data.exchange_rate?.exchange_rate_currency ?? data.exchange_rate?.receiver?.currency) ? (
         <div className={styles.item}>
           <span>{t(exchangeRateLabel)}</span>
           <p className={styles.sm}>
@@ -133,8 +125,7 @@ const FeesComponent = ({
             }) ?? "0.00"}{" "}
             {isInvoice && data.exchange_rate?.topup_fee?.currency
               ? data.exchange_rate?.topup_fee?.currency
-              : data?.exchange_rate?.fee?.currency ||
-                data.exchange_rate?.sending?.currency}
+              : data?.exchange_rate?.fee?.currency || data.exchange_rate?.sending?.currency}
           </span>
         </div>
       )}
@@ -142,12 +133,11 @@ const FeesComponent = ({
         <div className={styles.item}>
           <span>{t(totalLabel)}</span>
           <p className={styles.lg}>
-            {Number(cleanString(data?.exchange_rate?.total))?.toLocaleString(
-              "en-US",
-              { minimumFractionDigits: 2, maximumFractionDigits: 3 },
-            )}{" "}
-            {data.exchange_rate?.total_currency ??
-              data.exchange_rate?.sending?.currency}
+            {Number(cleanString(data?.exchange_rate?.total))?.toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 3,
+            })}{" "}
+            {data.exchange_rate?.total_currency ?? data.exchange_rate?.sending?.currency}
           </p>
         </div>
       )}
@@ -227,9 +217,7 @@ const FeesComponent = ({
                 }}
               >
                 1.00 {data?.exchange_rate?.paypal?.fee?.currency} ={" "}
-                {Number(
-                  data?.exchange_rate?.paypal?.paypal_rate?.value,
-                )?.toLocaleString("en-US", {
+                {Number(data?.exchange_rate?.paypal?.paypal_rate?.value)?.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 4,
                 })}
@@ -268,12 +256,13 @@ const FeesComponent = ({
                   letterSpacing: "-0.8px",
                 }}
               >
-                {Number(
-                  data?.exchange_rate?.paypal?.paypal_converted?.value,
-                )?.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                {Number(data?.exchange_rate?.paypal?.paypal_converted?.value)?.toLocaleString(
+                  "en-US",
+                  {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  },
+                )}
                 {t("USD")}
               </strong>
             </div>
@@ -357,8 +346,7 @@ const FeesComponent = ({
                 }}
               >
                 1.00 {data.exchange_rate?.sending?.currency} ={" "}
-                {Number(data.exchange_rate?.plaid_fx)}{" "}
-                {data?.exchange_rate?.plaid_currency}
+                {Number(data.exchange_rate?.plaid_fx)} {data?.exchange_rate?.plaid_currency}
               </strong>
             </div>
             <div
@@ -380,10 +368,7 @@ const FeesComponent = ({
                   letterSpacing: "-0.14px",
                 }}
               >
-                {t("Amount in CHF").replace(
-                  "CHF",
-                  data?.exchange_rate?.plaid_currency,
-                )}
+                {t("Amount in CHF").replace("CHF", data?.exchange_rate?.plaid_currency)}
               </span>
               <strong
                 style={{
@@ -396,10 +381,10 @@ const FeesComponent = ({
                   letterSpacing: "-0.8px",
                 }}
               >
-                {Number(data.exchange_rate?.plaid_amount)?.toLocaleString(
-                  "en-US",
-                  { minimumFractionDigits: 2, maximumFractionDigits: 2 },
-                )}{" "}
+                {Number(data.exchange_rate?.plaid_amount)?.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}{" "}
                 {data?.exchange_rate?.plaid_currency}
               </strong>
             </div>

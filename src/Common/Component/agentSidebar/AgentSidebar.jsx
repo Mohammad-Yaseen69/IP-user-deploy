@@ -53,12 +53,10 @@ const NAV_SECTIONS = [
 export const AgentSidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { userDetails, logout, isSidebarOpen, setIsSidebarOpen } =
-    useContext(UserContext) || {};
+  const { userDetails, logout, isSidebarOpen, setIsSidebarOpen } = useContext(UserContext) || {};
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
-  const isActive = (to) =>
-    location.pathname === to || location.pathname.startsWith(`${to}/`);
+  const isActive = (to) => location.pathname === to || location.pathname.startsWith(`${to}/`);
 
   const displayName =
     userDetails?.full_name ||
@@ -75,20 +73,14 @@ export const AgentSidebar = () => {
   const handleClose = () => setShowProfileMenu(null);
 
   return (
-    <div
-      className={`${classes.sideMenu} ${!isSidebarOpen ? classes.sideMenuCollapsed : ""}`}
-    >
+    <div className={`${classes.sideMenu} ${!isSidebarOpen ? classes.sideMenuCollapsed : ""}`}>
       <div className={classes.content}>
         <div className={classes.header}>
           {isSidebarOpen && (
             <div className={classes.brand}>
               <div className={classes.brandName}>
                 <div className={classes.instaPayWrapper}>
-                  <img
-                    className={classes.instaPay}
-                    alt="Insta pay"
-                    src={instaPay}
-                  />
+                  <img className={classes.instaPay} alt="Insta pay" src={instaPay} />
                   <div className={classes.business}>BUSINESS</div>
                 </div>
               </div>
@@ -113,9 +105,7 @@ export const AgentSidebar = () => {
             <div className={classes.navigationSections}>
               {NAV_SECTIONS.map((section) => (
                 <div key={section.label} className={classes.navGroup}>
-                  {isSidebarOpen && (
-                    <div className={classes.sectionLabel}>{section.label}</div>
-                  )}
+                  {isSidebarOpen && <div className={classes.sectionLabel}>{section.label}</div>}
                   {section.items.map((item) => (
                     <NavSegment
                       key={item.to}
@@ -142,9 +132,7 @@ export const AgentSidebar = () => {
               onClick={() => navigate("/notifications")}
             >
               <MessageSquare className={classes.icon18} />
-              {isSidebarOpen && (
-                <div className={classes.bodySmall}>Notifications</div>
-              )}
+              {isSidebarOpen && <div className={classes.bodySmall}>Notifications</div>}
             </button>
             {isSidebarOpen && (
               <button type="button" className={classes.languageButton}>
@@ -161,9 +149,7 @@ export const AgentSidebar = () => {
             >
               <div className={classes.profileInfo}>
                 <div className={classes.avatar} />
-                {isSidebarOpen && (
-                  <div className={classes.bodySmall}>{displayName}</div>
-                )}
+                {isSidebarOpen && <div className={classes.bodySmall}>{displayName}</div>}
               </div>
               {isSidebarOpen && <ChevronRight className={classes.icon18} />}
             </button>

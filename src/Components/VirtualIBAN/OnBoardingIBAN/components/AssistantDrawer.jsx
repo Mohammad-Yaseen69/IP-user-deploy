@@ -2,13 +2,7 @@ import { SwipeableDrawer } from "@mui/material";
 import React from "react";
 import SidebarProgress from "./SidebarProgress";
 
-const AssistantDrawer = ({
-  open,
-  toggleDrawer,
-  percent,
-  stepsLeft,
-  currentStep,
-}) => {
+const AssistantDrawer = ({ open, toggleDrawer, percent, stepsLeft, currentStep }) => {
   return (
     <SwipeableDrawer
       anchor={"bottom"}

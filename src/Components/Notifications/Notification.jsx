@@ -56,21 +56,13 @@ const Notification = ({ notification, currentUser, onRead }) => {
     // console.log(notification)
     if (notification.type === "quotation") {
       if (notification.desc.toLowerCase().includes("create")) {
-        setLink(
-          `/quotations?tab=received&type=created&_id=${notification?.link_id}`,
-        );
+        setLink(`/quotations?tab=received&type=created&_id=${notification?.link_id}`);
       } else if (notification.desc.toLowerCase().includes("bargain")) {
-        setLink(
-          `/quotations?tab=sent&type=bargain&_id=${notification?.link_id}`,
-        );
+        setLink(`/quotations?tab=sent&type=bargain&_id=${notification?.link_id}`);
       } else if (notification.desc.toLowerCase().includes("revise")) {
-        setLink(
-          `/quotations?tab=received&type=revise&_id=${notification?.link_id}`,
-        );
+        setLink(`/quotations?tab=received&type=revise&_id=${notification?.link_id}`);
       } else {
-        setLink(
-          `/quotations?tab=received&type=completed&_id=${notification?.link_id}`,
-        );
+        setLink(`/quotations?tab=received&type=completed&_id=${notification?.link_id}`);
       }
     }
     if (notification.type === "wallet_to_wallet") {
@@ -97,19 +89,13 @@ const Notification = ({ notification, currentUser, onRead }) => {
     }
     if (notification.type === "request_review") {
       if (notification.desc.toLowerCase().includes("reply")) {
-        setLink(
-          `/payment-requests?tab=received&id=${notification.link_id}&type=reply`,
-        );
+        setLink(`/payment-requests?tab=received&id=${notification.link_id}&type=reply`);
       }
       if (notification.desc.toLowerCase().includes("review")) {
         if (notification?.to === userDetails?._id) {
-          setLink(
-            `/payment-requests?tab=received&id=${notification.link_id}&type=review`,
-          );
+          setLink(`/payment-requests?tab=received&id=${notification.link_id}&type=review`);
         } else {
-          setLink(
-            `/payment-requests?tab=sent&id=${notification.link_id}&type=review`,
-          );
+          setLink(`/payment-requests?tab=sent&id=${notification.link_id}&type=review`);
         }
       }
     }

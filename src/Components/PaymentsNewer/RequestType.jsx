@@ -8,12 +8,7 @@ import security from "./files/security.png";
 import instalment from "./files/instalment.png";
 import split from "./files/split.png";
 
-const RequestType = ({
-  setSubStep,
-  paymentMethod,
-  setPaymentMethod,
-  setNotInstant,
-}) => {
+const RequestType = ({ setSubStep, paymentMethod, setPaymentMethod, setNotInstant }) => {
   const { t } = useTranslation();
   const data = [
     {
@@ -71,8 +66,7 @@ const RequestType = ({
           padding: "14px",
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
         className="i_t_pt"
       >

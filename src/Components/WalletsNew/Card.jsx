@@ -75,14 +75,10 @@ const Card = ({ wallet, current, index, data }) => {
             style={{ padding: "0px", background: "none" }}
             className={`${r_styles.flex} ${r_styles.r_total}`}
           >
-            <span style={{ fontSize: "10px", fontWeight: 600 }}>
-              {t("Total Balance")}:
-            </span>
+            <span style={{ fontSize: "10px", fontWeight: 600 }}>{t("Total Balance")}:</span>
             <h5>
               {wallet.currency?.code}{" "}
-              {Number(
-                wallet.balance.available + wallet.balance.reserved,
-              )?.toLocaleString("en-US", {
+              {Number(wallet.balance.available + wallet.balance.reserved)?.toLocaleString("en-US", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}
@@ -99,9 +95,7 @@ const Card = ({ wallet, current, index, data }) => {
               }}
               className={`${r_styles.flex} ${r_styles.r_blocked}`}
             >
-              <span style={{ fontSize: "9px", fontWeight: 600 }}>
-                {t("Available balance")}:
-              </span>
+              <span style={{ fontSize: "9px", fontWeight: 600 }}>{t("Available balance")}:</span>
               <h5>
                 {wallet.currency?.code}{" "}
                 {Number(wallet.balance.available)?.toLocaleString("en-US", {
@@ -120,9 +114,7 @@ const Card = ({ wallet, current, index, data }) => {
               }}
               className={`${r_styles.flex} ${r_styles.r_blocked}`}
             >
-              <span style={{ fontSize: "9px", fontWeight: 600 }}>
-                {t("Blocked balance")}:
-              </span>
+              <span style={{ fontSize: "9px", fontWeight: 600 }}>{t("Blocked balance")}:</span>
               <h5>
                 {wallet.currency?.code}{" "}
                 {Number(wallet.balance.reserved)?.toLocaleString("en-US", {
@@ -145,10 +137,7 @@ const Card = ({ wallet, current, index, data }) => {
               )}
             </h5>
           </div>
-          <div
-            className={`${r_styles.flex} ${r_styles.r_bal}`}
-            style={{ marginTop: ".5rem" }}
-          >
+          <div className={`${r_styles.flex} ${r_styles.r_bal}`} style={{ marginTop: ".5rem" }}>
             <span>{t("Monthly limit")}:</span>
             <h5>
               {data?.balance_limits?.total} / {data?.balance_limits?.remaining}
@@ -162,8 +151,7 @@ const Card = ({ wallet, current, index, data }) => {
                 100
               }
               barStyle={{
-                background:
-                  "linear-gradient(to right, rgba(256,256,256,.6), rgba(256,256,256,.9))",
+                background: "linear-gradient(to right, rgba(256,256,256,.6), rgba(256,256,256,.9))",
                 borderRadius: "50px",
                 margin: "2px",
               }}
@@ -172,9 +160,7 @@ const Card = ({ wallet, current, index, data }) => {
                 background: "rgba(256,256,256,.3)",
               }}
             />
-            <span style={{ right: "5px" }}>
-              {data?.balance_limits?.remaining}
-            </span>
+            <span style={{ right: "5px" }}>{data?.balance_limits?.remaining}</span>
           </div>
         </>
       ) : (
@@ -232,9 +218,7 @@ const Card = ({ wallet, current, index, data }) => {
                   background: "rgba(256,256,256,.3)",
                 }}
               />
-              <span style={{ right: "5px" }}>
-                {data?.balance_limits?.remaining}
-              </span>
+              <span style={{ right: "5px" }}>{data?.balance_limits?.remaining}</span>
             </div>
           </div>
         </>

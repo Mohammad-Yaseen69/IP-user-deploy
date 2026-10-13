@@ -1,14 +1,7 @@
 import { useTranslation } from "react-i18next";
 import styles from "../TransactionsNewApi/styles/index.module.scss";
 import calendar from "../TransactionsNewApi/files/calendar.png";
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Search } from "react-feather";
 import { Input } from "reactstrap";
 import TransactionItem from "../TransactionsNewApi/TransactionItem";
@@ -43,10 +36,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
   const datePickerRef = useRef(null);
 
   const handleClickOutside = useCallback((event) => {
-    if (
-      datePickerRef.current &&
-      !datePickerRef.current.contains(event.target)
-    ) {
+    if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
       setShowDatePicker(false);
     }
   }, []);
@@ -106,14 +96,10 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
       .then((res) => {
         const decrypted = decryptData(res.data.data);
         setFiltered((prev) =>
-          page === 1
-            ? decrypted?.transactionList
-            : [...prev, ...decrypted.transactionList],
+          page === 1 ? decrypted?.transactionList : [...prev, ...decrypted.transactionList],
         );
         setTransactions((prev) =>
-          page === 1
-            ? decrypted?.transactionList
-            : [...prev, ...decrypted.transactionList],
+          page === 1 ? decrypted?.transactionList : [...prev, ...decrypted.transactionList],
         );
         setIsLoading(false);
       })
@@ -144,14 +130,10 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
         const decrypted = decryptData(res.data.data);
         const newTransactions = decrypted?.transactionList || [];
         setFiltered((prev) =>
-          page === 1
-            ? decrypted?.transactionList
-            : [...prev, ...decrypted.transactionList],
+          page === 1 ? decrypted?.transactionList : [...prev, ...decrypted.transactionList],
         );
         setTransactions((prev) =>
-          page === 1
-            ? decrypted?.transactionList
-            : [...prev, ...decrypted.transactionList],
+          page === 1 ? decrypted?.transactionList : [...prev, ...decrypted.transactionList],
         );
         if (newTransactions.length < 15) {
           setStopLoader(true);
@@ -197,14 +179,10 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
       .then((res) => {
         const decrypted = decryptData(res.data.data);
         setFiltered((prev) =>
-          page === 1
-            ? decrypted?.transactionList
-            : [...prev, ...decrypted.transactionList],
+          page === 1 ? decrypted?.transactionList : [...prev, ...decrypted.transactionList],
         );
         setTransactions((prev) =>
-          page === 1
-            ? decrypted?.transactionList
-            : [...prev, ...decrypted.transactionList],
+          page === 1 ? decrypted?.transactionList : [...prev, ...decrypted.transactionList],
         );
         setIsLoading(false);
       })
@@ -232,15 +210,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
     if (currentTrxType === "date_and_query") {
       getTransactionsByQueryAndDate();
     }
-  }, [
-    page,
-    currentTrxType,
-    debouncedSearchQuery,
-    apiDates,
-    currentWallet,
-    userDetails,
-    maxLimit,
-  ]);
+  }, [page, currentTrxType, debouncedSearchQuery, apiDates, currentWallet, userDetails, maxLimit]);
 
   useEffect(() => {
     if (currentWallet) {
@@ -355,9 +325,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
       setFiltered(transactions);
     }
     if (active === "Sent") {
-      const sentTransactions = transactions?.filter(
-        (item) => item?.transaction_type === "debit",
-      );
+      const sentTransactions = transactions?.filter((item) => item?.transaction_type === "debit");
       setFiltered(sentTransactions);
     }
     if (active === "Received") {
@@ -367,9 +335,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
       setFiltered(receivedTransactions);
     }
     if (active === "Quoted") {
-      const quotedTransactions = transactions?.filter(
-        (item) => item?.payment_type === "quotation",
-      );
+      const quotedTransactions = transactions?.filter((item) => item?.payment_type === "quotation");
       setFiltered(quotedTransactions);
     }
     if (active === "Requested") {
@@ -438,11 +404,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
                 zIndex: 10000000,
               }}
             >
-              <DateRangePicker
-                maxDate={new Date()}
-                ranges={[dateRange]}
-                onChange={handleChange}
-              />
+              <DateRangePicker maxDate={new Date()} ranges={[dateRange]} onChange={handleChange} />
             </div>
           )}
         </div>

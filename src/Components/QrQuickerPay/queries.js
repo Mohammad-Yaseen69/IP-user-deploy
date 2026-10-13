@@ -28,8 +28,7 @@ export const getWalletDetails = async ({ wallet_id }) => {
   );
   const dec = decryptData(res.data.data);
   const file = countriesData.find(
-    (item) =>
-      item.name.toLowerCase() === dec?.walletDetails?.country?.toLowerCase(),
+    (item) => item.name.toLowerCase() === dec?.walletDetails?.country?.toLowerCase(),
   )?.file_url;
   return { ...dec.walletDetails, file };
 };

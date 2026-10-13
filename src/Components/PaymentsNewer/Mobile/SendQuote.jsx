@@ -32,11 +32,7 @@ const SendQuote = ({ step, setStep, setCurrentFlow, setAction }) => {
   const [totalBalance, setTotalBalance] = useState(0);
 
   useEffect(() => {
-    if (
-      userWallets?.length > 0 &&
-      currency &&
-      userDetails?.user?.kyc_status !== "approved"
-    ) {
+    if (userWallets?.length > 0 && currency && userDetails?.user?.kyc_status !== "approved") {
       const getExchangedAmounts = async (from, to, amount) => {
         try {
           const res = await axios.get(
@@ -53,15 +49,9 @@ const SendQuote = ({ step, setStep, setCurrentFlow, setAction }) => {
       };
 
       const calculateTotal = async () => {
-        const wallets = userWallets.filter(
-          (item) => item?.wallet_type === "insta",
-        );
+        const wallets = userWallets.filter((item) => item?.wallet_type === "insta");
         const promises = wallets.map((item) =>
-          getExchangedAmounts(
-            item?.currency?.code,
-            currency,
-            item?.balance?.available,
-          ),
+          getExchangedAmounts(item?.currency?.code, currency, item?.balance?.available),
         );
         const balances = await Promise.all(promises);
         const total = balances.reduce((acc, balance) => acc + balance, 0);

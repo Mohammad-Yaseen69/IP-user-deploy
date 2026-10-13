@@ -32,9 +32,7 @@ const InitiatedStep = ({ asset }) => {
         <span className={styles.successBadge}>
           <CheckIcon />
         </span>
-        <h3 className={styles.successTitle}>
-          {t("Wallet activation initiated")}
-        </h3>
+        <h3 className={styles.successTitle}>{t("Wallet activation initiated")}</h3>
         <p className={styles.successText}>
           {t(
             "Your {{asset}} wallet is being created. It appears in your accounts right away and turns active once the provider finishes setting it up.",

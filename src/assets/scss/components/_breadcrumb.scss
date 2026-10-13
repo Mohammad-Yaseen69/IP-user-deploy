@@ -38,9 +38,8 @@
     text-transform: capitalize;
   }
 }
-@each $bg-name, $bg-color in (primary, $primary-color),
-  (secondary, $secondary-color), (success, $success-color),
-  (danger, $danger-color), (info, $info-color), (light, $light-color),
+@each $bg-name, $bg-color in (primary, $primary-color), (secondary, $secondary-color),
+  (success, $success-color), (danger, $danger-color), (info, $info-color), (light, $light-color),
   (dark, $dark-color), (warning, $warning-color)
 {
   .bg-outline-#{$bg-name} {

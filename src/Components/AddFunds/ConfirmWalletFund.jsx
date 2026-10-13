@@ -446,14 +446,9 @@ const ConfirmWalletFund = ({
               flexDirection: "column",
               justifyContent: "space-between",
               borderRadius: "20px",
-              padding: isBig
-                ? window.innerWidth < 1500
-                  ? "20px"
-                  : "20px 40px"
-                : "5px",
+              padding: isBig ? (window.innerWidth < 1500 ? "20px" : "20px 40px") : "5px",
               paddingBottom: 0,
-              boxShadow:
-                "0px 2px 20px -5.704601287841797px rgba(89, 38, 240, 0.07)",
+              boxShadow: "0px 2px 20px -5.704601287841797px rgba(89, 38, 240, 0.07)",
             }}
             className="conf_cont"
           >
@@ -477,14 +472,10 @@ const ConfirmWalletFund = ({
                   gap: "1rem",
                 }}
               >
-                {type === "add_fund" && (
-                  <SelectedWallet setSubStep={setSubStep} wallet={wallet} />
-                )}
+                {type === "add_fund" && <SelectedWallet setSubStep={setSubStep} wallet={wallet} />}
                 <SelectedAmountAndCurrency
                   amount={
-                    payoutChannel?.value === "crypto"
-                      ? exchangeRate?.sending?.amount
-                      : amount
+                    payoutChannel?.value === "crypto" ? exchangeRate?.sending?.amount : amount
                   }
                   currency={
                     kybFeeDets
@@ -534,11 +525,7 @@ const ConfirmWalletFund = ({
                   }}
                 >
                   <div className="d-flex justify-content-center">
-                    <div
-                      className="spinner-border"
-                      color="primary"
-                      role="status"
-                    >
+                    <div className="spinner-border" color="primary" role="status">
                       <span className="sr-only">{t("Loading...")}</span>
                     </div>
                   </div>

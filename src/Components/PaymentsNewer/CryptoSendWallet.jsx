@@ -27,8 +27,7 @@ const CryptoSendWallet = ({ setWallet, setSubStep, wallet }) => {
           padding: "30px 20px",
           gap: "14px",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
       >
         <div>
@@ -41,8 +40,7 @@ const CryptoSendWallet = ({ setWallet, setSubStep, wallet }) => {
             style={{
               fontSize: "18px",
               borderRadius: "10px",
-              boxShadow:
-                " 0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+              boxShadow: " 0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
             }}
             className="w_a_i"
           />
@@ -50,8 +48,7 @@ const CryptoSendWallet = ({ setWallet, setSubStep, wallet }) => {
             type="select"
             style={{
               background: "rgba(89, 38, 240, 0.04)",
-              boxShadow:
-                "0px 16.675323486328125px 18.0649356842041px 0px rgba(109, 41, 220, 0.04)",
+              boxShadow: "0px 16.675323486328125px 18.0649356842041px 0px rgba(109, 41, 220, 0.04)",
               appearance: "auto",
               marginTop: "1.5rem",
               fontWeight: 700,

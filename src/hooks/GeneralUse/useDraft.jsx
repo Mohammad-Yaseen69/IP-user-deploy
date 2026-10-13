@@ -23,10 +23,7 @@ const sendKeepalive = (scope, patch) => {
   }
 };
 
-const useDraft = (
-  scope,
-  { enabled = true, debounceMs = DEFAULT_DEBOUNCE_MS } = {},
-) => {
+const useDraft = (scope, { enabled = true, debounceMs = DEFAULT_DEBOUNCE_MS } = {}) => {
   const [data, setData] = useState({});
   const [files, setFiles] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -94,8 +91,7 @@ const useDraft = (
     (patch) => {
       if (!enabledRef.current || !isLoadedRef.current || !patch) return;
       const changed = Object.keys(patch).filter(
-        (key) =>
-          JSON.stringify(patch[key]) !== JSON.stringify(dataRef.current[key]),
+        (key) => JSON.stringify(patch[key]) !== JSON.stringify(dataRef.current[key]),
       );
       if (!changed.length) return;
 
@@ -131,10 +127,7 @@ const useDraft = (
         });
         const entry = res?.data;
         if (entry?.slot) {
-          setFiles((prev) => [
-            ...prev.filter((f) => f.slot !== entry.slot),
-            entry,
-          ]);
+          setFiles((prev) => [...prev.filter((f) => f.slot !== entry.slot), entry]);
         }
         return entry;
       };

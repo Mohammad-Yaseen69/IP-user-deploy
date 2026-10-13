@@ -7,20 +7,7 @@ import { Button } from "reactstrap";
 import SubscriptionPaymentFlow from "./PaymentFlow/index.jsx";
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem.jsx";
 
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 export const calculateFinalDate = (startDate, cycles) => {
   const dateParts = startDate.split("-");
@@ -45,9 +32,7 @@ const SubscriptionDetails = ({ item, currentImage, setCurrentImage }) => {
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
 
   const startMonth = +item_date.split("-")[1] - 1;
-  const startYear = new Date(
-    item_date?.split("-")?.reverse()?.join("-"),
-  ).getFullYear();
+  const startYear = new Date(item_date?.split("-")?.reverse()?.join("-")).getFullYear();
   const cycles = item?.cycles;
 
   const handleNextYear = () => {
@@ -118,9 +103,7 @@ const SubscriptionDetails = ({ item, currentImage, setCurrentImage }) => {
             padding: ".7rem 1rem",
           }}
         >
-          <h5 style={{ marginBottom: 0, fontSize: "20px", fontWeight: "700" }}>
-            {currentYear}
-          </h5>
+          <h5 style={{ marginBottom: 0, fontSize: "20px", fontWeight: "700" }}>{currentYear}</h5>
           <div
             style={{
               display: "flex",

@@ -13,8 +13,7 @@ import { getLoginPath } from "../utils/Functions/loginPage";
 const AgentLayout = () => {
   const width = useWindowWidth();
   const isMobile = width <= 780;
-  const { userDetails, verifyToken, isSidebarOpen } =
-    useContext(UserContext) || {};
+  const { userDetails, verifyToken, isSidebarOpen } = useContext(UserContext) || {};
   const token = localStorage.getItem("token");
   const location = useLocation();
 
@@ -43,9 +42,7 @@ const AgentLayout = () => {
           <MobileSidebar />
         </div>
       ) : (
-        <aside
-          className={`${styles.sidebar} ${!isSidebarOpen ? styles.sidebarCollpased : ""}`}
-        >
+        <aside className={`${styles.sidebar} ${!isSidebarOpen ? styles.sidebarCollpased : ""}`}>
           <NewMenu />
           <div className={styles.agentSidebarContainer}>
             <SidebarIndex />

@@ -41,9 +41,7 @@ const OptionRow = ({
         }
       }}
     >
-      {!disabled && (
-        <span className={`${styles.radio} ${selected ? styles.radioOn : ""}`} />
-      )}
+      {!disabled && <span className={`${styles.radio} ${selected ? styles.radioOn : ""}`} />}
 
       {leading}
 
@@ -52,19 +50,13 @@ const OptionRow = ({
           <span className={styles.optionTitle}>{title}</span>
           {badge ? <Badge accent={badgeAccent}>{badge}</Badge> : null}
         </div>
-        {description ? (
-          <p className={styles.optionDesc}>{description}</p>
-        ) : null}
+        {description ? <p className={styles.optionDesc}>{description}</p> : null}
       </div>
 
       <div className={styles.optionAside}>
         {price ? <div className={styles.optionPrice}>{price}</div> : null}
-        {priceNote ? (
-          <p className={styles.optionPriceNote}>{priceNote}</p>
-        ) : null}
-        {asideNote ? (
-          <span className={styles.optionOwned}>{asideNote}</span>
-        ) : null}
+        {priceNote ? <p className={styles.optionPriceNote}>{priceNote}</p> : null}
+        {asideNote ? <span className={styles.optionOwned}>{asideNote}</span> : null}
       </div>
     </div>
   );

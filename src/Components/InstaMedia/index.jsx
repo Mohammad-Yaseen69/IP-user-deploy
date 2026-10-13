@@ -1,14 +1,5 @@
 import { useState } from "react";
-import {
-  Facebook,
-  Instagram,
-  Linkedin,
-  Minus,
-  Monitor,
-  Plus,
-  X,
-  Youtube,
-} from "react-feather";
+import { Facebook, Instagram, Linkedin, Minus, Monitor, Plus, X, Youtube } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { BsBroadcast, BsLightning, BsWhatsapp } from "react-icons/bs";
 import { FaCrown } from "react-icons/fa6";
@@ -83,23 +74,14 @@ const InstaMediaComponent = () => {
         </nav>
 
         <section className={style.hero}>
-          <span className={style.heroEyebrow}>
-            {" "}
-            {t("Powered by InstaPay · Launching Q3 2026")}
-          </span>
+          <span className={style.heroEyebrow}> {t("Powered by InstaPay · Launching Q3 2026")}</span>
           <h1 className={style.heroTitle}>
-            {t("Your platform. Your")}{" "}
-            <span className={style.heroHighlight}>{t("audience")}</span>.{" "}
+            {t("Your platform. Your")} <span className={style.heroHighlight}>{t("audience")}</span>.{" "}
             {t("Your revenue.")}
           </h1>
           <p className={style.heroSubtitle}>
-            {t(
-              "One platform for live streaming, video, posts and memberships - built on",
-            )}{" "}
-            <br />{" "}
-            {t(
-              "InstaPay so every tip, sub and sale lands in your wallet instantly.",
-            )}
+            {t("One platform for live streaming, video, posts and memberships - built on")} <br />{" "}
+            {t("InstaPay so every tip, sub and sale lands in your wallet instantly.")}
           </p>
 
           <div
@@ -120,9 +102,7 @@ const InstaMediaComponent = () => {
             }}
           >
             <div className={style.heroForm}>
-              <span className={style.formLabel}>
-                {t("Get notified when we launch")}
-              </span>
+              <span className={style.formLabel}>{t("Get notified when we launch")}</span>
               <div className={style.formRow}>
                 <span>
                   <svg
@@ -145,9 +125,7 @@ const InstaMediaComponent = () => {
                 />
                 <button className={style.notifyButton}>{t("Continue")}</button>
               </div>
-              <p className={style.formNote}>
-                {t("No spam — one notification when we go live.")}
-              </p>
+              <p className={style.formNote}>{t("No spam — one notification when we go live.")}</p>
               <p className={style.formNote}>
                 <div className={style.avatarCont}>
                   <img src={avtar} alt="" />
@@ -164,39 +142,17 @@ const InstaMediaComponent = () => {
             <div className={style.partnerTrack}>
               {[...Array(2)].map((_, index) => (
                 <div className={style.partnerGroup} key={index}>
-                  <span className={style.partnerItem}>
-                    {t("✦ Video on Demand")}
-                  </span>
-                  <span className={style.partnerItem}>
-                    {t("✦ Subscriptions")}
-                  </span>
-                  <span className={style.partnerItem}>
-                    {t("✦ Instant Payouts")}
-                  </span>
-                  <span className={style.partnerItem}>
-                    {t("✦ Posts & Stories")}
-                  </span>
-                  <span className={style.partnerItem}>
-                    {t("✦ Tips & Donations")}
-                  </span>
-                  <span className={style.partnerItem}>
-                    {t("✦ Live Streaming")}
-                  </span>
-                  <span className={style.partnerItem}>
-                    {t("✦ Video on Demand")}
-                  </span>
-                  <span className={style.partnerItem}>
-                    {t("✦ Subscriptions")}
-                  </span>
-                  <span className={style.partnerItem}>
-                    {t("✦ Posts & Stories")}
-                  </span>
-                  <span className={style.partnerItem}>
-                    {t("✦ Tips & Donations")}
-                  </span>
-                  <span className={style.partnerItem}>
-                    {t("✦ Live Streaming")}
-                  </span>
+                  <span className={style.partnerItem}>{t("✦ Video on Demand")}</span>
+                  <span className={style.partnerItem}>{t("✦ Subscriptions")}</span>
+                  <span className={style.partnerItem}>{t("✦ Instant Payouts")}</span>
+                  <span className={style.partnerItem}>{t("✦ Posts & Stories")}</span>
+                  <span className={style.partnerItem}>{t("✦ Tips & Donations")}</span>
+                  <span className={style.partnerItem}>{t("✦ Live Streaming")}</span>
+                  <span className={style.partnerItem}>{t("✦ Video on Demand")}</span>
+                  <span className={style.partnerItem}>{t("✦ Subscriptions")}</span>
+                  <span className={style.partnerItem}>{t("✦ Posts & Stories")}</span>
+                  <span className={style.partnerItem}>{t("✦ Tips & Donations")}</span>
+                  <span className={style.partnerItem}>{t("✦ Live Streaming")}</span>
                 </div>
               ))}
             </div>
@@ -229,8 +185,8 @@ const InstaMediaComponent = () => {
                   {t("Repeat.")}
                 </h3>
                 <p className={style.cardText}>
-                  {t("Subscriber-only streams, live chat, real-time tipping.")}{" "}
-                  <br /> {t("Your audience, your rules!")}
+                  {t("Subscriber-only streams, live chat, real-time tipping.")} <br />{" "}
+                  {t("Your audience, your rules!")}
                 </p>
                 <button className={style.liveButton}>
                   {t("LIVE NOW")} <strong>{t("4,218 watching")}</strong>
@@ -252,9 +208,7 @@ const InstaMediaComponent = () => {
                     </div>
                   </div>
                   <div className={style.planRowBtn}>
-                    <button className={style.cancelButton2}>
-                      {t("Cancel")}
-                    </button>
+                    <button className={style.cancelButton2}>{t("Cancel")}</button>
                     <button
                       className={style.cancelButton2}
                       style={{
@@ -269,9 +223,7 @@ const InstaMediaComponent = () => {
               </div>
 
               <div className={`${style.card} ${style.cardMint}`}>
-                <span className={style.cardEyebrow}>
-                  {t("Instant Payouts")}
-                </span>
+                <span className={style.cardEyebrow}>{t("Instant Payouts")}</span>
                 <h3 className={style.cardTitle1}>
                   {t("Zero-wait.")}
                   <br />
@@ -316,12 +268,8 @@ const InstaMediaComponent = () => {
                 </h3>
                 <img src={screenShot} alt="Card 3" />
               </div>
-              <div
-                className={`${style.card} ${style.cardWhite} ${style.cardWhite3}`}
-              >
-                <span className={style.cardEyebrow}>
-                  {t("Posts & Discover")}
-                </span>
+              <div className={`${style.card} ${style.cardWhite} ${style.cardWhite3}`}>
+                <span className={style.cardEyebrow}>{t("Posts & Discover")}</span>
                 <h3 className={style.cardTitle}>
                   {t("Your world,")}
                   <br />
@@ -344,9 +292,7 @@ const InstaMediaComponent = () => {
             <div className={style.rowtowCon}>
               <div className={style.compareWrapper}>
                 <div className={style.oldCard}>
-                  <p className={style.smallHeading}>
-                    {t("WHAT CREATORS JUGGLE TODAY")}
-                  </p>
+                  <p className={style.smallHeading}>{t("WHAT CREATORS JUGGLE TODAY")}</p>
 
                   <div className={style.item}>
                     <span className={style.iconStyle}>
@@ -378,9 +324,7 @@ const InstaMediaComponent = () => {
                 </div>
 
                 <div className={style.newCard}>
-                  <p className={style.smallHeading}>
-                    {t("REPLACE IT ALL WITH ONE APP")}
-                  </p>
+                  <p className={style.smallHeading}>{t("REPLACE IT ALL WITH ONE APP")}</p>
 
                   <div className={style.logoRow}>
                     <img src={InstaMedia} className={style.logoMark} alt="" />
@@ -573,17 +517,12 @@ const InstaMediaComponent = () => {
             </defs>
           </svg>
           <div className={style.ctaBox}>
-            <h3 className={style.ctaTitle}>
-              {t("Be first through the door.")}
-            </h3>
+            <h3 className={style.ctaTitle}>{t("Be first through the door.")}</h3>
             <p className={style.ctaSub}>
               {t("Join the waitlist. We'll open your account the")}
               <br /> {t("moment we go live. No spam, ever.")}
             </p>
-            <form
-              className={style.ctaForm}
-              onSubmit={(e) => e.preventDefault()}
-            >
+            <form className={style.ctaForm} onSubmit={(e) => e.preventDefault()}>
               {" "}
               <span>
                 <svg
@@ -725,12 +664,7 @@ const InstaMediaComponent = () => {
               viewBox="0 0 35 35"
               fill="none"
             >
-              <rect
-                width="34.1157"
-                height="34.1157"
-                rx="7.08018"
-                fill="#F8F9FC"
-              />
+              <rect width="34.1157" height="34.1157" rx="7.08018" fill="#F8F9FC" />
               <path
                 fill-rule="evenodd"
                 clip-rule="evenodd"

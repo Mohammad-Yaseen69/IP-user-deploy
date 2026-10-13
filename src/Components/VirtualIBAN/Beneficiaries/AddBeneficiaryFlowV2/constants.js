@@ -118,13 +118,10 @@ export const GROUPS = {
   },
 };
 
-export const METHOD_CONTEXT_LABEL = Object.keys(METHOD_META).reduce(
-  (acc, key) => {
-    acc[key] = METHOD_META[key].title;
-    return acc;
-  },
-  {},
-);
+export const METHOD_CONTEXT_LABEL = Object.keys(METHOD_META).reduce((acc, key) => {
+  acc[key] = METHOD_META[key].title;
+  return acc;
+}, {});
 
 export const METHOD_AVATAR_ICON = {
   mobile_wallet: "device-mobile",

@@ -41,11 +41,7 @@ const Profile = () => {
       <div className={styles.top}>
         <div className={styles.headerTitle}>
           <h1>{t("Agent Profile")}</h1>
-          <p>
-            {t(
-              "View and edit your agent account details and IBAN for payouts.",
-            )}
-          </p>
+          <p>{t("View and edit your agent account details and IBAN for payouts.")}</p>
         </div>
         <div className={styles.topright}>{width > 1000 && <TopRight />}</div>
       </div>
@@ -68,17 +64,13 @@ const Profile = () => {
           {(showAll || activeTab === "all") && (
             <div className={styles.cardSection}>
               <div className={styles.cardHeader}>
-                <h3 className={styles.sectionTitle}>
-                  {t("Corporate profile")}
-                </h3>
+                <h3 className={styles.sectionTitle}>{t("Corporate profile")}</h3>
               </div>
 
               <div className={styles.infoRowsList}>
                 <div className={styles.infoRow}>
                   <span className={styles.label}>{t("Company")}</span>
-                  <span className={styles.value}>
-                    {t("Mensah Trade Partners Ltd")}
-                  </span>
+                  <span className={styles.value}>{t("Mensah Trade Partners Ltd")}</span>
                 </div>
 
                 <div className={styles.infoRow}>
@@ -157,12 +149,8 @@ const Profile = () => {
 
               <div className={styles.infoRowsList}>
                 <div className={styles.infoRow}>
-                  <span className={styles.label}>
-                    {t("Commission payout account")}
-                  </span>
-                  <span className={styles.value}>
-                    {t("MT84 SYPL 3948 6011 •••• ••••")}
-                  </span>
+                  <span className={styles.label}>{t("Commission payout account")}</span>
+                  <span className={styles.value}>{t("MT84 SYPL 3948 6011 •••• ••••")}</span>
                 </div>
 
                 <div className={styles.infoRow}>
@@ -202,9 +190,7 @@ const Profile = () => {
 
               <div className={styles.ratesGrid}>
                 <div className={styles.rateCard}>
-                  <span className={styles.rateLabel}>
-                    {t("IBAN activation")}
-                  </span>
+                  <span className={styles.rateLabel}>{t("IBAN activation")}</span>
                   <span className={styles.rateValue}>20%</span>
                 </div>
                 <div className={styles.rateCard}>

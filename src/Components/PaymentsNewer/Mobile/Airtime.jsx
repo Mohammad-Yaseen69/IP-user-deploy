@@ -149,11 +149,7 @@ const AirtimeMobile = ({ step, setStep, setCurrentFlow, setAction }) => {
                     />
                 }
             </div> */}
-      <Airtime
-        setCurrentFlow={setCurrentFlow}
-        setAction={setAction}
-        setStep={setStep}
-      />
+      <Airtime setCurrentFlow={setCurrentFlow} setAction={setAction} setStep={setStep} />
     </div>
   );
 };

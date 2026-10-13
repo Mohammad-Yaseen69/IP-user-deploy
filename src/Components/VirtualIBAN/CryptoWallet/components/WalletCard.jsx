@@ -1,11 +1,7 @@
 import { useTranslation } from "react-i18next";
 import styles from "../cryptoPage.module.scss";
 import { getWalletNetworks } from "../api/cryptoWallets";
-import {
-  formatCryptoAmount,
-  getAssetFullName,
-  getWalletAccentColor,
-} from "../utils/format";
+import { formatCryptoAmount, getAssetFullName, getWalletAccentColor } from "../utils/format";
 
 /**
  * One crypto wallet in "Your accounts". Clicking it opens the wallet.
@@ -44,10 +40,7 @@ const WalletCard = ({ wallet, onOpen }) => {
       }}
     >
       <div className={styles.walletTop}>
-        <span
-          className={styles.walletMark}
-          style={{ background: getWalletAccentColor(code) }}
-        >
+        <span className={styles.walletMark} style={{ background: getWalletAccentColor(code) }}>
           {code}
         </span>
         <span>
@@ -55,9 +48,7 @@ const WalletCard = ({ wallet, onOpen }) => {
             {code}
             {primaryNetwork ? ` · ${primaryNetwork}` : ""}
           </span>
-          <span className={styles.walletFullName}>
-            {t(getAssetFullName(code))}
-          </span>
+          <span className={styles.walletFullName}>{t(getAssetFullName(code))}</span>
         </span>
         <span className={`${styles.pill} ${pill.className}`}>{pill.label}</span>
       </div>
@@ -74,12 +65,7 @@ const WalletCard = ({ wallet, onOpen }) => {
       </div>
 
       <div className={styles.walletActions} onClick={stop}>
-        <button
-          type="button"
-          className={styles.walletBtnPrimary}
-          disabled
-          title={t("Coming Soon")}
-        >
+        <button type="button" className={styles.walletBtnPrimary} disabled title={t("Coming Soon")}>
           {t("Convert")}
         </button>
         <button

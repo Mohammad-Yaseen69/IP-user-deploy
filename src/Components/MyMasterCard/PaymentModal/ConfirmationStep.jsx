@@ -17,16 +17,11 @@ export const paymentInfoJSX = (feeDetails, addFunds, title, t) => (
       >
         {!addFunds
           ? (feeDetails?.totalFee ?? feeDetails?.fee)
-          : (feeDetails?.feeDetails?.totalAmount ??
-            feeDetails?.feeDetails?.amount)}{" "}
+          : (feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount)}{" "}
         {!addFunds ? feeDetails.currency : feeDetails?.feeDetails?.currency}
       </h1>
     </div>
-    <img
-      src={Svg}
-      style={{ position: "absolute", right: "10px", top: "0px" }}
-      alt=""
-    />
+    <img src={Svg} style={{ position: "absolute", right: "10px", top: "0px" }} alt="" />
   </div>
 );
 
@@ -42,9 +37,7 @@ const ConfirmationStep = ({
   feeLabel,
 }) => {
   const { t } = useTranslation();
-  const exchangeRate = Number(
-    String(feeDetails?.exchangeRate ?? "").replace(/,/g, ""),
-  );
+  const exchangeRate = Number(String(feeDetails?.exchangeRate ?? "").replace(/,/g, ""));
   const showExchangeRate =
     !addFunds &&
     feeDetails?.baseCurrency &&
@@ -91,16 +84,11 @@ const ConfirmationStep = ({
             </div>
             {addFunds && feeDetails?.feeDetails?.exchangeRate && (
               <div style={{ justifyContent: "center" }}>
-                <div
-                  style={{ flexDirection: "row" }}
-                  className={styles.er_details}
-                >
+                <div style={{ flexDirection: "row" }} className={styles.er_details}>
                   <img src={er_icon} alt="" />
                   <span>
                     1.00 {cardDets?.currency} ={" "}
-                    {Number(
-                      feeDetails?.feeDetails?.exchangeRate?.replace(/[,]/g, ""),
-                    )?.toFixed(2)}{" "}
+                    {Number(feeDetails?.feeDetails?.exchangeRate?.replace(/[,]/g, ""))?.toFixed(2)}{" "}
                     {feeDetails?.feeDetails?.currency}{" "}
                   </span>
                 </div>
@@ -108,14 +96,10 @@ const ConfirmationStep = ({
             )}
             {showExchangeRate && (
               <div style={{ justifyContent: "center" }}>
-                <div
-                  style={{ flexDirection: "row" }}
-                  className={styles.er_details}
-                >
+                <div style={{ flexDirection: "row" }} className={styles.er_details}>
                   <img src={er_icon} alt="" />
                   <span>
-                    1.00 {feeDetails.baseCurrency} = {exchangeRate.toFixed(2)}{" "}
-                    {feeDetails.currency}
+                    1.00 {feeDetails.baseCurrency} = {exchangeRate.toFixed(2)} {feeDetails.currency}
                   </span>
                 </div>
               </div>
@@ -127,8 +111,7 @@ const ConfirmationStep = ({
                   {cardDets?.currency}
                 </h3>
                 <h3 style={{ marginBottom: "0", fontSize: "18px" }}>
-                  {feeDetails?.feeDetails?.totalAmount ??
-                    feeDetails?.feeDetails?.amount}
+                  {feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount}
                   {feeDetails?.feeDetails?.currency}{" "}
                 </h3>
               </div>
@@ -164,8 +147,7 @@ const ConfirmationStep = ({
                 <h3>{t("Total Amount:")}</h3>
                 <h3>
                   {" "}
-                  {feeDetails?.feeDetails?.totalAmount ??
-                    feeDetails?.feeDetails?.amount}
+                  {feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount}
                   {feeDetails?.feeDetails?.currency}
                 </h3>
               </div>
@@ -177,10 +159,7 @@ const ConfirmationStep = ({
       {window.innerWidth > 1000 && !addFunds && !hideButtons && (
         <div className={styles.btns}>
           <button onClick={() => setStep(2)}>{t("Back")}</button>
-          <button
-            style={{ color: "white", backgroundColor: "#5926F0" }}
-            onClick={sendOtp}
-          >
+          <button style={{ color: "white", backgroundColor: "#5926F0" }} onClick={sendOtp}>
             {t("Proceed to Payment")}
             <svg
               xmlns="http://www.w3.org/2000/svg"

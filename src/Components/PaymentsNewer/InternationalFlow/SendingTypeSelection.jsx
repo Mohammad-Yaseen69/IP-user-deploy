@@ -5,11 +5,7 @@ import { User, Users, CheckCircle } from "react-feather";
 
 const getAccountName = (userDetails) => {
   if (userDetails?.account_type === "business") {
-    return (
-      userDetails?.company?.company_name ||
-      userDetails?.company?.name ||
-      "Business account"
-    );
+    return userDetails?.company?.company_name || userDetails?.company?.name || "Business account";
   }
   return (
     `${userDetails?.user?.first_name || ""} ${userDetails?.user?.last_name || ""}`.trim() ||
@@ -84,9 +80,7 @@ const SendingTypeSelection = ({ data, dataHandler }) => {
       }}
     >
       <div>
-        <h5 style={{ margin: 0, color: "#5926F0", fontWeight: 800 }}>
-          {t("Select Sender Type")}
-        </h5>
+        <h5 style={{ margin: 0, color: "#5926F0", fontWeight: 800 }}>{t("Select Sender Type")}</h5>
         <p
           style={{
             margin: "6px 0 0",
@@ -121,9 +115,7 @@ const SendingTypeSelection = ({ data, dataHandler }) => {
               {getAccountName(userDetails)}
             </span>
           </span>
-          {senderType === "account" ? (
-            <CheckCircle size={18} color="#5926F0" />
-          ) : null}
+          {senderType === "account" ? <CheckCircle size={18} color="#5926F0" /> : null}
         </button>
         <button
           type="button"
@@ -146,9 +138,7 @@ const SendingTypeSelection = ({ data, dataHandler }) => {
               {t("Select a saved sender or add a new one")}
             </span>
           </span>
-          {senderType === "third-party" ? (
-            <CheckCircle size={18} color="#5926F0" />
-          ) : null}
+          {senderType === "third-party" ? <CheckCircle size={18} color="#5926F0" /> : null}
         </button>
       </div>
 
@@ -161,9 +151,7 @@ const SendingTypeSelection = ({ data, dataHandler }) => {
             gap: "10px",
           }}
         >
-          <h5
-            style={{ fontWeight: 700, color: "#454545", margin: "10px 0 5px" }}
-          >
+          <h5 style={{ fontWeight: 700, color: "#454545", margin: "10px 0 5px" }}>
             {t("Select Third-Party Type")}
           </h5>
           <div
@@ -180,13 +168,9 @@ const SendingTypeSelection = ({ data, dataHandler }) => {
             >
               <User size={20} color="#5926F0" />
               <span style={{ flex: 1 }}>
-                <strong style={{ display: "block", fontSize: "13px" }}>
-                  {t("Individual")}
-                </strong>
+                <strong style={{ display: "block", fontSize: "13px" }}>{t("Individual")}</strong>
               </span>
-              {selectedSendingType === "C" ? (
-                <CheckCircle size={16} color="#5926F0" />
-              ) : null}
+              {selectedSendingType === "C" ? <CheckCircle size={16} color="#5926F0" /> : null}
             </button>
             <button
               type="button"
@@ -195,13 +179,9 @@ const SendingTypeSelection = ({ data, dataHandler }) => {
             >
               <Users size={20} color="#5926F0" />
               <span style={{ flex: 1 }}>
-                <strong style={{ display: "block", fontSize: "13px" }}>
-                  {t("Business")}
-                </strong>
+                <strong style={{ display: "block", fontSize: "13px" }}>{t("Business")}</strong>
               </span>
-              {selectedSendingType === "B" ? (
-                <CheckCircle size={16} color="#5926F0" />
-              ) : null}
+              {selectedSendingType === "B" ? <CheckCircle size={16} color="#5926F0" /> : null}
             </button>
           </div>
         </div>

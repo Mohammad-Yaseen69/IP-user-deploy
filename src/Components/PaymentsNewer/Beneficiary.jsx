@@ -1,12 +1,4 @@
-import {
-  Check,
-  ChevronLeft,
-  ChevronRight,
-  HelpCircle,
-  Search,
-  X,
-  XCircle,
-} from "react-feather";
+import { Check, ChevronLeft, ChevronRight, HelpCircle, Search, X, XCircle } from "react-feather";
 import { Badge, Button, Card, CardBody, Input } from "reactstrap";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
@@ -92,9 +84,7 @@ const PaymentsBeneficiary = ({
 
       if (fil?.length === 0) {
         setAddMessage(
-          t(
-            "You have no beneficiary from ${country} having ${payoutChannel} details.",
-          )
+          t("You have no beneficiary from ${country} having ${payoutChannel} details.")
             .replace("${country}", country)
             ?.replace("${payoutChannel}", payoutChannel),
         );
@@ -104,20 +94,16 @@ const PaymentsBeneficiary = ({
     if (payoutChannel === "mobile") {
       // You have no beneficiary from ${country} having ${} details.
       fil = fil.filter(
-        (item) =>
-          item?.mobile_wallet?.[0]?.money_provider == international?.payer_id,
+        (item) => item?.mobile_wallet?.[0]?.money_provider == international?.payer_id,
       );
       if (fil?.length === 0) {
         setAddMessage(
-          t(
-            "You have no beneficiary from ${country} having ${payoutChannel} details.",
-          )
+          t("You have no beneficiary from ${country} having ${payoutChannel} details.")
             .replace("${country}", country)
             ?.replace(
               "${payoutChannel}",
-              international?.subServices?.find(
-                (item) => item?.id === international?.payer_id,
-              )?.name,
+              international?.subServices?.find((item) => item?.id === international?.payer_id)
+                ?.name,
             ),
         );
       }
@@ -145,9 +131,7 @@ const PaymentsBeneficiary = ({
           token: international?.token,
           payerId: international?.payer_id,
           wallet_id: userWallets?.filter(
-            (it) =>
-              it?.currency?.code?.toLowerCase() ===
-              international?.currency?.toLowerCase(),
+            (it) => it?.currency?.code?.toLowerCase() === international?.currency?.toLowerCase(),
           )[0]?._id,
           transaction_type: item?.beneficiary_type
             ? item?.beneficiary_type === "individual"
@@ -221,12 +205,9 @@ const PaymentsBeneficiary = ({
           : searchQuery;
       console.log(query);
       axios
-        .get(
-          `${import.meta.env.VITE_IP_DEV_API}/api/account/search-users/${query}`,
-          {
-            headers: authHeader,
-          },
-        )
+        .get(`${import.meta.env.VITE_IP_DEV_API}/api/account/search-users/${query}`, {
+          headers: authHeader,
+        })
         .then((res) => {
           const decrypted = decryptData(res.data.data);
           setSearched(decrypted?.users ?? []);
@@ -246,15 +227,9 @@ const PaymentsBeneficiary = ({
         return (
           // ||
           // item?.email?.toLowerCase()?.includes(e.target.value.toLowerCase())
-          item?.first_name
-            ?.toLowerCase()
-            ?.includes(searchQuery?.toLowerCase()) ||
-          item?.last_name
-            ?.toLowerCase()
-            ?.includes(searchQuery?.toLowerCase()) ||
-          item?.company_name
-            ?.toLowerCase()
-            ?.includes(searchQuery?.toLowerCase())
+          item?.first_name?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
+          item?.last_name?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
+          item?.company_name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
         );
       });
       setFiltered(searchBenef);
@@ -283,9 +258,7 @@ const PaymentsBeneficiary = ({
 
   useEffect(() => {
     if (url_recipient && beneficiaries?.length > 0) {
-      const fil = beneficiaries?.filter(
-        (item) => item?._id == url_recipient,
-      )?.[0];
+      const fil = beneficiaries?.filter((item) => item?._id == url_recipient)?.[0];
       setBeneficiary([fil]);
       createQuotations([fil]);
     }
@@ -312,8 +285,7 @@ const PaymentsBeneficiary = ({
           padding: "14px",
           background: window.innerWidth > 1000 ? "rgba(0,0,0,.03)" : "#fff",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
       >
         {type !== "Quoting" && (
@@ -446,9 +418,7 @@ const PaymentsBeneficiary = ({
         {(type === "Requesting" || type === "Quoting") &&
         searched.length == 0 &&
         searchQuery.length > 0 ? (
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}
-          >
+          <div style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}>
             <p style={{ marginBottom: 0, fontWeight: 600 }}>
               {t("Please follow these examples:")}{" "}
             </p>
@@ -456,15 +426,13 @@ const PaymentsBeneficiary = ({
               {t("Full Name")}: <strong>{t("Muhammad Imtiaz")}</strong>
             </div>
             <div>
-              {t("InstaPay/Instagram Username")}:{" "}
-              <strong>{t("instauser")}</strong>
+              {t("InstaPay/Instagram Username")}: <strong>{t("instauser")}</strong>
             </div>
             <div>
               {t("Email")}: <strong>{t("user@email.com")}</strong>
             </div>
             <div>
-              {t("Phone Number")}: <strong>44795396600</strong> (
-              {t("With Country Code")})
+              {t("Phone Number")}: <strong>44795396600</strong> ({t("With Country Code")})
             </div>
           </div>
         ) : (
@@ -495,11 +463,7 @@ const PaymentsBeneficiary = ({
                                     &&
                                     <div style={{ textAlign: "center", margin: "1rem 0" }}>{t("You can't perform this action to yourself")}</div>
                                 } */}
-              {isError && (
-                <div style={{ textAlign: "center", margin: "1rem 0" }}>
-                  {t(isError)}
-                </div>
-              )}
+              {isError && <div style={{ textAlign: "center", margin: "1rem 0" }}>{t(isError)}</div>}
               {searched.length > 0 && (
                 <>
                   {/* {searched?._id !== userDetails?._id
@@ -577,10 +541,7 @@ const PaymentsBeneficiary = ({
                                   alignItems: "center",
                                 }}
                               >
-                                <h5
-                                  className="mb-0"
-                                  style={{ fontSize: ".9rem" }}
-                                >
+                                <h5 className="mb-0" style={{ fontSize: ".9rem" }}>
                                   {user_searched?.account_type === "individual"
                                     ? `${user_searched?.first_name} ${user_searched?.last_name}`
                                     : user_searched?.company_name}
@@ -637,13 +598,8 @@ const PaymentsBeneficiary = ({
                               />
                               {/* <span style={{ fontSize: "1rem", fontWeight: "700" }}>{countries.filter(it => it.name.toLowerCase() === user_searched?.country?.toLowerCase())[0]?.name}</span> */}
                             </div>
-                            {beneficiary?.some(
-                              (it) => it?._id === user_searched?._id,
-                            ) ? (
-                              <Check
-                                style={{ fontWeight: "900" }}
-                                color="green"
-                              />
+                            {beneficiary?.some((it) => it?._id === user_searched?._id) ? (
+                              <Check style={{ fontWeight: "900" }} color="green" />
                             ) : (
                               <BsThreeDots />
                             )}
@@ -764,10 +720,7 @@ const PaymentsBeneficiary = ({
           )}
         </p>
         <div style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
-          <button
-            style={{ all: "unset", cursor: "pointer" }}
-            onClick={backHandler}
-          >
+          <button style={{ all: "unset", cursor: "pointer" }} onClick={backHandler}>
             {t("Back")}
           </button>
           <Button
@@ -788,8 +741,7 @@ const PaymentsBeneficiary = ({
             onClick={createQuotations}
             disabled={isChecking || beneficiary.length < 1}
           >
-            {isChecking ? t("Confirming") : t("Confirm")}{" "}
-            <ChevronRight size={20} />
+            {isChecking ? t("Confirming") : t("Confirm")} <ChevronRight size={20} />
           </Button>
         </div>
       </div>
@@ -816,8 +768,7 @@ const PaymentsBeneficiary = ({
             onClick={createQuotations}
             disabled={isChecking || beneficiary.length < 1}
           >
-            {isChecking ? t("Confirming") : t("Confirm")}{" "}
-            <ChevronRight size={20} />
+            {isChecking ? t("Confirming") : t("Confirm")} <ChevronRight size={20} />
           </button>
         </div>
 

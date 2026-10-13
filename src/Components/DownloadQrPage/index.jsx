@@ -10,13 +10,9 @@ const DownloadQrPage = () => {
 
   const wallet = useMemo(() => {
     console.log(
-      userWallets?.find(
-        (item) => item?.wallet_id?.toLowerCase() == wallet_id?.toLowerCase(),
-      ),
+      userWallets?.find((item) => item?.wallet_id?.toLowerCase() == wallet_id?.toLowerCase()),
     );
-    return userWallets?.find(
-      (item) => item?.wallet_id?.toLowerCase() === wallet_id?.toLowerCase(),
-    );
+    return userWallets?.find((item) => item?.wallet_id?.toLowerCase() === wallet_id?.toLowerCase());
   }, [wallet_id, userWallets]);
 
   useLayoutEffect(() => {

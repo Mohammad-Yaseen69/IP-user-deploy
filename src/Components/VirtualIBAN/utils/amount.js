@@ -35,8 +35,7 @@ export const getQuickAmountsFromBalance = (balance) => {
 export const isSameAmount = (firstValue, secondValue) =>
   Math.abs(getAmountNumber(firstValue) - getAmountNumber(secondValue)) < 0.01;
 
-export const getAmountInputSize = (value) =>
-  Math.max(String(value || "0.00").length, 1);
+export const getAmountInputSize = (value) => Math.max(String(value || "0.00").length, 1);
 
 export const handleAmountInputChange = (event, setAmount) => {
   const value = event.target.value.replace(/[^\d.,]/g, "");

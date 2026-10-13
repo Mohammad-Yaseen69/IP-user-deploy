@@ -18,13 +18,9 @@ import {
 const ALLOWED_FILE_TYPES = {
   "application/pdf": [".pdf"],
   "application/msword": [".doc"],
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
-    ".docx",
-  ],
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
   "application/vnd.ms-excel": [".xls"],
-  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [
-    ".xlsx",
-  ],
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"],
   "image/jpeg": [".jpg", ".jpeg"],
   "image/png": [".png"],
   "image/webp": [".webp"],
@@ -77,12 +73,7 @@ const DocumentsStep = ({
   ];
   if (!isKybDone) {
     if (companyType.includes("sole")) {
-      requiredDocKeys = [
-        "commercial_register",
-        IBAN_POA_SLOT,
-        "ubo_passport",
-        "ubo_address_proof",
-      ];
+      requiredDocKeys = ["commercial_register", IBAN_POA_SLOT, "ubo_passport", "ubo_address_proof"];
     } else {
       if (!requiredDocKeys.includes("authority_letter")) {
         requiredDocKeys.push("authority_letter");
@@ -138,9 +129,7 @@ const DocumentsStep = ({
         slot === IBAN_POA_SLOT ? { variant: key } : undefined,
       );
       if (entry?.slot) {
-        setFiles((prev) =>
-          prev[key] === file ? { ...prev, [key]: toDraftFileRef(entry) } : prev,
-        );
+        setFiles((prev) => (prev[key] === file ? { ...prev, [key]: toDraftFileRef(entry) } : prev));
       }
     } catch (err) {
       console.error(`Unable to save ${key} to the draft`, err);
@@ -214,10 +203,7 @@ const DocumentsStep = ({
   const { err, validate } = useStepValidation(files, rules);
 
   const uploadedCount = Object.keys(files).length;
-  const progressPercent = Math.min(
-    100,
-    Math.round((uploadedCount / requiredDocKeys.length) * 100),
-  );
+  const progressPercent = Math.min(100, Math.round((uploadedCount / requiredDocKeys.length) * 100));
   const renderUploadControl = (key) => {
     const selectedFile = files[key];
     const isVerified = isKeyVerifiedFromKyb(key);
@@ -234,11 +220,7 @@ const DocumentsStep = ({
                   ? t("PROVIDED")
                   : selectedFile.name}
             </span>
-            <button
-              type="button"
-              className={styles.uploadBtn}
-              onClick={() => openFilePicker(key)}
-            >
+            <button type="button" className={styles.uploadBtn} onClick={() => openFilePicker(key)}>
               <Upload size={10} /> {t("Replace")}
             </button>
           </>
@@ -265,11 +247,7 @@ const DocumentsStep = ({
             >
               {t(isPOF ? "ANY ONE" : isRequired ? "REQUIRED" : "OPTIONAL")}
             </span>
-            <button
-              type="button"
-              className={styles.uploadBtn}
-              onClick={() => openFilePicker(key)}
-            >
+            <button type="button" className={styles.uploadBtn} onClick={() => openFilePicker(key)}>
               <Upload size={10} /> {t("Upload")}
             </button>
           </>
@@ -287,13 +265,10 @@ const DocumentsStep = ({
     );
   };
 
-  const isDocProvided = (key) =>
-    Boolean(files[key]) || isKeyVerifiedFromKyb(key);
+  const isDocProvided = (key) => Boolean(files[key]) || isKeyVerifiedFromKyb(key);
   const isDocsValid =
     requiredDocKeys.every((k) =>
-      k === IBAN_POA_SLOT
-        ? IBAN_POA_DOC_KEYS.some(isDocProvided)
-        : isDocProvided(k),
+      k === IBAN_POA_SLOT ? IBAN_POA_DOC_KEYS.some(isDocProvided) : isDocProvided(k),
     ) && !Object.values(uploadingKeys).some(Boolean);
 
   const handleContinue = () => {
@@ -329,9 +304,7 @@ const DocumentsStep = ({
           width: "100%",
         }}
       >
-        <h2 className={styles.formHeading}>
-          {t("Drop your documents - we'll sort them out")}
-        </h2>
+        <h2 className={styles.formHeading}>{t("Drop your documents - we'll sort them out")}</h2>
         <p className={styles.formSubheading}>
           {t(
             "Your checklist adapts to your profile. Scan or upload; we detect the type automatically. Provide sensitive files through the secure channel - never by ordinary email.",
@@ -377,9 +350,7 @@ const DocumentsStep = ({
                 <div className={styles.left}>
                   <span className={styles.empty}></span>
                   <span>
-                    {t(
-                      "Recent commercial register extract or certificate of incorporation",
-                    )}
+                    {t("Recent commercial register extract or certificate of incorporation")}
                   </span>
                 </div>
 
@@ -430,26 +401,16 @@ const DocumentsStep = ({
               {isMobile && (
                 <div className={styles.headerContent}>
                   <h3>{t("Company proof of address")}</h3>
-                  <p className={styles.subtitle}>
-                    {t("Provide ONE of the following")}
-                  </p>
+                  <p className={styles.subtitle}>{t("Provide ONE of the following")}</p>
                 </div>
               )}
             </div>
-            {!isMobile && (
-              <p className={styles.subtitle}>
-                {t("Provide ONE of the following")}
-              </p>
-            )}
+            {!isMobile && <p className={styles.subtitle}>{t("Provide ONE of the following")}</p>}
             <div className={styles.documentList}>
               <div className={styles.documentRow}>
                 <div className={styles.left}>
                   <span className={styles.empty}></span>
-                  <span>
-                    {t(
-                      "Register extract showing the registered office address",
-                    )}
-                  </span>
+                  <span>{t("Register extract showing the registered office address")}</span>
                 </div>
 
                 {renderUploadControl("registered_extract")}
@@ -477,9 +438,7 @@ const DocumentsStep = ({
                 <div className={styles.left}>
                   <span className={styles.empty}></span>
                   <span>
-                    {t(
-                      "Utility bill under 3 months (electricity, water, gas, internet, landline)",
-                    )}
+                    {t("Utility bill under 3 months (electricity, water, gas, internet, landline)")}
                   </span>
                 </div>
 
@@ -490,9 +449,7 @@ const DocumentsStep = ({
                 <div className={styles.left}>
                   <span className={styles.empty}></span>
                   <span>
-                    {t(
-                      "Recent business bank statement showing company name and address",
-                    )}
+                    {t("Recent business bank statement showing company name and address")}
                   </span>
                 </div>
 
@@ -502,11 +459,7 @@ const DocumentsStep = ({
               <div className={styles.documentRow}>
                 <div className={styles.left}>
                   <span className={styles.empty}></span>
-                  <span>
-                    {t(
-                      "Official letter from an administration or tax authority",
-                    )}
-                  </span>
+                  <span>{t("Official letter from an administration or tax authority")}</span>
                 </div>
 
                 {renderUploadControl("tax_authority_letter")}
@@ -522,9 +475,7 @@ const DocumentsStep = ({
                 <div className={styles.headerContent}>
                   <h3>{t("Ultimate Beneficial Owners (UBO)")}</h3>
                   <p className={styles.subtitle}>
-                    {t(
-                      "For each UBO holding directly or indirectly 25% or more",
-                    )}
+                    {t("For each UBO holding directly or indirectly 25% or more")}
                   </p>
                 </div>
               )}
@@ -556,11 +507,7 @@ const DocumentsStep = ({
               <div className={styles.documentRow}>
                 <div className={styles.left}>
                   <span className={styles.empty}></span>
-                  <span>
-                    {t(
-                      "UBO declaration (including corporate UBO if applicable)",
-                    )}
-                  </span>
+                  <span>{t("UBO declaration (including corporate UBO if applicable)")}</span>
                 </div>
 
                 {renderUploadControl("ubo_declaration")}
@@ -578,9 +525,7 @@ const DocumentsStep = ({
               <div className={styles.documentRow}>
                 <div className={styles.left}>
                   <span className={styles.empty}></span>
-                  <span>
-                    {t("Private proof of address under 3 months for each UBO")}
-                  </span>
+                  <span>{t("Private proof of address under 3 months for each UBO")}</span>
                 </div>
 
                 {renderUploadControl("ubo_address_proof")}

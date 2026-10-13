@@ -79,8 +79,7 @@ const MainContent = () => {
     let status;
     setUploadStarted(true);
     setIsUploading(true);
-    const { email, number, firstName, lastName, account_type, kyc_status } =
-      data;
+    const { email, number, firstName, lastName, account_type, kyc_status } = data;
     const body = {
       email,
       phone: number,
@@ -94,11 +93,7 @@ const MainContent = () => {
 
     try {
       if (email || number || firstName || lastName) {
-        const response = await axios.post(
-          url,
-          { data: encrypted },
-          { headers: authHeader },
-        );
+        const response = await axios.post(url, { data: encrypted }, { headers: authHeader });
         status = true;
         setSuccessCount((prev) => prev + 1);
       }
@@ -110,9 +105,7 @@ const MainContent = () => {
       setProcessedUsers((prev) => [...prev, { ...data, status: status }]);
       if (index + 1 === csvData.length) {
         if (successCount > 0) {
-          toast.success(
-            "Successfully sent emails to " + successCount + " users",
-          );
+          toast.success("Successfully sent emails to " + successCount + " users");
         }
         if (errorCount > 0) {
           toast.error("Failed to send emails to " + errorCount + " users");
@@ -177,17 +170,14 @@ const MainContent = () => {
                     <>
                       <div>
                         <p>
-                          {t("Successfully sent Email to")} {successCount}/
-                          {csvData.length} {t("users.")}
+                          {t("Successfully sent Email to")} {successCount}/{csvData.length}{" "}
+                          {t("users.")}
                         </p>
                         <p>
-                          {t("Failed to send Email to")} {errorCount}/
-                          {csvData.length} {t("users.")}
+                          {t("Failed to send Email to")} {errorCount}/{csvData.length} {t("users.")}
                         </p>
                       </div>
-                      <div
-                        style={{ display: "flex", justifyContent: "flex-end" }}
-                      >
+                      <div style={{ display: "flex", justifyContent: "flex-end" }}>
                         <Button
                           style={{
                             background:
@@ -205,9 +195,7 @@ const MainContent = () => {
                     <>
                       <p>
                         {csvData.length}{" "}
-                        {t(
-                          "users fetched from file, Do you want to start the process?",
-                        )}
+                        {t("users fetched from file, Do you want to start the process?")}
                       </p>
                       <div
                         style={{
@@ -245,9 +233,7 @@ const MainContent = () => {
                   )}
                 </div>
               ) : (
-                <p style={{ textAlign: "center" }}>
-                  {t("Upload The File To Start The Process!")}
-                </p>
+                <p style={{ textAlign: "center" }}>{t("Upload The File To Start The Process!")}</p>
               )}
             </CardBody>
           </Card>
@@ -264,8 +250,7 @@ const MainContent = () => {
               <h5>{t("Fetched Users")}</h5>
               <Button
                 style={{
-                  background:
-                    "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                  background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                   border: "none",
                   outline: "none",
                 }}

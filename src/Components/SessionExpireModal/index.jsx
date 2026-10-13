@@ -4,10 +4,7 @@ import { useNavigate } from "react-router";
 import { Modal, ModalBody } from "reactstrap";
 import { X } from "react-feather";
 import { useTranslation } from "react-i18next";
-import {
-  clearAuthStorage,
-  getLoginPath,
-} from "../../utils/Functions/loginPage";
+import { clearAuthStorage, getLoginPath } from "../../utils/Functions/loginPage";
 
 const SessionExpireModal = ({ isOpen, toggle }) => {
   const [timer, setTimer] = useState(5);
@@ -70,14 +67,9 @@ const SessionExpireModal = ({ isOpen, toggle }) => {
           <X color="white" size={50} />
         </div>
         <h4 style={{ color: "orange" }}>{t("Session Expired")}</h4>
-        <p>
-          {t(
-            "You have been logged out for security reasons, please login again to continue.",
-          )}
-        </p>
+        <p>{t("You have been logged out for security reasons, please login again to continue.")}</p>
         <span style={{ color: "rgb(89 89 89)", fontWeight: 500 }}>
-          {t("Redirecting you to Login Page in")} <strong>{timer}</strong>{" "}
-          {t("seconds")}.
+          {t("Redirecting you to Login Page in")} <strong>{timer}</strong> {t("seconds")}.
         </span>
       </ModalBody>
     </Modal>

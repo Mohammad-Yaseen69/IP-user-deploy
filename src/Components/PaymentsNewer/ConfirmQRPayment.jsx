@@ -110,9 +110,7 @@ const ConfirmQRPayment = ({
         setConfirmed(true);
         setToken(dec?.token);
       } catch (error) {
-        toast.error(
-          t("Something went wrong while confirming the transaction!"),
-        );
+        toast.error(t("Something went wrong while confirming the transaction!"));
         // console.log(decryptData(error?.response?.data?.data))
       }
     };
@@ -140,14 +138,10 @@ const ConfirmQRPayment = ({
           padding: "20px 30px",
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
       >
-        <div
-          style={{ display: "flex", flexDirection: "column" }}
-          className="conf_cont"
-        >
+        <div style={{ display: "flex", flexDirection: "column" }} className="conf_cont">
           <h4 className="text-center">
             {t("You Selected")}
             <br />

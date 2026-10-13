@@ -95,15 +95,7 @@ const UserIcon = () => (
 
 const IdBadgeIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-    <rect
-      x="3"
-      y="2.25"
-      width="12"
-      height="13.5"
-      rx="1.5"
-      stroke="#F8F9FC"
-      strokeWidth="1.2"
-    />
+    <rect x="3" y="2.25" width="12" height="13.5" rx="1.5" stroke="#F8F9FC" strokeWidth="1.2" />
     <circle cx="9" cy="8.25" r="2.25" stroke="#F8F9FC" strokeWidth="1.2" />
   </svg>
 );
@@ -160,9 +152,7 @@ const SIDEBAR_ICONS = {
 const getQuoteExpiry = (token) => {
   let exp;
   try {
-    exp = JSON.parse(
-      atob(String(token).split(".")[1].replace(/-/g, "+").replace(/_/g, "/")),
-    )?.exp;
+    exp = JSON.parse(atob(String(token).split(".")[1].replace(/-/g, "+").replace(/_/g, "/")))?.exp;
   } catch {
     exp = null;
   }
@@ -172,16 +162,8 @@ const getQuoteExpiry = (token) => {
 const getBeneficiaryId = (beneficiary) => beneficiary?._id || beneficiary?.id;
 
 const getBeneficiaryName = (beneficiary) => {
-  const name = [beneficiary?.first_name, beneficiary?.last_name]
-    .filter(Boolean)
-    .join(" ");
-  return (
-    name ||
-    beneficiary?.company_name ||
-    beneficiary?.legalName ||
-    beneficiary?.name ||
-    "-"
-  );
+  const name = [beneficiary?.first_name, beneficiary?.last_name].filter(Boolean).join(" ");
+  return name || beneficiary?.company_name || beneficiary?.legalName || beneficiary?.name || "-";
 };
 
 const getChannelTag = (channel) =>
@@ -194,16 +176,11 @@ const IbanCryptoPayoutModal = forwardRef(
     const isMobile = width <= 600;
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const {
-      userDetails,
-      beneficiaries,
-      getUserBeneficiaries,
-      setProfileLockTime,
-    } = useContext(UserContext);
+    const { userDetails, beneficiaries, getUserBeneficiaries, setProfileLockTime } =
+      useContext(UserContext);
     const { getKey, reset: resetIdempotency } = useIdempotency();
 
-    const getDefaultAuthType = () =>
-      userDetails?.tfa ? "authenticator" : "sms";
+    const getDefaultAuthType = () => (userDetails?.tfa ? "authenticator" : "sms");
 
     const [showDrawer, setShowDrawer] = useState(false);
     const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT);
@@ -240,8 +217,7 @@ const IbanCryptoPayoutModal = forwardRef(
       onSuccess: (token, response) => {
         setOtpToken(token);
         setOtpMethods(response || null);
-        if (currentStep !== STEPS.OTP && response?.otp_sent_on)
-          setAuthType(response.otp_sent_on);
+        if (currentStep !== STEPS.OTP && response?.otp_sent_on) setAuthType(response.otp_sent_on);
         setCurrentStep(STEPS.OTP);
       },
       onError: (error) => {
@@ -258,10 +234,7 @@ const IbanCryptoPayoutModal = forwardRef(
     }, [userDetails?.tfa]);
 
     const cryptoBeneficiaries = useMemo(
-      () =>
-        (beneficiaries || []).filter((beneficiary) =>
-          hasCryptoChannel(beneficiary, asset),
-        ),
+      () => (beneficiaries || []).filter((beneficiary) => hasCryptoChannel(beneficiary, asset)),
       [beneficiaries, asset],
     );
 
@@ -275,16 +248,12 @@ const IbanCryptoPayoutModal = forwardRef(
     }, [selectedBeneficiary, asset]);
 
     const address = getChannelAddress(selectedChannel);
-    const savedProtocol = useMemo(
-      () => getChannelProtocol(selectedChannel),
-      [selectedChannel],
-    );
+    const savedProtocol = useMemo(() => getChannelProtocol(selectedChannel), [selectedChannel]);
 
     const protocolOptions = useMemo(() => {
       if (!address) return [];
       if (savedProtocol) return [savedProtocol];
-      if (apiProtocols.length)
-        return filterProtocolsForAddress(apiProtocols, address);
+      if (apiProtocols.length) return filterProtocolsForAddress(apiProtocols, address);
       const fromAddress = getProtocolsForAddress(address);
       if (fromAddress.length) return fromAddress;
       const initial = getInitialProtocol(selectedChannel);
@@ -294,9 +263,7 @@ const IbanCryptoPayoutModal = forwardRef(
     useEffect(() => {
       if (!selectedBeneficiary) return;
       const stillListed = cryptoBeneficiaries.some(
-        (beneficiary) =>
-          getBeneficiaryId(beneficiary) ===
-          getBeneficiaryId(selectedBeneficiary),
+        (beneficiary) => getBeneficiaryId(beneficiary) === getBeneficiaryId(selectedBeneficiary),
       );
       if (!stillListed) setSelectedBeneficiary(null);
     }, [cryptoBeneficiaries, selectedBeneficiary]);
@@ -367,23 +334,15 @@ const IbanCryptoPayoutModal = forwardRef(
 
     useEffect(() => {
       if (currentStep !== STEPS.DONE || !userDetails?._id) return undefined;
-      if (payoutStatus === "COMPLETED" || payoutStatus === "FAILED")
-        return undefined;
+      if (payoutStatus === "COMPLETED" || payoutStatus === "FAILED") return undefined;
 
       const socketsService = new SocketsService(socketConfig, () => {});
 
       const handleStatus = (data) => {
         const reference = data?.reference_id || data?.data?.reference_id;
-        if (
-          reference &&
-          result?.reference_id &&
-          reference !== result.reference_id
-        )
-          return;
+        if (reference && result?.reference_id && reference !== result.reference_id) return;
 
-        const nextStatus = String(
-          data?.status || data?.data?.status || "",
-        ).toUpperCase();
+        const nextStatus = String(data?.status || data?.data?.status || "").toUpperCase();
         if (nextStatus) setPayoutStatus(nextStatus);
 
         queryClient.invalidateQueries({
@@ -401,25 +360,13 @@ const IbanCryptoPayoutModal = forwardRef(
 
       socketsService.connect();
       socketsService.connectToServer(userDetails._id);
-      socketsService.socket.on(
-        "virtual_iban:crypto_payout_status",
-        handleStatus,
-      );
+      socketsService.socket.on("virtual_iban:crypto_payout_status", handleStatus);
 
       return () => {
-        socketsService.socket.off(
-          "virtual_iban:crypto_payout_status",
-          handleStatus,
-        );
+        socketsService.socket.off("virtual_iban:crypto_payout_status", handleStatus);
         socketsService.disconnect();
       };
-    }, [
-      currentStep,
-      payoutStatus,
-      result?.reference_id,
-      ibanId,
-      userDetails?._id,
-    ]);
+    }, [currentStep, payoutStatus, result?.reference_id, ibanId, userDetails?._id]);
 
     const quoteExpired = !!quoteExpiresAt && quoteExpiresAt <= Date.now();
     const disabled = getDisabledState(currentStep, {
@@ -496,15 +443,7 @@ const IbanCryptoPayoutModal = forwardRef(
       setConfirmedNetwork(false);
       resetIdempotency();
       return data;
-    }, [
-      ibanId,
-      selectedBeneficiary,
-      amount,
-      asset,
-      protocol,
-      address,
-      selectedChannel,
-    ]);
+    }, [ibanId, selectedBeneficiary, amount, asset, protocol, address, selectedChannel]);
 
     const refreshQuote = useCallback(async () => {
       try {
@@ -589,14 +528,10 @@ const IbanCryptoPayoutModal = forwardRef(
           await fetchQuote();
           setCurrentStep(STEPS.REVIEW);
         } catch (error) {
-          showError(
-            error,
-            "We couldn't get a quote. Please try again.",
-            (message) => {
-              setRecipientError(message);
-              toast.error(t(message));
-            },
-          );
+          showError(error, "We couldn't get a quote. Please try again.", (message) => {
+            setRecipientError(message);
+            toast.error(t(message));
+          });
         }
         return;
       }
@@ -660,8 +595,7 @@ const IbanCryptoPayoutModal = forwardRef(
               errorMessage={recipientError}
               onEditBeneficiary={
                 selectedBeneficiary &&
-                (MISSING_DETAILS.test(recipientError) ||
-                  addressStatus === "invalid")
+                (MISSING_DETAILS.test(recipientError) || addressStatus === "invalid")
                   ? editBeneficiary
                   : null
               }
@@ -710,8 +644,7 @@ const IbanCryptoPayoutModal = forwardRef(
 
     const isDone = currentStep === STEPS.DONE;
     const isOtp = currentStep === STEPS.OTP;
-    const isBusy =
-      feeQuote.isPending || executePayout.isPending || isSendingOtp;
+    const isBusy = feeQuote.isPending || executePayout.isPending || isSendingOtp;
     const footerDisabled = (!isDone && disabled) || isBusy || !selectedIban;
     const primaryLabel = isBusy
       ? t("Processing...")
@@ -741,10 +674,7 @@ const IbanCryptoPayoutModal = forwardRef(
                   <h2>{t("Send IBAN to external crypto")}</h2>
                 )}
               </div>
-              <div
-                className={addFundsStyles.progressEffect}
-                style={{ marginTop: "2rem" }}
-              >
+              <div className={addFundsStyles.progressEffect} style={{ marginTop: "2rem" }}>
                 {SIDEBAR_STEPS.map((item, index) => (
                   <SidebarProgress
                     key={item.stepName}
@@ -766,10 +696,7 @@ const IbanCryptoPayoutModal = forwardRef(
           </div>
         )}
 
-        <div
-          className={styles.rightPanel}
-          style={{ width: width < 1000 ? "100%" : undefined }}
-        >
+        <div className={styles.rightPanel} style={{ width: width < 1000 ? "100%" : undefined }}>
           <div className={styles.content}>{renderStepContent()}</div>
           {isOtp ? null : isMobile ? (
             <MobileFooter
@@ -784,20 +711,12 @@ const IbanCryptoPayoutModal = forwardRef(
               style={isDone ? { justifyContent: "flex-end" } : undefined}
             >
               {isDone ? (
-                <button
-                  type="button"
-                  className={styles.nextBtn}
-                  onClick={handleClose}
-                >
+                <button type="button" className={styles.nextBtn} onClick={handleClose}>
                   {t("Close")}
                 </button>
               ) : (
                 <>
-                  <button
-                    type="button"
-                    className={styles.cancelBtn}
-                    onClick={handleClose}
-                  >
+                  <button type="button" className={styles.cancelBtn} onClick={handleClose}>
                     {t("Cancel")}
                   </button>
                   <div className={styles.footerNav}>

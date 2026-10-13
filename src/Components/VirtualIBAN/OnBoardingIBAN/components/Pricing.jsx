@@ -140,9 +140,7 @@ const Pricing = ({ onBack, t, onNext }) => {
                     <div className={styles.item} key={item.id}>
                       <div className={styles.left}>
                         {isMobile ? (
-                          <div className={styles.iconContainer}>
-                            {getIcon(item.id)}
-                          </div>
+                          <div className={styles.iconContainer}>{getIcon(item.id)}</div>
                         ) : (
                           getIcon(item.id)
                         )}
@@ -182,9 +180,7 @@ const Pricing = ({ onBack, t, onNext }) => {
                 icon={<CheckBoxOutline />}
                 onChange={(e) => setAcceptedTerms(e.target.checked)}
               />
-              <p>
-                {t("I accept this pricing and InstaPay's terms of service.")}
-              </p>
+              <p>{t("I accept this pricing and InstaPay's terms of service.")}</p>
             </div>
           </div>
         </div>

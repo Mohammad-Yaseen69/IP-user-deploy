@@ -1,13 +1,7 @@
 import { useTranslation } from "react-i18next";
 import SendActionCard from "../Common/SendActionCard";
 import styles from "./styles/index.module.css";
-import React, {
-  useContext,
-  useEffect,
-  useMemo,
-  useReducer,
-  useState,
-} from "react";
+import React, { useContext, useEffect, useMemo, useReducer, useState } from "react";
 import w3 from "../files/airtime.png";
 import airtime from "../files/airtime.svg";
 import ErrorModal from "../InternationalFlow/ErrorModal";
@@ -109,8 +103,7 @@ function reducer(state, action) {
 
 const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
   const navigate = useNavigate();
-  const { authHeader, userWallets, userDetails, setProfileLockTime } =
-    useContext(UserContext);
+  const { authHeader, userWallets, userDetails, setProfileLockTime } = useContext(UserContext);
   const { t } = useTranslation();
   const [data, dispatch] = useReducer(reducer, initialState);
   const { getKey, reset } = useIdempotency();
@@ -140,9 +133,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
       let localWallet;
 
       if (localCurrency) {
-        const wallet = userWallets?.find(
-          (item) => item?.currency?.code === localCurrency,
-        );
+        const wallet = userWallets?.find((item) => item?.currency?.code === localCurrency);
 
         if (
           wallet &&
@@ -246,12 +237,8 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
       const dataa = {
         product_id: data?.package?.id || data.eSimData.selectedPlan?.productId,
         payment_method: data.payment_type?.value,
-        wallet_id:
-          data.payment_type?.value === "wallet"
-            ? data.wallet?._id
-            : data.localWallet?._id,
-        sub_service_id:
-          data.flow === "e-sim" ? 14 : data.service_type?.id || 12,
+        wallet_id: data.payment_type?.value === "wallet" ? data.wallet?._id : data.localWallet?._id,
+        sub_service_id: data.flow === "e-sim" ? 14 : data.service_type?.id || 12,
         local_wallet_id: data?.localWallet?._id,
         type: data.flow === "e-sim" && "esim",
       };
@@ -299,9 +286,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
       const payload = {
         data: {
           wallet_id:
-            data?.payment_type?.value === "wallet"
-              ? data.wallet?._id
-              : data.localWallet?._id,
+            data?.payment_type?.value === "wallet" ? data.wallet?._id : data.localWallet?._id,
           token: data.package_details?.data?.token,
           number: data.recipient
             ? `+${data.recipient}`
@@ -343,8 +328,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
       console.log(dec);
       updateDataHandler(
         "error",
-        dec?.message ??
-          "Something went wrong while confirming the transaction.",
+        dec?.message ?? "Something went wrong while confirming the transaction.",
       );
     }
   };
@@ -402,11 +386,8 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
       const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message);
       if (error) {
         updateDataHandler("otpError", error);
-      } else if (
-        decrypted.message?.toLowerCase()?.includes("account is locked")
-      ) {
-        const time =
-          decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+      } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+        const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
         const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
         setProfileLockTime(timeInSec);
         const coun = localStorage.getItem("ip_country");
@@ -478,10 +459,8 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
 
       case 3:
         return data.package?.baseAmount
-          ? +String(data?.airtime_amount)?.replaceAll(",", "") <
-              data.package?.baseAmount?.min ||
-              +String(data?.airtime_amount)?.replaceAll(",", "") >
-                data.package?.baseAmount?.max
+          ? +String(data?.airtime_amount)?.replaceAll(",", "") < data.package?.baseAmount?.min ||
+              +String(data?.airtime_amount)?.replaceAll(",", "") > data.package?.baseAmount?.max
           : !data.package?.name;
 
       case 4:
@@ -489,9 +468,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         if (data.payment_type?.value === "wallet") {
           return !data.wallet?._id;
         } else if (data.payment_type?.value === "card") {
-          const [contentMonth, contentYear] = data.expiry
-            .split("/")
-            .map(Number);
+          const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
           const currentDate = new Date();
           const currentMonth = currentDate.getMonth() + 1;
           const currentYear = currentDate.getFullYear() % 100;
@@ -566,19 +543,12 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         setShowCardModal(true);
       } else {
         const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message);
-        updateDataHandler(
-          "otpError",
-          decrypted?.message ?? "You have entered wrong OTP.",
-        );
+        updateDataHandler("otpError", decrypted?.message ?? "You have entered wrong OTP.");
         if (error) {
           updateDataHandler("otpError", error);
-        } else if (
-          decrypted.message?.toLowerCase()?.includes("account is locked")
-        ) {
-          const time =
-            decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
-          const timeInSec =
-            +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
+        } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+          const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+          const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
           setProfileLockTime(timeInSec);
           const coun = localStorage.getItem("ip_country");
           localStorage.clear();
@@ -622,9 +592,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
     data.show_otp && (
       <OtpConfirmation
         variant="modal"
-        callback={
-          data.payment_type?.value === "card" ? initiateCardPayment : verifyOtp
-        }
+        callback={data.payment_type?.value === "card" ? initiateCardPayment : verifyOtp}
         // callback={verifyOtp}
         data={data}
         dataHandler={updateDataHandler}
@@ -747,9 +715,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
           </div>
           {data.verified || transaction_status ? (
             data.loading ? (
-              <div
-                style={{ height: "300px", width: "300px", margin: "1rem auto" }}
-              >
+              <div style={{ height: "300px", width: "300px", margin: "1rem auto" }}>
                 <InstaPayLoader />
               </div>
             ) : (
@@ -762,9 +728,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                 style={{ justifyContent: "space-between", padding: "0 1.5rem" }}
               >
                 <div>
-                  {data.flow && (
-                    <h1 style={{ marginBottom: "20px" }}>{t("Send Top-up")}</h1>
-                  )}
+                  {data.flow && <h1 style={{ marginBottom: "20px" }}>{t("Send Top-up")}</h1>}
                   <h2>
                     {data.flow === "e-sim" ? (
                       "eSim"
@@ -775,9 +739,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                         {data.step === 3 && t("available sunservices")}
                         {data.step === 4 && t("Select Payment Type")}
                         {data.step === 5 &&
-                          (data.verified
-                            ? t("Top-Up Initiated")
-                            : t("Top-Up Summary"))}
+                          (data.verified ? t("Top-Up Initiated") : t("Top-Up Summary"))}
                       </>
                     )}
                   </h2>
@@ -846,10 +808,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                           disabled={data.loading}
                           onClick={() => {
                             reset();
-                            if (
-                              data.payment_type?.value === "card" &&
-                              data.showCard
-                            ) {
+                            if (data.payment_type?.value === "card" && data.showCard) {
                               updateDataHandler("showCard", false);
                             } else {
                               updateDataHandler("step", 3);
@@ -871,10 +830,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                                 data.cardError))
                           }
                           onClick={() => {
-                            if (
-                              data.payment_type?.value === "card" &&
-                              !data.showCard
-                            ) {
+                            if (data.payment_type?.value === "card" && !data.showCard) {
                               updateDataHandler("showCard", true);
                             } else {
                               getPackageDetails();
@@ -913,10 +869,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                   </>
                 )}
                 {data.step === 4 && data.payment_type?.value === "wallet" ? (
-                  <WalletsComponent
-                    data={data}
-                    dataHandler={updateDataHandler}
-                  />
+                  <WalletsComponent data={data} dataHandler={updateDataHandler} />
                 ) : (
                   ""
                 )}
@@ -939,9 +892,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         <div className={styles.mobile}>
           {data.error && (
             <ErrorModal
-              heading={
-                data.step === 2 ? "Phone Number Error" : "Transaction Failed"
-              }
+              heading={data.step === 2 ? "Phone Number Error" : "Transaction Failed"}
               isOpen={data.error}
               toggle={() => {
                 updateDataHandler("error", "");
@@ -953,9 +904,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
           )}
           {data.verified || transaction_status ? (
             data.loading ? (
-              <div
-                style={{ height: "300px", width: "300px", margin: "1rem auto" }}
-              >
+              <div style={{ height: "300px", width: "300px", margin: "1rem auto" }}>
                 <InstaPayLoader />
               </div>
             ) : (

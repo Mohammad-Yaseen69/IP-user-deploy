@@ -28,18 +28,15 @@ const StepCountry = ({
   const isNewCountry = country && !usedIsos.includes(country.alpha3);
   const slotHint =
     isNewCountry && usedIsos.length === MAX_COUNTRIES - 1
-      ? t(
-          "This uses your last country slot, so you'll be at {{max}} of {{max}}.",
-          { max: MAX_COUNTRIES },
-        )
+      ? t("This uses your last country slot, so you'll be at {{max}} of {{max}}.", {
+          max: MAX_COUNTRIES,
+        })
       : isNewCountry
         ? t("This uses one of your {{max}} country slots.", {
             max: MAX_COUNTRIES,
           })
         : country
-          ? t(
-              "You already withdraw to this country. We'll add the new account to it.",
-            )
+          ? t("You already withdraw to this country. We'll add the new account to it.")
           : "";
 
   return (
@@ -52,10 +49,7 @@ const StepCountry = ({
             country={country?.alpha3 ?? ""}
             filteringList={filteringList}
             onSelect={(selected) =>
-              onSelect(
-                countries.find((item) => item.alpha3 === selected?.alpha3) ??
-                  null,
-              )
+              onSelect(countries.find((item) => item.alpha3 === selected?.alpha3) ?? null)
             }
           />
         )}
@@ -85,14 +79,9 @@ const StepCountry = ({
 
       <div className={styles.note}>
         <p>
-          {t("Withdrawals can only go to accounts")}{" "}
-          <strong>{t("in your own name")}</strong>.{" "}
+          {t("Withdrawals can only go to accounts")} <strong>{t("in your own name")}</strong>.{" "}
           {t("To pay someone else, use")}{" "}
-          <button
-            type="button"
-            className={styles.linkBtn}
-            onClick={onOpenBeneficiaries}
-          >
+          <button type="button" className={styles.linkBtn} onClick={onOpenBeneficiaries}>
             {t("Beneficiaries")}
           </button>
           .

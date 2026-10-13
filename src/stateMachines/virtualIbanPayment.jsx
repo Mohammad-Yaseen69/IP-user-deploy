@@ -74,12 +74,12 @@ export const getSidebarSteps = (data = {}) => {
     ...(data?.skipPaymentStep ? [STEPS.PAYMENT_METHOD] : []),
   ];
 
-  return SIDEBAR_STEPS.filter(
-    (item) => !hiddenSteps.includes(item.stepName),
-  ).map((item, index) => ({
-    ...item,
-    stepLabel: `STEP ${String(index + 1).padStart(2, "0")}`,
-  }));
+  return SIDEBAR_STEPS.filter((item) => !hiddenSteps.includes(item.stepName)).map(
+    (item, index) => ({
+      ...item,
+      stepLabel: `STEP ${String(index + 1).padStart(2, "0")}`,
+    }),
+  );
 };
 
 export const transitions = {
@@ -97,13 +97,11 @@ export const transitions = {
     back: () => STEPS.JURISDICTION,
   },
   [STEPS.VERIFICATION]: {
-    next: (data) =>
-      data?.skipPaymentStep ? STEPS.SUMMARY : STEPS.PAYMENT_METHOD,
+    next: (data) => (data?.skipPaymentStep ? STEPS.SUMMARY : STEPS.PAYMENT_METHOD),
     back: () => STEPS.FEES,
   },
   [STEPS.PAYMENT_METHOD]: {
-    next: (data) =>
-      data?.paymentType === "paypal" ? STEPS.SUMMARY : STEPS.PAYMENT_DETAILS,
+    next: (data) => (data?.paymentType === "paypal" ? STEPS.SUMMARY : STEPS.PAYMENT_DETAILS),
     back: (data) => (data?.kycApproved ? STEPS.FEES : STEPS.VERIFICATION),
   },
   [STEPS.PAYMENT_DETAILS]: {
@@ -214,17 +212,11 @@ const formatFeeAmount = (amount) =>
     maximumFractionDigits: 2,
   });
 
-export const buildMockFeeDetails = (
-  jurisdiction,
-  paymentType,
-  paymentFee = {},
-) => {
+export const buildMockFeeDetails = (jurisdiction, paymentType, paymentFee = {}) => {
   const info = getJurisdiction(jurisdiction);
   const baseAmount = paymentFee.baseAmount ?? VIRTUAL_IBAN_ACTIVATION_FEE;
   const baseCurrency =
-    paymentFee.baseCurrency ||
-    info.activationFeeCurrency ||
-    VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY;
+    paymentFee.baseCurrency || info.activationFeeCurrency || VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY;
   const feeAmount = formatFeeAmount(paymentFee.amount ?? baseAmount);
   const feeCurrency = paymentFee.currency || baseCurrency;
 

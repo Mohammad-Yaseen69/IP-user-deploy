@@ -95,23 +95,19 @@ export const getLimits = async (
             daily: {
               total: limits.daily_transaction_count,
               used: limits_used.daily_transaction_count_used,
-              remaining:
-                limits.daily_transaction_count -
-                limits_used.daily_transaction_count_used,
+              remaining: limits.daily_transaction_count - limits_used.daily_transaction_count_used,
             },
             monthly: {
               total: limits.monthly_transaction_count,
               used: limits_used.monthly_transaction_count_used,
               remaining:
-                limits.monthly_transaction_count -
-                limits_used.monthly_transaction_count_used,
+                limits.monthly_transaction_count - limits_used.monthly_transaction_count_used,
             },
             yearly: {
               total: limits.yearly_transaction_count,
               used: limits_used.yearly_transaction_count_used,
               remaining:
-                limits.yearly_transaction_count -
-                limits_used.yearly_transaction_count_used,
+                limits.yearly_transaction_count - limits_used.yearly_transaction_count_used,
             },
           },
         },
@@ -126,9 +122,7 @@ export const getLimits = async (
       if (axios.isCancel(error)) {
         return;
       }
-      setError(
-        dec?.message ?? "Something went wrong while fetching account limits.",
-      );
+      setError(dec?.message ?? "Something went wrong while fetching account limits.");
     }
   } finally {
     setLoading(false);
@@ -161,10 +155,7 @@ const WalletsNew = () => {
         );
       });
 
-      const totalAmount = filteredTransactions.reduce(
-        (acc, trx) => acc + trx.amount,
-        0,
-      );
+      const totalAmount = filteredTransactions.reduce((acc, trx) => acc + trx.amount, 0);
 
       return {
         ...category,
@@ -250,9 +241,7 @@ const WalletsNew = () => {
   return (
     <>
       {nonQrWallets?.length > 0 && (
-        <QrGenerate
-          wallets={userWallets?.filter((item) => !item?.qrCode?.url)}
-        />
+        <QrGenerate wallets={userWallets?.filter((item) => !item?.qrCode?.url)} />
       )}
       {window.innerWidth > 1000 ? (
         <div className={styles.container}>
@@ -277,11 +266,7 @@ const WalletsNew = () => {
               marginBottom: "1rem",
             }}
           >
-            <Top
-              currentWallet={currentWallet}
-              setCurrentWallet={setCurrentWallet}
-              data={data}
-            />
+            <Top currentWallet={currentWallet} setCurrentWallet={setCurrentWallet} data={data} />
             {can("wallet.limits.view") && (
               <AccountLimits
                 data={data}
@@ -337,11 +322,7 @@ const WalletsNew = () => {
               marginBottom: "1rem",
             }}
           >
-            <Top
-              currentWallet={currentWallet}
-              setCurrentWallet={setCurrentWallet}
-              data={data}
-            />
+            <Top currentWallet={currentWallet} setCurrentWallet={setCurrentWallet} data={data} />
             {can("wallet.limits.view") && (
               <AccountLimits
                 data={data}

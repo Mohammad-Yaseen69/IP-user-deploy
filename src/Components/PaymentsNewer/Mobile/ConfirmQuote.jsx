@@ -94,9 +94,7 @@ const ConfirmRequest = ({
         setConfirmed(true);
         setToken(dec?.token);
       } catch (error) {
-        toast.error(
-          t("Something went wrong while confirming the transaction!"),
-        );
+        toast.error(t("Something went wrong while confirming the transaction!"));
         // console.log(decryptData(error?.response?.data?.data))
       }
     };
@@ -261,9 +259,7 @@ const ConfirmRequest = ({
                 textOverflow: "ellipsis",
               }}
             >
-              {description?.length > 100
-                ? `${description.slice(0, 100)}...`
-                : description}
+              {description?.length > 100 ? `${description.slice(0, 100)}...` : description}
             </span>
           </div>
         </div>

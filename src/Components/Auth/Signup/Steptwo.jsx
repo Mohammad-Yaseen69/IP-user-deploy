@@ -73,9 +73,7 @@ const Steptwo = ({ data, dataHandler }) => {
               }}
             >
               <label>{t("First Name")}</label>
-              <span
-                style={{ fontSize: "12px", fontWeight: 600, color: "#8A8A8A" }}
-              >
+              <span style={{ fontSize: "12px", fontWeight: 600, color: "#8A8A8A" }}>
                 {(data.first_name || "").length}/30
               </span>
             </div>
@@ -83,16 +81,9 @@ const Steptwo = ({ data, dataHandler }) => {
               type="text"
               value={data.first_name}
               maxLength={30}
-              onChange={(e) =>
-                dataHandler(
-                  "first_name",
-                  sanitizeIndividualName(e.target.value),
-                )
-              }
+              onChange={(e) => dataHandler("first_name", sanitizeIndividualName(e.target.value))}
               placeholder={t("Enter Your First Name")}
-              onBlur={() =>
-                dataHandler("first_name", (data.first_name || "").trim())
-              }
+              onBlur={() => dataHandler("first_name", (data.first_name || "").trim())}
               onKeyDown={preventEdgeSpaces}
             />
           </div>
@@ -105,9 +96,7 @@ const Steptwo = ({ data, dataHandler }) => {
               }}
             >
               <label>{t("Last Name")}</label>
-              <span
-                style={{ fontSize: "12px", fontWeight: 600, color: "#8A8A8A" }}
-              >
+              <span style={{ fontSize: "12px", fontWeight: 600, color: "#8A8A8A" }}>
                 {(data.last_name || "").length}/30
               </span>
             </div>
@@ -116,9 +105,7 @@ const Steptwo = ({ data, dataHandler }) => {
               onKeyDown={preventEdgeSpaces}
               value={data.last_name}
               maxLength={30}
-              onChange={(e) =>
-                dataHandler("last_name", sanitizeIndividualName(e.target.value))
-              }
+              onChange={(e) => dataHandler("last_name", sanitizeIndividualName(e.target.value))}
               placeholder={t("Enter Your Last Name")}
             />
           </div>
@@ -134,9 +121,7 @@ const Steptwo = ({ data, dataHandler }) => {
               }}
             >
               <label>{t("Company Name")}:</label>
-              <span
-                style={{ fontSize: "12px", fontWeight: 600, color: "#8A8A8A" }}
-              >
+              <span style={{ fontSize: "12px", fontWeight: 600, color: "#8A8A8A" }}>
                 {(data.company_name || "").length}/80
               </span>
             </div>
@@ -145,9 +130,7 @@ const Steptwo = ({ data, dataHandler }) => {
               onKeyDown={preventEdgeSpaces}
               value={data.company_name}
               maxLength={80}
-              onChange={(e) =>
-                dataHandler("company_name", sanitizeCompanyName(e.target.value))
-              }
+              onChange={(e) => dataHandler("company_name", sanitizeCompanyName(e.target.value))}
               placeholder={t("Enter Your Company Name")}
             />
           </div>

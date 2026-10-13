@@ -134,19 +134,13 @@ const CustomDatePicker = ({ setRecStartDate, setShowPicker }) => {
 
   const getMonthName = (monthIndex) => {
     const options = { month: "long" };
-    return new Intl.DateTimeFormat("en-US", options).format(
-      new Date(0, monthIndex),
-    );
+    return new Intl.DateTimeFormat("en-US", options).format(new Date(0, monthIndex));
   };
 
   const renderMonthDropdown = () => {
     const months = Array.from({ length: 12 }, (_, i) => i);
     return (
-      <select
-        value={selectedMonth}
-        onChange={handleMonthChange}
-        style={{ width: "100px" }}
-      >
+      <select value={selectedMonth} onChange={handleMonthChange} style={{ width: "100px" }}>
         {months.map((monthIndex) => (
           <option key={monthIndex} value={monthIndex}>
             {getMonthName(monthIndex)}
@@ -184,10 +178,8 @@ const CustomDatePicker = ({ setRecStartDate, setShowPicker }) => {
         {[...emptyDays, ...days].map((day, index) => {
           const currentDate = new Date(selectedYear, selectedMonth, day);
           const isPastDate =
-            currentDate <
-            new Date(now.getFullYear(), now.getMonth(), now.getDate());
-          const isCurrentDate =
-            currentDate.toDateString() === now.toDateString();
+            currentDate < new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          const isCurrentDate = currentDate.toDateString() === now.toDateString();
 
           if (excludeCurrentDate && isCurrentDate) {
             return null;
@@ -287,11 +279,7 @@ const FutureDatePicker = ({ setRecStartDate, setShowPicker }) => {
     const days = Array.from({ length: totalDays }, (_, i) => i + 1);
 
     // Today at midnight (for accurate date-only comparison)
-    const todayMidnight = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate(),
-    );
+    const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
     return (
       <div className="days">
@@ -303,15 +291,12 @@ const FutureDatePicker = ({ setRecStartDate, setShowPicker }) => {
           const currentDate = new Date(selectedYear, selectedMonth, day);
           const isPast = currentDate < todayMidnight;
 
-          const isSelected =
-            selectedDate.toDateString() === currentDate.toDateString();
+          const isSelected = selectedDate.toDateString() === currentDate.toDateString();
 
           return (
             <div
               key={index}
-              className={`day ${isPast ? "disabled" : ""} ${
-                isSelected ? "active" : ""
-              }`}
+              className={`day ${isPast ? "disabled" : ""} ${isSelected ? "active" : ""}`}
               onClick={() => {
                 if (isPast) return; // 🔴 past date select nahi hogi
 

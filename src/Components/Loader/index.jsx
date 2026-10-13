@@ -2,12 +2,7 @@ import load from "../../assets/load.gif";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import LottieFile from "./LoaderLottie.lottie";
 
-const InstaPayLoader = ({
-  opacity = 1,
-  fallback = false,
-  transparent,
-  fullHeight = false,
-}) => {
+const InstaPayLoader = ({ opacity = 1, fallback = false, transparent, fullHeight = false }) => {
   if (fallback) {
     return (
       <div

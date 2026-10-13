@@ -5,11 +5,7 @@ import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 import { useContext } from "react";
 import { UserContext } from "../../../Context/UserContext";
 
-const useGetAllChannelPayers = ({
-  data,
-  payoutChannelData,
-  toggleModalHandler,
-}) => {
+const useGetAllChannelPayers = ({ data, payoutChannelData, toggleModalHandler }) => {
   const { userDetails } = useContext(UserContext);
 
   const {
@@ -30,8 +26,7 @@ const useGetAllChannelPayers = ({
       const mappedServices =
         decrypted?.services?.map((item) => {
           const serviceName = item?.method?.split(" - ")?.[0]?.toLowerCase();
-          const updatedServiceName =
-            serviceName === "cards" ? "payment card" : serviceName;
+          const updatedServiceName = serviceName === "cards" ? "payment card" : serviceName;
           const channelData = payoutChannelData?.find(
             (it) => it?.name?.toLowerCase() === updatedServiceName,
           );
@@ -94,8 +89,7 @@ const useGetAllChannelPayers = ({
             payers = payers.filter((payer) => {
               if (payer?.name?.toLowerCase() === "moncash") {
                 return (
-                  userDetails?.country_iso_code === "CAN" ||
-                  userDetails?.country_iso_code === "CHE"
+                  userDetails?.country_iso_code === "CAN" || userDetails?.country_iso_code === "CHE"
                 );
               } else {
                 return true;

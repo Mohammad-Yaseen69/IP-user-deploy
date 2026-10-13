@@ -35,12 +35,9 @@ const BroadcastVerify = () => {
       password,
     };
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_IP_DEV_API}/api/account/set-password`,
-        {
-          data: encryptData(data),
-        },
-      );
+      const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/set-password`, {
+        data: encryptData(data),
+      });
 
       const decrypted = decryptData(res.data.data);
       // console.log(decrypted)
@@ -54,12 +51,7 @@ const BroadcastVerify = () => {
 
   return (
     <section className={styles.container}>
-      <img
-        src={overlay}
-        alt="overlay"
-        loading="lazy"
-        className={styles.overlay}
-      />
+      <img src={overlay} alt="overlay" loading="lazy" className={styles.overlay} />
       <img src={man} loading="lazy" alt="man" className={styles.man} />
       <form className={styles.form}>
         <div className={styles.top}>
@@ -70,10 +62,7 @@ const BroadcastVerify = () => {
           <p>{t("Start Your Instapay Journey Today!")}</p>
         </div>
         <div className={styles.input_group}>
-          <div
-            className={styles.input_container}
-            style={{ position: "relative" }}
-          >
+          <div className={styles.input_container} style={{ position: "relative" }}>
             <label>{t("Enter your password")}</label>
             <input
               type={showPassword ? "text" : "password"}
@@ -103,10 +92,7 @@ const BroadcastVerify = () => {
               />
             )}
           </div>
-          <div
-            className={styles.input_container}
-            style={{ position: "relative" }}
-          >
+          <div className={styles.input_container} style={{ position: "relative" }}>
             <label>{t("Confirm your password")}</label>
             <input
               type={showConfirmPassword ? "text" : "password"}

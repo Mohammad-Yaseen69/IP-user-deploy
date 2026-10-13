@@ -132,52 +132,22 @@ const VerificationGuide = ({ setShowGuide }) => {
   return (
     <Card>
       {step === 1 && (
-        <GuideItem
-          setShowGuide={setShowGuide}
-          step={step}
-          item={vgData[0]}
-          setStep={setStep}
-        />
+        <GuideItem setShowGuide={setShowGuide} step={step} item={vgData[0]} setStep={setStep} />
       )}
       {step === 2 && (
-        <GuideItem
-          setShowGuide={setShowGuide}
-          step={step}
-          item={vgData[1]}
-          setStep={setStep}
-        />
+        <GuideItem setShowGuide={setShowGuide} step={step} item={vgData[1]} setStep={setStep} />
       )}
       {step === 3 && (
-        <GuideItem
-          setShowGuide={setShowGuide}
-          step={step}
-          item={vgData[2]}
-          setStep={setStep}
-        />
+        <GuideItem setShowGuide={setShowGuide} step={step} item={vgData[2]} setStep={setStep} />
       )}
       {step === 4 && (
-        <GuideItem
-          setShowGuide={setShowGuide}
-          step={step}
-          item={vgData[3]}
-          setStep={setStep}
-        />
+        <GuideItem setShowGuide={setShowGuide} step={step} item={vgData[3]} setStep={setStep} />
       )}
       {step === 5 && (
-        <GuideItem
-          setShowGuide={setShowGuide}
-          step={step}
-          item={vgData[4]}
-          setStep={setStep}
-        />
+        <GuideItem setShowGuide={setShowGuide} step={step} item={vgData[4]} setStep={setStep} />
       )}
       {step === 6 && (
-        <GuideItem
-          setShowGuide={setShowGuide}
-          step={step}
-          item={vgData[5]}
-          setStep={setStep}
-        />
+        <GuideItem setShowGuide={setShowGuide} step={step} item={vgData[5]} setStep={setStep} />
       )}
 
       {step === 7 && (
@@ -193,24 +163,9 @@ const VerificationGuide = ({ setShowGuide }) => {
           <div className={styles.avoid}>
             <h2>{t(content)?.split("\n\n")?.[2]}</h2>
             <ul>
-              <li>
-                {t(content)
-                  ?.split("\n\n")?.[3]
-                  ?.split("\n")?.[0]
-                  ?.replace("*", "")}
-              </li>
-              <li>
-                {t(content)
-                  ?.split("\n\n")?.[3]
-                  ?.split("\n")?.[1]
-                  ?.replace("*", "")}
-              </li>
-              <li>
-                {t(content)
-                  ?.split("\n\n")?.[3]
-                  ?.split("\n")?.[2]
-                  ?.replace("*", "")}
-              </li>
+              <li>{t(content)?.split("\n\n")?.[3]?.split("\n")?.[0]?.replace("*", "")}</li>
+              <li>{t(content)?.split("\n\n")?.[3]?.split("\n")?.[1]?.replace("*", "")}</li>
+              <li>{t(content)?.split("\n\n")?.[3]?.split("\n")?.[2]?.replace("*", "")}</li>
             </ul>
           </div>
 
@@ -220,12 +175,8 @@ const VerificationGuide = ({ setShowGuide }) => {
 
           <p>{t(content)?.split("\n\n")?.[5]}</p>
           <p>
-            {t(content)
-              ?.split("\n\n")?.[6]
-              .replace(" support@insta-pay.ch.", "")}{" "}
-            <Link to={"mailto:support@insta-pay.ch"}>
-              {t("support@insta-pay.ch")}
-            </Link>
+            {t(content)?.split("\n\n")?.[6].replace(" support@insta-pay.ch.", "")}{" "}
+            <Link to={"mailto:support@insta-pay.ch"}>{t("support@insta-pay.ch")}</Link>
           </p>
 
           <div className={styles.buttons}>

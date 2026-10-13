@@ -294,9 +294,7 @@ const RecipientSelect = ({ dataHandler, data }) => {
                     <InstaPayLoader />
                   </div>
                 ) : searchState.username.error ? (
-                  <div className={styles.error}>
-                    {searchState.username.error}
-                  </div>
+                  <div className={styles.error}>{searchState.username.error}</div>
                 ) : (
                   searchState.username.data?.cards?.map((card) => (
                     <UserInfo
@@ -347,12 +345,7 @@ const RecipientSelect = ({ dataHandler, data }) => {
                 </g>
                 <defs>
                   <clipPath id="clip0_4003_7363">
-                    <rect
-                      width="18"
-                      height="18"
-                      fill="white"
-                      transform="translate(0 0.980713)"
-                    />
+                    <rect width="18" height="18" fill="white" transform="translate(0 0.980713)" />
                   </clipPath>
                 </defs>
               </svg>

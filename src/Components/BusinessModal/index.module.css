@@ -61,13 +61,7 @@
 
 .card {
   border-radius: 4px;
-  background:
-    linear-gradient(
-      0deg,
-      rgba(89, 38, 240, 0.04) 0%,
-      rgba(89, 38, 240, 0.04) 100%
-    ),
-    #fff;
+  background: linear-gradient(0deg, rgba(89, 38, 240, 0.04) 0%, rgba(89, 38, 240, 0.04) 100%), #fff;
   padding: 1.1rem;
   /* min-width: 450px; */
 }
@@ -131,12 +125,7 @@
 
 .buttons button {
   border-radius: 6px;
-  background: linear-gradient(
-    259deg,
-    #e64067 8.36%,
-    #5926f0 54.71%,
-    #4828a0 91.64%
-  );
+  background: linear-gradient(259deg, #e64067 8.36%, #5926f0 54.71%, #4828a0 91.64%);
   border: none;
   outline: none;
   padding: 0.65rem 1.1rem;

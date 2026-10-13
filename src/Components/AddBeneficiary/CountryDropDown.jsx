@@ -1,11 +1,5 @@
 import React, { useContext, useRef, useState } from "react";
-import {
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Input,
-} from "reactstrap";
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Input } from "reactstrap";
 import { useEffect } from "react";
 import { UserContext } from "../../Context/UserContext";
 import { useTranslation } from "react-i18next";
@@ -45,16 +39,12 @@ const CountryDropDown = ({
   useEffect(() => {
     if (allowedCountries?.length > 0) {
       let filtered = countriesInDiffLangs[i18n.language]?.filter((coun) => {
-        return allowedCountries?.some(
-          (item) => coun?.alpha3 === item?.country_iso_code,
-        );
+        return allowedCountries?.some((item) => coun?.alpha3 === item?.country_iso_code);
       });
 
       if (filteringList?.length > 0) {
         filtered = filtered?.filter((coun) => {
-          return filteringList?.some(
-            (item) => coun?.alpha3 === item?.country_iso_code,
-          );
+          return filteringList?.some((item) => coun?.alpha3 === item?.country_iso_code);
         });
         setCountries(filtered);
         setCountriesLoaded(true);
@@ -84,17 +74,13 @@ const CountryDropDown = ({
     if (searchTerm?.trim() === "") {
       setFilteredCountries(countries);
     } else {
-      const fuseResults = fuse
-        ?.search(searchTerm)
-        ?.map((result) => result?.item);
+      const fuseResults = fuse?.search(searchTerm)?.map((result) => result?.item);
       if (fuseResults?.length > 0) {
         setFilteredCountries(fuseResults);
       } else {
         const filtered = countries?.filter(
           (Country) =>
-            t(Country?.name)
-              ?.toLowerCase()
-              ?.includes(searchTerm?.toLowerCase()) ||
+            t(Country?.name)?.toLowerCase()?.includes(searchTerm?.toLowerCase()) ||
             Country?.name?.toLowerCase().includes(searchTerm?.toLowerCase()),
         );
         setFilteredCountries(filtered);
@@ -105,9 +91,7 @@ const CountryDropDown = ({
   useEffect(() => {
     if (country && countriesLoaded) {
       const filtered = countries?.filter(
-        (item) =>
-          item?.alpha3 === country ||
-          item?.name?.toLowerCase() === country?.toLowerCase(),
+        (item) => item?.alpha3 === country || item?.name?.toLowerCase() === country?.toLowerCase(),
       )?.[0];
       setSelectedCountry(filtered);
     }
@@ -143,9 +127,7 @@ const CountryDropDown = ({
           justifyContent: "space-between",
           alignItems: "center",
           width: "100%",
-          border: isMobile
-            ? "1px solid #1412201F"
-            : "1px solid rgba(0,0,0,.05)",
+          border: isMobile ? "1px solid #1412201F" : "1px solid rgba(0,0,0,.05)",
           borderRadius: isMobile ? "10px" : "5px",
           padding: padding,
           background: disabled ? disabledColor : background,

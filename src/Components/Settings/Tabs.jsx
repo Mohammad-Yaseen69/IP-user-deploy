@@ -208,11 +208,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
     { param: "verification", name: "Identity Verification" },
   ]);
   useEffect(() => {
-    if (
-      userDetails?._id &&
-      typeof userWithdrawals !== "undefined" &&
-      profileCompleted
-    ) {
+    if (userDetails?._id && typeof userWithdrawals !== "undefined" && profileCompleted) {
       if (missingTabsData.length > 0) {
         const newMissingTabs = missingTabsData
           .map((tabType) => tabsData.find((tab) => tab.tabType === tabType))
@@ -229,9 +225,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
   useEffect(() => {
     if (tab?.toLowerCase()?.includes("verification")) {
       setCurrentTab(
-        account_type === "individual"
-          ? "Identity Verification"
-          : "Business Verification",
+        account_type === "individual" ? "Identity Verification" : "Business Verification",
       );
     }
   }, [tab, userDetails]);
@@ -254,10 +248,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
       : userDetails?.user?.kyc_status === "approved";
 
   return (
-    <div
-      style={{ overflowX: width < 1000 && "visible" }}
-      className={styles.container}
-    >
+    <div style={{ overflowX: width < 1000 && "visible" }} className={styles.container}>
       {missingTabsData?.length > 0 && width > 1000 && profileCompleted && (
         <div className={styles.missingTabs}>
           <span>{t("Please complete the following important steps")}</span>
@@ -280,10 +271,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                 }
               }}
             >
-              <img
-                alt="asdfaf"
-                src={item?.name !== currentTab ? item?.active_icon : item?.icon}
-              />
+              <img alt="asdfaf" src={item?.name !== currentTab ? item?.active_icon : item?.icon} />
               {t(item?.name)}
             </div>
           ))}
@@ -294,16 +282,9 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
         <div className={styles.missingDiv}>
           <div className={styles.missingContent}>
             <span className={styles.infoIcon}>i</span>
-            <h4>
-              {t(
-                "Please complete these important steps for a seamless experience.",
-              )}
-            </h4>
+            <h4>{t("Please complete these important steps for a seamless experience.")}</h4>
           </div>
-          <button
-            className={styles.viewStepsBtn}
-            onClick={() => setShowMissingModal(true)}
-          >
+          <button className={styles.viewStepsBtn} onClick={() => setShowMissingModal(true)}>
             {t("View the Steps")}
           </button>
         </div>
@@ -323,8 +304,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             tabIndex={0}
             style={{ justifyContent: "space-between" }}
             onBlur={(e) => {
-              if (!e.currentTarget.contains(e?.relatedTarget))
-                setShowDropdown(false);
+              if (!e.currentTarget.contains(e?.relatedTarget)) setShowDropdown(false);
             }}
           >
             {(() => {
@@ -338,9 +318,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                       src={selected.active_icon}
                       className={styles.tabIcon}
                     />
-                    <span style={{ fontWeight: 600, fontSize: "15px" }}>
-                      {t(selected.name)}
-                    </span>
+                    <span style={{ fontWeight: 600, fontSize: "15px" }}>{t(selected.name)}</span>
                   </div>
                   <ChevronDown />
                 </>
@@ -353,8 +331,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                 .filter((item) => item?.name.length > 0)
                 .map((item) => {
                   const isDisabled =
-                    (item?.name !== "Basic Info" &&
-                      profileIncompleteReason === "basic") ||
+                    (item?.name !== "Basic Info" && profileIncompleteReason === "basic") ||
                     (userDetails?.country?.kyc_required &&
                       item?.name !== "Verification" &&
                       !ft &&
@@ -397,9 +374,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                           src={item?.active_icon}
                           className={styles.tabIcon}
                         />
-                        <span style={{ fontWeight: 600, fontSize: "15px" }}>
-                          {t(item?.name)}
-                        </span>
+                        <span style={{ fontWeight: 600, fontSize: "15px" }}>{t(item?.name)}</span>
                       </div>
 
                       {currentTab !== item?.name &&
@@ -441,8 +416,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             className={`${styles.tab} ${currentTab === item?.name ? styles.active : ""} ${(item?.name !== "Basic Info" && profileIncompleteReason === "basic") || (userDetails?.country?.kyc_required && item?.name !== "Verification" && !ft && !isKycApproved) ? styles.disabled : ""} ${userDetails?.country?.kyc_required && item?.name !== "Verification" ? styles.kyc : ""}`}
             onClick={() => {
               if (
-                (item?.name !== "Basic Info" &&
-                  profileIncompleteReason === "basic") ||
+                (item?.name !== "Basic Info" && profileIncompleteReason === "basic") ||
                 (userDetails?.country?.kyc_required &&
                   item?.name !== "Verification" &&
                   !ft &&
@@ -462,13 +436,9 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
               }
             }}
           >
-            <img
-              alt="asdfaf"
-              src={item?.name !== currentTab ? item?.active_icon : item?.icon}
-            />
+            <img alt="asdfaf" src={item?.name !== currentTab ? item?.active_icon : item?.icon} />
             {t(item?.name)}
-            {item?.name.toLowerCase().includes("basic") &&
-            profileIncompleteReason === "basic" ? (
+            {item?.name.toLowerCase().includes("basic") && profileIncompleteReason === "basic" ? (
               <div
                 style={{
                   height: "5px",

@@ -8,8 +8,7 @@ import { apiWrapper } from "./apiWrapper";
 export const checkPhoneNumber = async (number) => {
   const digits = String(number || "").replace(/\D/g, "");
 
-  if (!digits)
-    return { verified: false, reachable: true, message: "phone not verified" };
+  if (!digits) return { verified: false, reachable: true, message: "phone not verified" };
 
   try {
     await apiWrapper({

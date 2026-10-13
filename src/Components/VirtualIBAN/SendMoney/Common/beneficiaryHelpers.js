@@ -9,13 +9,10 @@ export const getBeneficiaryName = (b) => {
 
 export const getBeneficiaryTypeLabel = (b) => {
   const type = b?.beneficiary_type || b?.type;
-  return type
-    ? `${String(type).charAt(0).toUpperCase()}${String(type).slice(1)}`
-    : "-";
+  return type ? `${String(type).charAt(0).toUpperCase()}${String(type).slice(1)}` : "-";
 };
 
-export const getBeneficiaryCountry = (b) =>
-  b?.country_name || b?.country || "-";
+export const getBeneficiaryCountry = (b) => b?.country_name || b?.country || "-";
 
 export const getBeneficiaryBankDetail = (b) =>
   (Array.isArray(b?.bank_details) && b.bank_details[0]) || null;
@@ -26,18 +23,14 @@ export const getBeneficiaryBic = (b) =>
 export const getBeneficiaryBankName = (b) =>
   getBeneficiaryBankDetail(b)?.name || b?.bankName || "-";
 
-export const getBeneficiaryIban = (b) =>
-  getBeneficiaryBankDetail(b)?.iban || b?.iban || "-";
+export const getBeneficiaryIban = (b) => getBeneficiaryBankDetail(b)?.iban || b?.iban || "-";
 
 export const getBeneficiaryAccountCount = (b) => b?.beneficiary_type || "bank";
 
 export const getBeneficiarySubtitle = (b) =>
-  [getBeneficiaryCountry(b), getBeneficiaryTypeLabel(b)]
-    .filter((v) => v && v !== "-")
-    .join(" - ");
+  [getBeneficiaryCountry(b), getBeneficiaryTypeLabel(b)].filter((v) => v && v !== "-").join(" - ");
 
-export const getBeneficiaryInitial = (b) =>
-  (getBeneficiaryName(b).charAt(0) || "B").toUpperCase();
+export const getBeneficiaryInitial = (b) => (getBeneficiaryName(b).charAt(0) || "B").toUpperCase();
 
 export const getBeneficiaryId = (b) => b?.id || b?._id;
 
@@ -52,11 +45,9 @@ export const hasBeneficiarySwiftCode = (b) => isValidBic(getRawSwiftCode(b));
 
 export const ADDRESS_LINE_MAX = 35;
 
-const getAddressCandidates = (b) =>
-  [b?.address].map((value) => String(value || "").trim());
+const getAddressCandidates = (b) => [b?.address].map((value) => String(value || "").trim());
 
-export const getBeneficiaryAddress = (b) =>
-  getAddressCandidates(b).find(Boolean) || "";
+export const getBeneficiaryAddress = (b) => getAddressCandidates(b).find(Boolean) || "";
 
 export const isBeneficiaryAddressTooLong = (b) =>
   getAddressCandidates(b).some((value) => value.length > ADDRESS_LINE_MAX);

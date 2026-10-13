@@ -152,8 +152,7 @@
   align-self: stretch;
   min-height: 68px;
   border-radius: var(--Gaps-Gap-Small, 8px);
-  background:
-    linear-gradient(0deg, #f6f6f6 0%, #f6f6f6 100%), rgba(255, 255, 255, 0);
+  background: linear-gradient(0deg, #f6f6f6 0%, #f6f6f6 100%), rgba(255, 255, 255, 0);
 }
 
 .mobileItem .left {

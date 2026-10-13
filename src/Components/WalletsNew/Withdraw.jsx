@@ -65,10 +65,7 @@ const Withdraw = ({ isOpen, toggle, wallet }) => {
     <Modal isOpen={isOpen}>
       <ModalHeader toggle={toggle}>
         {service_name_formatter(
-          t("withdraw balance from PKR wallet").replaceAll(
-            "PKR",
-            wallet?.currency?.code,
-          ),
+          t("withdraw balance from PKR wallet").replaceAll("PKR", wallet?.currency?.code),
         )}
       </ModalHeader>
       {userWithdrawals?.length > 0 ? (
@@ -109,12 +106,7 @@ const Withdraw = ({ isOpen, toggle, wallet }) => {
           ) : (
             <>
               <ModalBody>
-                {mainStep === 1 && (
-                  <ChooseType
-                    selected={withdrawType}
-                    setter={setWithdrawType}
-                  />
-                )}
+                {mainStep === 1 && <ChooseType selected={withdrawType} setter={setWithdrawType} />}
                 {mainStep === 2 ? (
                   withdrawType === "specify" ? (
                     userWithdrawals?.length > 0 ? (
@@ -126,9 +118,7 @@ const Withdraw = ({ isOpen, toggle, wallet }) => {
                             marginBottom: "1rem",
                           }}
                         >
-                          {service_name_formatter(
-                            t("Which receiving account would you want use?"),
-                          )}
+                          {service_name_formatter(t("Which receiving account would you want use?"))}
                           :
                         </h5>
                         <div
@@ -231,8 +221,7 @@ const Withdraw = ({ isOpen, toggle, wallet }) => {
         </>
       ) : (
         <div>
-          {t("No Withdrawals Found!")}{" "}
-          <Link to={"/settings?tab=withdraw"}>{t("Add Now")}</Link>
+          {t("No Withdrawals Found!")} <Link to={"/settings?tab=withdraw"}>{t("Add Now")}</Link>
         </div>
       )}
     </Modal>
@@ -287,17 +276,17 @@ const WithdrawOldFlow = ({
       return currentWithdrawal?.bank_details?.[0]?.vendor || "thunes";
     if (payoutChannel?.value === "mobile")
       return currentWithdrawal?.mobile_wallet?.[0]?.vendor || "thunes";
-    if (payoutChannel?.value === "card")
-      return currentWithdrawal?.card?.[0]?.vendor || "thunes";
+    if (payoutChannel?.value === "card") return currentWithdrawal?.card?.[0]?.vendor || "thunes";
     if (payoutChannel?.value === "cash")
       return currentWithdrawal?.cash_pickup?.[0]?.vendor || "thunes";
     return "";
   };
 
-  const { vendorBalance, vendorBalanceInUSD, vendorBalanceLoading } =
-    useVendorBalance(wallet?.currency?.code, getVendor(), (err) =>
-      setAmountError(err),
-    );
+  const { vendorBalance, vendorBalanceInUSD, vendorBalanceLoading } = useVendorBalance(
+    wallet?.currency?.code,
+    getVendor(),
+    (err) => setAmountError(err),
+  );
 
   useEffect(() => {
     if (payoutChannel) {
@@ -305,19 +294,14 @@ const WithdrawOldFlow = ({
         country: currentWithdrawal?.iso_code,
         service: payoutChannel.name,
         vendor: getVendor(),
-        transaction_type:
-          userDetails?.account_type === "individual" ? "C2C" : "B2B",
+        transaction_type: userDetails?.account_type === "individual" ? "C2C" : "B2B",
       };
       const url = `${import.meta.env.VITE_IP_DEV_API}/api/payment/payers`;
       axios
         .post(url, data, { headers: authHeader })
         .then((res) => {
           const decrypted = decryptData(res.data.data);
-          console.log(
-            decrypted,
-            userWithdrawals?.[payoutChannel?.sub_value]?.[0]?.payer_id,
-            "hey",
-          );
+          console.log(decrypted, userWithdrawals?.[payoutChannel?.sub_value]?.[0]?.payer_id, "hey");
           const filtered = (decrypted.destinations || decrypted)?.find(
             (it) =>
               (it.destinationId || it.id).toString() ===
@@ -353,8 +337,7 @@ const WithdrawOldFlow = ({
         token: quotationDetails?.token,
         payerId: subService?.id,
         wallet_id: wallet?._id,
-        transaction_type:
-          userDetails?.account_type === "individual" ? "C2C" : "B2B",
+        transaction_type: userDetails?.account_type === "individual" ? "C2C" : "B2B",
         service_name:
           payoutChannel?.value === "bank"
             ? "withdrawal_bank_transfer"
@@ -399,8 +382,7 @@ const WithdrawOldFlow = ({
     } catch (err) {
       const dec = decryptData(err.response.data.data);
       setAmountError(
-        dec?.message ??
-          "We cannot process your request at the moment, please try again later.",
+        dec?.message ?? "We cannot process your request at the moment, please try again later.",
       );
     }
 
@@ -493,14 +475,10 @@ const WithdrawOldFlow = ({
     <>
       <ModalBody
         style={{
-          padding:
-            step === 4 && confirmed && window.innerWidth < 450 ? "0" : "25px",
+          padding: step === 4 && confirmed && window.innerWidth < 450 ? "0" : "25px",
         }}
       >
-        <VendorBalanceModal
-          isOpen={showBalanceModal}
-          toggle={() => setShowBalanceModal(false)}
-        />
+        <VendorBalanceModal isOpen={showBalanceModal} toggle={() => setShowBalanceModal(false)} />
         {step === 1 && (
           <PayoutChannel
             payoutChannel={payoutChannel}
@@ -551,9 +529,7 @@ const WithdrawOldFlow = ({
                   gap: "12px",
                 }}
               >
-                <span style={{ fontWeight: 600, fontSize: "22px" }}>
-                  {t("Withdrawal Notice!")}
-                </span>
+                <span style={{ fontWeight: 600, fontSize: "22px" }}>{t("Withdrawal Notice!")}</span>
               </div>
 
               <p
@@ -576,10 +552,7 @@ const WithdrawOldFlow = ({
                 checked={agree}
                 onChange={() => setAgree((prev) => !prev)}
               />
-              <label
-                htmlFor="agree"
-                style={{ marginLeft: "8px", fontWeight: 600 }}
-              >
+              <label htmlFor="agree" style={{ marginLeft: "8px", fontWeight: 600 }}>
                 {t("I understand and agree.")}
               </label>
             </div>
@@ -715,9 +688,7 @@ const WithdrawOldFlow = ({
                 padding: ".7rem 2.5rem",
               }}
               disabled={
-                isLoading || amountError || (isExternalWithdrawal && showNotice)
-                  ? !agree
-                  : false
+                isLoading || amountError || (isExternalWithdrawal && showNotice) ? !agree : false
               }
               onClick={clickHandler}
             >

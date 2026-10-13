@@ -2,15 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Plus, Trash2 } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { FaRegFilePdf, FaRegFileVideo } from "react-icons/fa";
-import {
-  Button,
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-} from "reactstrap";
+import { Button, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { UserContext } from "../../../Context/UserContext";
 import { formatCurrency } from "../../../Helper/AmountFormat.js";
 import ImagePreviewModal from "../../ImagePreviewModal.jsx";
@@ -103,10 +95,7 @@ const QuotationDetails = ({
       <div className={`${styles.top} mb-4`}>
         <label htmlFor="Amount">{t("Enter the amount")}</label>
         <div>
-          <select
-            value={currency}
-            onChange={(e) => setCurrency(e.target.value)}
-          >
+          <select value={currency} onChange={(e) => setCurrency(e.target.value)}>
             {userWallets
               ?.filter(
                 (item) =>
@@ -149,10 +138,7 @@ const QuotationDetails = ({
         placeholder={t("Enter the Title for Your Quotation.")}
         maxLength={120}
       />
-      <div
-        className="text-end"
-        style={{ fontSize: "0.8rem", color: "#666", marginBottom: "1rem" }}
-      >
+      <div className="text-end" style={{ fontSize: "0.8rem", color: "#666", marginBottom: "1rem" }}>
         {title.length}/120
       </div>
       <Input
@@ -167,10 +153,7 @@ const QuotationDetails = ({
           height: "100%",
         }}
       />
-      <div
-        className="text-end"
-        style={{ fontSize: "0.8rem", color: "#666", marginBottom: "1rem" }}
-      >
+      <div className="text-end" style={{ fontSize: "0.8rem", color: "#666", marginBottom: "1rem" }}>
         {description.length}/500
       </div>
       <div style={{ display: "flex", flexDirection: "column" }}>
@@ -315,16 +298,11 @@ const QuotationDetails = ({
         currentImage={currentImage}
       />
 
-      <Modal
-        isOpen={showDelModal}
-        toggle={() => setShowDelModal(!showDelModal)}
-      >
+      <Modal isOpen={showDelModal} toggle={() => setShowDelModal(!showDelModal)}>
         <ModalHeader toggle={() => setShowDelModal(!showDelModal)}>
           {t("Confirm Removing File")}
         </ModalHeader>
-        <ModalBody>
-          {t("Are you sure, you want to remove this file?")}
-        </ModalBody>
+        <ModalBody>{t("Are you sure, you want to remove this file?")}</ModalBody>
         <ModalFooter>
           <Button
             style={{

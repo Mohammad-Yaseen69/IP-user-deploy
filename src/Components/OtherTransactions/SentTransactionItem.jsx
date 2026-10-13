@@ -10,14 +10,7 @@ import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePermission } from "../../hooks/GeneralUse/usePermission.jsx";
 
-const SentTransactionItem = ({
-  color,
-  item,
-  activeItem,
-  setActiveItem,
-  index,
-  currentUser,
-}) => {
+const SentTransactionItem = ({ color, item, activeItem, setActiveItem, index, currentUser }) => {
   const { t } = useTranslation();
   const [currentImage, setCurrentImage] = useState("");
   const queryClient = useQueryClient();
@@ -26,11 +19,10 @@ const SentTransactionItem = ({
 
   const { authHeader, verifyToken } = useContext(UserContext);
   const recipient = useMemo(() => {
-    return item?.[item?.type === "payment" ? "payment" : "request_payment"]
-      ?.receiver?.account_type === "individual"
+    return item?.[item?.type === "payment" ? "payment" : "request_payment"]?.receiver
+      ?.account_type === "individual"
       ? `${item?.[item?.type === "payment" ? "payment" : "request_payment"]?.receiver?.first_name} ${item?.[item?.type === "payment" ? "payment" : "request_payment"]?.receiver?.last_name}`
-      : item?.[item?.type === "payment" ? "payment" : "request_payment"]
-          ?.receiver?.company_name;
+      : item?.[item?.type === "payment" ? "payment" : "request_payment"]?.receiver?.company_name;
   }, [item]);
   return (
     <div>
@@ -53,11 +45,7 @@ const SentTransactionItem = ({
             : "N/A"}
         </div>
         <div>
-          {"recursive" in item
-            ? item?.recursive === true
-              ? "Recursive"
-              : "Schedule"
-            : "N/A"}
+          {"recursive" in item ? (item?.recursive === true ? "Recursive" : "Schedule") : "N/A"}
         </div>
         <div>
           {item?.type?.[0]?.toUpperCase()}
@@ -65,10 +53,7 @@ const SentTransactionItem = ({
         </div>
         <div style={{ minWidth: "18ch", maxWidth: "18ch" }}>{recipient}</div>
         <div>
-          {
-            item?.["payment" in item ? "payment" : "request_payment"]?.currency
-              ?.code
-          }{" "}
+          {item?.["payment" in item ? "payment" : "request_payment"]?.currency?.code}{" "}
           {item?.payment?.amount
             ? item?.payment?.amount.toLocaleString("en-US", {
                 minimumFractionDigits: 2,
@@ -93,10 +78,7 @@ const SentTransactionItem = ({
               borderRadius: "30px",
             }}
           >
-            {t(
-              item?.status[0].toUpperCase() +
-                item?.status.slice(1)?.toLowerCase(),
-            )}
+            {t(item?.status[0].toUpperCase() + item?.status.slice(1)?.toLowerCase())}
           </div>
         </div>
         <div>
@@ -105,10 +87,8 @@ const SentTransactionItem = ({
               style={{
                 borderRadius: "9.938px",
                 flex: "none",
-                background:
-                  "linear-gradient(to top left,#e1e1e1,#e2e2e2,#b5b5b5)",
-                boxShadow:
-                  "0px 3.3125px 5.79688px 0px rgba(172, 53, 159, 0.31)",
+                background: "linear-gradient(to top left,#e1e1e1,#e2e2e2,#b5b5b5)",
+                boxShadow: "0px 3.3125px 5.79688px 0px rgba(172, 53, 159, 0.31)",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
@@ -116,10 +96,7 @@ const SentTransactionItem = ({
                 width: "34px",
                 aspectRatio: 1,
                 margin: "0 auto",
-                opacity:
-                  item?.status === "processing" || item?.status === "pending"
-                    ? 1
-                    : 0.3,
+                opacity: item?.status === "processing" || item?.status === "pending" ? 1 : 0.3,
                 // pointerEvents: item?.status === "processing" || item?.status === "pending" ? "all" : "none",
                 cursor:
                   item?.status === "processing" || item?.status === "pending"
@@ -128,12 +105,7 @@ const SentTransactionItem = ({
               }}
               onClick={() =>
                 item?.status === "processing" || item?.status === "pending"
-                  ? cancelSubscriptionOrSchedulePayment(
-                      item,
-                      authHeader,
-                      verifyToken,
-                      queryClient,
-                    )
+                  ? cancelSubscriptionOrSchedulePayment(item, authHeader, verifyToken, queryClient)
                   : console.log("")
               }
             >

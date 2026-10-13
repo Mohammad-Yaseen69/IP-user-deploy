@@ -1,13 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import {
-  ArrowLeft,
-  ArrowRight,
-  CheckCircle,
-  Edit2,
-  Plus,
-  Trash2,
-} from "react-feather";
+import { ArrowLeft, ArrowRight, CheckCircle, Edit2, Plus, Trash2 } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { decryptData } from "../../../../Helper/EssentilaMethods/Decryption";
@@ -17,9 +10,7 @@ import StepProgress from "./StepProgress";
 import AlertBox from "./AlertBox";
 import { useMediaQuery } from "@mui/material";
 import { getInitials } from "../../../../utils/Functions/getInitials";
-import useStepValidation, {
-  required,
-} from "../../../../hooks/useStepValidation";
+import useStepValidation, { required } from "../../../../hooks/useStepValidation";
 
 const EMPTY_FORM = {
   id: "",
@@ -56,10 +47,8 @@ const OwnershipStep = ({
   const isKybDone = ["approved", "verified"].includes(kybStatus);
 
   const initialOwners = () => {
-    if (Array.isArray(data.owners) && data.owners.length > 0)
-      return data.owners;
-    const existingPartners =
-      userDetails?.company?.partners || userDetails?.partners || [];
+    if (Array.isArray(data.owners) && data.owners.length > 0) return data.owners;
+    const existingPartners = userDetails?.company?.partners || userDetails?.partners || [];
     if (Array.isArray(existingPartners) && existingPartners.length > 0) {
       return existingPartners.map((p, idx) => ({
         id: p._id || idx + 1,
@@ -118,14 +107,10 @@ const OwnershipStep = ({
             isImportedPartner: true,
           }));
           const importedEmails = new Set(
-            importedOwners
-              .map((owner) => owner.email?.toLowerCase())
-              .filter(Boolean),
+            importedOwners.map((owner) => owner.email?.toLowerCase()).filter(Boolean),
           );
           const localOwners = currentOwners.filter(
-            (owner) =>
-              !owner.isImportedPartner &&
-              !importedEmails.has(owner.email?.toLowerCase()),
+            (owner) => !owner.isImportedPartner && !importedEmails.has(owner.email?.toLowerCase()),
           );
 
           return [...importedOwners, ...localOwners];
@@ -175,14 +160,9 @@ const OwnershipStep = ({
     if (!validate() || isKybDone) return;
 
     if (isEditing) {
-      setOwners((prev) =>
-        prev.map((o) => (o.id === formData.id ? { ...formData } : o)),
-      );
+      setOwners((prev) => prev.map((o) => (o.id === formData.id ? { ...formData } : o)));
     } else {
-      setOwners((prev) => [
-        ...prev,
-        { ...formData, id: formData.id || Date.now() },
-      ]);
+      setOwners((prev) => [...prev, { ...formData, id: formData.id || Date.now() }]);
     }
     setIsModalOpen(false);
   };
@@ -220,9 +200,7 @@ const OwnershipStep = ({
         <StepProgress percent={60} currentStep={currentStep} />
       </div>
       <div style={{ width: "100%" }} className={styles.activityHeader}>
-        <h2 className={styles.formHeading}>
-          {t("Directors, Ownership & control")}
-        </h2>
+        <h2 className={styles.formHeading}>{t("Directors, Ownership & control")}</h2>
         <p className={styles.formSubheading}>
           {t(
             "List anyone, individual or company, owning 25% or more (UBOs), plus your directors and authorised signatories.Individuals complete a quick e - ID via Didit; entities are verified against the registry.",
@@ -338,10 +316,7 @@ const OwnershipStep = ({
                   </p>
 
                   {!isKybDone && !owner.isImportedPartner ? (
-                    <div
-                      className={styles.actions}
-                      style={{ display: "flex", gap: "8px" }}
-                    >
+                    <div className={styles.actions} style={{ display: "flex", gap: "8px" }}>
                       <span
                         style={{
                           fontSize: "12px",
@@ -518,14 +493,10 @@ const OwnershipStep = ({
         style={{ maxWidth: isMobile ? "90%" : "auto" }}
       >
         <ModalHeader toggle={() => setIsModalOpen(false)}>
-          {isEditing
-            ? "Edit Beneficial Owner / Director"
-            : "Add Beneficial Owner / Director"}
+          {isEditing ? "Edit Beneficial Owner / Director" : "Add Beneficial Owner / Director"}
         </ModalHeader>
         <form onSubmit={handleSaveOwner}>
-          <ModalBody
-            style={{ display: "flex", flexDirection: "column", gap: "15px" }}
-          >
+          <ModalBody style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
             <div style={{ display: "flex", gap: "20px" }}>
               <label
                 style={{
@@ -541,9 +512,7 @@ const OwnershipStep = ({
                   name="type"
                   value="individual"
                   checked={formData.type === "individual"}
-                  onChange={() =>
-                    setFormData((prev) => ({ ...prev, type: "individual" }))
-                  }
+                  onChange={() => setFormData((prev) => ({ ...prev, type: "individual" }))}
                 />
                 {t("Individual")}
               </label>
@@ -617,9 +586,7 @@ const OwnershipStep = ({
                 className="form-control"
                 style={err("email")}
                 value={formData.email}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, email: e.target.value }))
-                }
+                onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
                 placeholder="john@example.com"
               />
             </div>
@@ -642,9 +609,7 @@ const OwnershipStep = ({
                   className="form-control"
                   style={err("role")}
                   value={formData.role}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, role: e.target.value }))
-                  }
+                  onChange={(e) => setFormData((prev) => ({ ...prev, role: e.target.value }))}
                   placeholder="e.g. Director, UBO, CEO"
                 />
               </div>

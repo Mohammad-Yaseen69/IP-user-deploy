@@ -51,11 +51,7 @@ const CustomSubmitButton = styled.button`
   padding: 10px 20px;
   /* background-color: #007bff; */
   background: rgb(3, 51, 164);
-  background: linear-gradient(
-    310deg,
-    rgba(3, 51, 164, 0.8) 16%,
-    rgba(240, 11, 240, 0.8) 97%
-  );
+  background: linear-gradient(310deg, rgba(3, 51, 164, 0.8) 16%, rgba(240, 11, 240, 0.8) 97%);
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -83,13 +79,7 @@ export const SuccessImage = styled.img`
   margin-bottom: 20px;
 `;
 const SuccessTick = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="green"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="green">
     <path d="M0 0h24v24H0z" fill="none" />
     <path d="M9 16.2l-2.5-2.5L5 15l4 4 8-8-1.4-1.4-6.6 6.6z" />
   </svg>
@@ -101,9 +91,7 @@ const SubscriptionCalendar = () => {
   const tomorrow = dayjs().add(1, "day"); // Get tomorrow's date
 
   const [selectedDate, setSelectedDate] = React.useState(tomorrow);
-  const [selectedTime, setSelectedTime] = React.useState(
-    dayjs().add(5, "minute"),
-  );
+  const [selectedTime, setSelectedTime] = React.useState(dayjs().add(5, "minute"));
   const [selectedTimezone, setSelectedTimezone] = React.useState(
     timezones?.length > 0 ? timezones[0]?.timezone : "",
   );
@@ -134,8 +122,7 @@ const SubscriptionCalendar = () => {
       ?.split(" GMT")[0];
 
     try {
-      const apiUrl =
-        "https://fontawesomev23.com/api/webhook/set-schedule-calendar";
+      const apiUrl = "https://fontawesomev23.com/api/webhook/set-schedule-calendar";
       const requestBody = {
         data: {
           token,
@@ -179,8 +166,7 @@ const SubscriptionCalendar = () => {
 
   console.log(selectedTimezone);
 
-  const isDateValid =
-    selectedDate.isAfter(dayjs(), "day") || selectedDate.isSame(dayjs(), "day");
+  const isDateValid = selectedDate.isAfter(dayjs(), "day") || selectedDate.isSame(dayjs(), "day");
   const isTimeValid = selectedDate.isSame(dayjs(), "day")
     ? selectedTime.isAfter(dayjs().add(5, "minute"))
     : true;
@@ -193,9 +179,7 @@ const SubscriptionCalendar = () => {
 
   const handleTimezoneFilter = (options, { inputValue }) => {
     const normalizedInput = inputValue.replace(/^(\+)([1-9])$/, "$10$2"); // Remove leading zeros
-    return options.filter((option) =>
-      option.toLowerCase().includes(normalizedInput.toLowerCase()),
-    );
+    return options.filter((option) => option.toLowerCase().includes(normalizedInput.toLowerCase()));
   };
 
   return (
@@ -220,12 +204,9 @@ const SubscriptionCalendar = () => {
               autoplay={true}
             />
             <h5 style={{ padding: "1rem", textAlign: "center" }}>
-              {t(
-                "You can now close this webpage and go back to {{platform}}.",
-                {
-                  platform: platform === "telegram" ? "Telegram" : "Instagram",
-                },
-              )}
+              {t("You can now close this webpage and go back to {{platform}}.", {
+                platform: platform === "telegram" ? "Telegram" : "Instagram",
+              })}
             </h5>
             <RedirectButton platform={platform} />
           </CustomDatePickerContainer>
@@ -243,9 +224,7 @@ const SubscriptionCalendar = () => {
                   flexDirection: "column",
                 }}
               >
-                <CustomLabel htmlFor="datepicker">
-                  {t("Select a Date:")}
-                </CustomLabel>
+                <CustomLabel htmlFor="datepicker">{t("Select a Date:")}</CustomLabel>
                 <MobileDatePicker
                   minDate={dayjs()}
                   id="datepicker"
@@ -260,15 +239,9 @@ const SubscriptionCalendar = () => {
                   flexDirection: "column",
                 }}
               >
-                <CustomLabel htmlFor="timepicker">
-                  {t("Select a Time:")}
-                </CustomLabel>
+                <CustomLabel htmlFor="timepicker">{t("Select a Time:")}</CustomLabel>
                 <MobileTimePicker
-                  minTime={
-                    selectedDate.isSame(dayjs(), "day")
-                      ? dayjs().add(5, "minute")
-                      : null
-                  }
+                  minTime={selectedDate.isSame(dayjs(), "day") ? dayjs().add(5, "minute") : null}
                   id="timepicker"
                   value={selectedTime}
                   onChange={setSelectedTime}
@@ -281,24 +254,16 @@ const SubscriptionCalendar = () => {
                   flexDirection: "column",
                 }}
               >
-                <CustomLabel htmlFor="timezone">
-                  {t("Select a Timezone:")}
-                </CustomLabel>
+                <CustomLabel htmlFor="timezone">{t("Select a Timezone:")}</CustomLabel>
                 <Autocomplete
                   fullWidth={true}
                   disablePortal
                   options={[
                     "System Default",
-                    ...timezones?.map(
-                      (option) => `${option.name} - ${option.timezone}`,
-                    ),
+                    ...timezones?.map((option) => `${option.name} - ${option.timezone}`),
                   ]}
                   getOptionLabel={(option) => option}
-                  value={
-                    selectedTimezone?.includes("undefined")
-                      ? ""
-                      : selectedTimezone
-                  }
+                  value={selectedTimezone?.includes("undefined") ? "" : selectedTimezone}
                   onChange={(e, newValue) => {
                     setSelectedTimezone(newValue);
                   }}
@@ -308,11 +273,7 @@ const SubscriptionCalendar = () => {
                     <TextField
                       {...params}
                       variant="outlined"
-                      value={
-                        selectedTimezone?.includes("undefined")
-                          ? ""
-                          : selectedTimezone
-                      }
+                      value={selectedTimezone?.includes("undefined") ? "" : selectedTimezone}
                     />
                   )}
                 />

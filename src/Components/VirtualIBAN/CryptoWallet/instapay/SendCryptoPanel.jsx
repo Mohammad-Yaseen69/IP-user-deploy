@@ -38,8 +38,7 @@ import OtpVerification from "../../../../Common/Component/OtpVerification";
 
 const QUICK_PERCENTAGES = [25, 50, 75, 100];
 
-const channelKey = (channel, index) =>
-  channel?._id || `${getChannelAddress(channel)}-${index}`;
+const channelKey = (channel, index) => channel?._id || `${getChannelAddress(channel)}-${index}`;
 
 /**
  * The crypto payout drawn inside the rail: everything is asked on one screen, the
@@ -112,9 +111,7 @@ const SendCryptoPanel = ({ wallets = [], wallet, onSelectWallet }) => {
           <span className={styles.railAvatar}>
             {getBeneficiaryName(beneficiary).charAt(0).toUpperCase()}
           </span>
-          <span className={styles.railSelectMain}>
-            {getBeneficiaryName(beneficiary)}
-          </span>
+          <span className={styles.railSelectMain}>{getBeneficiaryName(beneficiary)}</span>
           <span className={styles.railSelectValue}>
             {channels.length > 1
               ? `${channels.length} ${t("wallets")}`
@@ -134,10 +131,7 @@ const SendCryptoPanel = ({ wallets = [], wallet, onSelectWallet }) => {
 
   const selectedChannelValue = cryptoChannels.reduce(
     (found, channel, index) =>
-      found ||
-      (getChannelAddress(channel) === address
-        ? channelKey(channel, index)
-        : ""),
+      found || (getChannelAddress(channel) === address ? channelKey(channel, index) : ""),
     "",
   );
 
@@ -146,11 +140,7 @@ const SendCryptoPanel = ({ wallets = [], wallet, onSelectWallet }) => {
   const editLink = canEditBeneficiary && (
     <>
       {" "}
-      <button
-        type="button"
-        className={styles.railTextLink}
-        onClick={editBeneficiary}
-      >
+      <button type="button" className={styles.railTextLink} onClick={editBeneficiary}>
         {t("Edit beneficiary")}
       </button>
     </>
@@ -312,12 +302,8 @@ const SendCryptoPanel = ({ wallets = [], wallet, onSelectWallet }) => {
                 className={`${styles.railRadio} ${sendTo === "saved" ? styles.railRadioOn : ""}`}
               />
               <span>
-                <span className={styles.railOptionTitle}>
-                  {t("Saved beneficiary")}
-                </span>
-                <p className={styles.railOptionSub}>
-                  {t("Pick a contact & their crypto channel")}
-                </p>
+                <span className={styles.railOptionTitle}>{t("Saved beneficiary")}</span>
+                <p className={styles.railOptionSub}>{t("Pick a contact & their crypto channel")}</p>
               </span>
             </div>
             <div
@@ -326,12 +312,8 @@ const SendCryptoPanel = ({ wallets = [], wallet, onSelectWallet }) => {
             >
               <span className={styles.railRadio} />
               <span>
-                <span className={styles.railOptionTitle}>
-                  {t("New wallet address")}
-                </span>
-                <p className={styles.railOptionSub}>
-                  {t("Paste an external address")}
-                </p>
+                <span className={styles.railOptionTitle}>{t("New wallet address")}</span>
+                <p className={styles.railOptionSub}>{t("Paste an external address")}</p>
               </span>
               <span className={styles.railSoon}>{t("Coming Soon")}</span>
             </div>
@@ -346,10 +328,9 @@ const SendCryptoPanel = ({ wallets = [], wallet, onSelectWallet }) => {
             options={beneficiaryOptions}
             onChange={(option) => selectBeneficiary(option.beneficiary)}
             placeholder={t("Choose a beneficiary")}
-            emptyText={t(
-              "No beneficiaries with a saved {{currency}} wallet address.",
-              { currency: cryptoCurrency },
-            )}
+            emptyText={t("No beneficiaries with a saved {{currency}} wallet address.", {
+              currency: cryptoCurrency,
+            })}
             disabled={!wallet}
           />
           {beneficiaryError && (
@@ -386,23 +367,17 @@ const SendCryptoPanel = ({ wallets = [], wallet, onSelectWallet }) => {
                   {addressStatus === "invalid" && (
                     <span className={styles.railBad}>
                       {isProtocolLocked
-                        ? t(
-                            "This address is not valid on the network saved for this beneficiary.",
-                          )
-                        : t(
-                            "This address is not valid for the selected network.",
-                          )}
+                        ? t("This address is not valid on the network saved for this beneficiary.")
+                        : t("This address is not valid for the selected network.")}
                       {editLink}
                     </span>
                   )}
-                  {!addressStatus &&
-                    t("Taken from the saved beneficiary wallet.")}
+                  {!addressStatus && t("Taken from the saved beneficiary wallet.")}
                 </span>
 
                 {isProtocolLocked && protocol ? (
                   <span className={styles.railNetwork}>
-                    {t("Network")}:{" "}
-                    <strong>{getProtocolLabel(protocol)}</strong>
+                    {t("Network")}: <strong>{getProtocolLabel(protocol)}</strong>
                   </span>
                 ) : protocolOptions.length > 0 ? (
                   <span className={styles.railNetworkChips}>

@@ -22,13 +22,7 @@ import { useLocation, useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow";
 
-const CardtoWallet = ({
-  isOpen,
-  setOpen,
-  card,
-  setCurrentCardDetails,
-  currentCardDetails,
-}) => {
+const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCardDetails }) => {
   // const [sideText, setSideText] = useState("")
   const [step, setStep] = useState(1);
   const [option, setOption] = useState("my");
@@ -147,9 +141,7 @@ const CardtoWallet = ({
       setToken(dec?.data?.token);
     } catch (error) {
       const dec = decryptData(error?.response?.data?.data);
-      toast.error(
-        dec?.message || "An error occurred while fetching fee details",
-      );
+      toast.error(dec?.message || "An error occurred while fetching fee details");
     } finally {
       setLoading(false);
     }
@@ -218,9 +210,7 @@ const CardtoWallet = ({
       setStep((prev) => prev + 1);
       setCurrentCardDetails((prev) => ({
         ...prev,
-        balance: (
-          prev.balance - feeDets?.totalAmount?.replace(/,/g, "")
-        ).toFixed(2),
+        balance: (prev.balance - feeDets?.totalAmount?.replace(/,/g, "")).toFixed(2),
       }));
       console.log(dec);
     } catch (error) {
@@ -343,9 +333,7 @@ const CardtoWallet = ({
                   }
                   setAmount(e.target.value);
                 }}
-                onKeyUp={(e) =>
-                  formatCurrency(e.target.value, false, setAmount)
-                }
+                onKeyUp={(e) => formatCurrency(e.target.value, false, setAmount)}
                 onBlur={(e) => formatCurrency(e.target.value, true, setAmount)}
                 type="text"
                 placeholder="30.00"
@@ -380,21 +368,13 @@ const CardtoWallet = ({
                 background: "rgba(109, 41, 220, 0.04)",
               }}
             >
-              <span
-                style={{ fontWeight: 600, color: "#8A8A8A", fontSize: "12px" }}
-              >
+              <span style={{ fontWeight: 600, color: "#8A8A8A", fontSize: "12px" }}>
                 {t("You used")}
               </span>
 
-              <div
-                style={{ display: "flex", flexDirection: "column", gap: "6px" }}
-              >
-                <span
-                  style={{ fontWeight: 600, color: "#000", fontSize: "12px" }}
-                >
-                  {userWallet?.currency?.code ||
-                    recipient?.wallet?.currency?.code}{" "}
-                  {t("Wallet")}
+              <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                <span style={{ fontWeight: 600, color: "#000", fontSize: "12px" }}>
+                  {userWallet?.currency?.code || recipient?.wallet?.currency?.code} {t("Wallet")}
                 </span>
                 <span
                   style={{
@@ -423,15 +403,8 @@ const CardtoWallet = ({
               {(feeDets?.exchangeRate ||
                 feeDets?.exchangeRate !== 1 ||
                 feeDets?.exchangeRate !== 1) &&
-                feeCol(
-                  t("Exchange Rate"),
-                  `${feeDets?.currency} ${feeDets?.exchangeRate}`,
-                )}
-              {feeCol(
-                t("Total"),
-                `${card?.currency} ${feeDets?.totalAmount}`,
-                true,
-              )}
+                feeCol(t("Exchange Rate"), `${feeDets?.currency} ${feeDets?.exchangeRate}`)}
+              {feeCol(t("Total"), `${card?.currency} ${feeDets?.totalAmount}`, true)}
             </div>
           </div>
         )}
@@ -461,21 +434,13 @@ const CardtoWallet = ({
                 background: "rgba(109, 41, 220, 0.04)",
               }}
             >
-              <span
-                style={{ fontWeight: 600, color: "#8A8A8A", fontSize: "12px" }}
-              >
+              <span style={{ fontWeight: 600, color: "#8A8A8A", fontSize: "12px" }}>
                 {t("You used")}
               </span>
 
-              <div
-                style={{ display: "flex", flexDirection: "column", gap: "6px" }}
-              >
-                <span
-                  style={{ fontWeight: 600, color: "#000", fontSize: "12px" }}
-                >
-                  {userWallet?.currency?.code ||
-                    recipient?.wallet?.currency?.code}{" "}
-                  {t("Wallet")}
+              <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                <span style={{ fontWeight: 600, color: "#000", fontSize: "12px" }}>
+                  {userWallet?.currency?.code || recipient?.wallet?.currency?.code} {t("Wallet")}
                 </span>
                 <span
                   style={{
@@ -491,10 +456,7 @@ const CardtoWallet = ({
           </div>
         )}
 
-        <div
-          style={{ flexDirection: width < 1000 && "column-reverse" }}
-          className={styles.btns}
-        >
+        <div style={{ flexDirection: width < 1000 && "column-reverse" }} className={styles.btns}>
           {step !== 5 && (step !== 1 || width < 1000) && (
             <button
               style={{
@@ -543,9 +505,7 @@ const CardtoWallet = ({
           >
             {step === 5 ? t("Close") : t("Continue")}
           </button>
-          {width < 1000 && (
-            <ContactBox style={{ width: "100%", justifyContent: "center" }} />
-          )}
+          {width < 1000 && <ContactBox style={{ width: "100%", justifyContent: "center" }} />}
         </div>
       </div>
     </div>
@@ -553,14 +513,8 @@ const CardtoWallet = ({
   return (
     <div className="ctw-modal">
       {width > 1000 ? (
-        <Modal
-          isOpen={isOpen}
-          toggle={handleClose}
-          style={{ minWidth: "950px" }}
-        >
-          <ModalBody
-            style={{ minHeight: "80vh", display: "flex", padding: "30px" }}
-          >
+        <Modal isOpen={isOpen} toggle={handleClose} style={{ minWidth: "950px" }}>
+          <ModalBody style={{ minHeight: "80vh", display: "flex", padding: "30px" }}>
             {content()}
           </ModalBody>
         </Modal>

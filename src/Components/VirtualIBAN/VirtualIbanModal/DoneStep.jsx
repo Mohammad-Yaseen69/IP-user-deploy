@@ -76,19 +76,11 @@ const DoneStep = ({ jurisdiction, iban, onGoToAccount }) => {
       </div>
 
       <div className={styles.doneActions}>
-        <button
-          type="button"
-          className={styles.primaryBtn}
-          onClick={onGoToAccount}
-        >
+        <button type="button" className={styles.primaryBtn} onClick={onGoToAccount}>
           {t("Go to My virtual account")}
           <span>›</span>
         </button>
-        <button
-          type="button"
-          className={styles.secondaryBtn}
-          onClick={copyIban}
-        >
+        <button type="button" className={styles.secondaryBtn} onClick={copyIban}>
           <Copy color="black" size={16} />
 
           {t("Copy IBAN")}

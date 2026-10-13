@@ -85,18 +85,7 @@ const CryptoCurrency = ({ cryptoCurrency, setStep, setCryptoCurrency }) => {
               xaxis: {
                 offsetX: 0,
                 offsetY: 0,
-                categories: [
-                  "Jan",
-                  "Feb",
-                  "Mar",
-                  "Apr",
-                  "May",
-                  "Jun",
-                  "Jul",
-                  "Aug",
-                  "Sep",
-                  "Oct",
-                ],
+                categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct"],
                 labels: {
                   low: 0,
                   offsetX: 0,
@@ -146,9 +135,7 @@ const CryptoCurrency = ({ cryptoCurrency, setStep, setCryptoCurrency }) => {
                 height: "fit-content",
                 padding: "1rem",
                 boxShadow:
-                  item.value === cryptoCurrency?.value
-                    ? `0 0 10px ${item.item_bg}`
-                    : "none",
+                  item.value === cryptoCurrency?.value ? `0 0 10px ${item.item_bg}` : "none",
                 overflow: "hidden",
               }}
             >

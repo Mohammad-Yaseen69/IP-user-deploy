@@ -119,9 +119,7 @@ const AddBeneficiary = ({
           >
             {/* <H4 attrH4={{ className: 'card-title mb-0' }}>{t("Add")} {isIndividual ? t("Individual") : t("Business")} {t("Account")}</H4> */}
             <H4 attrH4={{ className: "card-title mb-0" }}>
-              {isIndividual
-                ? t("Add Individual Account")
-                : t("Add Business Account")}{" "}
+              {isIndividual ? t("Add Individual Account") : t("Add Business Account")}{" "}
             </H4>
             <div style={{ display: "flex" }}>
               <button

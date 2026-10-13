@@ -75,20 +75,17 @@ export const CHARGE_BEARER_OPTIONS = [
   {
     id: "SHA",
     label: "Shared (SHA)",
-    description:
-      "You pay outgoing fees; recipient pays any local bank charges.",
+    description: "You pay outgoing fees; recipient pays any local bank charges.",
   },
   {
     id: "OUR",
     label: "Sender pays all (OUR)",
-    description:
-      "You cover all correspondent-bank fees. Recipient gets the full amount.",
+    description: "You cover all correspondent-bank fees. Recipient gets the full amount.",
   },
   {
     id: "BEN",
     label: "Recipient pays all (BEN)",
-    description:
-      "All fees deducted from the recipient's end. You send the gross amount.",
+    description: "All fees deducted from the recipient's end. You send the gross amount.",
   },
 ];
 
@@ -113,8 +110,7 @@ export const transitions = {
   },
   [STEPS.PURPOSE]: {
     next: () => STEPS.REVIEW,
-    back: (data) =>
-      data?.isAddingBeneficiary ? STEPS.ADD_BENEFICIARY : STEPS.BENEFICIARY,
+    back: (data) => (data?.isAddingBeneficiary ? STEPS.ADD_BENEFICIARY : STEPS.BENEFICIARY),
   },
   [STEPS.REVIEW]: {
     next: () => STEPS.OTP,
@@ -164,15 +160,10 @@ export const getDisabledState = (stepName, data = {}) => {
       return !isValid;
     }
     case STEPS.ADD_BENEFICIARY: {
-      if (
-        beneficiaryForm.type === "business" &&
-        !hasValue(beneficiaryForm.legalName)
-      )
-        return true;
+      if (beneficiaryForm.type === "business" && !hasValue(beneficiaryForm.legalName)) return true;
       if (
         beneficiaryForm.type !== "business" &&
-        (!hasValue(beneficiaryForm.firstName) ||
-          !hasValue(beneficiaryForm.lastName))
+        (!hasValue(beneficiaryForm.firstName) || !hasValue(beneficiaryForm.lastName))
       )
         return true;
       if (!isValidBic(beneficiaryForm.swift_code)) return true;
@@ -210,8 +201,7 @@ export const getContinueLabel = (stepName, t) => {
 };
 
 export const getSidebarStepName = (currentStep) => {
-  if (currentStep === STEPS.ADD_BENEFICIARY)
-    return SIDEBAR_STEP_NAMES.BENEFICIARY;
+  if (currentStep === STEPS.ADD_BENEFICIARY) return SIDEBAR_STEP_NAMES.BENEFICIARY;
   if (currentStep === STEPS.OTP) return SIDEBAR_STEP_NAMES.DONE;
   return currentStep;
 };

@@ -97,9 +97,7 @@ const Qr = ({
                 style={{ cursor: "pointer" }}
                 onClick={() => {
                   navigator.clipboard.writeText(userWallet?.wallet_id);
-                  toast.success(
-                    userWallet?.wallet_id + " copied to clipboard.",
-                  );
+                  toast.success(userWallet?.wallet_id + " copied to clipboard.");
                 }}
               />
             </div>
@@ -124,9 +122,7 @@ const Qr = ({
           <div>
             <Rating
               initialRating={
-                currentRevTab === "Seller"
-                  ? averageRatingAsSeller
-                  : averageRatingAsBuyer
+                currentRevTab === "Seller" ? averageRatingAsSeller : averageRatingAsBuyer
               }
               emptySymbol="fa fa-star-o fa-2x"
               fullSymbol="fa fa-star fa-2x"

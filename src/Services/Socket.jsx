@@ -16,13 +16,7 @@ class SocketsService {
     this.socket.connect();
   }
 
-  connectToServer(
-    userId,
-    transactionConnection = false,
-    transactionId,
-    token,
-    onAnotherLogin,
-  ) {
+  connectToServer(userId, transactionConnection = false, transactionId, token, onAnotherLogin) {
     this.socket.on("connect", () => {
       console.log("Connected to the server");
       if (transactionConnection) {
@@ -64,9 +58,7 @@ class SocketsService {
       }
 
       if (typeof window !== "undefined") {
-        window.dispatchEvent(
-          new CustomEvent("instapay:new_notification", { detail: data }),
-        );
+        window.dispatchEvent(new CustomEvent("instapay:new_notification", { detail: data }));
       }
 
       if (this.onNewNotification) {
@@ -101,9 +93,7 @@ class SocketsService {
 
     this.socket.on("crypto_wallet:created", (data) => {
       if (typeof window !== "undefined") {
-        window.dispatchEvent(
-          new CustomEvent("instapay:crypto_wallet:created", { detail: data }),
-        );
+        window.dispatchEvent(new CustomEvent("instapay:crypto_wallet:created", { detail: data }));
       }
     });
 
@@ -115,9 +105,7 @@ class SocketsService {
           }),
         );
       }
-      toast.info(
-        `Incoming ${data?.currency || ""} deposit detected — awaiting confirmation.`,
-      );
+      toast.info(`Incoming ${data?.currency || ""} deposit detected — awaiting confirmation.`);
     });
 
     this.socket.on("crypto_wallet:deposit_completed", (data) => {

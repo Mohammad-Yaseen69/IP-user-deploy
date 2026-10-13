@@ -28,27 +28,14 @@ import { UserContext } from "../../../Context/UserContext";
 
 const IdBadgeIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-    <rect
-      x="3"
-      y="2.25"
-      width="12"
-      height="13.5"
-      rx="1.5"
-      stroke="#F8F9FC"
-      strokeWidth="1.2"
-    />
+    <rect x="3" y="2.25" width="12" height="13.5" rx="1.5" stroke="#F8F9FC" strokeWidth="1.2" />
     <circle cx="9" cy="8.25" r="2.25" stroke="#F8F9FC" strokeWidth="1.2" />
     <path
       d="M5.25 14.25C5.25 12.1789 6.92893 10.5 9 10.5C11.0711 10.5 12.75 12.1789 12.75 14.25"
       stroke="#F8F9FC"
       strokeWidth="1.2"
     />
-    <path
-      d="M7.5 3.75H10.5"
-      stroke="#F8F9FC"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
+    <path d="M7.5 3.75H10.5" stroke="#F8F9FC" strokeWidth="1.2" strokeLinecap="round" />
   </svg>
 );
 
@@ -124,10 +111,7 @@ const getVirtualIbanNumber = (iban) =>
   "";
 
 const getVirtualIbanTitle = (iban, fallbackCurrency = "EUR") =>
-  iban?.name ||
-  iban?.title ||
-  iban?.label ||
-  `${iban?.currency || fallbackCurrency} IBAN`;
+  iban?.name || iban?.title || iban?.label || `${iban?.currency || fallbackCurrency} IBAN`;
 
 const getWithdrawalBanks = (withdrawals = []) =>
   (Array.isArray(withdrawals) ? withdrawals : [])
@@ -142,12 +126,7 @@ const getWithdrawalBanks = (withdrawals = []) =>
       })),
     );
 
-const WithdrawBalanceModal = ({
-  isOpen,
-  toggle,
-  selectedIban,
-  availableBalance,
-}) => {
+const WithdrawBalanceModal = ({ isOpen, toggle, selectedIban, availableBalance }) => {
   const { t } = useTranslation();
   const width = useWindowWidth();
   const { userWithdrawals, getWithdrawals } = useContext(UserContext);
@@ -158,10 +137,7 @@ const WithdrawBalanceModal = ({
   const [authType, setAuthType] = useState("authenticator");
   const sourceAvailableBalance = availableBalance ?? selectedIban?.balance ?? 0;
   const currencyCode = selectedIban?.currency || "EUR";
-  const savedBanks = useMemo(
-    () => getWithdrawalBanks(userWithdrawals || []),
-    [userWithdrawals],
-  );
+  const savedBanks = useMemo(() => getWithdrawalBanks(userWithdrawals || []), [userWithdrawals]);
   const sourceIban = useMemo(
     () => ({
       title: getVirtualIbanTitle(selectedIban, currencyCode),
@@ -201,9 +177,7 @@ const WithdrawBalanceModal = ({
   useEffect(() => {
     if (!selectedBank?.id) return;
 
-    const nextSelectedBank = savedBanks.find(
-      (bank) => bank.id === selectedBank.id,
-    );
+    const nextSelectedBank = savedBanks.find((bank) => bank.id === selectedBank.id);
 
     if (!nextSelectedBank) {
       setSelectedBank(null);
@@ -298,10 +272,7 @@ const WithdrawBalanceModal = ({
   const isDone = currentStep === STEPS.DONE;
 
   const renderBody = () => (
-    <div
-      className={styles.modalLayout}
-      style={{ flexDirection: width < 1000 ? "column" : "row" }}
-    >
+    <div className={styles.modalLayout} style={{ flexDirection: width < 1000 ? "column" : "row" }}>
       {/* {width >= 1000 && ( */}
       <div className={styles.left}>
         <div
@@ -340,28 +311,17 @@ const WithdrawBalanceModal = ({
       </div>
       {/* )} */}
 
-      <div
-        className={styles.rightPanel}
-        style={{ width: width < 1000 ? "100%" : undefined }}
-      >
+      <div className={styles.rightPanel} style={{ width: width < 1000 ? "100%" : undefined }}>
         <div className={styles.content}>{renderStepContent()}</div>
 
         {showFooter && (
           <div className={styles.footer}>
-            <button
-              type="button"
-              className={styles.cancelBtn}
-              onClick={handleClose}
-            >
+            <button type="button" className={styles.cancelBtn} onClick={handleClose}>
               {t("Cancel")}
             </button>
             <div className={styles.footerNav}>
               {!isDone && (
-                <button
-                  type="button"
-                  className={styles.backBtn}
-                  onClick={handleBack}
-                >
+                <button type="button" className={styles.backBtn} onClick={handleBack}>
                   <ChevronLeft />
                   {t("Back")}
                 </button>

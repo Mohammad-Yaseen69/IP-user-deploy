@@ -32,13 +32,8 @@ const FinancialInfo = React.lazy(() => import("./FinancialInfo"));
 const Settings = () => {
   const { t } = useTranslation();
   const [currentTab, setCurrentTab] = useState("Basic Info");
-  const {
-    userDetails,
-    verifyToken,
-    profileCompletedPercentage,
-    authHeader,
-    setUpdateToken,
-  } = useContext(UserContext);
+  const { userDetails, verifyToken, profileCompletedPercentage, authHeader, setUpdateToken } =
+    useContext(UserContext);
   const navigate = useNavigate();
 
   if (!userDetails || Object.keys(userDetails || {})?.length === 0) {
@@ -54,9 +49,7 @@ const Settings = () => {
               <h4>{t("Settings")}</h4>
               <TopRight />
             </div>
-            <div
-              style={{ marginBottom: "-50px", zIndex: 1, position: "relative" }}
-            >
+            <div style={{ marginBottom: "-50px", zIndex: 1, position: "relative" }}>
               <Cover />
               <Header />
             </div>
@@ -68,14 +61,10 @@ const Settings = () => {
                 verifyToken={verifyToken}
               />
               <div style={{ marginLeft: "1rem" }} className={styles.right}>
-                {currentTab === "Basic Info" && (
-                  <Basic setCurrentTab={setCurrentTab} />
-                )}
+                {currentTab === "Basic Info" && <Basic setCurrentTab={setCurrentTab} />}
                 {currentTab === "Change Password" && <Password />}
                 {currentTab === "Security Questions" && <SecurityQuestions />}
-                {currentTab === "Two Factor Authentication" && (
-                  <TwoFactorAuth />
-                )}
+                {currentTab === "Two Factor Authentication" && <TwoFactorAuth />}
                 {currentTab === "Nominee Information" && <Nominee />}
                 {currentTab === "Notifications" && <Notifications />}
                 {currentTab === "Identity Verification" &&
@@ -97,11 +86,7 @@ const Settings = () => {
                             "Complete your profile data before proceeding with identity verification.",
                           )}
                         </div>
-                        <span>
-                          {t(
-                            'Note: Fill in all required fields in the "Basic Info".',
-                          )}
-                        </span>
+                        <span>{t('Note: Fill in all required fields in the "Basic Info".')}</span>
                         <div
                           style={{
                             display: "flex",
@@ -145,14 +130,8 @@ const Settings = () => {
                 {currentTab === "API Key" && <ApiKey />}
                 {currentTab === "Manage Saved Cards" && <ManageSaveCards />}
                 {currentTab === "Business Verification" &&
-                  (profileCompletedPercentage === 100 ? (
-                    <KYB />
-                  ) : (
-                    "Complete Your Profile First"
-                  ))}
-                {currentTab === "How Others Can Find You" && (
-                  <HowOthersFindYou />
-                )}
+                  (profileCompletedPercentage === 100 ? <KYB /> : "Complete Your Profile First")}
+                {currentTab === "How Others Can Find You" && <HowOthersFindYou />}
               </div>
             </div>
           </div>
@@ -173,11 +152,7 @@ const Settings = () => {
                     style={{ "--progress": `${profileCompletedPercentage}%` }}
                   ></div>
                   <div className={styles.bottom}>
-                    <span>
-                      {t(
-                        "Complete your profile to smooth your transaction process.",
-                      )}
-                    </span>
+                    <span>{t("Complete your profile to smooth your transaction process.")}</span>
                     <div>
                       <span
                         style={{
@@ -208,20 +183,13 @@ const Settings = () => {
                 verifyToken={verifyToken}
               />
               <div className={styles.right}>
-                {currentTab === "Basic Info" && (
-                  <Basic setCurrentTab={setCurrentTab} />
-                )}
+                {currentTab === "Basic Info" && <Basic setCurrentTab={setCurrentTab} />}
                 {currentTab === "Change Password" && <Password />}
                 {currentTab === "Security Questions" && <SecurityQuestions />}
                 {currentTab === "Payment Threshold" && (
-                  <Threshold
-                    userDetails={userDetails}
-                    authHeader={authHeader}
-                  />
+                  <Threshold userDetails={userDetails} authHeader={authHeader} />
                 )}
-                {currentTab === "Two Factor Authentication" && (
-                  <TwoFactorAuth />
-                )}
+                {currentTab === "Two Factor Authentication" && <TwoFactorAuth />}
                 {currentTab === "Nominee Information" && <Nominee />}
                 {currentTab === "Notifications" && <Notifications />}
                 {currentTab === "Identity Verification" && <Verification />}
@@ -234,9 +202,7 @@ const Settings = () => {
                 {currentTab === "Manage Saved Cards" && <ManageSaveCards />}
                 {currentTab === "Business Verification" && <KYB />}
                 {currentTab === "Financial Info" && <FinancialInfo />}
-                {currentTab === "How Others Can Find You" && (
-                  <HowOthersFindYou />
-                )}
+                {currentTab === "How Others Can Find You" && <HowOthersFindYou />}
               </div>
             </div>
           </div>

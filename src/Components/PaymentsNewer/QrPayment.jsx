@@ -60,8 +60,7 @@ const QrPayment = ({ setSendPaymentType, sendPaymentType, setStep }) => {
     <div
       style={{
         display: "flex",
-        width:
-          sendPaymentType === "qr_pay" ? "calc(100% - 240px)" : "fit-content",
+        width: sendPaymentType === "qr_pay" ? "calc(100% - 240px)" : "fit-content",
         transition: "500ms",
         order: sendPaymentType === "qr_pay" ? 1 : 10,
       }}
@@ -120,14 +119,9 @@ const QrPayment = ({ setSendPaymentType, sendPaymentType, setStep }) => {
               >
                 <div style={{ height: "100%" }}>
                   <h4 className="head_left_side">
-                    {subStep === 1 ||
-                      (subStep === 2 &&
-                        t("Scan/Upload QR Code of the Recipient"))}
-                    {subStep === 3 &&
-                      t("Enter the Amount You Wish to Transfer.")}
-                    {subStep === 4 &&
-                      confirmed &&
-                      t("Please Authenticate Your Payment.")}
+                    {subStep === 1 || (subStep === 2 && t("Scan/Upload QR Code of the Recipient"))}
+                    {subStep === 3 && t("Enter the Amount You Wish to Transfer.")}
+                    {subStep === 4 && confirmed && t("Please Authenticate Your Payment.")}
                   </h4>
                   {subStep === 4 && !confirmed ? (
                     <div
@@ -209,12 +203,8 @@ const QrPayment = ({ setSendPaymentType, sendPaymentType, setStep }) => {
               <div>{subStep < 4 && <PWizard subStep={subStep} />}</div>
             </div>
             <div style={{ flex: 1.6, minWidth: "300px", height: "100%" }}>
-              {subStep === 1 && (
-                <QRCodeScan setSubStep={setSubStep} setWallet={setWallet} />
-              )}
-              {subStep === 2 && (
-                <QRRecipient setSubStep={setSubStep} wallet={wallet} />
-              )}
+              {subStep === 1 && <QRCodeScan setSubStep={setSubStep} setWallet={setWallet} />}
+              {subStep === 2 && <QRRecipient setSubStep={setSubStep} wallet={wallet} />}
               {subStep === 3 && (
                 <AmountAndCurrency
                   setSubStep={setSubStep}

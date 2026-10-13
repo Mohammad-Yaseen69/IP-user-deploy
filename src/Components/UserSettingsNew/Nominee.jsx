@@ -21,12 +21,9 @@ const Nominee = () => {
     if (userDetails) {
       const getNomineeDetails = () => {
         axios
-          .get(
-            `${import.meta.env.VITE_IP_DEV_API}/api/nominee/get-nominee/${userDetails?._id}`,
-            {
-              headers: authHeader,
-            },
-          )
+          .get(`${import.meta.env.VITE_IP_DEV_API}/api/nominee/get-nominee/${userDetails?._id}`, {
+            headers: authHeader,
+          })
           .then((res) => {
             const decrypted = decryptData(res.data.data);
             setNominee(decrypted?.nomineeDetails);
@@ -53,10 +50,7 @@ const Nominee = () => {
           ) : (
             <>
               {addNominee ? (
-                <AddNominee
-                  setNominee={setNominee}
-                  setAddNominee={setAddNominee}
-                />
+                <AddNominee setNominee={setNominee} setAddNominee={setAddNominee} />
               ) : (
                 <div
                   style={{
@@ -73,8 +67,7 @@ const Nominee = () => {
                   </p>
                   <Button
                     style={{
-                      background:
-                        "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                      background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                       border: "none",
                       outline: "none",
                       borderRadius: "10px",

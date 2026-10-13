@@ -111,9 +111,7 @@ const AddKYBPartner = ({ setPartners }) => {
           ) : (
             <>
               {isLoading ? (
-                <div
-                  style={{ height: "100px", width: "100px", margin: "0 auto" }}
-                >
+                <div style={{ height: "100px", width: "100px", margin: "0 auto" }}>
                   <InstaPayLoader />
                 </div>
               ) : (

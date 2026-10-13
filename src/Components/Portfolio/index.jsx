@@ -55,9 +55,7 @@ const Portfolio = () => {
     dragOverRef.current = null;
   };
 
-  const [isOpen, setIsOpen] = useState(
-    !sessionStorage.getItem("show_port_modal"),
-  );
+  const [isOpen, setIsOpen] = useState(!sessionStorage.getItem("show_port_modal"));
 
   useEffect(() => {
     sessionStorage.setItem("show_port_modal", true);
@@ -68,10 +66,7 @@ const Portfolio = () => {
       <div className={styles.container}>
         <InstructionsModal isOpen={isOpen} toggle={() => setIsOpen(!isOpen)} />
         {showAddModal && (
-          <AddPortfolioItem
-            isOpen={showAddModal}
-            toggle={() => setShowAddModal(!showAddModal)}
-          />
+          <AddPortfolioItem isOpen={showAddModal} toggle={() => setShowAddModal(!showAddModal)} />
         )}
         <div className={styles.top}>
           <h4 style={{ display: "flex", gap: "1rem", alignItems: "center" }}>

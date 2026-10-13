@@ -1,10 +1,4 @@
-import {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import FormLogo from "./FormLogo";
 import styles from "./styles/index.module.css";
 // import PhoneInput from "react-phone-input-2"
@@ -48,9 +42,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
   const [resendTimer, setResendTimer] = useState(90);
   const [isLoginError, setIsLoginError] = useState("");
   const [showToolTip, setShowTooltip] = useState("");
-  const [isAgent] = useState(
-    window?.location?.href?.includes("agent") ? true : false,
-  );
+  const [isAgent] = useState(window?.location?.href?.includes("agent") ? true : false);
   const [passwords, setPasswords] = useState({
     password: {
       value: "",
@@ -62,8 +54,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
     },
   });
   const [availableMethods, setAvailableMethods] = useState({ sms: true });
-  const whatsappAvailable =
-    currentMethod === "sms" && availableMethods?.["whatsapp"];
+  const whatsappAvailable = currentMethod === "sms" && availableMethods?.["whatsapp"];
   const canSwitchMethod = whatsappAvailable || availableMethods?.sms;
 
   const changePassHandler = (e) => {
@@ -337,9 +328,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                         color: "#5926f0",
                       }}
                       onClick={() => {
-                        setLoginMethod(
-                          loginMethod === "email" ? "phone" : "email",
-                        );
+                        setLoginMethod(loginMethod === "email" ? "phone" : "email");
                         localStorage.setItem(
                           "loginWith",
                           loginMethod === "email" ? "phone" : "email",
@@ -382,10 +371,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                   <button
                     type="submit"
                     className={styles.form_btn}
-                    disabled={
-                      isPressed ||
-                      (!isPhoneNumber.test(email) && !isEmail.test(email))
-                    }
+                    disabled={isPressed || (!isPhoneNumber.test(email) && !isEmail.test(email))}
                   >
                     <span>{t("Send OTP")}</span>
                     <ChevronRight size={28} color="white" />
@@ -406,17 +392,11 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                 <img src={otp} alt="otp" />
               </div>
               <div className={styles.otp_text}>
-                <h5>
-                  {verified ? t("Verification Code Verified") : t("Enter Code")}
-                </h5>
+                <h5>{verified ? t("Verification Code Verified") : t("Enter Code")}</h5>
                 <p>
                   {verified
-                    ? t(
-                        "Verification code has been verified, Please continue to the next step.",
-                      )
-                    : t(
-                        "A Verification code has been sent to your number.",
-                      ).replace(
+                    ? t("Verification code has been verified, Please continue to the next step.")
+                    : t("A Verification code has been sent to your number.").replace(
                         "number",
                         loginMethod === "email"
                           ? "email"
@@ -462,10 +442,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                               setCurrentMethod("whatsapp");
                               setResendTimer(90);
                               sendOTP({ preventDefault: () => {} }, "whatsapp");
-                              setOTPValues(
-                                Array(numberOfFields).fill(""),
-                                "whatsapp",
-                              );
+                              setOTPValues(Array(numberOfFields).fill(""), "whatsapp");
                             } else {
                               setCurrentMethod("sms");
                               setResendTimer(90);
@@ -532,11 +509,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                     className={styles.resend_text}
                   >
                     {resendTimer > 0 ? (
-                      t("Resend available in") +
-                      " " +
-                      resendTimer +
-                      " " +
-                      t("seconds")
+                      t("Resend available in") + " " + resendTimer + " " + t("seconds")
                     ) : (
                       <>
                         {t("Didn't receive OTP?") + " "}
@@ -560,17 +533,12 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                 </>
               )}
               {isLoginError && (
-                <div
-                  style={{ display: "flex", gap: "10px", alignItems: "center" }}
-                >
+                <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
                   <AlertTriangle size={17} color="#F32D2D" />
                   <span style={{ color: "#F32D2D" }}>{t(isLoginError)}</span>
                 </div>
               )}
-              <button
-                className={styles.form_btn}
-                disabled={isPressed || isAnyFieldEmpty}
-              >
+              <button className={styles.form_btn} disabled={isPressed || isAnyFieldEmpty}>
                 <span>{isPressed ? t("Verifying") : t("Verify")}</span>
                 <ChevronRight size={28} color="white" />
               </button>
@@ -616,16 +584,12 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
             />
             {passwords.password.show ? (
               <EyeOff
-                onClick={() =>
-                  changePassShowHandler("password", !passwords.password.show)
-                }
+                onClick={() => changePassShowHandler("password", !passwords.password.show)}
                 style={{ cursor: "pointer" }}
               />
             ) : (
               <Eye
-                onClick={() =>
-                  changePassShowHandler("password", !passwords.password.show)
-                }
+                onClick={() => changePassShowHandler("password", !passwords.password.show)}
                 style={{ cursor: "pointer" }}
               />
             )}
@@ -634,8 +598,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
             <h5>{t("Password must:")}</h5>
             <ul className={styles.pg_list}>
               <li>
-                {passwords.password.value.length >= 9 &&
-                passwords.password.value.length <= 64 ? (
+                {passwords.password.value.length >= 9 && passwords.password.value.length <= 64 ? (
                   <Check />
                 ) : (
                   <Cross />
@@ -655,35 +618,19 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
               </li>
               <ul className={styles.pg_sub_list}>
                 <li>
-                  {/[A-Z]/.test(passwords.password.value) ? (
-                    <Check />
-                  ) : (
-                    <Cross />
-                  )}
+                  {/[A-Z]/.test(passwords.password.value) ? <Check /> : <Cross />}
                   <p>{t("Uppercase character")}</p>
                 </li>
                 <li>
-                  {/[a-z]/.test(passwords.password.value) ? (
-                    <Check />
-                  ) : (
-                    <Cross />
-                  )}
+                  {/[a-z]/.test(passwords.password.value) ? <Check /> : <Cross />}
                   <p>{t("Lowercase Character")}</p>
                 </li>
                 <li>
-                  {/[0-9]/.test(passwords.password.value) ? (
-                    <Check />
-                  ) : (
-                    <Cross />
-                  )}
+                  {/[0-9]/.test(passwords.password.value) ? <Check /> : <Cross />}
                   <p>{t("Number")}</p>
                 </li>
                 <li>
-                  {/[^A-Za-z0-9]/.test(passwords.password.value) ? (
-                    <Check />
-                  ) : (
-                    <Cross />
-                  )}
+                  {/[^A-Za-z0-9]/.test(passwords.password.value) ? <Check /> : <Cross />}
                   <p>{t("Special Character")}</p>
                 </li>
               </ul>
@@ -711,20 +658,14 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
             {passwords.confirm_password.show ? (
               <EyeOff
                 onClick={() =>
-                  changePassShowHandler(
-                    "confirm_password",
-                    !passwords.confirm_password.show,
-                  )
+                  changePassShowHandler("confirm_password", !passwords.confirm_password.show)
                 }
                 style={{ cursor: "pointer" }}
               />
             ) : (
               <Eye
                 onClick={() =>
-                  changePassShowHandler(
-                    "confirm_password",
-                    !passwords.confirm_password.show,
-                  )
+                  changePassShowHandler("confirm_password", !passwords.confirm_password.show)
                 }
                 style={{ cursor: "pointer" }}
               />
@@ -780,9 +721,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
             }}
           />
           <div className={styles.otp_text}>
-            <h5 style={{ whiteSpace: "nowrap" }}>
-              {t("Password Updated Successfully!")}
-            </h5>
+            <h5 style={{ whiteSpace: "nowrap" }}>{t("Password Updated Successfully!")}</h5>
             <p>{t("Click below to login")}</p>
           </div>
           <Link to={"/login"} style={{ color: "white" }}>

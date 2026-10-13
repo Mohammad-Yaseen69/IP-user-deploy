@@ -2,13 +2,7 @@ import React from "react";
 
 const FormLogo = () => {
   return (
-    <svg
-      width="35"
-      height="52"
-      viewBox="0 0 35 52"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="35" height="52" viewBox="0 0 35 52" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g filter="url(#filter0_b_3813_7312)">
         <path
           fill-rule="evenodd"
@@ -34,11 +28,7 @@ const FormLogo = () => {
         >
           <feFlood flood-opacity="0" result="BackgroundImageFix" />
           <feGaussianBlur in="BackgroundImageFix" stdDeviation="21.8656" />
-          <feComposite
-            in2="SourceAlpha"
-            operator="in"
-            result="effect1_backgroundBlur_3813_7312"
-          />
+          <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_3813_7312" />
           <feBlend
             mode="normal"
             in="SourceGraphic"

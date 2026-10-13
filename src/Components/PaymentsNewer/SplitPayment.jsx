@@ -5,15 +5,8 @@ import instalment from "./files/instalment.png";
 import { NumberInputValidator } from "../../Helper/NumberInput";
 
 const SplitPayment = (props) => {
-  const {
-    amount,
-    currency,
-    splitAmount,
-    setSplitAmount,
-    numOfSplits,
-    setNumOfSplits,
-    setSubStep,
-  } = props;
+  const { amount, currency, splitAmount, setSplitAmount, numOfSplits, setNumOfSplits, setSubStep } =
+    props;
 
   const { t } = useTranslation();
 
@@ -35,8 +28,7 @@ const SplitPayment = (props) => {
           padding: "20px",
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
       >
         <Card style={{ marginBottom: 0 }}>
@@ -65,8 +57,7 @@ const SplitPayment = (props) => {
                 style={{
                   minHeight: "35px",
                   minWidth: "35px",
-                  background:
-                    "linear-gradient(to top left, #e64067,#5926f0,#4828a0)",
+                  background: "linear-gradient(to top left, #e64067,#5926f0,#4828a0)",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
@@ -138,8 +129,7 @@ const SplitPayment = (props) => {
               <div
                 style={{
                   background: "#fff",
-                  boxShadow:
-                    "0px -1px 32px -3.3496174812316895px rgba(89, 38, 240, 0.36)",
+                  boxShadow: "0px -1px 32px -3.3496174812316895px rgba(89, 38, 240, 0.36)",
                   borderRadius: "100px",
                   border: "none",
                   outline: "none",
@@ -194,9 +184,7 @@ const SplitPayment = (props) => {
                 {t("Split Amount")}
               </p>
               <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>
-                {numOfSplits > 0
-                  ? (amount / numOfSplits).toFixed(2)
-                  : (+amount).toFixed(2)}{" "}
+                {numOfSplits > 0 ? (amount / numOfSplits).toFixed(2) : (+amount).toFixed(2)}{" "}
                 {currency}
               </p>
             </div>

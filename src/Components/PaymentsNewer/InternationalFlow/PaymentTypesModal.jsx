@@ -7,19 +7,12 @@ import { useTranslation } from "react-i18next";
 const PaymentTypesModal = ({ isOpen, toggle }) => {
   const { t } = useTranslation();
   return (
-    <Modal
-      isOpen={isOpen}
-      style={{ borderRadius: "0px", width: "96vw", maxWidth: "1300px" }}
-    >
+    <Modal isOpen={isOpen} style={{ borderRadius: "0px", width: "96vw", maxWidth: "1300px" }}>
       <ModalBody className={styles.body}>
         <div className={styles.top}>
           <div className={styles.left}>
             <span>{t("Payment Methods")}</span>
-            <h5>
-              {t(
-                "These are the supported payment methods for completing your transaction.",
-              )}
-            </h5>
+            <h5>{t("These are the supported payment methods for completing your transaction.")}</h5>
           </div>
           <div className={styles.close} onClick={toggle}>
             <img src={x} alt="" />

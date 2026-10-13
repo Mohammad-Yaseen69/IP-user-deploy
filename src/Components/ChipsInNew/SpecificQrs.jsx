@@ -17,9 +17,7 @@ const SpecificQrs = () => {
   return (
     <Card style={{ flex: 1, marginBottom: 0, minWidth: "250px" }}>
       <CardBody style={{ padding: "2.5rem" }}>
-        <h5
-          style={{ fontSize: "1.rem", marginBottom: "1rem", fontWeight: 700 }}
-        >
+        <h5 style={{ fontSize: "1.rem", marginBottom: "1rem", fontWeight: 700 }}>
           {t("My QR Codes:")}
         </h5>
         <div
@@ -73,12 +71,8 @@ const SpecificQrs = () => {
                 } */}
       </CardBody>
       <Modal isOpen={showMoreModal} toggle={toggleMoreModal}>
-        <ModalHeader toggle={toggleMoreModal}>
-          {t("My QR Code Sticker")}
-        </ModalHeader>
-        <ModalBody
-          style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-        >
+        <ModalHeader toggle={toggleMoreModal}>{t("My QR Code Sticker")}</ModalHeader>
+        <ModalBody style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
           {userWallets
             .filter(
               (item) =>

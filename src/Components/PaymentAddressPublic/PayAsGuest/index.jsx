@@ -146,9 +146,7 @@ const PayAsGuest = ({
       if (selected) {
         dataHandler(
           "countryData",
-          allowedCountries.find(
-            (c) => c.country_iso_code?.toUpperCase() === countryIsoCode,
-          ),
+          allowedCountries.find((c) => c.country_iso_code?.toUpperCase() === countryIsoCode),
         );
         dataHandler("country", selected);
         dataHandler("step", 2);
@@ -235,8 +233,7 @@ const PayAsGuest = ({
       } else {
         dataHandler(
           "error",
-          dec?.message ??
-            "We cannot process your request at the moment, please try again later.",
+          dec?.message ?? "We cannot process your request at the moment, please try again later.",
         );
       }
       dataHandler("loading", false);
@@ -361,8 +358,7 @@ const PayAsGuest = ({
       } else {
         dataHandler(
           "error",
-          dec?.message ??
-            "We cannot process your request at the moment, please try again later.",
+          dec?.message ?? "We cannot process your request at the moment, please try again later.",
         );
       }
       dataHandler("loading", false);
@@ -377,9 +373,7 @@ const PayAsGuest = ({
       const enc = encryptData(payload);
 
       const res = await axios.post(
-        `${
-          import.meta.env.VITE_IP_DEV_API
-        }/api/guest-pay/initiate-wallet-payment`,
+        `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/initiate-wallet-payment`,
         {
           data: enc,
         },
@@ -410,8 +404,7 @@ const PayAsGuest = ({
       } else {
         dataHandler(
           "error",
-          dec?.message ??
-            "We cannot process your request at the moment, please try again later.",
+          dec?.message ?? "We cannot process your request at the moment, please try again later.",
         );
       }
       dataHandler("loading", false);
@@ -427,16 +420,10 @@ const PayAsGuest = ({
       if (result === "Verified") {
         callback();
       } else {
-        dataHandler(
-          "phone_error",
-          "Incorrect phone number, please enter a valid number.",
-        );
+        dataHandler("phone_error", "Incorrect phone number, please enter a valid number.");
       }
     } catch {
-      dataHandler(
-        "phone_error",
-        "Incorrect phone number, please enter a valid number.",
-      );
+      dataHandler("phone_error", "Incorrect phone number, please enter a valid number.");
     } finally {
       dataHandler("loading", false);
     }
@@ -587,8 +574,7 @@ const PayAsGuest = ({
       const dec = decryptData(error?.response?.data?.data);
       dataHandler(
         "exchange_rate_error",
-        dec?.message ??
-          "We cannot process your request at the moment, please try again later.",
+        dec?.message ?? "We cannot process your request at the moment, please try again later.",
       );
       console.log(dec);
     } finally {
@@ -605,8 +591,7 @@ const PayAsGuest = ({
       );
       const dec = decryptData(res.data.data);
 
-      const apiData =
-        data.payment_type?.value === "bank_transfer" ? dec?.data : dec;
+      const apiData = data.payment_type?.value === "bank_transfer" ? dec?.data : dec;
 
       const exchange_rate_details = {
         fee: {
@@ -633,8 +618,7 @@ const PayAsGuest = ({
       const dec = decryptData(error?.response?.data?.data);
       dataHandler(
         "exchange_rate_error",
-        dec?.message ??
-          "We cannot process your request at the moment, please try again later.",
+        dec?.message ?? "We cannot process your request at the moment, please try again later.",
       );
       console.log(dec);
     } finally {
@@ -666,8 +650,7 @@ const PayAsGuest = ({
       const dec = decryptData(error?.response?.data?.data);
       dataHandler(
         "exchange_rate_error",
-        dec?.message ??
-          "We cannot process your request at the moment, please try again later.",
+        dec?.message ?? "We cannot process your request at the moment, please try again later.",
       );
       console.log(dec);
     } finally {
@@ -679,10 +662,7 @@ const PayAsGuest = ({
     if (data.payment_type?.value === "paypal") {
       getFeesPaypal();
     }
-    if (
-      data.payment_type?.value === "card" ||
-      data.payment_type?.value === "bank"
-    ) {
+    if (data.payment_type?.value === "card" || data.payment_type?.value === "bank") {
       getFeesCard();
     }
     if (
@@ -698,8 +678,7 @@ const PayAsGuest = ({
     const getPayouts = async () => {
       dataHandler("loading", true);
       try {
-        const levelId =
-          typeof user?.level === "string" ? user?.level : user?.level?._id;
+        const levelId = typeof user?.level === "string" ? user?.level : user?.level?._id;
         const res = await axios.get(
           `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/payment-methods/${levelId}?accountId=${user?._id}&country_iso_code=${data?.country?.alpha3}${type === "invoice" ? "&isInvoice=true" : ""}`,
         );
@@ -712,8 +691,7 @@ const PayAsGuest = ({
         dataHandler("loading", false);
       }
     };
-    const levelId =
-      typeof user?.level === "string" ? user?.level : user?.level?._id;
+    const levelId = typeof user?.level === "string" ? user?.level : user?.level?._id;
 
     if (levelId && data?.country?.alpha3) {
       getPayouts();
@@ -801,8 +779,7 @@ const PayAsGuest = ({
                 <div className={styles.left}>
                   <div className={styles.l_top}>
                     <h1>{t("PAY AS A GUEST")}</h1>
-                    {data.payment_type?.value !== "bank_transfer" ||
-                    data.step < 4 ? (
+                    {data.payment_type?.value !== "bank_transfer" || data.step < 4 ? (
                       <h2>
                         {data.step === 1 && t("Select Your Country")}
                         {data.step === 2 && t("Select Payment Type")}
@@ -815,9 +792,7 @@ const PayAsGuest = ({
                             ? t("Enter Your Personal Details")
                             : t("Review Payment"))}
                         {data.step === 5 &&
-                          (data.payment_type?.value === "card"
-                            ? t("Review Payment")
-                            : "")}
+                          (data.payment_type?.value === "card" ? t("Review Payment") : "")}
                       </h2>
                     ) : (
                       <h2>{t("Bank Transfer")}</h2>
@@ -835,11 +810,7 @@ const PayAsGuest = ({
                 </div>
                 <div className={styles.right}>
                   {data.step === 1 && (
-                    <Country
-                      username={username}
-                      data={data}
-                      dataHandler={dataHandler}
-                    />
+                    <Country username={username} data={data} dataHandler={dataHandler} />
                   )}
 
                   {data.step === 2 && (
@@ -856,9 +827,7 @@ const PayAsGuest = ({
                         <div className={styles.bot_top}>
                           <h5>{t("Payment Details")}</h5>
                           <span>
-                            {t(
-                              "Complete your payment by providing your payment details",
-                            )}
+                            {t("Complete your payment by providing your payment details")}
                           </span>
                         </div>
                         <CreditCard
@@ -883,11 +852,7 @@ const PayAsGuest = ({
                     (data.payment_type?.value === "paypal" ||
                     data.payment_type?.value === "mobile_wallet" ? (
                       <>
-                        <PaymentDetails
-                          dataHandler={dataHandler}
-                          data={data}
-                          amount={amount}
-                        />
+                        <PaymentDetails dataHandler={dataHandler} data={data} amount={amount} />
 
                         {data.payment_type?.value === "mobile_wallet" && (
                           <MobileWalletExternalAmount data={data} />
@@ -928,11 +893,7 @@ const PayAsGuest = ({
                   {data.step === 5 &&
                     (data.payment_type?.value === "card" ? (
                       // <StepFive
-                      <PaymentDetails
-                        dataHandler={dataHandler}
-                        data={data}
-                        amount={amount}
-                      />
+                      <PaymentDetails dataHandler={dataHandler} data={data} amount={amount} />
                     ) : (
                       ""
                     ))}
@@ -940,10 +901,7 @@ const PayAsGuest = ({
                   {((data.payment_type?.value !== "bank" &&
                     data?.payment_type?.value !== "bank_transfer") ||
                     data.step < 4) && (
-                    <div
-                      className={styles.bottom}
-                      style={{ marginTop: "auto" }}
-                    >
+                    <div className={styles.bottom} style={{ marginTop: "auto" }}>
                       <Link
                         to={"https://insta-pay.ch/faqs"}
                         target="_blank"
@@ -970,10 +928,7 @@ const PayAsGuest = ({
                             <InstaPayLoader />{" "}
                           </div>
                         ) : (
-                          <button
-                            disabled={data.loading || disabled}
-                            onClick={onClickHandler}
-                          >
+                          <button disabled={data.loading || disabled} onClick={onClickHandler}>
                             {t("Next")}
                             <ChevronRight size={18} />
                           </button>
@@ -987,10 +942,7 @@ const PayAsGuest = ({
           </ModalBody>
         </Modal>
       ) : (
-        <div
-          style={{ background: "#f1eef9" }}
-          className={styles.payment_flow_mobile}
-        >
+        <div style={{ background: "#f1eef9" }} className={styles.payment_flow_mobile}>
           <div className={int_styles.container}>
             <button
               style={{
@@ -1024,8 +976,7 @@ const PayAsGuest = ({
                     <h1 style={{ color: "#906EF5", letterSpacing: "1.5px" }}>
                       {t("PAY AS A GUEST")}
                     </h1>
-                    {data.payment_type?.value !== "bank_transfer" ||
-                    data.step < 4 ? (
+                    {data.payment_type?.value !== "bank_transfer" || data.step < 4 ? (
                       <h2>
                         {data.step === 1 && t("Select Your Country")}
                         {data.step === 2 && t("Select Payment Type")}
@@ -1038,9 +989,7 @@ const PayAsGuest = ({
                             ? t("Enter Your Personal Details")
                             : t("Review Payment"))}
                         {data.step === 5 &&
-                          (data.payment_type?.value === "card"
-                            ? t("Review Payment")
-                            : "")}
+                          (data.payment_type?.value === "card" ? t("Review Payment") : "")}
                       </h2>
                     ) : (
                       <h2>{t("Bank Transfer")}</h2>
@@ -1048,16 +997,9 @@ const PayAsGuest = ({
                   </div>
                 </div>
                 <div className={paym_styles.flow}>
-                  <div
-                    className={paym_styles.flow_com}
-                    style={{ minHeight: "41vh" }}
-                  >
+                  <div className={paym_styles.flow_com} style={{ minHeight: "41vh" }}>
                     {data.step === 1 && (
-                      <Country
-                        username={username}
-                        data={data}
-                        dataHandler={dataHandler}
-                      />
+                      <Country username={username} data={data} dataHandler={dataHandler} />
                     )}
                     {data.step === 2 && (
                       <StepOne
@@ -1081,9 +1023,7 @@ const PayAsGuest = ({
                           <div className={styles.bot_top}>
                             <h5>{t("Payment Details")}</h5>
                             <span>
-                              {t(
-                                "Complete your payment by providing your payment details",
-                              )}
+                              {t("Complete your payment by providing your payment details")}
                             </span>
                           </div>
                           <CreditCard
@@ -1110,11 +1050,7 @@ const PayAsGuest = ({
                       (data.payment_type?.value === "paypal" ||
                       data?.payment_type?.value === "mobile_wallet" ? (
                         <>
-                          <PaymentDetails
-                            dataHandler={dataHandler}
-                            data={data}
-                            amount={amount}
-                          />
+                          <PaymentDetails dataHandler={dataHandler} data={data} amount={amount} />
 
                           {data.payment_type?.value === "paypal" && (
                             <PaypalDetails data={data} wallet={wallet} />
@@ -1159,11 +1095,7 @@ const PayAsGuest = ({
                     {data.step === 5 &&
                       (data.payment_type?.value === "card" ? (
                         // <StepFive
-                        <PaymentDetails
-                          dataHandler={dataHandler}
-                          data={data}
-                          amount={amount}
-                        />
+                        <PaymentDetails dataHandler={dataHandler} data={data} amount={amount} />
                       ) : (
                         ""
                       ))}
@@ -1192,10 +1124,7 @@ const PayAsGuest = ({
                         <HelpCircle size={16} />
                         {t("Trouble Sending Money")}
                       </Link>
-                      <div
-                        className={paym_styles?.buttons}
-                        style={{ flexDirection: "column" }}
-                      >
+                      <div className={paym_styles?.buttons} style={{ flexDirection: "column" }}>
                         {data.loading ? (
                           <div style={{ width: "120px" }}>
                             <InstaPayLoader />{" "}
@@ -1215,8 +1144,7 @@ const PayAsGuest = ({
                           style={{
                             width: "100%",
                             background: "#EEEEEE",
-                            boxShadow:
-                              "0px 3.643px 30.052px 0px rgba(0, 0, 0, 0.09)",
+                            boxShadow: "0px 3.643px 30.052px 0px rgba(0, 0, 0, 0.09)",
                             color: "black",
                           }}
                           onClick={onBackClickHandler}

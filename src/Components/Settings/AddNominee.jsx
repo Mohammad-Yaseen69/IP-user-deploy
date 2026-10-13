@@ -116,12 +116,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
       }
     };
 
-    if (
-      debouncedAddress.length >= 5 &&
-      position?.lat &&
-      position?.lng &&
-      addressInFocus
-    ) {
+    if (debouncedAddress.length >= 5 && position?.lat && position?.lng && addressInFocus) {
       getAddresses();
     }
 
@@ -180,12 +175,9 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
 
   const NumberValidation = async () => {
     try {
-      await axios.post(
-        `${import.meta.env.VITE_IP_DEV_API}/api/dt/check-number-public`,
-        {
-          data: encryptData({ number: `+${contact}` }),
-        },
-      );
+      await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/check-number-public`, {
+        data: encryptData({ number: `+${contact}` }),
+      });
       addNomineeHandler();
     } catch (error) {
       toast.error(t("Incorrect phone number, please enter a valid number."));
@@ -219,11 +211,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
             <div className={styles.inp_con}>
               <Label style={{ display: "flex", alignItems: "center" }}>
                 {t("Name")}{" "}
-                <span
-                  style={{ color: "red", fontSize: "13px", display: "inline" }}
-                >
-                  *
-                </span>
+                <span style={{ color: "red", fontSize: "13px", display: "inline" }}>*</span>
               </Label>
               <Input
                 onKeyDown={preventEdgeSpaces}
@@ -303,11 +291,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
                     *
                   </span>
                 </Label>
-                <Input
-                  type="select"
-                  value={gender}
-                  onChange={(e) => setGender(e.target.value)}
-                >
+                <Input type="select" value={gender} onChange={(e) => setGender(e.target.value)}>
                   <option value="" disabled>
                     --{t("Select Gender")}--
                   </option>
@@ -323,11 +307,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
           <div className={styles.inp_con}>
             <Label>
               {t("Relationship with Nominee")}{" "}
-              <span
-                style={{ color: "red", fontSize: "13px", display: "inline" }}
-              >
-                *
-              </span>
+              <span style={{ color: "red", fontSize: "13px", display: "inline" }}>*</span>
             </Label>
             <NestedDropdown
               child={friendsAndFamily}
@@ -344,11 +324,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
           <div className={styles.inp_con}>
             <Label>
               {t("Nominee Contact Number")}{" "}
-              <span
-                style={{ color: "red", fontSize: "13px", display: "inline" }}
-              >
-                *
-              </span>
+              <span style={{ color: "red", fontSize: "13px", display: "inline" }}>*</span>
             </Label>
             <PhoneInput
               placeholder="Enter Phone number"
@@ -370,9 +346,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
         <div style={{ position: "relative" }} className={styles.inp_con}>
           <Label>
             {t("Nominee Address")}{" "}
-            <span style={{ color: "red", fontSize: "13px", display: "inline" }}>
-              *
-            </span>
+            <span style={{ color: "red", fontSize: "13px", display: "inline" }}>*</span>
           </Label>
           <Input
             type="textarea"
@@ -435,8 +409,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
         >
           <Button
             style={{
-              background:
-                "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+              background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
               border: "inline",
               outline: "inline",
               borderRadius: "10px",
@@ -457,10 +430,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
             {t("Save")}
           </Button>
         </div>
-        <SuccessModal
-          isOpen={showSuccess}
-          toggle={() => setShowSuccess(!showSuccess)}
-        />
+        <SuccessModal isOpen={showSuccess} toggle={() => setShowSuccess(!showSuccess)} />
       </div>
     </MuiPickersUtilsProvider>
   );

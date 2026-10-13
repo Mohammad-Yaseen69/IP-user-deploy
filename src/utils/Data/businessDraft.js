@@ -28,8 +28,7 @@ export const IBAN_DOC_KEY_TO_SLOT = {
 export const KYB_DOCS_BY_TYPE = {
   private: [
     {
-      label:
-        "Official Company Registry Extract (Entity's Registration/Incorporation Document)",
+      label: "Official Company Registry Extract (Entity's Registration/Incorporation Document)",
       translate: true,
       slot: "registry_extract",
     },
@@ -39,8 +38,7 @@ export const KYB_DOCS_BY_TYPE = {
       slot: "authority_proof",
     },
     {
-      label:
-        "Ownership Structure and Ultimate Beneficial Owners (UBOs) Documentation",
+      label: "Ownership Structure and Ultimate Beneficial Owners (UBOs) Documentation",
       translate: true,
       slot: "ownership_structure",
     },
@@ -53,8 +51,7 @@ export const KYB_DOCS_BY_TYPE = {
   ],
   publicly: [
     {
-      label:
-        "Official Company Registry Extract (Entity's Registration/Incorporation Document)",
+      label: "Official Company Registry Extract (Entity's Registration/Incorporation Document)",
       translate: false,
       slot: "registry_extract",
     },
@@ -64,8 +61,7 @@ export const KYB_DOCS_BY_TYPE = {
       slot: "authority_proof",
     },
     {
-      label:
-        "Ownership Structure and Ultimate Beneficial Owners (UBOs) Documentation",
+      label: "Ownership Structure and Ultimate Beneficial Owners (UBOs) Documentation",
       translate: true,
       slot: "ownership_structure",
     },
@@ -78,8 +74,7 @@ export const KYB_DOCS_BY_TYPE = {
   ],
   ngos: [
     {
-      label:
-        "Entity's Registry Extract (Entity'sRegistration/Creation Document)",
+      label: "Entity's Registry Extract (Entity'sRegistration/Creation Document)",
       translate: true,
       slot: "registry_extract",
     },
@@ -107,8 +102,7 @@ export const KYB_DOCS_BY_TYPE = {
   ],
   sole: [
     {
-      label:
-        "Sole Trader's Registry Extract (Entity's Registration/Creation Document)",
+      label: "Sole Trader's Registry Extract (Entity's Registration/Creation Document)",
       translate: true,
       slot: "registry_extract",
     },
@@ -148,8 +142,7 @@ export const toDraftFileRef = (entry) => ({
   variant: entry.meta?.variant,
 });
 
-export const isDraftFileRef = (value) =>
-  Boolean(value && value.draft === true && value.slot);
+export const isDraftFileRef = (value) => Boolean(value && value.draft === true && value.slot);
 
 export const draftFilesToIbanDocs = (draftFiles = []) => {
   const docs = {};
@@ -173,9 +166,7 @@ export const draftPartnerToKyb = (partner) => ({
   name: partner.fullName || "",
   email: partner.email || "",
   designation: partner.role || "",
-  ...(partner.ownershipPercent
-    ? { ownershipPercent: partner.ownershipPercent }
-    : {}),
+  ...(partner.ownershipPercent ? { ownershipPercent: partner.ownershipPercent } : {}),
   ...(typeof partner.isPep === "boolean" ? { isPep: partner.isPep } : {}),
 });
 

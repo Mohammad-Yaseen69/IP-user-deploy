@@ -20,9 +20,7 @@ const UserProfilePublic = () => {
             style={{
               display: "flex",
               alignItems: "center",
-              justifyContent: userDetails?._id
-                ? "space-between"
-                : "space-between",
+              justifyContent: userDetails?._id ? "space-between" : "space-between",
             }}
           >
             <div
@@ -56,10 +54,7 @@ const UserProfilePublic = () => {
           <ProfileComponent />
         </div>
       ) : (
-        <div
-          className={styles.mobile}
-          style={{ padding: 0, position: "relative" }}
-        >
+        <div className={styles.mobile} style={{ padding: 0, position: "relative" }}>
           <ProfileComponent />
           <div
             style={{

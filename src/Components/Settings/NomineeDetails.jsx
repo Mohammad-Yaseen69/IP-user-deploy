@@ -85,12 +85,9 @@ const NomineeDetails = ({ nominee, setNominee }) => {
 
   const NumberValidation = async () => {
     try {
-      await axios.post(
-        `${import.meta.env.VITE_IP_DEV_API}/api/dt/check-number-public`,
-        {
-          data: encryptData({ number: `+${contact}` }),
-        },
-      );
+      await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/check-number-public`, {
+        data: encryptData({ number: `+${contact}` }),
+      });
       updateNomineeHandler();
     } catch (error) {
       toast.error(t("Incorrect phone number, please enter a valid number."));
@@ -99,12 +96,9 @@ const NomineeDetails = ({ nominee, setNominee }) => {
   const deleteNomineeHandler = () => {
     setLoading(true);
     axios
-      .get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/nominee/delete-nominee/${userDetails?._id}`,
-        {
-          headers: authHeader,
-        },
-      )
+      .get(`${import.meta.env.VITE_IP_DEV_API}/api/nominee/delete-nominee/${userDetails?._id}`, {
+        headers: authHeader,
+      })
       .then((res) => {
         const decrypted = decryptData(res.data.data);
         setNominee(null);
@@ -130,9 +124,7 @@ const NomineeDetails = ({ nominee, setNominee }) => {
   return (
     <div>
       <div className={styles.top}>
-        <div
-          className={`${styles.img_container} ${isEditMode && styles.imageBox}`}
-        >
+        <div className={`${styles.img_container} ${isEditMode && styles.imageBox}`}>
           {userImage && <img src={userImage} alt="nominee photo" />}
           {isEditMode && (
             <label htmlFor="file" className={styles.upload}>
@@ -260,8 +252,7 @@ const NomineeDetails = ({ nominee, setNominee }) => {
           <>
             <Button
               style={{
-                background:
-                  "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                 border: "none",
                 outline: "none",
                 borderRadius: "10px",
@@ -275,8 +266,7 @@ const NomineeDetails = ({ nominee, setNominee }) => {
             </Button>
             <Button
               style={{
-                background:
-                  "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                 border: "none",
                 outline: "none",
                 borderRadius: "10px",
@@ -301,8 +291,7 @@ const NomineeDetails = ({ nominee, setNominee }) => {
           <>
             <Button
               style={{
-                background:
-                  "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                 border: "none",
                 outline: "none",
                 borderRadius: "10px",
@@ -314,8 +303,7 @@ const NomineeDetails = ({ nominee, setNominee }) => {
             </Button>
             <Button
               style={{
-                background:
-                  "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                 border: "none",
                 outline: "none",
                 borderRadius: "10px",
@@ -330,10 +318,7 @@ const NomineeDetails = ({ nominee, setNominee }) => {
           </>
         )}
       </div>
-      <SuccessModal
-        isOpen={showSuccess}
-        toggle={() => setShowSuccess(!showSuccess)}
-      />
+      <SuccessModal isOpen={showSuccess} toggle={() => setShowSuccess(!showSuccess)} />
     </div>
   );
 };

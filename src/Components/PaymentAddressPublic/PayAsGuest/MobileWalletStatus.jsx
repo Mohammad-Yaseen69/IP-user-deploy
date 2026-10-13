@@ -26,10 +26,7 @@ const MobileWalletStatus = ({
     [],
   );
 
-  const socketsService = useMemo(
-    () => new SocketsService(socketConfig, () => {}),
-    [socketConfig],
-  );
+  const socketsService = useMemo(() => new SocketsService(socketConfig, () => {}), [socketConfig]);
 
   console.log(transactionId);
   useEffect(() => {
@@ -93,9 +90,7 @@ const MobileWalletStatus = ({
         return {
           icon: failSvg,
           title: t("Payment Failed"),
-          message: t(
-            "Unfortunately, your transaction could not be processed. Please try again.",
-          ),
+          message: t("Unfortunately, your transaction could not be processed. Please try again."),
         };
       case "PROCESSING":
         return {

@@ -39,9 +39,7 @@ const MaintenancePage = () => {
             <span>{t("Scheduled Maintenance")}</span>
           </div>
 
-          <h1 className={styles.title}>
-            {t("We're Currently Under Maintenance")}
-          </h1>
+          <h1 className={styles.title}>{t("We're Currently Under Maintenance")}</h1>
 
           <p className={styles.description}>
             {t(
@@ -57,9 +55,7 @@ const MaintenancePage = () => {
               disabled={isRefreshing}
             >
               <RefreshCw size={18} />
-              <span>
-                {isRefreshing ? t("Checking status...") : t("Check Again")}
-              </span>
+              <span>{isRefreshing ? t("Checking status...") : t("Check Again")}</span>
             </button>
           </div>
 

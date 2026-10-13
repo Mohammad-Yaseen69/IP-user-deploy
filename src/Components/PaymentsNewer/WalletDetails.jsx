@@ -31,12 +31,9 @@ const WalletDetails = ({ setWallet, setSubStep, wallet }) => {
       ? searchQuery.slice(1).toLowerCase()
       : searchQuery.toLowerCase();
     axios
-      .get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-user-wallets/${id || query}`,
-        {
-          headers: authHeader,
-        },
-      )
+      .get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-user-wallets/${id || query}`, {
+        headers: authHeader,
+      })
       .then((res) => {
         const decrypted = decryptData(res.data.data);
         const user = decrypted?.users?.[0];
@@ -50,9 +47,7 @@ const WalletDetails = ({ setWallet, setSubStep, wallet }) => {
         } else {
           setSearchUser(user);
           if (user?.wallets?.length > 0) {
-            const defaultWal = user?.wallets?.find(
-              (it) => it?.default,
-            )?.wallet_id;
+            const defaultWal = user?.wallets?.find((it) => it?.default)?.wallet_id;
             setWallet(defaultWal ?? user?.wallets?.[0]?.wallet_id);
           }
         }
@@ -127,14 +122,11 @@ const WalletDetails = ({ setWallet, setSubStep, wallet }) => {
           padding: "30px 20px",
           gap: "14px",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
       >
         <p style={{ fontSize: "1rem", color: "#7d7d7d" }}>
-          {t(
-            "Enter the Wallet ID, Username, Email, or Phone Number of the recipient.",
-          )}
+          {t("Enter the Wallet ID, Username, Email, or Phone Number of the recipient.")}
         </p>
         <form
           onSubmit={(e) => {
@@ -220,9 +212,7 @@ const WalletDetails = ({ setWallet, setSubStep, wallet }) => {
           <InviteFriendModal isOpen={isOpen} toggle={toggle} />
         </div>
         {searchQuery.length > 0 && !searchUser ? (
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}
-          >
+          <div style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}>
             <p style={{ marginBottom: 0, fontWeight: 600 }}>
               {t("Please follow these examples:")}{" "}
             </p>
@@ -230,15 +220,13 @@ const WalletDetails = ({ setWallet, setSubStep, wallet }) => {
               {t("Wallet ID:")} <strong>{t("GY68J782")}</strong>
             </div>
             <div>
-              {t("InstaPay/Instagram Username:")}{" "}
-              <strong>{t("instauser")}</strong>
+              {t("InstaPay/Instagram Username:")} <strong>{t("instauser")}</strong>
             </div>
             <div>
               {t("Email:")} <strong>{t("user@email.com")}</strong>
             </div>
             <div>
-              {t("Phone Number:")} <strong>44795396600</strong>{" "}
-              {t("(With Country Code)")}
+              {t("Phone Number:")} <strong>44795396600</strong> {t("(With Country Code)")}
             </div>
           </div>
         ) : (
@@ -269,9 +257,7 @@ const WalletDetails = ({ setWallet, setSubStep, wallet }) => {
                 minHeight: "70px",
                 border:
                   searchUser?.wallets?.length > 0 &&
-                  searchUser?.wallets?.some(
-                    (item) => item?.wallet_id === wallet,
-                  )
+                  searchUser?.wallets?.some((item) => item?.wallet_id === wallet)
                     ? "2px solid rgba(89, 38, 240, .3)"
                     : "none",
                 flexWrap: "wrap",
@@ -310,17 +296,13 @@ const WalletDetails = ({ setWallet, setSubStep, wallet }) => {
                       fontWeight: 800,
                     }}
                   >
-                    {searchUser?.first_name?.[0] ||
-                      searchUser?.company_name?.[0]}
+                    {searchUser?.first_name?.[0] || searchUser?.company_name?.[0]}
                   </div>
                 )}
                 <div>
                   <h5 style={{ marginBottom: 0, whiteSpace: "nowrap" }}>
                     {searchUser?.account_type === "individual"
-                      ? `${searchUser?.first_name} ${searchUser?.last_name}`.slice(
-                          0,
-                          24,
-                        )
+                      ? `${searchUser?.first_name} ${searchUser?.last_name}`.slice(0, 24)
                       : `${searchUser?.company_name}`.slice(0, 24)}
                   </h5>
                   <span style={{ paddingLeft: ".3rem" }}>
@@ -328,9 +310,7 @@ const WalletDetails = ({ setWallet, setSubStep, wallet }) => {
                   </span>
                 </div>
               </div>
-              <div
-                style={{ display: "flex", alignItems: "center", gap: ".3rem" }}
-              >
+              <div style={{ display: "flex", alignItems: "center", gap: ".3rem" }}>
                 {searchUser?.wallets?.length > 0 ? (
                   searchUser?.wallets?.map((item) => (
                     <div
@@ -401,11 +381,7 @@ const WalletDetails = ({ setWallet, setSubStep, wallet }) => {
           ) : (
             ""
           )}
-          {searchedBeneficiaries.length > 0 ? (
-            <h5>{t("My Beneficiaries")}</h5>
-          ) : (
-            ""
-          )}
+          {searchedBeneficiaries.length > 0 ? <h5>{t("My Beneficiaries")}</h5> : ""}
           {searchedBeneficiaries.map((user) => (
             <WalletBeneficiaryCard
               key={user._id}

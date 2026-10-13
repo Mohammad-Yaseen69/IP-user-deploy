@@ -1,12 +1,5 @@
 import React, { useContext, useState } from "react";
-import {
-  Button,
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalHeader,
-} from "reactstrap";
+import { Button, Input, Label, Modal, ModalBody, ModalHeader } from "reactstrap";
 import styles from "./styles/AddNominee.module.css";
 import { Camera } from "react-feather";
 import PhoneInput from "react-phone-input-2";
@@ -91,12 +84,9 @@ const NomineeDetails = ({ nominee, setNominee }) => {
 
   const deleteNomineeHandler = () => {
     axios
-      .get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/nominee/delete-nominee/${userDetails?._id}`,
-        {
-          headers: authHeader,
-        },
-      )
+      .get(`${import.meta.env.VITE_IP_DEV_API}/api/nominee/delete-nominee/${userDetails?._id}`, {
+        headers: authHeader,
+      })
       .then((res) => {
         const decrypted = decryptData(res.data.data);
         setNominee(null);
@@ -239,8 +229,7 @@ const NomineeDetails = ({ nominee, setNominee }) => {
           <>
             <Button
               style={{
-                background:
-                  "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                 border: "none",
                 outline: "none",
                 borderRadius: "10px",
@@ -253,8 +242,7 @@ const NomineeDetails = ({ nominee, setNominee }) => {
             </Button>
             <Button
               style={{
-                background:
-                  "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                 border: "none",
                 outline: "none",
                 borderRadius: "10px",
@@ -278,8 +266,7 @@ const NomineeDetails = ({ nominee, setNominee }) => {
           <>
             <Button
               style={{
-                background:
-                  "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                 border: "none",
                 outline: "none",
                 borderRadius: "10px",
@@ -290,8 +277,7 @@ const NomineeDetails = ({ nominee, setNominee }) => {
             </Button>
             <Button
               style={{
-                background:
-                  "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                 border: "none",
                 outline: "none",
                 borderRadius: "10px",
@@ -306,9 +292,7 @@ const NomineeDetails = ({ nominee, setNominee }) => {
         )}
       </div>
       <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-        <ModalHeader toggle={() => setShowOtp(!showOtp)}>
-          {t("Confirm")}
-        </ModalHeader>
+        <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
         <ModalBody>
           <OtpVerification
             variant="card"
@@ -321,9 +305,7 @@ const NomineeDetails = ({ nominee, setNominee }) => {
         </ModalBody>
       </Modal>
       <Modal isOpen={showDelOtp} toggle={() => setShowDelOtp(!showDelOtp)}>
-        <ModalHeader toggle={() => setShowDelOtp(!showDelOtp)}>
-          {t("Confirm")}
-        </ModalHeader>
+        <ModalHeader toggle={() => setShowDelOtp(!showDelOtp)}>{t("Confirm")}</ModalHeader>
         <ModalBody>
           <OtpVerification
             variant="card"
@@ -335,10 +317,7 @@ const NomineeDetails = ({ nominee, setNominee }) => {
           />
         </ModalBody>
       </Modal>
-      <SuccessModal
-        isOpen={showSuccess}
-        toggle={() => setShowSuccess(!showSuccess)}
-      />
+      <SuccessModal isOpen={showSuccess} toggle={() => setShowSuccess(!showSuccess)} />
     </div>
   );
 };

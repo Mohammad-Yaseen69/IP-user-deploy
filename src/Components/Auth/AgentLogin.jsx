@@ -1,11 +1,5 @@
 import { startAuthentication } from "@simplewebauthn/browser";
-import {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as rdd from "react-device-detect";
 import { AlertTriangle, ChevronRight, Eye, EyeOff } from "react-feather";
 import { useTranslation } from "react-i18next";
@@ -21,13 +15,7 @@ import whatsappBlack from "../../assets/images/whatsappBlack.png";
 import LanguagePicker from "../LanguagePicker";
 import PhoneInput from "../PhoneInput";
 import FaceAnimation from "./FaceAnimation";
-import {
-  authIcon,
-  email as emailIcon,
-  instaIcon,
-  smsIcon,
-  whatsappIcon,
-} from "./files";
+import { authIcon, email as emailIcon, instaIcon, smsIcon, whatsappIcon } from "./files";
 import as from "./files/as.svg";
 import authenticator from "./files/authenticator.webp";
 import gs from "./files/gs.svg";
@@ -58,8 +46,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
   const isQuickLoginRef = useRef(false);
   const redirectQuery = params.get("redirect");
   const redirect =
-    location?.state?.redirect ??
-    (redirectQuery ? decodeURIComponent(redirectQuery) : null);
+    location?.state?.redirect ?? (redirectQuery ? decodeURIComponent(redirectQuery) : null);
   const isPhoneNumber = /^\d{9,20}$/;
   const isEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const [emailVerified, setEmailVerified] = useState(false);
@@ -85,8 +72,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
   const [currentOtpMethod, setCurrentOtpMethod] = useState("auth");
   const [pendingOtpMethod, setPendingOtpMethod] = useState(null);
   const [isMobile] = useState(
-    ((rdd.isMobile || rdd.isMobileSafari) && (!rdd.isAndroid || !rdd.isIOS)) ??
-      false,
+    ((rdd.isMobile || rdd.isMobileSafari) && (!rdd.isAndroid || !rdd.isIOS)) ?? false,
   );
   const [isInstagramBrowser, setisInstagramBrowser] = useState();
   const [lastOtpSentTo, setLastOtpSentTo] = useState(null);
@@ -107,8 +93,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
   const [pendingLoginData, setPendingLoginData] = useState(null);
   const [capturedSecurityData, setCapturedSecurityData] = useState(null);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
-  const normalizeCredential = (value) =>
-    (value ?? "").toString().trim().toLowerCase();
+  const normalizeCredential = (value) => (value ?? "").toString().trim().toLowerCase();
   const getResolvedCredential = () => {
     const fromState = normalizeCredential(email);
     if (fromState) return fromState;
@@ -268,8 +253,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
     }
     const credential = getResolvedCredential();
     const credentialIsEmail = isEmail.test(credential);
-    const isCredentialValid =
-      isPhoneNumber.test(credential) || credentialIsEmail;
+    const isCredentialValid = isPhoneNumber.test(credential) || credentialIsEmail;
 
     if (!isCredentialValid) {
       setIsLoginError("Uh-Oh! Please enter a valid email or phone number.");
@@ -289,13 +273,9 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
     const isInsta = method
       ? method === "insta"
       : currentOtpMethod === "insta" ||
-        (currentOtpMethod !== "sms" &&
-          currentOtpMethod !== "email" &&
-          currentOtpMethod !== "wp");
+        (currentOtpMethod !== "sms" && currentOtpMethod !== "email" && currentOtpMethod !== "wp");
     const isWp = method ? method === "wp" : currentOtpMethod === "wp";
-    const isEmailOtp = method
-      ? method === "email"
-      : currentOtpMethod === "email";
+    const isEmailOtp = method ? method === "email" : currentOtpMethod === "email";
 
     const credentials = credentialIsEmail
       ? {
@@ -388,15 +368,10 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
         const handleMethods = () => {
           if (method === undefined) {
             if (decrypted?.biometric && !isInstagramBrowser) return "biometric";
-            if (decrypted?.tfa && decrypted?.message === "authenticator")
-              return "auth";
-            if (decrypted?.message === "instagram" && !isInstagramBrowser)
-              return "insta";
+            if (decrypted?.tfa && decrypted?.message === "authenticator") return "auth";
+            if (decrypted?.message === "instagram" && !isInstagramBrowser) return "insta";
             if (decrypted?.message === "whatsapp") return "wp";
-            if (
-              decrypted?.otpMethod === "email" ||
-              (decrypted?.email && !decrypted?.phone)
-            )
+            if (decrypted?.otpMethod === "email" || (decrypted?.email && !decrypted?.phone))
               return "email";
             return "sms";
           } else {
@@ -523,18 +498,13 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
           setIsLoginError(`Uh-Oh! Your account is onhold.`);
         } else if (decrypted.message?.toLowerCase()?.includes("delete")) {
           setIsLoginError(decrypted?.message);
-        } else if (
-          decrypted.message?.toLowerCase()?.includes("account is locked")
-        ) {
-          const time =
-            decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
-          const timeInSec =
-            +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
+        } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+          const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+          const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
           setProfileLockTime(timeInSec);
         } else {
           setIsLoginError(
-            decrypted?.message ||
-              "We're unable to process your request. Please try again",
+            decrypted?.message || "We're unable to process your request. Please try again",
           );
         }
       });
@@ -567,11 +537,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
     }
     if (email.startsWith("92")) return;
     const newEmail = email;
-    if (
-      /^\d+$/.test(newEmail.slice(0, 6)) &&
-      newEmail.startsWith(0) &&
-      newEmail.length >= 6
-    ) {
+    if (/^\d+$/.test(newEmail.slice(0, 6)) && newEmail.startsWith(0) && newEmail.length >= 6) {
       if (country) {
         const formatted = `${country?.country_code?.split("+")[1] ?? "41"}${newEmail.slice(1)}`;
         setEmail(formatted);
@@ -615,12 +581,9 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
         };
       }
     } catch (error) {
-      logger.error(
-        `IP Locate api failed at ${Date.now().toLocaleString()} for user: ${username}`,
-        {
-          error: error,
-        },
-      );
+      logger.error(`IP Locate api failed at ${Date.now().toLocaleString()} for user: ${username}`, {
+        error: error,
+      });
       console.log("ip locate failed");
       try {
         const res = await fetch("https://geolocation-db.com/json");
@@ -653,9 +616,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
     };
 
     if (
-      (ipInfo?.privacy?.is_proxy ||
-        ipInfo?.privacy?.is_tor ||
-        ipInfo?.privacy?.is_vpn) &&
+      (ipInfo?.privacy?.is_proxy || ipInfo?.privacy?.is_tor || ipInfo?.privacy?.is_vpn) &&
       !isVpnAllowed
     ) {
       setShowNoticeModal(true);
@@ -745,8 +706,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
       console.error("Login history creation failed:", err);
     } finally {
       const path =
-        sessionStorage.getItem("path") &&
-        sessionStorage.getItem("path") !== "undefined"
+        sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined"
           ? sessionStorage.getItem("path")
           : redirect || "";
       if (path && path !== "undefined") {
@@ -857,9 +817,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
           })
           .catch((err) => {
             setIsPressed(false);
-            setIsLoginError(
-              "Something went wrong while getting account details",
-            );
+            setIsLoginError("Something went wrong while getting account details");
           });
       })
       .catch((error) => {
@@ -871,10 +829,8 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
         console.log(decrypted);
         setIsPressed(false);
         if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-          const time =
-            decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
-          const timeInSec =
-            +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
+          const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+          const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
           setProfileLockTime(timeInSec);
         } else {
           setIsLoginError("Uh-Oh! You entered incorrect OTP.");
@@ -922,10 +878,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
     if (
       resendTimer > 0 &&
       lastOtpSentTo &&
-      (method === "sms" ||
-        method === "insta" ||
-        method === "wp" ||
-        method === "email")
+      (method === "sms" || method === "insta" || method === "wp" || method === "email")
     ) {
       if (!hasChangedMethodOnce || lastOtpSentTo === method) {
         setHasChangedMethodOnce(true);
@@ -938,10 +891,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
         setPendingOtpMethod(method);
         return;
       }
-    } else if (
-      method !== "biometric" &&
-      (method === "auth" || resendTimer === 0)
-    ) {
+    } else if (method !== "biometric" && (method === "auth" || resendTimer === 0)) {
       shouldCallLoginHandler = true;
       setCurrentOtpMethod(method);
     }
@@ -965,9 +915,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
       setBiometricLoading(true);
       const credential = getResolvedCredential();
 
-      const emailOrPhone = isEmail.test(credential)
-        ? { email: credential }
-        : { phone: credential };
+      const emailOrPhone = isEmail.test(credential) ? { email: credential } : { phone: credential };
 
       const dec1 = await biometricChallenge.mutateAsync(emailOrPhone);
       let credentials;
@@ -996,9 +944,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
           const dec2 = await biometricVerify.mutateAsync(verificationData);
           return dec2;
         } catch (err) {
-          const serverErr = err?.response?.data?.data
-            ? decryptData(err.response.data.data)
-            : err;
+          const serverErr = err?.response?.data?.data ? decryptData(err.response.data.data) : err;
           logger.error(`Biometric verification failed! for ${credential}`, {
             credentials,
             serverError: serverErr,
@@ -1011,10 +957,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
               verificationData.credentials = freshCreds;
               return await tryVerify(attempt + 1);
             } catch (innerErr) {
-              console.error(
-                "biometric retry startAuthentication failed:",
-                innerErr,
-              );
+              console.error("biometric retry startAuthentication failed:", innerErr);
               throw err;
             }
           }
@@ -1168,11 +1111,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
           }
         }}
       />
-      <Modal
-        isOpen={showRestoreModal}
-        toggle={() => setShowRestoreModal(false)}
-        centered
-      >
+      <Modal isOpen={showRestoreModal} toggle={() => setShowRestoreModal(false)} centered>
         <ModalHeader toggle={() => setShowRestoreModal(false)}>
           {t("Account Restoration")}
         </ModalHeader>
@@ -1183,9 +1122,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
             )}
           </p>
         </ModalBody>
-        <ModalFooter
-          style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}
-        >
+        <ModalFooter style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
           <Button
             color="secondary"
             onClick={resetLoginStates}
@@ -1204,8 +1141,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
             onClick={(e) => loginHandler(e, undefined, true)}
             disabled={restoreLoading}
             style={{
-              background:
-                "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+              background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
               border: "none",
               borderRadius: "10px",
               padding: "10px 20px",
@@ -1218,9 +1154,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
       <form
         autoComplete="off"
         onSubmit={(e) => {
-          emailVerified
-            ? loginHandler(e, undefined, false, true)
-            : checkEmailHandler(e);
+          emailVerified ? loginHandler(e, undefined, false, true) : checkEmailHandler(e);
         }}
         className={styles.form_details}
         style={
@@ -1249,19 +1183,13 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                         : t("Enter Your Email")}
                     </label>
                     {loginMethod === "phone" ? (
-                      <PhoneInput
-                        phone={email}
-                        setPhone={setEmail}
-                        country={country}
-                      />
+                      <PhoneInput phone={email} setPhone={setEmail} country={country} />
                     ) : (
                       <input
                         type="email"
                         placeholder={t("eg: john@doe.org")}
                         value={email}
-                        onChange={(e) =>
-                          setEmail(e.target.value?.toLowerCase())
-                        }
+                        onChange={(e) => setEmail(e.target.value?.toLowerCase())}
                         autoComplete="off"
                         name="email"
                       />
@@ -1269,9 +1197,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                     <div
                       className={styles.loginWith}
                       onClick={() => {
-                        setLoginMethod(
-                          loginMethod === "email" ? "phone" : "email",
-                        );
+                        setLoginMethod(loginMethod === "email" ? "phone" : "email");
                         localStorage.setItem(
                           "loginWith",
                           loginMethod === "email" ? "phone" : "email",
@@ -1310,9 +1236,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                             alt=""
                           />
                         ) : (
-                          <div className={styles.dp}>
-                            {loginData?.name?.[0]?.toUpperCase()}
-                          </div>
+                          <div className={styles.dp}>{loginData?.name?.[0]?.toUpperCase()}</div>
                         )}
                         <div>
                           <h4
@@ -1399,10 +1323,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                   {showPassword ? <EyeOff /> : <Eye />}
                 </div>
               </div>
-              <Link
-                to={"/forgot-password/agent"}
-                className={styles.forgot_pass}
-              >
+              <Link to={"/forgot-password/agent"} className={styles.forgot_pass}>
                 {t("Forgot Password?")}
               </Link>
             </div>
@@ -1410,9 +1331,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
           {isLoginError && (
             <div className={styles.input_error}>
               <AlertTriangle size={17} color="#F32D2D" />
-              <span>
-                {profileLockTIme > 0 ? isLoginError : t(isLoginError)}
-              </span>
+              <span>{profileLockTIme > 0 ? isLoginError : t(isLoginError)}</span>
             </div>
           )}
           {locationLoading && (
@@ -1520,9 +1439,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                           ? t("Email OTP Verification")
                           : t("SMS Verification").replace(
                               "SMS",
-                              resolvedCredential.slice(0, 3) === "971"
-                                ? "Whatsapp"
-                                : "SMS",
+                              resolvedCredential.slice(0, 3) === "971" ? "Whatsapp" : "SMS",
                             )}
               </h1>
             </div>
@@ -1540,9 +1457,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                       fontWeight: 600,
                     }}
                   >
-                    {t(
-                      "Verify identity using your created Passkey on this device",
-                    )}
+                    {t("Verify identity using your created Passkey on this device")}
                   </h4>
                   {biometricLoading || biometricSuccessfull ? (
                     <div
@@ -1598,9 +1513,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                   <div
                     style={{
                       animation:
-                        otpVerified && !isOtpCorrect
-                          ? "horizontal-shaking 0.5s ease-in-out"
-                          : "",
+                        otpVerified && !isOtpCorrect ? "horizontal-shaking 0.5s ease-in-out" : "",
                     }}
                     className={
                       styles.otp_inputs +
@@ -1640,11 +1553,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                       isLoginError
                     }
                   >
-                    <span>
-                      {isPressed && !methodLoading
-                        ? t("Verifying")
-                        : t("Verify")}
-                    </span>
+                    <span>{isPressed && !methodLoading ? t("Verifying") : t("Verify")}</span>
                     <ChevronRight size={28} color="white" />
                   </button>
                 </div>
@@ -1662,9 +1571,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                     </div>
                   )}
 
-                {currentOtpMethod === "auth" && (
-                  <span>{t("Problem with the OTP?")}</span>
-                )}
+                {currentOtpMethod === "auth" && <span>{t("Problem with the OTP?")}</span>}
 
                 {methods.filter((m) => m.avail).length > 1 && (
                   <p style={{ alignSelf: "baseline" }}>
@@ -1676,18 +1583,13 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                     {isMobile ? (
                       <>
                         {methods.map((method, index) => {
-                          if (
-                            method.avail &&
-                            method.attr !== currentOtpMethod
-                          ) {
+                          if (method.avail && method.attr !== currentOtpMethod) {
                             return (
                               <button
                                 key={index}
                                 className={styles.otpMethodButton}
                                 type="button"
-                                disabled={
-                                  isPressed || methodLoading || biometricLoading
-                                }
+                                disabled={isPressed || methodLoading || biometricLoading}
                                 onClick={() => handleOtpMethod(method.attr)}
                               >
                                 <img src={method.icon} alt="" />
@@ -1711,24 +1613,17 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                     ) : (
                       <>
                         {methods.map((method, index) => {
-                          if (
-                            method.avail &&
-                            method.attr !== currentOtpMethod
-                          ) {
+                          if (method.avail && method.attr !== currentOtpMethod) {
                             return (
                               <button
                                 key={index}
                                 className={styles.otpMethodButton}
                                 type="button"
-                                disabled={
-                                  isPressed || methodLoading || biometricLoading
-                                }
+                                disabled={isPressed || methodLoading || biometricLoading}
                                 onClick={() => handleOtpMethod(method.attr)}
                               >
                                 <img src={method.icon} alt="" />
-                                <span style={{ marginBottom: "0" }}>
-                                  {t(method.text)}
-                                </span>
+                                <span style={{ marginBottom: "0" }}>{t(method.text)}</span>
                               </button>
                             );
                           }
@@ -1746,10 +1641,8 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                         ["sms", "insta", "wp", "email"].includes(
                           pendingOtpMethod || currentOtpMethod,
                         ) &&
-                        lastOtpSentTo !==
-                          (pendingOtpMethod || currentOtpMethod)) ||
-                      (pendingOtpMethod &&
-                        lastOtpSentTo !== currentOtpMethod) ? (
+                        lastOtpSentTo !== (pendingOtpMethod || currentOtpMethod)) ||
+                      (pendingOtpMethod && lastOtpSentTo !== currentOtpMethod) ? (
                         <span>
                           {t(
                             "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}",
@@ -1766,11 +1659,9 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                               nextOtpMethod:
                                 (pendingOtpMethod || currentOtpMethod) === "sms"
                                   ? "SMS"
-                                  : (pendingOtpMethod || currentOtpMethod) ===
-                                      "wp"
+                                  : (pendingOtpMethod || currentOtpMethod) === "wp"
                                     ? "WhatsApp"
-                                    : (pendingOtpMethod || currentOtpMethod) ===
-                                        "email"
+                                    : (pendingOtpMethod || currentOtpMethod) === "email"
                                       ? "Email"
                                       : "Instagram",
 
@@ -1790,26 +1681,22 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                       )
                     ) : (
                       <>
-                        {currentOtpMethod !== "auth" &&
-                          currentOtpMethod !== "biometric" && (
-                            <>
-                              <span>{t("Didn't receive OTP?") + " "}</span>
-                              <span
-                                style={{ color: "#5926f0", cursor: "pointer" }}
-                                onClick={() => {
-                                  setLastOtpSentTo(currentOtpMethod);
-                                  setOTPValues(Array(numberOfFields).fill(""));
-                                  loginHandler(
-                                    { preventDefault: () => {} },
-                                    currentOtpMethod,
-                                  );
-                                  setResendTimer(120);
-                                }}
-                              >
-                                {t("Resend Now")}
-                              </span>
-                            </>
-                          )}
+                        {currentOtpMethod !== "auth" && currentOtpMethod !== "biometric" && (
+                          <>
+                            <span>{t("Didn't receive OTP?") + " "}</span>
+                            <span
+                              style={{ color: "#5926f0", cursor: "pointer" }}
+                              onClick={() => {
+                                setLastOtpSentTo(currentOtpMethod);
+                                setOTPValues(Array(numberOfFields).fill(""));
+                                loginHandler({ preventDefault: () => {} }, currentOtpMethod);
+                                setResendTimer(120);
+                              }}
+                            >
+                              {t("Resend Now")}
+                            </span>
+                          </>
+                        )}
                       </>
                     )}
                   </span>
@@ -1824,11 +1711,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
             </div>
             <div className={styles.center_bottom}>
               {width < 1000 && (
-                <button
-                  type="button"
-                  className={styles.go_back_btn}
-                  onClick={resetOtpStates}
-                >
+                <button type="button" className={styles.go_back_btn} onClick={resetOtpStates}>
                   {t("Back")}
                 </button>
               )}
@@ -1866,11 +1749,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                       isLoginError
                     }
                   >
-                    <span>
-                      {isPressed && !methodLoading
-                        ? t("Verifying")
-                        : t("Verify")}
-                    </span>
+                    <span>{isPressed && !methodLoading ? t("Verifying") : t("Verify")}</span>
                     <ChevronRight size={28} color="white" />
                   </button>
                 )}
@@ -1890,11 +1769,7 @@ export const AuthenticatorDetails = () => {
   return (
     <div className={styles.auth_details}>
       <div className={styles.left}>
-        <h5>
-          {t(
-            "Two-factor authentication (2FA) is the best way to protect yourself online.",
-          )}
-        </h5>
+        <h5>{t("Two-factor authentication (2FA) is the best way to protect yourself online.")}</h5>
         <p>
           {t(
             "We recommend you download and install the Google Authenticator app to ensure you receive your verification codes instantly, avoiding any SMS delays or issues.",

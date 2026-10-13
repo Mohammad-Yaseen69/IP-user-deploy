@@ -30,8 +30,7 @@ const useVendorBalance = (currency, vendor, setError) => {
       } catch (error) {
         let errorMessage = "Unable to retrieve balance information";
         const dec = decryptData(error?.response?.data?.data);
-        errorMessage =
-          dec?.message || "Balance service temporarily unavailable";
+        errorMessage = dec?.message || "Balance service temporarily unavailable";
 
         if (retryCount < 2) {
           setTimeout(

@@ -1,13 +1,7 @@
 import { Link } from "react-router-dom";
 import * as classes from "./AgentSidebar.module.css";
 
-const NavSegment = ({
-  icon: Icon,
-  text,
-  to,
-  active = false,
-  collapsed = false,
-}) => {
+const NavSegment = ({ icon: Icon, text, to, active = false, collapsed = false }) => {
   return (
     <Link
       to={to}

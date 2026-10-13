@@ -1,5 +1,4 @@
-export const unwrapVirtualIbanResponse = (res) =>
-  res?.data?.data ?? res?.data ?? res;
+export const unwrapVirtualIbanResponse = (res) => res?.data?.data ?? res?.data ?? res;
 
 export const getVirtualIbanId = (iban) => iban?._id || iban?.id || "";
 
@@ -33,8 +32,7 @@ export const INTL_DEPOSIT_ACCOUNTS = {
 export const getIntlDepositAccount = (currency) =>
   INTL_DEPOSIT_ACCOUNTS[String(currency || "").toLowerCase()] || null;
 
-export const getProviderReference = (currency) =>
-  getIntlDepositAccount(currency)?.reference || "";
+export const getProviderReference = (currency) => getIntlDepositAccount(currency)?.reference || "";
 
 export const getAccountReferenceCode = (iban, userDetails) => {
   const candidates = [iban?.virtualIbanId, userDetails?.username];
@@ -53,8 +51,7 @@ export const getPaymentReference = (iban, userDetails, currency) => {
 };
 
 export const getVirtualIbanCountry = (iban) => {
-  const rawCountry =
-    iban?.country || iban?.jurisdiction || iban?.bank?.address?.country;
+  const rawCountry = iban?.country || iban?.jurisdiction || iban?.bank?.address?.country;
   const country = String(rawCountry || iban?.iban || "")
     .slice(0, 2)
     .toUpperCase();
@@ -68,13 +65,7 @@ export const formatVirtualIbanBankAddress = (address) => {
 
   const { addressLine1, addressLine2, city, postCode, country } = address;
 
-  return [
-    addressLine1,
-    addressLine2,
-    city,
-    postCode,
-    country === "MT" ? "Malta" : country,
-  ]
+  return [addressLine1, addressLine2, city, postCode, country === "MT" ? "Malta" : country]
     .filter(Boolean)
     .join(", ");
 };
@@ -85,16 +76,14 @@ export const normalizeVirtualIban = (iban) => {
 
   const id = getVirtualIbanId(iban);
   const bank = iban?.bank || {};
-  const bankAddressSource =
-    bank?.address || iban?.bank_address || iban?.bankAddress;
+  const bankAddressSource = bank?.address || iban?.bank_address || iban?.bankAddress;
   const bankAddress = formatVirtualIbanBankAddress(bankAddressSource);
 
   return {
     ...iban,
     _id: id,
     id,
-    account_holder_name:
-      iban?.account_holder_name || iban?.accountHolderName || "",
+    account_holder_name: iban?.account_holder_name || iban?.accountHolderName || "",
     swift_code: iban?.swift_code || iban?.bic || bank?.bic || "",
     bank_name: iban?.bank_name || iban?.bankName || bank?.name || "",
     bank_address: bankAddress,
@@ -149,8 +138,7 @@ export const isVirtualIbanFrozen = (iban) => Boolean(iban?.freezeIban);
 
 export const isVirtualIbanUserBlocked = (iban) => Boolean(iban?.userBlocked);
 
-export const isVirtualIbanOutboundBlocked = (iban) =>
-  Boolean(iban?.blockOutbound);
+export const isVirtualIbanOutboundBlocked = (iban) => Boolean(iban?.blockOutbound);
 
 export const asVirtualIban = (value) => {
   const unwrapped = unwrapVirtualIbanResponse(value);

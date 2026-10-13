@@ -560,9 +560,7 @@ const AgentCommission = () => {
                 {card.icon && (
                   <div
                     className={
-                      card.isCircleIcon
-                        ? styles.iconWrapperCircle
-                        : styles.iconWrapperSquare
+                      card.isCircleIcon ? styles.iconWrapperCircle : styles.iconWrapperSquare
                     }
                   >
                     {card.icon}
@@ -572,9 +570,7 @@ const AgentCommission = () => {
               <div className={styles.cardValue}>{card.value}</div>
               {card.hasSubtext && (
                 <div className={styles.cardSubtext}>
-                  <span className={card.isTrend ? styles.trendUp : ""}>
-                    {card.subtext}
-                  </span>
+                  <span className={card.isTrend ? styles.trendUp : ""}>{card.subtext}</span>
                   {card.subtextLabel && ` ${t(card.subtextLabel)}`}
                 </div>
               )}
@@ -611,35 +607,23 @@ const AgentCommission = () => {
           <div className={styles.rightColumn}>
             <div className={styles.boxSection} style={{ height: "100%" }}>
               <div className={styles.subAgentHeaderRow}>
-                <h3 className={styles.sectionTitle}>
-                  {t("Sub-agent network")}
-                </h3>
+                <h3 className={styles.sectionTitle}>{t("Sub-agent network")}</h3>
               </div>
 
               <div className={styles.subAgentTable}>
                 <div className={styles.tableHeaderRow}>
-                  <div className={styles.colAgentName}>
-                    {t("SUB-AGENT NETWORK")}
-                  </div>
+                  <div className={styles.colAgentName}>{t("SUB-AGENT NETWORK")}</div>
                   <div className={styles.colActive}>{t("TOTAL NETWORK")}</div>
                   <div className={styles.colConv}>{t("CONVERSION")}</div>
                 </div>
 
                 <div className={styles.tableDataRow}>
                   <div className={styles.colAgentName}>
-                    <div className={`${styles.avatar} ${styles.avatarPurple}`}>
-                      AN
-                    </div>
-                    <span className={styles.agentName}>
-                      {t("Active Network")}
-                    </span>
+                    <div className={`${styles.avatar} ${styles.avatarPurple}`}>AN</div>
+                    <span className={styles.agentName}>{t("Active Network")}</span>
                   </div>
-                  <div className={styles.colActive}>
-                    {analytics.subAgentNetwork ?? 0}
-                  </div>
-                  <div className={styles.colConv}>
-                    {analytics.conversionRate || "0.0%"}
-                  </div>
+                  <div className={styles.colActive}>{analytics.subAgentNetwork ?? 0}</div>
+                  <div className={styles.colConv}>{analytics.conversionRate || "0.0%"}</div>
                 </div>
               </div>
             </div>

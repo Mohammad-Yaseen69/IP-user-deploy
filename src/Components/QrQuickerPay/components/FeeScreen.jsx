@@ -20,11 +20,7 @@ const FeeBox = ({ label, curr, value, fx, total }) => {
       <span>{t(label)}</span>
       <span>
         {curr}
-        {fx
-          ? value
-          : value >= 0.01
-            ? value.toFixed(2)
-            : value.toFixed(getDecimalPointIndex(value))}
+        {fx ? value : value >= 0.01 ? value.toFixed(2) : value.toFixed(getDecimalPointIndex(value))}
       </span>
     </div>
   );
@@ -42,9 +38,7 @@ const FeeScreen = ({ feeData, step, userDetails }) => {
           <span className={styles.curr}>
             {userDetails?.walletDetails?.currency?.code} {t("Wallet")}
           </span>
-          <span className={styles.id}>
-            {userDetails?.walletDetails?.wallet_id}
-          </span>
+          <span className={styles.id}>{userDetails?.walletDetails?.wallet_id}</span>
         </div>
       </div>
 
@@ -55,11 +49,7 @@ const FeeScreen = ({ feeData, step, userDetails }) => {
             curr={feeData?.sending?.currency}
             value={feeData?.sending?.amount}
           />
-          <FeeBox
-            label="Fees"
-            curr={feeData?.fee?.currency}
-            value={feeData?.fee?.amount}
-          />
+          <FeeBox label="Fees" curr={feeData?.fee?.currency} value={feeData?.fee?.amount} />
           {feeData?.exchange_rate && feeData?.exchange_rate !== 1 && (
             <FeeBox
               label="Exchange Rate"
@@ -73,12 +63,7 @@ const FeeScreen = ({ feeData, step, userDetails }) => {
             curr={feeData?.receiver?.currency}
             value={feeData?.receiver?.amount}
           />
-          <FeeBox
-            label="Total"
-            curr={feeData?.sending?.currency}
-            value={feeData?.total}
-            total
-          />
+          <FeeBox label="Total" curr={feeData?.sending?.currency} value={feeData?.total} total />
         </>
       ) : (
         <div

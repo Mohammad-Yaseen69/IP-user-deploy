@@ -132,18 +132,15 @@ const QuotationDetails = ({
           padding: "14px",
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
       >
         <h5>{t("Enter the amount")}</h5>
         <div
           style={{
-            background:
-              "linear-gradient(to bottom right, #EC2AB6 0%, #5926F0 100%)",
+            background: "linear-gradient(to bottom right, #EC2AB6 0%, #5926F0 100%)",
             border: "0.5px solid rgba(0, 0, 0, 0.08)",
-            boxShadow:
-              "0px 4.456576347351074px 132.58314514160156px 0px rgba(0, 0, 0, 0.11)",
+            boxShadow: "0px 4.456576347351074px 132.58314514160156px 0px rgba(0, 0, 0, 0.11)",
             borderRadius: "24px",
             padding: "12px",
             display: "flex",
@@ -159,10 +156,7 @@ const QuotationDetails = ({
               transform: "translate(15px, 5px)",
             }}
           >
-            {
-              userWallets?.find((i) => i?.currency?.code === currency)?.currency
-                ?.code
-            }
+            {userWallets?.find((i) => i?.currency?.code === currency)?.currency?.code}
           </h4>
           <input
             type="text"
@@ -408,16 +402,11 @@ const QuotationDetails = ({
           currentImage={currentImage}
         />
 
-        <Modal
-          isOpen={showDelModal}
-          toggle={() => setShowDelModal(!showDelModal)}
-        >
+        <Modal isOpen={showDelModal} toggle={() => setShowDelModal(!showDelModal)}>
           <ModalHeader toggle={() => setShowDelModal(!showDelModal)}>
             {t("Confirm Removing File")}
           </ModalHeader>
-          <ModalBody>
-            {t("Are you sure, you want to remove this file?")}
-          </ModalBody>
+          <ModalBody>{t("Are you sure, you want to remove this file?")}</ModalBody>
           <ModalFooter>
             <Button
               style={{
@@ -509,9 +498,7 @@ const QuotationDetails = ({
               alignItems: "center",
             }}
             className="i_t_button"
-            disabled={
-              Number(amount) <= 0 || !currency || !title || !description
-            }
+            disabled={Number(amount) <= 0 || !currency || !title || !description}
             onClick={() => setSubStep((prev) => prev + 1)}
           >
             <span>{t("Confirm")}</span>

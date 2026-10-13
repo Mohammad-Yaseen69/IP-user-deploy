@@ -29,8 +29,7 @@ export const useAssistantSession = () => {
       body: JSON.stringify({ userId: userDetails?._id }),
     });
 
-    if (!response.ok)
-      throw new Error(`Assistant session failed with ${response.status}`);
+    if (!response.ok) throw new Error(`Assistant session failed with ${response.status}`);
 
     const { data } = await response.json();
     if (!data?.token) throw new Error("Assistant session returned no token");

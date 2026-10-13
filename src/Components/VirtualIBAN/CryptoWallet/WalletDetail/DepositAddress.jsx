@@ -31,9 +31,7 @@ const DepositAddress = ({ currencyCode, network }) => {
         </div>
 
         <div className={styles.addressRow}>
-          <span className={styles.addressText}>
-            {network?.address || t("Address unavailable")}
-          </span>
+          <span className={styles.addressText}>{network?.address || t("Address unavailable")}</span>
           <button
             type="button"
             className={`${styles.copyBtn} ${copied ? styles.copyBtnDone : ""}`}
@@ -45,10 +43,7 @@ const DepositAddress = ({ currencyCode, network }) => {
         </div>
 
         <div className={`${styles.notice} ${styles.noticeWarning}`}>
-          <AlertTriangle
-            size={16}
-            style={{ flexShrink: 0, marginTop: "1px" }}
-          />
+          <AlertTriangle size={16} style={{ flexShrink: 0, marginTop: "1px" }} />
           <div>
             <strong>{t("Important")}: </strong>
             {t("Send only")} <strong>{currencyCode}</strong>{" "}

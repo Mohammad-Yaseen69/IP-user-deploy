@@ -33,10 +33,7 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
         dataHandler("service_type", dec?.[0]);
       } catch (error) {
         const dec = decryptData(error?.response?.data?.data);
-        dataHandler(
-          "error",
-          dec?.message ?? "Something went wrong while getting services.",
-        );
+        dataHandler("error", dec?.message ?? "Something went wrong while getting services.");
         dataHandler("service_types", []);
       } finally {
         setIsLoading(false);
@@ -65,23 +62,15 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
             { headers: authHeader },
           );
           const dec = await decryptData(res.data.data);
-          const packageVar = Array.isArray(dec?.data)
-            ? dec?.data?.[0]
-            : dec?.data;
+          const packageVar = Array.isArray(dec?.data) ? dec?.data?.[0] : dec?.data;
           console.log(dec);
-          dataHandler(
-            "packages",
-            Array.isArray(dec?.data) ? dec?.data : [dec?.data],
-          );
+          dataHandler("packages", Array.isArray(dec?.data) ? dec?.data : [dec?.data]);
           dataHandler("package", packageVar);
           dataHandler("airtime_amount", packageVar?.baseAmount?.min);
         } catch (error) {
           const dec = decryptData(error?.response?.data?.data);
           dataHandler("packages", []);
-          dataHandler(
-            "error",
-            dec?.message ?? "Something went wrong while getting services.",
-          );
+          dataHandler("error", dec?.message ?? "Something went wrong while getting services.");
         } finally {
           setPakLoading(false);
         }
@@ -175,15 +164,12 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
                   >
                     <div className={styles.c_top}>
                       <h2 style={{ whiteSpace: "nowrap" }}>
-                        {item?.prices?.unit}{" "}
-                        {Number(item?.prices?.amount)?.toFixed(2)}
+                        {item?.prices?.unit} {Number(item?.prices?.amount)?.toFixed(2)}
                       </h2>
                       <div>
                         <span>{t("Name")}</span>
                         <p>{t(item?.name)}</p>
-                        <span style={{ maxWidth: "40ch" }}>
-                          {t(item?.description)}
-                        </span>
+                        <span style={{ maxWidth: "40ch" }}>{t(item?.description)}</span>
                       </div>
                     </div>
                     <div className={styles.operator}>
@@ -215,15 +201,15 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
                 {t("Enter custom amount")}{" "}
                 <span style={{ fontSize: "70%" }}>
                   ({data.localWallet?.currency?.code}{" "}
-                  {Number(data.package?.baseAmount?.min)?.toLocaleString(
-                    "en-US",
-                    { minimumFractionDigits: 2, maximumFractionDigits: 2 },
-                  )}{" "}
+                  {Number(data.package?.baseAmount?.min)?.toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}{" "}
                   - {data.localWallet?.currency?.code}{" "}
-                  {Number(data.package?.baseAmount?.max)?.toLocaleString(
-                    "en-US",
-                    { minimumFractionDigits: 2, maximumFractionDigits: 2 },
-                  )}
+                  {Number(data.package?.baseAmount?.max)?.toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
                   )
                 </span>
               </label>
@@ -236,9 +222,7 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
                       <input
                         type="text"
                         value={data.airtime_amount}
-                        onChange={(e) =>
-                          dataHandler("airtime_amount", e.target.value)
-                        }
+                        onChange={(e) => dataHandler("airtime_amount", e.target.value)}
                         onKeyUp={handleKeyUp}
                         onBlur={handleBlur}
                         placeholder="Enter amount"
@@ -253,9 +237,7 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
                     <input
                       type="text"
                       value={data.airtime_amount}
-                      onChange={(e) =>
-                        dataHandler("airtime_amount", e.target.value)
-                      }
+                      onChange={(e) => dataHandler("airtime_amount", e.target.value)}
                       onKeyUp={handleKeyUp}
                       onBlur={handleBlur}
                       placeholder="Enter amount"
@@ -279,15 +261,12 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
                 >
                   <div className={styles.c_top}>
                     <h2 style={{ whiteSpace: "nowrap" }}>
-                      {item?.prices?.unit}{" "}
-                      {Number(item?.prices?.amount)?.toFixed(2)}
+                      {item?.prices?.unit} {Number(item?.prices?.amount)?.toFixed(2)}
                     </h2>
                     <div>
                       <span>{t("Name")}</span>
                       <p>{t(item?.name)}</p>
-                      <span style={{ maxWidth: "40ch" }}>
-                        {t(item?.description)}
-                      </span>
+                      <span style={{ maxWidth: "40ch" }}>{t(item?.description)}</span>
                     </div>
                   </div>
                   <div className={styles.operator}>

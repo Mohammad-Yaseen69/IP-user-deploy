@@ -54,24 +54,16 @@ export const recordTelemetryFocus = () => {
  */
 export const getBotSignals = () => {
   const now = Date.now();
-  const dwellMs = firstInteractionTime
-    ? Math.max(0, now - firstInteractionTime)
-    : 0;
+  const dwellMs = firstInteractionTime ? Math.max(0, now - firstInteractionTime) : 0;
 
   return {
     keys: keyCount,
     moved: mouseMoved,
     dwellMs,
-    webdriver:
-      typeof navigator !== "undefined" ? Boolean(navigator?.webdriver) : false,
-    plugins:
-      typeof navigator !== "undefined" && navigator?.plugins
-        ? navigator.plugins.length
-        : 0,
+    webdriver: typeof navigator !== "undefined" ? Boolean(navigator?.webdriver) : false,
+    plugins: typeof navigator !== "undefined" && navigator?.plugins ? navigator.plugins.length : 0,
     languages:
-      typeof navigator !== "undefined" && navigator?.languages
-        ? navigator.languages.length
-        : 0,
+      typeof navigator !== "undefined" && navigator?.languages ? navigator.languages.length : 0,
     ua: typeof navigator !== "undefined" ? navigator?.userAgent || "" : "",
   };
 };
@@ -89,10 +81,7 @@ export const executeGlobalRecaptcha = async () => {
 /**
  * Case 1 Sentry Logger: Honeypot Triggered
  */
-export const logHoneypotToSentry = (
-  honeypotValue = "",
-  customSignals = null,
-) => {
+export const logHoneypotToSentry = (honeypotValue = "", customSignals = null) => {
   try {
     const signals = customSignals || getBotSignals();
     Sentry.captureMessage("Bot Defense: Honeypot trap triggered (Case 1)", {
@@ -115,30 +104,23 @@ export const logHoneypotToSentry = (
 /**
  * Case 2 Sentry Logger: reCAPTCHA Failure / Bot Rejection
  */
-export const logRecaptchaFailureToSentry = (
-  reason,
-  errorDetails = null,
-  customSignals = null,
-) => {
+export const logRecaptchaFailureToSentry = (reason, errorDetails = null, customSignals = null) => {
   try {
     const signals = customSignals || getBotSignals();
-    Sentry.captureMessage(
-      `Bot Defense: reCAPTCHA verification failed (Case 2) - ${reason}`,
-      {
-        level: "warning",
-        tags: {
-          security_event: "RECAPTCHA_FAILED",
-          failure_reason: reason,
-          flow: "signup",
-        },
-        extra: {
-          reason,
-          errorDetails: errorDetails ? String(errorDetails) : null,
-          signals,
-          timestamp: new Date().toISOString(),
-        },
+    Sentry.captureMessage(`Bot Defense: reCAPTCHA verification failed (Case 2) - ${reason}`, {
+      level: "warning",
+      tags: {
+        security_event: "RECAPTCHA_FAILED",
+        failure_reason: reason,
+        flow: "signup",
       },
-    );
+      extra: {
+        reason,
+        errorDetails: errorDetails ? String(errorDetails) : null,
+        signals,
+        timestamp: new Date().toISOString(),
+      },
+    });
   } catch (e) {
     console.error("Failed to log reCAPTCHA failure to Sentry:", e);
   }

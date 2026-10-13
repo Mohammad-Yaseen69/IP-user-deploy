@@ -6,13 +6,7 @@ import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 
-const DeleteModal = ({
-  showDeleteModal,
-  setShowDeleteModal,
-  item,
-  categories,
-  setCategories,
-}) => {
+const DeleteModal = ({ showDeleteModal, setShowDeleteModal, item, categories, setCategories }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const { t } = useTranslation();
   const { userDetails, authHeader } = useContext(UserContext);
@@ -53,10 +47,7 @@ const DeleteModal = ({
       });
   };
   return (
-    <Modal
-      isOpen={showDeleteModal}
-      toggle={() => setShowDeleteModal(!showDeleteModal)}
-    >
+    <Modal isOpen={showDeleteModal} toggle={() => setShowDeleteModal(!showDeleteModal)}>
       <ModalHeader toggle={() => setShowDeleteModal(!showDeleteModal)}>
         {t("Edit Category")}
       </ModalHeader>
@@ -66,8 +57,7 @@ const DeleteModal = ({
       <ModalFooter>
         <Button
           style={{
-            background:
-              "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
             border: "none",
             outline: "none",
           }}
@@ -77,8 +67,7 @@ const DeleteModal = ({
         </Button>
         <Button
           style={{
-            background:
-              "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
             border: "none",
             outline: "none",
           }}

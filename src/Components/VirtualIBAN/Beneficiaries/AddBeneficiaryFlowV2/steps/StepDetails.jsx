@@ -33,8 +33,7 @@ const StepDetails = ({
 
   const countryLabel = useMemo(
     () =>
-      (allowedCountries || []).find((c) => c.country_iso_code === form.country)
-        ?.country_name || "",
+      (allowedCountries || []).find((c) => c.country_iso_code === form.country)?.country_name || "",
     [allowedCountries, form.country],
   );
 
@@ -47,9 +46,7 @@ const StepDetails = ({
         icon={METHOD_AVATAR_ICON[form.method]}
         initial={(recipientName || "").charAt(0).toUpperCase()}
         name={recipientName}
-        meta={[hasMethod ? methodLabel : null, countryLabel]
-          .filter(Boolean)
-          .join(", ")}
+        meta={[hasMethod ? methodLabel : null, countryLabel].filter(Boolean).join(", ")}
         actionLabel={hasMethod ? "Change" : undefined}
         onAction={onChangeMethod}
       />
@@ -107,9 +104,7 @@ const StepDetails = ({
                     margin: "2px 0 0",
                     fontSize: "12px",
                     fontWeight: 600,
-                    color:
-                      CHANNEL_CHECK_COLORS[channelCheck.state] ||
-                      "var(--abf-text-secondary)",
+                    color: CHANNEL_CHECK_COLORS[channelCheck.state] || "var(--abf-text-secondary)",
                   }}
                 >
                   {channelCheck.message}
@@ -120,25 +115,19 @@ const StepDetails = ({
 
           {requirements.beneficiaryFields.length === 0 &&
             requirements.channelFields.length === 0 && (
-              <Alert variant="info">
-                This method does not require any extra details.
-              </Alert>
+              <Alert variant="info">This method does not require any extra details.</Alert>
             )}
         </>
       )}
 
       {!requirements && (
         <Alert variant="info">
-          Go back and choose a payout method so we know which details are
-          needed.
+          Go back and choose a payout method so we know which details are needed.
         </Alert>
       )}
 
       {beneficiary && (
-        <ChannelsSummary
-          beneficiary={beneficiary}
-          heading="Payout channels on file"
-        />
+        <ChannelsSummary beneficiary={beneficiary} heading="Payout channels on file" />
       )}
 
       {providerError && (

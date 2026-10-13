@@ -9,9 +9,7 @@ const SelectedWallet = ({ wallet, setSubStep, step = 1 }) => {
       className="i_t_selected"
     >
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <span style={{ color: "rgba(0,0,0,0.36)", fontSize: ".7rem" }}>
-          {t("Sending to")}
-        </span>
+        <span style={{ color: "rgba(0,0,0,0.36)", fontSize: ".7rem" }}>{t("Sending to")}</span>
         <span
           style={{
             background: "white",

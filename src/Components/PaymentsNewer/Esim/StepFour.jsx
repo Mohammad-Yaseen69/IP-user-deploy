@@ -68,11 +68,7 @@ const StepFour = ({ data, dataHandler, dataHandlerE }) => {
             </div>
 
             {showError && (
-              <p
-                style={{ color: "red", fontSize: "12px", marginBottom: "0px" }}
-              >
-                {t(showError)}
-              </p>
+              <p style={{ color: "red", fontSize: "12px", marginBottom: "0px" }}>{t(showError)}</p>
             )}
 
             <div className={styles.input}>
@@ -86,11 +82,7 @@ const StepFour = ({ data, dataHandler, dataHandlerE }) => {
               />
             </div>
           </div>
-          <PlanCard
-            data={data}
-            plan={data?.eSimData?.selectedPlan}
-            handlePlanSelect={() => {}}
-          />
+          <PlanCard data={data} plan={data?.eSimData?.selectedPlan} handlePlanSelect={() => {}} />
         </div>
 
         <div
@@ -127,8 +119,7 @@ const StepFour = ({ data, dataHandler, dataHandlerE }) => {
               }}
               disabled={
                 !data?.eSimData?.selectedPlan?.productId ||
-                (data.eSimData.email?.length > 0 &&
-                  !emailRegex.test(data.eSimData.email))
+                (data.eSimData.email?.length > 0 && !emailRegex.test(data.eSimData.email))
               }
               className={styles2.nxt}
             >

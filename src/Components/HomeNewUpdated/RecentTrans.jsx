@@ -52,8 +52,7 @@ const RecentTrans = ({ currentWallet }) => {
             transactionDate.setHours(0, 0, 0, 0);
 
             const diffInDays = Math.floor(
-              (today.getTime() - transactionDate.getTime()) /
-                (1000 * 60 * 60 * 24),
+              (today.getTime() - transactionDate.getTime()) / (1000 * 60 * 60 * 24),
             );
 
             let headerText;
@@ -118,9 +117,7 @@ const RecentTrans = ({ currentWallet }) => {
                 />
               ))
             ) : (
-              <div style={{ margin: "1rem auto", textAlign: "center" }}>
-                {t("No Transactions")}
-              </div>
+              <div style={{ margin: "1rem auto", textAlign: "center" }}>{t("No Transactions")}</div>
             )}
           </>
         )}

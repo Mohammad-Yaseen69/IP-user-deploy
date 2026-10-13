@@ -135,11 +135,7 @@ const OtpConfirmation = ({
       >
         <div className={styles.registerFormTop}>
           <h1>
-            {t(
-              type === "phone"
-                ? "Enter the code we texted you"
-                : "Enter the code we emailed you",
-            )}
+            {t(type === "phone" ? "Enter the code we texted you" : "Enter the code we emailed you")}
           </h1>
           <p>
             {type === "phone"
@@ -150,14 +146,9 @@ const OtpConfirmation = ({
                       ?.slice(0, data?.[type]?.length - 4)
                       .split("")
                       .map((_) => "*")
-                      .join(
-                        "",
-                      )}${data?.[type]?.slice(data?.[type]?.length - 4)}`,
+                      .join("")}${data?.[type]?.slice(data?.[type]?.length - 4)}`,
                   )
-                  .replace(
-                    "SMS",
-                    currentMethod === "whatsapp" ? "WhatsApp" : "SMS",
-                  )
+                  .replace("SMS", currentMethod === "whatsapp" ? "WhatsApp" : "SMS")
               : `${t("We sent a 6-digit code to")} ${getMaskedEmail()}`}
           </p>
         </div>
@@ -190,10 +181,7 @@ const OtpConfirmation = ({
                         setCurrentMethod("whatsapp");
                         setResendTimer(90);
                         resendHandler("whatsapp");
-                        setOTPValues(
-                          Array(numberOfFields).fill(""),
-                          "whatsapp",
-                        );
+                        setOTPValues(Array(numberOfFields).fill(""), "whatsapp");
                       } else {
                         setCurrentMethod("sms");
                         setResendTimer(90);
@@ -226,8 +214,7 @@ const OtpConfirmation = ({
                     alt=""
                   />
                   <span style={{ fontWeight: 600, color: "black" }}>
-                    {t("Verify Using")}{" "}
-                    {currentMethod === "sms" ? "WhatsApp" : "SMS"}
+                    {t("Verify Using")} {currentMethod === "sms" ? "WhatsApp" : "SMS"}
                   </span>
                 </span>
 
@@ -256,9 +243,7 @@ const OtpConfirmation = ({
                   <>
                     {t("Didn't get it? You can resend in")}&nbsp;
                     <span className={styles.countDownTimer}>
-                      {type === "email"
-                        ? formatTimer(resendTimer)
-                        : resendTimer}
+                      {type === "email" ? formatTimer(resendTimer) : resendTimer}
                     </span>
                   </>
                 ) : (
@@ -279,10 +264,7 @@ const OtpConfirmation = ({
               </span>
               <div className={styles.changeContainer}>
                 <p>
-                  {t("Wrong Number").replace(
-                    "Number",
-                    type === "phone" ? "Number" : "Email",
-                  )}
+                  {t("Wrong Number").replace("Number", type === "phone" ? "Number" : "Email")}
                   ?&nbsp;
                 </p>
                 <span

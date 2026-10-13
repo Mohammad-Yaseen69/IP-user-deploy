@@ -124,20 +124,17 @@ const socialData = [
   {
     name: "Facebook",
     icon: <FaFacebook />,
-    href: (link) =>
-      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`,
+    href: (link) => `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`,
   },
   {
     name: "Twitter / X",
     icon: <FaTwitter />,
-    href: (link) =>
-      `https://x.com/intent/tweet?url=${encodeURIComponent(link)}`,
+    href: (link) => `https://x.com/intent/tweet?url=${encodeURIComponent(link)}`,
   },
   {
     name: "Instagram",
     icon: <FaInstagram />,
-    href: (link) =>
-      `https://www.instagram.com/share?url=${encodeURIComponent(link)}`,
+    href: (link) => `https://www.instagram.com/share?url=${encodeURIComponent(link)}`,
   },
   {
     name: "WhatsApp",
@@ -153,14 +150,12 @@ const socialData = [
   {
     name: "Pinterest",
     icon: <SiPinterest />,
-    href: (link) =>
-      `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(link)}`,
+    href: (link) => `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(link)}`,
   },
   {
     name: "TikTok",
     icon: <SiTiktok />,
-    href: (link) =>
-      `https://www.tiktok.com/share?url=${encodeURIComponent(link)}`,
+    href: (link) => `https://www.tiktok.com/share?url=${encodeURIComponent(link)}`,
   },
   {
     name: "Telegram",
@@ -183,8 +178,7 @@ const socialData = [
   {
     name: "Quora",
     icon: <SiQuora />,
-    href: (link) =>
-      `https://www.quora.com/share?url=${encodeURIComponent(link)}`,
+    href: (link) => `https://www.quora.com/share?url=${encodeURIComponent(link)}`,
   },
   {
     name: "Discord",

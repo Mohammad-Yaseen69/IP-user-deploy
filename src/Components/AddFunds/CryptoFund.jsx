@@ -105,12 +105,10 @@ const CryptoFund = ({ setAction }) => {
       }
       const dec = decryptData(error?.response?.data?.data);
       setExchangeRateError(
-        dec?.message ??
-          "We cannot process your request at the moment, please try again later.",
+        dec?.message ?? "We cannot process your request at the moment, please try again later.",
       );
       setError(
-        dec?.message ??
-          "We cannot process your request at the moment, please try again later.",
+        dec?.message ?? "We cannot process your request at the moment, please try again later.",
       );
       console.log(dec);
     } finally {
@@ -218,8 +216,7 @@ const CryptoFund = ({ setAction }) => {
         setError(t(error2));
       } else {
         setError(
-          dec?.message ??
-            "We cannot process your request at the moment, please try again later.",
+          dec?.message ?? "We cannot process your request at the moment, please try again later.",
         );
       }
     } finally {
@@ -300,8 +297,7 @@ const CryptoFund = ({ setAction }) => {
                   }}
                 >
                   <h4 className="head_left_side">
-                    {subStep === 1 &&
-                      t("Choose the Crypto that you intend to liquidate!")}
+                    {subStep === 1 && t("Choose the Crypto that you intend to liquidate!")}
                     {subStep === 2 && t("Enter the amount you want to topup.")}
                   </h4>
 
@@ -400,34 +396,29 @@ const CryptoFund = ({ setAction }) => {
                     action=""
                   />
                 )}
-                {subStep === 2 &&
-                  cryptoCurrency &&
-                  typeof cryptoCurrency === "object" && (
-                    <Amount
-                      data={{
-                        wallet: cryptoCurrency,
-                        amount,
-                        limits: limits || { min: 0, max: 0 },
-                        exchangeRate: exchangeRateError,
-                      }}
-                      dataHandler={(key, value) => {
-                        if (key === "amount") {
-                          setAmount(value);
-                        }
-                        if (key === "limits") {
-                          setLimits(value);
-                        }
-                        if (key === "exchangeRateError") {
-                          setAmountLimitError(value);
-                        }
-                      }}
-                    />
-                  )}
+                {subStep === 2 && cryptoCurrency && typeof cryptoCurrency === "object" && (
+                  <Amount
+                    data={{
+                      wallet: cryptoCurrency,
+                      amount,
+                      limits: limits || { min: 0, max: 0 },
+                      exchangeRate: exchangeRateError,
+                    }}
+                    dataHandler={(key, value) => {
+                      if (key === "amount") {
+                        setAmount(value);
+                      }
+                      if (key === "limits") {
+                        setLimits(value);
+                      }
+                      if (key === "exchangeRateError") {
+                        setAmountLimitError(value);
+                      }
+                    }}
+                  />
+                )}
 
-                <div
-                  className={flowStyles.bottom}
-                  style={{ marginTop: "1rem" }}
-                >
+                <div className={flowStyles.bottom} style={{ marginTop: "1rem" }}>
                   <Link
                     to={"https://insta-pay.ch/faqs"}
                     target="_blank"
@@ -463,9 +454,7 @@ const CryptoFund = ({ setAction }) => {
                           navigate("/wallets");
                         } else {
                           if (subStep === 1) {
-                            navigate(
-                              "/add-funds?wallet_address=" + cryptoCurrency._id,
-                            );
+                            navigate("/add-funds?wallet_address=" + cryptoCurrency._id);
                             setSubStep((prev) => prev + 1);
                           } else {
                             handleConfirm();
@@ -520,55 +509,53 @@ const CryptoFund = ({ setAction }) => {
                 action=""
               />
             )}
-            {subStep === 2 &&
-              cryptoCurrency &&
-              typeof cryptoCurrency === "object" && (
-                <div>
-                  <Amount
-                    data={{
-                      wallet: cryptoCurrency,
-                      amount,
-                      limits: limits || { min: 0, max: 0 },
-                      exchangeRate: exchangeRateError,
-                    }}
-                    dataHandler={(key, value) => {
-                      if (key === "amount") {
-                        setAmount(value);
-                      }
-                      if (key === "limits") {
-                        setLimits(value);
-                      }
-                      if (key === "exchangeRateError") {
-                        setAmountLimitError(value);
-                      }
-                    }}
-                  />
+            {subStep === 2 && cryptoCurrency && typeof cryptoCurrency === "object" && (
+              <div>
+                <Amount
+                  data={{
+                    wallet: cryptoCurrency,
+                    amount,
+                    limits: limits || { min: 0, max: 0 },
+                    exchangeRate: exchangeRateError,
+                  }}
+                  dataHandler={(key, value) => {
+                    if (key === "amount") {
+                      setAmount(value);
+                    }
+                    if (key === "limits") {
+                      setLimits(value);
+                    }
+                    if (key === "exchangeRateError") {
+                      setAmountLimitError(value);
+                    }
+                  }}
+                />
 
-                  <div style={{ marginTop: "1rem" }}>
-                    {loading && (
-                      <div
-                        style={{
-                          height: "100px",
-                          width: "100px",
-                          margin: "0 auto",
-                        }}
-                      >
-                        <InstaPayLoader />
-                      </div>
-                    )}
-                    {!loading && !exchangeRateError && (
-                      <FeesComponent
-                        receiverLabel={"You Will Get"}
-                        error={exchangeRateError}
-                        feesLabel="Fees"
-                        sendingLabel="Sending Amount"
-                        totalLabel="Total Amount"
-                        data={{ exchange_rate: exchangeRate }}
-                      />
-                    )}
-                  </div>
+                <div style={{ marginTop: "1rem" }}>
+                  {loading && (
+                    <div
+                      style={{
+                        height: "100px",
+                        width: "100px",
+                        margin: "0 auto",
+                      }}
+                    >
+                      <InstaPayLoader />
+                    </div>
+                  )}
+                  {!loading && !exchangeRateError && (
+                    <FeesComponent
+                      receiverLabel={"You Will Get"}
+                      error={exchangeRateError}
+                      feesLabel="Fees"
+                      sendingLabel="Sending Amount"
+                      totalLabel="Total Amount"
+                      data={{ exchange_rate: exchangeRate }}
+                    />
+                  )}
                 </div>
-              )}
+              </div>
+            )}
 
             <div className={flowStyles.bottom}>
               <Link
@@ -585,10 +572,7 @@ const CryptoFund = ({ setAction }) => {
               </Link>
               <div className={flowStyles.buttons}>
                 {subStep > 1 && (
-                  <button
-                    disabled={loading || transactionLoading}
-                    onClick={handleBack}
-                  >
+                  <button disabled={loading || transactionLoading} onClick={handleBack}>
                     <ChevronLeft />
                   </button>
                 )}
@@ -609,9 +593,7 @@ const CryptoFund = ({ setAction }) => {
                       navigate("/wallets");
                     } else {
                       if (subStep === 1) {
-                        navigate(
-                          "/add-funds?wallet_address=" + cryptoCurrency._id,
-                        );
+                        navigate("/add-funds?wallet_address=" + cryptoCurrency._id);
                         setSubStep((prev) => prev + 1);
                       } else {
                         handleConfirm();

@@ -16,22 +16,13 @@ import RemoveAccountModal from "./components/RemoveAccountModal";
 import styles from "./styles/WithdrawalsNew.module.css";
 import useWithdrawalActions from "./useWithdrawalActions";
 import { buildCountryGroups, buildCryptoRows } from "./withdrawalAccounts";
-import {
-  MAX_COUNTRIES,
-  MAX_CRYPTO_WALLETS,
-  TRANSFER_METHODS,
-} from "./withdrawalPayload";
+import { MAX_COUNTRIES, MAX_CRYPTO_WALLETS, TRANSFER_METHODS } from "./withdrawalPayload";
 
 const WithdrawalsNew = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const {
-    allowedCountries,
-    userWithdrawals,
-    cryptoWithdrawals,
-    getWithdrawals,
-    userDetails,
-  } = useContext(UserContext);
+  const { allowedCountries, userWithdrawals, cryptoWithdrawals, getWithdrawals, userDetails } =
+    useContext(UserContext);
   const can = usePermission();
   const canAdd = can("settings.receiving-accounts.add");
   const canDelete = can("settings.receiving-accounts.delete");
@@ -53,16 +44,12 @@ const WithdrawalsNew = () => {
     apiWrapper({ endpoint: `/api/payment/countries/${senderIso}` })
       .then((payoutCountries) => {
         const supported = allCountries.filter((item) =>
-          (payoutCountries || []).some(
-            (apiCountry) => apiCountry.countryIso3 === item?.alpha3,
-          ),
+          (payoutCountries || []).some((apiCountry) => apiCountry.countryIso3 === item?.alpha3),
         );
         setCountries(
           allowedCountries
             .map((allowed) => {
-              const country = supported.find(
-                (item) => item?.alpha3 === allowed?.country_iso_code,
-              );
+              const country = supported.find((item) => item?.alpha3 === allowed?.country_iso_code);
               return country ? { ...country, id: allowed?._id } : null;
             })
             .filter(Boolean),
@@ -71,14 +58,8 @@ const WithdrawalsNew = () => {
       .catch(() => setCountries([]));
   }, [userDetails?.country?.country_iso_code, allowedCountries]);
 
-  const groups = useMemo(
-    () => buildCountryGroups(userWithdrawals),
-    [userWithdrawals],
-  );
-  const cryptoRows = useMemo(
-    () => buildCryptoRows(cryptoWithdrawals),
-    [cryptoWithdrawals],
-  );
+  const groups = useMemo(() => buildCountryGroups(userWithdrawals), [userWithdrawals]);
+  const cryptoRows = useMemo(() => buildCryptoRows(cryptoWithdrawals), [cryptoWithdrawals]);
 
   const usedCountries = groups.length;
   const limitReached = usedCountries >= MAX_COUNTRIES;
@@ -99,9 +80,7 @@ const WithdrawalsNew = () => {
         <div>
           <h2 className={styles.title}>{t("Withdrawal accounts")}</h2>
           <p className={styles.subtitle}>
-            {t(
-              "Where InstaPay sends money when you withdraw. Accounts must be in your own name.",
-            )}
+            {t("Where InstaPay sends money when you withdraw. Accounts must be in your own name.")}
           </p>
         </div>
         {hasAccounts && (

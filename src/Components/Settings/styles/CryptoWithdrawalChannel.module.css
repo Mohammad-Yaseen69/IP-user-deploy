@@ -39,8 +39,7 @@
   border-radius: 6px !important;
   border: 1px solid #dfdfdf !important;
   background:
-    linear-gradient(341deg, #e64067 -4.84%, #5926f0 90.69%, #4828a0 166.81%),
-    #fff !important;
+    linear-gradient(341deg, #e64067 -4.84%, #5926f0 90.69%, #4828a0 166.81%), #fff !important;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.12);
   display: inline-flex !important;
   align-items: center;
@@ -146,8 +145,8 @@
   overflow-wrap: anywhere;
   word-break: break-word;
   font-family:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-    "Courier New", monospace;
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+    monospace;
   font-size: 13px !important;
 }
 

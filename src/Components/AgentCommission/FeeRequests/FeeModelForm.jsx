@@ -92,15 +92,9 @@ const FeeModelForm = ({
         <Table size="small">
           <TableHead>
             <TableRow sx={{ background: "#F9FAFB" }}>
-              <TableCell sx={{ fontWeight: 700 }}>
-                {t("Fee Line Item")}
-              </TableCell>
-              <TableCell sx={{ fontWeight: 700 }}>
-                {t("Flat Amount (€ EUR)")}
-              </TableCell>
-              <TableCell sx={{ fontWeight: 700 }}>
-                {t("Percentage (%)")}
-              </TableCell>
+              <TableCell sx={{ fontWeight: 700 }}>{t("Fee Line Item")}</TableCell>
+              <TableCell sx={{ fontWeight: 700 }}>{t("Flat Amount (€ EUR)")}</TableCell>
+              <TableCell sx={{ fontWeight: 700 }}>{t("Percentage (%)")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -108,9 +102,7 @@ const FeeModelForm = ({
               const isNoPercent = NO_PERCENT_FEE_IDS.includes(item.id);
               return (
                 <TableRow key={item.id} hover>
-                  <TableCell
-                    sx={{ fontWeight: 600, fontSize: "13px", color: "#374151" }}
-                  >
+                  <TableCell sx={{ fontWeight: 600, fontSize: "13px", color: "#374151" }}>
                     {item.name}
                   </TableCell>
                   <TableCell>
@@ -119,9 +111,7 @@ const FeeModelForm = ({
                       size="small"
                       inputProps={feeInputProps}
                       value={item.flatEuro}
-                      onChange={(e) =>
-                        onFeeChange(idx, "flatEuro", e.target.value)
-                      }
+                      onChange={(e) => onFeeChange(idx, "flatEuro", e.target.value)}
                       sx={{ width: "130px" }}
                     />
                   </TableCell>
@@ -132,9 +122,7 @@ const FeeModelForm = ({
                         size="small"
                         inputProps={feeInputProps}
                         value={item.percentAmount}
-                        onChange={(e) =>
-                          onFeeChange(idx, "percentAmount", e.target.value)
-                        }
+                        onChange={(e) => onFeeChange(idx, "percentAmount", e.target.value)}
                         sx={{ width: "130px" }}
                       />
                     )}
@@ -146,9 +134,7 @@ const FeeModelForm = ({
         </Table>
       </TableContainer>
 
-      <Box
-        sx={{ display: "flex", justifyContent: "flex-end", gap: "12px", mt: 3 }}
-      >
+      <Box sx={{ display: "flex", justifyContent: "flex-end", gap: "12px", mt: 3 }}>
         <Button
           type="button"
           variant="outlined"

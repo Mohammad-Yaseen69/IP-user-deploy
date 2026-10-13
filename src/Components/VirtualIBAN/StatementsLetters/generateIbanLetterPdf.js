@@ -92,10 +92,7 @@ const buildLetterHtml = ({
   const holderName = getSafeString(iban?.account_holder_name, "HEAVYMORE LTD");
   const holderType = getSafeString(userDetails?.account_type, "---");
   const companyType = getSafeString(userDetails?.category?.name, "---");
-  const jurisdiction = getSafeString(
-    userDetails?.country?.country_name,
-    "Cyprus",
-  );
+  const jurisdiction = getSafeString(userDetails?.country?.country_name, "Cyprus");
   const incDate = userDetails?.company?.date_of_incorporation
     ? formatDate(userDetails?.company?.date_of_incorporation)
     : userDetails?.dob
@@ -109,26 +106,16 @@ const buildLetterHtml = ({
     userDetails?.company?.registration_number || userDetails?.company?.tax_id,
     "---",
   );
-  const virtualIbanId = getSafeString(
-    iban?.virtualIbanId || iban?._id || iban?.id,
-    "",
-  );
+  const virtualIbanId = getSafeString(iban?.virtualIbanId || iban?._id || iban?.id, "");
   const customerId = virtualIbanId;
 
-  const ibanNumber = getSafeString(
-    iban?.iban,
-    "MT17 SYPL 3948 0354 2000 1814 7054 916",
-  );
-  const bic = getSafeString(
-    iban?.bank?.bic || iban?.swift_code || iban?.bic,
-    "SYPLMTM2",
-  );
+  const ibanNumber = getSafeString(iban?.iban, "MT17 SYPL 3948 0354 2000 1814 7054 916");
+  const bic = getSafeString(iban?.bank?.bic || iban?.swift_code || iban?.bic, "SYPLMTM2");
   const currency = getSafeString(iban?.currency, "EUR");
   const currencyLabel = currency === "EUR" ? "EUR (Euro)" : currency;
   const status = getSafeString(iban?.status, "Active");
   const statusNormalized =
-    String(status).charAt(0).toUpperCase() +
-    String(status).slice(1).toLowerCase();
+    String(status).charAt(0).toUpperCase() + String(status).slice(1).toLowerCase();
   const accountOpenedDate = iban?.createdAt
     ? formatDate(iban.createdAt, {
         day: "2-digit",
@@ -140,13 +127,7 @@ const buildLetterHtml = ({
   const todayDate = formatDate(new Date());
   const refCode = `ICL-${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}${String(new Date().getDate()).padStart(2, "0")}-${customerId.slice(-4)}`;
 
-  const renderTableRow = (
-    label,
-    value,
-    isLast = false,
-    isStatus = false,
-    isMono = false,
-  ) => `
+  const renderTableRow = (label, value, isLast = false, isStatus = false, isMono = false) => `
         <tr style="border-bottom: ${isLast ? "none" : "1px solid #E6E2F5"};">
             <td style="padding: 11px 20px; color: #55506B; font-size: 13.5px; font-weight: 500; width: 44%; vertical-align: middle;">
                 ${label}
@@ -396,9 +377,7 @@ const generateIbanLetterPdf = async (iban, userDetails = {}, options = {}) => {
     toBase64(logoImg),
     generateQrBase64(qrUrl),
     toBase64(signatureImg),
-  ]).then((results) =>
-    results.map((r) => (r.status === "fulfilled" ? r.value : null)),
-  );
+  ]).then((results) => results.map((r) => (r.status === "fulfilled" ? r.value : null)));
 
   const html = buildLetterHtml({
     logoBase64,
@@ -410,8 +389,7 @@ const generateIbanLetterPdf = async (iban, userDetails = {}, options = {}) => {
   });
 
   const wrapper = document.createElement("div");
-  wrapper.style.cssText =
-    "position:absolute;left:-9999px;top:0;z-index:-1;width:794px;";
+  wrapper.style.cssText = "position:absolute;left:-9999px;top:0;z-index:-1;width:794px;";
   wrapper.innerHTML = html;
   document.body.appendChild(wrapper);
 
@@ -439,46 +417,19 @@ const generateIbanLetterPdf = async (iban, userDetails = {}, options = {}) => {
     const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
     if (pdfHeight <= 297) {
-      doc.addImage(
-        imgData,
-        "JPEG",
-        0,
-        0,
-        pdfWidth,
-        pdfHeight,
-        undefined,
-        "FAST",
-      );
+      doc.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight, undefined, "FAST");
     } else {
       let heightLeft = pdfHeight;
       let position = 0;
       const pageHeight = 297;
 
-      doc.addImage(
-        imgData,
-        "JPEG",
-        0,
-        position,
-        pdfWidth,
-        pdfHeight,
-        undefined,
-        "FAST",
-      );
+      doc.addImage(imgData, "JPEG", 0, position, pdfWidth, pdfHeight, undefined, "FAST");
       heightLeft -= pageHeight;
 
       while (heightLeft > 0) {
         position = heightLeft - pdfHeight;
         doc.addPage();
-        doc.addImage(
-          imgData,
-          "JPEG",
-          0,
-          position,
-          pdfWidth,
-          pdfHeight,
-          undefined,
-          "FAST",
-        );
+        doc.addImage(imgData, "JPEG", 0, position, pdfWidth, pdfHeight, undefined, "FAST");
         heightLeft -= pageHeight;
       }
     }

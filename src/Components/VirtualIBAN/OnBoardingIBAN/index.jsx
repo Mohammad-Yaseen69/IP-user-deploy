@@ -8,14 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
-import {
-  Activity,
-  ArrowRight,
-  Cpu,
-  CreditCard,
-  Globe,
-  Zap,
-} from "react-feather";
+import { Activity, ArrowRight, Cpu, CreditCard, Globe, Zap } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { UserContext } from "../../../Context/UserContext";
@@ -141,9 +134,7 @@ function onboardingReducer(state, action) {
     case "SET_FEE_DETAILS":
       return {
         ...state,
-        feeDetails: action.payload
-          ? { ...state.feeDetails, ...action.payload }
-          : null,
+        feeDetails: action.payload ? { ...state.feeDetails, ...action.payload } : null,
       };
     case "SET_REQUEST_DATA":
       return { ...state, requestData: action.payload };
@@ -188,8 +179,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
   const [draftHydrated, setDraftHydrated] = useState(false);
   const hydratedForRef = useRef(null);
 
-  const draftEnabled =
-    Boolean(userDetails?._id) && userDetails?.account_type === "business";
+  const draftEnabled = Boolean(userDetails?._id) && userDetails?.account_type === "business";
   const profileDraft = useDraft(BUSINESS_PROFILE_SCOPE, {
     enabled: draftEnabled,
   });
@@ -207,11 +197,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         { headers: authHeader },
       );
       const dec = decryptData(res.data?.data);
-      if (
-        dec?.hasRequest &&
-        dec?.requestStatus &&
-        dec.requestStatus !== "none"
-      ) {
+      if (dec?.hasRequest && dec?.requestStatus && dec.requestStatus !== "none") {
         dispatch({ type: "SET_STATUS", payload: dec.requestStatus });
         dispatch({ type: "SET_STEP", payload: "status" });
         if (dec?.data) {
@@ -242,27 +228,19 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
 
   useEffect(() => {
     if (!draftEnabled || hydratedForRef.current === userDetails._id) return;
-    if (
-      statusCheckedFor !== userDetails._id ||
-      !profileDraft.isLoaded ||
-      !ibanDraft.isLoaded
-    )
+    if (statusCheckedFor !== userDetails._id || !profileDraft.isLoaded || !ibanDraft.isLoaded)
       return;
     hydratedForRef.current = userDetails._id;
 
     if (state.step !== "status") {
       const profileCompany = profileDraft.data?.company || {};
       const savedActivity = ibanDraft.data?.activity || {};
-      const industryReference =
-        profileCompany.industryReference || savedActivity.industryReference;
+      const industryReference = profileCompany.industryReference || savedActivity.industryReference;
       const company = DRAFT_COMPANY_KEYS.reduce(
-        (acc, key) =>
-          profileCompany[key] ? { ...acc, [key]: profileCompany[key] } : acc,
+        (acc, key) => (profileCompany[key] ? { ...acc, [key]: profileCompany[key] } : acc),
         {},
       );
-      const restoredStep = DRAFT_STEPS.includes(ibanDraft.data?.step)
-        ? ibanDraft.data.step
-        : null;
+      const restoredStep = DRAFT_STEPS.includes(ibanDraft.data?.step) ? ibanDraft.data.step : null;
 
       dispatch({
         type: "HYDRATE_DRAFT",
@@ -279,29 +257,18 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
               : {}),
           },
           owners:
-            Array.isArray(profileDraft.data?.partners) &&
-            profileDraft.data.partners.length
+            Array.isArray(profileDraft.data?.partners) && profileDraft.data.partners.length
               ? profileDraft.data.partners
               : null,
           files: draftFilesToIbanDocs(profileDraft.files),
         },
       });
       if (restoredStep) {
-        toast.info(
-          t(
-            "Welcome back! We've restored your IBAN application where you left off.",
-          ),
-        );
+        toast.info(t("Welcome back! We've restored your IBAN application where you left off."));
       }
     }
     setDraftHydrated(true);
-  }, [
-    draftEnabled,
-    userDetails?._id,
-    statusCheckedFor,
-    profileDraft.isLoaded,
-    ibanDraft.isLoaded,
-  ]);
+  }, [draftEnabled, userDetails?._id, statusCheckedFor, profileDraft.isLoaded, ibanDraft.isLoaded]);
 
   useEffect(() => {
     if (!draftHydrated || !DRAFT_STEPS.includes(state.step)) return;
@@ -321,26 +288,18 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
       },
       partners: (state.ownership?.owners || [])
         .filter((owner) => !owner.isImportedPartner)
-        .map(
-          ({ id, type, fullName, email, role, ownershipPercent, isPep }) => ({
-            id,
-            type,
-            fullName,
-            email,
-            role,
-            ownershipPercent,
-            isPep,
-          }),
-        ),
+        .map(({ id, type, fullName, email, role, ownershipPercent, isPep }) => ({
+          id,
+          type,
+          fullName,
+          email,
+          role,
+          ownershipPercent,
+          isPep,
+        })),
     });
     ibanDraft.update({ step: state.step, activity: state.activity });
-  }, [
-    draftHydrated,
-    state.step,
-    state.company,
-    state.activity,
-    state.ownership,
-  ]);
+  }, [draftHydrated, state.step, state.company, state.activity, state.ownership]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
@@ -367,15 +326,12 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     },
   });
 
-  const stepOrder =
-    state.userType === "individual" ? STEPS_INDIVIDUAL : STEPS_BUSINESS;
+  const stepOrder = state.userType === "individual" ? STEPS_INDIVIDUAL : STEPS_BUSINESS;
 
   const getNextStep = (currentStep) => {
     if (currentStep === "landing") return "selection";
-    if (currentStep === "selection")
-      return state.userType === "individual" ? "review" : "company";
-    if (currentStep === "account")
-      return state.userType === "individual" ? "review" : "company";
+    if (currentStep === "selection") return state.userType === "individual" ? "review" : "company";
+    if (currentStep === "account") return state.userType === "individual" ? "review" : "company";
     if (currentStep === "company") return "activity";
     if (currentStep === "activity") return "ownership";
     if (currentStep === "ownership") return "documents";
@@ -402,8 +358,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
   };
 
   const goNext = (newData = {}, sectionKey = null) => {
-    if (sectionKey === "account")
-      dispatch({ type: "UPDATE_ACCOUNT", payload: newData });
+    if (sectionKey === "account") dispatch({ type: "UPDATE_ACCOUNT", payload: newData });
     else if (sectionKey === "company")
       dispatch({ type: "UPDATE_COMPANY", payload: newData.company || newData });
     else if (sectionKey === "activity")
@@ -421,14 +376,10 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         type: "UPDATE_DOCUMENTS",
         payload: newData.documents || newData,
       });
-    else if (newData.company)
-      dispatch({ type: "UPDATE_COMPANY", payload: newData.company });
-    else if (newData.activity)
-      dispatch({ type: "UPDATE_ACTIVITY", payload: newData.activity });
-    else if (newData.ownership)
-      dispatch({ type: "UPDATE_OWNERSHIP", payload: newData.ownership });
-    else if (newData.documents)
-      dispatch({ type: "UPDATE_DOCUMENTS", payload: newData.documents });
+    else if (newData.company) dispatch({ type: "UPDATE_COMPANY", payload: newData.company });
+    else if (newData.activity) dispatch({ type: "UPDATE_ACTIVITY", payload: newData.activity });
+    else if (newData.ownership) dispatch({ type: "UPDATE_OWNERSHIP", payload: newData.ownership });
+    else if (newData.documents) dispatch({ type: "UPDATE_DOCUMENTS", payload: newData.documents });
 
     const nextStep = getNextStep(state.step);
     dispatch({ type: "SET_STEP", payload: nextStep });
@@ -456,10 +407,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
       toast.error(t("Please select an Instapay wallet to continue."));
       return;
     }
-    if (
-      state.feeDetails?.convertedAmount == null ||
-      !state.feeDetails?.currency
-    ) {
+    if (state.feeDetails?.convertedAmount == null || !state.feeDetails?.currency) {
       toast.error(t("Unable to fetch markup conversion rate"));
       return;
     }
@@ -497,11 +445,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         type: type || codeType,
         ...state.company,
         ...state.activity,
-        ubos:
-          state.ownership?.owners ||
-          state.ownership?.ubos ||
-          state.ownership ||
-          [],
+        ubos: state.ownership?.owners || state.ownership?.ubos || state.ownership || [],
         email: state.account.email,
       };
 
@@ -516,11 +460,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
 
       const rawDocs = state.documents?.files || state.documents || {};
       Object.keys(rawDocs).forEach((key) => {
-        if (
-          key === "files" &&
-          rawDocs.files &&
-          typeof rawDocs.files === "object"
-        ) {
+        if (key === "files" && rawDocs.files && typeof rawDocs.files === "object") {
           Object.keys(rawDocs.files).forEach((nestedKey) =>
             appendDoc(nestedKey, rawDocs.files[nestedKey]),
           );
@@ -529,10 +469,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         }
       });
 
-      formData.append(
-        "data",
-        encryptData({ ...payloadData, draft_files: draftFiles }),
-      );
+      formData.append("data", encryptData({ ...payloadData, draft_files: draftFiles }));
 
       profileDraft.cancelPending();
       ibanDraft.cancelPending();
@@ -556,17 +493,13 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         await checkRequestStatus();
         dispatch({ type: "SET_STATUS", payload: "submitted" });
         dispatch({ type: "SET_STEP", payload: "status" });
-        toast.success(
-          t("IBAN Activation request and payment completed successfully!"),
-        );
+        toast.success(t("IBAN Activation request and payment completed successfully!"));
       } else {
         setOtpError?.(dec?.message || t("Verification failed"));
       }
     } catch (err) {
       const decErr = decryptData(err?.response?.data?.data);
-      setOtpError?.(
-        decErr?.message || t("Verification failed or insufficient balance"),
-      );
+      setOtpError?.(decErr?.message || t("Verification failed or insufficient balance"));
     }
   };
 
@@ -625,9 +558,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
           width: "100%",
         }}
       >
-        <Spinner
-          style={{ width: "2.5rem", height: "2.5rem", color: "#5926F0" }}
-        />
+        <Spinner style={{ width: "2.5rem", height: "2.5rem", color: "#5926F0" }} />
       </div>
     );
   }
@@ -645,8 +576,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
             </div>
             <p className={styles.subHeading}>{t("NEW · BUSINESS IBAN")}</p>
             <h1 className={styles.heading}>
-              {t("Get a dedicated business IBAN")} <br />{" "}
-              {t("for your company.")}
+              {t("Get a dedicated business IBAN")} <br /> {t("for your company.")}
             </h1>
             <p className={styles.description}>
               {t(
@@ -687,10 +617,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
           </div>
 
           <div className={styles.footerContainer}>
-            <button
-              className={styles.buttonGroup1}
-              onClick={() => handleTypeSelect("business")}
-            >
+            <button className={styles.buttonGroup1} onClick={() => handleTypeSelect("business")}>
               <span>{t("Request IBAN Activation")}</span>
               <div className={styles.forwardBtnIcon}>
                 <ArrowRight size={18} />
@@ -703,9 +630,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
       {state.step === "selection" && (
         <div className={styles.selectionContainer}>
           <div className={styles.banner}>
-            <h2 className={styles.bannerTitle}>
-              {t("One activation. A whole financial system.")}
-            </h2>
+            <h2 className={styles.bannerTitle}>{t("One activation. A whole financial system.")}</h2>
             <p className={styles.bannerDescription}>
               {t(
                 "European IBANs, SEPA and SWIFT, multi-currency wallets, crypto-to-fiat, cards, treasury and an AI assistant, activated through a single guided journey. A named IBAN is a regulated privilege, not a form.",
@@ -774,9 +699,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         <CompanyStep
           onNext={(d) => goNext(d.company || d, "company")}
           onBack={goBack}
-          onChange={(form) =>
-            dispatch({ type: "UPDATE_COMPANY", payload: form })
-          }
+          onChange={(form) => dispatch({ type: "UPDATE_COMPANY", payload: form })}
           userType={state.userType}
           data={state.company}
           currentStep={state.step}
@@ -787,9 +710,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         <ActivityStep
           onNext={(d) => goNext(d.activity || d, "activity")}
           onBack={goBack}
-          onChange={(form) =>
-            dispatch({ type: "UPDATE_ACTIVITY", payload: form })
-          }
+          onChange={(form) => dispatch({ type: "UPDATE_ACTIVITY", payload: form })}
           userType={state.userType}
           data={state.activity}
           currentStep={state.step}
@@ -800,9 +721,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         <OwnershipStep
           onNext={(d) => goNext({ owners: d.owners || d }, "ownership")}
           onBack={goBack}
-          onChange={(owners) =>
-            dispatch({ type: "UPDATE_OWNERSHIP", payload: { owners } })
-          }
+          onChange={(owners) => dispatch({ type: "UPDATE_OWNERSHIP", payload: { owners } })}
           userType={state.userType}
           data={{ owners: state.ownership.owners }}
           userDetails={userDetails}
@@ -812,13 +731,9 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
 
       {state.step === "documents" && (
         <DocumentsStep
-          onNext={(d) =>
-            goNext({ files: d.files || d.documents || d }, "documents")
-          }
+          onNext={(d) => goNext({ files: d.files || d.documents || d }, "documents")}
           onBack={goBack}
-          onChange={(files) =>
-            dispatch({ type: "UPDATE_DOCUMENTS", payload: { files } })
-          }
+          onChange={(files) => dispatch({ type: "UPDATE_DOCUMENTS", payload: { files } })}
           onUploadDraftFile={profileDraft.uploadFile}
           userType={state.userType}
           data={{ files: state.documents.files }}
@@ -842,9 +757,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
 
       {state.step === "pricing" && (
         <Pricing
-          onNext={() =>
-            dispatch({ type: "SET_STEP", payload: "ActivateAccount" })
-          }
+          onNext={() => dispatch({ type: "SET_STEP", payload: "ActivateAccount" })}
           onBack={goBack}
           userType={state.userType}
           t={t}
@@ -857,13 +770,9 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
           userType={state.userType}
           t={t}
           selectedWallet={state.selectedWallet}
-          setSelectedWallet={(w) =>
-            dispatch({ type: "SET_SELECTED_WALLET", payload: w })
-          }
+          setSelectedWallet={(w) => dispatch({ type: "SET_SELECTED_WALLET", payload: w })}
           feeDetails={state.feeDetails}
-          setFeeDetails={(fd) =>
-            dispatch({ type: "SET_FEE_DETAILS", payload: fd })
-          }
+          setFeeDetails={(fd) => dispatch({ type: "SET_FEE_DETAILS", payload: fd })}
           onSubmitPayment={handleInitiatePayment}
         />
       )}
@@ -920,10 +829,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
               const nextCodeType = method || codeType;
               reset();
               if (method) setCodeType(method);
-              return sendOtp(
-                { wallet_id: state.selectedWallet?._id },
-                nextCodeType,
-              );
+              return sendOtp({ wallet_id: state.selectedWallet?._id }, nextCodeType);
             }}
           />
         </ModalBody>

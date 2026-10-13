@@ -25,12 +25,7 @@ const StepThree = ({ data, dataHandler }) => {
       }
     }
 
-    if (
-      imageCount > 4 ||
-      videoCount > 1 ||
-      files.length > 5 ||
-      totalSize > 20 * 1024 * 1024
-    ) {
+    if (imageCount > 4 || videoCount > 1 || files.length > 5 || totalSize > 20 * 1024 * 1024) {
       setError(
         t(
           "You can upload a maximum of 4 images, 1 video, and the total size should not exceed 20 MB.",
@@ -64,10 +59,7 @@ const StepThree = ({ data, dataHandler }) => {
         }
         className={styles.container}
       >
-        <select
-          value={data.reason}
-          onChange={(e) => dataHandler("reason", e.target.value)}
-        >
+        <select value={data.reason} onChange={(e) => dataHandler("reason", e.target.value)}>
           <option value="" disabled>
             {t("Select Purpose of Payment")}
           </option>
@@ -90,8 +82,7 @@ const StepThree = ({ data, dataHandler }) => {
             placeholder={t("Transfer Note")}
             value={data.comment}
             onChange={(e) => {
-              if (e.target.value.length <= 120)
-                dataHandler("comment", e.target.value);
+              if (e.target.value.length <= 120) dataHandler("comment", e.target.value);
             }}
             maxLength={120}
           />

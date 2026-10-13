@@ -478,16 +478,8 @@ const CardPurchased = ({
     doc.text("Card Information:", 14, 45);
     doc.setFont("sans-serif", "normal", "normal");
     doc.setFontSize(10);
-    doc.text(
-      `Card Number: •••• •••• •••• ${currentCardDetails?.card_number?.slice(-4)}`,
-      14,
-      55,
-    );
-    doc.text(
-      `Card Type: ${cards[current]?.type === "standard" ? "Standard" : "Premium"}`,
-      14,
-      62,
-    );
+    doc.text(`Card Number: •••• •••• •••• ${currentCardDetails?.card_number?.slice(-4)}`, 14, 55);
+    doc.text(`Card Type: ${cards[current]?.type === "standard" ? "Standard" : "Premium"}`, 14, 62);
 
     // Add date range if selected
     if (dateRanges.startDate && dateRanges.endDate) {
@@ -598,29 +590,20 @@ const CardPurchased = ({
           new TableRow({
             children: [
               new TableCell({
-                children: [
-                  new Paragraph(new Date(tx.createdAt).toLocaleString()),
-                ],
+                children: [new Paragraph(new Date(tx.createdAt).toLocaleString())],
               }),
               new TableCell({
                 children: [new Paragraph(tx.transactionId || "N/A")],
               }),
               new TableCell({
-                children: [
-                  new Paragraph(
-                    `•••• •••• •••• ${tx.cardNo?.slice(-4) || "N/A"}`,
-                  ),
-                ],
+                children: [new Paragraph(`•••• •••• •••• ${tx.cardNo?.slice(-4) || "N/A"}`)],
               }),
               new TableCell({
                 children: [new Paragraph(tx.type?.toUpperCase() || "N/A")],
               }),
               new TableCell({
                 children: [
-                  new Paragraph(
-                    tx.transaction_type?.replace(/_/g, " ").toUpperCase() ||
-                      "N/A",
-                  ),
+                  new Paragraph(tx.transaction_type?.replace(/_/g, " ").toUpperCase() || "N/A"),
                 ],
               }),
               new TableCell({
@@ -635,20 +618,14 @@ const CardPurchased = ({
               new TableCell({
                 children: [
                   new Paragraph(
-                    CountriesData.find(
-                      (item) => item.alpha3 === tx.merchantCountry,
-                    )?.name ||
+                    CountriesData.find((item) => item.alpha3 === tx.merchantCountry)?.name ||
                       tx?.merchantCountry ||
                       "N/A",
                   ),
                 ],
               }),
               new TableCell({
-                children: [
-                  new Paragraph(
-                    `${tx.currency} ${tx.txAmount?.toFixed(2) || "0.00"}`,
-                  ),
-                ],
+                children: [new Paragraph(`${tx.currency} ${tx.txAmount?.toFixed(2) || "0.00"}`)],
               }),
               new TableCell({
                 children: [new Paragraph(tx.status || "N/A")],
@@ -849,10 +826,8 @@ const CardPurchased = ({
                         // Permission: mastercard.details.view
                         if (!can("mastercard.details.view")) return;
                         if (
-                          (cards[current]?.premium_features?.apple_pay ===
-                            true ||
-                            cards[current]?.premium_features?.google_pay ===
-                              true) &&
+                          (cards[current]?.premium_features?.apple_pay === true ||
+                            cards[current]?.premium_features?.google_pay === true) &&
                           !userDetails.email
                         ) {
                           setShowEmailModal(true);
@@ -896,8 +871,7 @@ const CardPurchased = ({
 
                         <div style={{ alignItems: "flex-end" }}>
                           <h2>
-                            {userDetails?.first_name ||
-                              userDetails?.company_name}{" "}
+                            {userDetails?.first_name || userDetails?.company_name}{" "}
                             {userDetails?.last_name}
                           </h2>
 
@@ -969,16 +943,10 @@ const CardPurchased = ({
                                 className={styles.vals}
                                 style={{ cursor: "pointer" }}
                               >
-                                {formatCardNumber(
-                                  currentCardDetails?.card_number,
-                                )}
+                                {formatCardNumber(currentCardDetails?.card_number)}
                               </h3>
                               {isCopied ? (
-                                <Check
-                                  size={14}
-                                  color="white"
-                                  style={{ transform: "none" }}
-                                />
+                                <Check size={14} color="white" style={{ transform: "none" }} />
                               ) : (
                                 <img
                                   src={Copy}
@@ -996,18 +964,12 @@ const CardPurchased = ({
 
                             <div className={styles.row}>
                               <div className={styles.dets}>
-                                <span className={styles.lab}>
-                                  {t("VALID THRU")}
-                                </span>
-                                <h3 className={styles.vals}>
-                                  {currentCardDetails?.exp_date}
-                                </h3>
+                                <span className={styles.lab}>{t("VALID THRU")}</span>
+                                <h3 className={styles.vals}>{currentCardDetails?.exp_date}</h3>
                               </div>
                               <div className={styles.dets}>
                                 <span className={styles.lab}>{t("CVV")}</span>
-                                <h3 className={styles.vals}>
-                                  {currentCardDetails?.cvv}
-                                </h3>
+                                <h3 className={styles.vals}>{currentCardDetails?.cvv}</h3>
                               </div>
                             </div>
                           </div>
@@ -1072,10 +1034,7 @@ const CardPurchased = ({
                       in2="BackgroundImageFix"
                       result="shape"
                     />
-                    <feGaussianBlur
-                      stdDeviation="63.15"
-                      result="effect1_foregroundBlur_3023_732"
-                    />
+                    <feGaussianBlur stdDeviation="63.15" result="effect1_foregroundBlur_3023_732" />
                   </filter>
                 </defs>
               </svg>
@@ -1097,9 +1056,7 @@ const CardPurchased = ({
                         : Number(currentCardDetails?.balance) >= 0.01
                           ? Number(currentCardDetails?.balance).toFixed(2)
                           : Number(currentCardDetails?.balance).toFixed(
-                              getDecimalPointIndex(
-                                +currentCardDetails?.balance,
-                              ),
+                              getDecimalPointIndex(+currentCardDetails?.balance),
                             )}
                     </h2>
 
@@ -1117,9 +1074,8 @@ const CardPurchased = ({
                           boxShadow: "0px 0px 3px #00000066",
                         }}
                         src={
-                          CountriesData.find(
-                            (c) => c.alpha3 === userDetails?.country_iso_code,
-                          ).file_url
+                          CountriesData.find((c) => c.alpha3 === userDetails?.country_iso_code)
+                            .file_url
                         }
                         alt=""
                       />
@@ -1131,8 +1087,7 @@ const CardPurchased = ({
                           marginBottom: "0px",
                         }}
                       >
-                        {localCurrency(userDetails)}{" "}
-                        {formatCurrency(balanceInLocal, true)}
+                        {localCurrency(userDetails)} {formatCurrency(balanceInLocal, true)}
                       </p>
                     </div>
                   </>
@@ -1195,16 +1150,10 @@ const CardPurchased = ({
                     </svg>
                   </div>
                 </div>
-                <div
-                  style={{ justifyContent: "space-between" }}
-                  className={styles.iconBox}
-                >
+                <div style={{ justifyContent: "space-between" }} className={styles.iconBox}>
                   <span>{t("Card Status")}</span>
 
-                  <Toggle
-                    checked={checks.cardStatus}
-                    onChange={() => handleToggle("cardStatus")}
-                  />
+                  <Toggle checked={checks.cardStatus} onChange={() => handleToggle("cardStatus")} />
                 </div>
                 <div
                   onClick={freezeToggle}
@@ -1255,23 +1204,18 @@ const CardPurchased = ({
                       }
                     }}
                     style={{
-                      cursor:
-                        cardStatus === "deactive" ? "not-allowed" : "pointer",
+                      cursor: cardStatus === "deactive" ? "not-allowed" : "pointer",
                       opacity: cardStatus === "deactive" ? 0.7 : 1,
                       position: "relative",
                     }}
                     className={styles.iconBox}
                     onMouseEnter={(e) =>
                       cardStatus === "deactive" &&
-                      (e.currentTarget.querySelector(
-                        ".disabled-overlay",
-                      ).style.display = "flex")
+                      (e.currentTarget.querySelector(".disabled-overlay").style.display = "flex")
                     }
                     onMouseLeave={(e) =>
                       cardStatus === "deactive" &&
-                      (e.currentTarget.querySelector(
-                        ".disabled-overlay",
-                      ).style.display = "none")
+                      (e.currentTarget.querySelector(".disabled-overlay").style.display = "none")
                     }
                   >
                     <img src={plus} alt="" />
@@ -1303,23 +1247,18 @@ const CardPurchased = ({
                       }
                     }}
                     style={{
-                      cursor:
-                        cardStatus === "deactive" ? "not-allowed" : "pointer",
+                      cursor: cardStatus === "deactive" ? "not-allowed" : "pointer",
                       opacity: cardStatus === "deactive" ? 0.7 : 1,
                       position: "relative",
                     }}
                     className={styles.iconBox}
                     onMouseEnter={(e) =>
                       cardStatus === "deactive" &&
-                      (e.currentTarget.querySelector(
-                        ".disabled-overlay",
-                      ).style.display = "flex")
+                      (e.currentTarget.querySelector(".disabled-overlay").style.display = "flex")
                     }
                     onMouseLeave={(e) =>
                       cardStatus === "deactive" &&
-                      (e.currentTarget.querySelector(
-                        ".disabled-overlay",
-                      ).style.display = "none")
+                      (e.currentTarget.querySelector(".disabled-overlay").style.display = "none")
                     }
                   >
                     <img src={CreditCardR} alt="" />
@@ -1361,23 +1300,18 @@ const CardPurchased = ({
                       }
                     }}
                     style={{
-                      cursor:
-                        cardStatus === "deactive" ? "not-allowed" : "pointer",
+                      cursor: cardStatus === "deactive" ? "not-allowed" : "pointer",
                       opacity: cardStatus === "deactive" ? 0.7 : 1,
                       position: "relative",
                     }}
                     className={styles.iconBox}
                     onMouseEnter={(e) =>
                       cardStatus === "deactive" &&
-                      (e.currentTarget.querySelector(
-                        ".disabled-overlay",
-                      ).style.display = "flex")
+                      (e.currentTarget.querySelector(".disabled-overlay").style.display = "flex")
                     }
                     onMouseLeave={(e) =>
                       cardStatus === "deactive" &&
-                      (e.currentTarget.querySelector(
-                        ".disabled-overlay",
-                      ).style.display = "none")
+                      (e.currentTarget.querySelector(".disabled-overlay").style.display = "none")
                     }
                   >
                     <img src={Wallet2} alt="" />
@@ -1430,18 +1364,13 @@ const CardPurchased = ({
                     {/* <img src={Giftpng} alt="" /> */}
                     <div>
                       <div>
-                        <img
-                          style={{ width: "24px" }}
-                          src={CreditCardP}
-                          alt=""
-                        />
+                        <img style={{ width: "24px" }} src={CreditCardP} alt="" />
                         <h3>{t("Create an Add-On Card")}</h3>
                       </div>
                       <p>
                         {t("Send joy in just a few clicks!")}
                         <br />
-                        {t("Create your")}{" "}
-                        <span>{t("InstaPay Mastercard Gift")}</span>{" "}
+                        {t("Create your")} <span>{t("InstaPay Mastercard Gift")}</span>{" "}
                         {t("Card now.")}
                       </p>
                     </div>
@@ -1511,10 +1440,7 @@ const CardPurchased = ({
                                 </div>
                             </div>
                         </div> */}
-            <div
-              style={{ backgroundColor: "white" }}
-              className={styles.detailsContainer}
-            >
+            <div style={{ backgroundColor: "white" }} className={styles.detailsContainer}>
               <div
                 style={{
                   display: "flex",
@@ -1590,14 +1516,10 @@ const CardPurchased = ({
       )}
 
       <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-        <ModalHeader toggle={() => setShowOtp(!showOtp)}>
-          {t("Confirm")}
-        </ModalHeader>
+        <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
         <ModalBody>
           <OTPConfirmation
-            type={
-              userDetails?.account_type === "individual" ? "email" : "phone"
-            }
+            type={userDetails?.account_type === "individual" ? "email" : "phone"}
             callback={verifyOTP}
             setterValue={true}
             hideOtp={() => setShowOtp(false)}
@@ -1613,16 +1535,12 @@ const CardPurchased = ({
       </Modal>
       <Modal isOpen={showEmailModal}>
         <ModalHeader toggle={() => setShowEmailModal(false)}>
-          <h5
-            style={{ fontWeight: 600, fontSize: "16px", marginBottom: "0px" }}
-          >
+          <h5 style={{ fontWeight: 600, fontSize: "16px", marginBottom: "0px" }}>
             {t("Email is Required")}
           </h5>
         </ModalHeader>
         <ModalBody>
-          <p
-            style={{ fontSize: "14px", color: "#71767A", marginBottom: "0px" }}
-          >
+          <p style={{ fontSize: "14px", color: "#71767A", marginBottom: "0px" }}>
             {t("Please add your email to see Sensitive Information.")}
           </p>
           <form
@@ -1660,38 +1578,35 @@ const CardPurchased = ({
         </ModalBody>
       </Modal>
       {/* Permission: mastercard.funds.add */}
-      {can("mastercard.funds.add") &&
-        (showModals.addFunds || addFundsMobile) && (
-          <AddFundsModal
-            setCurrentCardDetails={setCurrentCardDetails}
-            card={cards[current]}
-            isOpen={showModals.addFunds || addFundsMobile}
-            setOpen={setShowModals}
-          />
-        )}
+      {can("mastercard.funds.add") && (showModals.addFunds || addFundsMobile) && (
+        <AddFundsModal
+          setCurrentCardDetails={setCurrentCardDetails}
+          card={cards[current]}
+          isOpen={showModals.addFunds || addFundsMobile}
+          setOpen={setShowModals}
+        />
+      )}
 
       {/* Permission: mastercard.transfer.card-to-card */}
-      {can("mastercard.transfer.card-to-card") &&
-        (showModals.ctc || ctcMobile) && (
-          <CardtoCard
-            currentCardDetails={currentCardDetails}
-            card={cards[current]}
-            setCurrentCardDetails={setCurrentCardDetails}
-            isOpen={showModals.ctc || ctcMobile}
-            setOpen={setShowModals}
-          />
-        )}
+      {can("mastercard.transfer.card-to-card") && (showModals.ctc || ctcMobile) && (
+        <CardtoCard
+          currentCardDetails={currentCardDetails}
+          card={cards[current]}
+          setCurrentCardDetails={setCurrentCardDetails}
+          isOpen={showModals.ctc || ctcMobile}
+          setOpen={setShowModals}
+        />
+      )}
       {/* Permission: mastercard.transfer.card-to-wallet */}
-      {can("mastercard.transfer.card-to-wallet") &&
-        (showModals.ctw || ctwMobile) && (
-          <CardtoWallet
-            currentCardDetails={currentCardDetails}
-            card={cards[current]}
-            setCurrentCardDetails={setCurrentCardDetails}
-            isOpen={showModals.ctw || ctwMobile}
-            setOpen={setShowModals}
-          />
-        )}
+      {can("mastercard.transfer.card-to-wallet") && (showModals.ctw || ctwMobile) && (
+        <CardtoWallet
+          currentCardDetails={currentCardDetails}
+          card={cards[current]}
+          setCurrentCardDetails={setCurrentCardDetails}
+          isOpen={showModals.ctw || ctwMobile}
+          setOpen={setShowModals}
+        />
+      )}
       {/* Permission: mastercard.statement.download */}
       {can("mastercard.statement.download") && (
         <Modal
@@ -1699,9 +1614,7 @@ const CardPurchased = ({
           isOpen={showModals.download}
           toggle={() => setShowModals({ ...showModals, download: false })}
         >
-          <ModalHeader
-            toggle={() => setShowModals({ ...showModals, download: false })}
-          >
+          <ModalHeader toggle={() => setShowModals({ ...showModals, download: false })}>
             {t("Download Your Statement")}
           </ModalHeader>
 
@@ -1710,17 +1623,11 @@ const CardPurchased = ({
               <h5 style={{ fontWeight: 600, marginBottom: "15px" }}>
                 {t("Select The Date Range")}.
               </h5>
-              <DateRangePicker
-                maxDate={new Date()}
-                ranges={[dateRanges]}
-                onChange={handleChange}
-              />
+              <DateRangePicker maxDate={new Date()} ranges={[dateRanges]} onChange={handleChange} />
             </div>
 
             <div style={{ marginTop: "20px" }}>
-              <h5 style={{ fontWeight: 600, marginBottom: "15px" }}>
-                {t("Select The Type")}.
-              </h5>
+              <h5 style={{ fontWeight: 600, marginBottom: "15px" }}>{t("Select The Type")}.</h5>
               <select
                 style={{
                   width: "100%",

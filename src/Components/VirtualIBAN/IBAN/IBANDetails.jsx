@@ -31,9 +31,7 @@ const DetailRow = ({ label, value, copyKey, copiedKey, onCopy, mono }) => {
     <div className={styles.detailRow}>
       <span className={styles.label}>{label}</span>
       <div className={styles.valueGroup}>
-        <span className={`${styles.value} ${mono ? styles.mono : ""}`}>
-          {value || "-"}
-        </span>
+        <span className={`${styles.value} ${mono ? styles.mono : ""}`}>{value || "-"}</span>
         {onCopy && value && (
           <button
             className={styles.inlineCopyBtn}
@@ -60,9 +58,7 @@ const IBANDetails = ({ ibanId, fallbackIban }) => {
   const can = usePermission();
   const canViewDetails = can("virtual-iban.details.view");
   const canCopyDetails = can("virtual-iban.details.copy");
-  const { data, isFetching } = useVirtualIbanDetails(
-    canViewDetails ? ibanId : null,
-  );
+  const { data, isFetching } = useVirtualIbanDetails(canViewDetails ? ibanId : null);
   const { copiedKey, copy } = useCopy();
   const iban = useMemo(
     () => normalizeVirtualIban(data || fallbackIban) || {},
@@ -120,9 +116,7 @@ const IBANDetails = ({ ibanId, fallbackIban }) => {
             <div className={styles.radioOuter}>
               {depositing === "eu" && <div className={styles.radioInner} />}
             </div>
-            <span className={styles.itemText}>
-              {t("Countries in European Union")}
-            </span>
+            <span className={styles.itemText}>{t("Countries in European Union")}</span>
           </div>
 
           <div
@@ -130,9 +124,7 @@ const IBANDetails = ({ ibanId, fallbackIban }) => {
             onClick={() => setDepositing("international")}
           >
             <div className={styles.radioOuter}>
-              {depositing === "international" && (
-                <div className={styles.radioInner} />
-              )}
+              {depositing === "international" && <div className={styles.radioInner} />}
             </div>
             <span className={styles.itemText}>{t("Countries out of EU")}</span>
           </div>
@@ -146,16 +138,14 @@ const IBANDetails = ({ ibanId, fallbackIban }) => {
               onClick={() => setIntlCurrency("usd")}
             >
               <input type="radio" checked={intlCurrency === "usd"} readOnly />
-              <span className={styles.currencyIcon}>$</span>{" "}
-              {t("Depositing in USD")}
+              <span className={styles.currencyIcon}>$</span> {t("Depositing in USD")}
             </button>
             <button
               className={`${styles.currencyTab} ${intlCurrency === "eur" ? styles.active : ""}`}
               onClick={() => setIntlCurrency("eur")}
             >
               <input type="radio" checked={intlCurrency === "eur"} readOnly />
-              <span className={styles.currencyIcon}>€</span>{" "}
-              {t("Depositing in EUR")}
+              <span className={styles.currencyIcon}>€</span> {t("Depositing in EUR")}
             </button>
           </div>
         )}
@@ -164,9 +154,7 @@ const IBANDetails = ({ ibanId, fallbackIban }) => {
           style={depositing === "international" ? { marginTop: "10px" } : {}}
         >
           <div className={styles.detailsContainer}>
-            {isFetching && (
-              <span className={styles.label}>{t("Refreshing details...")}</span>
-            )}
+            {isFetching && <span className={styles.label}>{t("Refreshing details...")}</span>}
             <p>{t("Add money to this account to top up your vIBAN.")}</p>
             {depositing === "eu" ? (
               <>
@@ -261,10 +249,7 @@ const IBANDetails = ({ ibanId, fallbackIban }) => {
             )}
           </div>
           {canCopyDetails && (
-            <button
-              className={styles.copyButton}
-              onClick={() => copy(allText, "all-details")}
-            >
+            <button className={styles.copyButton} onClick={() => copy(allText, "all-details")}>
               {copiedKey === "all-details" ? (
                 <>
                   <Check size={15} />
@@ -280,11 +265,7 @@ const IBANDetails = ({ ibanId, fallbackIban }) => {
           )}
           {depositing === "international" && (
             <div className={styles.warningNotice}>
-              <AlertCircle
-                size={20}
-                className={styles.warningIcon}
-                fill="#5926F0"
-              />
+              <AlertCircle size={20} className={styles.warningIcon} fill="#5926F0" />
               <p className={styles.warningText}>
                 {t(
                   "Please ensure correct reference number is quoted in payment instruction else we will not be able to automatically credit funds to your account, which may cause additional delays.",

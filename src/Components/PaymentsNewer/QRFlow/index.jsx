@@ -115,21 +115,11 @@ function reducer(state, action) {
   }
 }
 
-const QRFlow = ({
-  sendPaymentType,
-  setStep,
-  setSendPaymentType,
-  setIsWallet,
-}) => {
+const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const {
-    userDetails,
-    authHeader,
-    setProfileLockTime,
-    userWallets,
-    getUserWallets,
-  } = useContext(UserContext);
+  const { userDetails, authHeader, setProfileLockTime, userWallets, getUserWallets } =
+    useContext(UserContext);
   const [data, dispatch] = useReducer(reducer, initialState);
   const { limitStatus, clearStatus } = useTopupLimitCheck(
     data?.currency?.currency?.code,
@@ -193,17 +183,13 @@ const QRFlow = ({
           ? !data.wallet?._id
           : data?.payment_duration?.value == "subscription"
             ? !data.payment_duration?.recStartDate ||
-              (!data.payment_duration?.cycles &&
-                !data.payment_duration?.unlimited)
+              (!data.payment_duration?.cycles && !data.payment_duration?.unlimited)
             : data?.payment_duration?.value == "schedule"
-              ? !data.payment_duration?.scheduleDate ||
-                !data.payment_duration?.scheduleTime
+              ? !data.payment_duration?.scheduleDate || !data.payment_duration?.scheduleTime
               : false;
       case 5:
         if (data.payment_type?.value === "card") {
-          const [contentMonth, contentYear] = data.expiry
-            .split("/")
-            .map(Number);
+          const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
           const currentDate = new Date();
           const currentMonth = currentDate.getMonth() + 1;
           const currentYear = currentDate.getFullYear() % 100;
@@ -246,9 +232,7 @@ const QRFlow = ({
     }
   };
 
-  const getMobileWalletServices = async (
-    service_name = data.payment_type?.sub_name,
-  ) => {
+  const getMobileWalletServices = async (service_name = data.payment_type?.sub_name) => {
     dataHandler("loading", true);
     try {
       const res = await axios.get(
@@ -286,9 +270,7 @@ const QRFlow = ({
         data: {
           receiver_wallet_id: data.beneficiary_wallet?.wallet_id,
           sender_wallet_id:
-            data.payment_type?.value !== "wallet"
-              ? data.currency?._id
-              : data?.wallet?._id,
+            data.payment_type?.value !== "wallet" ? data.currency?._id : data?.wallet?._id,
           purpose: data.reason,
           amount: Number(cleanString(data.recipient_amount)),
           type: "instant",
@@ -328,10 +310,7 @@ const QRFlow = ({
       dataHandler("otp_token", dec?.token);
     } catch (error) {
       const decrypted = decryptData(error?.response?.data?.data);
-      dataHandler(
-        "error",
-        decrypted?.message ?? "Something went wrong while sending the OTP!",
-      );
+      dataHandler("error", decrypted?.message ?? "Something went wrong while sending the OTP!");
     } finally {
       dataHandler("loading", false);
     }
@@ -353,13 +332,9 @@ const QRFlow = ({
         data.payment_type?.value === "mobile_wallet"
           ? "/api/collection/wallet-to-wallet"
           : `/api/wallet/${data.payment_duration?.value === "instant" ? "insta-wallet-to-wallet" : data.payment_duration?.value === "subscription" ? "subscribe-payment-w2w" : "schedule-payment-w2w"}`;
-      const res = await axios.post(
-        `${import.meta.env.VITE_IP_DEV_API}${url}`,
-        payload,
-        {
-          headers: { ...authHeader, "idempotency-key": getKey() },
-        },
-      );
+      const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}${url}`, payload, {
+        headers: { ...authHeader, "idempotency-key": getKey() },
+      });
 
       const dec = decryptData(res.data.data);
       dataHandler("transaction_details", dec?.data ?? dec?.subscribtionDetails);
@@ -379,11 +354,8 @@ const QRFlow = ({
         if (otp === "otp_skipped") {
           dataHandler("error", error);
         }
-      } else if (
-        decrypted.message?.toLowerCase()?.includes("account is locked")
-      ) {
-        const time =
-          decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+      } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+        const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
         const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
         setProfileLockTime(timeInSec);
         const coun = localStorage.getItem("ip_country");
@@ -391,15 +363,9 @@ const QRFlow = ({
         localStorage.setItem("ip_country", coun);
         navigate("/login");
       } else {
-        dataHandler(
-          "otpError",
-          decrypted?.message ?? "You have entered wrong OTP.",
-        );
+        dataHandler("otpError", decrypted?.message ?? "You have entered wrong OTP.");
         if (otp === "otp_skipped") {
-          dataHandler(
-            "error",
-            decrypted?.message ?? "We are unable to process your request.",
-          );
+          dataHandler("error", decrypted?.message ?? "We are unable to process your request.");
         }
       }
     } finally {
@@ -479,23 +445,16 @@ const QRFlow = ({
           if (otp === "otp_skipped") {
             dataHandler("error", t(error));
           }
-        } else if (
-          decrypted.message?.toLowerCase()?.includes("account is locked")
-        ) {
-          const time =
-            decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
-          const timeInSec =
-            +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
+        } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+          const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+          const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
           setProfileLockTime(timeInSec);
           const coun = localStorage.getItem("ip_country");
           localStorage.clear();
           localStorage.setItem("ip_country", coun);
           navigate("/login");
         } else {
-          dataHandler(
-            "otpError",
-            decrypted?.message ?? "You have entered wrong OTP.",
-          );
+          dataHandler("otpError", decrypted?.message ?? "You have entered wrong OTP.");
           dataHandler("otpError", error);
           if (otp === "otp_skipped") {
             dataHandler("error", decrypted?.message);
@@ -538,11 +497,8 @@ const QRFlow = ({
         if (otp === "otp_skipped") {
           dataHandler("error", error2);
         }
-      } else if (
-        decrypted.message?.toLowerCase()?.includes("account is locked")
-      ) {
-        const time =
-          decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+      } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+        const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
         const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
         setProfileLockTime(timeInSec);
         const coun = localStorage.getItem("ip_country");
@@ -550,10 +506,7 @@ const QRFlow = ({
         localStorage.setItem("ip_country", coun);
         navigate("/login");
       } else {
-        dataHandler(
-          "otpError",
-          decrypted?.message ?? "You have entered wrong OTP.",
-        );
+        dataHandler("otpError", decrypted?.message ?? "You have entered wrong OTP.");
         if (otp === "otp_skipped") {
           dataHandler("error", decrypted?.message);
         }
@@ -663,8 +616,7 @@ const QRFlow = ({
         },
         limits: {
           daily_receiving_limit: {
-            limits_used:
-              decrypted?.data?.limits_used?.daily_receiving_limit_used,
+            limits_used: decrypted?.data?.limits_used?.daily_receiving_limit_used,
             total_limits: decrypted?.data?.limits?.daily_receiving_limit,
           },
           daily_sending_limit: {
@@ -672,23 +624,19 @@ const QRFlow = ({
             total_limits: decrypted?.data?.limits?.daily_sending_limit,
           },
           monthly_receiving_limit: {
-            limits_used:
-              decrypted?.data?.limits_used?.monthly_receiving_limit_used,
+            limits_used: decrypted?.data?.limits_used?.monthly_receiving_limit_used,
             total_limits: decrypted?.data?.limits?.monthly_receiving_limit,
           },
           monthly_sending_limit: {
-            limits_used:
-              decrypted?.data?.limits_used?.monthly_sending_limit_used,
+            limits_used: decrypted?.data?.limits_used?.monthly_sending_limit_used,
             total_limits: decrypted?.data?.limits?.monthly_sending_limit,
           },
           yearly_receiving_limit: {
-            limits_used:
-              decrypted?.data?.limits_used?.yearly_receiving_limit_used,
+            limits_used: decrypted?.data?.limits_used?.yearly_receiving_limit_used,
             total_limits: decrypted?.data?.limits?.yearly_receiving_limit,
           },
           yearly_sending_limit: {
-            limits_used:
-              decrypted?.data?.limits_used?.yearly_sending_limit_used,
+            limits_used: decrypted?.data?.limits_used?.yearly_sending_limit_used,
             total_limits: decrypted?.data?.limits?.yearly_sending_limit,
           },
         },
@@ -698,29 +646,21 @@ const QRFlow = ({
       };
 
       console.log(decrypted);
-      if (decrypted?.data?.paypal)
-        exchange_rate_details.paypal = decrypted?.data?.paypal;
+      if (decrypted?.data?.paypal) exchange_rate_details.paypal = decrypted?.data?.paypal;
       if (data.payment_type?.value === "bank_transfer") {
-        exchange_rate_details.plaid_currency =
-          decrypted?.data?.converted_currency;
+        exchange_rate_details.plaid_currency = decrypted?.data?.converted_currency;
         exchange_rate_details.plaid_amount = decrypted?.data?.converted_amount;
         exchange_rate_details.plaid_fx = decrypted?.data?.converted_rate;
       }
 
       dataHandler("exchange_rate", exchange_rate_details);
-      if (
-        +amount > exchange_rate_details?.limits_used?.daily_sending_limit_used
-      ) {
+      if (+amount > exchange_rate_details?.limits_used?.daily_sending_limit_used) {
         dataHandler("exchange_rate_error", "exceed send");
         setLimitType("daily");
-      } else if (
-        +amount > exchange_rate_details?.limits_used?.monthly_sending_limit_used
-      ) {
+      } else if (+amount > exchange_rate_details?.limits_used?.monthly_sending_limit_used) {
         dataHandler("exchange_rate_error", "exceed send");
         setLimitType("monthly");
-      } else if (
-        +amount > exchange_rate_details?.limits_used?.yearly_sending_limit_used
-      ) {
+      } else if (+amount > exchange_rate_details?.limits_used?.yearly_sending_limit_used) {
         dataHandler("exchange_rate_error", "exceed send");
         setLimitType("yearly");
       } else {
@@ -779,12 +719,7 @@ const QRFlow = ({
     if (data.payment_type?.value && sendPaymentType === "qr_pay") {
       const getAmount = async () => {
         let amount;
-        console.log(
-          data.payment_type,
-          data.wallet,
-          data.currency_wallet,
-          "shit",
-        );
+        console.log(data.payment_type, data.wallet, data.currency_wallet, "shit");
         if (
           data.payment_type?.value === "wallet" &&
           data?.wallet?.currency &&
@@ -798,9 +733,7 @@ const QRFlow = ({
         } else {
           amount = data?.amount;
         }
-        return Number(
-          typeof amount === "string" ? amount?.replace(/,/g, "") : amount,
-        );
+        return Number(typeof amount === "string" ? amount?.replace(/,/g, "") : amount);
       };
       timeout = setTimeout(() => {
         getAmount().then((res) => {
@@ -921,8 +854,7 @@ const QRFlow = ({
           message={data.error}
         />
       )}
-      {data.cardTransactionDetails?.intlToken ||
-      data.cardTransactionDetails?.w2w_data ? (
+      {data.cardTransactionDetails?.intlToken || data.cardTransactionDetails?.w2w_data ? (
         <TrustpaymentPage
           amount={data.amount}
           card_cvc={data.cvc}
@@ -972,9 +904,7 @@ const QRFlow = ({
             showDesc={sendPaymentType === "qr_pay"}
             active={sendPaymentType === "qr_pay"}
             sendPaymentType={sendPaymentType}
-            shrinkWidth={
-              data.step === 4 && data.payment_type?.value === "wallet"
-            }
+            shrinkWidth={data.step === 4 && data.payment_type?.value === "wallet"}
           />
           {sendPaymentType === "qr_pay" &&
             (data?.transaction_details ? (
@@ -998,18 +928,14 @@ const QRFlow = ({
                   width: sendPaymentType === "international" ? "100%" : "0px",
                   transition: "500ms",
                   "--min-width":
-                    data.step === 4 && data.payment_type?.value === "wallet"
-                      ? "65vw"
-                      : "55vw",
+                    data.step === 4 && data.payment_type?.value === "wallet" ? "65vw" : "55vw",
                 }}
               >
                 <div className={styles.left}>
                   <div className={styles.l_top}>
                     <h1>{t("Send Money")}</h1>
                     <h2>
-                      {data.step === 5 &&
-                      data.showCard &&
-                      data.payment_type?.value === "card"
+                      {data.step === 5 && data.showCard && data.payment_type?.value === "card"
                         ? t("Select Or Add Payment Card")
                         : data.payment_type?.value === "bank_transfer"
                           ? t("Europe Bank Transfer")
@@ -1027,16 +953,11 @@ const QRFlow = ({
                       >
                         <InstaPayLoader />
                       </div>
-                    ) : (
-                        data.payment_type?.value === "wallet"
-                          ? data.wallet?._id
-                          : true
-                      ) ? (
+                    ) : (data.payment_type?.value === "wallet" ? data.wallet?._id : true) ? (
                       <>
                         <FeesComponent data={data} plaidValues />
                         {data.payment_type?.value === "paypal" &&
-                        !data?.exchange_rate?.paypal
-                          ?.paypal_currency_supported ? (
+                        !data?.exchange_rate?.paypal?.paypal_currency_supported ? (
                           <>
                             <div
                               style={{
@@ -1061,11 +982,8 @@ const QRFlow = ({
                                   letterSpacing: "-0.28px",
                                 }}
                               >
-                                <strong>
-                                  {data?.exchange_rate?.paypal?.fee?.currency}
-                                </strong>{" "}
-                                {t("is not supported by Paypal,")}{" "}
-                                <strong>{t("USD")}</strong>{" "}
+                                <strong>{data?.exchange_rate?.paypal?.fee?.currency}</strong>{" "}
+                                {t("is not supported by Paypal,")} <strong>{t("USD")}</strong>{" "}
                                 {t("will be used as the default currency.")}
                               </span>
                             </div>
@@ -1077,8 +995,7 @@ const QRFlow = ({
                                 padding: ".8rem",
                                 background: "#fff",
                                 borderRadius: "6px",
-                                boxShadow:
-                                  "0px 1.5px 10.8px 0px rgba(0, 0, 0, 0.11)",
+                                boxShadow: "0px 1.5px 10.8px 0px rgba(0, 0, 0, 0.11)",
                               }}
                             >
                               <div
@@ -1112,11 +1029,9 @@ const QRFlow = ({
                                     letterSpacing: "-0.14px",
                                   }}
                                 >
-                                  1.00{" "}
-                                  {data?.exchange_rate?.paypal?.fee?.currency} ={" "}
+                                  1.00 {data?.exchange_rate?.paypal?.fee?.currency} ={" "}
                                   {Number(
-                                    data?.exchange_rate?.paypal?.paypal_rate
-                                      ?.value,
+                                    data?.exchange_rate?.paypal?.paypal_rate?.value,
                                   )?.toLocaleString("en-US", {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 4,
@@ -1156,10 +1071,7 @@ const QRFlow = ({
                                     letterSpacing: "-0.8px",
                                   }}
                                 >
-                                  {Number(
-                                    data?.exchange_rate?.paypal
-                                      ?.paypal_converted?.value,
-                                  )}
+                                  {Number(data?.exchange_rate?.paypal?.paypal_converted?.value)}
                                   {t("USD")}
                                 </strong>
                               </div>
@@ -1173,10 +1085,7 @@ const QRFlow = ({
                       ""
                     ))}
                 </div>
-                <div
-                  className={styles.right}
-                  style={{ "--color-white": "#fafafa" }}
-                >
+                <div className={styles.right} style={{ "--color-white": "#fafafa" }}>
                   {data.step === 1 &&
                     (data.beneficiary?._id ? (
                       <QRRecipient
@@ -1187,10 +1096,7 @@ const QRFlow = ({
                         dataHandler={dataHandler}
                       />
                     ) : (
-                      <QRCodeScan
-                        setSubStep={() => {}}
-                        dataHandler={dataHandler}
-                      />
+                      <QRCodeScan setSubStep={() => {}} dataHandler={dataHandler} />
                     ))}
                   {data.step === 2 && (
                     <StepTwo
@@ -1200,9 +1106,7 @@ const QRFlow = ({
                       showFee={true}
                     />
                   )}
-                  {data.step === 3 && (
-                    <StepThree data={data} dataHandler={dataHandler} />
-                  )}
+                  {data.step === 3 && <StepThree data={data} dataHandler={dataHandler} />}
                   {data.step === 4 &&
                     (data.show_payment_type ? (
                       data.payment_duration?.value === "subscription" ? (
@@ -1266,11 +1170,7 @@ const QRFlow = ({
                         <PaymentType data={data} dataHandler={dataHandler} />
                       )
                     ) : (
-                      <StepFour
-                        data={data}
-                        dataHandler={dataHandler}
-                        loading={data.loading}
-                      />
+                      <StepFour data={data} dataHandler={dataHandler} loading={data.loading} />
                     ))}
                   {data.step === 5 &&
                     (data?.payment_type?.value === "bank_transfer" ? (
@@ -1281,16 +1181,13 @@ const QRFlow = ({
                         type="wallet_to_wallet"
                         initiatePayload={() => {
                           return {
-                            receiver_wallet_id:
-                              data.beneficiary_wallet?.wallet_id,
+                            receiver_wallet_id: data.beneficiary_wallet?.wallet_id,
                             sender_wallet_id:
                               data.payment_type?.value !== "wallet"
                                 ? data.currency?._id
                                 : data?.wallet?._id,
                             purpose: data.reason,
-                            amount: Number(
-                              String(data.recipient_amount)?.replace(/,/g, ""),
-                            ),
+                            amount: Number(String(data.recipient_amount)?.replace(/,/g, "")),
                             type: "instant",
                             payment_type: "qr_pay",
                             description: data.comment,
@@ -1367,10 +1264,7 @@ const QRFlow = ({
                                   value: "instant",
                                 });
                                 dataHandler("show_payment_type", false);
-                              } else if (
-                                data.step === 4 &&
-                                data.payment_type?.value === "card"
-                              ) {
+                              } else if (data.step === 4 && data.payment_type?.value === "card") {
                                 dataHandler("payment_type", {});
                                 dataHandler("showCard", false);
                                 dataHandler("step", data.step - 1);
@@ -1394,12 +1288,8 @@ const QRFlow = ({
                             {t("Back")}
                           </button>
                         )}
-                        <button
-                          disabled={disabledButton || data.loading}
-                          onClick={handleClick}
-                        >
-                          {data.step === 5 &&
-                          data.payment_type?.value !== "bank_transfer"
+                        <button disabled={disabledButton || data.loading} onClick={handleClick}>
+                          {data.step === 5 && data.payment_type?.value !== "bank_transfer"
                             ? t("Confirm")
                             : t("Next")}
                           <ChevronRight size={18} />
@@ -1411,17 +1301,11 @@ const QRFlow = ({
                 {data.step === 4 &&
                 data.payment_type?.value === "wallet" &&
                 !data.show_payment_type ? (
-                  <WalletsComponent
-                    loading={data.loading}
-                    data={data}
-                    dataHandler={dataHandler}
-                  />
+                  <WalletsComponent loading={data.loading} data={data} dataHandler={dataHandler} />
                 ) : (
                   ""
                 )}
-                {data.step === 4 &&
-                data.payment_type?.sub_name &&
-                !data.show_payment_type ? (
+                {data.step === 4 && data.payment_type?.sub_name && !data.show_payment_type ? (
                   <MobileWalletServices
                     loading={data.loading}
                     data={data}
@@ -1465,8 +1349,7 @@ const QRFlow = ({
                 <div className={styles.flow_com} style={{ minHeight: "50vh" }}>
                   {data.step === 4 &&
                   !data.show_payment_type &&
-                  (data.payment_type?.value === "wallet" ||
-                    data.payment_type?.sub_name) ? (
+                  (data.payment_type?.value === "wallet" || data.payment_type?.sub_name) ? (
                     data.payment_type?.value === "wallet" ? (
                       <WalletsComponent data={data} dataHandler={dataHandler} />
                     ) : data.payment_type?.sub_name ? (
@@ -1503,9 +1386,7 @@ const QRFlow = ({
                           getExchangeRate={getExchangeRate}
                         />
                       )}
-                      {data.step === 3 && (
-                        <StepThree data={data} dataHandler={dataHandler} />
-                      )}
+                      {data.step === 3 && <StepThree data={data} dataHandler={dataHandler} />}
                       {data.step === 4 &&
                         (data.show_payment_type ? (
                           data.payment_duration?.value === "subscription" ? (
@@ -1536,15 +1417,13 @@ const QRFlow = ({
                               decrementHandler={() =>
                                 dataHandler("payment_duration", {
                                   ...data.payment_duration,
-                                  cycles:
-                                    (data.payment_duration?.cycles ?? 1) - 1,
+                                  cycles: (data.payment_duration?.cycles ?? 1) - 1,
                                 })
                               }
                               incrementHandler={() =>
                                 dataHandler("payment_duration", {
                                   ...data.payment_duration,
-                                  cycles:
-                                    (data.payment_duration?.cycles ?? 1) + 1,
+                                  cycles: (data.payment_duration?.cycles ?? 1) + 1,
                                 })
                               }
                             />
@@ -1568,10 +1447,7 @@ const QRFlow = ({
                               setSubStep={() => {}}
                             />
                           ) : (
-                            <PaymentType
-                              data={data}
-                              dataHandler={dataHandler}
-                            />
+                            <PaymentType data={data} dataHandler={dataHandler} />
                           )
                         ) : (
                           <StepFour data={data} dataHandler={dataHandler} />
@@ -1585,19 +1461,13 @@ const QRFlow = ({
                             type="wallet_to_wallet"
                             initiatePayload={() => {
                               return {
-                                receiver_wallet_id:
-                                  data.beneficiary_wallet?.wallet_id,
+                                receiver_wallet_id: data.beneficiary_wallet?.wallet_id,
                                 sender_wallet_id:
                                   data.payment_type?.value !== "wallet"
                                     ? data.currency?._id
                                     : data?.wallet?._id,
                                 purpose: data.reason,
-                                amount: Number(
-                                  String(data.recipient_amount)?.replace(
-                                    /,/g,
-                                    "",
-                                  ),
-                                ),
+                                amount: Number(String(data.recipient_amount)?.replace(/,/g, "")),
                                 type: "instant",
                                 payment_type: "qr_pay",
                                 description: data.comment,
@@ -1676,10 +1546,7 @@ const QRFlow = ({
                                 value: "instant",
                               });
                               dataHandler("show_payment_type", false);
-                            } else if (
-                              data.step === 4 &&
-                              data.payment_type?.value === "card"
-                            ) {
+                            } else if (data.step === 4 && data.payment_type?.value === "card") {
                               dataHandler("payment_type", {});
                               dataHandler("showCard", false);
                               dataHandler("step", data.step - 1);
@@ -1708,8 +1575,7 @@ const QRFlow = ({
                         disabled={disabledButton || data.loading}
                         onClick={handleClick}
                       >
-                        {data.step === 5 &&
-                        data.payment_type?.value !== "bank_transfer"
+                        {data.step === 5 && data.payment_type?.value !== "bank_transfer"
                           ? t("Confirm")
                           : t("Next")}
                       </button>

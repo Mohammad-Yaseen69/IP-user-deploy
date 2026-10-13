@@ -33,12 +33,7 @@ const parseCsv = (text) => {
   });
 };
 
-const BulkPaymentModal = ({
-  isOpen,
-  onClose,
-  onNext,
-  initialRecipients = [],
-}) => {
+const BulkPaymentModal = ({ isOpen, onClose, onNext, initialRecipients = [] }) => {
   const fileInputRef = useRef(null);
   const [csvRows, setCsvRows] = useState(initialRecipients);
   const [fileName, setFileName] = useState("");
@@ -90,18 +85,11 @@ const BulkPaymentModal = ({
   };
 
   return (
-    <div
-      className={styles.overlay}
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-    >
+    <div className={styles.overlay} onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className={styles.modal}>
         <div className={styles.header}>
           <h4>{t("Bulk Payment Upload")}</h4>
-          <button
-            className={styles.closeBtn}
-            onClick={onClose}
-            aria-label="Close"
-          >
+          <button className={styles.closeBtn} onClick={onClose} aria-label="Close">
             <X size={20} />
           </button>
         </div>
@@ -122,11 +110,7 @@ const BulkPaymentModal = ({
 
             <div className={styles.colBlock}>
               <h6>{t("Recipient Identifier")}</h6>
-              <p>
-                {t(
-                  "Enter the recipient&apos;s email address, phone number, or username.",
-                )}
-              </p>
+              <p>{t("Enter the recipient&apos;s email address, phone number, or username.")}</p>
               <p>
                 {t("Example:")}&nbsp;<code>{t("john@example.com")}</code>
                 &nbsp;&middot;&nbsp;
@@ -148,27 +132,19 @@ const BulkPaymentModal = ({
 
             <div className={styles.colBlock}>
               <h6>{t("Sending Currency")}</h6>
+              <p>{t("Enter the 3-letter currency code of the currency you are sending from.")}</p>
               <p>
-                {t(
-                  "Enter the 3-letter currency code of the currency you are sending from.",
-                )}
-              </p>
-              <p>
-                {t("Example:")}&nbsp;<code>{t("USD")}</code>,{" "}
-                <code>{t("CHF")}</code>, <code>{t("EUR")}</code>
+                {t("Example:")}&nbsp;<code>{t("USD")}</code>, <code>{t("CHF")}</code>,{" "}
+                <code>{t("EUR")}</code>
               </p>
             </div>
 
             <div className={styles.colBlock}>
               <h6>{t("Recipient Currency")}</h6>
+              <p>{t("Enter the 3-letter currency code the recipient should receive.")}</p>
               <p>
-                {t(
-                  "Enter the 3-letter currency code the recipient should receive.",
-                )}
-              </p>
-              <p>
-                {t("Example:")}&nbsp;<code>{t("PKR")}</code>,{" "}
-                <code>{t("EUR")}</code>, <code>{t("GBP")}</code>
+                {t("Example:")}&nbsp;<code>{t("PKR")}</code>, <code>{t("EUR")}</code>,{" "}
+                <code>{t("GBP")}</code>
               </p>
             </div>
 
@@ -177,17 +153,11 @@ const BulkPaymentModal = ({
             <h5>{t("Important Notes")}</h5>
             <ul className={styles.noteList}>
               <li>{t("Ensure there are no extra spaces in column names.")}</li>
-              <li>
-                {t(
-                  "Currency codes must be valid ISO 3-letter codes (e.g., USD, EUR, PKR).",
-                )}
-              </li>
+              <li>{t("Currency codes must be valid ISO 3-letter codes (e.g., USD, EUR, PKR).")}</li>
               <li>{t("Amount must be greater than 0.")}</li>
               <li>{t("File must be uploaded in .csv format only.")}</li>
               <li>
-                {t(
-                  "Duplicate recipients in the same file may be processed as separate payments.",
-                )}
+                {t("Duplicate recipients in the same file may be processed as separate payments.")}
               </li>
             </ul>
           </div>
@@ -201,12 +171,7 @@ const BulkPaymentModal = ({
             </button>
 
             <label className={styles.uploadLabel}>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".csv"
-                onChange={handleFileChange}
-              />
+              <input ref={fileInputRef} type="file" accept=".csv" onChange={handleFileChange} />
               <div>
                 <Upload size={14} />
                 {csvRows.length > 0 ? t("Re-upload CSV") : t("Upload CSV")}
@@ -241,10 +206,7 @@ const BulkPaymentModal = ({
                 {csvRows.length !== 1 ? "s" : ""})
               </h6>
               <div className={styles.tableWrapper}>
-                <TimelineBulkRequests
-                  beneficiaries={csvRows}
-                  srr={setCsvRows}
-                />
+                <TimelineBulkRequests beneficiaries={csvRows} srr={setCsvRows} />
               </div>
             </div>
           ) : (

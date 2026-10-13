@@ -102,11 +102,7 @@ const RequestMoney = ({ setAction, setStep }) => {
   const [timezone, setTimezone] = useState("");
 
   useEffect(() => {
-    if (
-      userWallets?.length > 0 &&
-      currency &&
-      userDetails?.user?.kyc_status !== "approved"
-    ) {
+    if (userWallets?.length > 0 && currency && userDetails?.user?.kyc_status !== "approved") {
       const getExchangedAmounts = async (from, to, amount) => {
         try {
           const res = await axios.get(
@@ -123,15 +119,9 @@ const RequestMoney = ({ setAction, setStep }) => {
       };
 
       const calculateTotal = async () => {
-        const wallets = userWallets.filter(
-          (item) => item?.wallet_type === "insta",
-        );
+        const wallets = userWallets.filter((item) => item?.wallet_type === "insta");
         const promises = wallets.map((item) =>
-          getExchangedAmounts(
-            item?.currency?.code,
-            currency,
-            item?.balance?.available,
-          ),
+          getExchangedAmounts(item?.currency?.code, currency, item?.balance?.available),
         );
         const balances = await Promise.all(promises);
         const total = balances.reduce((acc, balance) => acc + balance, 0);
@@ -152,9 +142,7 @@ const RequestMoney = ({ setAction, setStep }) => {
 
   const getPrefrences = async (liveCountry) => {
     console.log(beneficiary, userDetails.country.country_iso_code, liveCountry);
-    const userId = beneficiary[0]?.user
-      ? beneficiary[0]?._id
-      : beneficiary[0]?._id;
+    const userId = beneficiary[0]?.user ? beneficiary[0]?._id : beneficiary[0]?._id;
     console.log(beneficiary);
     try {
       if (userDetails.country.country_iso_code == liveCountry?.iso3) {
@@ -357,9 +345,7 @@ const RequestMoney = ({ setAction, setStep }) => {
             active={true}
             sendPaymentType={true}
           />
-          <Card
-            style={{ width: "100%", marginBottom: 0, paddingBottom: "1rem" }}
-          >
+          <Card style={{ width: "100%", marginBottom: 0, paddingBottom: "1rem" }}>
             <CardBody
               style={{
                 display: "flex",
@@ -390,8 +376,7 @@ const RequestMoney = ({ setAction, setStep }) => {
                 >
                   <h4 className="head_left_side">
                     {subStep === 1 && t("Choose The Beneficiary")}
-                    {subStep === 2 &&
-                      t("Enter the Amount You Wish to Transfer.")}
+                    {subStep === 2 && t("Enter the Amount You Wish to Transfer.")}
                     {subStep === 3 && t("Choose Request Type")}
                     {/* {subStep === 4 && completed && t("Authenticate Your Payment")} */}
                   </h4>
@@ -561,66 +546,58 @@ const RequestMoney = ({ setAction, setStep }) => {
                     setNotInstant={setNotInstant}
                   />
                 )}
-                {subStep === 3 &&
-                  paymentType.value === "subscription" &&
-                  notInstant && (
-                    <Recursive
-                      setSubStep={setSubStep}
-                      recursiveType={recursiveType}
-                      setRecursiveType={setRecursiveType}
-                      unlimited={unlimited}
-                      setUnlimited={setUnlimited}
-                      recDay={recDay}
-                      setRecDay={setRecDay}
-                      recCycle={recCycle}
-                      setRecCycle={setRecCycle}
-                      recStartDate={recStartDate}
-                      setRecStartDate={setRecStartDate}
-                      decrementHandler={() => setRecCycle((prev) => prev - 1)}
-                      incrementHandler={() => setRecCycle((prev) => prev + 1)}
-                      timezone={timezone}
-                      setTimezone={setTimezone}
-                    />
-                  )}
-                {subStep === 3 &&
-                  paymentType.value === "schedule" &&
-                  notInstant && (
-                    <SchedulePayment
-                      scheduleDate={scheduleDate}
-                      setScheduleDate={setScheduleDate}
-                      scheduleTime={scheduleTime}
-                      setScheduleTime={setScheduleTime}
-                      setSubStep={setSubStep}
-                      timezone={timezone}
-                      setTimezone={setTimezone}
-                    />
-                  )}
-                {subStep === 3 &&
-                  paymentType.value === "instalment" &&
-                  notInstant && (
-                    <InstalmentPayment
-                      amount={amount}
-                      currency={currency}
-                      numOfTerms={numOfTerms}
-                      setNumOfTerms={setNumOfTerms}
-                      billingDate={billingDate}
-                      setBillingDate={setBillingDate}
-                      setSubStep={setSubStep}
-                    />
-                  )}
-                {subStep === 3 &&
-                  paymentType.value === "split" &&
-                  notInstant && (
-                    <SplitPayment
-                      amount={amount}
-                      currency={currency}
-                      numOfSplits={numOfSplits}
-                      setNumOfSplits={setNumOfSplits}
-                      splitAmount={splitAmount}
-                      setSplitAmount={setSplitAmount}
-                      setSubStep={setSubStep}
-                    />
-                  )}
+                {subStep === 3 && paymentType.value === "subscription" && notInstant && (
+                  <Recursive
+                    setSubStep={setSubStep}
+                    recursiveType={recursiveType}
+                    setRecursiveType={setRecursiveType}
+                    unlimited={unlimited}
+                    setUnlimited={setUnlimited}
+                    recDay={recDay}
+                    setRecDay={setRecDay}
+                    recCycle={recCycle}
+                    setRecCycle={setRecCycle}
+                    recStartDate={recStartDate}
+                    setRecStartDate={setRecStartDate}
+                    decrementHandler={() => setRecCycle((prev) => prev - 1)}
+                    incrementHandler={() => setRecCycle((prev) => prev + 1)}
+                    timezone={timezone}
+                    setTimezone={setTimezone}
+                  />
+                )}
+                {subStep === 3 && paymentType.value === "schedule" && notInstant && (
+                  <SchedulePayment
+                    scheduleDate={scheduleDate}
+                    setScheduleDate={setScheduleDate}
+                    scheduleTime={scheduleTime}
+                    setScheduleTime={setScheduleTime}
+                    setSubStep={setSubStep}
+                    timezone={timezone}
+                    setTimezone={setTimezone}
+                  />
+                )}
+                {subStep === 3 && paymentType.value === "instalment" && notInstant && (
+                  <InstalmentPayment
+                    amount={amount}
+                    currency={currency}
+                    numOfTerms={numOfTerms}
+                    setNumOfTerms={setNumOfTerms}
+                    billingDate={billingDate}
+                    setBillingDate={setBillingDate}
+                    setSubStep={setSubStep}
+                  />
+                )}
+                {subStep === 3 && paymentType.value === "split" && notInstant && (
+                  <SplitPayment
+                    amount={amount}
+                    currency={currency}
+                    numOfSplits={numOfSplits}
+                    setNumOfSplits={setNumOfSplits}
+                    splitAmount={splitAmount}
+                    setSplitAmount={setSplitAmount}
+                    setSubStep={setSubStep}
+                  />
+                )}
                 {subStep === 4 && !completed && (
                   <ConfirmRequest
                     beneficiary={beneficiary}

@@ -52,8 +52,7 @@ export const maskAddress = (value) => {
   return `${clean.slice(0, 6)}…${clean.slice(-4)}`;
 };
 
-export const findCountry = (iso3) =>
-  allCountries.find((item) => item.alpha3 === iso3);
+export const findCountry = (iso3) => allCountries.find((item) => item.alpha3 === iso3);
 
 const describeEntry = (method, entry) => {
   switch (method) {
@@ -131,15 +130,10 @@ export const buildCryptoRows = (records = []) =>
     .flatMap((record) => {
       const list = getCryptoList(record);
       const channelKey =
-        Array.isArray(record?.crypto) && record.crypto.length > 0
-          ? "crypto"
-          : "crypto_wallet";
+        Array.isArray(record?.crypto) && record.crypto.length > 0 ? "crypto" : "crypto_wallet";
 
       return list.map((crypto, index) => {
-        const network = normalizeNetwork(
-          crypto?.network,
-          crypto?.wallet_address,
-        );
+        const network = normalizeNetwork(crypto?.network, crypto?.wallet_address);
         return {
           key: `${record?._id || "crypto"}-${crypto?._id || index}`,
           record,

@@ -21,8 +21,8 @@ const StepMethod = ({
 
   const countryLabel = useMemo(
     () =>
-      (allowedCountries || []).find((c) => c.country_iso_code === form.country)
-        ?.country_name || "this country",
+      (allowedCountries || []).find((c) => c.country_iso_code === form.country)?.country_name ||
+      "this country",
     [allowedCountries, form.country],
   );
 
@@ -33,10 +33,7 @@ const StepMethod = ({
     const isSelected = form.method === entry.value;
 
     return (
-      <div
-        key={`${entry.value}-${entry.vendor}`}
-        className={styles.methodBlock}
-      >
+      <div key={`${entry.value}-${entry.vendor}`} className={styles.methodBlock}>
         <OptionCard
           icon={meta.icon}
           title={meta.title}
@@ -86,9 +83,7 @@ const StepMethod = ({
 
         <div className={styles.optionList}>
           {isLoading && (
-            <p className={styles.optionSubtitle}>
-              Loading methods for {countryLabel}...
-            </p>
+            <p className={styles.optionSubtitle}>Loading methods for {countryLabel}...</p>
           )}
           {!isLoading && methods.transfer.length === 0 && (
             <p className={styles.optionSubtitle}>
@@ -105,9 +100,7 @@ const StepMethod = ({
           title={GROUPS.virtualIban.title}
           subtitle={GROUPS.virtualIban.subtitle}
         />
-        <div className={styles.optionList}>
-          {methods.virtualIban.map(renderMethod)}
-        </div>
+        <div className={styles.optionList}>{methods.virtualIban.map(renderMethod)}</div>
       </div>
     </>
   );

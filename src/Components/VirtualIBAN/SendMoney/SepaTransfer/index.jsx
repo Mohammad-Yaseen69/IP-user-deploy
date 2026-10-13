@@ -99,9 +99,7 @@ const DEFAULT_BENEFICIARY_FORM = {
 
 const sidebarIcons = {
   [SIDEBAR_STEP_NAMES.PAYMENT_RAIL]: Send,
-  [SIDEBAR_STEP_NAMES.AMOUNT]: () => (
-    <span className={styles.sidebarIconText}>EUR</span>
-  ),
+  [SIDEBAR_STEP_NAMES.AMOUNT]: () => <span className={styles.sidebarIconText}>EUR</span>,
   [SIDEBAR_STEP_NAMES.BENEFICIARY]: User,
   [SIDEBAR_STEP_NAMES.PURPOSE]: List,
   [SIDEBAR_STEP_NAMES.REVIEW]: FileText,
@@ -182,8 +180,7 @@ const SepaAmountStep = ({
   const numericAmount = getAmountNumber(amount);
   const sourceBalance = getAmountNumber(availableBalance);
   const selectedSpeed =
-    SEPA_TRANSFER_SPEEDS.find((speed) => speed.id === transferSpeed) ||
-    SEPA_TRANSFER_SPEEDS[0];
+    SEPA_TRANSFER_SPEEDS.find((speed) => speed.id === transferSpeed) || SEPA_TRANSFER_SPEEDS[0];
 
   return (
     <div className={styles.stepStack}>
@@ -221,18 +218,12 @@ const SepaAmountStep = ({
           {SEPA_TRANSFER_SPEEDS.map((speed) => {
             const isComingSoon = false;
             return (
-              <Tooltip
-                key={speed.id}
-                title={isComingSoon ? t("Coming soon") : ""}
-                arrow
-              >
+              <Tooltip key={speed.id} title={isComingSoon ? t("Coming soon") : ""} arrow>
                 <span style={{ display: "block" }}>
                   <button
                     type="button"
                     className={`${styles.speedCard} ${
-                      selectedSpeed.id === speed.id
-                        ? styles.selectedSpeedCard
-                        : ""
+                      selectedSpeed.id === speed.id ? styles.selectedSpeedCard : ""
                     }`}
                     onClick={() => !isComingSoon && setTransferSpeed(speed.id)}
                     disabled={isComingSoon}
@@ -249,9 +240,7 @@ const SepaAmountStep = ({
 
                     <div className={styles.speedCardBody}>
                       <p className={styles.speedLabel}>{speed.label}</p>
-                      <p className={styles.speedDescription}>
-                        {speed.description}
-                      </p>
+                      <p className={styles.speedDescription}>{speed.description}</p>
                     </div>
                   </button>
                 </span>
@@ -266,8 +255,7 @@ const SepaAmountStep = ({
 
 const AddBeneficiaryStep = ({ amount, currencyCode, form, setForm }) => {
   const { t } = useTranslation();
-  const updateForm = (key, value) =>
-    setForm((prev) => ({ ...prev, [key]: value }));
+  const updateForm = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
   const nameMatches = String(form.iban || "").trim().length > 10;
 
   return (
@@ -317,20 +305,14 @@ const AddBeneficiaryStep = ({ amount, currencyCode, form, setForm }) => {
         label={t("IBAN *")}
         value={form.iban}
         onChange={(value) => updateForm("iban", value)}
-        hint={
-          nameMatches
-            ? t(`${form.bankCountry || "Germany"} - Euro area IBAN`)
-            : ""
-        }
+        hint={nameMatches ? t(`${form.bankCountry || "Germany"} - Euro area IBAN`) : ""}
       />
       {nameMatches && (
         <div className={styles.verificationCard}>
           <CheckCircle size={16} />
           <div>
             <strong>{t("Name matches the account")}</strong>
-            <p>
-              {t("Verification of Payee confirmed with the recipient's bank.")}
-            </p>
+            <p>{t("Verification of Payee confirmed with the recipient's bank.")}</p>
           </div>
         </div>
       )}
@@ -350,9 +332,7 @@ const AddBeneficiaryStep = ({ amount, currencyCode, form, setForm }) => {
         className={styles.toggleRow}
         onClick={() => updateForm("saveBeneficiary", !form.saveBeneficiary)}
       >
-        <span
-          className={`${styles.toggle} ${form.saveBeneficiary ? styles.toggleOn : ""}`}
-        >
+        <span className={`${styles.toggle} ${form.saveBeneficiary ? styles.toggleOn : ""}`}>
           <span />
         </span>
         {t("Save this beneficiary for next time")}
@@ -388,10 +368,7 @@ const PurposeStep = ({
       <label className={styles.field}>
         <span>{t("Purpose category")}</span>
         <div className={styles.selectWrap}>
-          <select
-            value={purpose}
-            onChange={(event) => setPurpose(event.target.value)}
-          >
+          <select value={purpose} onChange={(event) => setPurpose(event.target.value)}>
             {PURPOSE_OPTIONS.map((item) => (
               <option key={item} value={item}>
                 {t(item)}
@@ -408,11 +385,7 @@ const PurposeStep = ({
         onChange={setDescription}
         placeholder={t("e.g. Invoice payment, consultant fees, trade")}
         hint={
-          !descError
-            ? t(
-                "5–34 characters; letters, digits, space, comma, dot, hyphen only",
-              )
-            : ""
+          !descError ? t("5–34 characters; letters, digits, space, comma, dot, hyphen only") : ""
         }
         error={descError}
         maxLength={34}
@@ -449,8 +422,7 @@ const ReviewStep = ({
 }) => {
   const { t } = useTranslation();
   const speed =
-    SEPA_TRANSFER_SPEEDS.find((item) => item.id === transferSpeed) ||
-    SEPA_TRANSFER_SPEEDS[0];
+    SEPA_TRANSFER_SPEEDS.find((item) => item.id === transferSpeed) || SEPA_TRANSFER_SPEEDS[0];
   const feeAmount = feeDetails?.fee;
   const recipientAmount = feeDetails?.recipient;
   const totalAmount = feeDetails?.total;
@@ -481,10 +453,7 @@ const ReviewStep = ({
         ? formatMoney(totalAmount.value, totalAmount.currency || currencyCode)
         : formatMoney(amount, currencyCode),
     ],
-    [
-      "Estimated arrival",
-      speed.id === "instant" ? "Seconds" : "1-2 business days",
-    ],
+    ["Estimated arrival", speed.id === "instant" ? "Seconds" : "1-2 business days"],
   ];
 
   return (
@@ -527,8 +496,7 @@ const downloadSepaReceipt = ({
   const doc = new jsPDF();
   const margin = 14;
   const speed =
-    SEPA_TRANSFER_SPEEDS.find((item) => item.id === transferSpeed) ||
-    SEPA_TRANSFER_SPEEDS[0];
+    SEPA_TRANSFER_SPEEDS.find((item) => item.id === transferSpeed) || SEPA_TRANSFER_SPEEDS[0];
 
   const feeAmount = feeDetails?.fee;
   const recipientAmount = feeDetails?.recipient;
@@ -554,26 +522,15 @@ const downloadSepaReceipt = ({
     ["Purpose", purpose || "-"],
     ["Additional info", additionalInfo || "-"],
     ["Amount", formatMoney(amount, currencyCode)],
-    [
-      "Fee",
-      feeAmount
-        ? formatMoney(feeAmount.value, feeAmount.currency || currencyCode)
-        : "Free",
-    ],
-    [
-      "Recipient gets",
-      `${formatMoney(recipientAmount?.value ?? amount, currencyCode)} in full`,
-    ],
+    ["Fee", feeAmount ? formatMoney(feeAmount.value, feeAmount.currency || currencyCode) : "Free"],
+    ["Recipient gets", `${formatMoney(recipientAmount?.value ?? amount, currencyCode)} in full`],
     [
       "Total to be debited",
       totalAmount
         ? formatMoney(totalAmount.value, totalAmount.currency || currencyCode)
         : formatMoney(amount, currencyCode),
     ],
-    [
-      "Estimated arrival",
-      speed.id === "instant" ? "Seconds" : "1-2 business days",
-    ],
+    ["Estimated arrival", speed.id === "instant" ? "Seconds" : "1-2 business days"],
     ["Tracking reference", trackingReference],
     ["Status", status],
   ];
@@ -643,8 +600,7 @@ const DoneStep = ({
 }) => {
   const { t } = useTranslation();
   const speed =
-    SEPA_TRANSFER_SPEEDS.find((item) => item.id === transferSpeed) ||
-    SEPA_TRANSFER_SPEEDS[0];
+    SEPA_TRANSFER_SPEEDS.find((item) => item.id === transferSpeed) || SEPA_TRANSFER_SPEEDS[0];
   const feeAmount = feeDetails?.fee;
   const recipientAmount = feeDetails?.recipient;
   const trackingReference =
@@ -686,15 +642,12 @@ const DoneStep = ({
         <div className={styles.reviewRow}>
           <span>{t("Recipient gets")}</span>
           <strong>
-            {formatMoney(recipientAmount?.value ?? amount, currencyCode)}{" "}
-            {t("in full")}
+            {formatMoney(recipientAmount?.value ?? amount, currencyCode)} {t("in full")}
           </strong>
         </div>
         <div className={styles.reviewRow}>
           <span>{t("Expected arrival")}</span>
-          <strong>
-            {speed.id === "instant" ? t("Seconds") : t("1-2 business days")}
-          </strong>
+          <strong>{speed.id === "instant" ? t("Seconds") : t("1-2 business days")}</strong>
         </div>
       </div>
       <div className={styles.doneActions}>
@@ -860,9 +813,7 @@ const isInstantNotSupportedError = (errorOrMsg) => {
       (lower.includes("instant") && lower.includes("standard sepa")) ||
       lower.includes("recipient's bank") ||
       lower.includes("recipient’s bank") ||
-      (lower.includes("sepa") &&
-        lower.includes("instant") &&
-        lower.includes("not supported"))
+      (lower.includes("sepa") && lower.includes("instant") && lower.includes("not supported"))
     );
   }
   let decrypted = null;
@@ -879,9 +830,7 @@ const isInstantNotSupportedError = (errorOrMsg) => {
     decrypted?.code,
     errorOrMsg?.response?.data?.message,
     errorOrMsg?.response?.data?.error,
-    typeof errorOrMsg?.response?.data === "string"
-      ? errorOrMsg.response.data
-      : null,
+    typeof errorOrMsg?.response?.data === "string" ? errorOrMsg.response.data : null,
     errorOrMsg?.message,
   ];
   return candidates.some((candidate) => {
@@ -893,9 +842,7 @@ const isInstantNotSupportedError = (errorOrMsg) => {
       (lower.includes("instant") && lower.includes("standard sepa")) ||
       lower.includes("recipient's bank") ||
       lower.includes("recipient’s bank") ||
-      (lower.includes("sepa") &&
-        lower.includes("instant") &&
-        lower.includes("not supported"))
+      (lower.includes("sepa") && lower.includes("instant") && lower.includes("not supported"))
     );
   });
 };
@@ -911,17 +858,12 @@ const SepaTransfer = ({
   const width = useWindowWidth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const {
-    beneficiaries,
-    userDetails,
-    setProfileLockTime,
-    getUserBeneficiaries,
-  } = useContext(UserContext);
+  const { beneficiaries, userDetails, setProfileLockTime, getUserBeneficiaries } =
+    useContext(UserContext);
 
   const ibanId = selectedIban?._id || selectedIban?.id;
   const { data: syncedBalance } = useSyncVirtualIbanBalance(ibanId);
-  const liveBalance =
-    syncedBalance?.balance ?? availableBalance ?? selectedIban?.balance ?? 0;
+  const liveBalance = syncedBalance?.balance ?? availableBalance ?? selectedIban?.balance ?? 0;
   const currencyCode = selectedIban?.currency || "EUR";
   const sourceAvailableBalance = getSourceBalance(liveBalance, selectedIban);
   const getDefaultAuthType = () =>
@@ -937,9 +879,7 @@ const SepaTransfer = ({
   const [transferSpeed, setTransferSpeed] = useState("standard");
   const [beneficiaryList, setBeneficiaryList] = useState([]);
   const [selectedBeneficiary, setSelectedBeneficiary] = useState(null);
-  const [beneficiaryForm, setBeneficiaryForm] = useState(
-    DEFAULT_BENEFICIARY_FORM,
-  );
+  const [beneficiaryForm, setBeneficiaryForm] = useState(DEFAULT_BENEFICIARY_FORM);
   const [isAddingBeneficiary, setIsAddingBeneficiary] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isChannelModalOpen, setIsChannelModalOpen] = useState(false);
@@ -1011,16 +951,10 @@ const SepaTransfer = ({
   );
   const isProcessing = payoutFee.isPending || isSendingOtp;
   const isAddressBlocked =
-    currentStep === STEPS.BENEFICIARY &&
-    isBeneficiaryAddressTooLong(selectedBeneficiary);
-  const disabled =
-    getDisabledState(currentStep, machineData) ||
-    isProcessing ||
-    isAddressBlocked;
+    currentStep === STEPS.BENEFICIARY && isBeneficiaryAddressTooLong(selectedBeneficiary);
+  const disabled = getDisabledState(currentStep, machineData) || isProcessing || isAddressBlocked;
   const showFooter =
-    !showInstantFallback &&
-    currentStep !== STEPS.OTP &&
-    currentStep !== STEPS.DONE;
+    !showInstantFallback && currentStep !== STEPS.OTP && currentStep !== STEPS.DONE;
 
   const [savedBeneficiaryId, setSavedBeneficiaryId] = useState("");
 
@@ -1046,9 +980,7 @@ const SepaTransfer = ({
   useEffect(() => {
     if (!savedBeneficiaryId) return;
 
-    const saved = beneficiaryList.find(
-      (item) => (item?._id || item?.id) === savedBeneficiaryId,
-    );
+    const saved = beneficiaryList.find((item) => (item?._id || item?.id) === savedBeneficiaryId);
     if (!saved) return;
 
     setSelectedBeneficiary(saved);
@@ -1110,19 +1042,14 @@ const SepaTransfer = ({
     if (userDetails?.tfa) setAuthType("authenticator");
     else if (userDetails?.email_verification) setAuthType("email");
     else if (userDetails?.whatsapp_verification) setAuthType("whatsapp");
-  }, [
-    userDetails?.tfa,
-    userDetails?.email_verification,
-    userDetails?.whatsapp_verification,
-  ]);
+  }, [userDetails?.tfa, userDetails?.email_verification, userDetails?.whatsapp_verification]);
 
   useEffect(() => {
     if (beneficiaries && beneficiaries.length > 0) {
       const europeanCountries = sepaCountries;
       const europeanBeneficiaries = beneficiaries.filter((beneficiary) => {
         if (beneficiary?.account_type?.includes("bank")) {
-          const bankCountry =
-            beneficiary?.bank_details?.[0]?.extras?.country_iso_code;
+          const bankCountry = beneficiary?.bank_details?.[0]?.extras?.country_iso_code;
           return europeanCountries.includes(bankCountry);
         }
         return false;
@@ -1143,10 +1070,8 @@ const SepaTransfer = ({
   };
 
   const getSelectedMethod = () =>
-    (
-      SEPA_TRANSFER_SPEEDS.find((speed) => speed.id === transferSpeed) ||
-      SEPA_TRANSFER_SPEEDS[0]
-    ).rail;
+    (SEPA_TRANSFER_SPEEDS.find((speed) => speed.id === transferSpeed) || SEPA_TRANSFER_SPEEDS[0])
+      .rail;
 
   const buildFeePayload = () => ({
     iban_id: getVirtualIbanId(selectedIban),
@@ -1216,8 +1141,7 @@ const SepaTransfer = ({
     if (currentStep === STEPS.ADD_BENEFICIARY) {
       const nextBeneficiary = buildBeneficiaryFromForm(beneficiaryForm);
       setSelectedBeneficiary(nextBeneficiary);
-      if (beneficiaryForm.saveBeneficiary)
-        setBeneficiaryList((prev) => [nextBeneficiary, ...prev]);
+      if (beneficiaryForm.saveBeneficiary) setBeneficiaryList((prev) => [nextBeneficiary, ...prev]);
       setCurrentStep(STEPS.PURPOSE);
       return;
     }
@@ -1314,9 +1238,7 @@ const SepaTransfer = ({
             selectedBeneficiary={selectedBeneficiary}
             setSelectedBeneficiary={setSelectedBeneficiary}
             onAddBeneficiary={() => setIsAddModalOpen(true)}
-            emptyMessage={t(
-              "No beneficiaries found with European bank accounts.",
-            )}
+            emptyMessage={t("No beneficiaries found with European bank accounts.")}
           >
             {isAddressBlocked && (
               <AddressTooLongBanner
@@ -1429,11 +1351,7 @@ const SepaTransfer = ({
             <div className={styles.flowHeaderContent}>
               <h2>{t("SEPA Transfer")}</h2>{" "}
               {width <= 480 ? (
-                <button
-                  type="button"
-                  className={styles.cancelBtn}
-                  onClick={handleClose}
-                >
+                <button type="button" className={styles.cancelBtn} onClick={handleClose}>
                   {t("Cancel")}
                 </button>
               ) : (
@@ -1508,9 +1426,7 @@ const SepaTransfer = ({
         );
         const currentStepNumber = activeIndex !== -1 ? activeIndex + 1 : 1;
         const currentStepName =
-          SIDEBAR_STEPS[activeIndex]?.label ||
-          SIDEBAR_STEPS[activeIndex]?.stepLabel ||
-          "";
+          SIDEBAR_STEPS[activeIndex]?.label || SIDEBAR_STEPS[activeIndex]?.stepLabel || "";
         const totalSteps = SIDEBAR_STEPS.length;
         return width < 480 ? (
           <section className={styles.stepContainer}>
@@ -1543,22 +1459,14 @@ const SepaTransfer = ({
         {showFooter && (
           <div className={styles.footer}>
             {width >= 480 ? (
-              <button
-                type="button"
-                className={styles.cancelBtn}
-                onClick={handleClose}
-              >
+              <button type="button" className={styles.cancelBtn} onClick={handleClose}>
                 {t("Cancel")}
               </button>
             ) : (
               <span />
             )}
             <div className={styles.footerNav}>
-              <button
-                type="button"
-                className={styles.backBtn}
-                onClick={handleBack}
-              >
+              <button type="button" className={styles.backBtn} onClick={handleBack}>
                 <ChevronLeft size={14} />
                 {t("Back")}
               </button>
@@ -1568,9 +1476,7 @@ const SepaTransfer = ({
                 disabled={disabled}
                 onClick={handleContinue}
               >
-                {isProcessing
-                  ? t("Processing...")
-                  : getContinueLabel(currentStep, t)}
+                {isProcessing ? t("Processing...") : getContinueLabel(currentStep, t)}
                 <ChevronRight size={14} />
               </button>
             </div>
@@ -1599,9 +1505,7 @@ const SepaTransfer = ({
         <AddBeneficiaryFlowV2
           open={isAddModalOpen || isChannelModalOpen}
           fixedMethod="local_bank"
-          existingBeneficiary={
-            isChannelModalOpen ? channelModalBeneficiary : null
-          }
+          existingBeneficiary={isChannelModalOpen ? channelModalBeneficiary : null}
           handleClose={() => {
             setIsAddModalOpen(false);
             setIsChannelModalOpen(false);

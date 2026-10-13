@@ -37,8 +37,7 @@ const AddChannelModal = ({
 
   // Default to the first not-yet-added asset each time the modal opens.
   useEffect(() => {
-    if (isOpen)
-      setSelectedCode(assets.find((asset) => !asset.owned)?.code || null);
+    if (isOpen) setSelectedCode(assets.find((asset) => !asset.owned)?.code || null);
   }, [isOpen, assets]);
 
   const close = () => {
@@ -58,9 +57,7 @@ const AddChannelModal = ({
       <ModalBody style={{ padding: 0 }}>
         <ModalShell
           title={t("Add crypto channel")}
-          subtitle={t(
-            "Choose the crypto asset you want to receive into this vIBAN.",
-          )}
+          subtitle={t("Choose the crypto asset you want to receive into this vIBAN.")}
           onClose={close}
           secondaryLabel={t("Cancel")}
           onSecondary={close}
@@ -69,11 +66,7 @@ const AddChannelModal = ({
           primaryDisabled={!selectedCode || creating}
           locked={creating}
         >
-          <div
-            className={styles.optionList}
-            role="radiogroup"
-            aria-label={t("Crypto asset")}
-          >
+          <div className={styles.optionList} role="radiogroup" aria-label={t("Crypto asset")}>
             {assets.map((asset) => (
               <OptionRow
                 key={asset.id}

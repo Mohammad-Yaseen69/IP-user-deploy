@@ -4,16 +4,12 @@ export const createJwtToken = (payload) => {
   const headerString = JSON.stringify({ alg: "HS256", typ: "JWT" });
   const payloadString = JSON.stringify(payload);
 
-  const encodedHeader = CryptoJS.enc.Base64.stringify(
-    CryptoJS.enc.Utf8.parse(headerString),
-  )
+  const encodedHeader = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(headerString))
     .replace(/=/g, "")
     .replace(/\+/g, "-")
     .replace(/\//g, "_");
 
-  const encodedPayload = CryptoJS.enc.Base64.stringify(
-    CryptoJS.enc.Utf8.parse(payloadString),
-  )
+  const encodedPayload = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(payloadString))
     .replace(/=/g, "")
     .replace(/\+/g, "-")
     .replace(/\//g, "_");
@@ -36,16 +32,15 @@ export const createJwtToken = (payload) => {
 };
 
 export const createShambeToken = (data) => {
-  const reversed =
-    `${data?.cardNumber?.replaceAll(" ", "")}:${data?.cvc || data?.cardCVC}:${(
-      data?.expiry || data?.cardExpiry
-    )
-      ?.split("/")
-      ?.map((item) => item?.trim())
-      ?.join(":")}`
-      ?.split(":")
-      ?.reverse()
-      ?.join(":");
+  const reversed = `${data?.cardNumber?.replaceAll(" ", "")}:${data?.cvc || data?.cardCVC}:${(
+    data?.expiry || data?.cardExpiry
+  )
+    ?.split("/")
+    ?.map((item) => item?.trim())
+    ?.join(":")}`
+    ?.split(":")
+    ?.reverse()
+    ?.join(":");
   const gurhaku = { gurhaku: reversed };
   const shambeToken = createJwtToken(gurhaku);
   return shambeToken;

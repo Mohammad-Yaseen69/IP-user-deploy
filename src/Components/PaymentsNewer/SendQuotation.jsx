@@ -43,11 +43,7 @@ const SendQuotation = ({ setAction, setStep }) => {
   const [totalBalance, setTotalBalance] = useState(0);
 
   useEffect(() => {
-    if (
-      userWallets?.length > 0 &&
-      currency &&
-      userDetails?.user?.kyc_status !== "approved"
-    ) {
+    if (userWallets?.length > 0 && currency && userDetails?.user?.kyc_status !== "approved") {
       const getExchangedAmounts = async (from, to, amount) => {
         try {
           const res = await axios.get(
@@ -64,15 +60,9 @@ const SendQuotation = ({ setAction, setStep }) => {
       };
 
       const calculateTotal = async () => {
-        const wallets = userWallets.filter(
-          (item) => item?.wallet_type === "insta",
-        );
+        const wallets = userWallets.filter((item) => item?.wallet_type === "insta");
         const promises = wallets.map((item) =>
-          getExchangedAmounts(
-            item?.currency?.code,
-            currency,
-            item?.balance?.available,
-          ),
+          getExchangedAmounts(item?.currency?.code, currency, item?.balance?.available),
         );
         const balances = await Promise.all(promises);
         const total = balances.reduce((acc, balance) => acc + balance, 0);
@@ -138,8 +128,7 @@ const SendQuotation = ({ setAction, setStep }) => {
               {subStep === 3 && !completed ? (
                 <div
                   style={{
-                    background:
-                      "linear-gradient(0deg, #FAFAFA 0%, #FAFAFA 100%), #D2D2D2",
+                    background: "linear-gradient(0deg, #FAFAFA 0%, #FAFAFA 100%), #D2D2D2",
                     padding: "2rem",
                     textAlign: "center",
                     height: "100%",
@@ -170,8 +159,7 @@ const SendQuotation = ({ setAction, setStep }) => {
               {subStep === 4 && (
                 <div
                   style={{
-                    background:
-                      "linear-gradient(0deg, #FAFAFA 0%, #FAFAFA 100%), #D2D2D2",
+                    background: "linear-gradient(0deg, #FAFAFA 0%, #FAFAFA 100%), #D2D2D2",
                     padding: "2rem",
                     textAlign: "center",
                     height: "100%",

@@ -52,8 +52,7 @@ const toBase64 = (src) =>
   });
 
 const renderRecipientName = (tx) => {
-  if (tx?.virtual_iban?.account_holder_name)
-    return tx.virtual_iban.account_holder_name;
+  if (tx?.virtual_iban?.account_holder_name) return tx.virtual_iban.account_holder_name;
   if (tx?.guest_details?.name) return tx.guest_details.name;
   if (tx?.recipient_name) return tx.recipient_name;
   if (tx?.account?.user?.first_name || tx?.account?.user?.last_name) {
@@ -67,9 +66,7 @@ const renderRecipientName = (tx) => {
 
 const renderPaymentType = (item) => {
   if (item?.payment_type) {
-    return service_name_formatter
-      ? service_name_formatter(item.payment_type)
-      : item.payment_type;
+    return service_name_formatter ? service_name_formatter(item.payment_type) : item.payment_type;
   }
   if (item?.type) {
     return item.type
@@ -95,9 +92,7 @@ const getDateRange = (periodKey, customFrom, customTo) => {
     startDate = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
     endDate = new Date();
   } else if (periodKey === "Custom") {
-    startDate = customFrom
-      ? new Date(customFrom)
-      : new Date(now.getFullYear(), now.getMonth(), 1);
+    startDate = customFrom ? new Date(customFrom) : new Date(now.getFullYear(), now.getMonth(), 1);
     endDate = customTo ? new Date(customTo + "T23:59:59") : new Date();
   }
   return { startDate, endDate };
@@ -112,8 +107,7 @@ const StatementModal = ({ isOpen, toggle, selectedIban }) => {
     if (selectedIban) return normalizeVirtualIban(selectedIban);
     if (!rawIbans.length) return null;
     const found =
-      rawIbans.find((iban) => (iban?._id || iban?.id) === selectedAccount) ||
-      rawIbans[0];
+      rawIbans.find((iban) => (iban?._id || iban?.id) === selectedAccount) || rawIbans[0];
     return normalizeVirtualIban(found);
   }, [selectedIban, rawIbans, selectedAccount]);
 
@@ -159,15 +153,11 @@ const StatementModal = ({ isOpen, toggle, selectedIban }) => {
           isInRange: txDate >= startDate && txDate <= endDate,
         });
 
-        return (
-          !isNaN(txDate.getTime()) && txDate >= startDate && txDate <= endDate
-        );
+        return !isNaN(txDate.getTime()) && txDate >= startDate && txDate <= endDate;
       });
 
       if (filteredTransactions.length === 0) {
-        setDownloadError(
-          t("No transactions found within the selected period!"),
-        );
+        setDownloadError(t("No transactions found within the selected period!"));
         toast.warning(t("No transactions found for the selected date range."));
         setIsDownloading(false);
         return;
@@ -199,14 +189,10 @@ const StatementModal = ({ isOpen, toggle, selectedIban }) => {
         doc.text(formattedDate, 220, 17.5);
 
         const userName = `${userDetails?.user?.first_name || userDetails?.first_name || userDetails?.company_name || userDetails?.companyName || userDetails?.name || "Valued Customer"}`;
-        const userAddr =
-          userDetails?.address || userDetails?.formattedAddress || "N/A";
+        const userAddr = userDetails?.address || userDetails?.formattedAddress || "N/A";
         const ibanNum = activeIban?.iban || "N/A";
         const bicCode =
-          activeIban?.bank?.bic ||
-          activeIban?.swift_code ||
-          activeIban?.bic ||
-          "SYPLMTM2";
+          activeIban?.bank?.bic || activeIban?.swift_code || activeIban?.bic || "SYPLMTM2";
 
         doc.text(`IBAN: ${ibanNum}`, 14, 30);
         doc.text(`BIC / SWIFT: ${bicCode}`, 14, 35);
@@ -252,8 +238,7 @@ const StatementModal = ({ isOpen, toggle, selectedIban }) => {
             ],
           ],
           body: filteredTransactions.map((item) => {
-            const isDebit =
-              (item?.transaction_type ?? "")?.toLowerCase() === "debit";
+            const isDebit = (item?.transaction_type ?? "")?.toLowerCase() === "debit";
             const currency = item?.currency || "EUR";
 
             const amtStr = `${isDebit ? "-" : "+"}${item?.amount ? Number(item.amount).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"} ${currency}`;
@@ -263,20 +248,14 @@ const StatementModal = ({ isOpen, toggle, selectedIban }) => {
               maximumFractionDigits: 2,
             })} ${currency}`;
 
-            const totalStr = `${Number(item?.total ?? 0).toLocaleString(
-              "en-US",
-              {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              },
-            )} ${currency}`;
+            const totalStr = `${Number(item?.total ?? 0).toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })} ${currency}`;
 
             return [
               new Date(item?.createdAt || item?.date)?.toLocaleString(),
-              item?.reference_id ||
-                item?.external_reference ||
-                item?._id ||
-                "N/A",
+              item?.reference_id || item?.external_reference || item?._id || "N/A",
               renderPaymentType(item),
               item?.beneficiary?.name || renderRecipientName(item),
               (item?.transaction_type || "TRANSFER").toUpperCase(),
@@ -382,9 +361,7 @@ const StatementModal = ({ isOpen, toggle, selectedIban }) => {
                       className={`${styles.formatCard} ${isActive ? styles.activeFormat : ""}`}
                       onClick={() => setFormat(item.id)}
                     >
-                      <span className={styles.radio}>
-                        {isActive && <span />}
-                      </span>
+                      <span className={styles.radio}>{isActive && <span />}</span>
                       <FileBadge type={item.label} />
                       <span className={styles.formatText}>
                         <strong>{t(item.label)}</strong>
@@ -433,10 +410,7 @@ const StatementModal = ({ isOpen, toggle, selectedIban }) => {
             <button
               type="button"
               className={styles.downloadBtn}
-              disabled={
-                isDownloading ||
-                (period === "Custom" && (!customFrom || !customTo))
-              }
+              disabled={isDownloading || (period === "Custom" && (!customFrom || !customTo))}
               onClick={handleDownloadStatement}
             >
               {isDownloading ? t("Preparing...") : t("Download statement")}

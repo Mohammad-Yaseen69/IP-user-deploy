@@ -1,14 +1,7 @@
 import { useTranslation } from "react-i18next";
 import styles from "./styles/index.module.scss";
 import calendar from "./files/calendar.png";
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Search } from "react-feather";
 import { Input } from "reactstrap";
 import sent_white from "./files/sent_white.png";
@@ -46,10 +39,7 @@ const TransactionsTable = () => {
   const datePickerRef = useRef(null);
 
   const handleClickOutside = useCallback((event) => {
-    if (
-      datePickerRef.current &&
-      !datePickerRef.current.contains(event.target)
-    ) {
+    if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
       setShowDatePicker(false);
     }
   }, []);
@@ -192,10 +182,7 @@ const TransactionsTable = () => {
         );
         results.push(...subReq);
       } catch (err) {
-        console.log(
-          "subcribe-payment-request-w2w failed",
-          err.response?.data || err,
-        );
+        console.log("subcribe-payment-request-w2w failed", err.response?.data || err);
       }
 
       try {
@@ -205,10 +192,7 @@ const TransactionsTable = () => {
         );
         results.push(...scheduleReq);
       } catch (err) {
-        console.log(
-          "schedule-payment-request-w2w failed",
-          err.response?.data || err,
-        );
+        console.log("schedule-payment-request-w2w failed", err.response?.data || err);
       }
 
       return results;
@@ -318,11 +302,7 @@ const TransactionsTable = () => {
                 zIndex: 10000000,
               }}
             >
-              <DateRangePicker
-                maxDate={new Date()}
-                ranges={[dateRange]}
-                onChange={handleChange}
-              />
+              <DateRangePicker maxDate={new Date()} ranges={[dateRange]} onChange={handleChange} />
             </div>
           )}
         </div>
@@ -346,9 +326,7 @@ const TransactionsTable = () => {
           </div>
           <div className={styles.table_body}>
             {isLoading ? (
-              <div
-                style={{ height: "300px", width: "300px", margin: "0 auto" }}
-              >
+              <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
                 <InstaPayLoader />
               </div>
             ) : transsactions.length > 0 ? (
@@ -384,18 +362,14 @@ const TransactionsTable = () => {
                   );
                 })
             ) : (
-              <span style={{ textAlign: "center", marginTop: "2rem" }}>
-                {t("No payment")}
-              </span>
+              <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No payment")}</span>
             )}
           </div>
 
           {/* mobile */}
           <div className={styles.table_body_mobile}>
             {isLoading ? (
-              <div
-                style={{ height: "300px", width: "300px", margin: "0 auto" }}
-              >
+              <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
                 <InstaPayLoader />
               </div>
             ) : transsactions.length > 0 ? (
@@ -427,19 +401,13 @@ const TransactionsTable = () => {
                       setActiveItem={setActiveItem}
                       index={index}
                       currentUser={
-                        item?.[
-                          item?.type === "payment"
-                            ? "payment"
-                            : "request_payment"
-                        ]?.receiver
+                        item?.[item?.type === "payment" ? "payment" : "request_payment"]?.receiver
                       }
                     />
                   );
                 })
             ) : (
-              <span style={{ textAlign: "center", marginTop: "2rem" }}>
-                {t("No payment")}
-              </span>
+              <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No payment")}</span>
             )}
           </div>
         </div>

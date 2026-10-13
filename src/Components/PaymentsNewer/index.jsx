@@ -72,8 +72,7 @@ const PaymentsNewer = () => {
   const canSendQr = can("payments.qr.send");
   // Permission: payments.non-instapay.send
   const canSendNonInstapay = can("payments.non-instapay.send");
-  const canSendMoney =
-    canSendInternational || canSendWallet || canSendQr || canSendNonInstapay;
+  const canSendMoney = canSendInternational || canSendWallet || canSendQr || canSendNonInstapay;
 
   // Permission: payments.money.request
   const canMoneyRequest = can("payments.money.request");
@@ -217,24 +216,18 @@ const PaymentsNewer = () => {
               aria-label={t("Go back to main menu")}
             >
               <ChevronLeft color="#5826e9" size={14} />
-              <span style={{ fontWeight: 600 }}>
-                {t("Go back to main menu")}
-              </span>
+              <span style={{ fontWeight: 600 }}>{t("Go back to main menu")}</span>
             </button>
           )}
           {step === 1 && (
             <p style={{ marginBottom: 0 }}>
-              {t(
-                "Select the option that matches your needs from the list below:",
-              )}
+              {t("Select the option that matches your needs from the list below:")}
             </p>
           )}
           <TopRight />
         </div>
 
-        {step === 1 && (
-          <PaymentAction setAction={setAction} setStep={setStep} />
-        )}
+        {step === 1 && <PaymentAction setAction={setAction} setStep={setStep} />}
 
         {step === 2 && action === "send_money" && canSendMoney && (
           <SendPaymentType
@@ -245,11 +238,7 @@ const PaymentsNewer = () => {
         )}
 
         {step === 2 && action === "airtime" && canAirtimeOrEsim && (
-          <Airtime
-            setCurrentFlow={setCurrentFlow}
-            setAction={setAction}
-            setStep={setStep}
-          />
+          <Airtime setCurrentFlow={setCurrentFlow} setAction={setAction} setStep={setStep} />
         )}
 
         {step === 2 && action === "req_money" && canMoneyRequest && (
@@ -258,12 +247,8 @@ const PaymentsNewer = () => {
         {step === 2 && action === "send_quote" && canQuoteSend && (
           <SendQuotation setAction={setAction} setStep={setStep} />
         )}
-        {step === 2 && action === "send_crypto" && canSendCrypto && (
-          <SendCrypto />
-        )}
-        {step === 2 && action === "crypto_fiat" && canSendCrypto && (
-          <CryptoFiat />
-        )}
+        {step === 2 && action === "send_crypto" && canSendCrypto && <SendCrypto />}
+        {step === 2 && action === "crypto_fiat" && canSendCrypto && <CryptoFiat />}
       </div>
       <div className={styles.mobile}>
         {currentFlow === "" ? (
@@ -285,9 +270,7 @@ const PaymentsNewer = () => {
                 <h4 className={styles.heading}>{t("Payments")}</h4>
                 {step === 1 && (
                   <p style={{ marginBottom: 0 }}>
-                    {t(
-                      "Select the option that matches your needs from the list below:",
-                    )}
+                    {t("Select the option that matches your needs from the list below:")}
                   </p>
                 )}
               </div>
@@ -300,16 +283,12 @@ const PaymentsNewer = () => {
                       userDetails?.account_type === "individual"
                         ? userDetails?.level?.international_transfer?.bank ||
                           userDetails?.level?.wallet_to_wallet?.send ||
-                          userDetails?.level?.international_transfer
-                            ?.cash_pickup ||
-                          userDetails?.level?.international_transfer
-                            ?.mobile_money
+                          userDetails?.level?.international_transfer?.cash_pickup ||
+                          userDetails?.level?.international_transfer?.mobile_money
                         : userDetails?.level?.international_transfer?.bank ||
                           userDetails?.level?.wallet_to_wallet?.send ||
-                          userDetails?.level?.international_transfer
-                            ?.cash_pickup ||
-                          userDetails?.level?.international_transfer
-                            ?.mobile_money
+                          userDetails?.level?.international_transfer?.cash_pickup ||
+                          userDetails?.level?.international_transfer?.mobile_money
                     ) ? (
                       <button
                         data-action="send_money"
@@ -467,15 +446,11 @@ const PaymentsNewer = () => {
                     {(
                       userDetails?.account_type === "individual"
                         ? userDetails?.level?.international_transfer?.bank ||
-                          userDetails?.level?.international_transfer
-                            ?.cash_pickup ||
-                          userDetails?.level?.international_transfer
-                            ?.mobile_money
+                          userDetails?.level?.international_transfer?.cash_pickup ||
+                          userDetails?.level?.international_transfer?.mobile_money
                         : userDetails?.level?.international_transfer?.bank ||
-                          userDetails?.level?.international_transfer
-                            ?.cash_pickup ||
-                          userDetails?.level?.international_transfer
-                            ?.mobile_money
+                          userDetails?.level?.international_transfer?.cash_pickup ||
+                          userDetails?.level?.international_transfer?.mobile_money
                     ) ? (
                       <button
                         onClick={() => {

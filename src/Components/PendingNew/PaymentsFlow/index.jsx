@@ -169,8 +169,7 @@ const PaymentsFlow = ({ item }) => {
         },
         limits: {
           daily_receiving_limit: {
-            limits_used:
-              decrypted?.data?.limits_used?.daily_receiving_limit_used,
+            limits_used: decrypted?.data?.limits_used?.daily_receiving_limit_used,
             total_limits: decrypted?.data?.limits?.daily_receiving_limit,
           },
           daily_sending_limit: {
@@ -178,23 +177,19 @@ const PaymentsFlow = ({ item }) => {
             total_limits: decrypted?.data?.limits?.daily_sending_limit,
           },
           monthly_receiving_limit: {
-            limits_used:
-              decrypted?.data?.limits_used?.monthly_receiving_limit_used,
+            limits_used: decrypted?.data?.limits_used?.monthly_receiving_limit_used,
             total_limits: decrypted?.data?.limits?.monthly_receiving_limit,
           },
           monthly_sending_limit: {
-            limits_used:
-              decrypted?.data?.limits_used?.monthly_sending_limit_used,
+            limits_used: decrypted?.data?.limits_used?.monthly_sending_limit_used,
             total_limits: decrypted?.data?.limits?.monthly_sending_limit,
           },
           yearly_receiving_limit: {
-            limits_used:
-              decrypted?.data?.limits_used?.yearly_receiving_limit_used,
+            limits_used: decrypted?.data?.limits_used?.yearly_receiving_limit_used,
             total_limits: decrypted?.data?.limits?.yearly_receiving_limit,
           },
           yearly_sending_limit: {
-            limits_used:
-              decrypted?.data?.limits_used?.yearly_sending_limit_used,
+            limits_used: decrypted?.data?.limits_used?.yearly_sending_limit_used,
             total_limits: decrypted?.data?.limits?.yearly_sending_limit,
           },
         },
@@ -203,33 +198,22 @@ const PaymentsFlow = ({ item }) => {
         token: decrypted?.data?.token ?? "",
       };
 
-      if (decrypted?.data?.paypal)
-        exchange_rate_details.paypal = decrypted?.data?.paypal;
+      if (decrypted?.data?.paypal) exchange_rate_details.paypal = decrypted?.data?.paypal;
 
       if (data.payment_type?.value === "bank_transfer") {
-        exchange_rate_details.plaid_currency =
-          decrypted?.data?.converted_currency;
+        exchange_rate_details.plaid_currency = decrypted?.data?.converted_currency;
         exchange_rate_details.plaid_amount = decrypted?.data?.converted_amount;
         exchange_rate_details.plaid_fx = decrypted?.data?.converted_rate;
       }
 
       updateData("exchange_rate", exchange_rate_details);
-      if (
-        +item?.amount >
-        exchange_rate_details?.limits_used?.daily_sending_limit_used
-      ) {
+      if (+item?.amount > exchange_rate_details?.limits_used?.daily_sending_limit_used) {
         updateData("exchange_rate_error", "Daily sending limit exceed.");
         setLimitType("daily");
-      } else if (
-        +item?.amount >
-        exchange_rate_details?.limits_used?.monthly_sending_limit_used
-      ) {
+      } else if (+item?.amount > exchange_rate_details?.limits_used?.monthly_sending_limit_used) {
         updateData("exchange_rate_error", "Monthly sending limit exceed.");
         setLimitType("monthly");
-      } else if (
-        +item?.amount >
-        exchange_rate_details?.limits_used?.yearly_sending_limit_used
-      ) {
+      } else if (+item?.amount > exchange_rate_details?.limits_used?.yearly_sending_limit_used) {
         updateData("exchange_rate_error", "Yearly sending limit exceed");
         setLimitType("yearly");
       } else {
@@ -292,9 +276,7 @@ const PaymentsFlow = ({ item }) => {
     }
   };
 
-  const getMobileWalletServices = async (
-    service_name = data.payment_type?.sub_name,
-  ) => {
+  const getMobileWalletServices = async (service_name = data.payment_type?.sub_name) => {
     updateData("loading", true);
     try {
       const res = await axios.get(
@@ -360,9 +342,7 @@ const PaymentsFlow = ({ item }) => {
                 fontWeight: 600,
               }}
             >
-              {t(
-                "The fee and the received amount may vary depending on the chosen",
-              )}{" "}
+              {t("The fee and the received amount may vary depending on the chosen")}{" "}
               <strong
                 onClick={() => handleModalToggle("payment_type_info")}
                 style={{
@@ -397,14 +377,9 @@ const PaymentsFlow = ({ item }) => {
         <div className={styles.center}>
           <div className={styles.receiving_method}>
             <span style={{ whiteSpace: "nowrap" }}>{t("Sending Method")}</span>
-            <div
-              className={styles.channel_con}
-              onClick={() => handleModalToggle("payment_type")}
-            >
+            <div className={styles.channel_con} onClick={() => handleModalToggle("payment_type")}>
               <div className={styles.channel}>
-                <div
-                  className={data?.payment_type?.icon ? styles.grad_icon : ""}
-                >
+                <div className={data?.payment_type?.icon ? styles.grad_icon : ""}>
                   <img src={data?.payment_type?.icon ?? channel} alt="" />
                 </div>
                 <span>{data?.payment_type?.name ?? t("Select Method")}</span>
@@ -462,9 +437,7 @@ const PaymentsFlow = ({ item }) => {
                 fontWeight: 600,
               }}
             >
-              {t(
-                "The fee and the received amount may vary depending on the chosen",
-              )}{" "}
+              {t("The fee and the received amount may vary depending on the chosen")}{" "}
               <strong
                 onClick={() => handleModalToggle("payment_type_info")}
                 style={{
@@ -484,9 +457,7 @@ const PaymentsFlow = ({ item }) => {
             <span>{t("Trouble Sending Money?")}</span>
           </Link>
 
-          <button
-            disabled={!data.payment_type?.name || data.exchange_rate_error}
-          >
+          <button disabled={!data.payment_type?.name || data.exchange_rate_error}>
             <span>{t("Proceed")}</span>
             <ChevronRight size={20} color="white" />
           </button>

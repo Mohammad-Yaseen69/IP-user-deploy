@@ -38,9 +38,7 @@ const DeleteBeneficiary = ({ isOpen, toggle, benef, onDeleted }) => {
   return (
     <Modal isOpen={isOpen} toggle={toggle}>
       <ModalHeader toggle={toggle}>{t("Delete Beneficiary")}</ModalHeader>
-      <ModalBody>
-        {t("Are you sure you want to delete this beneficiary?")}
-      </ModalBody>
+      <ModalBody>{t("Are you sure you want to delete this beneficiary?")}</ModalBody>
       <ModalFooter>
         <Button
           onClick={toggle}

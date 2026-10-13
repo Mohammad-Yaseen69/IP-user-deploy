@@ -8,9 +8,7 @@ const SelectedCryptoCurrency = ({ cryptoCurrency, setSubStep }) => {
       className="i_t_selected"
     >
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <span style={{ color: "rgba(0,0,0,0.36)", fontSize: ".7rem" }}>
-          {t("You selected")}
-        </span>
+        <span style={{ color: "rgba(0,0,0,0.36)", fontSize: ".7rem" }}>{t("You selected")}</span>
         <span
           style={{
             background: "white",
@@ -42,9 +40,7 @@ const SelectedCryptoCurrency = ({ cryptoCurrency, setSubStep }) => {
           }}
           draggable="false"
         />
-        <span style={{ fontWeight: 700, fontSize: "1rem" }}>
-          {cryptoCurrency.name}
-        </span>
+        <span style={{ fontWeight: 700, fontSize: "1rem" }}>{cryptoCurrency.name}</span>
       </div>
     </div>
   );

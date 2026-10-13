@@ -47,8 +47,7 @@ const SidebarSubMenu = ({
       try {
         const target = new URL(item.url);
         if (target.search) {
-          returnValue =
-            pathname === target.pathname && search === target.search;
+          returnValue = pathname === target.pathname && search === target.search;
         } else {
           returnValue = pathname === target.pathname;
         }
@@ -118,20 +117,15 @@ const SidebarSubMenu = ({
                   background:
                     "linear-gradient(277.06deg, rgb(230, 64, 103) 9.52%, rgb(89, 38, 240) 62.22%, rgb(72, 40, 160) 119.38%)",
                   backgroundClip: "text",
-                  WebkitTextFillColor:
-                    /*togglSidebar ? "white" :*/ "transparent",
+                  WebkitTextFillColor: /*togglSidebar ? "white" :*/ "transparent",
                   WebkitBackgroundClip: "text",
                   width: "100%",
-                  padding:
-                    !inheritSize && togglSidebar
-                      ? "0rem"
-                      : "1rem 1.5rem .5rem 1.5rem",
+                  padding: !inheritSize && togglSidebar ? "0rem" : "1rem 1.5rem .5rem 1.5rem",
                   fontWeight: 600,
                   textTransform: "uppercase",
                   letterSpacing: "2px",
                   fontSize: !inheritSize && togglSidebar ? ".5rem" : ".7rem",
-                  whiteSpace:
-                    !inheritSize && togglSidebar ? "normal" : "nowrap",
+                  whiteSpace: !inheritSize && togglSidebar ? "normal" : "nowrap",
                   marginBottom: inheritSize && togglSidebar ? ".1rem" : "0",
                   marginRight: !inheritSize && togglSidebar ? "13px" : "0",
                   // opacity: togglSidebar ? 0 : 1
@@ -161,11 +155,8 @@ const SidebarSubMenu = ({
                 <Link
                   className={`${className ? "" : "sidebar-link sidebar-title"} ${
                     (item.menu
-                      ? item.menu
-                          .map((innerItem) => ActiveNavLinkUrl(innerItem.url))
-                          .includes(true)
-                      : ActiveNavLinkUrl(item.url)) ||
-                    isOpen[level] === item.title
+                      ? item.menu.map((innerItem) => ActiveNavLinkUrl(innerItem.url)).includes(true)
+                      : ActiveNavLinkUrl(item.url)) || isOpen[level] === item.title
                       ? "active"
                       : ""
                   }`}
@@ -178,13 +169,7 @@ const SidebarSubMenu = ({
                     textOverflow: "clip",
                     whiteSpace: "nowrap",
                   }}
-                  to={
-                    item?.type === "external_eshop"
-                      ? "#"
-                      : item.url
-                        ? item.url
-                        : Href
-                  }
+                  to={item?.type === "external_eshop" ? "#" : item.url ? item.url : Href}
                   onClick={(e) => {
                     // logout() navigates to the correct login page itself
                     if (
@@ -199,9 +184,7 @@ const SidebarSubMenu = ({
                   }}
                 >
                   {item.menu
-                    ? item.menu
-                        .map((innerItem) => ActiveNavLinkUrl(innerItem.url))
-                        .includes(true)
+                    ? item.menu.map((innerItem) => ActiveNavLinkUrl(innerItem.url)).includes(true)
                     : ActiveNavLinkUrl(item.url) || isOpen[level] === item.title
                       ? item?.activeIcon
                       : item?.icon}

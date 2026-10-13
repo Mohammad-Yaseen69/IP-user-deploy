@@ -61,10 +61,8 @@ const apiErrors = {
     "You took too long to initiate the payment and for security reasons we have terminated the process. Please start again",
   token_expired:
     "You took too long to initiate the payment and for security reasons we have terminated the process. Please start again",
-  invalid_card_details:
-    "The card details you entered don't match your selected country.",
-  incorrect_card:
-    "This card does not belong to your account. Please use a valid card.",
+  invalid_card_details: "The card details you entered don't match your selected country.",
+  incorrect_card: "This card does not belong to your account. Please use a valid card.",
   transaction_failed:
     "The transaction couldn't be completed. Please try again or use a different method.",
   feature_not_allowed:
@@ -77,8 +75,7 @@ const apiErrors = {
   invoice_not_found:
     "The invoice you're trying to pay is either inactive or the invoice id is not correct!",
   invoice_already_paid: "This invoice is already paid!",
-  receiver_wallet_not_found:
-    "Recipient wallet is either disabled, blocked or does not exists.",
+  receiver_wallet_not_found: "Recipient wallet is either disabled, blocked or does not exists.",
   shipping_details_required:
     "Please fill all the required shipping details before proceeding with the transaction.",
   "Onafriq API failed":
@@ -230,13 +227,8 @@ const InternationFlow = ({
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const {
-    userDetails,
-    authHeader,
-    setProfileLockTime,
-    getUserBeneficiaries,
-    isAgentLogin,
-  } = useContext(UserContext);
+  const { userDetails, authHeader, setProfileLockTime, getUserBeneficiaries, isAgentLogin } =
+    useContext(UserContext);
   const [subStep, setSubStep] = useState(0);
   const [internationalData, dispatch] = useReducer(reducer, initialState);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -288,9 +280,7 @@ const InternationFlow = ({
   );
 
   const checkVendorBalance = () => {
-    const amount = Number(
-      String(internationalData.amount)?.replaceAll(",", ""),
-    );
+    const amount = Number(String(internationalData.amount)?.replaceAll(",", ""));
     if (vendorBalanceInUSD < 4 || amount > vendorBalance) {
       return false;
     }
@@ -310,8 +300,7 @@ const InternationFlow = ({
       updateInternationalData("codeType", "whatsapp");
     }
     if (userDetails?.account_type && !internationalData.sendingType) {
-      const defaultSendingType =
-        userDetails.account_type === "individual" ? "C" : "B";
+      const defaultSendingType = userDetails.account_type === "individual" ? "C" : "B";
       updateInternationalData("sendingType", defaultSendingType);
     }
   }, [userDetails, internationalData.sendingType]);
@@ -319,10 +308,7 @@ const InternationFlow = ({
   useEffect(() => {
     if (userDetails?.isThirdPartyAllowed) {
       if (isAgentLogin) {
-        updateInternationalData(
-          "isThirdPartyAllowed",
-          can("payments.send-as-third-party.send"),
-        );
+        updateInternationalData("isThirdPartyAllowed", can("payments.send-as-third-party.send"));
       } else {
         updateInternationalData("isThirdPartyAllowed", true);
       }
@@ -337,10 +323,7 @@ const InternationFlow = ({
           if (!internationalData.isRecipientTypeSelected) {
             return !internationalData.transactionType;
           }
-          if (
-            internationalData.isThirdPartyAllowed &&
-            !internationalData.isSendingTypeSelected
-          ) {
+          if (internationalData.isThirdPartyAllowed && !internationalData.isSendingTypeSelected) {
             return !internationalData.sendingType;
           }
         }
@@ -375,10 +358,7 @@ const InternationFlow = ({
             return !internationalData.selectedSender?._id;
           }
         }
-        return (
-          !internationalData.beneficiary?._id &&
-          !internationalData.beneficiary?.isNew
-        );
+        return !internationalData.beneficiary?._id && !internationalData.beneficiary?.isNew;
 
       case 3:
         return internationalData.reason.length < 1 || !internationalData.reason;
@@ -394,9 +374,7 @@ const InternationFlow = ({
 
       case 5:
         if (internationalData.payment_type?.value === "card") {
-          const [contentMonth, contentYear] = internationalData.expiry
-            .split("/")
-            .map(Number);
+          const [contentMonth, contentYear] = internationalData.expiry.split("/").map(Number);
           const currentDate = new Date();
           const currentMonth = currentDate.getMonth() + 1;
           const currentYear = currentDate.getFullYear() % 100;
@@ -429,14 +407,8 @@ const InternationFlow = ({
         },
       );
       const dec = await decryptData(res.data.data);
-      updateInternationalData(
-        "recipient_currency",
-        dec?.data?.destination_currency,
-      );
-      updateInternationalData(
-        "payerRequiredFields",
-        dec?.data?.payer_required_fields,
-      );
+      updateInternationalData("recipient_currency", dec?.data?.destination_currency);
+      updateInternationalData("payerRequiredFields", dec?.data?.payer_required_fields);
       return dec?.data?.destination_currency;
     } catch {
       updateInternationalData("exchange_rate_error", "sww");
@@ -452,11 +424,7 @@ const InternationFlow = ({
     setLoading,
     fromOrTo = "from",
   ) => {
-    if (
-      internationalData.payer?.id &&
-      internationalData.payoutChannel?.id &&
-      amount
-    ) {
+    if (internationalData.payer?.id && internationalData.payoutChannel?.id && amount) {
       setLoading(true);
       const destinationCurrency = await getCurrency();
       try {
@@ -506,33 +474,27 @@ const InternationFlow = ({
           },
           limits: {
             daily_receiving_limit: {
-              limits_used:
-                decrypted?.data?.limits_used?.daily_receiving_limit_used,
+              limits_used: decrypted?.data?.limits_used?.daily_receiving_limit_used,
               total_limits: decrypted?.data?.limits?.daily_receiving_limit,
             },
             daily_sending_limit: {
-              limits_used:
-                decrypted?.data?.limits_used?.daily_sending_limit_used,
+              limits_used: decrypted?.data?.limits_used?.daily_sending_limit_used,
               total_limits: decrypted?.data?.limits?.daily_sending_limit,
             },
             monthly_receiving_limit: {
-              limits_used:
-                decrypted?.data?.limits_used?.monthly_receiving_limit_used,
+              limits_used: decrypted?.data?.limits_used?.monthly_receiving_limit_used,
               total_limits: decrypted?.data?.limits?.monthly_receiving_limit,
             },
             monthly_sending_limit: {
-              limits_used:
-                decrypted?.data?.limits_used?.monthly_sending_limit_used,
+              limits_used: decrypted?.data?.limits_used?.monthly_sending_limit_used,
               total_limits: decrypted?.data?.limits?.monthly_sending_limit,
             },
             yearly_receiving_limit: {
-              limits_used:
-                decrypted?.data?.limits_used?.yearly_receiving_limit_used,
+              limits_used: decrypted?.data?.limits_used?.yearly_receiving_limit_used,
               total_limits: decrypted?.data?.limits?.yearly_receiving_limit,
             },
             yearly_sending_limit: {
-              limits_used:
-                decrypted?.data?.limits_used?.yearly_sending_limit_used,
+              limits_used: decrypted?.data?.limits_used?.yearly_sending_limit_used,
               total_limits: decrypted?.data?.limits?.yearly_sending_limit,
             },
           },
@@ -546,19 +508,13 @@ const InternationFlow = ({
         updateInternationalData("quotation_details", decrypted?.data);
         // console.log(decrypted)
         if (fromOrTo === "from") {
-          updateInternationalData(
-            "receiving_amount",
-            exchange_rate_details?.receiver?.amount,
-          );
+          updateInternationalData("receiving_amount", exchange_rate_details?.receiver?.amount);
           updateInternationalData(
             "conversion_in",
             internationalData.currency_wallet?.currency?.code,
           );
         } else {
-          updateInternationalData(
-            "amount",
-            exchange_rate_details?.receiver?.amount,
-          );
+          updateInternationalData("amount", exchange_rate_details?.receiver?.amount);
           updateInternationalData("conversion_in", destinationCurrency);
         }
 
@@ -605,10 +561,7 @@ const InternationFlow = ({
           if (error) {
             updateInternationalData("exchange_rate_error", error);
           } else if (dec?.message?.toLowerCase()?.includes("insufficient")) {
-            updateInternationalData(
-              "exchange_rate_error",
-              "insufficient balance payer",
-            );
+            updateInternationalData("exchange_rate_error", "insufficient balance payer");
           } else if (dec?.message?.toLowerCase()?.includes("above the max")) {
             updateInternationalData("exchange_rate_error", "max payer");
             updateInternationalData(
@@ -711,8 +664,7 @@ const InternationFlow = ({
         },
         total: decrypted?.data?.result?.total?.value,
         token: internationalData?.exchange_rate?.token,
-        external_transaction_data:
-          decrypted?.data?.result?.external_transaction_data,
+        external_transaction_data: decrypted?.data?.result?.external_transaction_data,
       };
 
       if (decrypted?.data?.result?.paypal)
@@ -728,19 +680,13 @@ const InternationFlow = ({
           userDetails: userDetails,
         },
       );
-      if (
-        +amount > exchange_rate_details?.limits_used?.daily_sending_limit_used
-      ) {
+      if (+amount > exchange_rate_details?.limits_used?.daily_sending_limit_used) {
         updateInternationalData("exchange_rate_error", "exceed send");
         setLimitType("daily");
-      } else if (
-        +amount > exchange_rate_details?.limits_used?.monthly_sending_limit_used
-      ) {
+      } else if (+amount > exchange_rate_details?.limits_used?.monthly_sending_limit_used) {
         updateInternationalData("exchange_rate_error", "exceed send");
         setLimitType("monthly");
-      } else if (
-        +amount > exchange_rate_details?.limits_used?.yearly_sending_limit_used
-      ) {
+      } else if (+amount > exchange_rate_details?.limits_used?.yearly_sending_limit_used) {
         updateInternationalData("exchange_rate_error", "exceed send");
         setLimitType("yearly");
       } else {
@@ -783,20 +729,13 @@ const InternationFlow = ({
         } else if (
           typeof dec?.message === "string"
             ? dec?.message?.toLowerCase()?.includes("insufficient")
-            : dec?.message?.[0]?.message
-                ?.toLowerCase()
-                ?.includes("insufficient")
+            : dec?.message?.[0]?.message?.toLowerCase()?.includes("insufficient")
         ) {
-          updateInternationalData(
-            "exchange_rate_error",
-            "insufficient balance payer",
-          );
+          updateInternationalData("exchange_rate_error", "insufficient balance payer");
         } else if (
           typeof dec?.message === "string"
             ? dec?.message?.toLowerCase()?.includes("above the max")
-            : dec?.message?.[0]?.message
-                ?.toLowerCase()
-                ?.includes("above the max")
+            : dec?.message?.[0]?.message?.toLowerCase()?.includes("above the max")
         ) {
           updateInternationalData("exchange_rate_error", "max payer");
           updateInternationalData(
@@ -809,9 +748,7 @@ const InternationFlow = ({
         } else if (
           typeof dec?.message === "string"
             ? dec?.message?.toLowerCase()?.includes("below the min")
-            : dec?.message?.[0]?.message
-                ?.toLowerCase()
-                ?.includes("below the min")
+            : dec?.message?.[0]?.message?.toLowerCase()?.includes("below the min")
         ) {
           updateInternationalData("exchange_rate_error", "min payer");
           updateInternationalData(
@@ -823,12 +760,8 @@ const InternationFlow = ({
           );
         } else if (
           typeof dec?.message === "string"
-            ? dec?.message
-                ?.toLowerCase()
-                ?.includes("payer is currently unavailable")
-            : dec?.message?.[0]?.message
-                ?.toLowerCase()
-                ?.includes("payer is currently unavailable")
+            ? dec?.message?.toLowerCase()?.includes("payer is currently unavailable")
+            : dec?.message?.[0]?.message?.toLowerCase()?.includes("payer is currently unavailable")
         ) {
           updateInternationalData("exchange_rate_error", "unavailable payer");
           updateInternationalData("error", "Payer is currently unavailable.");
@@ -851,10 +784,7 @@ const InternationFlow = ({
         },
       );
       const dec = decryptData(res?.data?.data);
-      updateInternationalData(
-        "new_amount",
-        dec?.exchangeRate?.exchanged_amount,
-      );
+      updateInternationalData("new_amount", dec?.exchangeRate?.exchanged_amount);
       return dec?.exchangeRate?.exchanged_amount ?? 0;
     } catch {
       updateInternationalData(
@@ -876,14 +806,8 @@ const InternationFlow = ({
         },
       );
       const dec = decryptData(res.data.data);
-      updateInternationalData(
-        "mobile_wallet_channels",
-        dec?.data?.services ?? [],
-      );
-      updateInternationalData(
-        "mobile_wallet_merchant",
-        dec?.data?.merchant_id ?? "",
-      );
+      updateInternationalData("mobile_wallet_channels", dec?.data?.services ?? []);
+      updateInternationalData("mobile_wallet_merchant", dec?.data?.merchant_id ?? "");
     } catch {
       // updateInternationalData("error", "Something went wrong while getting mobile wallet channels.")
     } finally {
@@ -922,10 +846,7 @@ const InternationFlow = ({
     if (internationalData.payment_type?.value && subStep === 4) {
       if (internationalData.payment_type?.value !== "card")
         updateInternationalData("showCard", false);
-      if (
-        internationalData.payment_type?.value === "wallet" &&
-        !internationalData?.wallet?._id
-      )
+      if (internationalData.payment_type?.value === "wallet" && !internationalData?.wallet?._id)
         return;
       if (internationalData?.payment_type?.value !== "wallet") {
         updateInternationalData("wallet", {});
@@ -946,9 +867,7 @@ const InternationFlow = ({
               Number(String(internationalData.amount)?.replaceAll(",", "")),
             );
           } else {
-            amount = Number(
-              String(internationalData.amount)?.replaceAll(",", ""),
-            );
+            amount = Number(String(internationalData.amount)?.replaceAll(",", ""));
           }
           return amount;
         } catch (error) {
@@ -959,34 +878,21 @@ const InternationFlow = ({
       timeout = setTimeout(() => {
         const wallet_id =
           internationalData.payment_type?.value === "wallet"
-            ? (internationalData.wallet?._id ??
-              internationalData?.currency_wallet?._id)
+            ? (internationalData.wallet?._id ?? internationalData?.currency_wallet?._id)
             : internationalData?.currency_wallet?._id;
         const currency_code =
           internationalData.payment_type?.value === "wallet"
-            ? (internationalData?.wallet?.currency?.code ??
-              internationalData?.currency)
+            ? (internationalData?.wallet?.currency?.code ?? internationalData?.currency)
             : internationalData?.currency;
         getAmount().then((res) => {
           if (wallet_id) {
-            getExchangeRateNew(
-              res,
-              () => {},
-              wallet_id,
-              currency_code,
-              false,
-              setLoading,
-            );
+            getExchangeRateNew(res, () => {}, wallet_id, currency_code, false, setLoading);
           }
         });
       }, 100);
     }
     return () => clearTimeout(timeout);
-  }, [
-    internationalData.payment_type?.value,
-    internationalData.wallet?._id,
-    subStep,
-  ]);
+  }, [internationalData.payment_type?.value, internationalData.wallet?._id, subStep]);
 
   const createQuotation = async () => {
     setLoading(true);
@@ -994,9 +900,7 @@ const InternationFlow = ({
       const data = {
         token: internationalData.quotation_details?.token,
         payerId: internationalData.payer?.id,
-        wallet_id:
-          internationalData.wallet?._id ??
-          internationalData.currency_wallet?._id,
+        wallet_id: internationalData.wallet?._id ?? internationalData.currency_wallet?._id,
         transaction_type: internationalData.flow,
         payment_method: internationalData.payment_type?.value,
       };
@@ -1046,17 +950,14 @@ const InternationFlow = ({
         ...(isNewBeneficiary
           ? { beneficiaryDetails: internationalData.beneficiary.draftDetails }
           : { beneficiary_id: internationalData.beneficiary?._id }),
-        ...(internationalData.senderType === "third-party" &&
-        internationalData.selectedSender?._id
+        ...(internationalData.senderType === "third-party" && internationalData.selectedSender?._id
           ? {
               sender_id: internationalData.selectedSender._id,
             }
           : {}),
         service: { id: internationalData.payoutChannel?.id },
         transaction_type: internationalData.flow,
-        wallet_id:
-          internationalData.wallet?._id ??
-          internationalData.currency_wallet?._id,
+        wallet_id: internationalData.wallet?._id ?? internationalData.currency_wallet?._id,
         token: internationalData.quotation_details?.token,
         vendor: internationalData.payoutChannel?.vendor,
       };
@@ -1077,13 +978,9 @@ const InternationFlow = ({
         }
 
         if (!isNewBeneficiary) {
-          internationalData.payoutChannel?.value
-            ?.toLowerCase()
-            ?.includes("bank")
-            ? (payload.bank_id =
-                internationalData.beneficiary?.bank_details?.[0]?._id)
-            : (payload.mobile_wallet_id =
-                internationalData.beneficiary?.mobile_wallet?.[0]?._id);
+          internationalData.payoutChannel?.value?.toLowerCase()?.includes("bank")
+            ? (payload.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id)
+            : (payload.mobile_wallet_id = internationalData.beneficiary?.mobile_wallet?.[0]?._id);
         }
       } else {
         payload = {
@@ -1093,11 +990,8 @@ const InternationFlow = ({
           type: codeType || internationalData.codeType,
         };
         if (!isNewBeneficiary) {
-          internationalData.payoutChannel?.value
-            ?.toLowerCase()
-            ?.includes("bank")
-            ? (payload.data.bank_id =
-                internationalData.beneficiary?.bank_details?.[0]?._id)
+          internationalData.payoutChannel?.value?.toLowerCase()?.includes("bank")
+            ? (payload.data.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id)
             : (payload.data.mobile_wallet_id =
                 internationalData.beneficiary?.mobile_wallet?.[0]?._id);
         }
@@ -1221,13 +1115,9 @@ const InternationFlow = ({
           updateInternationalData("otpError", t(error2));
         } else if (error) {
           updateInternationalData("otpError", error);
-        } else if (
-          decrypted.message?.toLowerCase()?.includes("account is locked")
-        ) {
-          const time =
-            decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
-          const timeInSec =
-            +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
+        } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+          const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+          const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
           setProfileLockTime(timeInSec);
           const coun = localStorage.getItem("ip_country");
           localStorage.clear();
@@ -1271,21 +1161,15 @@ const InternationFlow = ({
       const decrypted = decryptData(err.response.data.data);
       console.log(decrypted);
       const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message);
-      updateInternationalData(
-        "otpError",
-        decrypted?.message ?? "You have entered wrong OTP.",
-      );
+      updateInternationalData("otpError", decrypted?.message ?? "You have entered wrong OTP.");
       const error2 = apiErrorMessage(decrypted?.message);
 
       if (error2) {
         updateInternationalData("otpError", t(error2));
       } else if (error) {
         updateInternationalData("otpError", error);
-      } else if (
-        decrypted.message?.toLowerCase()?.includes("account is locked")
-      ) {
-        const time =
-          decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+      } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+        const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
         const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
         setProfileLockTime(timeInSec);
         const coun = localStorage.getItem("ip_country");
@@ -1338,21 +1222,15 @@ const InternationFlow = ({
       const decrypted = decryptData(err.response.data.data);
       console.log(decrypted);
       const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message);
-      updateInternationalData(
-        "otpError",
-        decrypted?.message ?? "You have entered wrong OTP.",
-      );
+      updateInternationalData("otpError", decrypted?.message ?? "You have entered wrong OTP.");
       const error2 = apiErrorMessage(decrypted?.message);
 
       if (error2) {
         updateInternationalData("otpError", t(error2));
       } else if (error) {
         updateInternationalData("otpError", error);
-      } else if (
-        decrypted.message?.toLowerCase()?.includes("account is locked")
-      ) {
-        const time =
-          decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+      } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+        const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
         const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
         setProfileLockTime(timeInSec);
         const coun = localStorage.getItem("ip_country");
@@ -1380,10 +1258,7 @@ const InternationFlow = ({
           return;
         }
 
-        if (
-          internationalData.isThirdPartyAllowed &&
-          !internationalData.isSendingTypeSelected
-        ) {
+        if (internationalData.isThirdPartyAllowed && !internationalData.isSendingTypeSelected) {
           updateInternationalData("isSendingTypeSelected", true);
           updateInternationalData("transactionTypeSelected", true);
           return;
@@ -1415,16 +1290,10 @@ const InternationFlow = ({
 
         if (internationalData.isAddingBeneficiary) {
           if (!internationalData.pendingBeneficiary) return;
-          updateInternationalData(
-            "beneficiary",
-            internationalData.pendingBeneficiary,
-          );
+          updateInternationalData("beneficiary", internationalData.pendingBeneficiary);
         }
 
-        if (
-          internationalData.isAddingBeneficiary ||
-          internationalData.beneficiary?.isNew
-        ) {
+        if (internationalData.isAddingBeneficiary || internationalData.beneficiary?.isNew) {
           if (
             internationalData.isThirdPartyAllowed &&
             internationalData.senderType === "third-party"
@@ -1447,21 +1316,13 @@ const InternationFlow = ({
           },
         });
         internationalData.payerRequiredFields?.[0]?.forEach((field) => {
-          field =
-            field === "firstname"
-              ? "first_name"
-              : field === "lastname"
-                ? "last_name"
-                : field;
+          field = field === "firstname" ? "first_name" : field === "lastname" ? "last_name" : field;
 
           if (field === "country_iso_code") return;
           // if(field === "")
 
           if (beneficiaryRequiredFields.includes(field)) {
-            if (
-              field === "postal_code" &&
-              internationalData.beneficiary?.zip_code === ""
-            ) {
+            if (field === "postal_code" && internationalData.beneficiary?.zip_code === "") {
               setRequiredMissingFields((prev) => ({
                 ...prev,
                 beneficiary: {
@@ -1529,25 +1390,19 @@ const InternationFlow = ({
           updateInternationalData("showCard", true);
 
           if (internationalData.payoutChannel?.vendor === "thunes") {
-            createQuotation(
-              Number(String(internationalData.amount)?.replaceAll(",", "")),
-            );
+            createQuotation(Number(String(internationalData.amount)?.replaceAll(",", "")));
           } else {
             setSubStep((prev) => prev + 1);
           }
         } else if (internationalData.payment_type?.value === "mobile_wallet") {
           if (internationalData.payoutChannel?.vendor === "thunes") {
-            createQuotation(
-              Number(String(internationalData.amount)?.replaceAll(",", "")),
-            );
+            createQuotation(Number(String(internationalData.amount)?.replaceAll(",", "")));
           } else {
             setSubStep((prev) => prev + 1);
           }
         } else if (internationalData.payment_type?.value === "paypal") {
           if (internationalData.payoutChannel?.vendor === "thunes") {
-            createQuotation(
-              Number(String(internationalData.amount)?.replaceAll(",", "")),
-            );
+            createQuotation(Number(String(internationalData.amount)?.replaceAll(",", "")));
           } else {
             setSubStep((prev) => prev + 1);
           }
@@ -1559,9 +1414,7 @@ const InternationFlow = ({
             internationalData?.wallet?._id
           ) {
             if (internationalData.payoutChannel?.vendor === "thunes") {
-              createQuotation(
-                Number(String(internationalData.amount)?.replaceAll(",", "")),
-              );
+              createQuotation(Number(String(internationalData.amount)?.replaceAll(",", "")));
             } else {
               setSubStep((prev) => prev + 1);
             }
@@ -1645,14 +1498,10 @@ const InternationFlow = ({
       let res;
 
       if (internationalData.payoutChannel?.vendor === "thunes") {
-        res = await axios.post(
-          `${import.meta.env.VITE_THUNES_API}/confirmTransaction`,
-          data,
-          {
-            headers: { ...authHeader, "idempotency-key": getKey() },
-            timeout: 50000,
-          },
-        );
+        res = await axios.post(`${import.meta.env.VITE_THUNES_API}/confirmTransaction`, data, {
+          headers: { ...authHeader, "idempotency-key": getKey() },
+          timeout: 50000,
+        });
       } else {
         res = await axios.post(
           `${import.meta.env.VITE_IP_DEV_API}/api/payment/confirm-transaction`,
@@ -1665,10 +1514,7 @@ const InternationFlow = ({
       }
       const decrypted = decryptData(res.data.data);
       console.log(decrypted);
-      updateInternationalData(
-        "transaction_details",
-        decrypted?.data ?? decrypted,
-      );
+      updateInternationalData("transaction_details", decrypted?.data ?? decrypted);
       updateInternationalData("transactionStatus", true);
       updateInternationalData("otpError", "");
       setSubStep((prev) => prev + 1);
@@ -1677,10 +1523,7 @@ const InternationFlow = ({
       const decrypted = decryptData(err.response.data.data);
       console.log(decrypted);
       const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message);
-      updateInternationalData(
-        "otpError",
-        decrypted?.message ?? "You have entered wrong OTP.",
-      );
+      updateInternationalData("otpError", decrypted?.message ?? "You have entered wrong OTP.");
 
       const error2 = apiErrorMessage(decrypted?.message);
 
@@ -1688,11 +1531,8 @@ const InternationFlow = ({
         updateInternationalData("otpError", t(error2));
       } else if (error) {
         updateInternationalData("otpError", error);
-      } else if (
-        decrypted.message?.toLowerCase()?.includes("account is locked")
-      ) {
-        const time =
-          decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+      } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+        const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
         const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
         setProfileLockTime(timeInSec);
         const coun = localStorage.getItem("ip_country");
@@ -1798,12 +1638,7 @@ const InternationFlow = ({
           }}
         />
       )}
-      {
-        <VendorBalanceModal
-          isOpen={showBalanceModal}
-          toggle={() => setShowBalanceModal(false)}
-        />
-      }
+      {<VendorBalanceModal isOpen={showBalanceModal} toggle={() => setShowBalanceModal(false)} />}
       {showDetailsModal && (
         <AddBeneficiaryRequiredFields
           isOpen={showDetailsModal}
@@ -1834,9 +1669,7 @@ const InternationFlow = ({
           card_number={internationalData.cardNumber}
           currency={internationalData.currency_wallet?.currency?.code}
           transaction={internationalData.cardTransactionDetails}
-          paymentWithSavedCard={
-            internationalData.selectedSavedCard?._id ? true : false
-          }
+          paymentWithSavedCard={internationalData.selectedSavedCard?._id ? true : false}
           url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction/${internationalData.cardTransactionDetails?.transaction_id}/${internationalData.cardTransactionDetails?.intlToken}`}
           tokenUrl={() =>
             `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction/${internationalData.cardTransactionDetails?.transaction_id}/${internationalData.cardTransactionDetails?.intlToken}`
@@ -1855,11 +1688,7 @@ const InternationFlow = ({
             order: sendPaymentType === "international" ? 1 : 8,
           }}
         >
-          {sendPaymentType === "international" ? (
-            <ServiceDetails data={internationalData} />
-          ) : (
-            ""
-          )}
+          {sendPaymentType === "international" ? <ServiceDetails data={internationalData} /> : ""}
           {internationalData.error && (
             <ErrorModal
               isOpen={internationalData.error}
@@ -1875,19 +1704,18 @@ const InternationFlow = ({
               message={internationalData.error}
             />
           )}
-          {internationalData.exchange_rate_error === "payer_unavailable" &&
-            subStep === 4 && (
-              <ErrorModal
-                isOpen={internationalData.exchange_rate_error}
-                toggle={() => {
-                  updateInternationalData("exchange_rate_error", "");
-                  // setSendPaymentType("")
-                  // setStep(1)
-                }}
-                message={`Unfortunately, we can not send to "${internationalData.payer?.name}" at the moment. Please try again later.`}
-                heading="Unsupported Transaction"
-              />
-            )}
+          {internationalData.exchange_rate_error === "payer_unavailable" && subStep === 4 && (
+            <ErrorModal
+              isOpen={internationalData.exchange_rate_error}
+              toggle={() => {
+                updateInternationalData("exchange_rate_error", "");
+                // setSendPaymentType("")
+                // setStep(1)
+              }}
+              message={`Unfortunately, we can not send to "${internationalData.payer?.name}" at the moment. Please try again later.`}
+              heading="Unsupported Transaction"
+            />
+          )}
           <SendActionCard
             bg={international}
             title={t("International Transfer")}
@@ -1917,10 +1745,7 @@ const InternationFlow = ({
                   <InstaPayLoader />
                 </div>
               ) : (
-                <Receipt
-                  data={internationalData}
-                  transactionStatus={transaction_status}
-                />
+                <Receipt data={internationalData} transactionStatus={transaction_status} />
               )
             ) : (
               <div
@@ -1929,8 +1754,7 @@ const InternationFlow = ({
                   width: sendPaymentType === "international" ? "100%" : "0px",
                   transition: "500ms",
                   "--min-width":
-                    subStep === 4 &&
-                    internationalData.payment_type?.value === "wallet"
+                    subStep === 4 && internationalData.payment_type?.value === "wallet"
                       ? "65vw"
                       : "55vw",
                 }}
@@ -1975,9 +1799,7 @@ const InternationFlow = ({
                               title="Receive Method"
                               list={[
                                 {
-                                  text: t(
-                                    internationalData.payoutChannel?.name,
-                                  ),
+                                  text: t(internationalData.payoutChannel?.name),
                                   url: internationalData.payoutChannel?.icon,
                                 },
                                 {
@@ -1993,9 +1815,7 @@ const InternationFlow = ({
                               title="Name"
                               list={[
                                 {
-                                  text: getBeneficiaryDisplayName(
-                                    internationalData.beneficiary,
-                                  ),
+                                  text: getBeneficiaryDisplayName(internationalData.beneficiary),
                                 },
                               ]}
                               changeHandler={() => setSubStep(2)}
@@ -2008,9 +1828,7 @@ const InternationFlow = ({
                               title="Reason for sending"
                               list={[
                                 {
-                                  text: service_name_formatter(
-                                    internationalData.reason,
-                                  ),
+                                  text: service_name_formatter(internationalData.reason),
                                 },
                               ]}
                               changeHandler={() => setSubStep(3)}
@@ -2054,8 +1872,7 @@ const InternationFlow = ({
                   style={{
                     "--color-white":
                       subStep === 1 ||
-                      (subStep === 4 &&
-                        internationalData.payment_type?.value !== "card") ||
+                      (subStep === 4 && internationalData.payment_type?.value !== "card") ||
                       subStep === 5 ||
                       subStep === 6
                         ? "#fff"
@@ -2072,10 +1889,7 @@ const InternationFlow = ({
                   )}
                   {subStep === 2 &&
                     (!internationalData.showSenderSelection ? (
-                      <StepTwo
-                        data={internationalData}
-                        dataHandler={updateInternationalData}
-                      />
+                      <StepTwo data={internationalData} dataHandler={updateInternationalData} />
                     ) : (
                       <SelectSender
                         data={internationalData}
@@ -2083,10 +1897,7 @@ const InternationFlow = ({
                       />
                     ))}
                   {subStep === 3 && (
-                    <StepThree
-                      data={internationalData}
-                      dataHandler={updateInternationalData}
-                    />
+                    <StepThree data={internationalData} dataHandler={updateInternationalData} />
                   )}
                   {subStep === 4 && (
                     <StepFour
@@ -2100,10 +1911,7 @@ const InternationFlow = ({
                   {subStep === 5 && (
                     <>
                       {!internationalData.showCard ? (
-                        <StepFive
-                          data={internationalData}
-                          dataHandler={updateInternationalData}
-                        />
+                        <StepFive data={internationalData} dataHandler={updateInternationalData} />
                       ) : (
                         <CreditCard
                           url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction/${internationalData.cardTransactionDetails?.transaction_id}/${internationalData.cardTransactionDetails?.intlToken}`}
@@ -2140,9 +1948,7 @@ const InternationFlow = ({
                               strokeLinecap="round"
                             />
                           </svg>
-                          <span className={styles.noticeHead}>
-                            {t("Notice!")}
-                          </span>
+                          <span className={styles.noticeHead}>{t("Notice!")}</span>
                         </div>
 
                         <div>
@@ -2165,11 +1971,9 @@ const InternationFlow = ({
                           callback={
                             internationalData.payment_type?.value === "card"
                               ? initiateCardPayment
-                              : internationalData.payment_type?.value ===
-                                  "paypal"
+                              : internationalData.payment_type?.value === "paypal"
                                 ? initiatePaypalPayment
-                                : internationalData?.payment_type?.value ===
-                                    "mobile_wallet"
+                                : internationalData?.payment_type?.value === "mobile_wallet"
                                   ? initiateMobileWalletPayment
                                   : verifyOtp
                           }
@@ -2212,10 +2016,7 @@ const InternationFlow = ({
                           disabled={loading}
                           onClick={() => {
                             reset();
-                            if (
-                              subStep === 4 &&
-                              internationalData.payment_type?.value
-                            ) {
+                            if (subStep === 4 && internationalData.payment_type?.value) {
                               updateInternationalData("payment_type", {});
                             } else if (
                               subStep === 4 &&
@@ -2226,24 +2027,14 @@ const InternationFlow = ({
                               setSubStep((prev) => prev - 1);
                             } else if (
                               subStep === 5 &&
-                              internationalData.payment_type?.value ===
-                                "card" &&
+                              internationalData.payment_type?.value === "card" &&
                               !internationalData.showCard
                             ) {
                               updateInternationalData("showCard", true);
-                            } else if (
-                              internationalData.transactionTypeSelected &&
-                              subStep === 1
-                            ) {
+                            } else if (internationalData.transactionTypeSelected && subStep === 1) {
                               if (internationalData.isThirdPartyAllowed) {
-                                updateInternationalData(
-                                  "transactionTypeSelected",
-                                  false,
-                                );
-                                updateInternationalData(
-                                  "isSendingTypeSelected",
-                                  false,
-                                );
+                                updateInternationalData("transactionTypeSelected", false);
+                                updateInternationalData("isSendingTypeSelected", false);
                               } else {
                                 dispatch({ type: "RESET_FIRST_STEP_DATA" });
                               }
@@ -2252,18 +2043,9 @@ const InternationFlow = ({
                               internationalData.isThirdPartyAllowed &&
                               internationalData.isRecipientTypeSelected
                             ) {
-                              updateInternationalData(
-                                "isRecipientTypeSelected",
-                                false,
-                              );
-                            } else if (
-                              internationalData.showSenderSelection &&
-                              subStep === 2
-                            ) {
-                              updateInternationalData(
-                                "showSenderSelection",
-                                false,
-                              );
+                              updateInternationalData("isRecipientTypeSelected", false);
+                            } else if (internationalData.showSenderSelection && subStep === 2) {
+                              updateInternationalData("showSenderSelection", false);
                             } else {
                               setSubStep((prev) => prev - 1);
                             }
@@ -2272,10 +2054,7 @@ const InternationFlow = ({
                           {t("Back")}
                         </button>
                       )}
-                      <button
-                        disabled={disabledButton || loading}
-                        onClick={handleClick}
-                      >
+                      <button disabled={disabledButton || loading} onClick={handleClick}>
                         {!internationalData.transactionTypeSelected ||
                         (userDetails?.account_type === "individual"
                           ? userDetails?.user?.kyc_status === "approved"
@@ -2293,8 +2072,7 @@ const InternationFlow = ({
                     </div>
                   </div>
                 </div>
-                {subStep === 4 &&
-                internationalData.payment_type?.value === "wallet" ? (
+                {subStep === 4 && internationalData.payment_type?.value === "wallet" ? (
                   <WalletsComponent
                     loading={loading}
                     data={internationalData}
@@ -2365,10 +2143,7 @@ const InternationFlow = ({
                   )
                 ) : (
                   <>
-                    <div
-                      className={styles.flow_com}
-                      style={{ minHeight: "50vh" }}
-                    >
+                    <div className={styles.flow_com} style={{ minHeight: "50vh" }}>
                       {subStep === 4 &&
                       (internationalData.payment_type?.value === "wallet" ||
                         internationalData.payment_type?.sub_name) ? (
@@ -2468,9 +2243,7 @@ const InternationFlow = ({
                                       strokeLinecap="round"
                                     />
                                   </svg>
-                                  <span className={styles.noticeHead}>
-                                    {t("Notice!")}
-                                  </span>
+                                  <span className={styles.noticeHead}>{t("Notice!")}</span>
                                 </div>
 
                                 <div>
@@ -2491,14 +2264,11 @@ const InternationFlow = ({
                                 <OtpConfirmation
                                   variant="modal"
                                   callback={
-                                    internationalData.payment_type?.value ===
-                                    "card"
+                                    internationalData.payment_type?.value === "card"
                                       ? initiateCardPayment
-                                      : internationalData.payment_type
-                                            ?.value === "paypal"
+                                      : internationalData.payment_type?.value === "paypal"
                                         ? initiatePaypalPayment
-                                        : internationalData?.payment_type
-                                              ?.value === "mobile_wallet"
+                                        : internationalData?.payment_type?.value === "mobile_wallet"
                                           ? initiateMobileWalletPayment
                                           : verifyOtp
                                   }
@@ -2508,10 +2278,7 @@ const InternationFlow = ({
                                   isOpen={internationalData.showOtpModal}
                                   toggle={() => {
                                     reset();
-                                    updateInternationalData(
-                                      "showOtpModal",
-                                      false,
-                                    );
+                                    updateInternationalData("showOtpModal", false);
                                   }}
                                   resendHandler={createTransaction}
                                   methods={internationalData.otpMethods}
@@ -2546,10 +2313,7 @@ const InternationFlow = ({
                             disabled={loading}
                             onClick={() => {
                               reset();
-                              if (
-                                subStep === 4 &&
-                                internationalData.payment_type?.value
-                              ) {
+                              if (subStep === 4 && internationalData.payment_type?.value) {
                                 updateInternationalData("payment_type", {});
                               } else if (
                                 subStep === 4 &&
@@ -2560,8 +2324,7 @@ const InternationFlow = ({
                                 setSubStep((prev) => prev - 1);
                               } else if (
                                 subStep === 5 &&
-                                internationalData.payment_type?.value ===
-                                  "card" &&
+                                internationalData.payment_type?.value === "card" &&
                                 !internationalData.showCard
                               ) {
                                 updateInternationalData("showCard", true);
@@ -2570,38 +2333,20 @@ const InternationFlow = ({
                                 subStep === 1
                               ) {
                                 if (internationalData.isThirdPartyAllowed) {
-                                  updateInternationalData(
-                                    "isSendingTypeSelected",
-                                    false,
-                                  );
-                                  updateInternationalData(
-                                    "transactionTypeSelected",
-                                    false,
-                                  );
+                                  updateInternationalData("isSendingTypeSelected", false);
+                                  updateInternationalData("transactionTypeSelected", false);
                                 } else {
                                   dispatch({ type: "RESET_FIRST_STEP_DATA" });
-                                  updateInternationalData(
-                                    "transactionTypeSelected",
-                                    false,
-                                  );
+                                  updateInternationalData("transactionTypeSelected", false);
                                 }
                               } else if (
                                 !internationalData.transactionTypeSelected &&
                                 internationalData.isThirdPartyAllowed &&
                                 internationalData.isRecipientTypeSelected
                               ) {
-                                updateInternationalData(
-                                  "isRecipientTypeSelected",
-                                  false,
-                                );
-                              } else if (
-                                internationalData.showSenderSelection &&
-                                subStep === 2
-                              ) {
-                                updateInternationalData(
-                                  "showSenderSelection",
-                                  false,
-                                );
+                                updateInternationalData("isRecipientTypeSelected", false);
+                              } else if (internationalData.showSenderSelection && subStep === 2) {
+                                updateInternationalData("showSenderSelection", false);
                               } else {
                                 setSubStep((prev) => prev - 1);
                               }

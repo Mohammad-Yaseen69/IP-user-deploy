@@ -8,9 +8,7 @@ import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 
 const getStates = async (iso2) => {
-  const res = await axios.get(
-    `${import.meta.env.VITE_IP_DEV_API}/api/country/get-states/${iso2}`,
-  );
+  const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/country/get-states/${iso2}`);
   return decryptData(res.data.data)?.data;
 };
 
@@ -44,10 +42,7 @@ const NeemaBenExtrasFields = ({
           gap: "1rem",
         }}
       >
-        {fieldInfoValidate(
-          "credit_party_identifiers_accepted",
-          "houseNumber",
-        ) && (
+        {fieldInfoValidate("credit_party_identifiers_accepted", "houseNumber") && (
           <FormGroup style={{ flex: 1, margin: 0 }}>
             <Label className="col-form-label" htmlFor="houseNumber">
               {t("House Number")} <span className="req_star">*</span>
@@ -83,14 +78,8 @@ const NeemaBenExtrasFields = ({
             />
           </FormGroup>
         )}
-        {(fieldInfoValidate(
-          "credit_party_identifiers_accepted",
-          "province_state",
-        ) ||
-          fieldInfoValidate(
-            "required_receiving_entity_fields",
-            "province_state",
-          )) && (
+        {(fieldInfoValidate("credit_party_identifiers_accepted", "province_state") ||
+          fieldInfoValidate("required_receiving_entity_fields", "province_state")) && (
           <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
             <Label className="col-form-label" htmlFor="province_state">
               {t("Province State")} <span className="req_star">*</span>

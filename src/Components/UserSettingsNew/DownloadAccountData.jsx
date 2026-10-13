@@ -97,21 +97,14 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
 
     const personalBody = [
       nameDob
-        ? [
-            "Full Name",
-            `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}`,
-          ]
+        ? ["Full Name", `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}`]
         : null,
-      nameDob
-        ? ["InstaPay Username", `${userDetails?.username ?? "N/A"}`]
-        : null,
+      nameDob ? ["InstaPay Username", `${userDetails?.username ?? "N/A"}`] : null,
       email ? ["Email Address", `${userDetails?.email ?? "N/A"}`] : null,
       number ? ["Phone Number", `+${userDetails?.phone ?? "N/A"}`] : null,
       address ? ["Address", `${userDetails?.address ?? "N/A"}`] : null,
       address ? ["City", `${userDetails?.city ?? "N/A"}`] : null,
-      address
-        ? ["Postal/Zip Code", `${userDetails?.postal_code ?? "N/A"}`]
-        : null,
+      address ? ["Postal/Zip Code", `${userDetails?.postal_code ?? "N/A"}`] : null,
       address ? ["Country", `${userDetails?.country_name ?? "N/A"}`] : null,
       ["Account Type", `${userDetails?.account_type ?? "N/A"}`],
       ["Linked Instagram", `${userDetails?.insta_bot ?? "N/A"}`],
@@ -277,11 +270,8 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
               children: [
                 new Paragraph(
                   `${
-                    userDetails?.user?.createdAt
-                      ?.split("T")[0]
-                      ?.split("-")
-                      ?.reverse()
-                      ?.join("-") ?? "N/A"
+                    userDetails?.user?.createdAt?.split("T")[0]?.split("-")?.reverse()?.join("-") ??
+                    "N/A"
                   }`,
                 ),
               ],
@@ -373,9 +363,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
   return (
     <Card id="download_data">
       <CardHeader className={`pb-0 expanded`}>
-        <H4 attrH4={{ className: "card-title mb-0" }}>
-          {t("Download Your Data")}
-        </H4>
+        <H4 attrH4={{ className: "card-title mb-0" }}>{t("Download Your Data")}</H4>
       </CardHeader>
       <div className={`accordion-body expanded`}>
         <CardBody>
@@ -415,9 +403,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
                         <Calendar />
                       </div>
                       <div className="flex-1">
-                        <div className="text-secondary mb-1">
-                          {t("Name and Date Of Birth")}
-                        </div>
+                        <div className="text-secondary mb-1">{t("Name and Date Of Birth")}</div>
                       </div>
                     </div>
                     <Input
@@ -436,9 +422,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
                         <Home />
                       </div>
                       <div className="flex-1">
-                        <div className="text-secondary mb-1">
-                          {t("Address")}
-                        </div>
+                        <div className="text-secondary mb-1">{t("Address")}</div>
                       </div>
                     </div>
                     <Input
@@ -474,9 +458,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
                         <Phone />
                       </div>
                       <div className="flex-1">
-                        <div className="text-secondary mb-1">
-                          {t("Phone number")}
-                        </div>
+                        <div className="text-secondary mb-1">{t("Phone number")}</div>
                       </div>
                     </div>
                     <Input
@@ -508,9 +490,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
                       <User />
                     </div>
                     <div className="flex-1">
-                      <div className="text-secondary mb-1">
-                        {t("Bank accounts")}
-                      </div>
+                      <div className="text-secondary mb-1">{t("Bank accounts")}</div>
                     </div>
                   </div>
                   <Input
@@ -529,9 +509,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
                       <CreditCard />
                     </div>
                     <div className="flex-1">
-                      <div className="text-secondary mb-1">
-                        {t("Debit or credit cards")}
-                      </div>
+                      <div className="text-secondary mb-1">{t("Debit or credit cards")}</div>
                     </div>
                   </div>
                   <Input
@@ -547,16 +525,9 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
               <ul className="list-unstyled">
                 <li className="d-flex flex-column gap-2">
                   <div className="d-flex gap-2 justify-content-between align-items-center mb-2">
-                    <div
-                      style={{ maxWidth: "90%" }}
-                      onClick={(_) => setCreditInfo(!creditInfo)}
-                    >
-                      <h6 style={{ marginBottom: 0 }}>
-                        {t("Credit Information")}
-                      </h6>
-                      <span>
-                        {t("Includes your credit application information")}
-                      </span>
+                    <div style={{ maxWidth: "90%" }} onClick={(_) => setCreditInfo(!creditInfo)}>
+                      <h6 style={{ marginBottom: 0 }}>{t("Credit Information")}</h6>
+                      <span>{t("Includes your credit application information")}</span>
                     </div>
                     <Input
                       type="checkbox"
@@ -565,10 +536,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
                     />
                   </div>
                   <div className="d-flex gap-2 justify-content-between align-items-center">
-                    <div
-                      style={{ maxWidth: "90%" }}
-                      onClick={(_) => setOtherInfo(!otherInfo)}
-                    >
+                    <div style={{ maxWidth: "90%" }} onClick={(_) => setOtherInfo(!otherInfo)}>
                       <h6 style={{ marginBottom: 0 }}>
                         {t("Other Information")} {t("(not included in file)")}
                       </h6>

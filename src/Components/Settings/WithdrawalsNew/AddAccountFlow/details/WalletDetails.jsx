@@ -23,14 +23,9 @@ const WalletDetails = ({
   const dialCode = getDialCode(CountryBasedPhone, country?.alpha3);
   const maxLength = CountryBasedPhone[country?.alpha3]?.maxLength;
   const stored = channel.wallet_account_number ?? "";
-  const digits =
-    dialCode && stored.startsWith(dialCode)
-      ? stored.slice(dialCode.length)
-      : stored;
+  const digits = dialCode && stored.startsWith(dialCode) ? stored.slice(dialCode.length) : stored;
 
-  const provider = payers.find(
-    (payer) => String(payer.id) === String(channel.payer_id),
-  );
+  const provider = payers.find((payer) => String(payer.id) === String(channel.payer_id));
   const duplicate = !!digits && takenNumbers.includes(`${dialCode}${digits}`);
 
   const valid = !!(channel.payer_id && digits && !duplicate);
@@ -72,17 +67,13 @@ const WalletDetails = ({
       </div>
 
       <div className={abf.field}>
-        <FieldLabel htmlFor="wd-wallet-number">
-          {t("Wallet phone number")}
-        </FieldLabel>
+        <FieldLabel htmlFor="wd-wallet-number">{t("Wallet phone number")}</FieldLabel>
         <div
           className={`${abf.inputShell} ${styles.phoneShell} ${duplicate || error ? abf.inputShellError : ""}`}
         >
           <span className={styles.phonePrefix}>
-            {country?.file_url && (
-              <img src={country.file_url} alt="" draggable="false" />
-            )}
-            +{dialCode}
+            {country?.file_url && <img src={country.file_url} alt="" draggable="false" />}+
+            {dialCode}
           </span>
           <input
             id="wd-wallet-number"

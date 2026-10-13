@@ -15,13 +15,8 @@ import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 const Cover = () => {
   const [coverPhoto, setCoverPhoto] = useState(cover);
-  const {
-    userDetails,
-    authHeader,
-    verifyToken,
-    croppedImages,
-    setCroppedImages,
-  } = useContext(UserContext);
+  const { userDetails, authHeader, verifyToken, croppedImages, setCroppedImages } =
+    useContext(UserContext);
   const [showDelModal, setShowDelModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -193,9 +188,7 @@ const Cover = () => {
                 }}
               >
                 <Camera size={18} />
-                <span style={{ whiteSpace: "nowrap" }}>
-                  {t("Edit Cover Photo")}
-                </span>
+                <span style={{ whiteSpace: "nowrap" }}>{t("Edit Cover Photo")}</span>
               </label>
               {userDetails?.coverImage?.url && (
                 <>
@@ -214,9 +207,7 @@ const Cover = () => {
                     }}
                   >
                     <Camera size={18} />
-                    <span style={{ whiteSpace: "nowrap" }}>
-                      {t("Adjust Cover Photo")}
-                    </span>
+                    <span style={{ whiteSpace: "nowrap" }}>{t("Adjust Cover Photo")}</span>
                   </label>
                   <label
                     style={{
@@ -233,9 +224,7 @@ const Cover = () => {
                     }}
                   >
                     <Trash2 size={18} />
-                    <span style={{ whiteSpace: "nowrap" }}>
-                      {t("Remove Cover Photo")}
-                    </span>
+                    <span style={{ whiteSpace: "nowrap" }}>{t("Remove Cover Photo")}</span>
                   </label>
                 </>
               )}

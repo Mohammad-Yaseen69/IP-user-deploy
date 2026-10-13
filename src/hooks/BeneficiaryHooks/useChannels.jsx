@@ -85,8 +85,7 @@ const useChannels = ({
             let mappedServices =
               decrypted?.services?.map((item) => {
                 const serviceName = item?.method?.split(" - ")?.[0];
-                const updatedServiceName =
-                  serviceName === "cards" ? "payment card" : serviceName;
+                const updatedServiceName = serviceName === "cards" ? "payment card" : serviceName;
                 return {
                   ...item,
                   name: updatedServiceName,
@@ -108,8 +107,7 @@ const useChannels = ({
             console.log(mappedServices, " mapped services", mobile);
             if (mobile) {
               const receivingType = isBusiness ? "B" : "C";
-              const sendingType =
-                userDetails?.account_type === "individual" ? "C" : "B";
+              const sendingType = userDetails?.account_type === "individual" ? "C" : "B";
               const transaction_type = `${sendingType}2${receivingType}`;
 
               const data = {

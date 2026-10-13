@@ -24,18 +24,9 @@ const PaymentActionsButtons = ({
             onClick={() => (inPlans ? setSelectedAction(btn) : btn.onClick())}
             style={{
               background:
-                inPlans && selectedAction?.label === btn.label
-                  ? "#5926F0"
-                  : !btn.purple && "white",
-              border:
-                inPlans && selectedAction?.label === btn.label
-                  ? "none"
-                  : "1px solid #e5e7eb",
-              opacity: btn.disabled
-                ? 0.5
-                : inPlans && selectedAction?.label === btn.label
-                  ? 1
-                  : 1,
+                inPlans && selectedAction?.label === btn.label ? "#5926F0" : !btn.purple && "white",
+              border: inPlans && selectedAction?.label === btn.label ? "none" : "1px solid #e5e7eb",
+              opacity: btn.disabled ? 0.5 : inPlans && selectedAction?.label === btn.label ? 1 : 1,
               cursor: btn.disabled ? "not-allowed" : "pointer",
               pointerEvents: btn.disabled ? "none" : "all",
               width: "100%",

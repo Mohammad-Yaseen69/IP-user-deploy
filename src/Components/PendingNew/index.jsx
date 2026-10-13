@@ -1,11 +1,4 @@
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Search } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { Input } from "reactstrap";
@@ -59,10 +52,7 @@ const PendingNew = () => {
   }, [tab]);
 
   const handleClickOutside = useCallback((event) => {
-    if (
-      datePickerRef.current &&
-      !datePickerRef.current.contains(event.target)
-    ) {
+    if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
       setShowDatePicker(false);
     }
   }, []);
@@ -101,9 +91,7 @@ const PendingNew = () => {
         const decrypted = await decryptData(res.data.data);
         return decrypted?.paymentRequests ?? [];
       } catch (err) {
-        throw new Error(
-          err.response?.data?.message || "Failed to fetch received requests",
-        );
+        throw new Error(err.response?.data?.message || "Failed to fetch received requests");
       }
     },
     enabled: !!userDetails?._id,
@@ -125,9 +113,7 @@ const PendingNew = () => {
         const decrypted = await decryptData(res.data.data);
         return decrypted?.paymentRequests ?? [];
       } catch (err) {
-        throw new Error(
-          err.response?.data?.message || "Failed to fetch sent requests",
-        );
+        throw new Error(err.response?.data?.message || "Failed to fetch sent requests");
       }
     },
     enabled: !!userDetails?._id,
@@ -187,8 +173,7 @@ const PendingNew = () => {
   const handleScroll = () => {
     const wrapper = tableWrapperRef.current;
     if (wrapper) {
-      const isScrolledToBottom =
-        wrapper.scrollHeight - wrapper.scrollTop === wrapper.clientHeight;
+      const isScrolledToBottom = wrapper.scrollHeight - wrapper.scrollTop === wrapper.clientHeight;
       if (isScrolledToBottom) {
         setPage((prev) => prev + 1);
       }
@@ -226,15 +211,9 @@ const PendingNew = () => {
     if (searchQuery.length > 0) {
       return receivedRequests.filter(
         (item) =>
-          item?.sender?.user?.first_name
-            ?.toLowerCase()
-            ?.includes(searchQuery.toLowerCase()) ||
-          item?.sender?.user?.last_name
-            ?.toLowerCase()
-            ?.includes(searchQuery.toLowerCase()) ||
-          item?.sender?.user?.company_name
-            ?.toLowerCase()
-            ?.includes(searchQuery.toLowerCase()),
+          item?.sender?.user?.first_name?.toLowerCase()?.includes(searchQuery.toLowerCase()) ||
+          item?.sender?.user?.last_name?.toLowerCase()?.includes(searchQuery.toLowerCase()) ||
+          item?.sender?.user?.company_name?.toLowerCase()?.includes(searchQuery.toLowerCase()),
       );
     }
     return receivedRequests;
@@ -244,15 +223,9 @@ const PendingNew = () => {
     if (searchQuery.length > 0) {
       return sentRequests.filter(
         (item) =>
-          item?.receiver?.user?.first_name
-            ?.toLowerCase()
-            ?.includes(searchQuery.toLowerCase()) ||
-          item?.receiver?.user?.last_name
-            ?.toLowerCase()
-            ?.includes(searchQuery.toLowerCase()) ||
-          item?.receiver?.user?.company_name
-            ?.toLowerCase()
-            ?.includes(searchQuery.toLowerCase()),
+          item?.receiver?.user?.first_name?.toLowerCase()?.includes(searchQuery.toLowerCase()) ||
+          item?.receiver?.user?.last_name?.toLowerCase()?.includes(searchQuery.toLowerCase()) ||
+          item?.receiver?.user?.company_name?.toLowerCase()?.includes(searchQuery.toLowerCase()),
       );
     }
     return sentRequests;
@@ -261,9 +234,7 @@ const PendingNew = () => {
   useEffect(() => {
     const lastShown = async () => {
       if (
-        filteredReceived.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
-        ).length < 1
+        filteredReceived.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).length < 1
       ) {
         return false;
       }
@@ -319,9 +290,7 @@ const PendingNew = () => {
                   onClick={() => setActive(item.name)}
                 >
                   <img
-                    src={
-                      active === item.name ? item.icon_white : item.icon_grey
-                    }
+                    src={active === item.name ? item.icon_white : item.icon_grey}
                     loading="lazy"
                     style={{ width: "18px" }}
                   />
@@ -339,12 +308,7 @@ const PendingNew = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              <img
-                src={calendar}
-                alt="c"
-                loading="lazy"
-                onClick={handleDatePickerClick}
-              />
+              <img src={calendar} alt="c" loading="lazy" onClick={handleDatePickerClick} />
               {showDatePicker && (
                 <div
                   ref={datePickerRef}
@@ -380,9 +344,7 @@ const PendingNew = () => {
             </div>
             <div className={styles.table_body} ref={tableWrapperRef}>
               {isLoading ? (
-                <div
-                  style={{ height: "300px", width: "300px", margin: "0 auto" }}
-                >
+                <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
                   <InstaPayLoader />
                 </div>
               ) : (
@@ -391,10 +353,7 @@ const PendingNew = () => {
                     <>
                       {filteredReceived.length > 0 ? (
                         filteredReceived
-                          .sort(
-                            (a, b) =>
-                              new Date(b.createdAt) - new Date(a.createdAt),
-                          )
+                          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                           .map((item, index) => {
                             let color;
                             if (item?.status?.toLowerCase() === "completed") {
@@ -409,10 +368,7 @@ const PendingNew = () => {
                             return (
                               <div
                                 style={{
-                                  border:
-                                    id === item?._id
-                                      ? "4px solid #afafaf1e"
-                                      : "none",
+                                  border: id === item?._id ? "4px solid #afafaf1e" : "none",
                                 }}
                                 key={index}
                               >
@@ -430,9 +386,7 @@ const PendingNew = () => {
                             );
                           })
                       ) : (
-                        <span
-                          style={{ textAlign: "center", marginTop: "2rem" }}
-                        >
+                        <span style={{ textAlign: "center", marginTop: "2rem" }}>
                           {t("No Pending Items")}
                         </span>
                       )}
@@ -442,10 +396,7 @@ const PendingNew = () => {
                     <>
                       {filteredSent.length > 0 ? (
                         filteredSent
-                          .sort(
-                            (a, b) =>
-                              new Date(b.createdAt) - new Date(a.createdAt),
-                          )
+                          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                           .map((item, index) => {
                             let color;
                             if (item?.status?.toLowerCase() === "completed") {
@@ -460,10 +411,7 @@ const PendingNew = () => {
                             return (
                               <div
                                 style={{
-                                  border:
-                                    id === item?._id
-                                      ? "4px solid #afafaf1e"
-                                      : "none",
+                                  border: id === item?._id ? "4px solid #afafaf1e" : "none",
                                   borderRadius: "10px",
                                 }}
                                 key={index}
@@ -483,9 +431,7 @@ const PendingNew = () => {
                             );
                           })
                       ) : (
-                        <span
-                          style={{ textAlign: "center", marginTop: "2rem" }}
-                        >
+                        <span style={{ textAlign: "center", marginTop: "2rem" }}>
                           {t("No Pending Items")}
                         </span>
                       )}
@@ -512,12 +458,7 @@ const PendingNew = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              <img
-                src={calendar}
-                alt="c"
-                loading="lazy"
-                onClick={handleDatePickerClick}
-              />
+              <img src={calendar} alt="c" loading="lazy" onClick={handleDatePickerClick} />
               {showDatePicker && (
                 <div
                   ref={datePickerRef}
@@ -559,9 +500,7 @@ const PendingNew = () => {
                   onClick={() => setActive(item.name)}
                 >
                   <img
-                    src={
-                      active === item.name ? item.icon_white : item.icon_grey
-                    }
+                    src={active === item.name ? item.icon_white : item.icon_grey}
                     style={{ width: "18px" }}
                   />
                   <span>{item.name}</span>
@@ -582,9 +521,7 @@ const PendingNew = () => {
             </div>
             <div className={styles.table_body} ref={tableWrapperRef}>
               {isLoading ? (
-                <div
-                  style={{ height: "300px", width: "300px", margin: "0 auto" }}
-                >
+                <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
                   <InstaPayLoader />
                 </div>
               ) : (
@@ -593,10 +530,7 @@ const PendingNew = () => {
                     <>
                       {filteredReceived.length > 0 ? (
                         filteredReceived
-                          .sort(
-                            (a, b) =>
-                              new Date(b.createdAt) - new Date(a.createdAt),
-                          )
+                          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                           .map((item, index) => {
                             let color;
                             if (item?.status?.toLowerCase() === "completed") {
@@ -622,9 +556,7 @@ const PendingNew = () => {
                             );
                           })
                       ) : (
-                        <span
-                          style={{ textAlign: "center", marginTop: "2rem" }}
-                        >
+                        <span style={{ textAlign: "center", marginTop: "2rem" }}>
                           {t("No Pending Items")}
                         </span>
                       )}
@@ -634,10 +566,7 @@ const PendingNew = () => {
                     <>
                       {filteredSent.length > 0 ? (
                         filteredSent
-                          .sort(
-                            (a, b) =>
-                              new Date(b.createdAt) - new Date(a.createdAt),
-                          )
+                          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                           .map((item, index) => {
                             let color;
                             if (item?.status?.toLowerCase() === "completed") {
@@ -664,9 +593,7 @@ const PendingNew = () => {
                             );
                           })
                       ) : (
-                        <span
-                          style={{ textAlign: "center", marginTop: "2rem" }}
-                        >
+                        <span style={{ textAlign: "center", marginTop: "2rem" }}>
                           {t("No Pending Items")}
                         </span>
                       )}
@@ -677,9 +604,7 @@ const PendingNew = () => {
             </div>
             <div className={styles.table_body_mobile} ref={tableWrapperRef}>
               {isLoading ? (
-                <div
-                  style={{ height: "300px", width: "300px", margin: "0 auto" }}
-                >
+                <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
                   <InstaPayLoader />
                 </div>
               ) : (
@@ -688,10 +613,7 @@ const PendingNew = () => {
                     <>
                       {filteredReceived.length > 0 ? (
                         filteredReceived
-                          .sort(
-                            (a, b) =>
-                              new Date(b.createdAt) - new Date(a.createdAt),
-                          )
+                          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                           .map((item, index) => {
                             let color;
                             if (item?.status?.toLowerCase() === "completed") {
@@ -718,9 +640,7 @@ const PendingNew = () => {
                             );
                           })
                       ) : (
-                        <span
-                          style={{ textAlign: "center", marginTop: "2rem" }}
-                        >
+                        <span style={{ textAlign: "center", marginTop: "2rem" }}>
                           {t("No Pending Items")}
                         </span>
                       )}
@@ -730,10 +650,7 @@ const PendingNew = () => {
                     <>
                       {filteredSent.length > 0 ? (
                         filteredSent
-                          .sort(
-                            (a, b) =>
-                              new Date(b.createdAt) - new Date(a.createdAt),
-                          )
+                          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                           .map((item, index) => {
                             let color;
                             if (item?.status?.toLowerCase() === "completed") {
@@ -760,9 +677,7 @@ const PendingNew = () => {
                             );
                           })
                       ) : (
-                        <span
-                          style={{ textAlign: "center", marginTop: "2rem" }}
-                        >
+                        <span style={{ textAlign: "center", marginTop: "2rem" }}>
                           {t("No Pending Items")}
                         </span>
                       )}

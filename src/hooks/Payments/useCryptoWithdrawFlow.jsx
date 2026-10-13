@@ -13,10 +13,7 @@ import {
 } from "./useCryptoPayout";
 import { QUOTE_TTL_MS, SEND_STEPS, isQuoteError } from "./useCryptoSendFlow";
 import { handlePaymentApiError } from "../../utils/Functions/handlePaymentApiError";
-import {
-  getAmountError,
-  getAmountNumber,
-} from "../../stateMachines/cryptoPayout";
+import { getAmountError, getAmountNumber } from "../../stateMachines/cryptoPayout";
 import {
   getChannelAddress,
   getChannelAsset,
@@ -36,13 +33,8 @@ export const getDestinationKey = (destination) => destination?.key || "";
 export const useCryptoWithdrawFlow = (wallet, { active = true } = {}) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const {
-    userDetails,
-    userWithdrawals,
-    cryptoWithdrawals,
-    getWithdrawals,
-    setProfileLockTime,
-  } = useContext(UserContext);
+  const { userDetails, userWithdrawals, cryptoWithdrawals, getWithdrawals, setProfileLockTime } =
+    useContext(UserContext);
 
   const walletId = wallet?._id;
   const cryptoCurrency = String(wallet?.currency?.code || "").toUpperCase();
@@ -121,19 +113,13 @@ export const useCryptoWithdrawFlow = (wallet, { active = true } = {}) => {
   );
 
   const selectedDestination = useMemo(
-    () =>
-      countryDestinations.find(
-        (destination) => destination.key === destinationKey,
-      ) || null,
+    () => countryDestinations.find((destination) => destination.key === destinationKey) || null,
     [countryDestinations, destinationKey],
   );
 
   const selectedEntry = selectedDestination?.entry || null;
   const address = getChannelAddress(selectedEntry);
-  const savedProtocol = useMemo(
-    () => getChannelProtocol(selectedEntry),
-    [selectedEntry],
-  );
+  const savedProtocol = useMemo(() => getChannelProtocol(selectedEntry), [selectedEntry]);
 
   const protocolOptions = useMemo(() => {
     if (!address) return [];
@@ -156,21 +142,16 @@ export const useCryptoWithdrawFlow = (wallet, { active = true } = {}) => {
 
   useEffect(() => {
     if (!countryIso && countries.length === 1) setCountryIso(countries[0].iso);
-    if (countryIso && !countries.some((country) => country.iso === countryIso))
-      setCountryIso("");
+    if (countryIso && !countries.some((country) => country.iso === countryIso)) setCountryIso("");
   }, [countries, countryIso]);
 
   useEffect(() => {
     if (
       destinationKey &&
-      countryDestinations.some(
-        (destination) => destination.key === destinationKey,
-      )
+      countryDestinations.some((destination) => destination.key === destinationKey)
     )
       return;
-    setDestinationKey(
-      countryDestinations.length === 1 ? countryDestinations[0].key : "",
-    );
+    setDestinationKey(countryDestinations.length === 1 ? countryDestinations[0].key : "");
   }, [countryDestinations, destinationKey]);
 
   useEffect(() => {
@@ -385,8 +366,7 @@ export const useCryptoWithdrawFlow = (wallet, { active = true } = {}) => {
     addressStatus !== "invalid" &&
     !feeMutation.isPending;
 
-  const canConfirm =
-    !!feeDetails?.token && confirmedNetwork && !isQuoteExpired && !isSendingOtp;
+  const canConfirm = !!feeDetails?.token && confirmedNetwork && !isQuoteExpired && !isSendingOtp;
 
   return {
     step,

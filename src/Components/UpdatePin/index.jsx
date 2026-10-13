@@ -65,8 +65,7 @@ const CreatePin = () => {
   };
 
   const [isPinMatch, setIsPinMatch] = useState(false);
-  const { userDetails, authHeader, setProfileLockTime } =
-    useContext(UserContext);
+  const { userDetails, authHeader, setProfileLockTime } = useContext(UserContext);
 
   const handleInputChange = (index, value, setter, data, refs) => {
     const numericValue = value.replace(/[^0-9]/g, "");
@@ -138,8 +137,7 @@ const CreatePin = () => {
       const decrypted = decryptData(err.response.data.data);
       setError(decrypted?.message ?? "Invalid Verification Code");
       if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-        const time =
-          decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+        const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
         const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
         setProfileLockTime(timeInSec);
         const coun = localStorage.getItem("ip_country");
@@ -192,8 +190,7 @@ const CreatePin = () => {
     } catch (error) {
       const dec = decryptData(error?.response?.data?.data);
       toast.error(
-        dec.message ??
-          "We cannot process your request at the moment, please try again later.",
+        dec.message ?? "We cannot process your request at the moment, please try again later.",
       );
     } finally {
       setLoading(false);
@@ -257,9 +254,7 @@ const CreatePin = () => {
             </div>
 
             <div className={styles.right}>
-              <h4>
-                {t("Need to change your PIN? Enter a new 4-digit PIN below.")}
-              </h4>
+              <h4>{t("Need to change your PIN? Enter a new 4-digit PIN below.")}</h4>
 
               <div className={styles.fields}>
                 {/* <PinFields
@@ -290,16 +285,10 @@ const CreatePin = () => {
                   changeHandler={handleInputChange}
                   handleInputKeyDown={handleInputKeyDown}
                 />
-                {isPinMatch && (
-                  <span>{t("PINs do  not match. Please try again.")}</span>
-                )}
+                {isPinMatch && <span>{t("PINs do  not match. Please try again.")}</span>}
               </div>
 
-              <button
-                disabled={disabled}
-                style={{ opacity: disabled ? 0.5 : 1 }}
-                onClick={sendOtp}
-              >
+              <button disabled={disabled} style={{ opacity: disabled ? 0.5 : 1 }} onClick={sendOtp}>
                 {loading ? (
                   <div class="d-flex justify-content-center">
                     <div class="spinner-border" color="primary" role="status">
@@ -394,15 +383,10 @@ const CreatePin = () => {
                   </div>
                   <h4 style={{ color: "black" }}>{t("Update Your PIN")}</h4>
                 </div>
-                <h4>
-                  {t("Need to change your PIN? Enter a new 4-digit PIN below.")}
-                </h4>
+                <h4>{t("Need to change your PIN? Enter a new 4-digit PIN below.")}</h4>
               </div>
 
-              <div
-                style={{ width: "70%", alignSelf: "center" }}
-                className={styles.fields}
-              >
+              <div style={{ width: "70%", alignSelf: "center" }} className={styles.fields}>
                 {/* <PinFields
                                         label="Old PIN"
                                         data={oldPinFields}
@@ -431,9 +415,7 @@ const CreatePin = () => {
                   changeHandler={handleInputChange}
                   handleInputKeyDown={handleInputKeyDown}
                 />
-                {isPinMatch && (
-                  <span>{t("PINs do  not match. Please try again.")}</span>
-                )}
+                {isPinMatch && <span>{t("PINs do  not match. Please try again.")}</span>}
               </div>
 
               <div>
@@ -529,8 +511,7 @@ const CreatePin = () => {
               alignItems: "center",
               position: "relative",
               borderRadius: "16px",
-              background:
-                "linear-gradient(180deg, #FAFAFA 0%, rgba(250, 250, 250, 0.00) 132.78%)",
+              background: "linear-gradient(180deg, #FAFAFA 0%, rgba(250, 250, 250, 0.00) 132.78%)",
               boxShadow: "0px 16px 40px -8px rgba(88, 92, 95, 0.16)",
             }}
           >
@@ -586,9 +567,7 @@ const CreatePin = () => {
       )}
 
       <Modal isOpen={showOtpModal}>
-        <ModalHeader toggle={() => setShowOtpModal(!showOtpModal)}>
-          {t("Confirm")}
-        </ModalHeader>
+        <ModalHeader toggle={() => setShowOtpModal(!showOtpModal)}>{t("Confirm")}</ModalHeader>
         <ModalBody>
           <OTPConfirmation
             variant="card"

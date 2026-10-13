@@ -14,13 +14,7 @@ import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 
-const EditModal = ({
-  showEditModal,
-  setShowEditModal,
-  item,
-  categories,
-  setCategories,
-}) => {
+const EditModal = ({ showEditModal, setShowEditModal, item, categories, setCategories }) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [categoryName, setCategoryName] = useState("");
   const [error, setError] = useState(false);
@@ -61,21 +55,14 @@ const EditModal = ({
       .catch((err) => {
         const decrypted = decryptData(err.response.data.data);
         // console.log(decrypted)
-        setError(
-          "We cannot process your request at the moment, please try again later.",
-        );
+        setError("We cannot process your request at the moment, please try again later.");
         setIsUpdating(false);
       });
   };
 
   return (
-    <Modal
-      isOpen={showEditModal}
-      toggle={() => setShowEditModal(!showEditModal)}
-    >
-      <ModalHeader toggle={() => setShowEditModal(!showEditModal)}>
-        Edit Category
-      </ModalHeader>
+    <Modal isOpen={showEditModal} toggle={() => setShowEditModal(!showEditModal)}>
+      <ModalHeader toggle={() => setShowEditModal(!showEditModal)}>Edit Category</ModalHeader>
       <ModalBody>
         <FormGroup>
           <Label>New Category Name: </Label>
@@ -85,16 +72,13 @@ const EditModal = ({
             value={categoryName}
             onChange={(e) => setCategoryName(e.target.value)}
           />
-          {error && (
-            <span style={{ color: "red", paddingTop: ".5rem" }}>{error}</span>
-          )}
+          {error && <span style={{ color: "red", paddingTop: ".5rem" }}>{error}</span>}
         </FormGroup>
       </ModalBody>
       <ModalFooter>
         <Button
           style={{
-            background:
-              "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
             border: "none",
             outline: "none",
           }}

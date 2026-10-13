@@ -1,15 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Col,
-  FormGroup,
-  Input,
-  Label,
-} from "reactstrap";
+import { Button, Card, CardBody, CardHeader, Col, FormGroup, Input, Label } from "reactstrap";
 import { H4 } from "../../AbstractElements";
 import GradientButton from "./GradientButton";
 import axios from "axios";
@@ -230,11 +221,7 @@ const ApiKey = () => {
                 >
                   <Input
                     type="text"
-                    placeholder={
-                      isGetting
-                        ? "Getting API Key..."
-                        : "API key will be rendered"
-                    }
+                    placeholder={isGetting ? "Getting API Key..." : "API key will be rendered"}
                     readOnly
                     disabled
                     value={isGetting ? "Generating New API Key" : apiKey}
@@ -309,11 +296,7 @@ const ApiKey = () => {
               <Col md="12">
                 <FormGroup className="mb-3">
                   <Label className="form-label">{t("Webhook URL")}</Label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    placeholder={t("Webhook URL")}
-                  />
+                  <input className="form-control" type="text" placeholder={t("Webhook URL")} />
                 </FormGroup>
               </Col>
             </>

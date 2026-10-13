@@ -56,9 +56,7 @@ const AddWithdrawalsModal = ({ isOpen, toggle }) => {
           {window.innerWidth > 900 && (
             <>
               <h2>{t("Receiving Accounts")}</h2>
-              <h1>
-                {t("Get Paid Instantly: Set Up Your Receiving Accounts Now!")}
-              </h1>
+              <h1>{t("Get Paid Instantly: Set Up Your Receiving Accounts Now!")}</h1>
             </>
           )}
 
@@ -75,9 +73,7 @@ const AddWithdrawalsModal = ({ isOpen, toggle }) => {
             </p>
             {steps.map((item) => (
               <div className={styles.guide_item} key={item.step}>
-                <h2 className={styles.step_count}>
-                  {t(item.step).split(" – ")[0]}
-                </h2>
+                <h2 className={styles.step_count}>{t(item.step).split(" – ")[0]}</h2>
                 <div className={styles.gi_right}>
                   <h3>{t(item.name).split(" – ")[1]}</h3>
                   <p>{t(item.desc)}</p>
@@ -91,9 +87,7 @@ const AddWithdrawalsModal = ({ isOpen, toggle }) => {
                 </div>
               </div>
             ))}
-            <h3>
-              {t("Stay connected and in control of your money with InstaPay!")}
-            </h3>
+            <h3>{t("Stay connected and in control of your money with InstaPay!")}</h3>
           </div>
           <button
             className={styles.button}
@@ -115,28 +109,15 @@ const AddWithdrawalsModal = ({ isOpen, toggle }) => {
                 gap: ".75rem",
               }}
             >
-              <h1>
-                {t("Get Paid Instantly: Set Up Your Receiving Accounts Now!")}
-              </h1>
+              <h1>{t("Get Paid Instantly: Set Up Your Receiving Accounts Now!")}</h1>
               <span onClick={toggle}>
-                <img
-                  src={close}
-                  alt="close"
-                  style={{ height: "50px", width: "50px" }}
-                />
+                <img src={close} alt="close" style={{ height: "50px", width: "50px" }} />
               </span>
             </div>
           )}
           {window.innerWidth > 900 && (
-            <span
-              onClick={toggle}
-              style={{ position: "absolute", top: "1rem", right: "1rem" }}
-            >
-              <img
-                src={close_w}
-                alt="close"
-                style={{ height: "50px", width: "50px" }}
-              />
+            <span onClick={toggle} style={{ position: "absolute", top: "1rem", right: "1rem" }}>
+              <img src={close_w} alt="close" style={{ height: "50px", width: "50px" }} />
             </span>
           )}
           <img src={wd} alt="" />

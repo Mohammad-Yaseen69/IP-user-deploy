@@ -29,12 +29,7 @@ const ModalShell = ({
         {subtitle ? <p className={styles.subtitle}>{subtitle}</p> : null}
       </div>
       {!locked && (
-        <button
-          type="button"
-          className={styles.closeBtn}
-          onClick={onClose}
-          aria-label="Close"
-        >
+        <button type="button" className={styles.closeBtn} onClick={onClose} aria-label="Close">
           <CloseIcon />
         </button>
       )}
@@ -44,10 +39,7 @@ const ModalShell = ({
       <div className={styles.stepBar}>
         <span className={styles.stepLabel}>{step.label}</span>
         <div className={styles.stepTrack}>
-          <div
-            className={styles.stepFill}
-            style={{ width: `${step.percent}%` }}
-          />
+          <div className={styles.stepFill} style={{ width: `${step.percent}%` }} />
         </div>
         <span className={styles.stepLabel}>{step.name}</span>
       </div>
@@ -55,15 +47,9 @@ const ModalShell = ({
 
     <div className={styles.body}>{children}</div>
 
-    <div
-      className={`${styles.footer} ${hideSecondary || locked ? styles.footerSingle : ""}`}
-    >
+    <div className={`${styles.footer} ${hideSecondary || locked ? styles.footerSingle : ""}`}>
       {!hideSecondary && !locked && (
-        <button
-          type="button"
-          className={`${styles.btn} ${styles.btnGhost}`}
-          onClick={onSecondary}
-        >
+        <button type="button" className={`${styles.btn} ${styles.btnGhost}`} onClick={onSecondary}>
           {secondaryLabel}
         </button>
       )}

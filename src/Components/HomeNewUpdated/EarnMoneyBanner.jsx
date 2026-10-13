@@ -17,10 +17,7 @@ const EarnMoneyBanner = ({
   const is_big_width = window.innerWidth > 1600;
   return (
     <>
-      <div
-        className={styles.banner}
-        style={minWidth ? { minWidth: "40vw" } : {}}
-      >
+      <div className={styles.banner} style={minWidth ? { minWidth: "40vw" } : {}}>
         <h2>{t("Earn money with our affiliate program!")}</h2>
         {/* <div className={styles.description}> */}
         <p>
@@ -28,9 +25,7 @@ const EarnMoneyBanner = ({
             "Generate passive income by sharing your InstaPay affiliate code with your followers. For each transaction they make, \nyou earn a commission, thereby maximizing the profits from your online influence.",
           )}
         </p>
-        <Link to={"https://insta-pay.ch/affiliation-program"}>
-          {t("Learn More")} &rarr;
-        </Link>
+        <Link to={"https://insta-pay.ch/affiliation-program"}>{t("Learn More")} &rarr;</Link>
         {/* </div> */}
       </div>
       <Card className={styles.m_card}>
@@ -41,9 +36,7 @@ const EarnMoneyBanner = ({
           )}
         </p>
         {showLink && (
-          <Link to={"https://insta-pay.ch/affiliation-program"}>
-            {t("Learn More")} &rarr;
-          </Link>
+          <Link to={"https://insta-pay.ch/affiliation-program"}>{t("Learn More")} &rarr;</Link>
         )}
       </Card>
     </>

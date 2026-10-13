@@ -9,11 +9,7 @@ const SideProgress = ({ isActive, isCompleted, Text, Icon, step }) => {
         <div
           style={{
             border: isActive ? "2.5px solid #C8B7FA" : "",
-            backgroundColor: isActive
-              ? "#5926F0"
-              : isCompleted
-                ? "#1FC16B"
-                : "#D2D2D2",
+            backgroundColor: isActive ? "#5926F0" : isCompleted ? "#1FC16B" : "#D2D2D2",
           }}
           className={styles.circle}
         >

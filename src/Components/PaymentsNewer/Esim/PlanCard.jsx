@@ -54,11 +54,7 @@ const PlanCard = ({ plan, data, handlePlanSelect }) => {
               <p>{t(plan.usageInfo)}</p>
             </div>
             <img
-              src={
-                data?.eSimData?.selectedPlan?.productId === plan.productId
-                  ? line2
-                  : line
-              }
+              src={data?.eSimData?.selectedPlan?.productId === plan.productId ? line2 : line}
               alt=""
             />
           </div>

@@ -60,26 +60,19 @@ export const useAssistant = ({ authedFetch }) => {
     [],
   );
 
-  const push = useCallback(
-    (message) => setMessages((prev) => [...prev, message]),
-    [],
-  );
+  const push = useCallback((message) => setMessages((prev) => [...prev, message]), []);
 
   const appendTo = useCallback((id, chunk) => {
     setMessages((prev) =>
       prev.map((message) =>
-        message.id === id
-          ? { ...message, text: message.text + chunk }
-          : message,
+        message.id === id ? { ...message, text: message.text + chunk } : message,
       ),
     );
   }, []);
 
   const replaceText = useCallback((id, text, extra = {}) => {
     setMessages((prev) =>
-      prev.map((message) =>
-        message.id === id ? { ...message, text, ...extra } : message,
-      ),
+      prev.map((message) => (message.id === id ? { ...message, text, ...extra } : message)),
     );
   }, []);
 
@@ -90,10 +83,7 @@ export const useAssistant = ({ authedFetch }) => {
 
       push({ id: nextId(), role: "user", text });
       const history = historyRef.current.slice(-MAX_HISTORY_TURNS);
-      historyRef.current = [
-        ...historyRef.current,
-        { role: "user", content: text },
-      ];
+      historyRef.current = [...historyRef.current, { role: "user", content: text }];
 
       setIsThinking(true);
       const replyId = nextId();
@@ -159,10 +149,7 @@ export const useAssistant = ({ authedFetch }) => {
           replaceText(replyId, done.reply);
         }
 
-        historyRef.current = [
-          ...historyRef.current,
-          { role: "assistant", content: reply },
-        ];
+        historyRef.current = [...historyRef.current, { role: "assistant", content: reply }];
 
         // The agent already asked and the user already agreed, so this
         // navigates rather than offering another button. The allowlist
@@ -177,18 +164,13 @@ export const useAssistant = ({ authedFetch }) => {
           if (!moved?.ok) {
             const notice =
               moved?.reason === "not_permitted"
-                ? t(
-                    "That page isn't available on your account, so you're still where you were.",
-                  )
+                ? t("That page isn't available on your account, so you're still where you were.")
                 : t(
                     "I couldn't open that page. Try it from the menu, or email support@insta-pay.ch.",
                   );
 
             push({ id: nextId(), role: "assistant", text: notice });
-            historyRef.current = [
-              ...historyRef.current,
-              { role: "assistant", content: notice },
-            ];
+            historyRef.current = [...historyRef.current, { role: "assistant", content: notice }];
           }
         }
       } catch (error) {
@@ -203,16 +185,7 @@ export const useAssistant = ({ authedFetch }) => {
         setIsThinking(false);
       }
     },
-    [
-      allowedPages,
-      appendTo,
-      authedFetch,
-      isThinking,
-      navigateToPage,
-      push,
-      replaceText,
-      t,
-    ],
+    [allowedPages, appendTo, authedFetch, isThinking, navigateToPage, push, replaceText, t],
   );
 
   const reset = useCallback(() => {

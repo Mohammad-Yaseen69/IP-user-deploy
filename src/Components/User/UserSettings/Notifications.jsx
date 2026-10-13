@@ -18,22 +18,16 @@ const Notifications = ({ isCollapsed, setIsCollapsed }) => {
         onClick={toggleAccordion}
       >
         <div>
-          <H4 attrH4={{ className: "card-title mb-0" }}>
-            {t("Notifications")}
-          </H4>
+          <H4 attrH4={{ className: "card-title mb-0" }}>{t("Notifications")}</H4>
           <p style={{ marginTop: ".5rem", color: "black", fontWeight: "300" }}>
             {t(
               "Choose how you receive notifications. These notification settings apply to the things you’re watching.",
             )}
           </p>
         </div>
-        <div className="card-options">
-          {isCollapsed ? <ChevronDown /> : <ChevronUp />}
-        </div>
+        <div className="card-options">{isCollapsed ? <ChevronDown /> : <ChevronUp />}</div>
       </CardHeader>
-      <div
-        className={`accordion-body ${isCollapsed ? "collapsed" : "expanded"}`}
-      >
+      <div className={`accordion-body ${isCollapsed ? "collapsed" : "expanded"}`}>
         <CardBody
           style={{
             overflowX: "auto",

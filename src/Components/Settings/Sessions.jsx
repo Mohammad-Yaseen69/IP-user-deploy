@@ -1,11 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Card, CardBody, CardHeader, Spinner } from "reactstrap";
 import { H4 } from "../../AbstractElements";
 import SessionItem from "./SessionItem";
@@ -21,21 +14,18 @@ const Sessions = () => {
 
   const observerRef = useRef(null);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-    useInfiniteQuery({
-      queryKey: ["loginHistory", userDetails?._id],
-      queryFn: ({ pageParam = 1 }) =>
-        apiWrapper({
-          endpoint: `/api/login/get-user-login-history/${userDetails._id}?page=${pageParam}&limit=${LIMIT}`,
-          method: "GET",
-          isDecrypted: true,
-        }),
-      getNextPageParam: (lastPage) =>
-        lastPage?.pagination?.hasNextPage
-          ? lastPage?.pagination?.page + 1
-          : undefined,
-      enabled: !!userDetails?._id,
-    });
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useInfiniteQuery({
+    queryKey: ["loginHistory", userDetails?._id],
+    queryFn: ({ pageParam = 1 }) =>
+      apiWrapper({
+        endpoint: `/api/login/get-user-login-history/${userDetails._id}?page=${pageParam}&limit=${LIMIT}`,
+        method: "GET",
+        isDecrypted: true,
+      }),
+    getNextPageParam: (lastPage) =>
+      lastPage?.pagination?.hasNextPage ? lastPage?.pagination?.page + 1 : undefined,
+    enabled: !!userDetails?._id,
+  });
 
   const sessions = data?.pages?.flatMap((page) => page?.history ?? []) ?? [];
 
@@ -64,11 +54,7 @@ const Sessions = () => {
         </div>
       </CardHeader>
       <CardBody style={{ maxHeight: "700px", overflowY: "auto" }}>
-        {isLoading && (
-          <p style={{ textAlign: "center", color: "#888" }}>
-            {t("Loading...")}
-          </p>
-        )}
+        {isLoading && <p style={{ textAlign: "center", color: "#888" }}>{t("Loading...")}</p>}
 
         {sessions.map((session, index) => (
           <SessionItem key={session._id} session={session} index={index} />

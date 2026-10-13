@@ -43,15 +43,11 @@ const BeneficiaryStep = ({
     const q = query.trim().toLowerCase();
 
     const list = (beneficiaries || []).filter((b) => {
-      if (typeFilter === "business" && b?.beneficiary_type !== "business")
-        return false;
-      if (typeFilter === "individual" && b?.beneficiary_type === "business")
-        return false;
+      if (typeFilter === "business" && b?.beneficiary_type !== "business") return false;
+      if (typeFilter === "individual" && b?.beneficiary_type === "business") return false;
 
       if (!q) return true;
-      return `${getBeneficiaryName(b)} ${getBeneficiarySubtitle(b)}`
-        .toLowerCase()
-        .includes(q);
+      return `${getBeneficiaryName(b)} ${getBeneficiarySubtitle(b)}`.toLowerCase().includes(q);
     });
 
     return [...list].sort((a, b) => {
@@ -60,29 +56,20 @@ const BeneficiaryStep = ({
         return sortBy === "date_desc" ? -diff : diff;
       }
       if (sortBy === "type") {
-        return (a?.beneficiary_type || "").localeCompare(
-          b?.beneficiary_type || "",
-        );
+        return (a?.beneficiary_type || "").localeCompare(b?.beneficiary_type || "");
       }
-      const cmp = (getBeneficiaryName(a) || "").localeCompare(
-        getBeneficiaryName(b) || "",
-      );
+      const cmp = (getBeneficiaryName(a) || "").localeCompare(getBeneficiaryName(b) || "");
       return sortBy === "name_desc" ? -cmp : cmp;
     });
   }, [beneficiaries, query, typeFilter, sortBy]);
 
-  const toggleMenu = (name) =>
-    setOpenMenu((prev) => (prev === name ? null : name));
+  const toggleMenu = (name) => setOpenMenu((prev) => (prev === name ? null : name));
 
   return (
     <div className={styles.beneficiaryStep}>
       <div className={styles.beneficiaryHeader}>
         <h3>{t("Beneficiaries")}</h3>
-        <button
-          type="button"
-          className={styles.primarySmallBtn}
-          onClick={onAddBeneficiary}
-        >
+        <button type="button" className={styles.primarySmallBtn} onClick={onAddBeneficiary}>
           <Plus size={16} />
           {t("Add beneficiary")}
         </button>
@@ -99,11 +86,7 @@ const BeneficiaryStep = ({
 
       <div className={styles.toolbarRow}>
         <div className={styles.dropdown}>
-          <button
-            type="button"
-            className={styles.toolbarBtn}
-            onClick={() => toggleMenu("filter")}
-          >
+          <button type="button" className={styles.toolbarBtn} onClick={() => toggleMenu("filter")}>
             <Filter size={14} /> {t("Filter")}
           </button>
           {openMenu === "filter" && (
@@ -126,11 +109,7 @@ const BeneficiaryStep = ({
         </div>
 
         <div className={styles.dropdown}>
-          <button
-            type="button"
-            className={styles.toolbarBtn}
-            onClick={() => toggleMenu("sort")}
-          >
+          <button type="button" className={styles.toolbarBtn} onClick={() => toggleMenu("sort")}>
             <Sliders size={14} /> {t("Sort")}
           </button>
           {openMenu === "sort" && (
@@ -155,9 +134,7 @@ const BeneficiaryStep = ({
 
       <div className={styles.beneficiaryList}>
         {filtered.length === 0 && (
-          <div className={styles.emptyState}>
-            {emptyMessage || t("No beneficiaries found.")}
-          </div>
+          <div className={styles.emptyState}>{emptyMessage || t("No beneficiaries found.")}</div>
         )}
         {filtered.map((b) => {
           const id = getBeneficiaryId(b);
@@ -169,18 +146,14 @@ const BeneficiaryStep = ({
               className={`${styles.beneficiaryCard} ${selected ? styles.selectedBeneficiary : ""}`}
               onClick={() => setSelectedBeneficiary(b)}
             >
-              <span
-                className={`${styles.avatar} ${styles[b.accent || "blue"]}`}
-              >
+              <span className={`${styles.avatar} ${styles[b.accent || "blue"]}`}>
                 {getBeneficiaryInitial(b)}
               </span>
               <span className={styles.beneficiaryCopy}>
                 <strong>{getBeneficiaryName(b)}</strong>
                 <small>{getBeneficiarySubtitle(b)}</small>
               </span>
-              <span
-                className={`${styles.accountBadge} ${selected ? styles.activeBadge : ""}`}
-              >
+              <span className={`${styles.accountBadge} ${selected ? styles.activeBadge : ""}`}>
                 {getBeneficiaryAccountCount(b)}
               </span>
             </button>

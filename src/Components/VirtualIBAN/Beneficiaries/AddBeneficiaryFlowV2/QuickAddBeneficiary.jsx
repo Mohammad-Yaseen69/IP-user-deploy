@@ -68,23 +68,15 @@ const QuickAddBeneficiary = ({
   const [beneficiary, setBeneficiary] = useState(
     () =>
       initialValues?.beneficiary ||
-      PREFILLED_BENEFICIARY_FIELDS.reduce(
-        (bag, name) => ({ ...bag, [name]: countryIso3 }),
-        {},
-      ),
+      PREFILLED_BENEFICIARY_FIELDS.reduce((bag, name) => ({ ...bag, [name]: countryIso3 }), {}),
   );
   const [channel, setChannel] = useState(
     () => initialValues?.channel || prefillFromPayer(method, payer),
   );
-  const [saveForFuture, setSaveForFuture] = useState(
-    () => initialValues?.saveForFuture ?? true,
-  );
+  const [saveForFuture, setSaveForFuture] = useState(() => initialValues?.saveForFuture ?? true);
 
   const { data: stateData = [] } = useCountryStates(countryIso3);
-  const phoneCheck = usePhoneVerification(
-    channel.msisdn,
-    method === "mobile_wallet",
-  );
+  const phoneCheck = usePhoneVerification(channel.msisdn, method === "mobile_wallet");
 
   const {
     fields,
@@ -112,24 +104,15 @@ const QuickAddBeneficiary = ({
     const extra = (payerRequiredFields || [])
       .map((name) => String(name || "").toLowerCase())
       .filter(
-        (name) =>
-          THUNES_ENTITY_FIELDS[name] &&
-          !baseRequirements.beneficiaryFields.includes(name),
+        (name) => THUNES_ENTITY_FIELDS[name] && !baseRequirements.beneficiaryFields.includes(name),
       );
 
-    const asked = (names) =>
-      names.filter((name) => !PREFILLED_BENEFICIARY_FIELDS.includes(name));
+    const asked = (names) => names.filter((name) => !PREFILLED_BENEFICIARY_FIELDS.includes(name));
 
     return {
       ...baseRequirements,
-      beneficiaryFields: asked([
-        ...baseRequirements.beneficiaryFields,
-        ...extra,
-      ]),
-      requiredBeneficiary: asked([
-        ...baseRequirements.requiredBeneficiary,
-        ...extra,
-      ]),
+      beneficiaryFields: asked([...baseRequirements.beneficiaryFields, ...extra]),
+      requiredBeneficiary: asked([...baseRequirements.requiredBeneficiary, ...extra]),
       channelFields: baseRequirements.channelFields.filter(
         (name) => !PREFILLED_CHANNEL_FIELDS.includes(name),
       ),
@@ -149,9 +132,8 @@ const QuickAddBeneficiary = ({
 
   const countryLabel = useMemo(
     () =>
-      (allowedCountries || []).find(
-        (item) => item.country_iso_code === countryIso3,
-      )?.country_name ||
+      (allowedCountries || []).find((item) => item.country_iso_code === countryIso3)
+        ?.country_name ||
       country?.name ||
       countryIso3,
     [allowedCountries, countryIso3, country],
@@ -161,8 +143,7 @@ const QuickAddBeneficiary = ({
     const next = { beneficiary: {}, channel: {} };
 
     (requirements?.requiredBeneficiary || []).forEach((name) => {
-      if (!String(beneficiary[name] || "").trim())
-        next.beneficiary[name] = "Required.";
+      if (!String(beneficiary[name] || "").trim()) next.beneficiary[name] = "Required.";
     });
     (requirements?.requiredChannel || []).forEach((name) => {
       if (!String(channel[name] || "").trim()) next.channel[name] = "Required.";
@@ -175,11 +156,7 @@ const QuickAddBeneficiary = ({
     if (requirements) {
       const fieldType = (name) => getFieldDef(name, requirements.defs).type;
       next.channel = {
-        ...collectIdentifierErrors(
-          requirements.channelFields,
-          channel,
-          fieldType,
-        ),
+        ...collectIdentifierErrors(requirements.channelFields, channel, fieldType),
         ...next.channel,
       };
     }
@@ -189,9 +166,7 @@ const QuickAddBeneficiary = ({
 
   const filledOnly = (fieldErrors, values) =>
     Object.fromEntries(
-      Object.entries(fieldErrors).filter(([name]) =>
-        String(values[name] || "").trim(),
-      ),
+      Object.entries(fieldErrors).filter(([name]) => String(values[name] || "").trim()),
     );
   const visibleErrors = {
     beneficiary: filledOnly(errors.beneficiary, beneficiary),
@@ -235,8 +210,7 @@ const QuickAddBeneficiary = ({
     );
   }, [isComplete, beneficiary, channel, saveForFuture, transactionType]);
 
-  const methodLabel =
-    METHOD_CONTEXT_LABEL[method] || service?.name || "Payout channel";
+  const methodLabel = METHOD_CONTEXT_LABEL[method] || service?.name || "Payout channel";
   const isInteractive = !fieldsLoading && !!method;
 
   return (
@@ -245,28 +219,19 @@ const QuickAddBeneficiary = ({
         <div className={styles.quickAddHeading}>
           <h3 className={styles.quickAddTitle}>{t("Add recipient")}</h3>
           <p className={styles.quickAddMeta}>
-            {[methodLabel, payer?.name, countryLabel]
-              .filter(Boolean)
-              .join(" · ")}
+            {[methodLabel, payer?.name, countryLabel].filter(Boolean).join(" · ")}
           </p>
         </div>
 
         <div className={styles.quickAddActions}>
-          <button
-            type="button"
-            className={`${styles.btn} ${styles.btnGhost}`}
-            onClick={onCancel}
-          >
+          <button type="button" className={`${styles.btn} ${styles.btnGhost}`} onClick={onCancel}>
             {t("Cancel")}
           </button>
         </div>
       </div>
 
       {!method && (
-        <Alert
-          variant="error"
-          title={t("This payout method cannot be added here")}
-        >
+        <Alert variant="error" title={t("This payout method cannot be added here")}>
           {t("Go back and choose a different receiving method.")}
         </Alert>
       )}
@@ -318,9 +283,7 @@ const QuickAddBeneficiary = ({
                     margin: "2px 0 0",
                     fontSize: "12px",
                     fontWeight: 600,
-                    color:
-                      CHANNEL_CHECK_COLORS[phoneCheck.state] ||
-                      "var(--abf-text-secondary)",
+                    color: CHANNEL_CHECK_COLORS[phoneCheck.state] || "var(--abf-text-secondary)",
                   }}
                 >
                   {phoneCheck.message}

@@ -1,11 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
 import styles from "./styles/CountryCode.module.css";
 import { ChevronDown } from "react-feather";
@@ -41,9 +34,7 @@ const CountryCode = ({
         };
       })
       .filter((item) => {
-        return allowedCountries?.some(
-          (it) => it?.country_iso_code === item?.alpha3,
-        );
+        return allowedCountries?.some((it) => it?.country_iso_code === item?.alpha3);
       });
   }, [allowedCountries, lang]);
 
@@ -55,8 +46,7 @@ const CountryCode = ({
   const searchedCountries = useMemo(() => {
     if (!searchTerm) return countriesData ?? [];
 
-    const fuseResults =
-      fuse.search(searchTerm)?.map((result) => result?.item) ?? [];
+    const fuseResults = fuse.search(searchTerm)?.map((result) => result?.item) ?? [];
     if (fuseResults.length > 0) {
       return fuseResults;
     } else {
@@ -65,12 +55,8 @@ const CountryCode = ({
           item?.dial_code?.toString()?.includes(searchTerm) ||
           item?.alpha3?.toLowerCase()?.includes(searchTerm?.toLowerCase()) ||
           t(item?.name)?.toLowerCase()?.includes(searchTerm?.toLowerCase()) ||
-          t(item?.secondary_name)
-            ?.toLowerCase()
-            ?.includes(searchTerm?.toLowerCase()) ||
-          item?.secondary_name
-            ?.toLowerCase()
-            ?.includes(searchTerm?.toLowerCase())
+          t(item?.secondary_name)?.toLowerCase()?.includes(searchTerm?.toLowerCase()) ||
+          item?.secondary_name?.toLowerCase()?.includes(searchTerm?.toLowerCase())
         );
       });
     }
@@ -80,19 +66,14 @@ const CountryCode = ({
 
   useEffect(() => {
     if (country && countriesData?.length > 0) {
-      const filtered = countriesData?.filter(
-        (item) => item?.alpha3 === country,
-      )?.[0];
+      const filtered = countriesData?.filter((item) => item?.alpha3 === country)?.[0];
       console.log(filtered);
       setSelectedCountry(filtered);
       setCountry(filtered);
       if (firstTime && !number) {
-        const dialCode =
-          filtered?.dial_code?.replace("+", "")?.replace("-", "") ?? "";
+        const dialCode = filtered?.dial_code?.replace("+", "")?.replace("-", "") ?? "";
         const formatted =
-          (dialCode && phone?.startsWith(dialCode)
-            ? phone.slice(dialCode.length)
-            : phone) ?? "";
+          (dialCode && phone?.startsWith(dialCode) ? phone.slice(dialCode.length) : phone) ?? "";
         setNumber(formatted);
         setFirstTime(false);
       }
@@ -137,24 +118,14 @@ const CountryCode = ({
           pointerEvents: disabledDropdown ? "none" : "all",
         }}
       >
-        <div
-          className={styles.selected}
-          onClick={disabledDropdown ? () => {} : toggleDropDown}
-        >
-          <img
-            src={selectedCountry?.file_url}
-            alt={selectedCountry?.code ?? ""}
-          />
+        <div className={styles.selected} onClick={disabledDropdown ? () => {} : toggleDropDown}>
+          <img src={selectedCountry?.file_url} alt={selectedCountry?.code ?? ""} />
           <span>{selectedCountry?.dial_code}</span>
           {!hideIcon && <ChevronDown size={10} />}
         </div>
       </div>
       {showList && (
-        <div
-          className={styles.dropdown}
-          ref={dropdownRef}
-          style={{ zIndex: 99999999999 }}
-        >
+        <div className={styles.dropdown} ref={dropdownRef} style={{ zIndex: 99999999999 }}>
           <input
             type="search"
             placeholder="Search Country"

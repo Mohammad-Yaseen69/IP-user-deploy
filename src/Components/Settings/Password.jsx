@@ -41,13 +41,8 @@ const iconStyles = {
 const passwordPatterns = [/[^A-Za-z0-9]/, /[A-Z]/, /[a-z]/, /[0-9]/];
 
 const Password = () => {
-  const {
-    userDetails,
-    authHeader,
-    setProfileLockTime,
-    isAgentLogin,
-    agentDetails,
-  } = useContext(UserContext);
+  const { userDetails, authHeader, setProfileLockTime, isAgentLogin, agentDetails } =
+    useContext(UserContext);
   const navigate = useNavigate();
   const can = usePermission();
   const { t } = useTranslation();
@@ -164,8 +159,7 @@ const Password = () => {
       const decrypted = decryptData(err.response.data.data);
       setError(decrypted?.message ?? "Invalid Verification Code");
       if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-        const time =
-          decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+        const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
         const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
         setProfileLockTime(timeInSec);
         const coun = localStorage.getItem("ip_country");
@@ -181,8 +175,7 @@ const Password = () => {
   const isPasswordValid = useMemo(() => {
     const { new: newPassword } = state;
     return (
-      newPassword.length >= 8 &&
-      passwordPatterns.every((pattern) => pattern.test(newPassword))
+      newPassword.length >= 8 && passwordPatterns.every((pattern) => pattern.test(newPassword))
     );
   }, [state.new]);
 
@@ -223,15 +216,9 @@ const Password = () => {
                     placeholder={t(`${capitalize(item)} Password`)}
                   />
                   {show[item] ? (
-                    <EyeOff
-                      onClick={() => toggleShow(item, !show[item])}
-                      style={iconStyles}
-                    />
+                    <EyeOff onClick={() => toggleShow(item, !show[item])} style={iconStyles} />
                   ) : (
-                    <Eye
-                      onClick={() => toggleShow(item, !show[item])}
-                      style={iconStyles}
-                    />
+                    <Eye onClick={() => toggleShow(item, !show[item])} style={iconStyles} />
                   )}
                 </div>
               </FormGroup>
@@ -267,9 +254,7 @@ const Password = () => {
           >
             <li>{t("The new password cannot be the same as the old one")}.</li>
             <li>{t("Minimum of 8 characters.")}</li>
-            <li>
-              {t("Include at least one uppercase and one lowercase letter.")}
-            </li>
+            <li>{t("Include at least one uppercase and one lowercase letter.")}</li>
             <li>{t("Include at least one number")}</li>
             <li>{t("Include at least one special character.")}</li>
             <li>{t("Change it often for enhanced security.")}</li>
@@ -277,8 +262,7 @@ const Password = () => {
         </div>
         <Button
           style={{
-            background:
-              "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
             border: "none",
             outline: "none",
             borderRadius: "10px",
@@ -290,9 +274,7 @@ const Password = () => {
         </Button>
       </div>
       <Modal isOpen={showOtp}>
-        <ModalHeader toggle={() => setShowOtp(!showOtp)}>
-          {t("Confirm")}
-        </ModalHeader>
+        <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
         <ModalBody>
           <OTPConfirmation
             variant="card"

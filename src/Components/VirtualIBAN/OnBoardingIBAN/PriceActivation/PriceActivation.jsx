@@ -17,24 +17,16 @@ const PriceActivation = () => {
           <div className={styles.titleWithBack}>
             <h1>{t("Business IBAN")}</h1>
           </div>
-          <p>
-            {t(
-              "Activate a dedicated business account to receive and hold company funds.",
-            )}
-          </p>
+          <p>{t("Activate a dedicated business account to receive and hold company funds.")}</p>
         </div>
         <div className={styles.topright}>{width > 1000 && <TopRight />}</div>
       </div>
       <div className={styles.mainContent}>
         <div className={styles.headerRow}>
           <div>
-            <h2 className={styles.headerTitle}>
-              {t("Pricing & Activation Packs")}
-            </h2>
+            <h2 className={styles.headerTitle}>{t("Pricing & Activation Packs")}</h2>
             <p className={styles.headerSubtitle}>
-              {t(
-                "Activate a dedicated business account to receive and hold company funds.",
-              )}
+              {t("Activate a dedicated business account to receive and hold company funds.")}
             </p>
           </div>
           <button
@@ -68,13 +60,9 @@ const PriceActivation = () => {
             <div className={styles.cardContent}>
               <div className={styles.cardHeader}>
                 <h3 className={styles.cardTitle}>{t("Standard - Low risk")}</h3>
-                <span className={`${styles.badge} ${styles.badgePrimary}`}>
-                  {t("SUGGESTED")}
-                </span>
+                <span className={`${styles.badge} ${styles.badgePrimary}`}>{t("SUGGESTED")}</span>
               </div>
-              <p className={styles.cardDesc}>
-                {t("Opening €100 - Institution €0/mo")}
-              </p>
+              <p className={styles.cardDesc}>{t("Opening €100 - Institution €0/mo")}</p>
             </div>
           </div>
 
@@ -100,13 +88,9 @@ const PriceActivation = () => {
             </div>
             <div className={styles.cardContent}>
               <div className={styles.cardHeader}>
-                <h3 className={styles.cardTitle}>
-                  {t("Standard - Medium risk")}
-                </h3>
+                <h3 className={styles.cardTitle}>{t("Standard - Medium risk")}</h3>
               </div>
-              <p className={styles.cardDesc}>
-                {t("Opening €300 - Institution €50/mo")}
-              </p>
+              <p className={styles.cardDesc}>{t("Opening €300 - Institution €50/mo")}</p>
             </div>
           </div>
 
@@ -132,13 +116,9 @@ const PriceActivation = () => {
             </div>
             <div className={styles.cardContent}>
               <div className={styles.cardHeader}>
-                <h3 className={styles.cardTitle}>
-                  {t("Standard - High risk / High Vol")}
-                </h3>
+                <h3 className={styles.cardTitle}>{t("Standard - High risk / High Vol")}</h3>
               </div>
-              <p className={styles.cardDesc}>
-                {t("Opening €1000 - Institution €200/mo")}
-              </p>
+              <p className={styles.cardDesc}>{t("Opening €1000 - Institution €200/mo")}</p>
             </div>
           </div>
           <div className={styles.card}>
@@ -165,17 +145,13 @@ const PriceActivation = () => {
               <div className={styles.cardHeader}>
                 <h3 className={styles.cardTitle}>{t("Pack One")}</h3>
               </div>
-              <p className={styles.cardDesc}>
-                {t("Opening €500 - Activation €200 - €70/mo")}
-              </p>
+              <p className={styles.cardDesc}>{t("Opening €500 - Activation €200 - €70/mo")}</p>
             </div>
           </div>
         </div>
 
         <div className={styles.tableSection}>
-          <h3 className={styles.tableTitle}>
-            {t("Fee schedule - Standard - Low risk")}
-          </h3>
+          <h3 className={styles.tableTitle}>{t("Fee schedule - Standard - Low risk")}</h3>
 
           <table className={styles.feeTable}>
             <thead>
@@ -189,137 +165,73 @@ const PriceActivation = () => {
               <tr>
                 <td>{t("Opening fee (one-time)")}</td>
                 <td className={styles.textRight}>
-                  <input
-                    type="text"
-                    className={styles.inputField}
-                    defaultValue="99"
-                  />
+                  <input type="text" className={styles.inputField} defaultValue="99" />
                 </td>
                 <td className={styles.textRight}>
-                  <input
-                    type="text"
-                    className={styles.inputField}
-                    defaultValue="0"
-                  />
+                  <input type="text" className={styles.inputField} defaultValue="0" />
                 </td>
               </tr>
               <tr>
                 <td>{t("IBAN activation (one-time)")}</td>
                 <td className={styles.textRight}>
-                  <input
-                    type="text"
-                    className={styles.inputField}
-                    defaultValue="0"
-                  />
+                  <input type="text" className={styles.inputField} defaultValue="0" />
                 </td>
                 <td className={styles.textRight}>
-                  <input
-                    type="text"
-                    className={styles.inputField}
-                    defaultValue="0"
-                  />
+                  <input type="text" className={styles.inputField} defaultValue="0" />
                 </td>
               </tr>
               <tr>
                 <td>{t("Monthly IBAN fee")}</td>
                 <td className={styles.textRight}>
-                  <input
-                    type="text"
-                    className={styles.inputField}
-                    defaultValue="49"
-                  />
+                  <input type="text" className={styles.inputField} defaultValue="49" />
                 </td>
                 <td className={styles.textRight}>
-                  <input
-                    type="text"
-                    className={styles.inputField}
-                    defaultValue="0"
-                  />
+                  <input type="text" className={styles.inputField} defaultValue="0" />
                 </td>
               </tr>
               <tr>
                 <td>{t("SEPA inward")}</td>
                 <td className={styles.textRight}>
-                  <input
-                    type="text"
-                    className={styles.inputField}
-                    defaultValue="0"
-                  />
+                  <input type="text" className={styles.inputField} defaultValue="0" />
                 </td>
                 <td className={styles.textRight}>
-                  <input
-                    type="text"
-                    className={styles.inputField}
-                    defaultValue="0"
-                  />
+                  <input type="text" className={styles.inputField} defaultValue="0" />
                 </td>
               </tr>
               <tr>
                 <td>{t("SEPA outward")}</td>
                 <td className={styles.textRight}>
-                  <input
-                    type="text"
-                    className={styles.inputField}
-                    defaultValue="0.5"
-                  />
+                  <input type="text" className={styles.inputField} defaultValue="0.5" />
                 </td>
                 <td className={styles.textRight}>
-                  <input
-                    type="text"
-                    className={styles.inputField}
-                    defaultValue="0"
-                  />
+                  <input type="text" className={styles.inputField} defaultValue="0" />
                 </td>
               </tr>
               <tr>
                 <td>{t("SWIFT inward")}</td>
                 <td className={styles.textRight}>
-                  <input
-                    type="text"
-                    className={styles.inputField}
-                    defaultValue="5"
-                  />
+                  <input type="text" className={styles.inputField} defaultValue="5" />
                 </td>
                 <td className={styles.textRight}>
-                  <input
-                    type="text"
-                    className={styles.inputField}
-                    defaultValue="0"
-                  />
+                  <input type="text" className={styles.inputField} defaultValue="0" />
                 </td>
               </tr>
               <tr>
                 <td>{t("SWIFT outward")}</td>
                 <td className={styles.textRight}>
-                  <input
-                    type="text"
-                    className={styles.inputField}
-                    defaultValue="16"
-                  />
+                  <input type="text" className={styles.inputField} defaultValue="16" />
                 </td>
                 <td className={styles.textRight}>
-                  <input
-                    type="text"
-                    className={styles.inputField}
-                    defaultValue="0"
-                  />
+                  <input type="text" className={styles.inputField} defaultValue="0" />
                 </td>
               </tr>
               <tr>
                 <td>{t("Crypto on/off ramp")}</td>
                 <td className={styles.textRight}>
-                  <input
-                    type="text"
-                    className={styles.inputField}
-                    defaultValue="0"
-                  />
+                  <input type="text" className={styles.inputField} defaultValue="0" />
                 </td>
                 <td className={styles.textRight}>
-                  <input
-                    type="text"
-                    className={styles.inputField}
-                    defaultValue="0.7"
-                  />
+                  <input type="text" className={styles.inputField} defaultValue="0.7" />
                 </td>
               </tr>
             </tbody>
@@ -336,10 +248,7 @@ const PriceActivation = () => {
         </div>
       </div>
       {showModal && (
-        <NewActivationPackModal
-          open={showModal}
-          handleClose={() => setShowModal(false)}
-        />
+        <NewActivationPackModal open={showModal} handleClose={() => setShowModal(false)} />
       )}
     </div>
   );

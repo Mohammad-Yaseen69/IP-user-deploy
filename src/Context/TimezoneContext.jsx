@@ -31,11 +31,7 @@ export const TimezonesProvider = ({ children }) => {
     }
   }, [location]);
 
-  return (
-    <TimezoneContext.Provider value={{ timezones }}>
-      {children}
-    </TimezoneContext.Provider>
-  );
+  return <TimezoneContext.Provider value={{ timezones }}>{children}</TimezoneContext.Provider>;
 };
 
 export const useTimezones = () => useContext(TimezoneContext);

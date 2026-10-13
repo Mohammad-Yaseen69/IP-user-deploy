@@ -88,14 +88,10 @@ const ReceivedItemMobile = ({ item, activeItem, setActiveItem, index }) => {
       <div className={styles.item}>
         <div
           className={styles.top}
-          onClick={() =>
-            setActiveItem(activeItem === index + 1 ? 0 : index + 1)
-          }
+          onClick={() => setActiveItem(activeItem === index + 1 ? 0 : index + 1)}
         >
           <div className={styles.left}>
-            <div className={styles.dp}>
-              {item?.sender?.user?.first_name?.[0]}
-            </div>
+            <div className={styles.dp}>{item?.sender?.user?.first_name?.[0]}</div>
             <div className={styles.t_details}>
               <h5
                 style={{
@@ -128,10 +124,7 @@ const ReceivedItemMobile = ({ item, activeItem, setActiveItem, index }) => {
               <h5
                 className={styles.amount}
                 style={{
-                  color:
-                    item?.transaction_type?.toLowerCase() === "debit"
-                      ? "#FF7293"
-                      : "#1CB234",
+                  color: item?.transaction_type?.toLowerCase() === "debit" ? "#FF7293" : "#1CB234",
                   display: activeItem === index + 1 ? "none" : "inherit",
                 }}
               >
@@ -161,9 +154,7 @@ const ReceivedItemMobile = ({ item, activeItem, setActiveItem, index }) => {
           </div>
         </div>
 
-        {activeItem === index + 1 && (
-          <QuoteDetails item={item} key={item?._id} type="receive" />
-        )}
+        {activeItem === index + 1 && <QuoteDetails item={item} key={item?._id} type="receive" />}
         {window.innerWidth < 1000
           ? item?.status?.toLowerCase() !== "accepted" &&
             item?.status?.toLowerCase() !== "declined" && (

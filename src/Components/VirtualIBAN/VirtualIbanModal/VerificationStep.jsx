@@ -28,11 +28,7 @@ const VerificationStep = ({ jurisdiction }) => {
           <Shield size={36} />
         </div>
         <h3>{t("Please verify your identity")}</h3>
-        <p>
-          {t(
-            "Click verify identity button below, to start the verification process",
-          )}
-        </p>
+        <p>{t("Click verify identity button below, to start the verification process")}</p>
       </div>
     </>
   );

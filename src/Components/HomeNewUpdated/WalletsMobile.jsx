@@ -45,10 +45,9 @@ const WalletsMobile = ({ setCurrentWallet }) => {
               )}
             </>
           )}
-          {can("dashboard.balance.view") &&
-            userWallets.some((item) => item?.balance?.reserved) && (
-              <OtherBalance />
-            )}
+          {can("dashboard.balance.view") && userWallets.some((item) => item?.balance?.reserved) && (
+            <OtherBalance />
+          )}
         </div>
         <div className={styles.cards}>
           <Swiper

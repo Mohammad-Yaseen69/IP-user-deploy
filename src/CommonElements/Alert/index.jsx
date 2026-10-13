@@ -8,10 +8,7 @@ const Alerts = (props) => {
       {props.children}
       {props.closeBtn ? (
         <Btn attrBtn={props.attrBtn}>
-          <div
-            className={props.divCls}
-            dangerouslySetInnerHTML={{ __html: props.btnContent }}
-          />
+          <div className={props.divCls} dangerouslySetInnerHTML={{ __html: props.btnContent }} />
         </Btn>
       ) : (
         ""

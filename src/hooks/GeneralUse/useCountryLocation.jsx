@@ -35,20 +35,13 @@ const useCountryLocation = () => {
             }
             const foundCount = allowedCountries?.find(
               (item) =>
-                item?.country_name?.toLowerCase() ===
-                  location?.country?.toLowerCase() ||
-                item?.country_name
-                  ?.toLowerCase()
-                  ?.includes(location?.country?.toLowerCase()),
+                item?.country_name?.toLowerCase() === location?.country?.toLowerCase() ||
+                item?.country_name?.toLowerCase()?.includes(location?.country?.toLowerCase()),
             );
             if (foundCount?.country_iso_code) {
               localStorage.setItem("ip_country", foundCount?.country_iso_code);
             }
-            setCountry(
-              foundCount?.country_iso_code ??
-                localStorage.getItem("ip_country") ??
-                "USA",
-            );
+            setCountry(foundCount?.country_iso_code ?? localStorage.getItem("ip_country") ?? "USA");
           }
           setLoading(false);
         } catch (error) {
@@ -59,9 +52,7 @@ const useCountryLocation = () => {
           const res = await fetch("https://geolocation-db.com/json/");
           const data = await res.json();
           const filteredCountry = allowedCountries.filter((item) =>
-            item.country_name
-              .toLowerCase()
-              .includes(data?.country_name?.toLowerCase()),
+            item.country_name.toLowerCase().includes(data?.country_name?.toLowerCase()),
           )?.[0]?.country_iso_code;
           if (filteredCountry) {
             localStorage.setItem("ip_country", filteredCountry);

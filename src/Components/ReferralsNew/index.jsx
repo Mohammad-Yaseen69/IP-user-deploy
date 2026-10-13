@@ -2,12 +2,7 @@ import { useTranslation } from "react-i18next";
 import styles from "./styles/index.module.scss";
 import TopRight from "../topRight";
 import EarnMoneyBanner from "../HomeNewUpdated/EarnMoneyBanner";
-import {
-  Check,
-  ChevronDown,
-  ChevronRight,
-  MoreHorizontal,
-} from "react-feather";
+import { Check, ChevronDown, ChevronRight, MoreHorizontal } from "react-feather";
 import copy_ic from "../ChipsInNew/copy.png";
 import ref_share from "./ref_share.png";
 import { useContext, useEffect, useMemo, useState } from "react";
@@ -15,15 +10,7 @@ import SocialModal from "../ShareBtn/SocialModal";
 import { UserContext } from "../../Context/UserContext";
 import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardText,
-  Modal,
-  ModalBody,
-  ModalHeader,
-} from "reactstrap";
+import { Button, Card, CardBody, CardText, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
 import countries from "../PaymentsNewer/CountriesData.json";
 import InstaPayLoader from "../Loader";
@@ -91,12 +78,9 @@ const ReferralsNew = () => {
   const getReferrals = () => {
     if (userDetails?.account_type === "individual") {
       axios
-        .get(
-          `${import.meta.env.VITE_IP_DEV_API}/api/invitation/get-referral/${userDetails?._id}`,
-          {
-            headers: authHeader,
-          },
-        )
+        .get(`${import.meta.env.VITE_IP_DEV_API}/api/invitation/get-referral/${userDetails?._id}`, {
+          headers: authHeader,
+        })
         .then((res) => {
           const decrypted = decryptData(res.data.data);
           setIsLoading(false);
@@ -106,9 +90,7 @@ const ReferralsNew = () => {
                 (coun) => coun.alpha3 === item?.referral?.country_iso_code,
               );
               return {
-                joined: new Date(
-                  item?.referral?.createdAt,
-                ).toLocaleDateString(),
+                joined: new Date(item?.referral?.createdAt).toLocaleDateString(),
                 id: item?.referral?._id,
                 name:
                   item?.referral?.account_type === "individual"
@@ -143,9 +125,7 @@ const ReferralsNew = () => {
                 (coun) => coun.alpha3 === item?.referral?.country_iso_code,
               );
               return {
-                joined: new Date(
-                  item?.referral?.createdAt,
-                ).toLocaleDateString(),
+                joined: new Date(item?.referral?.createdAt).toLocaleDateString(),
                 id: item?.referral?._id,
                 name:
                   item?.referral?.account_type === "individual"
@@ -300,45 +280,36 @@ const ReferralsNew = () => {
                 <span>{t("Total Commission")}</span>
                 <strong>
                   $
-                  {Number(selectedReferral?.amount ?? 0).toLocaleString(
-                    "en-US",
-                    { minimumFractionDigits: 2, maximumFractionDigits: 2 },
-                  )}
+                  {Number(selectedReferral?.amount ?? 0).toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
                 </strong>
               </div>
               {selectedReferralCommissions?.length > 0 ? (
                 <div className={styles.commission_timeline}>
                   {selectedReferralCommissions.map((commission, index) => (
-                    <div
-                      className={styles.timeline_item}
-                      key={commission?._id ?? index}
-                    >
+                    <div className={styles.timeline_item} key={commission?._id ?? index}>
                       <div className={styles.timeline_marker} />
                       <div className={styles.timeline_content}>
                         <div>
                           <h6>
-                            {commission?.description ??
-                              commission?.type ??
-                              t("Commission Earned")}
+                            {commission?.description ?? commission?.type ?? t("Commission Earned")}
                           </h6>
                           <strong>+${getCommissionAmount(commission)}</strong>
                         </div>
                         <span>
-                          {formatCommissionDate(
-                            commission?.createdAt ?? commission?.updatedAt,
-                          )}
+                          {formatCommissionDate(commission?.createdAt ?? commission?.updatedAt)}
                         </span>
                         {commission?.status && (
                           <p>
                             {t("Status")}: {commission?.status}
                           </p>
                         )}
-                        {(commission?.transaction?._id ||
-                          commission?.transaction_id) && (
+                        {(commission?.transaction?._id || commission?.transaction_id) && (
                           <p>
                             {t("Transaction ID")}:{" "}
-                            {commission?.transaction?._id ??
-                              commission?.transaction_id}
+                            {commission?.transaction?._id ?? commission?.transaction_id}
                           </p>
                         )}
                       </div>
@@ -418,8 +389,7 @@ const ReferralsNew = () => {
                           (isLimitReached ||
                             totalReferralAmount >
                               userDetails?.level?.daily_receiving_limit -
-                                userDetails?.used_limits
-                                  ?.daily_receiving_limit) ? (
+                                userDetails?.used_limits?.daily_receiving_limit) ? (
                             <div
                               style={{
                                 padding: "13px 16px",
@@ -476,16 +446,11 @@ const ReferralsNew = () => {
           <div className={styles.ref_dets}>
             <div className={`${styles.ref_dets_sub} ${styles.left}`}>
               <span>{t("Your Referral ID")}:</span>
-              <h4>
-                {referralLink.split("/signup/")[1] + userDetails?.username}
-              </h4>
+              <h4>{referralLink.split("/signup/")[1] + userDetails?.username}</h4>
             </div>
             <div className={`${styles.ref_dets_sub} ${styles.right}`}>
               <span>{t("Share Your Unique Referral Link")}: </span>
-              <div
-                style={{ gap: window.innerWidth < 500 && "0.5rem" }}
-                className={styles.bot}
-              >
+              <div style={{ gap: window.innerWidth < 500 && "0.5rem" }} className={styles.bot}>
                 <div>
                   <span>{referralLink + userDetails?.username}</span>
                   {copied ? (
@@ -522,11 +487,7 @@ const ReferralsNew = () => {
             <div>
               <div className={styles.ref_guide_item}>
                 <h4>{t("Step 01")}</h4>
-                <p>
-                  {t(
-                    "Share your InstaPay unique referral link with your friends.",
-                  )}
-                </p>
+                <p>{t("Share your InstaPay unique referral link with your friends.")}</p>
               </div>
               <div className={styles.ref_guide_item}>
                 <h4>{t("Step 02")}</h4>
@@ -534,11 +495,7 @@ const ReferralsNew = () => {
               </div>
               <div className={styles.ref_guide_item}>
                 <h4>{t("Step 03")}</h4>
-                <p>
-                  {t(
-                    "Earn up to $0.06 for every transaction your followers make.",
-                  )}
-                </p>
+                <p>{t("Earn up to $0.06 for every transaction your followers make.")}</p>
               </div>
             </div>
           </div>
@@ -550,56 +507,35 @@ const ReferralsNew = () => {
             <>
               <div className={styles.ref_table}>
                 <div className={styles.item}>
-                  <div style={{ fontSize: "1.1rem", fontWeight: 700 }}>
-                    {t(currentTab)}
-                  </div>
+                  <div style={{ fontSize: "1.1rem", fontWeight: 700 }}>{t(currentTab)}</div>
                   <Button
                     color="primary"
                     style={{ borderRadius: "8px" }}
                     onClick={() =>
                       setCurrentTab(
-                        currentTab === "My Referrals"
-                          ? "my withdrawls"
-                          : "My Referrals",
+                        currentTab === "My Referrals" ? "my withdrawls" : "My Referrals",
                       )
                     }
                   >
-                    {currentTab === "My Referrals"
-                      ? t("My Withdrawls")
-                      : t("My Referrals")}
+                    {currentTab === "My Referrals" ? t("My Withdrawls") : t("My Referrals")}
                   </Button>
                 </div>
                 {currentTab === "My Referrals" ? (
                   <>
                     <div className={styles.item}>
-                      <div style={{ color: "#6f6f6f", fontSize: ".85rem" }}>
-                        {t("Country")}
-                      </div>
-                      <div style={{ color: "#6f6f6f", fontSize: ".85rem" }}>
-                        {t("Name")}
-                      </div>
-                      <div style={{ color: "#6f6f6f", fontSize: ".85rem" }}>
-                        {t("Username")}
-                      </div>
-                      <div style={{ color: "#6f6f6f", fontSize: ".85rem" }}>
-                        {t("Joined At")}
-                      </div>
+                      <div style={{ color: "#6f6f6f", fontSize: ".85rem" }}>{t("Country")}</div>
+                      <div style={{ color: "#6f6f6f", fontSize: ".85rem" }}>{t("Name")}</div>
+                      <div style={{ color: "#6f6f6f", fontSize: ".85rem" }}>{t("Username")}</div>
+                      <div style={{ color: "#6f6f6f", fontSize: ".85rem" }}>{t("Joined At")}</div>
                       <div style={{ color: "#6f6f6f", fontSize: ".85rem" }}>
                         {t("Profile Link")}
                       </div>
-                      <div style={{ color: "#6f6f6f", fontSize: ".85rem" }}>
-                        {t("Commission")}
-                      </div>
-                      <div style={{ color: "#6f6f6f", fontSize: ".85rem" }}>
-                        {t("Action")}
-                      </div>
+                      <div style={{ color: "#6f6f6f", fontSize: ".85rem" }}>{t("Commission")}</div>
+                      <div style={{ color: "#6f6f6f", fontSize: ".85rem" }}>{t("Action")}</div>
                     </div>
                     {referrals.map((item) => (
                       <div key={item?.id} className={styles.item}>
-                        <RefItem
-                          item={item}
-                          onViewCommissions={setSelectedReferral}
-                        />
+                        <RefItem item={item} onViewCommissions={setSelectedReferral} />
                       </div>
                     ))}
                   </>
@@ -677,9 +613,7 @@ const ReferralsNew = () => {
         <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
           <CardBody>
             <CardText>
-              {t(
-                "Please add username to your profile to enable referrals feature.",
-              )}{" "}
+              {t("Please add username to your profile to enable referrals feature.")}{" "}
               <Link
                 to={"/settings?tab=basic"}
                 style={{ textDecoration: "underline", fontWeight: 600 }}

@@ -63,8 +63,7 @@ const Receipt = ({
           padding: "0",
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
         className="conf_cont"
       >
@@ -91,9 +90,7 @@ const Receipt = ({
                 {t(`Your external withdrawal request is successfull`)}
               </span>
             ) : (
-              <span style={{ color: "#8a8a8a", fontSize: "1.1rem" }}>
-                {t(`You have ${type}`)}
-              </span>
+              <span style={{ color: "#8a8a8a", fontSize: "1.1rem" }}>{t(`You have ${type}`)}</span>
             )}
             <h4 style={{ fontSize: "2rem" }}>
               {currency} {formatCurrency(amount, true)}
@@ -140,10 +137,7 @@ const Receipt = ({
               >
                 {t("Receiver Gets")}:{" "}
                 <span style={{ color: "black", fontWeight: 600 }}>
-                  {formatCurrency(
-                    transactionDetails?.destination?.amount,
-                    true,
-                  )}{" "}
+                  {formatCurrency(transactionDetails?.destination?.amount, true)}{" "}
                   {transactionDetails?.destination?.currency}
                 </span>
               </div>
@@ -160,9 +154,7 @@ const Receipt = ({
                 borderRadius: "10px",
               }}
             >
-              <span style={{ minWidth: "100px", color: "#8a8a8a" }}>
-                {t("To Recipient")}:
-              </span>
+              <span style={{ minWidth: "100px", color: "#8a8a8a" }}>{t("To Recipient")}:</span>
               <Swiper
                 slidesPerView="auto"
                 centeredSlides
@@ -220,12 +212,8 @@ const Receipt = ({
               borderRadius: "10px",
             }}
           >
-            <span style={{ minWidth: "100px", color: "#8a8a8a" }}>
-              {t("Country")}:
-            </span>
-            <div
-              style={{ display: "flex", alignItems: "center", gap: ".6rem" }}
-            >
+            <span style={{ minWidth: "100px", color: "#8a8a8a" }}>{t("Country")}:</span>
+            <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
               <img
                 src={country.file_url}
                 alt={country.code}
@@ -237,9 +225,7 @@ const Receipt = ({
                 className="i_t_flag"
                 draggable="false"
               />
-              <span style={{ fontWeight: 600, fontSize: ".8rem" }}>
-                {country.name}
-              </span>
+              <span style={{ fontWeight: 600, fontSize: ".8rem" }}>{country.name}</span>
             </div>
           </div>
           <div
@@ -252,12 +238,8 @@ const Receipt = ({
               borderRadius: "10px",
             }}
           >
-            <span style={{ minWidth: "100px", color: "#8a8a8a" }}>
-              {t("Via")}:
-            </span>
-            <div
-              style={{ display: "flex", alignItems: "center", gap: ".6rem" }}
-            >
+            <span style={{ minWidth: "100px", color: "#8a8a8a" }}>{t("Via")}:</span>
+            <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
               <div
                 style={{
                   minHeight: "35px",
@@ -281,9 +263,7 @@ const Receipt = ({
                   }}
                 />
               </div>
-              <span style={{ fontWeight: 600, fontSize: ".8rem" }}>
-                {payoutChannel.name}
-              </span>
+              <span style={{ fontWeight: 600, fontSize: ".8rem" }}>{payoutChannel.name}</span>
             </div>
           </div>
         </div>
@@ -308,14 +288,8 @@ const Receipt = ({
               cursor: "pointer",
             }}
           >
-            <img
-              src={w}
-              alt="w"
-              style={{ height: "25px", width: "25px", objectFit: "contain" }}
-            />
-            <span style={{ fontWeight: "600", color: "black" }}>
-              {t("Where Is My Payment?")}
-            </span>
+            <img src={w} alt="w" style={{ height: "25px", width: "25px", objectFit: "contain" }} />
+            <span style={{ fontWeight: "600", color: "black" }}>{t("Where Is My Payment?")}</span>
           </Link>
           {downloading ? (
             <div className="d-flex justify-content-center">

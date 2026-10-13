@@ -49,10 +49,7 @@ export const useCryptoWallets = () => {
   const { userWallets, getUserWallets, userDetails } = useContext(UserContext);
   const [creating, setCreating] = useState(false);
 
-  const cryptoWallets = useMemo(
-    () => (userWallets || []).filter(isCryptoWallet),
-    [userWallets],
-  );
+  const cryptoWallets = useMemo(() => (userWallets || []).filter(isCryptoWallet), [userWallets]);
 
   const fiatWallets = useMemo(
     () => (userWallets || []).filter((w) => !isCryptoWallet(w)),
@@ -69,22 +66,14 @@ export const useCryptoWallets = () => {
   );
 
   const ownedCodes = useMemo(
-    () =>
-      new Set(
-        cryptoWallets.map((w) => String(w?.currency?.code || "").toUpperCase()),
-      ),
+    () => new Set(cryptoWallets.map((w) => String(w?.currency?.code || "").toUpperCase())),
     [cryptoWallets],
   );
 
   useEffect(() => {
     const refresh = () => getUserWallets?.();
-    CRYPTO_WALLET_EVENTS.forEach((evt) =>
-      window.addEventListener(evt, refresh),
-    );
-    return () =>
-      CRYPTO_WALLET_EVENTS.forEach((evt) =>
-        window.removeEventListener(evt, refresh),
-      );
+    CRYPTO_WALLET_EVENTS.forEach((evt) => window.addEventListener(evt, refresh));
+    return () => CRYPTO_WALLET_EVENTS.forEach((evt) => window.removeEventListener(evt, refresh));
   }, [getUserWallets]);
 
   const createWallet = useCallback(
@@ -114,11 +103,7 @@ export const useCryptoWallets = () => {
       } catch (err) {
         const dec = decryptData(err?.response?.data?.data);
         toast.error(
-          t(
-            dec?.message ||
-              err?.message ||
-              "Failed to create crypto wallet. Please try again.",
-          ),
+          t(dec?.message || err?.message || "Failed to create crypto wallet. Please try again."),
         );
         return false;
       } finally {

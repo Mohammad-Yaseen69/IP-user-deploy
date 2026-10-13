@@ -201,13 +201,7 @@ const Dropzone = ({ file, setFile, setFileType, pAddress, tempFile }) => {
                 <AlertTriangle size={12} />
                 {t("Max size 1GB")}
               </p>
-              <input
-                type="file"
-                value={""}
-                onChange={handleFileChange}
-                hidden
-                ref={inputRef}
-              />
+              <input type="file" value={""} onChange={handleFileChange} hidden ref={inputRef} />
             </div>
           )}
         </>

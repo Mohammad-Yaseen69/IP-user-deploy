@@ -129,9 +129,7 @@ const ServiceDetails = ({ data }) => {
   const [isPopup, setIsPopup] = useState(false);
 
   const isEuropean = useMemo(() => {
-    const isEuropean = european_countries.find(
-      (item) => item.alpha3 === data.country?.alpha3,
-    );
+    const isEuropean = european_countries.find((item) => item.alpha3 === data.country?.alpha3);
     return isEuropean?.alpha3 ? true : false;
   }, [data.country?.alpha3]);
 
@@ -198,11 +196,7 @@ const ServiceDetails = ({ data }) => {
                   onClick={() => setCurrent(item)}
                 >
                   <div className={styles.grad_icon}>
-                    <img
-                      src={
-                        item?.[item?.id == current?.id ? "active_icon" : "icon"]
-                      }
-                    />
+                    <img src={item?.[item?.id == current?.id ? "active_icon" : "icon"]} />
                   </div>
                   <span>{t(item?.name)}</span>
                 </div>
@@ -216,13 +210,7 @@ const ServiceDetails = ({ data }) => {
                     onClick={() => setCurrent(item)}
                   >
                     <div className={styles.grad_icon}>
-                      <img
-                        src={
-                          item?.[
-                            item?.id == current?.id ? "active_icon" : "icon"
-                          ]
-                        }
-                      />
+                      <img src={item?.[item?.id == current?.id ? "active_icon" : "icon"]} />
                     </div>
                     <span>{t(item?.name)}</span>
                   </div>
@@ -289,9 +277,9 @@ const ServiceDetails = ({ data }) => {
               </div>
               <div className={styles.r_body}>
                 <div style={{ flex: 0.8 }}>
-                  {service_details_data.funds_speed?.[
-                    data.payoutChannel?.value
-                  ]?.[isEuropean ? "eu" : "others"]?.map((item) => (
+                  {service_details_data.funds_speed?.[data.payoutChannel?.value]?.[
+                    isEuropean ? "eu" : "others"
+                  ]?.map((item) => (
                     <p>{t(item)}</p>
                   ))}
                 </div>
@@ -343,9 +331,7 @@ const ServiceDetails = ({ data }) => {
                     {data?.exchange_rate?.min_amount ? (
                       <li>
                         {t("Minimum Amount")}:{" "}
-                        {Number(
-                          data?.exchange_rate?.min_amount,
-                        )?.toLocaleString("en-US", {
+                        {Number(data?.exchange_rate?.min_amount)?.toLocaleString("en-US", {
                           minimumFractionDigits: 2,
                           maximumFractionDigits: 2,
                         })}{" "}
@@ -357,9 +343,7 @@ const ServiceDetails = ({ data }) => {
                     {data?.exchange_rate?.max_amount ? (
                       <li>
                         {t("Maximum Amount")}:{" "}
-                        {Number(
-                          data?.exchange_rate?.max_amount,
-                        )?.toLocaleString("en-US", {
+                        {Number(data?.exchange_rate?.max_amount)?.toLocaleString("en-US", {
                           minimumFractionDigits: 2,
                           maximumFractionDigits: 2,
                         })}{" "}

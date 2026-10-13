@@ -138,14 +138,10 @@ const AddFunds = () => {
 
         // Decode the base64 value
         const decryptedBytes = CryptoJS.AES.decrypt(
-          CryptoJS.enc.Base64.parse(base64EncodedValue).toString(
-            CryptoJS.enc.Utf8,
-          ),
+          CryptoJS.enc.Base64.parse(base64EncodedValue).toString(CryptoJS.enc.Utf8),
           decryptionKey,
         );
-        const originalObjectIdString = decryptedBytes.toString(
-          CryptoJS.enc.Utf8,
-        );
+        const originalObjectIdString = decryptedBytes.toString(CryptoJS.enc.Utf8);
 
         const { pathname } = window.location;
 
@@ -219,10 +215,7 @@ const AddFunds = () => {
               position: "relative",
             }}
           >
-            <div
-              style={{ cursor: "pointer" }}
-              onClick={() => setAction("money")}
-            >
+            <div style={{ cursor: "pointer" }} onClick={() => setAction("money")}>
               <img
                 src={money}
                 alt="money"
@@ -241,9 +234,7 @@ const AddFunds = () => {
                 overflow: "hidden",
               }}
               title={
-                !isCryptoAllowed
-                  ? t("This feature is not allowed for your account.")
-                  : undefined
+                !isCryptoAllowed ? t("This feature is not allowed for your account.") : undefined
               }
               aria-disabled={!isCryptoAllowed}
               onMouseEnter={() => setIsHovered(true)}
@@ -307,15 +298,10 @@ const AddFunds = () => {
 
         {currenctModal === "success" && (
           <Success
-            link={
-              status === "completed" || !status ? "/wallets" : "/transactions"
-            }
-            page={
-              status === "completed" || !status ? "My Wallets" : "Transactions"
-            }
+            link={status === "completed" || !status ? "/wallets" : "/transactions"}
+            page={status === "completed" || !status ? "My Wallets" : "Transactions"}
             message={
-              (status === "completed" || !status) &&
-              window.location.pathname.includes("card")
+              (status === "completed" || !status) && window.location.pathname.includes("card")
                 ? "Funds has been added Successfully!"
                 : "Your top-up via PayPal is being processed and may take up to 120 seconds. Please check the transactions section for updates."
             }
@@ -376,9 +362,7 @@ const AddFunds = () => {
               }}
               onClick={() => (isCryptoAllowed ? setAction("crypto") : null)}
               title={
-                !isCryptoAllowed
-                  ? t("This feature is not allowed for your account.")
-                  : undefined
+                !isCryptoAllowed ? t("This feature is not allowed for your account.") : undefined
               }
               aria-disabled={!isCryptoAllowed}
             >
@@ -397,15 +381,10 @@ const AddFunds = () => {
 
         {currenctModal === "success" && (
           <Success
-            link={
-              status === "completed" || !status ? "/wallets" : "/transactions"
-            }
-            page={
-              status === "completed" || !status ? "My Wallets" : "Transactions"
-            }
+            link={status === "completed" || !status ? "/wallets" : "/transactions"}
+            page={status === "completed" || !status ? "My Wallets" : "Transactions"}
             message={
-              (status === "completed" || !status) &&
-              window.location.pathname.includes("card")
+              (status === "completed" || !status) && window.location.pathname.includes("card")
                 ? "Funds has been added Successfully!"
                 : "Your top-up via PayPal is being processed and may take up to 120 seconds. Please check the transactions section for updates."
             }

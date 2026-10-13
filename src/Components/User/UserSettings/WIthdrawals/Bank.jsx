@@ -35,16 +35,10 @@ const Bank = ({ country, states, values, changeHandler, isEditMode }) => {
           readOnly={!isEditMode}
           className="form-control"
           style={{ flex: 1, width: "100%", minWidth: "250px" }}
-          placeholder={
-            states.accNumType === "IBAN" ? t("IBAN Number") : t("Swift Code")
-          }
+          placeholder={states.accNumType === "IBAN" ? t("IBAN Number") : t("Swift Code")}
           required
           name={states.accNumType === "IBAN" ? "bank_iban" : "bank_swift_code"}
-          value={
-            states.accNumType === "IBAN"
-              ? values.bank_iban
-              : values.bank_swift_code
-          }
+          value={states.accNumType === "IBAN" ? values.bank_iban : values.bank_swift_code}
           id="bank_iban"
           maxLength={34}
           min={8}

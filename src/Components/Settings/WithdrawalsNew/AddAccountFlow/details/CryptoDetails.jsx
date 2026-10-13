@@ -8,16 +8,10 @@ import {
 } from "../../../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/components";
 import { CRYPTO_NETWORKS } from "../../withdrawalPayload";
 
-const CryptoDetails = ({
-  channel,
-  setChannel,
-  takenAddresses,
-  onValidChange,
-}) => {
+const CryptoDetails = ({ channel, setChannel, takenAddresses, onValidChange }) => {
   const { t } = useTranslation();
   const network =
-    CRYPTO_NETWORKS.find((item) => item.value === channel.network) ??
-    CRYPTO_NETWORKS[0];
+    CRYPTO_NETWORKS.find((item) => item.value === channel.network) ?? CRYPTO_NETWORKS[0];
   const address = String(channel.wallet_address ?? "").trim();
 
   const error = useMemo(() => {
@@ -67,14 +61,11 @@ const CryptoDetails = ({
         label={t("Wallet address")}
         value={channel.wallet_address ?? ""}
         placeholder={network.value.startsWith("TRC") ? "T..." : "0x..."}
-        onChange={(value) =>
-          setChannel((prev) => ({ ...prev, wallet_address: value.trim() }))
-        }
+        onChange={(value) => setChannel((prev) => ({ ...prev, wallet_address: value.trim() }))}
         error={error}
-        hint={t(
-          "Only USDT on {{network}}. Sending on another network loses the funds.",
-          { network: network.value },
-        )}
+        hint={t("Only USDT on {{network}}. Sending on another network loses the funds.", {
+          network: network.value,
+        })}
       />
     </Fields>
   );

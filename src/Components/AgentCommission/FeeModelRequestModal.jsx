@@ -91,11 +91,7 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
         },
       );
       const dec = decryptData(res.data?.data);
-      const list = Array.isArray(dec?.data)
-        ? dec.data
-        : Array.isArray(dec)
-          ? dec
-          : [];
+      const list = Array.isArray(dec?.data) ? dec.data : Array.isArray(dec) ? dec : [];
       setRequests(list);
     } catch (err) {
       console.error("Error fetching agent fee requests:", err);
@@ -112,10 +108,7 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
   const handleFeeChange = (index, field, value) => {
     const updated = [...feeSchedule];
     const targetItem = updated[index];
-    if (
-      field === "percentAmount" &&
-      NO_PERCENT_FEE_IDS.includes(targetItem.id)
-    ) {
+    if (field === "percentAmount" && NO_PERCENT_FEE_IDS.includes(targetItem.id)) {
       updated[index] = { ...targetItem, percentAmount: 0 };
     } else {
       updated[index] = { ...targetItem, [field]: parseFloat(value) || 0 };
@@ -154,9 +147,7 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
       );
 
       const dec = decryptData(res.data?.data);
-      toast.success(
-        dec?.message || t("Fee model request submitted successfully!"),
-      );
+      toast.success(dec?.message || t("Fee model request submitted successfully!"));
       setTitle("");
       setFeeSchedule(DEFAULT_FEE_ITEMS);
       setActiveTab("list");
@@ -179,13 +170,7 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      toggle={toggle}
-      size="lg"
-      centered
-      style={{ maxWidth: "800px" }}
-    >
+    <Modal isOpen={isOpen} toggle={toggle} size="lg" centered style={{ maxWidth: "800px" }}>
       <ModalHeader toggle={toggle}>
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           <span style={{ fontSize: "18px", fontWeight: 700, color: "#111827" }}>
@@ -211,10 +196,7 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
               fontSize: "14px",
               fontWeight: 600,
               color: activeTab === "list" ? "#5926F0" : "#6B7280",
-              borderBottom:
-                activeTab === "list"
-                  ? "2px solid #5926F0"
-                  : "2px solid transparent",
+              borderBottom: activeTab === "list" ? "2px solid #5926F0" : "2px solid transparent",
               cursor: "pointer",
             }}
           >
@@ -229,10 +211,7 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
               fontSize: "14px",
               fontWeight: 600,
               color: activeTab === "create" ? "#5926F0" : "#6B7280",
-              borderBottom:
-                activeTab === "create"
-                  ? "2px solid #5926F0"
-                  : "2px solid transparent",
+              borderBottom: activeTab === "create" ? "2px solid #5926F0" : "2px solid transparent",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
@@ -276,9 +255,7 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
                   {t("No Fee Requests Submitted Yet")}
                 </p>
                 <p style={{ fontSize: "13px" }}>
-                  {t(
-                    "Click 'New Request' above to create custom fee models for your clients.",
-                  )}
+                  {t("Click 'New Request' above to create custom fee models for your clients.")}
                 </p>
               </div>
             ) : (
@@ -322,8 +299,7 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
                           {req.title}
                         </h4>
                         <span style={{ fontSize: "12px", color: "#6B7280" }}>
-                          {t("Submitted")}:{" "}
-                          {new Date(req.createdAt).toLocaleDateString()}
+                          {t("Submitted")}: {new Date(req.createdAt).toLocaleDateString()}
                         </span>
                       </div>
                       <div>
@@ -333,8 +309,7 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
                             pill
                             style={{ padding: "6px 12px", fontSize: "12px" }}
                           >
-                            <Clock size={12} style={{ marginRight: "4px" }} />{" "}
-                            {t("PENDING REVIEW")}
+                            <Clock size={12} style={{ marginRight: "4px" }} /> {t("PENDING REVIEW")}
                           </Badge>
                         )}
                         {req.status === "approved" && (
@@ -343,11 +318,7 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
                             pill
                             style={{ padding: "6px 12px", fontSize: "12px" }}
                           >
-                            <CheckCircle
-                              size={12}
-                              style={{ marginRight: "4px" }}
-                            />{" "}
-                            {t("APPROVED")}
+                            <CheckCircle size={12} style={{ marginRight: "4px" }} /> {t("APPROVED")}
                           </Badge>
                         )}
                         {req.status === "rejected" && (
@@ -356,8 +327,7 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
                             pill
                             style={{ padding: "6px 12px", fontSize: "12px" }}
                           >
-                            <XCircle size={12} style={{ marginRight: "4px" }} />{" "}
-                            {t("REJECTED")}
+                            <XCircle size={12} style={{ marginRight: "4px" }} /> {t("REJECTED")}
                           </Badge>
                         )}
                       </div>
@@ -436,10 +406,8 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
                                 req.feesCommisionFixed ??
                                 req.created_pack_id?.feesCommisionFixed ??
                                 0;
-                              if (cType === "both")
-                                return `${cVal}% + €${cFix}`;
-                              if (cType === "fixed")
-                                return `€${cFix > 0 ? cFix : cVal}`;
+                              if (cType === "both") return `${cVal}% + €${cFix}`;
+                              if (cType === "fixed") return `€${cFix > 0 ? cFix : cVal}`;
                               return `${cVal}%`;
                             })()}
                           </div>
@@ -503,9 +471,7 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
                               alignItems: "center",
                               gap: "4px",
                             }}
-                            onClick={() =>
-                              copyToClipboard(req.model_code, "code")
-                            }
+                            onClick={() => copyToClipboard(req.model_code, "code")}
                           >
                             <Copy size={13} /> {t("Copy Code")}
                           </Button>
@@ -589,8 +555,7 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
                           borderRadius: "8px",
                         }}
                       >
-                        <strong>{t("Rejection Reason")}:</strong>{" "}
-                        {req.rejection_reason}
+                        <strong>{t("Rejection Reason")}:</strong> {req.rejection_reason}
                       </div>
                     )}
                   </div>
@@ -601,9 +566,7 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
         ) : (
           <form onSubmit={handleSubmit}>
             <FormGroup>
-              <Label
-                style={{ fontWeight: 600, fontSize: "14px", color: "#374151" }}
-              >
+              <Label style={{ fontWeight: 600, fontSize: "14px", color: "#374151" }}>
                 {t("Fee Model Title")} <span style={{ color: "red" }}>*</span>
               </Label>
               <Input
@@ -654,9 +617,7 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
                           type="number"
                           step="any"
                           value={item.flatEuro}
-                          onChange={(e) =>
-                            handleFeeChange(idx, "flatEuro", e.target.value)
-                          }
+                          onChange={(e) => handleFeeChange(idx, "flatEuro", e.target.value)}
                           style={{ width: "110px" }}
                         />
                       </td>
@@ -676,13 +637,7 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
                             type="number"
                             step="any"
                             value={item.percentAmount}
-                            onChange={(e) =>
-                              handleFeeChange(
-                                idx,
-                                "percentAmount",
-                                e.target.value,
-                              )
-                            }
+                            onChange={(e) => handleFeeChange(idx, "percentAmount", e.target.value)}
                             style={{ width: "110px" }}
                           />
                         )}
@@ -701,11 +656,7 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
                 marginTop: "24px",
               }}
             >
-              <Button
-                type="button"
-                outline
-                onClick={() => setActiveTab("list")}
-              >
+              <Button type="button" outline onClick={() => setActiveTab("list")}>
                 {t("Cancel")}
               </Button>
               <Button

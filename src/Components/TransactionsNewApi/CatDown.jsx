@@ -10,12 +10,7 @@ import EditModal from "./EditModal";
 import DeleteModal from "./DeleteModal";
 import { useTranslation } from "react-i18next";
 
-const CatDown = ({
-  selectedCategories,
-  setSelectedCategories,
-  isEditMode,
-  item,
-}) => {
+const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }) => {
   const dropdownRef = useRef(null);
   const { t } = useTranslation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -29,9 +24,7 @@ const CatDown = ({
   const [tempItem, setTempItem] = useState(null);
 
   const [categories, setCategories] = useState([]);
-  const [searchedCategories, setSearchedCategories] = useState([
-    { _id: 1, name: "Hello World" },
-  ]);
+  const [searchedCategories, setSearchedCategories] = useState([{ _id: 1, name: "Hello World" }]);
 
   const [isSaving, setIsSaving] = useState(false);
 
@@ -128,14 +121,8 @@ const CatDown = ({
         // console.log(decrypted)
         setSearchTerm("");
         setIsSaving(false);
-        setSelectedCategories((prev) => [
-          ...prev,
-          decrypted?.transactionCategory,
-        ]);
-        setSearchedCategories((prev) => [
-          ...prev,
-          decrypted?.transactionCategory,
-        ]);
+        setSelectedCategories((prev) => [...prev, decrypted?.transactionCategory]);
+        setSearchedCategories((prev) => [...prev, decrypted?.transactionCategory]);
       })
       .catch((err) => {
         const decrypted = decryptData(err.response.data.data);
@@ -145,9 +132,7 @@ const CatDown = ({
   };
 
   const removeSelected = (item) => {
-    setSelectedCategories((prev) =>
-      prev.filter((category) => category._id !== item._id),
-    );
+    setSelectedCategories((prev) => prev.filter((category) => category._id !== item._id));
   };
 
   const handleItemSelect = (selected) => {
@@ -179,10 +164,7 @@ const CatDown = ({
   console.log(selectedCategories);
   return (
     <>
-      <div
-        ref={dropdownRef}
-        style={{ flex: 1, position: "relative", width: "100%" }}
-      >
+      <div ref={dropdownRef} style={{ flex: 1, position: "relative", width: "100%" }}>
         <div
           style={{ width: "100%" }}
           onClick={() => {
@@ -287,10 +269,7 @@ const CatDown = ({
                         filterUnits="userSpaceOnUse"
                         color-interpolation-filters="sRGB"
                       >
-                        <feFlood
-                          flood-opacity="0"
-                          result="BackgroundImageFix"
-                        />
+                        <feFlood flood-opacity="0" result="BackgroundImageFix" />
                         <feComposite in2="hardAlpha" operator="out" />
                         <feColorMatrix
                           type="matrix"
@@ -379,10 +358,7 @@ const CatDown = ({
                 setTempItem={setTempItem}
                 handleItemSelect={handleItemSelect}
                 removeSelected={removeSelected}
-                selected={
-                  selectedCategories.filter((item) => item._id === category._id)
-                    .length > 0
-                }
+                selected={selectedCategories.filter((item) => item._id === category._id).length > 0}
               />
             ))}
             {searchTerm && (

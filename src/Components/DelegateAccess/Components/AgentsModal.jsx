@@ -22,10 +22,7 @@ import userFour from "../images/UsersFour.svg";
 import s from "../styles/AgentsModal.module.css";
 import PermissionTree from "./PermissionTree";
 import { Button, Modal, ModalBody, ModalHeader, Spinner } from "reactstrap";
-import {
-  preventEdgeSpaces,
-  preventEmailSpaces,
-} from "../../../hooks/useTrimInput";
+import { preventEdgeSpaces, preventEmailSpaces } from "../../../hooks/useTrimInput";
 
 const STEPS = [
   { id: 1, label: "Profile", icon: <User size={14} /> },
@@ -33,25 +30,14 @@ const STEPS = [
   { id: 3, label: "Review", icon: <CheckSquare size={14} /> },
 ];
 
-const AgentsModal = ({
-  isRole,
-  isOpen,
-  onClose,
-  t,
-  width,
-  roles,
-  isEdit,
-  editData,
-}) => {
+const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editData }) => {
   const { country } = useCountryLocation();
   const [step, setStep] = useState(1);
   const [permSearch, setPermSearch] = useState("");
   const [selectedPermissions, setSelectedPermissions] = useState(
     isEdit && editData ? editData.permissions || [] : [],
   );
-  const [phone, setPhone] = useState(
-    isEdit && editData ? editData.phone || "" : "",
-  );
+  const [phone, setPhone] = useState(isEdit && editData ? editData.phone || "" : "");
   const [phoneError, setPhoneError] = useState("");
   const [isCheckingPhone, setIsCheckingPhone] = useState(false);
   const [verifiedPhone, setVerifiedPhone] = useState("");
@@ -59,8 +45,7 @@ const AgentsModal = ({
     isEdit && editData ? editData.deniedPermissions || [] : [],
   );
   const [status, setStatus] = useState({ type: null, message: "" });
-  const isWildcardParent = (pk) =>
-    pk && selectedPermissions.includes(`${pk}.*`);
+  const isWildcardParent = (pk) => pk && selectedPermissions.includes(`${pk}.*`);
   const queryClient = useQueryClient();
   const [form, setForm] = useState({
     first_name: isEdit && editData ? editData?.first_name || "" : "",
@@ -124,9 +109,7 @@ const AgentsModal = ({
         try {
           const decrypted = decryptData(error?.response?.data?.data);
           errorMessage =
-            typeof decrypted === "string"
-              ? decrypted
-              : decrypted?.message || errorMessage;
+            typeof decrypted === "string" ? decrypted : decrypted?.message || errorMessage;
         } catch (e) {
           console.error("Phone validation error decryption failed", e);
         }
@@ -146,16 +129,14 @@ const AgentsModal = ({
       const mod = key.split(".")[0];
       return (
         selectedPermissions.includes(`${key}.*`) ||
-        (selectedPermissions.includes(`${mod}.*`) &&
-          !deniedPermissions.includes(`${key}.*`))
+        (selectedPermissions.includes(`${mod}.*`) && !deniedPermissions.includes(`${key}.*`))
       );
     }
     const parts = key.split(".");
     const mod = parts[0];
     const feat = parts.length === 3 ? parts[1] : null;
     const underModWildcard = selectedPermissions.includes(`${mod}.*`);
-    const underFeatWildcard =
-      feat && selectedPermissions.includes(`${mod}.${feat}.*`);
+    const underFeatWildcard = feat && selectedPermissions.includes(`${mod}.${feat}.*`);
     if (underModWildcard) {
       if (feat && deniedPermissions.includes(`${mod}.${feat}.*`)) return false;
       return !deniedPermissions.includes(key);
@@ -167,8 +148,7 @@ const AgentsModal = ({
   const groupPermissions = (data) => {
     const hierarchy = {};
     data.forEach((item) => {
-      if (!hierarchy[item.module])
-        hierarchy[item.module] = { module: item.module, features: {} };
+      if (!hierarchy[item.module]) hierarchy[item.module] = { module: item.module, features: {} };
       const featureKey = item.feature || "general";
       if (!hierarchy[item.module].features[featureKey])
         hierarchy[item.module].features[featureKey] = {
@@ -215,9 +195,7 @@ const AgentsModal = ({
       const isUnderWildcard = isWildcardParent(moduleKey);
       if (featureWildcard) {
         if (newPerms.includes(featureWildcard)) {
-          newPerms = newPerms.filter(
-            (p) => p !== featureWildcard && !p.startsWith(`${key}.`),
-          );
+          newPerms = newPerms.filter((p) => p !== featureWildcard && !p.startsWith(`${key}.`));
           newDenied = newDenied.filter((p) => !p.startsWith(`${key}.`));
         } else if (isUnderWildcard) {
           if (newDenied.includes(featureWildcard)) {
@@ -235,9 +213,7 @@ const AgentsModal = ({
             .find((m) => m.module === moduleKey)
             ?.features.find((f) => !f.feature)
             ?.actions.map((a) => a.key) || [];
-        const allSelected = generalActions.every((ak) =>
-          isSelected(ak, "action"),
-        );
+        const allSelected = generalActions.every((ak) => isSelected(ak, "action"));
         if (allSelected) {
           newPerms = newPerms.filter((p) => !generalActions.includes(p));
           if (isUnderWildcard)
@@ -263,10 +239,7 @@ const AgentsModal = ({
         const parts = key.split(".");
         const mod = parts[0];
         const feat = parts.length === 3 ? parts[1] : null;
-        if (
-          isWildcardParent(mod) ||
-          (feat && newPerms.includes(`${mod}.${feat}.*`))
-        ) {
+        if (isWildcardParent(mod) || (feat && newPerms.includes(`${mod}.${feat}.*`))) {
           newDenied.push(key);
         } else {
           newPerms.push(key);
@@ -288,8 +261,7 @@ const AgentsModal = ({
         isEncrypted: true,
         isDecrypted: true,
       }),
-    onMutate: () =>
-      setStatus({ type: "loading", message: t("Creating agent...") }),
+    onMutate: () => setStatus({ type: "loading", message: t("Creating agent...") }),
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ["agents"] });
       setStatus({
@@ -308,10 +280,7 @@ const AgentsModal = ({
         }
       } else
         errorMsg =
-          err?.response?.data?.message ||
-          err?.response?.data?.error ||
-          err?.message ||
-          errorMsg;
+          err?.response?.data?.message || err?.response?.data?.error || err?.message || errorMsg;
       setStatus({ type: "error", message: errorMsg });
     },
   });
@@ -325,8 +294,7 @@ const AgentsModal = ({
         isEncrypted: true,
         isDecrypted: true,
       }),
-    onMutate: () =>
-      setStatus({ type: "loading", message: t("Updating agent...") }),
+    onMutate: () => setStatus({ type: "loading", message: t("Updating agent...") }),
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ["agents"] });
       setStatus({
@@ -345,10 +313,7 @@ const AgentsModal = ({
         }
       } else
         errorMsg =
-          err?.response?.data?.message ||
-          err?.response?.data?.error ||
-          err?.message ||
-          errorMsg;
+          err?.response?.data?.message || err?.response?.data?.error || err?.message || errorMsg;
       setStatus({ type: "error", message: errorMsg });
     },
   });
@@ -407,10 +372,7 @@ const AgentsModal = ({
 
   if (!isOpen) return null;
   const isStepOneInvalid =
-    !form.first_name ||
-    !form.last_name ||
-    (!isEdit && (!phone || phoneError)) ||
-    !form.email;
+    !form.first_name || !form.last_name || (!isEdit && (!phone || phoneError)) || !form.email;
 
   const isStepTwoInvalid = selectedPermissions.length === 0;
 
@@ -546,9 +508,7 @@ const AgentsModal = ({
       <div className={s.modal} onClick={(e) => e.stopPropagation()}>
         {status.type === "loading" && (
           <div className={s.statusScreen}>
-            <Spinner
-              style={{ width: "3rem", height: "3rem", color: "#5626e6" }}
-            />
+            <Spinner style={{ width: "3rem", height: "3rem", color: "#5626e6" }} />
             <p className={s.statusMsg}>{status.message}</p>
           </div>
         )}
@@ -569,10 +529,7 @@ const AgentsModal = ({
             <XCircle size={64} color="#ef4444" />
             <h3 className={s.statusTitle}>{t("Error!")}</h3>
             <p className={s.statusMsg}>{status.message}</p>
-            <button
-              className={s.btnNext}
-              onClick={() => setStatus({ type: null, message: "" })}
-            >
+            <button className={s.btnNext} onClick={() => setStatus({ type: null, message: "" })}>
               {t("Try Again")}
             </button>
           </div>
@@ -585,13 +542,7 @@ const AgentsModal = ({
                 <div className={s.modalHeader}>
                   <h2 className={s.modalTitle}>
                     <div>
-                      <img
-                        src={userFour}
-                        width={20}
-                        height={20}
-                        loading="lazy"
-                        alt=""
-                      />
+                      <img src={userFour} width={20} height={20} loading="lazy" alt="" />
                     </div>{" "}
                     {isEdit ? t("Edit Agent") : t("Add Agent")}
                   </h2>
@@ -601,11 +552,7 @@ const AgentsModal = ({
                     const isDone = step > st.id;
                     const isActive = step === st.id;
                     return (
-                      <div
-                        key={st.id}
-                        className={s.stepItem}
-                        style={{ position: "relative" }}
-                      >
+                      <div key={st.id} className={s.stepItem} style={{ position: "relative" }}>
                         {idx < STEPS.length - 1 && (
                           <div
                             style={{
@@ -645,9 +592,7 @@ const AgentsModal = ({
                     <>
                       <div className={s.nameInput}>
                         <div className={s.formGroup}>
-                          <label className={s.formLabel}>
-                            {t("First Name")}
-                          </label>
+                          <label className={s.formLabel}>{t("First Name")}</label>
                           <input
                             className={s.formInput}
                             onKeyDown={preventEdgeSpaces}
@@ -659,9 +604,7 @@ const AgentsModal = ({
                           />
                         </div>
                         <div className={s.formGroup}>
-                          <label className={s.formLabel}>
-                            {t("Last Name")}
-                          </label>
+                          <label className={s.formLabel}>{t("Last Name")}</label>
                           <input
                             className={s.formInput}
                             onKeyDown={preventEdgeSpaces}
@@ -674,15 +617,9 @@ const AgentsModal = ({
                         </div>
                       </div>
                       <div className={s.formGroup}>
-                        <label className={s.formLabel}>
-                          {t("Phone Number")}
-                        </label>
+                        <label className={s.formLabel}>{t("Phone Number")}</label>
                         <PhoneInput
-                          country={
-                            isEdit && editData?.country
-                              ? editData.country
-                              : country
-                          }
+                          country={isEdit && editData?.country ? editData.country : country}
                           phone={phone}
                           setPhone={handlePhoneChange}
                           error={phoneError}
@@ -758,10 +695,7 @@ const AgentsModal = ({
 
                   {step === 3 && (
                     <>
-                      <div
-                        className={s.reviewCard}
-                        style={{ marginBottom: 12 }}
-                      >
+                      <div className={s.reviewCard} style={{ marginBottom: 12 }}>
                         <div className={s.reviewRow}>
                           <span className={s.reviewRowKey}>{t("Agent")}</span>
                           <span className={s.reviewRowVal}>
@@ -775,9 +709,7 @@ const AgentsModal = ({
                           </span>
                         </div>
                         <div className={s.reviewRow}>
-                          <span className={s.reviewRowKey}>
-                            {t("Permissions")}
-                          </span>
+                          <span className={s.reviewRowKey}>{t("Permissions")}</span>
                           <span className={s.reviewRowVal}>
                             {selectedPermissions.length} {t("granted")}
                           </span>

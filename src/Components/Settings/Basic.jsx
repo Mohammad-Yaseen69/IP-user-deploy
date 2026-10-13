@@ -50,13 +50,8 @@ let timeout;
 
 const Basic = ({ setCurrentTab }) => {
   const { t } = useTranslation();
-  const {
-    userDetails,
-    authHeader,
-    missingTabsData,
-    userWallets,
-    setUserDetails,
-  } = useContext(UserContext);
+  const { userDetails, authHeader, missingTabsData, userWallets, setUserDetails } =
+    useContext(UserContext);
   const [company, setCompany] = useState("");
   const [username, setUsername] = useState(userDetails?.username ?? "");
   const [phone, setPhone] = useState(userDetails?.phone ?? "");
@@ -98,15 +93,10 @@ const Basic = ({ setCurrentTab }) => {
     [userDetails],
   );
   const isKybApproved = useMemo(
-    () =>
-      userDetails?.company?.kyb_status === "approved" ||
-      userDetails?.kyb_status === "approved",
+    () => userDetails?.company?.kyb_status === "approved" || userDetails?.kyb_status === "approved",
     [userDetails],
   );
-  const isVerified = useMemo(
-    () => isKycApproved || isKybApproved,
-    [isKycApproved, isKybApproved],
-  );
+  const isVerified = useMemo(() => isKycApproved || isKybApproved, [isKycApproved, isKybApproved]);
 
   const { data: statesResponse, isLoading: isStatesLoading } = useQuery({
     queryKey: ["country-states", "US"],
@@ -122,10 +112,7 @@ const Basic = ({ setCurrentTab }) => {
   const states = useMemo(() => {
     const responseStates = Array.isArray(statesResponse)
       ? statesResponse
-      : statesResponse?.States ||
-        statesResponse?.states ||
-        statesResponse?.data ||
-        [];
+      : statesResponse?.States || statesResponse?.states || statesResponse?.data || [];
 
     return responseStates.map((item) => ({
       value:
@@ -137,19 +124,11 @@ const Basic = ({ setCurrentTab }) => {
         item?.iso_code ||
         item,
       label:
-        item?.state_name ||
-        item?.name ||
-        item?.state ||
-        item?.state_code ||
-        item?.code ||
-        item,
-      isoCode: (
-        item?.isoCode ||
-        item?.iso_code ||
-        item?.state_code ||
-        item?.code ||
-        ""
-      ).replace("US-", ""),
+        item?.state_name || item?.name || item?.state || item?.state_code || item?.code || item,
+      isoCode: (item?.isoCode || item?.iso_code || item?.state_code || item?.code || "").replace(
+        "US-",
+        "",
+      ),
     }));
   }, [statesResponse]);
 
@@ -161,9 +140,7 @@ const Basic = ({ setCurrentTab }) => {
     }
 
     if (state && !stateCode) {
-      const selectedState = states.find(
-        (item) => item.value === state || item.isoCode === state,
-      );
+      const selectedState = states.find((item) => item.value === state || item.isoCode === state);
       if (selectedState?.isoCode) setStateCode(selectedState.isoCode);
     }
   }, [country, state, stateCode, states]);
@@ -200,9 +177,7 @@ const Basic = ({ setCurrentTab }) => {
       if (selected <= minDate) {
         setDateOfBirth(date.format("YYYY-MM-DD"));
       } else {
-        toast.error(
-          t("Please select a date at least 15 years ago or earlier."),
-        );
+        toast.error(t("Please select a date at least 15 years ago or earlier."));
       }
     } else {
       setDateOfBirth("");
@@ -309,8 +284,7 @@ const Basic = ({ setCurrentTab }) => {
   const sendOtp = async (arg = "") => {
     const isChannel = arg === "whatsapp" || arg === "sms";
     const type = isChannel
-      ? otpType ||
-        (userDetails?.account_type === "individual" ? "email" : "phone")
+      ? otpType || (userDetails?.account_type === "individual" ? "email" : "phone")
       : arg;
     const channel = isChannel ? arg : codeType;
 
@@ -328,9 +302,7 @@ const Basic = ({ setCurrentTab }) => {
         [type]: type === "email" ? email : phone,
         account_id: userDetails?._id,
         authenticator: codeType === "authenticator",
-        ...(type === "phone"
-          ? { type: channel === "sms" ? "sms" : "whatsapp" }
-          : {}),
+        ...(type === "phone" ? { type: channel === "sms" ? "sms" : "whatsapp" } : {}),
       };
       // console.log(body)
       const encrypted = encryptData(body);
@@ -349,27 +321,18 @@ const Basic = ({ setCurrentTab }) => {
       // console.log(data)
       setOtpToken(data?.token);
       setOtpMethods(data?.availableMethods);
-      if (!showOtp)
-        setCodeType(data?.availableMethods?.whatsapp ? "whatsapp" : "sms");
+      if (!showOtp) setCodeType(data?.availableMethods?.whatsapp ? "whatsapp" : "sms");
       setShowOtp(true);
     } catch (err) {
       const error = decryptData(err.response.data.data);
-      toast.error(
-        error.message ??
-          "Something went wrong while sending otp to your " + type,
-      );
+      toast.error(error.message ?? "Something went wrong while sending otp to your " + type);
     }
     setIsSaving(false);
   };
 
   const editProfileHandler = () => {
     setIsSaving(true);
-    if (
-      !usernameError &&
-      usernameValid &&
-      !isVerified &&
-      userDetails.username !== username
-    ) {
+    if (!usernameError && usernameValid && !isVerified && userDetails.username !== username) {
       updateUsername();
     }
 
@@ -415,9 +378,7 @@ const Basic = ({ setCurrentTab }) => {
           refreshUserState("state", state);
           refreshUserState("postal_code", postalCode);
           refreshUserState("about_me", aboutMe);
-          const newDob = dateOfBirth
-            ? dateOfBirth.split("-").reverse().join("-")
-            : "";
+          const newDob = dateOfBirth ? dateOfBirth.split("-").reverse().join("-") : "";
           refreshUserState("dob", newDob);
           refreshUserState("timezone", timezone);
 
@@ -576,10 +537,7 @@ const Basic = ({ setCurrentTab }) => {
   const [showUsernameGuide, setShowUsernameGuide] = useState(false);
 
   const handleSaveClick = () => {
-    const dialCode = String(CountryBasedPhone[country].dial_code)?.replace(
-      "+",
-      "",
-    );
+    const dialCode = String(CountryBasedPhone[country].dial_code)?.replace("+", "");
 
     const filterNumber = (num) => {
       if (typeof num === "string") {
@@ -592,9 +550,7 @@ const Basic = ({ setCurrentTab }) => {
 
     if (userDetails?.account_type === "individual") {
       if (!email) return editProfileHandler();
-      return userDetails?.email === email
-        ? editProfileHandler()
-        : sendOtp("email");
+      return userDetails?.email === email ? editProfileHandler() : sendOtp("email");
     }
     if (userDetails?.account_type === "business") {
       return filterNumber(userDetails?.phone) === filterNumber(phone)
@@ -607,10 +563,7 @@ const Basic = ({ setCurrentTab }) => {
     if (!country) return false;
 
     const countryData = citiesData.find(
-      (item) =>
-        item.iso3 === country ||
-        item.alpha3 === country ||
-        item.alpha2 === country,
+      (item) => item.iso3 === country || item.alpha3 === country || item.alpha2 === country,
     );
 
     return countryData?.region === "Africa";
@@ -618,10 +571,7 @@ const Basic = ({ setCurrentTab }) => {
 
   const selectedCountry = useMemo(() => {
     return countriesData.find(
-      (item) =>
-        item.alpha3 === country ||
-        item.alpha2 === country ||
-        item.iso3 === country,
+      (item) => item.alpha3 === country || item.alpha2 === country || item.iso3 === country,
     );
   }, [country]);
 
@@ -674,9 +624,7 @@ const Basic = ({ setCurrentTab }) => {
     <MuiPickersUtilsProvider utils={DateMomentUtils}>
       <Card>
         {userDetails?.username ? (
-          <QrGenerate
-            wallets={userWallets?.filter((item) => !item?.qrCode?.url)}
-          />
+          <QrGenerate wallets={userWallets?.filter((item) => !item?.qrCode?.url)} />
         ) : (
           ""
         )}
@@ -697,14 +645,10 @@ const Basic = ({ setCurrentTab }) => {
           setCurrentTab={setCurrentTab}
         />
         <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-          <ModalHeader toggle={() => setShowOtp(!showOtp)}>
-            {t("Confirm")}
-          </ModalHeader>
+          <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
           <ModalBody>
             <OTPConfirmation
-              type={
-                userDetails?.account_type === "individual" ? "email" : "phone"
-              }
+              type={userDetails?.account_type === "individual" ? "email" : "phone"}
               callback={verifyOTP}
               setter={setShowSuccess}
               setterValue={true}
@@ -749,9 +693,7 @@ const Basic = ({ setCurrentTab }) => {
                 )}
                 <Label>
                   {t("First Name")}
-                  {!firstName && (
-                    <span style={{ color: "red" }}>{t("(Required)")}</span>
-                  )}
+                  {!firstName && <span style={{ color: "red" }}>{t("(Required)")}</span>}
                 </Label>
                 <Input
                   disabled={!isEditMode || isVerified}
@@ -776,9 +718,7 @@ const Basic = ({ setCurrentTab }) => {
                 )}
                 <Label>
                   {t("Last Name")}
-                  {!lastName && (
-                    <span style={{ color: "red" }}>{t("(Required)")}</span>
-                  )}
+                  {!lastName && <span style={{ color: "red" }}>{t("(Required)")}</span>}
                 </Label>
                 <Input
                   disabled={!isEditMode || isVerified}
@@ -805,9 +745,7 @@ const Basic = ({ setCurrentTab }) => {
               )}
               <Label>
                 {t("Company Name")}
-                {!company && (
-                  <span style={{ color: "red" }}>{t("(Required)")}</span>
-                )}
+                {!company && <span style={{ color: "red" }}>{t("(Required)")}</span>}
               </Label>
               <Input
                 disabled={!isEditMode || isVerified}
@@ -847,9 +785,7 @@ const Basic = ({ setCurrentTab }) => {
             )}
             <Label>
               {t("Username")}
-              {!username && (
-                <span style={{ color: "red" }}>{t("(Required)")}</span>
-              )}
+              {!username && <span style={{ color: "red" }}>{t("(Required)")}</span>}
             </Label>
             <div style={{ position: "relative" }}>
               <Input
@@ -858,11 +794,7 @@ const Basic = ({ setCurrentTab }) => {
                 readOnly={!isEditMode || isVerified}
                 style={{
                   borderColor:
-                    !isEditMode || isVerified
-                      ? "#eeeeee"
-                      : usernameValid
-                        ? "green"
-                        : "red",
+                    !isEditMode || isVerified ? "#eeeeee" : usernameValid ? "green" : "red",
                 }}
                 value={username}
                 onChange={handleUsernameChange}
@@ -873,11 +805,7 @@ const Basic = ({ setCurrentTab }) => {
               {loading && (
                 <div style={{ position: "absolute", right: "7px", top: "7px" }}>
                   <div className="d-flex justify-content-center">
-                    <div
-                      className="spinner-border"
-                      color="primary"
-                      role="status"
-                    >
+                    <div className="spinner-border" color="primary" role="status">
                       <span className="sr-only">{t("Loading...")}</span>
                     </div>
                   </div>
@@ -906,9 +834,7 @@ const Basic = ({ setCurrentTab }) => {
                   marginTop: "1rem",
                 }}
               >
-                {t(
-                  "Username may includes only alphabets, numbers and _ (underscores).",
-                )}
+                {t("Username may includes only alphabets, numbers and _ (underscores).")}
               </div>
             )}
           </FormGroup>
@@ -953,9 +879,7 @@ const Basic = ({ setCurrentTab }) => {
               )}
               <Label>
                 {t("Gender")}
-                {!gender && (
-                  <span style={{ color: "red" }}>{t("(Required)")}</span>
-                )}
+                {!gender && <span style={{ color: "red" }}>{t("(Required)")}</span>}
               </Label>
               <Input
                 disabled={true}
@@ -988,9 +912,7 @@ const Basic = ({ setCurrentTab }) => {
               )}
               <Label>
                 {t("Date Of Birth")}
-                {!dateOfBirth && (
-                  <span style={{ color: "red" }}>{t("(Required)")}</span>
-                )}
+                {!dateOfBirth && <span style={{ color: "red" }}>{t("(Required)")}</span>}
               </Label>
               {!isEditMode ? (
                 <Input
@@ -1092,9 +1014,7 @@ const Basic = ({ setCurrentTab }) => {
             </Label>
             <PhoneInput
               phone={phone}
-              country={
-                countriesData.find((item) => item.alpha3 === country)?.alpha3
-              }
+              country={countriesData.find((item) => item.alpha3 === country)?.alpha3}
               disableDropdown={true}
               setPhone={setPhone}
               disabled={!isEditMode || isKycApproved}
@@ -1122,10 +1042,7 @@ const Basic = ({ setCurrentTab }) => {
                 ></div>
               )}
               <Label>
-                {t("Address")}{" "}
-                {!address && (
-                  <span style={{ color: "red" }}>{t("(Required)")}</span>
-                )}
+                {t("Address")} {!address && <span style={{ color: "red" }}>{t("(Required)")}</span>}
               </Label>
               <Input
                 disabled={!isEditMode || isVerified}
@@ -1151,10 +1068,7 @@ const Basic = ({ setCurrentTab }) => {
               ></div>
             )}
             <Label>
-              {t("Country")}{" "}
-              {!country && (
-                <span style={{ color: "red" }}>{t("(Required)")}</span>
-              )}
+              {t("Country")} {!country && <span style={{ color: "red" }}>{t("(Required)")}</span>}
             </Label>
             <Input
               disabled={true}
@@ -1181,9 +1095,7 @@ const Basic = ({ setCurrentTab }) => {
 
               <Label>
                 {t("State")}
-                {!state && (
-                  <span style={{ color: "red" }}>{t("(Required)")}</span>
-                )}
+                {!state && <span style={{ color: "red" }}>{t("(Required)")}</span>}
               </Label>
 
               <Input
@@ -1191,9 +1103,7 @@ const Basic = ({ setCurrentTab }) => {
                 disabled={!isEditMode || isVerified}
                 value={state}
                 onChange={(e) => {
-                  const selectedState = states.find(
-                    (item) => item.value === e.target.value,
-                  );
+                  const selectedState = states.find((item) => item.value === e.target.value);
                   setState(e.target.value);
                   setStateCode(selectedState?.isoCode || "");
                   setCity("");
@@ -1225,16 +1135,13 @@ const Basic = ({ setCurrentTab }) => {
               ></div>
             )}
             <Label>
-              {t("City")}{" "}
-              {!city && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+              {t("City")} {!city && <span style={{ color: "red" }}>{t("(Required)")}</span>}
             </Label>
             <CitiesDropDown
               country={country === "Cabo Verde" ? "Cape Verde" : country}
               setUserCity={setCity}
               userCity={city}
-              disabled={
-                !isEditMode || isVerified || (country === "USA" && !stateCode)
-              }
+              disabled={!isEditMode || isVerified || (country === "USA" && !stateCode)}
               iso_3={country}
               stateCode={stateCode}
               requireState={country === "USA"}
@@ -1258,9 +1165,7 @@ const Basic = ({ setCurrentTab }) => {
 
               <Label>
                 {t("State")}
-                {!state && (
-                  <span style={{ color: "red" }}>{t("(Required)")}</span>
-                )}
+                {!state && <span style={{ color: "red" }}>{t("(Required)")}</span>}
               </Label>
 
               <Input
@@ -1295,10 +1200,7 @@ const Basic = ({ setCurrentTab }) => {
               ></div>
             )}
             <Label>
-              {t("Timezone")}{" "}
-              {!timezone && (
-                <span style={{ color: "red" }}>{t("(Required)")}</span>
-              )}
+              {t("Timezone")} {!timezone && <span style={{ color: "red" }}>{t("(Required)")}</span>}
             </Label>
             {/* {
                         isEditMode
@@ -1347,9 +1249,7 @@ const Basic = ({ setCurrentTab }) => {
               onChange={(e) => {
                 setPostalCode(e.target.value);
               }}
-              placeholder={
-                countryAlpha2 ? POSTAL_CODE_FORMATS[countryAlpha2] || "" : ""
-              }
+              placeholder={countryAlpha2 ? POSTAL_CODE_FORMATS[countryAlpha2] || "" : ""}
             />
             {postalCode && !isPostalCodeValid && (
               <div
@@ -1365,15 +1265,12 @@ const Basic = ({ setCurrentTab }) => {
             )}
           </FormGroup>
         </CardBody>
-        <CardFooter
-          style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}
-        >
+        <CardFooter style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
           {isEditMode ? (
             <>
               <Button
                 style={{
-                  background:
-                    "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                  background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                   border: "none",
                   outline: "none",
                   borderRadius: "10px",
@@ -1385,8 +1282,7 @@ const Basic = ({ setCurrentTab }) => {
               </Button>
               <Button
                 style={{
-                  background:
-                    "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                  background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                   border: "none",
                   outline: "none",
                   borderRadius: "10px",
@@ -1401,8 +1297,7 @@ const Basic = ({ setCurrentTab }) => {
                       !city ||
                       !username ||
                       (country === "USA" && !state?.trim()) ||
-                      (userDetails?.account_type === "business" &&
-                        !company?.trim()) ||
+                      (userDetails?.account_type === "business" && !company?.trim()) ||
                       (!isAfricanCountry && !postalCode?.trim()) ||
                       !isPostalCodeValid))
                 }
@@ -1414,8 +1309,7 @@ const Basic = ({ setCurrentTab }) => {
             can("settings.basic-info.update") && (
               <Button
                 style={{
-                  background:
-                    "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                  background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                   border: "none",
                   outline: "none",
                   borderRadius: "10px",

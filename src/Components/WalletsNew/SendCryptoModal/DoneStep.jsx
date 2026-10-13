@@ -52,9 +52,7 @@ const DoneStep = ({
         </div>
         <div className={convertStyles.doneText}>
           <h3>{t("Crypto payout submitted")}</h3>
-          <p>
-            {t("We will update this transaction once the network confirms it.")}
-          </p>
+          <p>{t("We will update this transaction once the network confirms it.")}</p>
         </div>
       </div>
 
@@ -90,10 +88,7 @@ const DoneStep = ({
           </div>
         </div>
 
-        <div
-          className={convertStyles.reviewRow}
-          style={{ background: "#f2eeff" }}
-        >
+        <div className={convertStyles.reviewRow} style={{ background: "#f2eeff" }}>
           <div
             className={convertStyles.reviewRowLabel}
             style={{ fontWeight: 600, color: "#5926f0" }}
@@ -116,28 +111,18 @@ const DoneStep = ({
         <div className={convertStyles.reviewRow}>
           <div className={convertStyles.reviewRowLabel}>{t("Network")}</div>
           <div className={convertStyles.reviewRowValue}>
-            <span className={styles.networkStrong}>
-              {getProtocolLabel(protocol)}
-            </span>
+            <span className={styles.networkStrong}>{getProtocolLabel(protocol)}</span>
           </div>
         </div>
 
         <div className={convertStyles.reviewRow}>
-          <div className={convertStyles.reviewRowLabel}>
-            {t("Destination address")}
-          </div>
-          <div
-            className={`${convertStyles.reviewRowValue} ${styles.monoValue}`}
-          >
-            {address}
-          </div>
+          <div className={convertStyles.reviewRowLabel}>{t("Destination address")}</div>
+          <div className={`${convertStyles.reviewRowValue} ${styles.monoValue}`}>{address}</div>
         </div>
 
         {payoutResult?.new_balance !== undefined && (
           <div className={convertStyles.reviewRow}>
-            <div className={convertStyles.reviewRowLabel}>
-              {t("New wallet balance")}
-            </div>
+            <div className={convertStyles.reviewRowLabel}>{t("New wallet balance")}</div>
             <div className={convertStyles.reviewRowValue}>
               {formatMoney(payoutResult?.new_balance, cryptoCurrency)}
             </div>
@@ -146,18 +131,10 @@ const DoneStep = ({
       </div>
 
       <div style={{ display: "flex", gap: "10px" }}>
-        <button
-          type="button"
-          className={convertStyles.backBtn}
-          onClick={onSendAgain}
-        >
+        <button type="button" className={convertStyles.backBtn} onClick={onSendAgain}>
           {t("Send again")}
         </button>
-        <button
-          type="button"
-          className={convertStyles.nextBtn}
-          onClick={onClose}
-        >
+        <button type="button" className={convertStyles.nextBtn} onClick={onClose}>
           {t("Done")}
         </button>
       </div>

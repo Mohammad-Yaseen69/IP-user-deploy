@@ -1,23 +1,13 @@
 export const CloseIcon = () => (
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <path
-      d="M15 5L5 15M5 5l10 10"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-    />
+    <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
   </svg>
 );
 
 export const InfoIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
     <circle cx="9" cy="9" r="7.25" stroke="currentColor" strokeWidth="1.3" />
-    <path
-      d="M9 8.25v4M9 5.9v.1"
-      stroke="currentColor"
-      strokeWidth="1.4"
-      strokeLinecap="round"
-    />
+    <path d="M9 8.25v4M9 5.9v.1" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
   </svg>
 );
 
@@ -29,12 +19,7 @@ export const WarningIcon = () => (
       strokeWidth="1.3"
       strokeLinejoin="round"
     />
-    <path
-      d="M9 7v3.4M9 12.6v.1"
-      stroke="currentColor"
-      strokeWidth="1.4"
-      strokeLinecap="round"
-    />
+    <path d="M9 7v3.4M9 12.6v.1" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
   </svg>
 );
 

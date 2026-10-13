@@ -40,14 +40,8 @@ import { preventEdgeSpaces } from "../../hooks/useTrimInput";
 const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
   const { t } = useTranslation();
   const [userCountry, setUserCountry] = useState({});
-  const {
-    authHeader,
-    userWallets,
-    getUserVideos,
-    verifyToken,
-    userVideos,
-    setUserVideos,
-  } = useContext(UserContext);
+  const { authHeader, userWallets, getUserVideos, verifyToken, userVideos, setUserVideos } =
+    useContext(UserContext);
   const [paymentAddressDetails, setPaymentAddressDetails] = useState(null);
   const [title, setTitle] = useState("");
   const [currency, setCurrency] = useState("");
@@ -67,13 +61,9 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
   const can = usePermission();
   const canUploadPaymentBanner = can("payment-address.banner.upload");
 
-  const canUpdatePaymentProfileImage = can(
-    "payment-address.profile-image.update",
-  );
+  const canUpdatePaymentProfileImage = can("payment-address.profile-image.update");
 
-  const canEnableVirtualPaymentAddress = can(
-    "payment-address.virtual-payment-address.enable",
-  );
+  const canEnableVirtualPaymentAddress = can("payment-address.virtual-payment-address.enable");
 
   const canAddPaymentVideo = can("payment-address.video.add");
 
@@ -93,19 +83,13 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
           SetIsAllowed(false);
         } else {
           setPaymentAddressDetails(decrypted?.paymentAddressDetails);
-          setTitle(
-            decrypted?.paymentAddressDetails?.title ?? "My Payment Address",
-          );
+          setTitle(decrypted?.paymentAddressDetails?.title ?? "My Payment Address");
           setDescription(
-            decrypted?.paymentAddressDetails?.description ??
-              "This is my payment address",
+            decrypted?.paymentAddressDetails?.description ?? "This is my payment address",
           );
-          setApiTitle(
-            decrypted?.paymentAddressDetails?.title ?? "My Payment Address",
-          );
+          setApiTitle(decrypted?.paymentAddressDetails?.title ?? "My Payment Address");
           setApiDescription(
-            decrypted?.paymentAddressDetails?.description ??
-              "This is my payment address",
+            decrypted?.paymentAddressDetails?.description ?? "This is my payment address",
           );
           setCurrency(decrypted?.paymentAddressDetails?.currency);
           setDp(decrypted?.paymentAddressDetails?.profileImage?.url);
@@ -121,9 +105,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
   useEffect(() => {
     if (userDetails?.country_name) {
       const filteredCountry = countries.find((item) =>
-        item.name
-          .toLowerCase()
-          .includes(userDetails?.country_name.toLowerCase()),
+        item.name.toLowerCase().includes(userDetails?.country_name.toLowerCase()),
       );
       setUserCountry(filteredCountry);
     }
@@ -181,9 +163,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
 
   useEffect(() => {
     if (currency) {
-      setCurrentWallet(
-        userWallets?.filter((item) => item?.currency?.code === currency)?.[0],
-      );
+      setCurrentWallet(userWallets?.filter((item) => item?.currency?.code === currency)?.[0]);
     } else {
       setCurrentWallet(
         userWallets?.filter(
@@ -225,9 +205,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
       }
     } catch (error) {
       console.log(decryptData(error?.response?.data?.data));
-      toast.error(
-        "We cannot process your request at the moment, please try again later.",
-      );
+      toast.error("We cannot process your request at the moment, please try again later.");
     } finally {
       setLoading(false);
     }
@@ -322,20 +300,14 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
             downloadFileSetter={setQrFile}
             qrUrl={`${base_url}/pay/${userDetails?.username}`}
           />
-          <InstructionsModal
-            isOpen={isOpen}
-            toggle={() => setIsOpen(!isOpen)}
-          />
+          <InstructionsModal isOpen={isOpen} toggle={() => setIsOpen(!isOpen)} />
           <Cover
             dets={paymentAddressDetails}
             cover={cover}
             setCover={setCover}
             canUploadPaymentBanner={canUploadPaymentBanner}
           />
-          <Card
-            style={{ marginBottom: "0", borderRadius: "0px" }}
-            className={styles.sub_container}
-          >
+          <Card style={{ marginBottom: "0", borderRadius: "0px" }} className={styles.sub_container}>
             <CardBody className={styles.sc_body}>
               <div className={styles.top}>
                 <div ref={leftRef} className={styles.left}>
@@ -347,14 +319,11 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                   />
                   <div className={styles.basic_dets}>
                     <div className={styles.badge}>
-                      {userDetails?.account_type === "individual"
-                        ? t("Personal")
-                        : t("Business")}{" "}
+                      {userDetails?.account_type === "individual" ? t("Personal") : t("Business")}{" "}
                       {t("Account")}
                     </div>
                     <h4>
-                      {userDetails?.user?.first_name ||
-                        userDetails?.company_name}{" "}
+                      {userDetails?.user?.first_name || userDetails?.company_name}{" "}
                       {userDetails?.user?.last_name}
                     </h4>
                     <div className={styles.country}>
@@ -370,10 +339,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                 {window.innerWidth < 1000 && (
                   <div className={styles.top_right}>
                     {userDetails?.about_me && (
-                      <div
-                        style={{ marginTop: width < 1000 && "1rem" }}
-                        className={styles.about}
-                      >
+                      <div style={{ marginTop: width < 1000 && "1rem" }} className={styles.about}>
                         <h5>{t("About Me")}:</h5>
                         <p>
                           {userDetails?.about_me?.length > 150
@@ -396,9 +362,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                           isOpen={showAboutModal}
                           toggle={() => setShowAboutModal(!showAboutModal)}
                         >
-                          <ModalHeader
-                            toggle={() => setShowAboutModal(!showAboutModal)}
-                          >
+                          <ModalHeader toggle={() => setShowAboutModal(!showAboutModal)}>
                             {t("About")}
                           </ModalHeader>
                           <ModalBody>{userDetails?.about_me}</ModalBody>
@@ -442,27 +406,19 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                     </div>
 
                     {canEnableVirtualPaymentAddress && (
-                      <Toggle
-                        checked={isActive}
-                        onChange={handleChangeStatus}
-                      />
+                      <Toggle checked={isActive} onChange={handleChangeStatus} />
                     )}
                   </div>
 
                   <div
-                    onClick={() =>
-                      setShowCurrencyDropdown(!showCurrencyDropdown)
-                    }
+                    onClick={() => setShowCurrencyDropdown(!showCurrencyDropdown)}
                     className={styles.curr}
                   >
                     <p>{t("Set the currency")}</p>
 
                     <div style={{ position: "relative" }}>
                       {showCurrencyDropdown && (
-                        <ul
-                          style={{ width: "100%" }}
-                          className={styles.dropdown}
-                        >
+                        <ul style={{ width: "100%" }} className={styles.dropdown}>
                           {userWallets?.length > 0 &&
                             userWallets
                               ?.filter(
@@ -480,9 +436,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                   onClick={() => {
                                     if (item.currency.code !== currency) {
                                       setCurrency(item?.currency?.code);
-                                      addUpdatePaymentAddress(
-                                        item?.currency?.code,
-                                      );
+                                      addUpdatePaymentAddress(item?.currency?.code);
                                     }
                                   }}
                                 >
@@ -524,10 +478,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                   <div className={styles.copyDiv}>
                     <p>{t("Payment Address QR Code")}</p>
                     {can("payment-address.download") && (
-                      <span
-                        onClick={downloadQRCode}
-                        style={{ cursor: "pointer" }}
-                      >
+                      <span onClick={downloadQRCode} style={{ cursor: "pointer" }}>
                         {t("Download")}
                       </span>
                     )}
@@ -635,11 +586,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                   </div>
 
                   <div className={styles.topV}>
-                    <p>
-                      {t(
-                        "You can add videos in your public payment address page.",
-                      )}{" "}
-                    </p>
+                    <p>{t("You can add videos in your public payment address page.")} </p>
                   </div>
 
                   <div className={styles.videoDiv}>
@@ -654,18 +601,13 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                           />
                         ))
                       ) : (
-                        <div className="text-center my-4">
-                          {t("No Video Items")}
-                        </div>
+                        <div className="text-center my-4">{t("No Video Items")}</div>
                       )}
                     </div>
                   </div>
                   <div className={styles.bottomV}>
                     {canAddPaymentVideo && (
-                      <button
-                        className={styles.buttonStyles}
-                        onClick={() => setShowModal(true)}
-                      >
+                      <button className={styles.buttonStyles} onClick={() => setShowModal(true)}>
                         {t("Add Video")}
                       </button>
                     )}{" "}
@@ -676,11 +618,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
             </CardBody>
           </Card>
 
-          <AddPortfolioItem
-            isOpen={showModal}
-            toggle={() => setShowModal(false)}
-            pAddress={true}
-          />
+          <AddPortfolioItem isOpen={showModal} toggle={() => setShowModal(false)} pAddress={true} />
         </>
       ) : (
         <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>

@@ -19,9 +19,7 @@ export function capitalizeStatus(str) {
     ? "Bargain-Accepted"
     : str
         .split(" ")
-        .map(
-          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
-        )
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
         .join(" ");
 }
 
@@ -99,10 +97,7 @@ const ItemMobile = ({ item, activeItem, setActiveItem, index, type }) => {
           const decrypted = decryptData(res.data.data);
           // console.log(decrypted)
           if (decrypted?.reviews?.length > 0) {
-            const overAllRating = decrypted.reviews?.reduce(
-              (acc, rat) => (acc += rat.rating),
-              0,
-            );
+            const overAllRating = decrypted.reviews?.reduce((acc, rat) => (acc += rat.rating), 0);
             setAllRating(overAllRating / decrypted?.reviewsCount);
             // console.log(decrypted)
             setAllReviews(decrypted?.reviews);
@@ -179,10 +174,7 @@ const ItemMobile = ({ item, activeItem, setActiveItem, index, type }) => {
             <h5
               className={styles.amount}
               style={{
-                color:
-                  item?.transaction_type?.toLowerCase() === "debit"
-                    ? "#FF7293"
-                    : "#1CB234",
+                color: item?.transaction_type?.toLowerCase() === "debit" ? "#FF7293" : "#1CB234",
                 display: activeItem === index + 1 ? "none" : "inherit",
               }}
             >
@@ -371,14 +363,10 @@ const ItemMobile = ({ item, activeItem, setActiveItem, index, type }) => {
       {type === "send" && (
         <div className={styles.smr_right}>
           <span>
-            {item?.seller_comment
-              ? t("You Left A Review")
-              : t("How Was Your Experience?")}
+            {item?.seller_comment ? t("You Left A Review") : t("How Was Your Experience?")}
           </span>
           <Button onClick={() => setShowReviewModal(!showReviewModal)}>
-            {item?.seller_comment || item?.seller_reply
-              ? t("Check Now")
-              : t("Leave A Review")}
+            {item?.seller_comment || item?.seller_reply ? t("Check Now") : t("Leave A Review")}
           </Button>
           <ReviewModal
             isOpen={showReviewModal}

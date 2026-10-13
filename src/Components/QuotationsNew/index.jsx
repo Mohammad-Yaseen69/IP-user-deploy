@@ -7,14 +7,7 @@ import sent_white from "../TransactionsNewApi/files/sent_white.png";
 import sent_grey from "../TransactionsNewApi/files/sent_grey.png";
 import received_white from "../TransactionsNewApi/files/received_white.png";
 import received_grey from "../TransactionsNewApi/files/received_grey.png";
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import q_styles from "./styles/index.module.css";
 import { UserContext } from "../../Context/UserContext";
 import axios from "axios";
@@ -64,19 +57,18 @@ const Quotations = () => {
     }
   };
 
-  const { data: receivedQuotations = [], isLoading: isLoadingReceived } =
-    useQuery({
-      queryKey: ["receivedQuotations", userDetails?._id],
-      queryFn: async () => {
-        const response = await axios.get(
-          `${import.meta.env.VITE_IP_DEV_API}/api/quotation/get-quotation-by-reciever/${userDetails?._id}`,
-          { headers: authHeader },
-        );
-        const decrypted = await decryptData(response?.data?.data);
-        return decrypted?.quotation ?? [];
-      },
-      enabled: !!userDetails?._id,
-    });
+  const { data: receivedQuotations = [], isLoading: isLoadingReceived } = useQuery({
+    queryKey: ["receivedQuotations", userDetails?._id],
+    queryFn: async () => {
+      const response = await axios.get(
+        `${import.meta.env.VITE_IP_DEV_API}/api/quotation/get-quotation-by-reciever/${userDetails?._id}`,
+        { headers: authHeader },
+      );
+      const decrypted = await decryptData(response?.data?.data);
+      return decrypted?.quotation ?? [];
+    },
+    enabled: !!userDetails?._id,
+  });
   const { data: sentQuotations = [], isLoading: isLoadingSent } = useQuery({
     queryKey: ["sentQuotations", userDetails?._id],
     queryFn: async () => {
@@ -115,10 +107,7 @@ const Quotations = () => {
   }, [tab, id, sentQuotations, receivedQuotations]);
 
   const handleClickOutside = useCallback((event) => {
-    if (
-      datePickerRef.current &&
-      !datePickerRef.current.contains(event.target)
-    ) {
+    if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
       setShowDatePicker(false);
     }
   }, []);
@@ -138,12 +127,8 @@ const Quotations = () => {
     if (searchQuery.length > 0) {
       return receivedQuotations.filter(
         (item) =>
-          item?.sender?.user?.first_name
-            ?.toLowerCase()
-            ?.includes(searchQuery.toLowerCase()) ||
-          item?.sender?.user?.last_name
-            ?.toLowerCase()
-            ?.includes(searchQuery.toLowerCase()),
+          item?.sender?.user?.first_name?.toLowerCase()?.includes(searchQuery.toLowerCase()) ||
+          item?.sender?.user?.last_name?.toLowerCase()?.includes(searchQuery.toLowerCase()),
       );
     }
     return receivedQuotations;
@@ -153,12 +138,8 @@ const Quotations = () => {
     if (searchQuery.length > 0) {
       return sentQuotations.filter(
         (item) =>
-          item?.receiver?.user?.first_name
-            ?.toLowerCase()
-            ?.includes(searchQuery.toLowerCase()) ||
-          item?.receiver?.user?.last_name
-            ?.toLowerCase()
-            ?.includes(searchQuery.toLowerCase()),
+          item?.receiver?.user?.first_name?.toLowerCase()?.includes(searchQuery.toLowerCase()) ||
+          item?.receiver?.user?.last_name?.toLowerCase()?.includes(searchQuery.toLowerCase()),
       );
     }
     return sentQuotations;
@@ -207,9 +188,7 @@ const Quotations = () => {
                   onClick={() => setActive(item.name)}
                 >
                   <img
-                    src={
-                      active === item.name ? item.icon_white : item.icon_grey
-                    }
+                    src={active === item.name ? item.icon_white : item.icon_grey}
                     loading="lazy"
                     style={{ width: "18px" }}
                   />
@@ -248,9 +227,7 @@ const Quotations = () => {
             </div>
             <div className={styles.table_body}>
               {isLoading ? (
-                <div
-                  style={{ height: "300px", width: "300px", margin: "0 auto" }}
-                >
+                <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
                   <InstaPayLoader />
                 </div>
               ) : (
@@ -259,10 +236,7 @@ const Quotations = () => {
                     <>
                       {filteredReceived?.length > 0 ? (
                         filteredReceived
-                          ?.sort(
-                            (a, b) =>
-                              new Date(b.createdAt) - new Date(a.createdAt),
-                          )
+                          ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                           .map((item, index) => {
                             let color;
                             if (
@@ -280,10 +254,7 @@ const Quotations = () => {
                             return (
                               <div
                                 style={{
-                                  border:
-                                    id === item?._id
-                                      ? "4px solid #afafaf1e"
-                                      : "none",
+                                  border: id === item?._id ? "4px solid #afafaf1e" : "none",
                                 }}
                               >
                                 <QuotationReceivedItem
@@ -300,9 +271,7 @@ const Quotations = () => {
                             );
                           })
                       ) : (
-                        <span
-                          style={{ textAlign: "center", marginTop: "2rem" }}
-                        >
+                        <span style={{ textAlign: "center", marginTop: "2rem" }}>
                           {t("No Quotations")}
                         </span>
                       )}
@@ -312,10 +281,7 @@ const Quotations = () => {
                     <>
                       {filteredSent.length > 0 ? (
                         filteredSent
-                          .sort(
-                            (a, b) =>
-                              new Date(b.createdAt) - new Date(a.createdAt),
-                          )
+                          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                           .map((item, index) => {
                             let color;
                             if (
@@ -333,10 +299,7 @@ const Quotations = () => {
                             return (
                               <div
                                 style={{
-                                  border:
-                                    id === item?._id
-                                      ? "4px solid #afafaf1e"
-                                      : "none",
+                                  border: id === item?._id ? "4px solid #afafaf1e" : "none",
                                 }}
                               >
                                 <QuotationSentItem
@@ -353,9 +316,7 @@ const Quotations = () => {
                             );
                           })
                       ) : (
-                        <span
-                          style={{ textAlign: "center", marginTop: "2rem" }}
-                        >
+                        <span style={{ textAlign: "center", marginTop: "2rem" }}>
                           {t("No Quotations")}
                         </span>
                       )}
@@ -393,9 +354,7 @@ const Quotations = () => {
                   onClick={() => setActive(item.name)}
                 >
                   <img
-                    src={
-                      active === item.name ? item.icon_white : item.icon_grey
-                    }
+                    src={active === item.name ? item.icon_white : item.icon_grey}
                     loading="lazy"
                     style={{ width: "18px" }}
                   />
@@ -413,12 +372,7 @@ const Quotations = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              <img
-                src={calendar}
-                alt="c"
-                loading="lazy"
-                onClick={handleDatePickerClick}
-              />
+              <img src={calendar} alt="c" loading="lazy" onClick={handleDatePickerClick} />
               {showDatePicker && (
                 <div
                   ref={datePickerRef}
@@ -453,9 +407,7 @@ const Quotations = () => {
             </div>
             <div className={styles.table_body}>
               {isLoading ? (
-                <div
-                  style={{ height: "300px", width: "300px", margin: "0 auto" }}
-                >
+                <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
                   <InstaPayLoader />
                 </div>
               ) : (
@@ -464,10 +416,7 @@ const Quotations = () => {
                     <>
                       {filteredReceived.length > 0 ? (
                         filteredReceived
-                          .sort(
-                            (a, b) =>
-                              new Date(b.createdAt) - new Date(a.createdAt),
-                          )
+                          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                           .map((item, index) => {
                             let color;
                             if (
@@ -485,10 +434,7 @@ const Quotations = () => {
                             return (
                               <div
                                 style={{
-                                  border:
-                                    id === item?._id
-                                      ? "4px solid #afafaf1e"
-                                      : "none",
+                                  border: id === item?._id ? "4px solid #afafaf1e" : "none",
                                 }}
                               >
                                 <QuotationReceivedItem
@@ -505,9 +451,7 @@ const Quotations = () => {
                             );
                           })
                       ) : (
-                        <span
-                          style={{ textAlign: "center", marginTop: "2rem" }}
-                        >
+                        <span style={{ textAlign: "center", marginTop: "2rem" }}>
                           {t("No Quotations")}
                         </span>
                       )}
@@ -517,10 +461,7 @@ const Quotations = () => {
                     <>
                       {filteredSent.length > 0 ? (
                         filteredSent
-                          .sort(
-                            (a, b) =>
-                              new Date(b.createdAt) - new Date(a.createdAt),
-                          )
+                          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                           .map((item, index) => {
                             let color;
                             if (
@@ -538,10 +479,7 @@ const Quotations = () => {
                             return (
                               <div
                                 style={{
-                                  border:
-                                    id === item?._id
-                                      ? "4px solid #afafaf1e"
-                                      : "none",
+                                  border: id === item?._id ? "4px solid #afafaf1e" : "none",
                                 }}
                               >
                                 <QuotationSentItem
@@ -558,9 +496,7 @@ const Quotations = () => {
                             );
                           })
                       ) : (
-                        <span
-                          style={{ textAlign: "center", marginTop: "2rem" }}
-                        >
+                        <span style={{ textAlign: "center", marginTop: "2rem" }}>
                           {t("No Quotations")}
                         </span>
                       )}
@@ -571,9 +507,7 @@ const Quotations = () => {
             </div>
             <div className={styles.table_body_mobile}>
               {isLoading ? (
-                <div
-                  style={{ height: "300px", width: "300px", margin: "0 auto" }}
-                >
+                <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
                   <InstaPayLoader />
                 </div>
               ) : (
@@ -582,10 +516,7 @@ const Quotations = () => {
                     <>
                       {filteredReceived.length > 0 ? (
                         filteredReceived
-                          .sort(
-                            (a, b) =>
-                              new Date(b.createdAt) - new Date(a.createdAt),
-                          )
+                          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                           .map((item, index) => {
                             let color;
                             if (
@@ -603,10 +534,7 @@ const Quotations = () => {
                             return (
                               <div
                                 style={{
-                                  border:
-                                    id === item?._id
-                                      ? "4px solid #afafaf1e"
-                                      : "none",
+                                  border: id === item?._id ? "4px solid #afafaf1e" : "none",
                                 }}
                               >
                                 <ReceivedItemMobile
@@ -623,9 +551,7 @@ const Quotations = () => {
                             );
                           })
                       ) : (
-                        <span
-                          style={{ textAlign: "center", marginTop: "2rem" }}
-                        >
+                        <span style={{ textAlign: "center", marginTop: "2rem" }}>
                           {t("No Quotations")}
                         </span>
                       )}
@@ -635,10 +561,7 @@ const Quotations = () => {
                     <>
                       {filteredSent.length > 0 ? (
                         filteredSent
-                          .sort(
-                            (a, b) =>
-                              new Date(b.createdAt) - new Date(a.createdAt),
-                          )
+                          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                           .map((item, index) => {
                             let color;
                             if (
@@ -656,10 +579,7 @@ const Quotations = () => {
                             return (
                               <div
                                 style={{
-                                  border:
-                                    id === item?._id
-                                      ? "4px solid #afafaf1e"
-                                      : "none",
+                                  border: id === item?._id ? "4px solid #afafaf1e" : "none",
                                 }}
                               >
                                 <SentItemMobile
@@ -676,9 +596,7 @@ const Quotations = () => {
                             );
                           })
                       ) : (
-                        <span
-                          style={{ textAlign: "center", marginTop: "2rem" }}
-                        >
+                        <span style={{ textAlign: "center", marginTop: "2rem" }}>
                           {t("No Quotations")}
                         </span>
                       )}

@@ -128,8 +128,7 @@ const QRRecipient = ({ wallet, dataHandler }) => {
                     {/* username */}
 
                     <h4 style={{ fontSize: "7.3cqi", marginBottom: "0" }}>
-                      {wallet?.first_name || wallet?.company_name}{" "}
-                      {wallet?.last_name}
+                      {wallet?.first_name || wallet?.company_name} {wallet?.last_name}
                     </h4>
                     <div
                       style={{
@@ -154,9 +153,7 @@ const QRRecipient = ({ wallet, dataHandler }) => {
                           padding: "3px 7px",
                         }}
                       >
-                        {wallet?.account_type === "individual"
-                          ? "Personal"
-                          : "Business"}
+                        {wallet?.account_type === "individual" ? "Personal" : "Business"}
                         {t("Account")}
                       </div>
                       <div
@@ -268,9 +265,7 @@ const QRRecipient = ({ wallet, dataHandler }) => {
               marginTop: "1.5rem",
             }}
           >
-            <div
-              style={{ display: "flex", alignItems: "center", gap: ".3rem" }}
-            >
+            <div style={{ display: "flex", alignItems: "center", gap: ".3rem" }}>
               <img src={invite} alt="i" width={13} height={13} />
               <span
                 style={{
@@ -308,10 +303,7 @@ const QRRecipient = ({ wallet, dataHandler }) => {
                 {t("Invite")}
               </span>
             </button>
-            <InviteFriendModal
-              isOpen={isOpen}
-              toggle={() => setIsOpen(false)}
-            />
+            <InviteFriendModal isOpen={isOpen} toggle={() => setIsOpen(false)} />
           </div>
         </Card>
         {/* <div style={{

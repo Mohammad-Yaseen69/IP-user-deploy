@@ -9,8 +9,7 @@ const formatDate = (value) => {
   return day && month && year ? `${day}/${month}/${year}` : String(value);
 };
 
-const rowsFrom = (entries) =>
-  entries.filter(([, value]) => String(value ?? "").trim());
+const rowsFrom = (entries) => entries.filter(([, value]) => String(value ?? "").trim());
 
 const StepView = ({ beneficiary, recipientName }) => {
   const { allowedCountries } = useContext(UserContext);
@@ -18,9 +17,8 @@ const StepView = ({ beneficiary, recipientName }) => {
 
   const countryLabel = useMemo(
     () =>
-      (allowedCountries || []).find(
-        (c) => c.country_iso_code === beneficiary?.country_iso_code,
-      )?.country_name ||
+      (allowedCountries || []).find((c) => c.country_iso_code === beneficiary?.country_iso_code)
+        ?.country_name ||
       beneficiary?.country_name ||
       beneficiary?.country_iso_code ||
       "",
@@ -33,10 +31,7 @@ const StepView = ({ beneficiary, recipientName }) => {
     [isBusiness ? "Legal name" : "Full name", recipientName],
     ["Type", isBusiness ? "Business" : "Individual"],
     ["Country", countryLabel],
-    [
-      "Date of birth",
-      formatDate(beneficiary?.date_of_birth || extras.date_of_birth),
-    ],
+    ["Date of birth", formatDate(beneficiary?.date_of_birth || extras.date_of_birth)],
     ["Nationality", extras.nationality_country_iso_code],
     ["Relationship", extras.beneficiary_relationship],
     ["Occupation", extras.occupation],
@@ -48,16 +43,10 @@ const StepView = ({ beneficiary, recipientName }) => {
   ]);
 
   const addressRows = rowsFrom([
-    [
-      "Address",
-      beneficiary?.address || extras.address || extras.beneficiaryAddress,
-    ],
+    ["Address", beneficiary?.address || extras.address || extras.beneficiaryAddress],
     ["City", beneficiary?.city || extras.city || extras.beneficiaryCity],
     ["Province or state", extras.state_name || extras.province_state],
-    [
-      "Postal code",
-      beneficiary?.zip_code || extras.postal_code || extras.beneficiaryPostal,
-    ],
+    ["Postal code", beneficiary?.zip_code || extras.postal_code || extras.beneficiaryPostal],
   ]);
 
   const identityDocRows = rowsFrom([
@@ -72,9 +61,7 @@ const StepView = ({ beneficiary, recipientName }) => {
       <ContextCard
         initial={(recipientName || "B").charAt(0).toUpperCase()}
         name={recipientName}
-        meta={[isBusiness ? "Business" : "Individual", countryLabel]
-          .filter(Boolean)
-          .join(", ")}
+        meta={[isBusiness ? "Business" : "Individual", countryLabel].filter(Boolean).join(", ")}
       />
 
       <SummaryCard heading="Recipient">

@@ -55,14 +55,10 @@ const ConfirmW2W = ({
           padding: "20px 30px",
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
       >
-        <div
-          style={{ display: "flex", flexDirection: "column" }}
-          className="conf_cont"
-        >
+        <div style={{ display: "flex", flexDirection: "column" }} className="conf_cont">
           <h4 className="text-center">
             {t("You Selected")}
             <br />
@@ -82,9 +78,7 @@ const ConfirmW2W = ({
                 {t("You selected")}
               </span>
             </div>
-            <div
-              style={{ display: "flex", alignItems: "center", gap: ".6rem" }}
-            >
+            <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
               <div
                 style={{
                   minHeight: "35px",
@@ -158,9 +152,7 @@ const ConfirmW2W = ({
                 {t(`You are transferring`)}
               </span>
             </div>
-            <div
-              style={{ display: "flex", alignItems: "center", gap: ".6rem" }}
-            >
+            <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
               <span style={{ fontWeight: 700, fontSize: "1.4rem" }}>
                 {amount} {currency}
               </span>

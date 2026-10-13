@@ -11,9 +11,7 @@ const SessionItem = ({ session, index }) => {
   return (
     <div className={styles.session}>
       <Modal isOpen={showModal} toggle={() => setShowModal(!showModal)}>
-        <ModalHeader toggle={() => setShowModal(!showModal)}>
-          {t("Session Details")}
-        </ModalHeader>
+        <ModalHeader toggle={() => setShowModal(!showModal)}>{t("Session Details")}</ModalHeader>
         <ModalBody>
           <div
             style={{
@@ -29,11 +27,7 @@ const SessionItem = ({ session, index }) => {
               margin: "0 auto",
             }}
           >
-            {session?.platform === "Windows" ? (
-              <Monitor size={70} />
-            ) : (
-              <Smartphone size={70} />
-            )}
+            {session?.platform === "Windows" ? <Monitor size={70} /> : <Smartphone size={70} />}
           </div>
           <ul
             style={{
@@ -52,9 +46,7 @@ const SessionItem = ({ session, index }) => {
               }}
             >
               <span>{t("Date & Time")}: </span>
-              <h5 style={{ marginBottom: 0 }}>
-                {new Date(session?.createdAt).toLocaleString()}
-              </h5>
+              <h5 style={{ marginBottom: 0 }}>{new Date(session?.createdAt).toLocaleString()}</h5>
             </li>
             <li
               style={{
@@ -133,9 +125,7 @@ const SessionItem = ({ session, index }) => {
               }}
             >
               <span>{t("Country")}</span>
-              <h5 style={{ marginBottom: 0 }}>
-                {session?.location?.country_name}
-              </h5>
+              <h5 style={{ marginBottom: 0 }}>{session?.location?.country_name}</h5>
             </li>
             {/* <li style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "1rem" }}>
                             <span>Coordinates</span>
@@ -181,8 +171,7 @@ const SessionItem = ({ session, index }) => {
             textOverflow: "ellipsis",
           }}
         >
-          {session?.location?.city}, {session?.location?.state},{" "}
-          {session?.location?.country_name}
+          {session?.location?.city}, {session?.location?.state}, {session?.location?.country_name}
         </p>
         <p
           style={{

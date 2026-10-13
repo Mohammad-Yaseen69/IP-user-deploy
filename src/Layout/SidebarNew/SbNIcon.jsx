@@ -16,10 +16,7 @@ const SidebarIconNew = () => {
           zIndex: 10000,
         }}
       >
-        <SidebarLogo
-          sidebartoogle={sidebartoogle}
-          setSidebartoogle={setSidebartoogle}
-        />
+        <SidebarLogo sidebartoogle={sidebartoogle} setSidebartoogle={setSidebartoogle} />
       </div>
       <div className="logo-icon-wrapper">
         <Link
@@ -32,10 +29,7 @@ const SidebarIconNew = () => {
           }}
         >
           <img src={dot} alt="" style={{ height: "17px", width: "20px" }} />
-          <div
-            className="icon-box-sidebar"
-            style={{ background: "transparent" }}
-          >
+          <div className="icon-box-sidebar" style={{ background: "transparent" }}>
             <img
               src={cubaimg}
               alt=""

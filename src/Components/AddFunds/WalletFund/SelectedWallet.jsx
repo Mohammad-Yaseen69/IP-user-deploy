@@ -8,9 +8,7 @@ const SelectedWallet = ({ wallet, setSubStep }) => {
       className="i_t_selected"
     >
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <span style={{ color: "black", fontSize: ".7rem" }}>
-          {t("You selected")}
-        </span>
+        <span style={{ color: "black", fontSize: ".7rem" }}>{t("You selected")}</span>
         <span
           style={{
             background: "white",
@@ -55,9 +53,7 @@ const SelectedWallet = ({ wallet, setSubStep }) => {
           <h5 style={{ fontSize: "1rem", fontWeight: 700, marginBottom: "0" }}>
             {wallet?.wallet_id}
           </h5>
-          <span
-            style={{ color: "#a8a8a8", fontSize: ".6rem", fontWeight: 500 }}
-          >
+          <span style={{ color: "#a8a8a8", fontSize: ".6rem", fontWeight: 500 }}>
             {wallet?.currency?.code}{" "}
           </span>
         </div>

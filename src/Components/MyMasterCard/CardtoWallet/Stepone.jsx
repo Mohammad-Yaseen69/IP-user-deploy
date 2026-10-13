@@ -24,9 +24,7 @@ const Stepone = ({ setOption, option }) => {
           className={styles.option}
         >
           <FaUser color={option === "my" && "white"} size={22} />
-          <h4 style={{ color: option === "my" && "white" }}>
-            {t("My Wallet")}
-          </h4>
+          <h4 style={{ color: option === "my" && "white" }}>{t("My Wallet")}</h4>
         </div>
         <div
           style={{
@@ -38,9 +36,7 @@ const Stepone = ({ setOption, option }) => {
           className={styles.option}
         >
           <FaUsers color={option === "other" && "white"} size={22} />
-          <h4 style={{ color: option === "other" && "white" }}>
-            {t("Other Wallet")}
-          </h4>
+          <h4 style={{ color: option === "other" && "white" }}>{t("Other Wallet")}</h4>
         </div>
       </div>
     </div>

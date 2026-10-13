@@ -29,25 +29,16 @@ const IbanBreadcrumb = ({ items = [] }) => {
           };
 
           const isClickable =
-            !isLast &&
-            (typeof item.onClick === "function" || item.path || item.to);
+            !isLast && (typeof item.onClick === "function" || item.path || item.to);
 
           return (
             <li key={index} className={styles.breadcrumbItem}>
               {isClickable ? (
-                <button
-                  type="button"
-                  className={styles.breadcrumbLink}
-                  onClick={handleClick}
-                >
+                <button type="button" className={styles.breadcrumbLink} onClick={handleClick}>
                   {translatedLabel}
                 </button>
               ) : (
-                <span
-                  className={
-                    isLast ? styles.breadcrumbActive : styles.breadcrumbStatic
-                  }
-                >
+                <span className={isLast ? styles.breadcrumbActive : styles.breadcrumbStatic}>
                   {translatedLabel}
                 </span>
               )}

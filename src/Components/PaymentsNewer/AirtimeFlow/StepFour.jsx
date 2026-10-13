@@ -12,23 +12,13 @@ const StepFour = ({ data, updateDataHandler, getPackageDetails }) => {
     <>
       {width < 1000 && data.payment_type?.value === "wallet" && (
         <>
-          <WalletsComponent
-            data={data}
-            dataHandler={updateDataHandler}
-            inEsim={true}
-          />
+          <WalletsComponent data={data} dataHandler={updateDataHandler} inEsim={true} />
         </>
       )}
       <div className={styles.container}>
-        {((width < 1000 &&
-          (data.payment_type?.value !== "wallet" ||
-            !data.payment_type?.value)) ||
+        {((width < 1000 && (data.payment_type?.value !== "wallet" || !data.payment_type?.value)) ||
           width > 1000) && (
-          <IntStepFour
-            data={data}
-            dataHandler={updateDataHandler}
-            isAirtime={true}
-          />
+          <IntStepFour data={data} dataHandler={updateDataHandler} isAirtime={true} />
         )}
         <div className={styles.buttons}>
           <button
@@ -58,9 +48,7 @@ const StepFour = ({ data, updateDataHandler, getPackageDetails }) => {
             disabled={
               data.loading ||
               !data.payment_type?.name ||
-              (data.payment_type?.value === "wallet"
-                ? !data.wallet?._id
-                : false)
+              (data.payment_type?.value === "wallet" ? !data.wallet?._id : false)
             }
             onClick={() => {
               if (data.payment_type?.value === "card" && !data.showCard) {
@@ -71,9 +59,7 @@ const StepFour = ({ data, updateDataHandler, getPackageDetails }) => {
             }}
           >
             {t("Next")}
-            {window.innerWidth > 1000 && (
-              <ChevronRight color="white" size={17} />
-            )}
+            {window.innerWidth > 1000 && <ChevronRight color="white" size={17} />}
           </button>
         </div>
       </div>

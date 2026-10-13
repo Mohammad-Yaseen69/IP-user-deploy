@@ -50,11 +50,7 @@
   position: absolute;
   inset: 24px;
   border-radius: 12px;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.15) 0%,
-    rgba(0, 0, 0, 0.45) 100%
-  );
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.45) 100%);
 }
 
 .childLogo {
@@ -359,9 +355,7 @@
 
   .form_btn {
     border-radius: var(--sm, 6px);
-    background:
-      linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%),
-      #4a32e3;
+    background: linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%), #4a32e3;
   }
 
   .inputs input {

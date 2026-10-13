@@ -2,14 +2,7 @@ import { DatePicker } from "@material-ui/pickers";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { format } from "date-fns";
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { CheckCircle, XCircle } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { AiOutlineClockCircle } from "react-icons/ai";
@@ -70,15 +63,9 @@ function getFirstLargeFileName(files) {
   return false;
 }
 
-const KYB_ACTION_BLOCKED_STATUSES = [
-  "verified",
-  "approved",
-  "needs-review",
-  "needs_review",
-];
+const KYB_ACTION_BLOCKED_STATUSES = ["verified", "approved", "needs-review", "needs_review"];
 
-const isKybActionBlocked = (status) =>
-  KYB_ACTION_BLOCKED_STATUSES.includes(status);
+const isKybActionBlocked = (status) => KYB_ACTION_BLOCKED_STATUSES.includes(status);
 
 const getIndustryPayload = (industry) => ({
   name: industry?.name,
@@ -117,8 +104,7 @@ const getFeeAmount = async ({ payload, authHeader }) => {
 
 const KYB = () => {
   const { t } = useTranslation();
-  const { userDetails, authHeader, setUserDetails, verifyToken } =
-    useContext(UserContext);
+  const { userDetails, authHeader, setUserDetails, verifyToken } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(false);
   const [registrationNum, setRegistrationNum] = useState("");
   const [taxId, setTaxId] = useState("");
@@ -208,9 +194,7 @@ const KYB = () => {
           ...prev.filter(
             (p) =>
               !p?._id &&
-              !serverPartners.some(
-                (s) => s?.email?.toLowerCase() === p?.email?.toLowerCase(),
-              ),
+              !serverPartners.some((s) => s?.email?.toLowerCase() === p?.email?.toLowerCase()),
           ),
         ]);
       } catch (error) {
@@ -231,8 +215,7 @@ const KYB = () => {
 
   useEffect(() => {
     if (userDetails?.company) {
-      const { tax_id, registration_number, date_of_incorporation, kyb_files } =
-        userDetails.company;
+      const { tax_id, registration_number, date_of_incorporation, kyb_files } = userDetails.company;
 
       if (tax_id && !taxId) {
         setTaxId(tax_id);
@@ -254,8 +237,7 @@ const KYB = () => {
       }
 
       const savedIndustryReference = parseIndustryReference(
-        userDetails.company.industryReference ||
-          userDetails.company.industry_reference,
+        userDetails.company.industryReference || userDetails.company.industry_reference,
       );
       if (savedIndustryReference && !industryReference) {
         setIndustryReference(savedIndustryReference);
@@ -265,9 +247,7 @@ const KYB = () => {
 
   const addPartnerHandler = async () => {
     if (isKybActionBlocked(userDetails?.company?.kyb_status)) {
-      toast.error(
-        "No action is allowed for the current business verification status.",
-      );
+      toast.error("No action is allowed for the current business verification status.");
       return;
     }
 
@@ -276,19 +256,14 @@ const KYB = () => {
       return;
     }
 
-    if (
-      partners.find((p) => p.email.toLowerCase() === partnerEmail.toLowerCase())
-    ) {
+    if (partners.find((p) => p.email.toLowerCase() === partnerEmail.toLowerCase())) {
       toast.error("A director with this email already exists.");
       return;
     }
 
     setAdding(true);
     try {
-      if (
-        userDetails?.company?.kyb_files &&
-        userDetails?.company?.kyb_files?.length === 0
-      ) {
+      if (userDetails?.company?.kyb_files && userDetails?.company?.kyb_files?.length === 0) {
         setPartners((prev) => [
           {
             name: partnerName,
@@ -304,8 +279,7 @@ const KYB = () => {
         setShowAddModal(false);
       } else {
         const paymentAllowed =
-          !userDetails?.kyb_verification_paid ||
-          userDetails?.company?.kyb_status === "declined";
+          !userDetails?.kyb_verification_paid || userDetails?.company?.kyb_status === "declined";
 
         const payload = {
           name: partnerName,
@@ -350,36 +324,22 @@ const KYB = () => {
     }
   }, [userDetails]);
 
-  const kybDocSlots = useMemo(
-    () => getKybDocSlots(companyType?.name, t),
-    [companyType, t],
-  );
+  const kybDocSlots = useMemo(() => getKybDocSlots(companyType?.name, t), [companyType, t]);
 
   useEffect(() => {
-    if (
-      !draftEnabled ||
-      draftHydrated ||
-      !profileDraft.isLoaded ||
-      !userDetails?.company
-    )
-      return;
+    if (!draftEnabled || draftHydrated || !profileDraft.isLoaded || !userDetails?.company) return;
 
     const company = userDetails.company;
     const draftCompany = profileDraft.data?.company || {};
     if (!company.registration_number && draftCompany.registrationNumber)
       setRegistrationNum(draftCompany.registrationNumber);
-    if (!company.tax_id && draftCompany.taxNumber)
-      setTaxId(draftCompany.taxNumber);
+    if (!company.tax_id && draftCompany.taxNumber) setTaxId(draftCompany.taxNumber);
     if (!company.date_of_incorporation && draftCompany.dateOfIncorporation) {
-      const restoredDate = new Date(
-        `${draftCompany.dateOfIncorporation}T00:00:00`,
-      );
+      const restoredDate = new Date(`${draftCompany.dateOfIncorporation}T00:00:00`);
       if (!isNaN(restoredDate.getTime())) setDateOfI(restoredDate);
     }
     if (
-      !parseIndustryReference(
-        company.industryReference || company.industry_reference,
-      )?.name &&
+      !parseIndustryReference(company.industryReference || company.industry_reference)?.name &&
       draftCompany.industryReference?.name
     ) {
       setIndustryReference(draftCompany.industryReference);
@@ -395,25 +355,16 @@ const KYB = () => {
           .filter(
             (p) =>
               p?.email &&
-              !prev.some(
-                (existing) =>
-                  existing?.email?.toLowerCase() === p.email.toLowerCase(),
-              ),
+              !prev.some((existing) => existing?.email?.toLowerCase() === p.email.toLowerCase()),
           )
           .map(draftPartnerToKyb),
       ]);
     }
     setDraftHydrated(true);
-  }, [
-    draftEnabled,
-    draftHydrated,
-    profileDraft.isLoaded,
-    userDetails?.company,
-  ]);
+  }, [draftEnabled, draftHydrated, profileDraft.isLoaded, userDetails?.company]);
 
   useEffect(() => {
-    if (!draftHydrated || filesHydratedRef.current || !kybDocSlots.length)
-      return;
+    if (!draftHydrated || filesHydratedRef.current || !kybDocSlots.length) return;
     filesHydratedRef.current = true;
 
     const kybFiles = userDetails?.company?.kyb_files || [];
@@ -422,8 +373,7 @@ const KYB = () => {
         const entry = profileDraft.files.find((f) => f.slot === slot);
         if (!entry) return null;
         const existing = kybFiles.find((f) => f?.document_name === docName);
-        if (existing && ["approved", "verified"].includes(existing.status))
-          return null;
+        if (existing && ["approved", "verified"].includes(existing.status)) return null;
         return { ...toDraftFileRef(entry), document_name: docName };
       })
       .filter(Boolean);
@@ -432,9 +382,7 @@ const KYB = () => {
     setCompanyFiles((prev) => {
       const next = [...prev];
       restored.forEach((ref) => {
-        const idx = next.findIndex(
-          (f) => f?.document_name === ref.document_name,
-        );
+        const idx = next.findIndex((f) => f?.document_name === ref.document_name);
         if (idx !== -1) next[idx] = ref;
         else next.push(ref);
       });
@@ -442,9 +390,7 @@ const KYB = () => {
     });
     setCompanyFileNames((prev) => [
       ...prev,
-      ...restored
-        .map((ref) => ref.document_name)
-        .filter((name) => !prev.includes(name)),
+      ...restored.map((ref) => ref.document_name).filter((name) => !prev.includes(name)),
     ]);
   }, [draftHydrated, kybDocSlots]);
 
@@ -459,11 +405,8 @@ const KYB = () => {
         registrationNumber: registrationNum || "",
         taxNumber: taxId || "",
         dateOfIncorporation:
-          parsedDate && !isNaN(parsedDate.getTime())
-            ? format(parsedDate, "yyyy-MM-dd")
-            : "",
-        industryReference:
-          industryReference || draftCompany.industryReference || null,
+          parsedDate && !isNaN(parsedDate.getTime()) ? format(parsedDate, "yyyy-MM-dd") : "",
+        industryReference: industryReference || draftCompany.industryReference || null,
       },
     };
     if (isFirstSubmission) {
@@ -494,9 +437,7 @@ const KYB = () => {
       next[idx] = { file, document_name: docName };
       return next;
     });
-    setCompanyFileNames((prev) =>
-      prev.includes(docName) ? prev : [...prev, docName],
-    );
+    setCompanyFileNames((prev) => (prev.includes(docName) ? prev : [...prev, docName]));
 
     const slot = kybDocSlots.find((doc) => doc.docName === docName)?.slot;
     if (!draftEnabled || !slot) return;
@@ -507,9 +448,7 @@ const KYB = () => {
       if (entry?.slot) {
         setCompanyFiles((prev) =>
           prev.map((f) =>
-            f?.file === file
-              ? { ...toDraftFileRef(entry), document_name: docName }
-              : f,
+            f?.file === file ? { ...toDraftFileRef(entry), document_name: docName } : f,
           ),
         );
       }
@@ -525,15 +464,12 @@ const KYB = () => {
 
   const uploadKybFiles = async () => {
     if (isKybActionBlocked(userDetails?.company?.kyb_status)) {
-      toast.error(
-        "No action is allowed for the current business verification status.",
-      );
+      toast.error("No action is allowed for the current business verification status.");
       return;
     }
 
     const allowPayment =
-      !userDetails?.kyb_verification_paid ||
-      userDetails?.company?.kyb_status === "declined";
+      !userDetails?.kyb_verification_paid || userDetails?.company?.kyb_status === "declined";
 
     console.log(
       compnanyFiles.map((file, idx) => ({
@@ -549,16 +485,10 @@ const KYB = () => {
         file,
         name: file?.document_name || compnanyFileNames[idx],
       }))
-      .filter(
-        ({ file }) => file && (file instanceof File || !("status" in file)),
-      )
+      .filter(({ file }) => file && (file instanceof File || !("status" in file)))
       ?.filter((entry) => entry.name !== undefined);
-    const draftEntries = editedEntries.filter(({ file }) =>
-      isDraftFileRef(file),
-    );
-    const fileEntries = editedEntries.filter(
-      ({ file }) => !isDraftFileRef(file),
-    );
+    const draftEntries = editedEntries.filter(({ file }) => isDraftFileRef(file));
+    const fileEntries = editedEntries.filter(({ file }) => !isDraftFileRef(file));
 
     // if (editedEntries?.length === 0 && allowPayment) {
     //     const data = await mutateAsync({
@@ -590,12 +520,8 @@ const KYB = () => {
 
       formdata.append("account_id", userDetails?._id);
       formdata.append("business_type", companyType?._id);
-      fileEntries.forEach(({ file }) =>
-        formdata.append("files", file?.file || file),
-      );
-      fileEntries.forEach(({ name }, i) =>
-        formdata.append(`file_names[${i}]`, name),
-      );
+      fileEntries.forEach(({ file }) => formdata.append("files", file?.file || file));
+      fileEntries.forEach(({ name }, i) => formdata.append(`file_names[${i}]`, name));
       if (draftEntries.length) {
         formdata.append(
           "draft_files",
@@ -613,14 +539,9 @@ const KYB = () => {
       formdata.append("industryReference", JSON.stringify(industryReference));
 
       console.log(dateOfI);
-      formdata.append(
-        "date_of_incorporation",
-        format(new Date(dateOfI), "dd-MM-yyyy"),
-      );
+      formdata.append("date_of_incorporation", format(new Date(dateOfI), "dd-MM-yyyy"));
       console.log(
-        compnanyFileNames?.filter(
-          (name) => !compnanyFiles.find((f) => f.document_name === name),
-        ),
+        compnanyFileNames?.filter((name) => !compnanyFiles.find((f) => f.document_name === name)),
       );
 
       if (userDetails?.company?.kyb_files?.length === 0) {
@@ -643,17 +564,11 @@ const KYB = () => {
 
       if (draftEnabled) {
         const submittedSlots = fileEntries
-          .map(
-            ({ name }) => kybDocSlots.find((doc) => doc.docName === name)?.slot,
-          )
+          .map(({ name }) => kybDocSlots.find((doc) => doc.docName === name)?.slot)
           .filter(Boolean);
-        Promise.allSettled(
-          submittedSlots.map((slot) => profileDraft.removeFile(slot)),
-        )
+        Promise.allSettled(submittedSlots.map((slot) => profileDraft.removeFile(slot)))
           .then(() => profileDraft.reload())
-          .catch((err) =>
-            console.error("Unable to refresh the KYB draft", err),
-          );
+          .catch((err) => console.error("Unable to refresh the KYB draft", err));
       }
 
       if (allowPayment) {
@@ -718,9 +633,7 @@ const KYB = () => {
   const industryOptions = useMemo(() => {
     return bvnkIndustryReference.map((group) => ({
       name: group.name,
-      children: (group.children || []).map((child) =>
-        getIndustryPayload(child),
-      ),
+      children: (group.children || []).map((child) => getIndustryPayload(child)),
     }));
   }, []);
 
@@ -731,8 +644,7 @@ const KYB = () => {
       .flatMap((group) => group.children)
       .find(
         (industry) =>
-          industry.productionReference ===
-            industryReference.productionReference ||
+          industry.productionReference === industryReference.productionReference ||
           industry.sandboxReference === industryReference.sandboxReference ||
           industry.name === industryReference.name,
       );
@@ -836,8 +748,7 @@ const KYB = () => {
 
             <FormGroup>
               <Label>
-                {t("Registration Number")}{" "}
-                <span style={{ color: "red", fontWeight: 600 }}>*</span>
+                {t("Registration Number")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
               </Label>
               <Input
                 type="text"
@@ -857,8 +768,7 @@ const KYB = () => {
             </FormGroup>
             <FormGroup>
               <Label>
-                {t("Taxation ID")}{" "}
-                <span style={{ color: "red", fontWeight: 600 }}>*</span>
+                {t("Taxation ID")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
               </Label>
               <Input
                 type="text"
@@ -870,8 +780,7 @@ const KYB = () => {
             </FormGroup>
             <FormGroup>
               <Label>
-                {t("Industry")}{" "}
-                <span style={{ color: "red", fontWeight: 600 }}>*</span>
+                {t("Industry")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
               </Label>
               <Input
                 type="select"
@@ -957,8 +866,7 @@ const KYB = () => {
               <h4>{t("Directors")}</h4>
               <Button
                 style={{
-                  background:
-                    "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                  background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                   border: "none",
                   outline: "none",
                 }}
@@ -976,10 +884,7 @@ const KYB = () => {
               >
                 {t("Add New Director")}
               </Button>
-              <Modal
-                isOpen={showAddModal}
-                toggle={() => setShowAddModal(!showAddModal)}
-              >
+              <Modal isOpen={showAddModal} toggle={() => setShowAddModal(!showAddModal)}>
                 <ModalHeader toggle={() => setShowAddModal(!showAddModal)}>
                   {t("Add New Director")}
                 </ModalHeader>
@@ -1013,17 +918,11 @@ const KYB = () => {
                 <ModalFooter>
                   <Button
                     style={{
-                      background:
-                        "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                      background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                       border: "none",
                       outline: "none",
                     }}
-                    disabled={
-                      adding ||
-                      !partnerName ||
-                      !partnerEmail ||
-                      !partnerDesignation
-                    }
+                    disabled={adding || !partnerName || !partnerEmail || !partnerDesignation}
                     onClick={addPartnerHandler}
                   >
                     {adding ? t("Adding") : t("Add Now")}
@@ -1032,9 +931,7 @@ const KYB = () => {
               </Modal>
             </CardHeader>
             {isLoading ? (
-              <div
-                style={{ height: "200px", width: "200px", margin: "0 auto" }}
-              >
+              <div style={{ height: "200px", width: "200px", margin: "0 auto" }}>
                 <InstaPayLoader />
               </div>
             ) : (
@@ -1071,8 +968,7 @@ const KYB = () => {
         {companyType && !isReadOnly && (
           <Button
             style={{
-              background:
-                "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+              background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
               border: "none",
               outline: "none",
               alignSelf: "flex-end ",
@@ -1217,20 +1113,13 @@ const KYB = () => {
         </Modal>
       )}
       {showProcessSuccessModal && (
-        <Modal
-          isOpen={showProcessSuccessModal}
-          toggle={() => setShowProcessSuccessModal(false)}
-        >
+        <Modal isOpen={showProcessSuccessModal} toggle={() => setShowProcessSuccessModal(false)}>
           <ModalHeader toggle={() => setShowProcessSuccessModal(false)}>
             {t("Files Submitted Successfully!")}
           </ModalHeader>
           <ModalBody>
             <div className="text-center">
-              <CheckCircle
-                size={64}
-                className="text-success"
-                style={{ marginBottom: "1rem" }}
-              />
+              <CheckCircle size={64} className="text-success" style={{ marginBottom: "1rem" }} />
               <h5 className="modal-title" style={{ marginBottom: "1rem" }}>
                 {t("Files Submitted Successfully!")}
               </h5>
@@ -1248,8 +1137,7 @@ const KYB = () => {
                 style={{
                   border: "none",
                   outline: "none",
-                  background:
-                    "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                  background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                   borderRadius: "6px",
                   marginTop: "1.5rem",
                 }}

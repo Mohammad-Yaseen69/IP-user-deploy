@@ -1,11 +1,4 @@
-import {
-  Card,
-  CardBody,
-  Input,
-  Modal,
-  ModalBody,
-  ModalHeader,
-} from "reactstrap";
+import { Card, CardBody, Input, Modal, ModalBody, ModalHeader } from "reactstrap";
 import cover from "../UserProfilePublic/files/cover_1.png";
 import styles from "./styles/index.module.scss";
 import countries from "../PaymentsNewer/CountriesData.json";
@@ -49,8 +42,7 @@ export const reviews = [
 
 const ProfileComponent = () => {
   const [winWidth, setWinWidth] = useState(window?.innerWidth);
-  const { userPortfolio, userDetails, getUserDocuments } =
-    useContext(UserContext);
+  const { userPortfolio, userDetails, getUserDocuments } = useContext(UserContext);
   const [userCountry, setUserCountry] = useState({});
   const [userWallet, setUserWallet] = useState({});
   const [currentRevTab, setCurrentRevTab] = useState("Seller");
@@ -89,33 +81,19 @@ const ProfileComponent = () => {
             const sellerReviewsResponse = await axios.get(
               `${import.meta.env.VITE_IP_DEV_API}/api/user/get-user-reviews/${username}/seller/0/5`,
             );
-            const decryptedSellerReviews = decryptData(
-              sellerReviewsResponse.data.data,
-            );
-            setUserReviewsAsSeller(
-              decryptedSellerReviews?.userReviews?.reviews,
-            );
-            setAverageRatingAsSeller(
-              decryptedSellerReviews?.userReviews?.averageRating,
-            );
-            setTotalReviewsAsSeller(
-              decryptedSellerReviews?.userReviews?.totalNumberOfReviews,
-            );
+            const decryptedSellerReviews = decryptData(sellerReviewsResponse.data.data);
+            setUserReviewsAsSeller(decryptedSellerReviews?.userReviews?.reviews);
+            setAverageRatingAsSeller(decryptedSellerReviews?.userReviews?.averageRating);
+            setTotalReviewsAsSeller(decryptedSellerReviews?.userReviews?.totalNumberOfReviews);
 
             // Fetch user reviews as buyer
             const buyerReviewsResponse = await axios.get(
               `${import.meta.env.VITE_IP_DEV_API}/api/user/get-user-reviews/${username}/buyer/0/5`,
             );
-            const decryptedBuyerReviews = decryptData(
-              buyerReviewsResponse.data.data,
-            );
+            const decryptedBuyerReviews = decryptData(buyerReviewsResponse.data.data);
             setUserReviewsAsBuyer(decryptedBuyerReviews?.userReviews?.reviews);
-            setAverageRatingAsBuyer(
-              decryptedBuyerReviews?.userReviews?.averageRating,
-            );
-            setTotalReviewsAsBuyer(
-              decryptedBuyerReviews?.userReviews?.totalNumberOfReviews,
-            );
+            setAverageRatingAsBuyer(decryptedBuyerReviews?.userReviews?.averageRating);
+            setTotalReviewsAsBuyer(decryptedBuyerReviews?.userReviews?.totalNumberOfReviews);
           }
         }
         setIsLoading(false);
@@ -189,20 +167,16 @@ const ProfileComponent = () => {
                 />
               ) : (
                 <div className={styles.dp}>
-                  {userDetails?.user?.first_name?.[0] ||
-                    userDetails?.company?.company_name?.[0]}
+                  {userDetails?.user?.first_name?.[0] || userDetails?.company?.company_name?.[0]}
                 </div>
               )}
               <div className={styles.basic_dets}>
                 <div className={styles.badge}>
-                  {userDetails?.account_type === "individual"
-                    ? t("Personal")
-                    : t("Business")}{" "}
+                  {userDetails?.account_type === "individual" ? t("Personal") : t("Business")}{" "}
                   {t("Account")}
                 </div>
                 <h4>
-                  {userDetails?.user?.first_name ||
-                    userDetails?.company?.company_name}{" "}
+                  {userDetails?.user?.first_name || userDetails?.company?.company_name}{" "}
                   {userDetails?.user?.last_name || ""}
                 </h4>
                 <div className={styles.country}>
@@ -235,13 +209,8 @@ const ProfileComponent = () => {
                     {t("Read more")} {">"}
                   </p>
                 )}
-                <Modal
-                  isOpen={showAboutModal}
-                  toggle={() => setShowAboutModal(!showAboutModal)}
-                >
-                  <ModalHeader
-                    toggle={() => setShowAboutModal(!showAboutModal)}
-                  >
+                <Modal isOpen={showAboutModal} toggle={() => setShowAboutModal(!showAboutModal)}>
+                  <ModalHeader toggle={() => setShowAboutModal(!showAboutModal)}>
                     {t("About")}
                   </ModalHeader>
                   <ModalBody>{userDetails?.about_me}</ModalBody>
@@ -308,17 +277,13 @@ const ProfileComponent = () => {
               <div className={styles.rating}>
                 <p>{t("Overall Ratings")}</p>
                 <h4>
-                  {currentRevTab === "Seller"
-                    ? averageRatingAsSeller
-                    : averageRatingAsBuyer}
+                  {currentRevTab === "Seller" ? averageRatingAsSeller : averageRatingAsBuyer}
                   /5
                 </h4>
                 <div>
                   <Rating
                     initialRating={
-                      currentRevTab === "Seller"
-                        ? averageRatingAsSeller
-                        : averageRatingAsBuyer
+                      currentRevTab === "Seller" ? averageRatingAsSeller : averageRatingAsBuyer
                     }
                     emptySymbol="fa fa-star-o fa-2x"
                     fullSymbol="fa fa-star fa-2x"
@@ -326,9 +291,7 @@ const ProfileComponent = () => {
                   ></Rating>
                 </div>
                 <span>
-                  {currentRevTab === "Seller"
-                    ? totalReviewsAsSeller
-                    : totalReviewsAsBuyer}{" "}
+                  {currentRevTab === "Seller" ? totalReviewsAsSeller : totalReviewsAsBuyer}{" "}
                   {t("ratings")}
                 </span>
               </div>
@@ -393,9 +356,7 @@ const ProfileComponent = () => {
                     <>{item && <PortfolioItem item={item} key={ind} />}</>
                   ))
                 ) : (
-                  <div className="text-center my-4">
-                    {t("No Portfolio Items")}
-                  </div>
+                  <div className="text-center my-4">{t("No Portfolio Items")}</div>
                 )}
               </div>
               <div className={styles.see_more}>
@@ -417,10 +378,7 @@ const ProfileComponent = () => {
                     padding: "16px",
                     textAlign: "center",
                     flex: 1,
-                    background:
-                      currentRevTab === "Seller"
-                        ? "rgba(109, 41, 220, 0.1)"
-                        : "#fff",
+                    background: currentRevTab === "Seller" ? "rgba(109, 41, 220, 0.1)" : "#fff",
                     fontSize: "14px",
                     fontWeight: "600",
                     border: "2px solid rgba(17, 17, 17, 0.05)",
@@ -437,10 +395,7 @@ const ProfileComponent = () => {
                     padding: "16px",
                     textAlign: "center",
                     flex: 1,
-                    background:
-                      currentRevTab === "Buyer"
-                        ? "rgba(109, 41, 220, 0.1)"
-                        : "#fff",
+                    background: currentRevTab === "Buyer" ? "rgba(109, 41, 220, 0.1)" : "#fff",
                     fontSize: "14px",
                     fontWeight: "600",
                     border: "2px solid rgba(17, 17, 17, 0.05)",
@@ -500,8 +455,7 @@ const ProfileComponent = () => {
                           </div>
                         ))
                       : ""}
-                    {currentRevTab === "Seller" &&
-                    userReviewsAsSeller.length > 0
+                    {currentRevTab === "Seller" && userReviewsAsSeller.length > 0
                       ? userReviewsAsSeller.map((item) => (
                           <div key={item._id} className={styles.review_card}>
                             <div className={styles.rc_top}>

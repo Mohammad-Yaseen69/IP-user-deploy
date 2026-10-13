@@ -5,10 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
 import InstaPayLoader from "../../Loader";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
-import {
-  asVirtualIban,
-  formatVirtualIbanBankAddress,
-} from "../utils/virtualIban";
+import { asVirtualIban, formatVirtualIbanBankAddress } from "../utils/virtualIban";
 import logo from "../../../assets/images/logo/logo.svg";
 import styles from "./index.module.css";
 
@@ -70,11 +67,7 @@ const LoadingState = () => {
           <InstaPayLoader fallback transparent fullHeight />
         </div>
         <h1>{t("Verifying virtual IBAN")}</h1>
-        <p>
-          {t(
-            "Please wait while we confirm this virtual IBAN with InstaPay records.",
-          )}
-        </p>
+        <p>{t("Please wait while we confirm this virtual IBAN with InstaPay records.")}</p>
       </div>
     </main>
   );
@@ -92,9 +85,7 @@ const InvalidState = ({ ibanId }) => {
         </div>
         <div className={styles.resultHero}>
           <Illustration valid={false} />
-          <span className={`${styles.statusPill} ${styles.invalidPill}`}>
-            {t("Not verified")}
-          </span>
+          <span className={`${styles.statusPill} ${styles.invalidPill}`}>{t("Not verified")}</span>
           <h1>{t("This virtual IBAN is not valid")}</h1>
           <p>
             {t(
@@ -117,8 +108,7 @@ const ValidState = ({ iban, account }) => {
     formatVirtualIbanBankAddress(iban?.bank?.address) ||
     iban?.bank?.formattedAddress ||
     iban?.bank_address;
-  const accountName =
-    account?.company_name || iban?.account_holder_name || account?.username;
+  const accountName = account?.company_name || iban?.account_holder_name || account?.username;
 
   return (
     <main className={styles.page}>
@@ -130,9 +120,7 @@ const ValidState = ({ iban, account }) => {
 
         <div className={styles.resultHero}>
           <Illustration valid />
-          <span className={`${styles.statusPill} ${styles.validPill}`}>
-            {t("Verified")}
-          </span>
+          <span className={`${styles.statusPill} ${styles.validPill}`}>{t("Verified")}</span>
           <h1>{t("This virtual IBAN is valid")}</h1>
           <p>
             {t(

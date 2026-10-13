@@ -4,8 +4,7 @@ import {
   getAssetProtocolOptions,
 } from "../../../WalletsNew/SendCryptoModal/cryptoProtocols";
 
-const toOptions = (record) =>
-  Object.keys(record).map((value) => ({ value, label: record[value] }));
+const toOptions = (record) => Object.keys(record).map((value) => ({ value, label: record[value] }));
 
 export const GENDER_OPTIONS = toOptions(gendersData);
 export const ID_TYPE_OPTIONS = toOptions(idTypeData);
@@ -235,13 +234,7 @@ export const BVNK_FIELD_DEFS = {
   },
 };
 
-const BVNK_ADDRESS_FIELDS = [
-  "address",
-  "address_line_2",
-  "city",
-  "province_state",
-  "postal_code",
-];
+const BVNK_ADDRESS_FIELDS = ["address", "address_line_2", "city", "province_state", "postal_code"];
 
 const BVNK_SEPA = {
   beneficiary: BVNK_ADDRESS_FIELDS,
@@ -299,15 +292,7 @@ const EDIT_BENEFICIARY_FIELDS = {
     "city",
     "postal_code",
   ],
-  business: [
-    "legalName",
-    "email",
-    "msisdn",
-    "address",
-    "province_state",
-    "city",
-    "postal_code",
-  ],
+  business: ["legalName", "email", "msisdn", "address", "province_state", "city", "postal_code"],
 };
 
 const EDIT_REQUIRED_FIELDS = {
@@ -343,10 +328,7 @@ export const getBvnkRequirements = (method, recipientType, channel = {}) => {
   const rail = BVNK_RAILS[method];
   if (!rail) return null;
 
-  const entity =
-    BVNK_ENTITY_FIELDS[
-      recipientType === "business" ? "business" : "individual"
-    ];
+  const entity = BVNK_ENTITY_FIELDS[recipientType === "business" ? "business" : "individual"];
 
   const beneficiaryFields = [...entity, ...rail.beneficiary];
   const channelFields = rail.channel;
@@ -373,8 +355,7 @@ export const getBvnkRequirements = (method, recipientType, channel = {}) => {
     };
 
     if (name === "postal_code" && !def.required) {
-      def.hint =
-        "Recommended. Some banks reject payouts that arrive without it.";
+      def.hint = "Recommended. Some banks reject payouts that arrive without it.";
     }
 
     acc[name] = def;
@@ -418,23 +399,20 @@ const MOBILE_WALLET_CHANNEL_FIELDS = ["mobile_wallet_provider", "msisdn"];
 export const getThunesRequirements = (fields, recipientType, method) => {
   if (!fields) return null;
 
-  const alwaysAsked =
-    ALWAYS_ASKED_FIELDS[
-      recipientType === "business" ? "business" : "individual"
-    ];
+  const alwaysAsked = ALWAYS_ASKED_FIELDS[recipientType === "business" ? "business" : "individual"];
 
-  const providerFields = flattenFieldSets(
-    fields.required_receiving_entity_fields,
-  ).filter((name) => THUNES_ENTITY_FIELDS[name]);
+  const providerFields = flattenFieldSets(fields.required_receiving_entity_fields).filter(
+    (name) => THUNES_ENTITY_FIELDS[name],
+  );
 
   const beneficiaryFields = [
     ...alwaysAsked,
     ...providerFields.filter((name) => !alwaysAsked.includes(name)),
   ];
 
-  const identifierFields = flattenFieldSets(
-    fields.credit_party_identifiers_accepted,
-  ).filter((name) => THUNES_IDENTIFIER_FIELDS[name]);
+  const identifierFields = flattenFieldSets(fields.credit_party_identifiers_accepted).filter(
+    (name) => THUNES_IDENTIFIER_FIELDS[name],
+  );
 
   /* A mobile wallet is only ever a provider and the number it is held on, whatever
        else the provider lists as an accepted identifier. */

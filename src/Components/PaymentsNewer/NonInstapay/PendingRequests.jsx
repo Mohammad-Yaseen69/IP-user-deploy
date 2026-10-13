@@ -25,9 +25,7 @@ const ExpiresIn = ({ createdAt }) => {
       }
 
       const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor(
-        (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-      );
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
 
       if (days > 0) {
@@ -119,13 +117,10 @@ const PendingRequests = () => {
 
       <div className={styles.transCont}>
         {requests.map((request) => {
-          const createdAt = new Date(request.createdAt).toLocaleString(
-            "en-US",
-            {
-              month: "short",
-              day: "numeric",
-            },
-          );
+          const createdAt = new Date(request.createdAt).toLocaleString("en-US", {
+            month: "short",
+            day: "numeric",
+          });
 
           return (
             <div key={request._id} className={styles.trans}>
@@ -153,8 +148,7 @@ const PendingRequests = () => {
                     {request.originalReceivingFunds.amount.toFixed(2)}
                   </h4>
                   <span className={styles.expiresIn}>
-                    {t("Expires in")}:{" "}
-                    <ExpiresIn createdAt={request.createdAt} />
+                    {t("Expires in")}: <ExpiresIn createdAt={request.createdAt} />
                   </span>
                 </div>
                 <button
@@ -172,11 +166,7 @@ const PendingRequests = () => {
         })}
       </div>
       {showDetailsModal && selectedRequest && (
-        <Modal
-          isOpen={showDetailsModal}
-          toggle={() => setShowDetailsModal(false)}
-          centered
-        >
+        <Modal isOpen={showDetailsModal} toggle={() => setShowDetailsModal(false)} centered>
           <ModalBody>
             <div className={styles.modalHeader}>
               <h5>{t("Transaction Details")}</h5>
@@ -196,8 +186,7 @@ const PendingRequests = () => {
               <div className={styles.detailRow}>
                 <span>{t("Fee")}</span>
                 <span>
-                  {selectedRequest.transactionId.fee}{" "}
-                  {selectedRequest.transactionId.currency.code}
+                  {selectedRequest.transactionId.fee} {selectedRequest.transactionId.currency.code}
                 </span>
               </div>
               <div className={styles.detailRow}>
@@ -209,11 +198,7 @@ const PendingRequests = () => {
               </div>
               <div className={styles.detailRow}>
                 <span>{t("Payment Type")}</span>
-                <span>
-                  {service_name_formatter(
-                    selectedRequest.transactionId.payment_type,
-                  )}
-                </span>
+                <span>{service_name_formatter(selectedRequest.transactionId.payment_type)}</span>
               </div>
 
               <div className={styles.detailRow}>
@@ -229,9 +214,7 @@ const PendingRequests = () => {
               </div>
               <div className={styles.detailRow}>
                 <span>{t("Date")}</span>
-                <span>
-                  {new Date(selectedRequest.createdAt).toLocaleString()}
-                </span>
+                <span>{new Date(selectedRequest.createdAt).toLocaleString()}</span>
               </div>
               <div className={styles.detailRow}>
                 <span>{t("Expires In")}</span>
@@ -248,10 +231,7 @@ const PendingRequests = () => {
               >
                 {isPending ? t("Cancelling...") : t("Cancel this payment")}
               </button>
-              <button
-                className={styles.closeBtn}
-                onClick={() => setShowDetailsModal(false)}
-              >
+              <button className={styles.closeBtn} onClick={() => setShowDetailsModal(false)}>
                 {t("Close")}
               </button>
             </div>

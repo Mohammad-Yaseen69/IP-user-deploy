@@ -183,11 +183,7 @@ const BenefCard = ({ item, index, total }) => {
         </ModalHeader>
         <ModalBody>
           {step === 1 && paymentMethod === null && (
-            <PaymentMethod
-              setPaymentMethod={setPaymentMethod}
-              item={item}
-              setStep={setStep}
-            />
+            <PaymentMethod setPaymentMethod={setPaymentMethod} item={item} setStep={setStep} />
           )}
           {step === 2 && paymentMethod?.value === "wallet" && (
             <W2W
@@ -240,9 +236,8 @@ const BenefCard = ({ item, index, total }) => {
               type={paymentMethod.value === "wallet" ? "wallet" : ""}
               paymentDetails={{
                 receiver_wallet_id: walletDetails?.wallet_id,
-                sender_wallet_id: userWallets.filter(
-                  (item) => item.currency.code === currency,
-                )?.[0]?._id,
+                sender_wallet_id: userWallets.filter((item) => item.currency.code === currency)?.[0]
+                  ?._id,
                 purpose: reason,
                 amount: +amount,
                 type: paymentType?.value,

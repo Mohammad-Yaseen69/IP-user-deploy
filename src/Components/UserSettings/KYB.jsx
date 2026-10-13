@@ -143,9 +143,7 @@ const KYB = ({ isCollapsed, setIsCollapsed }) => {
         className={`pb-0 ${isCollapsed ? "collapsed" : "expanded"}`}
         onClick={toggleAccordion}
       >
-        <H4 attrH4={{ className: "card-title mb-0" }}>
-          {t("KYB Verification")}
-        </H4>
+        <H4 attrH4={{ className: "card-title mb-0" }}>{t("KYB Verification")}</H4>
         <div
           className="card-options"
           style={{ display: "flex", gap: "10px", alignItems: "center" }}
@@ -155,8 +153,7 @@ const KYB = ({ isCollapsed, setIsCollapsed }) => {
           ) && (
             <Button
               style={{
-                background:
-                  "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                 border: "none",
                 outline: "none",
                 padding: "5px 10px",
@@ -183,15 +180,9 @@ const KYB = ({ isCollapsed, setIsCollapsed }) => {
           user_id={userDetails?._id}
         />
       )}
-      <div
-        className={`accordion-body ${isCollapsed ? "collapsed" : "expanded"}`}
-      >
+      <div className={`accordion-body ${isCollapsed ? "collapsed" : "expanded"}`}>
         <CardBody>
-          <Input
-            type="select"
-            value={companyType}
-            onChange={(e) => setCompanyType(e.target.value)}
-          >
+          <Input type="select" value={companyType} onChange={(e) => setCompanyType(e.target.value)}>
             <option value={""} disabled>
               {t("--Select-Your-Company-Type--")}
             </option>
@@ -201,12 +192,8 @@ const KYB = ({ isCollapsed, setIsCollapsed }) => {
               </option>
             ))}
           </Input>
-          {companyType.toLowerCase().includes("private") && (
-            <PrivateCompanyDocs />
-          )}
-          {companyType.toLowerCase().includes("publicly") && (
-            <PubliclyTradedCompanyDocs />
-          )}
+          {companyType.toLowerCase().includes("private") && <PrivateCompanyDocs />}
+          {companyType.toLowerCase().includes("publicly") && <PubliclyTradedCompanyDocs />}
           {companyType.toLowerCase().includes("ngos") && <NgosDocs />}
           {companyType.toLowerCase().includes("sole") && <SoleTradedDocs />}
           {companyType && (
@@ -221,8 +208,7 @@ const KYB = ({ isCollapsed, setIsCollapsed }) => {
                 <h4>{t("Partners")}</h4>
                 <Button
                   style={{
-                    background:
-                      "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                     border: "none",
                     outline: "none",
                   }}
@@ -230,10 +216,7 @@ const KYB = ({ isCollapsed, setIsCollapsed }) => {
                 >
                   {t("Add New Partner")}
                 </Button>
-                <Modal
-                  isOpen={showAddModal}
-                  toggle={() => setShowAddModal(!showAddModal)}
-                >
+                <Modal isOpen={showAddModal} toggle={() => setShowAddModal(!showAddModal)}>
                   <ModalHeader toggle={() => setShowAddModal(!showAddModal)}>
                     {t("Add New Partner")}
                   </ModalHeader>
@@ -266,17 +249,11 @@ const KYB = ({ isCollapsed, setIsCollapsed }) => {
                   <ModalFooter>
                     <Button
                       style={{
-                        background:
-                          "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                        background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                         border: "none",
                         outline: "none",
                       }}
-                      disabled={
-                        adding ||
-                        !partnerName ||
-                        !partnerEmail ||
-                        !partnerDesignation
-                      }
+                      disabled={adding || !partnerName || !partnerEmail || !partnerDesignation}
                       onClick={addPartnerHandler}
                     >
                       {adding ? t("Adding") : t("Add Now")}
@@ -285,9 +262,7 @@ const KYB = ({ isCollapsed, setIsCollapsed }) => {
                 </Modal>
               </CardHeader>
               {isLoading ? (
-                <div
-                  style={{ height: "200px", width: "200px", margin: "0 auto" }}
-                >
+                <div style={{ height: "200px", width: "200px", margin: "0 auto" }}>
                   <InstaPayLoader />
                 </div>
               ) : (

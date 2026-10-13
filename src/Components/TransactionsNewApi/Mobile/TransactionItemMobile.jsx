@@ -112,10 +112,7 @@ const TransactionItemMobile = ({
   }, [beneficiaries, item]);
 
   const externalStatusDescription = useMemo(() => {
-    return (
-      statuses?.[item?.external_status?.split("_")?.[1]]?.[i18n.language]
-        ?.message ?? ""
-    );
+    return statuses?.[item?.external_status?.split("_")?.[1]]?.[i18n.language]?.message ?? "";
   }, [item, i18n]);
 
   const displayName = useMemo(() => {
@@ -151,8 +148,7 @@ const TransactionItemMobile = ({
         item?.account?.user?.first_name ??
         internationalReceiver?.company_name ??
         item?.account?.user?.company_name;
-      const last =
-        internationalReceiver?.last_name ?? item?.account?.user?.last_name;
+      const last = internationalReceiver?.last_name ?? item?.account?.user?.last_name;
       return [first, last].filter(Boolean).join(" ");
     }
 
@@ -166,8 +162,7 @@ const TransactionItemMobile = ({
       item?.sender?.user?.first_name ??
       item?.mastercard?.account?.first_name ??
       item?.sender?.user?.company_name;
-    const last =
-      item?.sender?.user?.last_name ?? item?.mastercard?.account?.last_name;
+    const last = item?.sender?.user?.last_name ?? item?.mastercard?.account?.last_name;
     return [first, last].filter(Boolean).join(" ");
   }, [item, internationalReceiver]);
 
@@ -188,10 +183,7 @@ const TransactionItemMobile = ({
     <div
       className={styles.item}
       onClick={() =>
-        console.log(
-          item,
-          item?.service_type === "payment_address" && item?.guest_details,
-        )
+        console.log(item, item?.service_type === "payment_address" && item?.guest_details)
       }
     >
       <div
@@ -226,20 +218,15 @@ const TransactionItemMobile = ({
             <h5
               className={styles.amount}
               style={{
-                color:
-                  item?.transaction_type?.toLowerCase() === "debit"
-                    ? "#FF7293"
-                    : "#1CB234",
+                color: item?.transaction_type?.toLowerCase() === "debit" ? "#FF7293" : "#1CB234",
                 display: activeItem === index + 1 ? "none" : "inherit",
               }}
             >
               {item?.transaction_type?.toLowerCase() === "debit" ? "-" : "+"}
-              {item?.payment_type?.toLowerCase() === "commission" &&
-              fromReferral
+              {item?.payment_type?.toLowerCase() === "commission" && fromReferral
                 ? "$"
                 : item?.currency?.code}{" "}
-              {item?.payment_type?.toLowerCase() === "commission" &&
-              fromReferral
+              {item?.payment_type?.toLowerCase() === "commission" && fromReferral
                 ? item?.replacement_currency?.value?.toLocaleString("en-US", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,

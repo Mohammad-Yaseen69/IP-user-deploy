@@ -70,10 +70,7 @@ const Commissions = () => {
       }
 
       if (item.user) {
-        const uid =
-          typeof item.user === "object"
-            ? item.user._id || item.user.email
-            : item.user;
+        const uid = typeof item.user === "object" ? item.user._id || item.user.email : item.user;
         clientsSet.add(uid);
       }
     });
@@ -175,10 +172,7 @@ const Commissions = () => {
                 </svg>
               </div>
             </div>
-            <span
-              className={styles.statValue}
-              style={{ color: "#5926F0", fontWeight: 700 }}
-            >
+            <span className={styles.statValue} style={{ color: "#5926F0", fontWeight: 700 }}>
               €{stats.totalEarned.toLocaleString()}
             </span>
           </div>
@@ -214,9 +208,7 @@ const Commissions = () => {
                 <BarChart size={16} />
               </div>
             </div>
-            <span className={styles.statValue}>
-              €{stats.avgPerClient.toLocaleString()}
-            </span>
+            <span className={styles.statValue}>€{stats.avgPerClient.toLocaleString()}</span>
           </div>
         </div>
 
@@ -268,17 +260,11 @@ const Commissions = () => {
                 return (
                   <div key={row._id || idx} className={styles.tableDataRow}>
                     <div className={styles.clientCell}>
-                      <span className={`${styles.avatar} ${avatarClass}`}>
-                        {initials}
-                      </span>
+                      <span className={`${styles.avatar} ${avatarClass}`}>{initials}</span>
                       <span className={styles.clientName}>{clientName}</span>
                     </div>
 
-                    <div>
-                      {row.description ||
-                        row.commission_type ||
-                        "IBAN Service Fee"}
-                    </div>
+                    <div>{row.description || row.commission_type || "IBAN Service Fee"}</div>
 
                     <div>
                       <span
@@ -300,26 +286,18 @@ const Commissions = () => {
                     </div>
 
                     <div>
-                      <strong style={{ color: "#16a34a" }}>
-                        €{row.commission || 0}
-                      </strong>
+                      <strong style={{ color: "#16a34a" }}>€{row.commission || 0}</strong>
                     </div>
 
                     <div style={{ color: "#666", fontSize: "13px" }}>
-                      {row.createdAt
-                        ? new Date(row.createdAt).toLocaleDateString()
-                        : "-"}
+                      {row.createdAt ? new Date(row.createdAt).toLocaleDateString() : "-"}
                     </div>
                   </div>
                 );
               })
             ) : (
-              <div
-                style={{ padding: "20px", textAlign: "center", color: "#666" }}
-              >
-                {loading
-                  ? "Loading commissions..."
-                  : "No commission records found."}
+              <div style={{ padding: "20px", textAlign: "center", color: "#666" }}>
+                {loading ? "Loading commissions..." : "No commission records found."}
               </div>
             )}
           </div>

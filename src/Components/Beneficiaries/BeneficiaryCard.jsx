@@ -15,9 +15,7 @@ import { usePermission } from "../../hooks/GeneralUse/usePermission";
 const BeneficiaryCard = ({ user, onEdit = () => {}, onView = () => {} }) => {
   const { t } = useTranslation();
   const normalizeName = (s) => (s || "").toLowerCase().replace(/[^a-z]/g, "");
-  const exact = countries.find(
-    (c) => normalizeName(c.name) === normalizeName(user?.country_name),
-  );
+  const exact = countries.find((c) => normalizeName(c.name) === normalizeName(user?.country_name));
   const loose = countries.find(
     (c) =>
       normalizeName(c.name).includes(normalizeName(user?.country_name)) ||
@@ -25,8 +23,7 @@ const BeneficiaryCard = ({ user, onEdit = () => {}, onView = () => {} }) => {
       user?.country_iso_code === c.alpha3,
   );
   const country = exact || loose;
-  const itemCheck = (item) =>
-    user?.account_type.some((acc) => acc.toLowerCase() === item);
+  const itemCheck = (item) => user?.account_type.some((acc) => acc.toLowerCase() === item);
   const [showMore, setShowMore] = useState(false);
   const toggleShowMore = () => setShowMore(!showMore);
   const [showDelete, setShowDelete] = useState(false);
@@ -175,12 +172,11 @@ const BeneficiaryCard = ({ user, onEdit = () => {}, onView = () => {} }) => {
                     {user?.first_name} {user?.last_name}
                   </h5>
                 )}
-                {user?.beneficiary_type === "business" &&
-                  user?.company_name && (
-                    <h5 style={{ maxWidth: showFull ? "fit-content" : "23vw" }}>
-                      {user?.company_name?.split(" ")[0].slice(0, 10)}
-                    </h5>
-                  )}
+                {user?.beneficiary_type === "business" && user?.company_name && (
+                  <h5 style={{ maxWidth: showFull ? "fit-content" : "23vw" }}>
+                    {user?.company_name?.split(" ")[0].slice(0, 10)}
+                  </h5>
+                )}
               </div>
               {/* </Link> */}
               <div
@@ -203,9 +199,7 @@ const BeneficiaryCard = ({ user, onEdit = () => {}, onView = () => {} }) => {
                   onError={() => setFlagSrc(ins)}
                   loading="lazy"
                 />
-                <div className={styles.type_badge}>
-                  {t(user?.beneficiary_type)}
-                </div>
+                <div className={styles.type_badge}>{t(user?.beneficiary_type)}</div>
               </div>
             </div>
           ) : (
@@ -248,14 +242,10 @@ const BeneficiaryCard = ({ user, onEdit = () => {}, onView = () => {} }) => {
                 onError={() => setFlagSrc(ins)}
                 loading="lazy"
               />
-              <div className={styles.type_badge}>
-                {t(user?.beneficiary_type)}
-              </div>
+              <div className={styles.type_badge}>{t(user?.beneficiary_type)}</div>
             </div>
           )}
-          <button className={styles.toggle}>
-            {showFull ? <ChevronUp /> : <ChevronDown />}
-          </button>
+          <button className={styles.toggle}>{showFull ? <ChevronUp /> : <ChevronDown />}</button>
         </div>
       )}
       {showFull && (
@@ -427,11 +417,7 @@ const BeneficiaryCard = ({ user, onEdit = () => {}, onView = () => {} }) => {
               </div>
             )}
           </div>
-          <DeleteBeneficiary
-            isOpen={showDelete}
-            toggle={toggleShowDelete}
-            benef={user}
-          />
+          <DeleteBeneficiary isOpen={showDelete} toggle={toggleShowDelete} benef={user} />
         </div>
       )}
     </div>

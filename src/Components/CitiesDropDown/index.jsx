@@ -1,10 +1,5 @@
 import { useMemo, useRef, useState, useCallback, useEffect } from "react";
-import {
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from "reactstrap";
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import iso2 from "../AddFunds/WalletFund/countries_iso2.json";
 import { useQuery } from "@tanstack/react-query";
@@ -14,8 +9,7 @@ import { useMediaQuery } from "@mui/material";
 import { ChevronDown, ChevronUp } from "react-feather";
 
 const getCities = async (iso2, stateCode) => {
-  const stateQuery =
-    iso2 === "US" && stateCode ? `?state=${encodeURIComponent(stateCode)}` : "";
+  const stateQuery = iso2 === "US" && stateCode ? `?state=${encodeURIComponent(stateCode)}` : "";
   const res = await axios.get(
     `${import.meta.env.VITE_IP_DEV_API}/api/country/get-cities/${iso2}${stateQuery}`,
   );
@@ -125,9 +119,7 @@ const CitiesDropDown = ({
           justifyContent: "space-between",
           alignItems: "center",
           width: "100%",
-          border: isMobile
-            ? "1px solid #1412201F"
-            : "1px solid rgba(0,0,0,.05)",
+          border: isMobile ? "1px solid #1412201F" : "1px solid rgba(0,0,0,.05)",
           borderRadius: isMobile ? "10px" : "5px",
           padding: ".75rem",
           background: disabled || isWaitingForState ? "#e9ecef" : background,
@@ -155,9 +147,7 @@ const CitiesDropDown = ({
         ) : (
           <>
             {userCity ? (
-              <div
-                style={{ display: "flex", gap: "1rem", alignItems: "center" }}
-              >
+              <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
                 <span style={{ fontWeight: 700 }}>{userCity}</span>
               </div>
             ) : (
@@ -187,10 +177,9 @@ const CitiesDropDown = ({
                 borderBottom: "1px solid #f8f8f8",
               }}
             >
-              {t(
-                "If you can not find your {{item}} in the list just enter manually.",
-                { item: t(title).toLowerCase().replace("select ", "") },
-              )}
+              {t("If you can not find your {{item}} in the list just enter manually.", {
+                item: t(title).toLowerCase().replace("select ", ""),
+              })}
             </div>
             <DropdownItem
               key="manual-entry"
@@ -201,8 +190,7 @@ const CitiesDropDown = ({
               }}
               style={{ color: "#5926F0", fontWeight: 700 }}
             >
-              {t("Set as")}:{" "}
-              <span style={{ fontWeight: 700 }}>&apos;{searchTerm}&apos;</span>
+              {t("Set as")}: <span style={{ fontWeight: 700 }}>&apos;{searchTerm}&apos;</span>
             </DropdownItem>
           </>
         )}

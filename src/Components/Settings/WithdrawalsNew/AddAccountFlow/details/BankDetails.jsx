@@ -15,8 +15,7 @@ import {
 } from "../../../../../utils/Functions/bankIdentifiers";
 
 /* The provider may ask for routing_code; the form always stores it as aba_routing_number. */
-const toExtraKey = (name) =>
-  name === "routing_code" ? "aba_routing_number" : name;
+const toExtraKey = (name) => (name === "routing_code" ? "aba_routing_number" : name);
 
 /* Used only when the provider's required fields could not be read. */
 const FALLBACK_IDENTIFIERS = ["bank_account_number"];
@@ -41,8 +40,7 @@ const checkIban = (value) => {
   if (!iban) return { state: "", message: "" };
   if (ibanLib.countries[iban.slice(0, 2)]) return checkIdentifier("iban", iban);
 
-  const valid =
-    /^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/.test(iban) && passesMod97(iban);
+  const valid = /^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/.test(iban) && passesMod97(iban);
   return valid
     ? { state: "valid", message: "Valid IBAN" }
     : {
@@ -56,22 +54,12 @@ const checkIban = (value) => {
  * fills the channel's own iban/swift_code; account numbers fill account_number; the
  * rest go to extras, as the old form sent them. The bank name is the chosen payer.
  */
-const BankDetails = ({
-  channel,
-  setChannel,
-  payers,
-  identifiers,
-  onValidChange,
-}) => {
+const BankDetails = ({ channel, setChannel, payers, identifiers, onValidChange }) => {
   const { t } = useTranslation();
 
   const fields = useMemo(() => {
     const names = [
-      ...new Set(
-        (identifiers?.length ? identifiers : FALLBACK_IDENTIFIERS).map(
-          toExtraKey,
-        ),
-      ),
+      ...new Set((identifiers?.length ? identifiers : FALLBACK_IDENTIFIERS).map(toExtraKey)),
     ];
     const hasIban = names.includes("iban");
 
@@ -79,8 +67,7 @@ const BankDetails = ({
       names
         .map((name) => {
           if (name === "iban") return { name, target: "iban" };
-          if (name === "swift_bic_code" && !hasIban)
-            return { name, target: "swift" };
+          if (name === "swift_bic_code" && !hasIban) return { name, target: "swift" };
           if (name === "bank_account_number" || name === "account_number")
             return { name, target: "account" };
           if (name in bankExtrasInitial) return { name, target: "extra" };
@@ -97,8 +84,7 @@ const BankDetails = ({
   }, [identifiers]);
 
   const valueOf = (field) => {
-    if (field.target === "iban" || field.target === "swift")
-      return channel.bank_iban ?? "";
+    if (field.target === "iban" || field.target === "swift") return channel.bank_iban ?? "";
     if (field.target === "account") return channel.bank_account_number ?? "";
     return channel.extras?.[field.name] ?? "";
   };
@@ -109,16 +95,13 @@ const BankDetails = ({
                unless the user has typed a different one themselves. */
       setChannel((prev) => {
         const previous = parseIban(prev.bank_iban)?.accountNumber;
-        const typedByUser =
-          prev.bank_account_number && prev.bank_account_number !== previous;
+        const typedByUser = prev.bank_account_number && prev.bank_account_number !== previous;
         const accountNumber = parseIban(value)?.accountNumber;
         return {
           ...prev,
           bank_iban: value,
           accNumType: "IBAN",
-          ...(accountNumber && !typedByUser
-            ? { bank_account_number: accountNumber }
-            : {}),
+          ...(accountNumber && !typedByUser ? { bank_account_number: accountNumber } : {}),
         };
       });
     } else if (field.target === "swift") {
@@ -139,9 +122,7 @@ const BankDetails = ({
 
   /* The bank is the payer the user picked, so its name is never typed. */
   useEffect(() => {
-    const payer = payers.find(
-      (item) => String(item.id) === String(channel.payer_id),
-    );
+    const payer = payers.find((item) => String(item.id) === String(channel.payer_id));
     if (payer && channel.bank_name !== payer.name) {
       setChannel((prev) => ({ ...prev, bank_name: payer.name }));
     }
@@ -165,10 +146,7 @@ const BankDetails = ({
 
   const valid =
     !!channel.payer_id &&
-    fields.every(
-      (field) =>
-        String(valueOf(field)).trim() && checkOf(field).state !== "invalid",
-    );
+    fields.every((field) => String(valueOf(field)).trim() && checkOf(field).state !== "invalid");
   useEffect(() => {
     onValidChange(valid);
   }, [valid, onValidChange]);
@@ -185,9 +163,7 @@ const BankDetails = ({
             value: String(payer.id),
             label: payer.name,
           }))}
-          onChange={(value) =>
-            setChannel((prev) => ({ ...prev, payer_id: value }))
-          }
+          onChange={(value) => setChannel((prev) => ({ ...prev, payer_id: value }))}
         />
       )}
 
@@ -220,10 +196,7 @@ const BankDetails = ({
             trailingIcon={check.state === "valid" ? "check" : undefined}
             onChange={(next) => {
               const normalised = def.alphanumeric ? clean(next) : next;
-              setValue(
-                field,
-                def.uppercase ? normalised.toUpperCase() : normalised,
-              );
+              setValue(field, def.uppercase ? normalised.toUpperCase() : normalised);
             }}
           />
         );

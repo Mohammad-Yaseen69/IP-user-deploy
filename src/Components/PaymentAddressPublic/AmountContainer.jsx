@@ -26,11 +26,7 @@ const AmountContainer = ({
   const [localAmount, setLocalAmount] = useState(state.formattedAmount || "");
   const openInNewTab = (url) => {
     const newWindow = window.open(url, "_blank", "noopener,noreferrer");
-    if (
-      !newWindow ||
-      newWindow.closed ||
-      typeof newWindow.closed === "undefined"
-    ) {
+    if (!newWindow || newWindow.closed || typeof newWindow.closed === "undefined") {
       const a = document.createElement("a");
       a.href = url;
       a.target = "_blank";
@@ -83,35 +79,21 @@ const AmountContainer = ({
             className={vpa_styles.top}
           >
             <div style={{ margin: "inherit" }} className={vpa_styles.currency}>
-              <div>
-                {state.currentWallet?.currency?.symbol ||
-                  state.currencySymbol}{" "}
-              </div>
+              <div>{state.currentWallet?.currency?.symbol || state.currencySymbol} </div>
               <p>{state.currentWallet?.currency?.code || state.currencyCode}</p>
             </div>
 
-            {isEditable ? (
-              <label>{t("Enter Amount")}</label>
-            ) : (
-              <label>{t("Amount")}</label>
-            )}
+            {isEditable ? <label>{t("Enter Amount")}</label> : <label>{t("Amount")}</label>}
           </div>
           <div
             style={{
-              margin: paidInvoice
-                ? "20px 0px 0px 0px"
-                : width < 1000
-                  ? "0 0 2rem"
-                  : ".5rem 0",
+              margin: paidInvoice ? "20px 0px 0px 0px" : width < 1000 ? "0 0 2rem" : ".5rem 0",
             }}
             className={vpa_styles.amount}
           >
             <div style={{ justifyContent: "center", gap: "5px" }}>
               {width > 1000 && (
-                <span>
-                  {state.currentWallet?.currency?.code ||
-                    state.currencyCode}{" "}
-                </span>
+                <span>{state.currentWallet?.currency?.code || state.currencyCode} </span>
               )}
 
               {isEditable ? (
@@ -133,9 +115,7 @@ const AmountContainer = ({
                   }}
                 />
               ) : (
-                <span style={{ textAlign: "left" }}>
-                  {formatCurrency(state.amount, true)}{" "}
-                </span>
+                <span style={{ textAlign: "left" }}>{formatCurrency(state.amount, true)} </span>
               )}
             </div>
           </div>
@@ -145,42 +125,19 @@ const AmountContainer = ({
                 style={{
                   margin: "0",
                   display: width > 1000 && width < 1350 && "grid",
-                  gridTemplateColumns:
-                    width > 1000 && width < 1350 && "1fr 1fr 1fr",
+                  gridTemplateColumns: width > 1000 && width < 1350 && "1fr 1fr 1fr",
                 }}
                 className={vpa_styles.buttons}
               >
-                {flagCheck(
-                  "payments.allowGuestPay",
-                  userDetails,
-                  "paymentAddress",
-                ) ||
-                flagCheck(
-                  "payments.allowCrypto",
-                  userDetails,
-                  "paymentAddress",
-                ) ||
-                flagCheck(
-                  "payments.allowInstapay",
-                  userDetails,
-                  "paymentAddress",
-                ) ? (
+                {flagCheck("payments.allowGuestPay", userDetails, "paymentAddress") ||
+                flagCheck("payments.allowCrypto", userDetails, "paymentAddress") ||
+                flagCheck("payments.allowInstapay", userDetails, "paymentAddress") ? (
                   <>
-                    {flagCheck(
-                      "payments.allowGuestPay",
-                      userDetails,
-                      "paymentAddress",
-                    ) && (
+                    {flagCheck("payments.allowGuestPay", userDetails, "paymentAddress") && (
                       <div
                         title={
-                          !flagCheck(
-                            "payments.allowGuestPay",
-                            userDetails,
-                            "paymentAddress",
-                          )
-                            ? t(
-                                "This method is disabled for this payment address by admin.",
-                              )
+                          !flagCheck("payments.allowGuestPay", userDetails, "paymentAddress")
+                            ? t("This method is disabled for this payment address by admin.")
                             : ""
                         }
                         style={{ position: "relative" }}
@@ -192,17 +149,14 @@ const AmountContainer = ({
                             opacity: state.amount <= 0 ? 0.7 : 1,
                             pointerEvents: state.amount <= 0 ? "none" : "all",
                             position: "relative",
-                            cursor:
-                              state.amount <= 0 ? "not-allowed" : "pointer",
+                            cursor: state.amount <= 0 ? "not-allowed" : "pointer",
                           }}
                         >
                           <div>
                             <img src={addFunds} alt="A" />
                           </div>
                           <span>
-                            {userDetails?.username === "novamind"
-                              ? t("PAY")
-                              : t("Pay As Guest")}
+                            {userDetails?.username === "novamind" ? t("PAY") : t("Pay As Guest")}
                           </span>
                           {state.guestPayError && (
                             <div
@@ -226,21 +180,11 @@ const AmountContainer = ({
                       </div>
                     )}
 
-                    {flagCheck(
-                      "payments.allowCrypto",
-                      userDetails,
-                      "paymentAddress",
-                    ) && (
+                    {flagCheck("payments.allowCrypto", userDetails, "paymentAddress") && (
                       <div
                         title={
-                          !flagCheck(
-                            "payments.allowCrypto",
-                            userDetails,
-                            "paymentAddress",
-                          )
-                            ? t(
-                                "This method is disabled for this payment address by admin.",
-                              )
+                          !flagCheck("payments.allowCrypto", userDetails, "paymentAddress")
+                            ? t("This method is disabled for this payment address by admin.")
                             : ""
                         }
                         style={{ position: "relative" }}
@@ -253,8 +197,7 @@ const AmountContainer = ({
                             opacity: state.amount <= 0 ? 0.7 : 1,
                             pointerEvents: state.amount <= 0 ? "none" : "all",
                             position: "relative",
-                            cursor:
-                              state.amount <= 0 ? "not-allowed" : "pointer",
+                            cursor: state.amount <= 0 ? "not-allowed" : "pointer",
                           }}
                         >
                           <div>
@@ -265,21 +208,11 @@ const AmountContainer = ({
                       </div>
                     )}
 
-                    {flagCheck(
-                      "payments.allowInstapay",
-                      userDetails,
-                      "paymentAddress",
-                    ) && (
+                    {flagCheck("payments.allowInstapay", userDetails, "paymentAddress") && (
                       <div
                         title={
-                          !flagCheck(
-                            "payments.allowInstapay",
-                            userDetails,
-                            "paymentAddress",
-                          )
-                            ? t(
-                                "This method is disabled for this payment address by admin.",
-                              )
+                          !flagCheck("payments.allowInstapay", userDetails, "paymentAddress")
+                            ? t("This method is disabled for this payment address by admin.")
                             : ""
                         }
                         style={{ position: "relative" }}
@@ -303,16 +236,13 @@ const AmountContainer = ({
                           style={{
                             opacity: state.amount <= 0 ? 0.7 : 1,
                             pointerEvents: state.amount <= 0 ? "none" : "all",
-                            cursor:
-                              state.amount <= 0 ? "not-allowed" : "pointer",
+                            cursor: state.amount <= 0 ? "not-allowed" : "pointer",
                           }}
                         >
                           <div>
                             <img src={logo} alt="A" />
                           </div>
-                          <span style={{ color: "white" }}>
-                            {t("Pay With InstaPay")}
-                          </span>
+                          <span style={{ color: "white" }}>{t("Pay With InstaPay")}</span>
                         </Link>
                       </div>
                     )}

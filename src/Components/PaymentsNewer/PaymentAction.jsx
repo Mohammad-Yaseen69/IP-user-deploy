@@ -32,8 +32,7 @@ const PaymentAction = ({ setAction, setStep }) => {
   const canSendQr = can("payments.qr.send");
   // Permission: payments.non-instapay.send
   const canSendNonInstapay = can("payments.non-instapay.send");
-  const canSendMoney =
-    canSendInternational || canSendWallet || canSendQr || canSendNonInstapay;
+  const canSendMoney = canSendInternational || canSendWallet || canSendQr || canSendNonInstapay;
 
   // Permission: payments.money.request
   const canRequestMoney = can("payments.money.request");
@@ -69,8 +68,7 @@ const PaymentAction = ({ setAction, setStep }) => {
         : userDetails?.level?.international_transfer?.bank ||
           userDetails?.level?.wallet_to_wallet?.send ||
           userDetails?.level?.international_transfer?.cash_pickup ||
-          userDetails?.level?.international_transfer?.mobile_money) &&
-      canSendMoney ? (
+          userDetails?.level?.international_transfer?.mobile_money) && canSendMoney ? (
         <ActionCard
           bg={send}
           title={t("Send Money")}

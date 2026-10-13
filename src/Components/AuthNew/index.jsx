@@ -65,18 +65,13 @@ const AuthNew = () => {
         const location = res.data;
 
         if (location) {
-          const findCOuntry = countries.find(
-            (item) => item?.code === location?.country,
-          );
+          const findCOuntry = countries.find((item) => item?.code === location?.country);
 
           if (findCOuntry) {
             const foundCount = allowedCountries?.find(
               (item) =>
-                item?.country_name?.toLowerCase() ===
-                  findCOuntry?.name?.toLowerCase() ||
-                item?.country_name
-                  ?.toLowerCase()
-                  ?.includes(findCOuntry?.name?.toLowerCase()),
+                item?.country_name?.toLowerCase() === findCOuntry?.name?.toLowerCase() ||
+                item?.country_name?.toLowerCase()?.includes(findCOuntry?.name?.toLowerCase()),
             );
 
             setCountry(foundCount?.country_iso_code ?? "CHF");
@@ -86,9 +81,7 @@ const AuthNew = () => {
         const res = await fetch("https://geolocation-db.com/json/");
         const data = await res.json();
         const filteredCountry = allowedCountries.filter((item) =>
-          item.country_name
-            .toLowerCase()
-            .includes(data?.country_name?.toLowerCase()),
+          item.country_name.toLowerCase().includes(data?.country_name?.toLowerCase()),
         )?.[0]?.country_iso_code;
         setCountry(filteredCountry ?? "CHF");
       }
@@ -99,12 +92,8 @@ const AuthNew = () => {
   }, [allowedCountries]);
   return (
     <>
-      {registrationCompleted &&
-      window.location.pathname.toLowerCase().includes("signup") ? (
-        <RegistrationCompleted
-          setStep={setStep}
-          setIsLoginForm={setIsLoginForm}
-        />
+      {registrationCompleted && window.location.pathname.toLowerCase().includes("signup") ? (
+        <RegistrationCompleted setStep={setStep} setIsLoginForm={setIsLoginForm} />
       ) : (
         <section className={styles.container}>
           {/* {
@@ -122,21 +111,11 @@ const AuthNew = () => {
             <LanguagePicker />
           </div>
           {/* } */}
-          <img
-            src={overlay}
-            alt="overlay"
-            loading="lazy"
-            className={styles.overlay}
-          />
+          <img src={overlay} alt="overlay" loading="lazy" className={styles.overlay} />
           {step < 2 ? (
             <img src={man} alt="man" loading="lazy" className={styles.man} />
           ) : (
-            <img
-              src={woman}
-              alt="woman"
-              loading="lazy"
-              className={styles.man}
-            />
+            <img src={woman} alt="woman" loading="lazy" className={styles.man} />
           )}
           {isForgot ? (
             <ForgotPassword

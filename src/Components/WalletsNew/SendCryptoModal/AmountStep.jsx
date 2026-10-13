@@ -18,13 +18,7 @@ import {
 
 const QUICK_PERCENTAGES = [25, 50, 75, 100];
 
-const AmountStep = ({
-  amount,
-  setAmount,
-  amountError,
-  availableBalance,
-  cryptoCurrency,
-}) => {
+const AmountStep = ({ amount, setAmount, amountError, availableBalance, cryptoCurrency }) => {
   const { t } = useTranslation();
 
   const numericAmount = getAmountNumber(amount);
@@ -56,9 +50,7 @@ const AmountStep = ({
           />
         </div>
 
-        {amountError && (
-          <div className={convertStyles.balanceError}>{t(amountError)}</div>
-        )}
+        {amountError && <div className={convertStyles.balanceError}>{t(amountError)}</div>}
 
         <div className={convertStyles.availableText}>
           {t("Available")}:{" "}
@@ -72,10 +64,7 @@ const AmountStep = ({
         </div>
 
         {quickAmounts.length > 0 && (
-          <div
-            className={convertStyles.quickAmounts}
-            style={{ marginTop: "12px" }}
-          >
+          <div className={convertStyles.quickAmounts} style={{ marginTop: "12px" }}>
             {quickAmounts.map(({ percent, value }) => (
               <button
                 key={percent}

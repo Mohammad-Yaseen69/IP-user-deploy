@@ -26,14 +26,9 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url }) => {
   const [verificationBadge, setShowVerificationBadge] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
 
-  const termsText =
-    data?.plan?.termsAndConditions?.text ||
-    data?.termsAndConditions?.text ||
-    "";
+  const termsText = data?.plan?.termsAndConditions?.text || data?.termsAndConditions?.text || "";
   const isTruncated = termsText.length > 500;
-  const displayTerms = isTruncated
-    ? termsText.substring(0, 500) + "..."
-    : termsText;
+  const displayTerms = isTruncated ? termsText.substring(0, 500) + "..." : termsText;
   const actionButtons = [
     {
       label: "Pay With InstaPay",
@@ -120,15 +115,11 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url }) => {
           <div>
             <button
               style={{ color: "white", background: "#5926F0" }}
-              onClick={() =>
-                navigate(`/profile/${data?.plan?.account?.username}`)
-              }
+              onClick={() => navigate(`/profile/${data?.plan?.account?.username}`)}
             >
               {t("View Profile")}
             </button>
-            <button
-              onClick={() => navigate(`/pay/${data?.plan?.account?.username}`)}
-            >
+            <button onClick={() => navigate(`/pay/${data?.plan?.account?.username}`)}>
               {t("View Payment Address")}
             </button>
           </div>
@@ -211,22 +202,12 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url }) => {
           }}
         >
           <AnimatedHeader mobileUI />
-          <img
-            src={ip}
-            alt=""
-            style={{ margin: "20px auto", width: "200px" }}
-          />
+          <img src={ip} alt="" style={{ margin: "20px auto", width: "200px" }} />
         </div>
       )}
 
-      <Modal
-        isOpen={showTermsModal}
-        toggle={() => setShowTermsModal(false)}
-        size="lg"
-      >
-        <ModalHeader toggle={() => setShowTermsModal(false)}>
-          {t("Terms & Conditions")}
-        </ModalHeader>
+      <Modal isOpen={showTermsModal} toggle={() => setShowTermsModal(false)} size="lg">
+        <ModalHeader toggle={() => setShowTermsModal(false)}>{t("Terms & Conditions")}</ModalHeader>
         <ModalBody style={{ padding: "20px" }}>
           <div
             style={{

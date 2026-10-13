@@ -2,13 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import styles from "./styles/index.module.scss";
 import { Modal, ModalBody } from "reactstrap";
 import back from "./back.png";
-import {
-  limitVolume,
-  sourceOfFunds,
-  sourceOfWealth,
-  volume,
-  professions,
-} from "./data";
+import { limitVolume, sourceOfFunds, sourceOfWealth, volume, professions } from "./data";
 import ContactBox from "../MyMasterCard/PaymentModal/ContactBox";
 import { UserContext } from "../../Context/UserContext";
 import { countriesInDiffLangs } from "../../Data/CountriesWithTranslations/countries";
@@ -23,12 +17,7 @@ import LanguagePicker from "../LanguagePicker";
 import { useNavigate } from "react-router-dom";
 import { getLoginPath } from "../../utils/Functions/loginPage";
 
-const FinancialInfoModal = ({
-  isOpen,
-  toggle,
-  toggleOnSuccess,
-  setShowSuccessModal,
-}) => {
+const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessModal }) => {
   const [activeStep, setActiveStep] = useState();
   const [textAreaValue, setTextAreaValue] = useState("");
   const [selectedProfessions, setSelectedProfessions] = useState([]);
@@ -52,9 +41,7 @@ const FinancialInfoModal = ({
     setSearchQuery(query);
     if (activeStep === "profession") {
       setFilteredProfessions(
-        professions.filter((prof) =>
-          prof.toLowerCase().includes(query.toLowerCase()),
-        ),
+        professions.filter((prof) => prof.toLowerCase().includes(query.toLowerCase())),
       );
     } else if (activeStep === "country") {
       setFilteredCountries(
@@ -69,16 +56,12 @@ const FinancialInfoModal = ({
     switch (type) {
       case "profession":
         setSelectedProfessions((prev) =>
-          prev.includes(item)
-            ? prev.filter((p) => p !== item)
-            : [...prev, item],
+          prev.includes(item) ? prev.filter((p) => p !== item) : [...prev, item],
         );
         break;
       case "country":
         setSelectedCountries((prev) =>
-          prev.includes(item)
-            ? prev.filter((c) => c !== item)
-            : [...prev, item],
+          prev.includes(item) ? prev.filter((c) => c !== item) : [...prev, item],
         );
         break;
       case "volume":
@@ -263,9 +246,7 @@ const FinancialInfoModal = ({
       setQuestions((prev) => prev.filter((q) => q.type !== activeStep));
     } catch (error) {
       const dec = decryptData(error?.response?.data?.data);
-      toast.error(
-        dec?.message || t("Something went wrong while adding your answer"),
-      );
+      toast.error(dec?.message || t("Something went wrong while adding your answer"));
     } finally {
       setLoading(false);
     }
@@ -303,17 +284,10 @@ const FinancialInfoModal = ({
 
   useEffect(() => {
     console.log(userDetails);
-    if (
-      userDetails &&
-      userDetails.user &&
-      Array.isArray(userDetails.user.financial_answers)
-    ) {
+    if (userDetails && userDetails.user && Array.isArray(userDetails.user.financial_answers)) {
       let filteringQuestions = [...questions];
       filteringQuestions = filteringQuestions.filter(
-        (q) =>
-          !userDetails?.user?.financial_answers?.some(
-            (a) => a.question_key === q?.type,
-          ),
+        (q) => !userDetails?.user?.financial_answers?.some((a) => a.question_key === q?.type),
       );
       setQuestions(filteringQuestions);
       setActiveStep(filteringQuestions[0]?.type);
@@ -324,19 +298,13 @@ const FinancialInfoModal = ({
   const rightContent = (isMobile) => (
     <div className={styles.right}>
       <div className={styles.contentContainer}>
-        <div
-          style={{ padding: isMobile && "24px 24px 0 24px" }}
-          className={styles.headerInfo}
-        >
+        <div style={{ padding: isMobile && "24px 24px 0 24px" }} className={styles.headerInfo}>
           {!isMobile && (
             <span>
-              {t("Step")}{" "}
-              {questions.findIndex((q) => q.type === activeStep) + 1}
+              {t("Step")} {questions.findIndex((q) => q.type === activeStep) + 1}
             </span>
           )}
-          {!isMobile && (
-            <h2>{t(questions.find((q) => q.type === activeStep)?.question)}</h2>
-          )}
+          {!isMobile && <h2>{t(questions.find((q) => q.type === activeStep)?.question)}</h2>}
           <p>{t(questions.find((q) => q.type === activeStep)?.info)}</p>
         </div>
         <div
@@ -485,9 +453,7 @@ const FinancialInfoModal = ({
                     style={{ justifyContent: "flex-start", gap: "10px" }}
                     className={`${styles.option} ${cryptoCheck === true && styles.checked}`}
                   >
-                    <span className={styles.circle}>
-                      {cryptoCheck === true && <span></span>}
-                    </span>
+                    <span className={styles.circle}>{cryptoCheck === true && <span></span>}</span>
                     <p
                       style={{
                         fontSize: "15px",
@@ -503,9 +469,7 @@ const FinancialInfoModal = ({
                     style={{ justifyContent: "flex-start", gap: "10px" }}
                     className={`${styles.option}  ${cryptoCheck === false && styles.checked}`}
                   >
-                    <span className={styles.circle}>
-                      {cryptoCheck === false && <span></span>}
-                    </span>
+                    <span className={styles.circle}>{cryptoCheck === false && <span></span>}</span>
                     <p
                       style={{
                         fontSize: "15px",
@@ -571,10 +535,7 @@ const FinancialInfoModal = ({
         >
           {width > 1100 ? (
             <div className={styles.container}>
-              <div
-                style={{ backgroundImage: `url(${back})` }}
-                className={styles.left}
-              >
+              <div style={{ backgroundImage: `url(${back})` }} className={styles.left}>
                 <div
                   style={{
                     display: "flex",
@@ -653,10 +614,7 @@ const FinancialInfoModal = ({
                   </div>
                   <h1>{t("Tell us more about you")}..</h1>
                 </div>
-                <div
-                  style={{ minHeight: "550px", zIndex: 1 }}
-                  className={styles.questions}
-                >
+                <div style={{ minHeight: "550px", zIndex: 1 }} className={styles.questions}>
                   {questions.map((question, index) => (
                     <div
                       onClick={() => setActiveStep(question?.type)}
@@ -696,14 +654,8 @@ const FinancialInfoModal = ({
               {rightContent()}
             </div>
           ) : (
-            <div
-              style={{ gridTemplateColumns: "1fr" }}
-              className={styles.container}
-            >
-              <div
-                style={{ backgroundImage: `url(${back})` }}
-                className={styles.left}
-              >
+            <div style={{ gridTemplateColumns: "1fr" }} className={styles.container}>
+              <div style={{ backgroundImage: `url(${back})` }} className={styles.left}>
                 <div
                   style={{
                     display: "flex",
@@ -820,9 +772,7 @@ const FinancialInfoModal = ({
                         <h4>{t(question.question)}</h4>
                       </div>
                       {activeStep === question.type && (
-                        <div style={{ width: "100%" }}>
-                          {rightContent("mobile")}
-                        </div>
+                        <div style={{ width: "100%" }}>{rightContent("mobile")}</div>
                       )}
                     </React.Fragment>
                   ))}

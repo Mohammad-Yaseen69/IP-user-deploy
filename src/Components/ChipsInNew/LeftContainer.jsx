@@ -96,10 +96,7 @@ const LeftContainer = ({
 
   return (
     <div className={styles.container}>
-      <InstructionsModal
-        isOpen={showTooltip}
-        toggle={() => setShowTooltip(!showTooltip)}
-      />
+      <InstructionsModal isOpen={showTooltip} toggle={() => setShowTooltip(!showTooltip)} />
       <DownloadQR
         isOpen={showDownloadModal}
         toggle={() => setShowDownloadModal(false)}
@@ -137,10 +134,7 @@ const LeftContainer = ({
                       style={{
                         fontSize: "1rem",
                         fontWeight: 900,
-                        display:
-                          currency === item?.currency?.code
-                            ? "none"
-                            : "inherit",
+                        display: currency === item?.currency?.code ? "none" : "inherit",
                       }}
                     >
                       {item?.currency?.code} ({item?.currency?.code} )
@@ -158,10 +152,7 @@ const LeftContainer = ({
             </p>
             <div className={styles.tl_bot}>
               {can("qr-sticker.download") && (
-                <Button
-                  color="primary"
-                  onClick={() => setShowDownloadModal(true)}
-                >
+                <Button color="primary" onClick={() => setShowDownloadModal(true)}>
                   <img src={download} alt="" />
                   <span>{t("Download QR")}</span>
                 </Button>
@@ -180,21 +171,14 @@ const LeftContainer = ({
             </div>
           </div>
           <div className={styles.right}>
-            <img
-              src={currentWallet?.qrCode?.url}
-              alt={currentWallet?.wallet_id}
-            />
+            <img src={currentWallet?.qrCode?.url} alt={currentWallet?.wallet_id} />
           </div>
         </div>
       </div>
 
       <div className={styles.bottom}>
         <div className={styles.b_left}>
-          <h5>
-            {t(
-              "Share your QR Code or pay link to instantly get paid in your insta wallet.",
-            )}
-          </h5>
+          <h5>{t("Share your QR Code or pay link to instantly get paid in your insta wallet.")}</h5>
           <div className={styles.inp_con}>
             <div className={styles.ic_top}>
               <Label>{t("QR Code Title")}</Label>

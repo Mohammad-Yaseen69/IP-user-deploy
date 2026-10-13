@@ -33,11 +33,7 @@ const Compliance = () => {
   const isItemOverdue = (item) => {
     if (!item?.deadline?.isSet) return false;
     if (item.deadline.status === "EXCEED") return true;
-    if (
-      item.deadline.date &&
-      item.status !== "APPROVED" &&
-      item.status !== "UPLOADED"
-    ) {
+    if (item.deadline.date && item.status !== "APPROVED" && item.status !== "UPLOADED") {
       return new Date(item.deadline.date) < new Date();
     }
     return false;
@@ -46,9 +42,7 @@ const Compliance = () => {
   const overdueItems = inquiries.filter(isItemOverdue);
   const activeInquiries = inquiries.filter(
     (item) =>
-      item.status === "REQUESTED" ||
-      item.status === "UPLOADED" ||
-      item.status === "action_needed",
+      item.status === "REQUESTED" || item.status === "UPLOADED" || item.status === "action_needed",
   );
 
   const renderComplianceContent = () => {
@@ -82,10 +76,7 @@ const Compliance = () => {
 
     if (overdueItems.length > 0) {
       const restrictedData = {
-        title: t(
-          "compliance.accountRestrictedTitle",
-          "Your account is temporarily restricted",
-        ),
+        title: t("compliance.accountRestrictedTitle", "Your account is temporarily restricted"),
         subtitle: t(
           "compliance.accountRestrictedSubtitle",
           "A deadline passed on compliance requests without a response. Resolve the items below to restore full account access.",
@@ -121,11 +112,7 @@ const Compliance = () => {
     return <AllCaughtUpView />;
   };
 
-  return (
-    <div className={styles.complianceContainer}>
-      {renderComplianceContent()}
-    </div>
-  );
+  return <div className={styles.complianceContainer}>{renderComplianceContent()}</div>;
 };
 
 export default Compliance;

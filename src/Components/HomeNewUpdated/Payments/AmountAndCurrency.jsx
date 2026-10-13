@@ -31,8 +31,7 @@ const AmountAndCurrency = ({
   const { t } = useTranslation();
 
   const invalid =
-    userWallets?.filter((item) => item.currency.code === currency)[0]?.balance
-      ?.available < amount;
+    userWallets?.filter((item) => item.currency.code === currency)[0]?.balance?.available < amount;
   useEffect(() => {
     if (invalid) {
       setExchangeError("insufficient balance");
@@ -44,9 +43,7 @@ const AmountAndCurrency = ({
           if (amount.length > 0 && +amount >= 1) {
             const data = {
               wallet_id: userWallets?.filter(
-                (item) =>
-                  item?.currency?.code?.toLowerCase() ===
-                  currency?.toLowerCase(),
+                (item) => item?.currency?.code?.toLowerCase() === currency?.toLowerCase(),
               )[0]?._id,
               transaction_type: "C2C",
               amount: +amount,
@@ -134,17 +131,14 @@ const AmountAndCurrency = ({
         padding: "14px",
         background: "rgba(0,0,0,.03)",
         paddingBottom: 0,
-        boxShadow:
-          "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+        boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
       }}
     >
       <div
         style={{
-          background:
-            "linear-gradient(to bottom right, #EC2AB6 0%, #5926F0 100%)",
+          background: "linear-gradient(to bottom right, #EC2AB6 0%, #5926F0 100%)",
           border: "0.5px solid rgba(0, 0, 0, 0.08)",
-          boxShadow:
-            "0px 4.456576347351074px 132.58314514160156px 0px rgba(0, 0, 0, 0.11)",
+          boxShadow: "0px 4.456576347351074px 132.58314514160156px 0px rgba(0, 0, 0, 0.11)",
           borderRadius: "24px",
           padding: "12px",
           display: "flex",
@@ -256,9 +250,7 @@ const AmountAndCurrency = ({
               }}
             >
               <span style={{ color: "#a0a0a0" }}>{t("Tax")}:</span>
-              <span style={{ color: "#a0a0a0" }}>
-                ${+exchangeRate?.fee?.amount ?? ""}
-              </span>
+              <span style={{ color: "#a0a0a0" }}>${+exchangeRate?.fee?.amount ?? ""}</span>
             </p>
             <p
               style={{
@@ -267,9 +259,7 @@ const AmountAndCurrency = ({
                 justifyContent: "space-between",
               }}
             >
-              <span style={{ fontWeight: "600" }}>
-                {t("How much they receive:")}
-              </span>
+              <span style={{ fontWeight: "600" }}>{t("How much they receive:")}</span>
               <span style={{ fontWeight: "600" }}>
                 {+exchangeRate?.destination?.amount?.toFixed(2) ?? ""}{" "}
                 {exchangeRate?.destination?.currency ?? ""}
@@ -298,8 +288,7 @@ const AmountAndCurrency = ({
                     fontWeight: 800,
                   }}
                 >
-                  {+service?.transaction_types?.C2C?.minimum_transaction_amount}{" "}
-                  {service?.currency}
+                  {+service?.transaction_types?.C2C?.minimum_transaction_amount} {service?.currency}
                 </h2>
               </>
             )}
@@ -335,9 +324,7 @@ const AmountAndCurrency = ({
                     fontWeight: 600,
                   }}
                 >
-                  {t(
-                    "You have entered an amount that exceeds our limit at the moment.",
-                  )}
+                  {t("You have entered an amount that exceeds our limit at the moment.")}
                 </p>
               </>
             )}
@@ -369,9 +356,7 @@ const AmountAndCurrency = ({
                 </h2>
               </>
             )}
-            {exchangeError.includes(
-              "An error occurred while creating the quotation",
-            ) && (
+            {exchangeError.includes("An error occurred while creating the quotation") && (
               <>
                 <h2
                   style={{
@@ -381,9 +366,7 @@ const AmountAndCurrency = ({
                     fontWeight: 800,
                   }}
                 >
-                  {t(
-                    "We cannot process your request at the moment, please try again later.",
-                  )}
+                  {t("We cannot process your request at the moment, please try again later.")}
                 </h2>
                 <p style={{ marginBottom: 0, textAlign: "center" }}>
                   {t("Please try again later")}

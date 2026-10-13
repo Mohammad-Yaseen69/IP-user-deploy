@@ -16,14 +16,8 @@ vi.mock("../../Helper/EssentilaMethods/ConversionMethods", () => ({
   base64ToString: vi.fn((base64) => base64.replace("base64_", "")),
 }));
 
-import {
-  encryptData,
-  decryptData,
-} from "../../Helper/EssentilaMethods/Encryption";
-import {
-  stringToBase64,
-  base64ToString,
-} from "../../Helper/EssentilaMethods/ConversionMethods";
+import { encryptData, decryptData } from "../../Helper/EssentilaMethods/Encryption";
+import { stringToBase64, base64ToString } from "../../Helper/EssentilaMethods/ConversionMethods";
 
 describe("Cryptography Functions", () => {
   beforeEach(() => {

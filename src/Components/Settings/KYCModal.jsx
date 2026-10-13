@@ -32,19 +32,12 @@ const KYCModal = ({ showModal, setShowModal, KYCComments, KYCStatus }) => {
   };
 
   const isNormalFormat = (item) => {
-    return (
-      item &&
-      typeof item === "object" &&
-      "name" in item &&
-      "description" in item
-    );
+    return item && typeof item === "object" && "name" in item && "description" in item;
   };
 
   const isDiditFormat = (item) => {
     return (
-      item &&
-      typeof item === "object" &&
-      ("node_id" in item || "feature" in item || "risk" in item)
+      item && typeof item === "object" && ("node_id" in item || "feature" in item || "risk" in item)
     );
   };
 
@@ -95,10 +88,7 @@ const KYCModal = ({ showModal, setShowModal, KYCComments, KYCStatus }) => {
     return comments.map((item, index) => {
       if (item?.warnings && item.warnings.length > 0) {
         return item.warnings.map((warning, wIdx) => (
-          <div
-            key={`${index}-w-${wIdx}`}
-            style={{ marginLeft: "34px", marginBottom: "6px" }}
-          >
+          <div key={`${index}-w-${wIdx}`} style={{ marginLeft: "34px", marginBottom: "6px" }}>
             <span
               style={{
                 color: "#dc3545",
@@ -205,9 +195,7 @@ const KYCModal = ({ showModal, setShowModal, KYCComments, KYCStatus }) => {
               {item.ip_address} | {item.ip_city}, {item.ip_country}
             </span>
             {item?.is_vpn_or_tor && (
-              <p
-                style={{ fontSize: "13px", color: "#dc3545", marginBottom: 0 }}
-              >
+              <p style={{ fontSize: "13px", color: "#dc3545", marginBottom: 0 }}>
                 {t("⚠ VPN/TOR detected")}
               </p>
             )}
@@ -276,11 +264,7 @@ const KYCModal = ({ showModal, setShowModal, KYCComments, KYCStatus }) => {
               <h6 style={{ marginBottom: 0 }}>{t(headingText[headingKey])}</h6>
             </div>
             {KYCComments[headingKey]?.length > 0 &&
-              renderComments(
-                KYCComments[headingKey],
-                headingKey,
-                KYCStatus[headingKey],
-              )}
+              renderComments(KYCComments[headingKey], headingKey, KYCStatus[headingKey])}
           </div>
         ))}
       </ModalBody>

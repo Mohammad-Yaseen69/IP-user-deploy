@@ -4,12 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router";
 import { Button, Modal, ModalBody } from "reactstrap";
 
-const ErrorModal = ({
-  isOpen,
-  toggle,
-  message = "",
-  heading = "Transaction Failed!",
-}) => {
+const ErrorModal = ({ isOpen, toggle, message = "", heading = "Transaction Failed!" }) => {
   const { t } = useTranslation();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);

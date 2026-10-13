@@ -7,15 +7,8 @@ import calendar from "./files/calendar.png";
 import CustomDatePicker from "./DatePicker";
 
 const InstalmentPayment = (props) => {
-  const {
-    amount,
-    currency,
-    billingDate,
-    setBillingDate,
-    numOfTerms,
-    setNumOfTerms,
-    setSubStep,
-  } = props;
+  const { amount, currency, billingDate, setBillingDate, numOfTerms, setNumOfTerms, setSubStep } =
+    props;
 
   const { t } = useTranslation();
   const [showDateError, setShowDateError] = useState(false);
@@ -49,8 +42,7 @@ const InstalmentPayment = (props) => {
           padding: "20px",
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
       >
         <Card style={{ marginBottom: 0 }}>
@@ -79,8 +71,7 @@ const InstalmentPayment = (props) => {
                 style={{
                   minHeight: "35px",
                   minWidth: "35px",
-                  background:
-                    "linear-gradient(to top left, #e64067,#5926f0,#4828a0)",
+                  background: "linear-gradient(to top left, #e64067,#5926f0,#4828a0)",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
@@ -151,9 +142,7 @@ const InstalmentPayment = (props) => {
               <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>
                 {t("Interest")} %
               </p>
-              <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>
-                12%
-              </p>
+              <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>12%</p>
             </div>
 
             <div
@@ -177,13 +166,11 @@ const InstalmentPayment = (props) => {
                 readOnly
                 style={{
                   background: "#fff",
-                  background:
-                    "linear-gradient(to right,#E64067, #5926F0, #4828A0)",
+                  background: "linear-gradient(to right,#E64067, #5926F0, #4828A0)",
                   backgroundClip: "text",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
-                  boxShadow:
-                    "0px -1px 32px -3.3496174812316895px rgba(89, 38, 240, 0.36)",
+                  boxShadow: "0px -1px 32px -3.3496174812316895px rgba(89, 38, 240, 0.36)",
                   borderRadius: "100px",
                   border: "none",
                   outline: "none",
@@ -209,10 +196,7 @@ const InstalmentPayment = (props) => {
                 onClick={(_) => setShowPicker(true)}
               />
               {showPicker && (
-                <CustomDatePicker
-                  setRecStartDate={setBillingDate}
-                  setShowPicker={setShowPicker}
-                />
+                <CustomDatePicker setRecStartDate={setBillingDate} setShowPicker={setShowPicker} />
               )}
             </div>
             {showDateError && (
@@ -247,8 +231,7 @@ const InstalmentPayment = (props) => {
               <div
                 style={{
                   background: "#fff",
-                  boxShadow:
-                    "0px -1px 32px -3.3496174812316895px rgba(89, 38, 240, 0.36)",
+                  boxShadow: "0px -1px 32px -3.3496174812316895px rgba(89, 38, 240, 0.36)",
                   borderRadius: "100px",
                   border: "none",
                   outline: "none",

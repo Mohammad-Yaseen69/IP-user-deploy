@@ -1,12 +1,4 @@
-import {
-  Card,
-  CardBody,
-  CardText,
-  Input,
-  Modal,
-  ModalBody,
-  ModalHeader,
-} from "reactstrap";
+import { Card, CardBody, CardText, Input, Modal, ModalBody, ModalHeader } from "reactstrap";
 // import cover from "./files/cover.png"
 import cover_1 from "./files/cover_1.png";
 import cover_2 from "./files/cover_2.png";
@@ -84,9 +76,7 @@ const ProfileComponent = () => {
 
   const covers = [cover_1, cover_2, cover_3];
 
-  const [userCover, setUserCover] = useState(
-    covers[Math.trunc(Math.random() * 3)],
-  );
+  const [userCover, setUserCover] = useState(covers[Math.trunc(Math.random() * 3)]);
   const [userDp, setUserDp] = useState("");
   const [userDetails, setUserDetails] = useState("");
   const [userCountry, setUserCountry] = useState({});
@@ -141,8 +131,7 @@ const ProfileComponent = () => {
           const decrypted = decryptData(res.data.data);
           console.log(decrypted, "cover-picture");
           setUserCover(
-            decrypted?.coverPicture?.coverImage ??
-              covers[Math.trunc(Math.random() * 3)],
+            decrypted?.coverPicture?.coverImage ?? covers[Math.trunc(Math.random() * 3)],
           );
           const img = await getCroppedImg(
             decrypted?.coverPicture?.coverImage,
@@ -178,8 +167,7 @@ const ProfileComponent = () => {
           const decrypted = decryptData(res.data.data);
           setUserDetails(decrypted?.userProfileInfo);
           const filtered = countries.find(
-            (item) =>
-              item.alpha3 === decrypted?.userProfileInfo?.country_iso_code,
+            (item) => item.alpha3 === decrypted?.userProfileInfo?.country_iso_code,
           );
           setUserCountry(filtered);
         })
@@ -278,11 +266,7 @@ const ProfileComponent = () => {
         ) : userDetails ? (
           <div className={styles.container}>
             <img
-              src={
-                croppedCover ||
-                userCover ||
-                covers[Math.trunc(Math.random() * 3)]
-              }
+              src={croppedCover || userCover || covers[Math.trunc(Math.random() * 3)]}
               alt="cover"
               className={styles.cover}
               style={{
@@ -292,10 +276,7 @@ const ProfileComponent = () => {
                 borderRadius: "30px 30px 0 0",
               }}
             />
-            <Card
-              style={{ marginBottom: "0" }}
-              className={styles.sub_container}
-            >
+            <Card style={{ marginBottom: "0" }} className={styles.sub_container}>
               <CardBody className={styles.sc_body}>
                 {/* basic info */}
                 <div className={styles.top}>
@@ -309,15 +290,12 @@ const ProfileComponent = () => {
                       />
                     ) : (
                       <div className={styles.dp} style={{ overflow: "hidden" }}>
-                        {userDetails?.first_name?.[0] ||
-                          userDetails?.company_name?.[0]}
+                        {userDetails?.first_name?.[0] || userDetails?.company_name?.[0]}
                       </div>
                     )}
                     <div className={styles.basic_dets}>
                       <div className={styles.badge}>
-                        {userDetails?.account_type === "individual"
-                          ? t("Personal")
-                          : t("Business")}{" "}
+                        {userDetails?.account_type === "individual" ? t("Personal") : t("Business")}{" "}
                         {t("Account")}
                       </div>
                       {/* <div className={styles.badge} style={{ background: userDetails?.kyc_status === "approved" ? "green" : "grey" }}>{userDetails?.kyc_status === "approved" ? "Verified" : "Unverified"}</div> */}
@@ -346,10 +324,8 @@ const ProfileComponent = () => {
                               src={verified}
                               alt=""
                               style={{
-                                height:
-                                  window.innerWidth > 780 ? "25px" : "17px",
-                                width:
-                                  window.innerWidth > 780 ? "25px" : "17px",
+                                height: window.innerWidth > 780 ? "25px" : "17px",
+                                width: window.innerWidth > 780 ? "25px" : "17px",
                                 objectFit: "contain",
                                 transform: "translateY(-2px)",
                               }}
@@ -362,17 +338,10 @@ const ProfileComponent = () => {
                                   right: "0",
                                   background: "#5926f0",
                                   color: "white",
-                                  fontSize:
-                                    window.innerWidth > 780
-                                      ? ".8rem"
-                                      : ".65rem",
+                                  fontSize: window.innerWidth > 780 ? ".8rem" : ".65rem",
                                   fontWeight: 500,
-                                  padding:
-                                    window.innerWidth > 780
-                                      ? "6px 18px"
-                                      : "3px 10px",
-                                  borderRadius:
-                                    window.innerWidth > 780 ? "8px" : "4px",
+                                  padding: window.innerWidth > 780 ? "6px 18px" : "3px 10px",
+                                  borderRadius: window.innerWidth > 780 ? "8px" : "4px",
                                   whiteSpace: "nowrap",
                                 }}
                               >
@@ -384,9 +353,7 @@ const ProfileComponent = () => {
                           </>
                         )}
                       </div>
-                      <div style={{ fontSize: ".8rem" }}>
-                        @{user_name?.toLowerCase()}
-                      </div>
+                      <div style={{ fontSize: ".8rem" }}>@{user_name?.toLowerCase()}</div>
                       <div className={styles.country}>
                         <img
                           src={userCountry?.file_url}
@@ -422,9 +389,7 @@ const ProfileComponent = () => {
                           isOpen={showAboutModal}
                           toggle={() => setShowAboutModal(!showAboutModal)}
                         >
-                          <ModalHeader
-                            toggle={() => setShowAboutModal(!showAboutModal)}
-                          >
+                          <ModalHeader toggle={() => setShowAboutModal(!showAboutModal)}>
                             {t("About")}
                           </ModalHeader>
                           <ModalBody>
@@ -447,42 +412,35 @@ const ProfileComponent = () => {
                   </div>
                 </div>
 
-                <div
-                  className={styles.social_info}
-                  style={{ flexWrap: "wrap" }}
-                >
-                  {socials_data
-                    .slice(0, showMore ? socials_data.length - 1 : 3)
-                    .map((item) => (
-                      <div className={styles.item} key={item.name}>
-                        <div className={styles.left}>
-                          <span>{item.name}</span>
-                          {item?.name?.toLowerCase()?.includes("instagram") &&
-                          userDetails?.insta_username ? (
-                            <a
-                              target="_blank"
-                              href={`https://www.instagram.com/${userDetails?.insta_username}`}
-                              style={{
-                                cursor: "pointer",
-                                color: "#5926f0",
-                                fontSize: ".65rem",
-                              }}
-                              rel="noreferrer"
-                            >
-                              @{userDetails?.insta_username}
-                            </a>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-                        <div className={styles.right}>
-                          {item.followers !== null && (
-                            <span>{item.followers}</span>
-                          )}
-                          <div>{">"}</div>
-                        </div>
+                <div className={styles.social_info} style={{ flexWrap: "wrap" }}>
+                  {socials_data.slice(0, showMore ? socials_data.length - 1 : 3).map((item) => (
+                    <div className={styles.item} key={item.name}>
+                      <div className={styles.left}>
+                        <span>{item.name}</span>
+                        {item?.name?.toLowerCase()?.includes("instagram") &&
+                        userDetails?.insta_username ? (
+                          <a
+                            target="_blank"
+                            href={`https://www.instagram.com/${userDetails?.insta_username}`}
+                            style={{
+                              cursor: "pointer",
+                              color: "#5926f0",
+                              fontSize: ".65rem",
+                            }}
+                            rel="noreferrer"
+                          >
+                            @{userDetails?.insta_username}
+                          </a>
+                        ) : (
+                          ""
+                        )}
                       </div>
-                    ))}
+                      <div className={styles.right}>
+                        {item.followers !== null && <span>{item.followers}</span>}
+                        <div>{">"}</div>
+                      </div>
+                    </div>
+                  ))}
                   <div
                     className={styles.item}
                     style={{ cursor: "pointer" }}
@@ -499,17 +457,13 @@ const ProfileComponent = () => {
 
                 {/* qr and rating */}
                 <div className={styles.qr_rating}>
-                  <Card
-                    style={{ marginBottom: 0 }}
-                    className={styles.qr_container}
-                  >
+                  <Card style={{ marginBottom: 0 }} className={styles.qr_container}>
                     <CardBody className={styles.qr_body}>
                       <div
                         style={{
                           padding: "1px",
                           borderRadius: "15px",
-                          background:
-                            "linear-gradient(155deg, #e64067, #5926f0), #fff",
+                          background: "linear-gradient(155deg, #e64067, #5926f0), #fff",
                           // width: winWidth > 1780 ? "194px" : "160px",
                           width: "fit-content",
                         }}
@@ -529,9 +483,7 @@ const ProfileComponent = () => {
                       </div>
                       <div className={styles.qr_info}>
                         <h5>{t("Wallet ID")}:</h5>
-                        <div
-                          className={`${styles.qri_box} ${styles.qri_box_p}`}
-                        >
+                        <div className={`${styles.qri_box} ${styles.qri_box_p}`}>
                           <span>
                             {t("INSTA-")}
                             {userWallet?.wallet_id}
@@ -541,18 +493,12 @@ const ProfileComponent = () => {
                             alt="c"
                             style={{ cursor: "pointer" }}
                             onClick={() => {
-                              navigator.clipboard.writeText(
-                                userWallet?.wallet_id,
-                              );
-                              toast.success(
-                                userWallet?.wallet_id + " copied to clipboard.",
-                              );
+                              navigator.clipboard.writeText(userWallet?.wallet_id);
+                              toast.success(userWallet?.wallet_id + " copied to clipboard.");
                             }}
                           />
                         </div>
-                        <div
-                          className={`${styles.qri_box} ${styles.qri_box_g}`}
-                        >
+                        <div className={`${styles.qri_box} ${styles.qri_box_g}`}>
                           <span>{t("Download QR Code")}</span>
                           <a href={userWallet?.qrCode?.url} download={true}>
                             <img src={download} alt="d" />
@@ -582,9 +528,7 @@ const ProfileComponent = () => {
                         />{" "}
                       </div>
                       <span>
-                        {currentRevTab === "Seller"
-                          ? totalReviewsAsSeller
-                          : totalReviewsAsBuyer}{" "}
+                        {currentRevTab === "Seller" ? totalReviewsAsSeller : totalReviewsAsBuyer}{" "}
                         {t("ratings")}
                       </span>
                     </div>
@@ -607,13 +551,9 @@ const ProfileComponent = () => {
                           background: "rgba(230, 64, 103, 0.16)",
                         }}
                         disabled={reported}
-                        onClick={() =>
-                          reported ? "" : setShowReportModal(true)
-                        }
+                        onClick={() => (reported ? "" : setShowReportModal(true))}
                       >
-                        <span>
-                          {reported ? t("Reported") : t("Report this person")}
-                        </span>
+                        <span>{reported ? t("Reported") : t("Report this person")}</span>
                       </button>
                       <ReportModal
                         user={userDetails}
@@ -675,14 +615,9 @@ const ProfileComponent = () => {
                               ? item?.jw_media?.status === "ready"
                               : item,
                           )
-                          .map((item, ind) => (
-                            <PortfolioItem item={item} key={ind} />
-                          ))
+                          .map((item, ind) => <PortfolioItem item={item} key={ind} />)
                       ) : (
-                        <div
-                          className="text-center my-4 align-self-center"
-                          style={{ flex: 1 }}
-                        >
+                        <div className="text-center my-4 align-self-center" style={{ flex: 1 }}>
                           {t("No Portfolio Items")}
                         </div>
                       )}
@@ -697,9 +632,7 @@ const ProfileComponent = () => {
                       <div
                         style={{
                           background:
-                            currentRevTab === "Seller"
-                              ? "rgba(109, 41, 220, 0.1)"
-                              : "#fff",
+                            currentRevTab === "Seller" ? "rgba(109, 41, 220, 0.1)" : "#fff",
                         }}
                         onClick={() => setCurrentRevTab("Seller")}
                       >
@@ -708,9 +641,7 @@ const ProfileComponent = () => {
                       <div
                         style={{
                           background:
-                            currentRevTab === "Buyer"
-                              ? "rgba(109, 41, 220, 0.1)"
-                              : "#fff",
+                            currentRevTab === "Buyer" ? "rgba(109, 41, 220, 0.1)" : "#fff",
                         }}
                         onClick={() => setCurrentRevTab("Buyer")}
                       >
@@ -721,15 +652,9 @@ const ProfileComponent = () => {
                       {currentRevTab === "Buyer" &&
                         (userReviewsAsBuyer.length > 0 ? (
                           userReviewsAsBuyer
-                            .sort(
-                              (a, b) =>
-                                new Date(a?.createdAt) - new Date(b?.createdAt),
-                            )
+                            .sort((a, b) => new Date(a?.createdAt) - new Date(b?.createdAt))
                             .map((item) => (
-                              <div
-                                key={item._id}
-                                className={styles.review_card}
-                              >
+                              <div key={item._id} className={styles.review_card}>
                                 <div className={styles.rc_top}>
                                   <div className={styles.rct_left}>
                                     {item?.buyer?.profileImage?.url ? (
@@ -771,8 +696,7 @@ const ProfileComponent = () => {
                                           <span>{t("Replied to ")}</span>
                                           <div>
                                             {item?.buyer?.user?.first_name ||
-                                              item?.buyer?.user
-                                                ?.company_name}{" "}
+                                              item?.buyer?.user?.company_name}{" "}
                                             {item?.buyer?.user?.last_name || ""}
                                           </div>
                                         </div>
@@ -793,21 +717,14 @@ const ProfileComponent = () => {
                                             </div>
                                           )}
                                           <div className={styles.rctl_dets}>
-                                            <div
-                                              className={
-                                                styles.seller_res_badge
-                                              }
-                                            >
+                                            <div className={styles.seller_res_badge}>
                                               {t("Seller Response")}
                                             </div>
                                             <h5>
-                                              {userDetails?.first_name ||
-                                                userDetails?.company_name}{" "}
+                                              {userDetails?.first_name || userDetails?.company_name}{" "}
                                               {userDetails?.last_name || ""}
                                             </h5>
-                                            <span>
-                                              {userDetails?.account_type}
-                                            </span>
+                                            <span>{userDetails?.account_type}</span>
                                           </div>
                                         </div>
                                       </div>
@@ -818,25 +735,16 @@ const ProfileComponent = () => {
                               </div>
                             ))
                         ) : (
-                          <div
-                            className="text-center my-3"
-                            style={{ color: "#666" }}
-                          >
+                          <div className="text-center my-3" style={{ color: "#666" }}>
                             {t("No Buyer Reviews Found")}
                           </div>
                         ))}
                       {currentRevTab === "Seller" &&
                         (userReviewsAsSeller.length > 0 ? (
                           userReviewsAsSeller
-                            .sort(
-                              (a, b) =>
-                                new Date(b?.createdAt) - new Date(a?.createdAt),
-                            )
+                            .sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt))
                             .map((item) => (
-                              <div
-                                key={item._id}
-                                className={styles.review_card}
-                              >
+                              <div key={item._id} className={styles.review_card}>
                                 <div className={styles.rc_top}>
                                   <div className={styles.rct_left}>
                                     {item?.seller?.profileImage?.url ? (
@@ -873,10 +781,7 @@ const ProfileComponent = () => {
                               </div>
                             ))
                         ) : (
-                          <div
-                            className="text-center my-3"
-                            style={{ color: "#666" }}
-                          >
+                          <div className="text-center my-3" style={{ color: "#666" }}>
                             {t("No Seller Reviews Found")}
                           </div>
                         ))}

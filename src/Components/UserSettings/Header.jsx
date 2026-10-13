@@ -187,9 +187,7 @@ const Header = () => {
                 }}
               >
                 <button
-                  onClick={() =>
-                    setScale((prev) => (prev > 1 ? prev - 0.25 : prev))
-                  }
+                  onClick={() => setScale((prev) => (prev > 1 ? prev - 0.25 : prev))}
                   style={{
                     border: "none",
                     outline: "none",
@@ -216,9 +214,7 @@ const Header = () => {
                   {scale}x
                 </span>
                 <button
-                  onClick={() =>
-                    setScale((prev) => (prev < 4 ? prev + 0.25 : prev))
-                  }
+                  onClick={() => setScale((prev) => (prev < 4 ? prev + 0.25 : prev))}
                   style={{
                     border: "none",
                     outline: "none",
@@ -313,9 +309,7 @@ const Header = () => {
                       }}
                     >
                       <Camera size={18} />
-                      <span style={{ whiteSpace: "nowrap" }}>
-                        {t("Adjust")}
-                      </span>
+                      <span style={{ whiteSpace: "nowrap" }}>{t("Adjust")}</span>
                     </label>
                     <label
                       style={{
@@ -332,22 +326,14 @@ const Header = () => {
                       }}
                     >
                       <Trash2 size={18} />
-                      <span style={{ whiteSpace: "nowrap" }}>
-                        {t("Remove")}
-                      </span>
+                      <span style={{ whiteSpace: "nowrap" }}>{t("Remove")}</span>
                     </label>
                   </>
                 )}
               </div>
             </div>
           )}
-          <input
-            type="file"
-            name="dp"
-            id="dp"
-            hidden
-            onChange={handleFileSelect}
-          />
+          <input type="file" name="dp" id="dp" hidden onChange={handleFileSelect} />
           <DeleteImageModal
             imageType={"Profile"}
             isOpen={showDelModal}
@@ -376,10 +362,7 @@ const Header = () => {
         </div>
       </div>
       <div className={styles.top_right}>
-        <Card
-          style={{ marginBottom: 0 }}
-          className={styles.completion_status_con}
-        >
+        <Card style={{ marginBottom: 0 }} className={styles.completion_status_con}>
           <CardBody className={styles.completion_status_body}>
             <span>{t("Profile Completion")}</span>
             <button>
@@ -403,8 +386,7 @@ const Header = () => {
               left: 0,
               width: `${profilePercentage}%`,
               height: "100%",
-              background:
-                "linear-gradient(270deg, #5926F0 -8.7%, #4828A0 100%), #FFF",
+              background: "linear-gradient(270deg, #5926F0 -8.7%, #4828A0 100%), #FFF",
               boxShadow: "0px 4px 30px 0px rgba(0, 0, 0, 0.09)",
               zIndex: 1,
             }}

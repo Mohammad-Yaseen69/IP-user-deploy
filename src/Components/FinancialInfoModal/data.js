@@ -25,12 +25,7 @@ export const volume = [
   "Over $500,000",
 ];
 
-export const limitVolume = [
-  "Less than 20",
-  "20 - 100",
-  "100 - 500",
-  "Over 500",
-];
+export const limitVolume = ["Less than 20", "20 - 100", "100 - 500", "Over 500"];
 
 export const professions = [
   "Automotive Sales & Services",

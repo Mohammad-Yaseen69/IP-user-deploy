@@ -37,20 +37,11 @@ const ActionNeededView = ({ bannerMessage, requests = [], refetch }) => {
         <div className={styles.warningBanner}>
           <span className={styles.redDot}></span>
           <p className={styles.bannerText}>
-            {t(
-              "compliance.bannerClear",
-              "We keep compliance clear and reassuring.",
-            )}{" "}
+            {t("compliance.bannerClear", "We keep compliance clear and reassuring.")}{" "}
             <span className={styles.bannerHighlight}>
-              {t(
-                "compliance.bannerActionPrompt",
-                "Responding promptly keeps payments flowing",
-              )}
+              {t("compliance.bannerActionPrompt", "Responding promptly keeps payments flowing")}
             </span>{" "}
-            {t(
-              "compliance.bannerWarning",
-              "- failure to respond may restrict account activity.",
-            )}
+            {t("compliance.bannerWarning", "- failure to respond may restrict account activity.")}
           </p>
         </div>
       )}
@@ -58,8 +49,7 @@ const ActionNeededView = ({ bannerMessage, requests = [], refetch }) => {
       {actionNeededList.length > 0 && (
         <div className={styles.section}>
           <h3 className={styles.sectionHeading}>
-            {t("compliance.actionNeededSection", "Action needed")} -{" "}
-            {actionNeededList.length}{" "}
+            {t("compliance.actionNeededSection", "Action needed")} - {actionNeededList.length}{" "}
             {t("compliance.requestsCount", "requests")}
           </h3>
           <div className={styles.cardsGrid}>
@@ -90,20 +80,14 @@ const ActionNeededView = ({ bannerMessage, requests = [], refetch }) => {
                     >
                       {isQuestionOnly
                         ? t("compliance.answerQuestionBtn", "Answer question")
-                        : t(
-                            "compliance.uploadDocumentsBtn",
-                            "Upload documents",
-                          )}
+                        : t("compliance.uploadDocumentsBtn", "Upload documents")}
                     </button>
                     <button
                       type="button"
                       className={styles.secondaryBtn}
                       onClick={() => setMessageInquiry(item)}
                     >
-                      {t(
-                        "compliance.messageComplianceBtn",
-                        "Message compliance",
-                      )}
+                      {t("compliance.messageComplianceBtn", "Message compliance")}
                     </button>
                   </div>
                 </div>

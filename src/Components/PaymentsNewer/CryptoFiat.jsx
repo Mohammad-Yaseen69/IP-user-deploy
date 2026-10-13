@@ -122,9 +122,7 @@ const CryptoFiat = () => {
             sendPaymentType={true}
             right="-2%"
           />
-          <Card
-            style={{ width: "100%", marginBottom: 0, paddingBottom: "1rem" }}
-          >
+          <Card style={{ width: "100%", marginBottom: 0, paddingBottom: "1rem" }}>
             <CardBody
               style={{
                 display: "flex",
@@ -153,12 +151,9 @@ const CryptoFiat = () => {
                   }}
                 >
                   <h4 className="head_left_side">
-                    {subStep === 1 &&
-                      t("Choose the Cryptocurrency You Intend to Liquidate.")}
-                    {subStep === 2 &&
-                      t("Enter the Crypto Wallet Address of the Recipient.")}
-                    {subStep === 3 &&
-                      t("Enter the Crypto Wallet Address of the Recipient.")}
+                    {subStep === 1 && t("Choose the Cryptocurrency You Intend to Liquidate.")}
+                    {subStep === 2 && t("Enter the Crypto Wallet Address of the Recipient.")}
+                    {subStep === 3 && t("Enter the Crypto Wallet Address of the Recipient.")}
                     {/* {subStep === 5 && t("Authenticate Your Payment.")} */}
                     {/* {subStep === 3 && "Select the payout channel"}
                                             {subStep === 4 && "Enter the Crypto Wallet Address  of recipient."} */}
@@ -295,11 +290,7 @@ const CryptoFiat = () => {
                                         <CryptoWalletAdressNew setSubStep={setSubStep} cryptoCurrency={cryptoCurrency} walletAddress={walletAddress} />
                                     } */}
                 {subStep === 3 && (
-                  <CryptoSendWallet
-                    wallet={"23232"}
-                    setSubStep={setSubStep}
-                    setWallet={() => {}}
-                  />
+                  <CryptoSendWallet wallet={"23232"} setSubStep={setSubStep} setWallet={() => {}} />
                 )}
                 {subStep === 4 && (
                   <ConfirmCryptoFiat
@@ -310,9 +301,7 @@ const CryptoFiat = () => {
                     payoutChannel={payoutChannel}
                   />
                 )}
-                {subStep === 5 && (
-                  <OTPConfirmation setSubStep={setSubStep} type="crypto" />
-                )}
+                {subStep === 5 && <OTPConfirmation setSubStep={setSubStep} type="crypto" />}
                 {subStep === 6 && (
                   <CryptoFiatReceipt
                     amount={amount}

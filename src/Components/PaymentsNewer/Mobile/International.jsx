@@ -46,11 +46,7 @@ const International = ({
         </button>
         <h5>{t("International Transfer")}</h5>
         <div onClick={() => setShowRecent((prev) => !prev)}>
-          {showRecent ? (
-            <X />
-          ) : (
-            <img style={{ width: "20px" }} src={recent} alt="" />
-          )}
+          {showRecent ? <X /> : <img style={{ width: "20px" }} src={recent} alt="" />}
         </div>
       </div>
       {/* {

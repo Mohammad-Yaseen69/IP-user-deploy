@@ -268,9 +268,7 @@ const NotifTable = () => {
                 <th>{t("Activity")}</th>
                 <th>{t("Email")}</th>
                 <th>
-                  {window.innerWidth < 1000 && i18n.language === "en"
-                    ? "Insta"
-                    : t("Instagram")}
+                  {window.innerWidth < 1000 && i18n.language === "en" ? "Insta" : t("Instagram")}
                 </th>
                 <th>{t("SMS")}</th>
                 <th>{t("Telegram")}</th>
@@ -505,8 +503,7 @@ const NotifTable = () => {
                 ) : (
                   <Button
                     style={{
-                      background:
-                        "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                      background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                       border: "none",
                       outline: "none",
                       borderRadius: "10px",
@@ -521,8 +518,7 @@ const NotifTable = () => {
             ) : (
               <Button
                 style={{
-                  background:
-                    "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                  background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                   border: "none",
                   outline: "none",
                   borderRadius: "10px",

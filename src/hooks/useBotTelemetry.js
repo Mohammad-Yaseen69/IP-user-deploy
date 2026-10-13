@@ -42,9 +42,7 @@ export const useBotTelemetry = () => {
 
   const getTelemetrySignals = useCallback(() => {
     const now = Date.now();
-    const dwellMs = firstFocusTimeRef.current
-      ? Math.max(0, now - firstFocusTimeRef.current)
-      : 0;
+    const dwellMs = firstFocusTimeRef.current ? Math.max(0, now - firstFocusTimeRef.current) : 0;
 
     return {
       keys: keyCountRef.current,

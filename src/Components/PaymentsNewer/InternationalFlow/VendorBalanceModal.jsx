@@ -14,9 +14,7 @@ const VendorBalanceModal = ({ isOpen, toggle }) => {
           {"Please try again shortly."}
         </p>
         <p style={{ fontSize: "15px", fontWeight: 400, marginBottom: "0" }}>
-          {
-            "If the issue persists, our support team will be happy to assist you."
-          }
+          {"If the issue persists, our support team will be happy to assist you."}
         </p>
       </ModalBody>
     </Modal>

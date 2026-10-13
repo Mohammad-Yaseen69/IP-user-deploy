@@ -7,8 +7,7 @@ const GradientButton = ({ value, size, attr }) => {
         gradient: "true",
         size: size.toLowerCase(),
         style: {
-          background:
-            "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+          background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
           border: "none",
           outline: "none",
         },

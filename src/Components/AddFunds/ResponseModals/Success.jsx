@@ -16,16 +16,11 @@ const Success = ({
 
   const error_message = () => {
     return (
-      errors?.[code] ??
-      "We cannot process your request at the moment, please try again later."
+      errors?.[code] ?? "We cannot process your request at the moment, please try again later."
     );
   };
   return (
-    <Modal
-      toggle={() => navigate(link)}
-      style={{ margin: "0px auto" }}
-      isOpen={true}
-    >
+    <Modal toggle={() => navigate(link)} style={{ margin: "0px auto" }} isOpen={true}>
       <ModalBody
         style={{
           display: "flex",
@@ -45,9 +40,7 @@ const Success = ({
             fontSize: "1.25rem",
           }}
         >
-          {type === "success"
-            ? "Transaction Successful!"
-            : "Transaction Pending"}
+          {type === "success" ? "Transaction Successful!" : "Transaction Pending"}
         </h4>
         <p
           style={{

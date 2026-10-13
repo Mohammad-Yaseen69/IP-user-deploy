@@ -10,9 +10,7 @@ const Notifications = () => {
     <Card id="notifications">
       <CardHeader className={`pb-0 expanded`}>
         <div>
-          <H4 attrH4={{ className: "card-title mb-0" }}>
-            {t("Notifications")}
-          </H4>
+          <H4 attrH4={{ className: "card-title mb-0" }}>{t("Notifications")}</H4>
           <p style={{ marginTop: ".5rem", color: "black", fontWeight: "300" }}>
             {t(
               "Choose how you receive notifications. These notification settings apply to the things you’re watching.",

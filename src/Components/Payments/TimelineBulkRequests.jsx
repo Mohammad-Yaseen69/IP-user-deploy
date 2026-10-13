@@ -3,12 +3,7 @@ import { Table } from "reactstrap";
 import TBRItem from "./TBRItem";
 import { useTranslation } from "react-i18next";
 
-const TimelineBulkRequests = ({
-  mobileView,
-  setStepNumber,
-  beneficiaries,
-  srr,
-}) => {
+const TimelineBulkRequests = ({ mobileView, setStepNumber, beneficiaries, srr }) => {
   const [completed, setCompleted] = useState(false);
   const [data, setData] = useState(beneficiaries);
   const [editRowIndex, setEditRowIndex] = useState(-1);

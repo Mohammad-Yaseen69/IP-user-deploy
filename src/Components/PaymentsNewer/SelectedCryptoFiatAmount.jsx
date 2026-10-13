@@ -3,9 +3,7 @@ import { useTranslation } from "react-i18next";
 const SelectedCryptoFiatAmount = ({ amount, setSubStep, cryptoCurrency }) => {
   const { t } = useTranslation();
   return (
-    <div
-      style={{ background: "rgba(89, 38, 240, 0.08)", borderRadius: "16px" }}
-    >
+    <div style={{ background: "rgba(89, 38, 240, 0.08)", borderRadius: "16px" }}>
       <div className="i_t_selected">
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <span
@@ -57,8 +55,7 @@ const SelectedCryptoFiatAmount = ({ amount, setSubStep, cryptoCurrency }) => {
       >
         <h4 style={{ marginBottom: "0", fontSize: "1.4rem", fontWeight: 600 }}>
           {(
-            +amount.split(",").join("") /
-            +cryptoCurrency.price.split(" ")[0].split(",").join("")
+            +amount.split(",").join("") / +cryptoCurrency.price.split(" ")[0].split(",").join("")
           ).toFixed(5)}
         </h4>
         <div

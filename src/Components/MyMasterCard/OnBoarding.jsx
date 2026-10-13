@@ -228,11 +228,7 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
                   <button
                     onClick={() =>
                       setStep((prev) =>
-                        prev !== 1
-                          ? --prev
-                          : alreadyHaveCard
-                            ? setCardPurchased(true)
-                            : 1,
+                        prev !== 1 ? --prev : alreadyHaveCard ? setCardPurchased(true) : 1,
                       )
                     }
                   >

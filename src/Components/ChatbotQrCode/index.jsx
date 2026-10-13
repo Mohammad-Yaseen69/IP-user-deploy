@@ -18,10 +18,7 @@ const ChatbotQrCode = () => {
   useLayoutEffect(() => {
     if (token && !wallet_id) {
       try {
-        const decodedToken = jwtDecode(
-          token,
-          "instachat_bot_secret_key_insta_pay",
-        );
+        const decodedToken = jwtDecode(token, "instachat_bot_secret_key_insta_pay");
         console.log(decodedToken);
         setWalletId(decodedToken?.wallet_id);
       } catch (error) {

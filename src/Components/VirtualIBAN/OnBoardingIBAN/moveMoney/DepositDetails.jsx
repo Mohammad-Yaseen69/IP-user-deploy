@@ -5,10 +5,7 @@ import styles from "../style/DepositDetails.module.css";
 import IbanBreadcrumb from "../../components/IbanBreadcrumb";
 import { UserContext } from "../../../../Context/UserContext";
 import { useVirtualIbans } from "../../../../hooks/useVirtualIban";
-import {
-  INTL_DEPOSIT_ACCOUNTS,
-  getPaymentReference,
-} from "../../utils/virtualIban";
+import { INTL_DEPOSIT_ACCOUNTS, getPaymentReference } from "../../utils/virtualIban";
 
 const CARD_META = {
   eur: {
@@ -77,15 +74,10 @@ const DepositDetails = () => {
   return (
     <div className={styles.container}>
       <IbanBreadcrumb
-        items={[
-          { label: "My virtual bank", path: "/virtual-IBAN" },
-          { label: "Deposit" },
-        ]}
+        items={[{ label: "My virtual bank", path: "/virtual-IBAN" }, { label: "Deposit" }]}
       />
 
-      <span className={styles.tagHeader}>
-        {t("Receiving money from outside SEPA")}
-      </span>
+      <span className={styles.tagHeader}>{t("Receiving money from outside SEPA")}</span>
       <h1 className={styles.mainHeading}>
         {t("Share the right bank details for your incoming payment")}
       </h1>
@@ -127,10 +119,7 @@ const DepositDetails = () => {
                     <h5>{t(row.label)}</h5>
                     <p>{row.value}</p>
                   </div>
-                  <button
-                    className={styles.copyBtn}
-                    onClick={() => handleCopy(row.value)}
-                  >
+                  <button className={styles.copyBtn} onClick={() => handleCopy(row.value)}>
                     <Copy size={16} />
                   </button>
                 </div>
@@ -143,10 +132,7 @@ const DepositDetails = () => {
               </div>
               <div className={styles.remittanceValueRow}>
                 <span className={styles.remittanceCode}>{reference}</span>
-                <button
-                  className={styles.copyBtn}
-                  onClick={() => handleCopy(reference)}
-                >
+                <button className={styles.copyBtn} onClick={() => handleCopy(reference)}>
                   <Copy size={16} />
                 </button>
               </div>
@@ -160,9 +146,7 @@ const DepositDetails = () => {
               role="button"
               tabIndex={0}
               onClick={() => handleCopy(allDetails)}
-              onKeyDown={(event) =>
-                event.key === "Enter" && handleCopy(allDetails)
-              }
+              onKeyDown={(event) => event.key === "Enter" && handleCopy(allDetails)}
             >
               <Copy size={20} /> {t("Copy all details")}
             </div>

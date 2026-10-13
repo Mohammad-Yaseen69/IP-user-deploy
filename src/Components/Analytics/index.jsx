@@ -18,9 +18,7 @@ const Analytics = () => {
       ) : (
         <div className={styles.mobile}>
           <div className={styles.top}>
-            <h4 style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-              {t("Analytics")}
-            </h4>
+            <h4 style={{ display: "flex", gap: "1rem", alignItems: "center" }}>{t("Analytics")}</h4>
           </div>
           <div className={styles.bottom}>
             <Reports />

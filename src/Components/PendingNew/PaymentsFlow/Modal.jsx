@@ -42,8 +42,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
     +String(data?.amount)?.replaceAll(",", ""),
     data?.payment_type?.value,
   );
-  const { userDetails, authHeader, setProfileLockTime, verifyToken } =
-    useContext(UserContext);
+  const { userDetails, authHeader, setProfileLockTime, verifyToken } = useContext(UserContext);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { getKey, reset } = useIdempotency();
@@ -58,9 +57,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
         }
       case 2:
         if (data.payment_type?.value === "card") {
-          const [contentMonth, contentYear] = data.expiry
-            .split("/")
-            .map(Number);
+          const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
           const currentDate = new Date();
           const currentMonth = currentDate.getMonth() + 1;
           const currentYear = currentDate.getFullYear() % 100;
@@ -122,14 +119,11 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
           request_id: item.reference_id,
           account_id: userDetails._id,
           sender_wallet_id:
-            data.payment_type?.value !== "wallet"
-              ? data.currency_wallet?._id
-              : data.wallet?._id,
+            data.payment_type?.value !== "wallet" ? data.currency_wallet?._id : data.wallet?._id,
           purpose: "xyz",
           payment_type: "payment_request",
           token:
-            data.payment_type?.value === "paypal" ||
-            data?.payment_type?.value === "mobile_wallet"
+            data.payment_type?.value === "paypal" || data?.payment_type?.value === "mobile_wallet"
               ? data.exchange_rate?.token
               : "",
         },
@@ -155,8 +149,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
     } catch (error) {
       const err = decryptData(error?.response?.data?.data);
       toast.error(
-        err.message ??
-          "We cannot process your request at the moment, please try again later.",
+        err.message ?? "We cannot process your request at the moment, please try again later.",
       );
     } finally {
       dataHandler("loading", false);
@@ -229,23 +222,16 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
           dataHandler("otp_error", t(error2));
         } else if (error) {
           dataHandler("otp_error", error);
-        } else if (
-          decrypted.message?.toLowerCase()?.includes("account is locked")
-        ) {
-          const time =
-            decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
-          const timeInSec =
-            +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
+        } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+          const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+          const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
           setProfileLockTime(timeInSec);
           const coun = localStorage.getItem("ip_country");
           localStorage.clear();
           localStorage.setItem("ip_country", coun);
           navigate("/login");
         } else {
-          dataHandler(
-            "otp_error",
-            decrypted?.message ?? "You have entered wrong OTP.",
-          );
+          dataHandler("otp_error", decrypted?.message ?? "You have entered wrong OTP.");
         }
       }
     } finally {
@@ -276,17 +262,11 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
       const decrypted = decryptData(err.response.data.data);
       console.log(decrypted);
       const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message);
-      dataHandler(
-        "otpError",
-        decrypted?.message ?? "You have entered wrong OTP.",
-      );
+      dataHandler("otpError", decrypted?.message ?? "You have entered wrong OTP.");
       if (error) {
         dataHandler("otpError", error);
-      } else if (
-        decrypted.message?.toLowerCase()?.includes("account is locked")
-      ) {
-        const time =
-          decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+      } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+        const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
         const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
         setProfileLockTime(timeInSec);
         const coun = localStorage.getItem("ip_country");
@@ -312,13 +292,9 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
           ? "/api/collection/wallet-to-wallet"
           : "/api/wallet/accept-payment-request";
 
-      const res = await axios.post(
-        `${import.meta.env.VITE_IP_DEV_API}${url}`,
-        formdata,
-        {
-          headers: { ...authHeader, "idempotency-key": getKey() },
-        },
-      );
+      const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}${url}`, formdata, {
+        headers: { ...authHeader, "idempotency-key": getKey() },
+      });
 
       const dec = decryptData(res.data.data);
       dataHandler("transaction_details", dec);
@@ -339,11 +315,8 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
         dataHandler("otp_error", error);
       } else if (error2) {
         dataHandler("otp_error", error2);
-      } else if (
-        decrypted.message?.toLowerCase()?.includes("account is locked")
-      ) {
-        const time =
-          decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+      } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+        const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
         const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
         setProfileLockTime(timeInSec);
         const coun = localStorage.getItem("ip_country");
@@ -351,10 +324,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
         localStorage.setItem("ip_country", coun);
         navigate("/login");
       } else {
-        dataHandler(
-          "otp_error",
-          decrypted?.message ?? "You have entered wrong OTP.",
-        );
+        dataHandler("otp_error", decrypted?.message ?? "You have entered wrong OTP.");
       }
     } finally {
       dataHandler("loading", false);
@@ -420,8 +390,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
           }}
         />
       )}
-      {data.cardTransactionDetails?.intlToken ||
-      data.cardTransactionDetails?.w2w_data ? (
+      {data.cardTransactionDetails?.intlToken || data.cardTransactionDetails?.w2w_data ? (
         <TrustpaymentPage
           amount={""}
           card_cvc={data.cvc}
@@ -485,9 +454,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                   <h2>{t(headings[data.step - 1])}</h2>
 
                   {((data.step === 1 && data.wallet?._id) ||
-                    (data.step === 2 && data.payment_type?.value === "card"
-                      ? true
-                      : false)) &&
+                    (data.step === 2 && data.payment_type?.value === "card" ? true : false)) &&
                   data.loading ? (
                     <div
                       style={{
@@ -498,16 +465,11 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                     >
                       <InstaPayLoader />
                     </div>
-                  ) : (
-                      data.payment_type?.value === "wallet"
-                        ? data.wallet?._id
-                        : true
-                    ) ? (
+                  ) : (data.payment_type?.value === "wallet" ? data.wallet?._id : true) ? (
                     <>
                       <FeesComponent data={data} plaidValues />
                       {data.payment_type?.value === "paypal" &&
-                      !data?.exchange_rate?.paypal
-                        ?.paypal_currency_supported ? (
+                      !data?.exchange_rate?.paypal?.paypal_currency_supported ? (
                         <>
                           <div
                             style={{
@@ -532,11 +494,8 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                 letterSpacing: "-0.28px",
                               }}
                             >
-                              <strong>
-                                {data?.exchange_rate?.paypal?.fee?.currency}
-                              </strong>{" "}
-                              {t("is not supported by Paypal,")}{" "}
-                              <strong>{t("USD")}</strong>{" "}
+                              <strong>{data?.exchange_rate?.paypal?.fee?.currency}</strong>{" "}
+                              {t("is not supported by Paypal,")} <strong>{t("USD")}</strong>{" "}
                               {t("will be used as the default currency.")}
                             </span>
                           </div>
@@ -548,8 +507,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                               padding: ".8rem",
                               background: "#fff",
                               borderRadius: "6px",
-                              boxShadow:
-                                "0px 1.5px 10.8px 0px rgba(0, 0, 0, 0.11)",
+                              boxShadow: "0px 1.5px 10.8px 0px rgba(0, 0, 0, 0.11)",
                             }}
                           >
                             <div
@@ -583,11 +541,9 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                   letterSpacing: "-0.14px",
                                 }}
                               >
-                                1.00{" "}
-                                {data?.exchange_rate?.paypal?.fee?.currency} ={" "}
+                                1.00 {data?.exchange_rate?.paypal?.fee?.currency} ={" "}
                                 {Number(
-                                  data?.exchange_rate?.paypal?.paypal_rate
-                                    ?.value,
+                                  data?.exchange_rate?.paypal?.paypal_rate?.value,
                                 )?.toLocaleString("en-US", {
                                   minimumFractionDigits: 2,
                                   maximumFractionDigits: 4,
@@ -628,8 +584,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                 }}
                               >
                                 {Number(
-                                  data?.exchange_rate?.paypal?.paypal_converted
-                                    ?.value,
+                                  data?.exchange_rate?.paypal?.paypal_converted?.value,
                                 )?.toLocaleString("en-US", {
                                   minimumFractionDigits: 2,
                                   maximumFractionDigits: 2,
@@ -755,11 +710,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                           {t("Back")}
                         </button>
                         <button
-                          disabled={
-                            disabledButton ||
-                            data.loading ||
-                            data.exchange_rate_error
-                          }
+                          disabled={disabledButton || data.loading || data.exchange_rate_error}
                           onClick={handleClick}
                         >
                           {
@@ -789,11 +740,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
               ""
             )}
             {data.step === 1 && data.payment_type?.sub_name ? (
-              <MobileWalletServices
-                loading={data.loading}
-                data={data}
-                dataHandler={dataHandler}
-              />
+              <MobileWalletServices loading={data.loading} data={data} dataHandler={dataHandler} />
             ) : (
               ""
             )}
@@ -832,13 +779,9 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
               </div>
             </div>
             <div className={paym_styles.flow}>
-              <div
-                className={paym_styles.flow_com}
-                style={{ minHeight: "50vh" }}
-              >
+              <div className={paym_styles.flow_com} style={{ minHeight: "50vh" }}>
                 {data.step === 1 &&
-                (data.payment_type?.value === "wallet" ||
-                  data.payment_type?.sub_name) ? (
+                (data.payment_type?.value === "wallet" || data.payment_type?.sub_name) ? (
                   data.payment_type?.value === "wallet" ? (
                     <WalletsComponent data={data} dataHandler={dataHandler} />
                   ) : data.payment_type?.sub_name ? (
@@ -853,11 +796,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                 ) : (
                   <>
                     {data.step === 1 && (
-                      <StepFour
-                        data={data}
-                        dataHandler={dataHandler}
-                        loading={data.loading}
-                      />
+                      <StepFour data={data} dataHandler={dataHandler} loading={data.loading} />
                     )}
                     {data.step === 2 && data.show_cards ? (
                       <CreditCard
@@ -957,11 +896,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                       <ChevronLeft />
                     </button>
                     <button
-                      disabled={
-                        disabledButton ||
-                        data.loading ||
-                        data.exchange_rate_error
-                      }
+                      disabled={disabledButton || data.loading || data.exchange_rate_error}
                       className={paym_styles.full}
                       onClick={handleClick}
                     >

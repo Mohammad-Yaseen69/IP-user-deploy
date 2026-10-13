@@ -8,14 +8,7 @@ import { takeScreenshot } from "../../Helper/takeScreenshot";
 import download from "../Profile/files/download.svg";
 import { useState } from "react";
 
-const SendQuoteReceipt = ({
-  beneficiary,
-  amount,
-  currency,
-  title,
-  description,
-  files,
-}) => {
+const SendQuoteReceipt = ({ beneficiary, amount, currency, title, description, files }) => {
   const { t } = useTranslation();
   const [downloading, setDownloading] = useState(false);
   // console.log(beneficiary)
@@ -39,8 +32,7 @@ const SendQuoteReceipt = ({
           padding: "0",
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
       >
         <div
@@ -48,9 +40,7 @@ const SendQuoteReceipt = ({
           className="conf_cont transaction-receipt"
         >
           <div style={{ textAlign: "center" }}>
-            <span style={{ color: "#8a8a8a", fontSize: "1.1rem" }}>
-              {t("You are Quoting")}
-            </span>
+            <span style={{ color: "#8a8a8a", fontSize: "1.1rem" }}>{t("You are Quoting")}</span>
             <h4 style={{ fontSize: "2rem" }}>
               {currency}{" "}
               {Number(amount)?.toLocaleString("en-US", {
@@ -89,13 +79,9 @@ const SendQuoteReceipt = ({
                     alignItems: "center",
                   }}
                 >
-                  {beneficiary[0]?.profileImage?.url ||
-                  beneficiary[0]?.profileImage ? (
+                  {beneficiary[0]?.profileImage?.url || beneficiary[0]?.profileImage ? (
                     <img
-                      src={
-                        beneficiary[0]?.profileImage?.url ??
-                        beneficiary[0]?.profileImage
-                      }
+                      src={beneficiary[0]?.profileImage?.url ?? beneficiary[0]?.profileImage}
                       style={{
                         width: "45px",
                         height: "45px",
@@ -176,8 +162,7 @@ const SendQuoteReceipt = ({
                       src={
                         countries.filter(
                           (it) =>
-                            it.name.toLowerCase() ===
-                            beneficiary[0]?.country_name?.toLowerCase(),
+                            it.name.toLowerCase() === beneficiary[0]?.country_name?.toLowerCase(),
                         )[0]?.file_url
                       }
                       alt="flag"
@@ -194,8 +179,7 @@ const SendQuoteReceipt = ({
                       {
                         countries.filter(
                           (it) =>
-                            it.name.toLowerCase() ===
-                            beneficiary[0]?.country_name?.toLowerCase(),
+                            it.name.toLowerCase() === beneficiary[0]?.country_name?.toLowerCase(),
                         )[0]?.name
                       }
                     </span>
@@ -222,12 +206,8 @@ const SendQuoteReceipt = ({
                 {t(`Title`)}
               </span>
             </div>
-            <div
-              style={{ display: "flex", alignItems: "center", gap: ".6rem" }}
-            >
-              <span style={{ fontWeight: 700, fontSize: "1.4rem" }}>
-                {title}
-              </span>
+            <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
+              <span style={{ fontWeight: 700, fontSize: "1.4rem" }}>{title}</span>
             </div>
           </div>
           {/* desciption */}
@@ -249,12 +229,8 @@ const SendQuoteReceipt = ({
                 {t(`Description`)}
               </span>
             </div>
-            <div
-              style={{ display: "flex", alignItems: "center", gap: ".6rem" }}
-            >
-              <span style={{ fontWeight: 700, fontSize: "1.4rem" }}>
-                {description}
-              </span>
+            <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
+              <span style={{ fontWeight: 700, fontSize: "1.4rem" }}>{description}</span>
             </div>
           </div>
           {/* files */}
@@ -326,9 +302,7 @@ const SendQuoteReceipt = ({
                           <FaRegFileVideo size={30} color="white" />
                         </div>
                       )}
-                      {file?.type
-                        ?.toLowerCase()
-                        ?.includes("application/pdf") && (
+                      {file?.type?.toLowerCase()?.includes("application/pdf") && (
                         <div
                           style={{
                             background:
@@ -374,14 +348,8 @@ const SendQuoteReceipt = ({
               cursor: "pointer",
             }}
           >
-            <img
-              src={w}
-              alt="w"
-              style={{ height: "25px", width: "25px", objectFit: "contain" }}
-            />
-            <span style={{ fontWeight: "600", color: "black" }}>
-              {t("Where Is My Payment?")}
-            </span>
+            <img src={w} alt="w" style={{ height: "25px", width: "25px", objectFit: "contain" }} />
+            <span style={{ fontWeight: "600", color: "black" }}>{t("Where Is My Payment?")}</span>
           </Link>
           {downloading ? (
             <div className="d-flex justify-content-center">

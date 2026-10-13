@@ -1,12 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import {
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-} from "reactstrap";
+import { Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import GradientButton from "./GradientButton";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
@@ -82,9 +75,7 @@ const UploadAdditional = ({ isOpen, toggle, files, user_id }) => {
                 <Input
                   type="file"
                   name={item?._id}
-                  onChange={(e) =>
-                    handleFileChange(item?._id, e.target.files[0])
-                  }
+                  onChange={(e) => handleFileChange(item?._id, e.target.files[0])}
                 />
               </div>
             );
@@ -101,12 +92,8 @@ const UploadAdditional = ({ isOpen, toggle, files, user_id }) => {
                   gap: ".5rem",
                 }}
               >
-                {item?.status === "approved" && (
-                  <Check size={15} color="green" />
-                )}
-                {item?.status === "needs-review" && (
-                  <Clock size={15} color="orange" />
-                )}
+                {item?.status === "approved" && <Check size={15} color="green" />}
+                {item?.status === "needs-review" && <Clock size={15} color="orange" />}
                 {item?.status === "declined" && <X size={15} color="red" />}
                 {item?.document_type}({item?.status})
               </div>

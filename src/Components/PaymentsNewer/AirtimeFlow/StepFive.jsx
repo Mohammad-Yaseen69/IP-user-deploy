@@ -50,9 +50,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
             <div className={styles.amount}>
               <span>{t("Amount")}</span>
               <h4>
-                {Number(
-                  data.package_details?.data?.sending?.value,
-                )?.toLocaleString("en-US", {
+                {Number(data.package_details?.data?.sending?.value)?.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}{" "}
@@ -86,9 +84,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
             )}
 
             {data.loading ? (
-              <div
-                style={{ height: "200px", width: "200px", margin: "1rem auto" }}
-              >
+              <div style={{ height: "200px", width: "200px", margin: "1rem auto" }}>
                 <InstaPayLoader />
               </div>
             ) : (
@@ -96,9 +92,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
                 <div>
                   <span>{t("Sending")}</span>
                   <span>
-                    {Number(
-                      data.package_details?.data?.sending?.value,
-                    )?.toLocaleString("en-US", {
+                    {Number(data.package_details?.data?.sending?.value)?.toLocaleString("en-US", {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}{" "}
@@ -108,9 +102,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
                 <div>
                   <span>{t("Transfer Fees")}</span>
                   <span>
-                    {Number(
-                      data.package_details?.data?.fee?.value,
-                    )?.toLocaleString("en-US", {
+                    {Number(data.package_details?.data?.fee?.value)?.toLocaleString("en-US", {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}{" "}
@@ -124,9 +116,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
                 <div className={styles.total}>
                   <span>{t("Total to pay")}</span>
                   <span>
-                    {Number(
-                      data.package_details?.data?.total?.value,
-                    )?.toLocaleString("en-US", {
+                    {Number(data.package_details?.data?.total?.value)?.toLocaleString("en-US", {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}{" "}
@@ -162,9 +152,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
                       letterSpacing: "-0.28px",
                     }}
                   >
-                    <strong>
-                      {data?.package_details?.data?.paypal?.fee?.currency}
-                    </strong>
+                    <strong>{data?.package_details?.data?.paypal?.fee?.currency}</strong>
                     {t("is not supported by Paypal,")}
                     <strong>{t("USD")}</strong>
                     {t("will be used as the default currency.")}
@@ -212,8 +200,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
                         letterSpacing: "-0.14px",
                       }}
                     >
-                      1.00 {data?.package_details?.data?.paypal?.fee?.currency}{" "}
-                      ={" "}
+                      1.00 {data?.package_details?.data?.paypal?.fee?.currency} ={" "}
                       {Number(
                         data?.package_details?.data?.paypal?.paypal_rate?.value,
                       )?.toLocaleString("en-US", {
@@ -256,8 +243,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
                       }}
                     >
                       {Number(
-                        data?.package_details?.data?.paypal?.paypal_converted
-                          ?.value,
+                        data?.package_details?.data?.paypal?.paypal_converted?.value,
                       )?.toLocaleString("en-US", {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,

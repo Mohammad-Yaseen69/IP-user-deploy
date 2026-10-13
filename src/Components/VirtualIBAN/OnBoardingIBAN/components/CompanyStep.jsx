@@ -1,13 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import {
-  Briefcase,
-  ChevronUp,
-  Globe,
-  Hash,
-  MapPin,
-  Plus,
-  Search,
-} from "react-feather";
+import { Briefcase, ChevronUp, Globe, Hash, MapPin, Plus, Search } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../../../Context/UserContext";
 import Magicsvg from "../magicsvg";
@@ -16,9 +8,7 @@ import SidebarProgress from "./SidebarProgress";
 import { BsDot } from "react-icons/bs";
 import AiIcon from "../../../../assets/icons/ai-icon.svg";
 import StepProgress from "./StepProgress";
-import useStepValidation, {
-  required,
-} from "../../../../hooks/useStepValidation";
+import useStepValidation, { required } from "../../../../hooks/useStepValidation";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
@@ -70,34 +60,19 @@ const COMPANY_RULES = {
   dateOfIncorporation: required.list("dateOfIncorporation"),
 };
 
-const CompanyStep = ({
-  onNext,
-  onBack,
-  onChange,
-  userType,
-  data = {},
-  currentStep,
-}) => {
+const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentStep }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
 
   const agentDefault =
-    userDetails?.parentIdAgent?.username ||
-    userDetails?.parentIdAgent?.agentCode ||
-    "";
+    userDetails?.parentIdAgent?.username || userDetails?.parentIdAgent?.agentCode || "";
 
-  const initialDate =
-    userDetails?.company?.date_of_incorporation ||
-    data.dateOfIncorporation ||
-    "";
+  const initialDate = userDetails?.company?.date_of_incorporation || data.dateOfIncorporation || "";
 
   const [form, setForm] = useState({
     legalName: userDetails?.company_name || "",
     tradingName: data.tradingName || "",
-    registrationNumber:
-      userDetails?.company?.registration_number ||
-      data.registrationNumber ||
-      "",
+    registrationNumber: userDetails?.company?.registration_number || data.registrationNumber || "",
     legalStructure: data.legalStructure || "",
     countryOfIncorporation: userDetails?.country_name || "",
     registeredAddress: userDetails?.address || "",
@@ -117,10 +92,7 @@ const CompanyStep = ({
   }, []);
 
   useEffect(() => {
-    const rawDate =
-      userDetails?.company?.date_of_incorporation ||
-      data.dateOfIncorporation ||
-      "";
+    const rawDate = userDetails?.company?.date_of_incorporation || data.dateOfIncorporation || "";
     if (rawDate && !form?.dateOfIncorporation) {
       const formatted = formatDateForInput(rawDate);
       if (formatted) {
@@ -281,9 +253,7 @@ const CompanyStep = ({
           <div className={styles.onboardingForm2} style={{ width: "100%" }}>
             <div className={styles.formRow}>
               <div className={styles.inputGroup}>
-                <label className={styles.inputLabel}>
-                  {t("COUNTRY OF INCORPORATION")}
-                </label>
+                <label className={styles.inputLabel}>{t("COUNTRY OF INCORPORATION")}</label>
 
                 <div className={styles.inputWrapper}>
                   <MapPin className={styles.inputIcon} size={16} />
@@ -302,9 +272,7 @@ const CompanyStep = ({
               </div>
 
               <div className={styles.inputGroup}>
-                <label className={styles.inputLabel}>
-                  {t("REGISTRATION NUMBER")}
-                </label>
+                <label className={styles.inputLabel}>{t("REGISTRATION NUMBER")}</label>
 
                 <div className={styles.inputWrapper}>
                   <Hash className={styles.inputIcon} size={16} />
@@ -318,20 +286,14 @@ const CompanyStep = ({
                     placeholder="CHE-105.837.234"
                     pattern="^[a-zA-Z0-9\u00C0-\u024F\s-]+$"
                     title="Only letters, numbers, spaces, and dashes are allowed."
-                    disabled={Boolean(
-                      userDetails?.company?.registration_number,
-                    )}
-                    readOnly={Boolean(
-                      userDetails?.company?.registration_number,
-                    )}
+                    disabled={Boolean(userDetails?.company?.registration_number)}
+                    readOnly={Boolean(userDetails?.company?.registration_number)}
                   />
                 </div>
               </div>
 
               <div className={styles.inputGroup}>
-                <label className={styles.inputLabel}>
-                  {t("LEGAL COMPANY NAME")}
-                </label>
+                <label className={styles.inputLabel}>{t("LEGAL COMPANY NAME")}</label>
 
                 <div className={styles.inputWrapper}>
                   <Briefcase className={styles.inputIcon} size={16} />
@@ -382,9 +344,7 @@ const CompanyStep = ({
               </div>
 
               <div className={`${styles.inputGroup} ${styles.dateIncoField1}`}>
-                <label className={styles.inputLabel}>
-                  {t("DATE OF INCORPORATION")}
-                </label>
+                <label className={styles.inputLabel}>{t("DATE OF INCORPORATION")}</label>
                 <DateField />
               </div>
 
@@ -404,16 +364,12 @@ const CompanyStep = ({
                 </div>
 
                 <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>
-                    {t("Incorporated")}
-                  </label>
+                  <label className={styles.inputLabel}>{t("Incorporated")}</label>
                   <DateField isMobile={true} />
                 </div>
               </div>
               <div className={styles.inputGroup}>
-                <label className={styles.inputLabel}>
-                  {t("TAX / VAT NUMBER")}
-                </label>
+                <label className={styles.inputLabel}>{t("TAX / VAT NUMBER")}</label>
 
                 <input
                   style={{ padding: "14.5px 14px 14.5px 12.5px" }}
@@ -449,9 +405,7 @@ const CompanyStep = ({
             </div>
 
             <div className={styles.inputGroup}>
-              <label className={styles.inputLabel}>
-                {t("REGISTERED ADDRESS")}
-              </label>
+              <label className={styles.inputLabel}>{t("REGISTERED ADDRESS")}</label>
 
               <div className={styles.inputWrapper}>
                 <MapPin className={styles.inputIcon} size={16} />
@@ -470,9 +424,7 @@ const CompanyStep = ({
 
             <div className={styles.formRow}>
               <div className={styles.inputGroup}>
-                <label className={styles.inputLabel}>
-                  {t("MAIN CONTACT PERSON")}
-                </label>
+                <label className={styles.inputLabel}>{t("MAIN CONTACT PERSON")}</label>
 
                 <input
                   style={{ padding: "14.5px 14px 14.5px 12.5px" }}
@@ -483,9 +435,7 @@ const CompanyStep = ({
               </div>
 
               <div className={styles.inputGroup}>
-                <label className={styles.inputLabel}>
-                  {t("AGENT / INTRODUCER (IF ANY)")}
-                </label>
+                <label className={styles.inputLabel}>{t("AGENT / INTRODUCER (IF ANY)")}</label>
 
                 <input
                   className={styles.textInput}
@@ -507,10 +457,7 @@ const CompanyStep = ({
           />
         </div>
       </div>
-      <div
-        className={styles.navigationFooter}
-        style={{ justifyContent: "flex-end" }}
-      >
+      <div className={styles.navigationFooter} style={{ justifyContent: "flex-end" }}>
         <button
           onClick={handleContinue}
           className={styles.continueButton}

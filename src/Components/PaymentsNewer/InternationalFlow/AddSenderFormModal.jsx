@@ -46,11 +46,7 @@ const isAtLeastYears = (value, years) => {
 
   const today = new Date();
 
-  const cutoff = new Date(
-    today.getFullYear() - years,
-    today.getMonth(),
-    today.getDate(),
-  );
+  const cutoff = new Date(today.getFullYear() - years, today.getMonth(), today.getDate());
 
   return dob <= cutoff;
 };
@@ -130,18 +126,13 @@ const individualSenderSchema = z.object({
           const issue = new Date(extras.dateOfIssue);
           if (Number.isNaN(issue.getTime())) return false;
           // expiry must be strictly after issue date
-          const minExpiry = new Date(
-            issue.getFullYear(),
-            issue.getMonth(),
-            issue.getDate() + 1,
-          );
+          const minExpiry = new Date(issue.getFullYear(), issue.getMonth(), issue.getDate() + 1);
           if (expiry < minExpiry) return false;
         }
         return true;
       },
       {
-        message:
-          "Date of expiry must be after issue date and cannot be in the past",
+        message: "Date of expiry must be after issue date and cannot be in the past",
       },
     ),
   ...senderFileFieldsSchema,
@@ -202,18 +193,13 @@ const businessSenderSchema = z.object({
           if (extras.dateOfIssue) {
             const issue = new Date(extras.dateOfIssue);
             if (Number.isNaN(issue.getTime())) return false;
-            const minExpiry = new Date(
-              issue.getFullYear(),
-              issue.getMonth(),
-              issue.getDate() + 1,
-            );
+            const minExpiry = new Date(issue.getFullYear(), issue.getMonth(), issue.getDate() + 1);
             if (expiry < minExpiry) return false;
           }
           return true;
         },
         {
-          message:
-            "Date of expiry must be after issue date and cannot be in the past",
+          message: "Date of expiry must be after issue date and cannot be in the past",
         },
       ),
   }),
@@ -282,10 +268,7 @@ const AddSenderFormModal = ({
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
   const [phoneError, setPhoneError] = useState("");
-  const schema =
-    senderAccountType === "business"
-      ? businessSenderSchema
-      : individualSenderSchema;
+  const schema = senderAccountType === "business" ? businessSenderSchema : individualSenderSchema;
   const [, forceUpdate] = useState({});
 
   console.log(editSender, "edit sender");
@@ -401,17 +384,11 @@ const AddSenderFormModal = ({
       country_name: values.country_name || data?.country?.name || "",
       country_iso_code: values.country_iso_code || data?.country?.alpha3 || "",
       user_nationaility:
-        values.user_nationaility ||
-        values.country_iso_code ||
-        data?.country?.alpha3 ||
-        "",
+        values.user_nationaility || values.country_iso_code || data?.country?.alpha3 || "",
       occupation: values.occupation || "",
       source_of_funds: values.source_of_funds || "",
       country_of_birth_iso_code:
-        values.country_of_birth_iso_code ||
-        values.country_iso_code ||
-        data?.country?.alpha3 ||
-        "",
+        values.country_of_birth_iso_code || values.country_iso_code || data?.country?.alpha3 || "",
       beneficiary_relationship: values.beneficiary_relationship || "",
       province_state: values.province_state || "",
       state_name: values.state_name || values.province_state || "",
@@ -428,19 +405,13 @@ const AddSenderFormModal = ({
         dateOfIssue: extras.dateOfIssue || "",
         dateOfExpiry: extras.dateOfExpiry || "",
         idCountryIsoCode:
-          extras.idCountryIsoCode ||
-          values.country_iso_code ||
-          data?.country?.alpha3 ||
-          "",
+          extras.idCountryIsoCode || values.country_iso_code || data?.country?.alpha3 || "",
       },
       representative: {
         first_name: representative.first_name || "",
         last_name: representative.last_name || "",
         nationality:
-          representative.nationality ||
-          values.country_iso_code ||
-          data?.country?.alpha3 ||
-          "",
+          representative.nationality || values.country_iso_code || data?.country?.alpha3 || "",
         address: representative.address || "",
         postal_code: representative.postal_code || "",
         dob: representative.dob || "",
@@ -502,17 +473,10 @@ const AddSenderFormModal = ({
     ) : null;
   };
 
-  const renderField = (
-    name,
-    label,
-    type = "text",
-    options = null,
-    required = false,
-  ) => (
+  const renderField = (name, label, type = "text", options = null, required = false) => (
     <label style={fieldStyle}>
       <span style={{ color: "#454545", fontSize: "12px", fontWeight: 700 }}>
-        {t(label)}{" "}
-        {required ? <span style={{ color: "#E64067" }}>*</span> : null}
+        {t(label)} {required ? <span style={{ color: "#E64067" }}>*</span> : null}
       </span>
       {options ? (
         <select {...register(name)} style={inputStyle}>
@@ -542,16 +506,10 @@ const AddSenderFormModal = ({
     },
   };
 
-  const renderDateField = (
-    name,
-    label,
-    required = false,
-    allowFuture = false,
-  ) => (
+  const renderDateField = (name, label, required = false, allowFuture = false) => (
     <label style={fieldStyle}>
       <span style={{ color: "#454545", fontSize: "12px", fontWeight: 700 }}>
-        {t(label)}{" "}
-        {required ? <span style={{ color: "#E64067" }}>*</span> : null}
+        {t(label)} {required ? <span style={{ color: "#E64067" }}>*</span> : null}
       </span>
       {(() => {
         const isDob = /(^|\.)dob$/i.test(name);
@@ -662,11 +620,10 @@ const AddSenderFormModal = ({
               shouldValidate: true,
               shouldDirty: true,
             });
-            setValue(
-              "representative.extras.idCountryIsoCode",
-              country?.alpha3 || "",
-              { shouldValidate: true, shouldDirty: true },
-            );
+            setValue("representative.extras.idCountryIsoCode", country?.alpha3 || "", {
+              shouldValidate: true,
+              shouldDirty: true,
+            });
             setValue("city", "", { shouldValidate: true, shouldDirty: true });
             setValue("province_state", "", {
               shouldValidate: true,
@@ -677,8 +634,7 @@ const AddSenderFormModal = ({
           }}
           country={selectedCountryIsoCode}
         />
-        {renderNestedError("country_name") ||
-          renderNestedError("country_iso_code")}
+        {renderNestedError("country_name") || renderNestedError("country_iso_code")}
       </label>
       <label style={fieldStyle}>
         <span style={{ color: "#454545", fontSize: "12px", fontWeight: 700 }}>
@@ -771,14 +727,8 @@ const AddSenderFormModal = ({
 
   const renderFileField = (name, label) => (
     <label style={fieldStyle}>
-      <span style={{ color: "#454545", fontSize: "12px", fontWeight: 700 }}>
-        {t(label)}
-      </span>
-      <input
-        {...register(name)}
-        type="file"
-        style={{ ...inputStyle, padding: "8px 10px" }}
-      />
+      <span style={{ color: "#454545", fontSize: "12px", fontWeight: 700 }}>{t(label)}</span>
+      <input {...register(name)} type="file" style={{ ...inputStyle, padding: "8px 10px" }} />
     </label>
   );
 
@@ -860,9 +810,7 @@ const AddSenderFormModal = ({
                 }}
               >
                 <Plus size={16} color="#5926F0" />
-                {senderAccountType === "business"
-                  ? t("Business Sender")
-                  : t("Individual Sender")}
+                {senderAccountType === "business" ? t("Business Sender") : t("Individual Sender")}
               </div>
               {!addingFromMenu && (
                 <label
@@ -892,11 +840,7 @@ const AddSenderFormModal = ({
               )}
             </div>
 
-            <input
-              type="hidden"
-              {...register("sender_type")}
-              value={senderAccountType}
-            />
+            <input type="hidden" {...register("sender_type")} value={senderAccountType} />
 
             {senderAccountType === "individual" ? (
               <>
@@ -960,20 +904,11 @@ const AddSenderFormModal = ({
                     gap: "12px",
                   }}
                 >
-                  {renderField(
-                    "company_name",
-                    "Company Name",
-                    "text",
-                    null,
-                    true,
-                  )}
+                  {renderField("company_name", "Company Name", "text", null, true)}
                   {renderField("trading_name", "Trading Name")}
                   {renderField("registration_number", "Registration Number")}
                   {renderField("tax_id", "Tax ID")}
-                  {renderDateField(
-                    "date_of_incorporation",
-                    "Date of Incorporation",
-                  )}
+                  {renderDateField("date_of_incorporation", "Date of Incorporation")}
                   {renderField(
                     "business_relationship",
                     "Business Relationship",
@@ -987,9 +922,7 @@ const AddSenderFormModal = ({
               </>
             )}
 
-            <div
-              style={{ fontSize: "13px", fontWeight: 800, color: "#5926F0" }}
-            >
+            <div style={{ fontSize: "13px", fontWeight: 800, color: "#5926F0" }}>
               {t("Contact and Address")}
             </div>
             <div
@@ -1024,20 +957,8 @@ const AddSenderFormModal = ({
                     gap: "12px",
                   }}
                 >
-                  {renderField(
-                    "representative.first_name",
-                    "First Name",
-                    "text",
-                    null,
-                    true,
-                  )}
-                  {renderField(
-                    "representative.last_name",
-                    "Last Name",
-                    "text",
-                    null,
-                    true,
-                  )}
+                  {renderField("representative.first_name", "First Name", "text", null, true)}
+                  {renderField("representative.last_name", "Last Name", "text", null, true)}
                   {renderField("representative.address", "Address")}
                   {renderField("representative.postal_code", "Postal Code")}
                   {renderDateField("representative.dob", "Date of Birth")}
@@ -1050,9 +971,7 @@ const AddSenderFormModal = ({
               </>
             )}
 
-            <div
-              style={{ fontSize: "13px", fontWeight: 800, color: "#5926F0" }}
-            >
+            <div style={{ fontSize: "13px", fontWeight: 800, color: "#5926F0" }}>
               {t("Identity Details")}
             </div>
             <div
@@ -1074,10 +993,7 @@ const AddSenderFormModal = ({
                       label: idTypeData[key],
                     })),
                   )}
-                  {renderDateField(
-                    "representative.extras.dateOfIssue",
-                    "Date of Issue",
-                  )}
+                  {renderDateField("representative.extras.dateOfIssue", "Date of Issue")}
                   {renderDateField(
                     "representative.extras.dateOfExpiry",
                     "Date of Expiry",
@@ -1098,19 +1014,12 @@ const AddSenderFormModal = ({
                     })),
                   )}
                   {renderDateField("extras.dateOfIssue", "Date of Issue")}
-                  {renderDateField(
-                    "extras.dateOfExpiry",
-                    "Date of Expiry",
-                    false,
-                    true,
-                  )}
+                  {renderDateField("extras.dateOfExpiry", "Date of Expiry", false, true)}
                 </>
               )}
             </div>
 
-            <div
-              style={{ fontSize: "13px", fontWeight: 800, color: "#5926F0" }}
-            >
+            <div style={{ fontSize: "13px", fontWeight: 800, color: "#5926F0" }}>
               {t("Documents")}
             </div>
             <div
@@ -1122,38 +1031,23 @@ const AddSenderFormModal = ({
             >
               {renderFileField(
                 "id_front",
-                senderAccountType === "business"
-                  ? "Representative ID Front"
-                  : "ID Front",
+                senderAccountType === "business" ? "Representative ID Front" : "ID Front",
               )}
               {renderFileField(
                 "id_back",
-                senderAccountType === "business"
-                  ? "Representative ID Back"
-                  : "ID Back",
+                senderAccountType === "business" ? "Representative ID Back" : "ID Back",
               )}
               {renderFileField(
                 "selfie",
-                senderAccountType === "business"
-                  ? "Representative Selfie"
-                  : "Selfie",
+                senderAccountType === "business" ? "Representative Selfie" : "Selfie",
               )}
               {senderAccountType === "business" ? (
                 <>
                   {renderFileField("kyb_registry_extract", "Registry Extract")}
-                  {renderFileField(
-                    "kyb_proof_of_authority",
-                    "Proof of Authority",
-                  )}
+                  {renderFileField("kyb_proof_of_authority", "Proof of Authority")}
                   {renderFileField("kyb_ubos", "UBO Documentation")}
-                  {renderFileField(
-                    "kyb_id_collection",
-                    "ID Documents Collection",
-                  )}
-                  {renderFileField(
-                    "kyb_additional_docs",
-                    "Additional Documents",
-                  )}
+                  {renderFileField("kyb_id_collection", "ID Documents Collection")}
+                  {renderFileField("kyb_additional_docs", "Additional Documents")}
                 </>
               ) : null}
             </div>

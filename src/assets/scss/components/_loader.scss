@@ -20,8 +20,8 @@
   justify-content: center;
   align-items: center;
   $loader-color:
-    rgba($primary-color, 0.2), rgba($secondary-color, 0.4),
-    rgba($primary-color, 0.6), rgba($secondary-color, 0.8), $primary-color;
+    rgba($primary-color, 0.2), rgba($secondary-color, 0.4), rgba($primary-color, 0.6),
+    rgba($secondary-color, 0.8), $primary-color;
   .dot {
     position: relative;
     width: 22px;

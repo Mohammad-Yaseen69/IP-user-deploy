@@ -75,13 +75,7 @@ const UserDets = ({
 
     const buttons = [];
 
-    if (
-      flagCheck(
-        "allowViewProfile",
-        userDetails,
-        invoice ? "invoice" : "paymentAddress",
-      )
-    ) {
+    if (flagCheck("allowViewProfile", userDetails, invoice ? "invoice" : "paymentAddress")) {
       buttons.push({
         label: "View Profile",
         onClick: () => navigate(`/profile/${user_name}`),
@@ -91,20 +85,14 @@ const UserDets = ({
     }
 
     if (
-      flagCheck(
-        "allowEcommerce",
-        userDetails,
-        invoice ? "invoice" : "paymentAddress",
-      ) &&
+      flagCheck("allowEcommerce", userDetails, invoice ? "invoice" : "paymentAddress") &&
       storeData?.data?._id &&
       !isFromQr
     ) {
       buttons.push({
         label: "Explore eShop",
         onClick: () => {
-          window.open(
-            `https://eshopinsta-pay.vercel.app/store/${storeData?.data?.storeId}`,
-          );
+          window.open(`https://eshopinsta-pay.vercel.app/store/${storeData?.data?.storeId}`);
         },
         disable: false,
         purple: false,
@@ -121,25 +109,13 @@ const UserDets = ({
     }
 
     setActionsButtons(buttons);
-  }, [
-    storeData,
-    userDetails,
-    invoice,
-    plansData,
-    isFromQr,
-    user_name,
-    navigate,
-  ]);
+  }, [storeData, userDetails, invoice, plansData, isFromQr, user_name, navigate]);
 
   console.log(actionButtons, "planData");
 
   return (
     <div className={styles.userDets} style={{ position: "relative" }}>
-      {flagCheck(
-        "allowCoverImage",
-        userDetails,
-        invoice ? "invoice" : "paymentAddress",
-      ) && (
+      {flagCheck("allowCoverImage", userDetails, invoice ? "invoice" : "paymentAddress") && (
         <div
           className={styles.cover_container}
           style={{ position: "relative", marginBottom: invoice && "-90px" }}
@@ -181,17 +157,13 @@ const UserDets = ({
           }}
           className={styles.top}
         >
-          <div
-            style={{ flexDirection: "column", width: "100%" }}
-            className={styles.left}
-          >
+          <div style={{ flexDirection: "column", width: "100%" }} className={styles.left}>
             <div
               style={{
                 display: "flex",
                 width: "100%",
                 alignItems: "center",
-                justifyContent:
-                  width < 1000 || invoice ? "center" : "space-between",
+                justifyContent: width < 1000 || invoice ? "center" : "space-between",
               }}
             >
               {flagCheck(
@@ -209,8 +181,7 @@ const UserDets = ({
                     />
                   ) : (
                     <div className={styles.dp} style={{ overflow: "hidden" }}>
-                      {userDetails?.first_name?.[0] ||
-                        userDetails?.company_name?.[0]}
+                      {userDetails?.first_name?.[0] || userDetails?.company_name?.[0]}
                     </div>
                   )}
                 </div>
@@ -236,9 +207,7 @@ const UserDets = ({
                   invoice ? "invoice" : "paymentAddress",
                 ) && (
                   <div className={styles.badge}>
-                    {userDetails?.account_type === "individual"
-                      ? t("Personal")
-                      : t("Business")}{" "}
+                    {userDetails?.account_type === "individual" ? t("Personal") : t("Business")}{" "}
                     {t("Account")}
                   </div>
                 )}
@@ -296,15 +265,10 @@ const UserDets = ({
                               right: "0",
                               background: "#5926f0",
                               color: "white",
-                              fontSize:
-                                window.innerWidth > 780 ? ".8rem" : ".65rem",
+                              fontSize: window.innerWidth > 780 ? ".8rem" : ".65rem",
                               fontWeight: 500,
-                              padding:
-                                window.innerWidth > 780
-                                  ? "6px 18px"
-                                  : "3px 10px",
-                              borderRadius:
-                                window.innerWidth > 780 ? "8px" : "4px",
+                              padding: window.innerWidth > 780 ? "6px 18px" : "3px 10px",
+                              borderRadius: window.innerWidth > 780 ? "8px" : "4px",
                               whiteSpace: "nowrap",
                             }}
                           >
@@ -332,11 +296,7 @@ const UserDets = ({
                     @{user_name}
                   </h6>
                 )}
-                {flagCheck(
-                  "allowCountry",
-                  userDetails,
-                  invoice ? "invoice" : "paymentAddress",
-                ) && (
+                {flagCheck("allowCountry", userDetails, invoice ? "invoice" : "paymentAddress") && (
                   <div className={styles.country}>
                     <img
                       src={userCountry?.file_url}

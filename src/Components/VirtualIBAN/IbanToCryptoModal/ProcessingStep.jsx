@@ -37,11 +37,7 @@ const ProcessingStep = ({ result }) => {
               "{{amount}} left your IBAN. About {{estimate}} will arrive in your USDT wallet shortly — we'll notify you when it does.",
               {
                 amount: money(result?.total?.value, result?.total?.currency, 2),
-                estimate: money(
-                  result?.recipient?.value,
-                  result?.recipient?.currency,
-                  6,
-                ),
+                estimate: money(result?.recipient?.value, result?.recipient?.currency, 6),
               },
             )}
           </p>

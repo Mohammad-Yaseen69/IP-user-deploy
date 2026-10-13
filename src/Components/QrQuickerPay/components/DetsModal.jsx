@@ -45,12 +45,7 @@ const DetsModal = ({
           <label htmlFor="" style={{ fontWeight: 600 }}>
             {t("Phone Number")}
           </label>
-          <PhoneInput
-            phone={phone}
-            setPhone={setPhone}
-            country={country}
-            setCountry={setCountry}
-          />
+          <PhoneInput phone={phone} setPhone={setPhone} country={country} setCountry={setCountry} />
         </div>
         <div style={{ marginTop: "1rem" }}>
           <label htmlFor="" style={{ fontWeight: 600 }}>
@@ -63,8 +58,7 @@ const DetsModal = ({
               type={showPassword ? "text" : "password"}
               style={{
                 padding: "1rem",
-                boxShadow:
-                  "0px 4px 11px 0px rgba(0, 0, 0, 0.16), 0px 0px 4px 6px #FDFDFD inset",
+                boxShadow: "0px 4px 11px 0px rgba(0, 0, 0, 0.16), 0px 0px 4px 6px #FDFDFD inset",
                 fontWeight: 800,
               }}
             />

@@ -17,12 +17,7 @@ const InquiryMessageModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
     e?.preventDefault();
 
     if (!userMessage.trim()) {
-      toast.error(
-        t(
-          "compliance.messageRequired",
-          "Please write a message before sending.",
-        ),
-      );
+      toast.error(t("compliance.messageRequired", "Please write a message before sending."));
       return;
     }
 
@@ -37,8 +32,7 @@ const InquiryMessageModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
       });
 
       toast.success(
-        res?.message ||
-          t("compliance.messageSent", "Message sent to compliance team."),
+        res?.message || t("compliance.messageSent", "Message sent to compliance team."),
       );
       if (onSuccess) onSuccess();
       toggle();
@@ -55,9 +49,7 @@ const InquiryMessageModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
 
   return (
     <Modal isOpen={isOpen} toggle={toggle} centered size="md">
-      <ModalBody
-        style={{ padding: "24px", background: "#ffffff", borderRadius: "16px" }}
-      >
+      <ModalBody style={{ padding: "24px", background: "#ffffff", borderRadius: "16px" }}>
         <div
           style={{
             display: "flex",
@@ -75,10 +67,7 @@ const InquiryMessageModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
                 color: "#111827",
               }}
             >
-              {t(
-                "compliance.messageComplianceTitle",
-                "Message Compliance Team",
-              )}
+              {t("compliance.messageComplianceTitle", "Message Compliance Team")}
             </h4>
             <span style={{ fontSize: "12px", color: "#6b7280" }}>
               {t("compliance.regarding", "Regarding")}: {inquiry.title}
@@ -104,9 +93,7 @@ const InquiryMessageModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
           style={{ display: "flex", flexDirection: "column", gap: "16px" }}
         >
           <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-            <label
-              style={{ fontSize: "13px", fontWeight: "600", color: "#374151" }}
-            >
+            <label style={{ fontSize: "13px", fontWeight: "600", color: "#374151" }}>
               {t("compliance.yourMessage", "Your Message")}{" "}
               <span style={{ color: "#dc2626" }}>*</span>
             </label>

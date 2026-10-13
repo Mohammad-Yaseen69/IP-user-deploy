@@ -43,9 +43,7 @@ const AlertBox = ({ icon, description, title, variant = "info" }) => {
       classes={{ message: styles.alertDescription }}
       icon={icon ?? <img src={AiIcon} alt="AI Icon" width={10} height={10} />}
     >
-      {title && (
-        <AlertTitle className={styles.alertTitle}>{t(title)}</AlertTitle>
-      )}
+      {title && <AlertTitle className={styles.alertTitle}>{t(title)}</AlertTitle>}
       {t(description)}
     </Alert>
   );

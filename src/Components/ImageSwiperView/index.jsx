@@ -15,9 +15,7 @@ const ImageSwiperView = ({ isOpen, toggle, images = [] }) => {
   return (
     <Modal isOpen={isOpen}>
       <ModalHeader toggle={toggle}>{t("Attachments")}</ModalHeader>
-      <ModalBody
-        style={{ display: "flex", gap: "1rem", flexDirection: "column" }}
-      >
+      <ModalBody style={{ display: "flex", gap: "1rem", flexDirection: "column" }}>
         <div style={{ display: "flex", gap: "1rem", overflowX: "auto" }}>
           {images.length > 1 &&
             images.map((item, ind) => (

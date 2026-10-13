@@ -54,32 +54,24 @@ const useBenCreateFunc = ({
 
   const addBenFunc = () => {
     const account_types = [
-      services.some((item) => item?.method?.toLowerCase()?.includes("bank")) &&
-      completedBank
+      services.some((item) => item?.method?.toLowerCase()?.includes("bank")) && completedBank
         ? "bank"
         : null,
-      services.some((item) => item?.method?.toLowerCase()?.includes("card")) &&
-      completedCard
+      services.some((item) => item?.method?.toLowerCase()?.includes("card")) && completedCard
         ? "card"
         : null,
-      services.some((item) =>
-        item?.method?.toLowerCase()?.includes("mobile"),
-      ) && completedWallet
+      services.some((item) => item?.method?.toLowerCase()?.includes("mobile")) && completedWallet
         ? "mobile"
         : null,
       completedCrypto ? "crypto" : null,
-      services.some((item) => item?.method?.toLowerCase()?.includes("cash")) &&
-      cashPickupCompleted
+      services.some((item) => item?.method?.toLowerCase()?.includes("cash")) && cashPickupCompleted
         ? "cash"
         : null,
-      instapayWallets.every((item) => item.length !== 8) || walletError
-        ? null
-        : "wallet",
+      instapayWallets.every((item) => item.length !== 8) || walletError ? null : "wallet",
     ];
 
     let extras = { ...basicExtras, ...additionFields };
-    const isIndividualToBusiness =
-      inBusiness && userDetails?.account_type === "individual";
+    const isIndividualToBusiness = inBusiness && userDetails?.account_type === "individual";
 
     for (const key in extras) {
       if (extras[key]) {
@@ -109,9 +101,7 @@ const useBenCreateFunc = ({
       wallet: walletIds,
       extras: extras,
       bank_details:
-        services.some((item) =>
-          item?.method?.toLowerCase()?.includes("bank"),
-        ) && completedBank
+        services.some((item) => item?.method?.toLowerCase()?.includes("bank")) && completedBank
           ? [
               {
                 swift_code: accNumType === "Swift" ? ibanSwift : "",
@@ -129,9 +119,7 @@ const useBenCreateFunc = ({
             ]
           : [],
       mobile_wallet:
-        services.some((item) =>
-          item?.method?.toLowerCase()?.includes("mobile"),
-        ) && completedWallet
+        services.some((item) => item?.method?.toLowerCase()?.includes("mobile")) && completedWallet
           ? [
               {
                 money_provider: formData.mobile_wallet_provider,
@@ -150,9 +138,8 @@ const useBenCreateFunc = ({
           ]
         : [],
       cash_pickup:
-        services.some((item) =>
-          item?.method?.toLowerCase()?.includes("cash"),
-        ) && cashPickupCompleted
+        services.some((item) => item?.method?.toLowerCase()?.includes("cash")) &&
+        cashPickupCompleted
           ? [
               {
                 document_type: cashPickupType,
@@ -162,9 +149,7 @@ const useBenCreateFunc = ({
             ]
           : [],
       card:
-        services.some((item) =>
-          item?.method?.toLowerCase()?.includes("card"),
-        ) && completedCard
+        services.some((item) => item?.method?.toLowerCase()?.includes("card")) && completedCard
           ? [
               {
                 card_name: formData.card_holder_one,
@@ -258,23 +243,18 @@ const useBenCreateFunc = ({
     if (extractWalletNum) {
       try {
         setBenLoading(true);
-        await axios.post(
-          `${import.meta.env.VITE_IP_DEV_API}/api/dt/check-number-public`,
-          {
-            data: encryptData({
-              number: `+${formData.mobile_wallet_account_number}`,
-            }),
-          },
-        );
+        await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/check-number-public`, {
+          data: encryptData({
+            number: `+${formData.mobile_wallet_account_number}`,
+          }),
+        });
         addBenFunc();
       } catch (err) {
         if (err?.response?.status === 500) {
           addBenFunc();
           return;
         }
-        setWalletMobileError(
-          "Incorrect phone number, please enter a valid number.",
-        );
+        setWalletMobileError("Incorrect phone number, please enter a valid number.");
         toast.error("Incorrect phone number, please enter a valid number.");
       } finally {
         setBenLoading(false);

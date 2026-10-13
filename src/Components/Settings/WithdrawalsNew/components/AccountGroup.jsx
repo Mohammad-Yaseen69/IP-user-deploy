@@ -23,12 +23,7 @@ const AccountGroup = ({
       <div className={styles.groupHead}>
         <div className={styles.groupName}>
           {flag ? (
-            <img
-              className={styles.groupFlag}
-              src={flag}
-              alt=""
-              draggable="false"
-            />
+            <img className={styles.groupFlag} src={flag} alt="" draggable="false" />
           ) : (
             icon && <Icon name={icon} size={18} color="var(--abf-primary)" />
           )}
@@ -36,12 +31,7 @@ const AccountGroup = ({
           {meta && <span className={styles.groupMeta}>· {meta}</span>}
         </div>
         {onAdd && (
-          <button
-            type="button"
-            className={styles.linkAction}
-            onClick={onAdd}
-            disabled={!canAdd}
-          >
+          <button type="button" className={styles.linkAction} onClick={onAdd} disabled={!canAdd}>
             <Plus size={16} />
             {addLabel}
           </button>
@@ -49,9 +39,7 @@ const AccountGroup = ({
       </div>
 
       <div className={styles.rows}>
-        {rows.length === 0 && emptyText && (
-          <p className={styles.rowsEmpty}>{t(emptyText)}</p>
-        )}
+        {rows.length === 0 && emptyText && <p className={styles.rowsEmpty}>{t(emptyText)}</p>}
         {rows.map((row) => (
           <AccountRow key={row.key} row={row} {...rowProps} />
         ))}

@@ -20,8 +20,7 @@ const STATUS_COLORS = {
 
 const toHistoryRow = (entry) => ({
   title: entry.title,
-  timestamp:
-    entry.edited_at ?? entry.timestamp ?? entry.updatedAt ?? entry.createdAt,
+  timestamp: entry.edited_at ?? entry.timestamp ?? entry.updatedAt ?? entry.createdAt,
   previousStatus: entry.previous_status ?? entry.previousStatus ?? entry.status,
 });
 
@@ -56,29 +55,21 @@ const FeeModelEditHistory = ({ history, loading }) => {
           {t("No edits made yet.")}
         </Typography>
       ) : (
-        <TableContainer
-          sx={{ border: "1px solid #E5E7EB", borderRadius: "8px" }}
-        >
+        <TableContainer sx={{ border: "1px solid #E5E7EB", borderRadius: "8px" }}>
           <Table size="small">
             <TableHead>
               <TableRow sx={{ background: "#F9FAFB" }}>
                 <TableCell sx={{ fontWeight: 700 }}>{t("Title")}</TableCell>
                 <TableCell sx={{ fontWeight: 700 }}>{t("Timestamp")}</TableCell>
-                <TableCell sx={{ fontWeight: 700 }}>
-                  {t("Previous Status")}
-                </TableCell>
+                <TableCell sx={{ fontWeight: 700 }}>{t("Previous Status")}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {rows.map((row, i) => (
                 <TableRow key={i} hover>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.title || "-"}</TableCell>
                   <TableCell sx={{ fontSize: "13px" }}>
-                    {row.title || "-"}
-                  </TableCell>
-                  <TableCell sx={{ fontSize: "13px" }}>
-                    {row.timestamp
-                      ? new Date(row.timestamp).toLocaleString()
-                      : "-"}
+                    {row.timestamp ? new Date(row.timestamp).toLocaleString() : "-"}
                   </TableCell>
                   <TableCell
                     sx={{

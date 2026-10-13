@@ -72,8 +72,7 @@ export const SEPA_TRANSFER_SPEEDS = [
     id: "instant",
     rail: "SEPA_INST",
     label: "Instant",
-    description:
-      "Real-time SEPA. Arrives in seconds, 24/7 - including weekends.",
+    description: "Real-time SEPA. Arrives in seconds, 24/7 - including weekends.",
     feeLabel: "0.4% + 0.2 EUR fee",
     feeAmount: 0.2,
   },
@@ -108,8 +107,7 @@ export const transitions = {
   },
   [STEPS.PURPOSE]: {
     next: () => STEPS.REVIEW,
-    back: (data) =>
-      data?.isAddingBeneficiary ? STEPS.ADD_BENEFICIARY : STEPS.BENEFICIARY,
+    back: (data) => (data?.isAddingBeneficiary ? STEPS.ADD_BENEFICIARY : STEPS.BENEFICIARY),
   },
   [STEPS.REVIEW]: {
     next: () => STEPS.OTP,
@@ -157,20 +155,13 @@ export const getDisabledState = (stepName, data = {}) => {
     case STEPS.BENEFICIARY:
       return !data.selectedBeneficiary;
     case STEPS.ADD_BENEFICIARY:
-      if (
-        beneficiaryForm.type === "business" &&
-        !hasValue(beneficiaryForm.legalName)
-      )
-        return true;
+      if (beneficiaryForm.type === "business" && !hasValue(beneficiaryForm.legalName)) return true;
       if (
         beneficiaryForm.type !== "business" &&
-        (!hasValue(beneficiaryForm.firstName) ||
-          !hasValue(beneficiaryForm.lastName))
+        (!hasValue(beneficiaryForm.firstName) || !hasValue(beneficiaryForm.lastName))
       )
         return true;
-      return (
-        !hasValue(beneficiaryForm.iban) || !hasValue(beneficiaryForm.reference)
-      );
+      return !hasValue(beneficiaryForm.iban) || !hasValue(beneficiaryForm.reference);
     case STEPS.PURPOSE: {
       return !hasValue(data.purpose) || !isValidDescription(data.description);
     }
@@ -196,8 +187,7 @@ export const getContinueLabel = (stepName, t) => {
 };
 
 export const getSidebarStepName = (currentStep) => {
-  if (currentStep === STEPS.ADD_BENEFICIARY)
-    return SIDEBAR_STEP_NAMES.BENEFICIARY;
+  if (currentStep === STEPS.ADD_BENEFICIARY) return SIDEBAR_STEP_NAMES.BENEFICIARY;
   if (currentStep === STEPS.OTP) return SIDEBAR_STEP_NAMES.DONE;
   return currentStep;
 };

@@ -37,8 +37,7 @@ const LanguagePicker = ({
   const [currentLang, setCurrentLang] = useState(defaultLanguage || "en");
 
   const [showModal, setShowModal] = useState(false);
-  const { country: userCountryLocation, loading: countryLoading } =
-    useCountryLocation();
+  const { country: userCountryLocation, loading: countryLoading } = useCountryLocation();
 
   const toggleModal = () => setShowModal(!showModal);
   const [openUp, setOpenUp] = useState(shouldOpenUpRequired);
@@ -332,9 +331,7 @@ const LanguagePicker = ({
   // const filtered = countries.filter(it => languageCountries.some(item => item.name === "India" ? it.name === item.name : it.name.includes(item.name))).map(coun => {
   const filtered = countries
     .filter((it) => {
-      const langItem = languageCountries.find(
-        (item) => item.alpha3 === it.alpha3,
-      );
+      const langItem = languageCountries.find((item) => item.alpha3 === it.alpha3);
 
       if (!isExtendedPage && newLangs.includes(langItem?.lang)) {
         return false;
@@ -383,8 +380,7 @@ const LanguagePicker = ({
       if (window.innerWidth >= 1000) return;
       if (showDropDown) return;
       draggingRef.current = true;
-      startYRef.current =
-        e.clientY ?? (e.touches && e.touches[0] && e.touches[0].clientY) ?? 0;
+      startYRef.current = e.clientY ?? (e.touches && e.touches[0] && e.touches[0].clientY) ?? 0;
       document.body.style.touchAction = "none";
       img.style.cursor = "grabbing";
     };
@@ -392,9 +388,7 @@ const LanguagePicker = ({
     const onPointerMove = (e) => {
       if (!draggingRef.current) return;
       const y =
-        e.clientY ??
-        (e.touches && e.touches[0] && e.touches[0].clientY) ??
-        startYRef.current;
+        e.clientY ?? (e.touches && e.touches[0] && e.touches[0].clientY) ?? startYRef.current;
       const delta = y - startYRef.current;
       const next = Math.max(
         -window.innerHeight / 2,
@@ -433,9 +427,7 @@ const LanguagePicker = ({
 
   useEffect(() => {
     const loadLang = async () => {
-      const lang =
-        (await localforage.getItem("i18nextLng")) ||
-        localStorage.getItem("i18nextLng");
+      const lang = (await localforage.getItem("i18nextLng")) || localStorage.getItem("i18nextLng");
       if (lang) {
         setCurrentLang(lang);
       }
@@ -499,11 +491,9 @@ const LanguagePicker = ({
 
   useEffect(() => {
     const handleLanguage = async () => {
-      const userManuallySelected =
-        await localforage.getItem("userSelectedLang");
+      const userManuallySelected = await localforage.getItem("userSelectedLang");
       const savedLang =
-        (await localforage.getItem("i18nextLng")) ||
-        localStorage.getItem("i18nextLng");
+        (await localforage.getItem("i18nextLng")) || localStorage.getItem("i18nextLng");
 
       if (!isExtendedPage && savedLang && newLangs.includes(savedLang)) {
         i18n.changeLanguage("en");
@@ -529,8 +519,7 @@ const LanguagePicker = ({
 
         const langItem = languageCountries.find(
           (item) =>
-            item.lang.toLowerCase() === targetLang ||
-            item.label.toLowerCase() === targetLang,
+            item.lang.toLowerCase() === targetLang || item.label.toLowerCase() === targetLang,
         );
 
         if (langItem && i18n.language !== langItem.lang) {
@@ -563,12 +552,7 @@ const LanguagePicker = ({
     };
 
     handleLanguage();
-  }, [
-    userDetails?.language,
-    userCountryLocation,
-    countryLoading,
-    isExtendedPage,
-  ]);
+  }, [userDetails?.language, userCountryLocation, countryLoading, isExtendedPage]);
   useEffect(() => {
     const handlePosition = () => {
       if (!showDropDown) return;
@@ -597,8 +581,7 @@ const LanguagePicker = ({
           xs="auto"
           style={{
             padding: !openUp && ".5rem",
-            boxShadow:
-              !openUp && "0px 9.94788px 10.7769px rgba(109, 41, 220, 0.17)",
+            boxShadow: !openUp && "0px 9.94788px 10.7769px rgba(109, 41, 220, 0.17)",
             display: "flex",
             alignItems: "center",
             borderRadius: "10px 10px 0 0",
@@ -612,12 +595,8 @@ const LanguagePicker = ({
             flex: 1,
             background: backgroundWhite && "white",
             zIndex: backgroundWhite && 999,
-            transform:
-              window.innerWidth < 1000
-                ? `translateY(${translateY}px)`
-                : undefined,
-            transition:
-              window.innerWidth < 1000 ? "transform 120ms linear" : undefined,
+            transform: window.innerWidth < 1000 ? `translateY(${translateY}px)` : undefined,
+            transition: window.innerWidth < 1000 ? "transform 120ms linear" : undefined,
           }}
           className={styles.active}
         >
@@ -785,10 +764,7 @@ const LanguagePicker = ({
               borderRadius: "8px",
               background: "white",
               boxShadow: "0 4px 39.6px 0 rgba(109, 41, 220, 0.15)",
-              transform:
-                window.innerWidth < 1000
-                  ? `translateY(${translateY}px)`
-                  : undefined,
+              transform: window.innerWidth < 1000 ? `translateY(${translateY}px)` : undefined,
             }}
             onClick={(e) => {
               e.stopPropagation();
@@ -814,9 +790,7 @@ const LanguagePicker = ({
               {languageCountries.find((i) => i.lang === currentLang)?.label}
             </span>
 
-            {window.innerWidth < 1000 && (
-              <img src={drag} style={{ cursor: "grab" }} alt="drag" />
-            )}
+            {window.innerWidth < 1000 && <img src={drag} style={{ cursor: "grab" }} alt="drag" />}
           </div>
         </>
       ) : selectUi ? (
@@ -827,10 +801,7 @@ const LanguagePicker = ({
               borderRadius: "6px",
               border: "1px solid rgba(161, 161, 161, 0.08)",
               background: "#FAFAFA",
-              transform:
-                window.innerWidth < 1000
-                  ? `translateY(${translateY}px)`
-                  : undefined,
+              transform: window.innerWidth < 1000 ? `translateY(${translateY}px)` : undefined,
             }}
             onClick={(e) => {
               e.stopPropagation();
@@ -849,9 +820,7 @@ const LanguagePicker = ({
           xs="auto"
           style={{
             padding: ".5rem",
-            boxShadow: hideShadow
-              ? "none"
-              : "0px 9.94788px 10.7769px rgba(109, 41, 220, 0.17)",
+            boxShadow: hideShadow ? "none" : "0px 9.94788px 10.7769px rgba(109, 41, 220, 0.17)",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",

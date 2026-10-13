@@ -33,13 +33,7 @@ const AuthStepTwo = ({ email, t, InstapayLogo }) => {
       <div className={styles.centerText}>
         <div className={styles.logoContainer}>
           <div className={styles.lockIcon}>
-            <img
-              src={lockIcon}
-              loading="lazy"
-              width={30}
-              height={30}
-              alt="lock"
-            />
+            <img src={lockIcon} loading="lazy" width={30} height={30} alt="lock" />
           </div>
         </div>
 

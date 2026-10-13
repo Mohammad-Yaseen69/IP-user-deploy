@@ -43,9 +43,7 @@ const IBAN = ({ onCreated }) => {
       setModalPreflight(preflight);
       setShowModal(true);
     } catch (error) {
-      toast.error(
-        error?.message || t("Unable to prepare your virtual IBAN setup"),
-      );
+      toast.error(error?.message || t("Unable to prepare your virtual IBAN setup"));
     } finally {
       setOpeningModal(false);
     }
@@ -75,9 +73,7 @@ const IBAN = ({ onCreated }) => {
               className={styles.buttonGroup1}
               disabled={openingModal}
             >
-              {openingModal
-                ? t("Preparing...")
-                : t("Open your virtual bank account")}{" "}
+              {openingModal ? t("Preparing...") : t("Open your virtual bank account")}{" "}
               <ArrowRight />
             </button>
           )}
@@ -94,9 +90,7 @@ const IBAN = ({ onCreated }) => {
           </div>
           <h3 className={styles.cardTitle}>{t("Funds safeguarded")}</h3>
           <p className={styles.cardDescription}>
-            {t(
-              "Held with a regulated tier-1 partner bank. Not lent or invested.",
-            )}
+            {t("Held with a regulated tier-1 partner bank. Not lent or invested.")}
           </p>
         </div>
 
@@ -106,9 +100,7 @@ const IBAN = ({ onCreated }) => {
           </div>
           <h3 className={styles.cardTitle}>{t("Verified in minutes")}</h3>
           <p className={styles.cardDescription}>
-            {t(
-              "Most accounts are issued the same day. Confirm proof of address",
-            )}
+            {t("Most accounts are issued the same day. Confirm proof of address")}
           </p>
         </div>
 

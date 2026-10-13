@@ -16,22 +16,15 @@ const InstapayCryptoWallets = () => {
   const can = usePermission();
   const { userWallets, getUserWallets } = useContext(UserContext);
 
-  const wallets = useMemo(
-    () => (userWallets || []).filter(isLiveCryptoWallet),
-    [userWallets],
-  );
+  const wallets = useMemo(() => (userWallets || []).filter(isLiveCryptoWallet), [userWallets]);
 
   const [selectedWalletId, setSelectedWalletId] = useState(null);
   const [sendWalletId, setSendWalletId] = useState(null);
   const [showAddCurrency, setShowAddCurrency] = useState(false);
 
-  const selectedWallet =
-    wallets.find((w) => w?._id === selectedWalletId) || null;
+  const selectedWallet = wallets.find((w) => w?._id === selectedWalletId) || null;
   const sendWallet =
-    wallets.find((w) => w?._id === sendWalletId) ||
-    selectedWallet ||
-    wallets[0] ||
-    null;
+    wallets.find((w) => w?._id === sendWalletId) || selectedWallet || wallets[0] || null;
 
   const hasWallets = wallets.length > 0;
 
@@ -50,11 +43,7 @@ const InstapayCryptoWallets = () => {
 
   const walletsSection = selectedWallet ? (
     <section>
-      <button
-        type="button"
-        className={styles.backLink}
-        onClick={() => setSelectedWalletId(null)}
-      >
+      <button type="button" className={styles.backLink} onClick={() => setSelectedWalletId(null)}>
         <ArrowLeft size={15} />
         {t("My crypto wallets")}
       </button>
@@ -72,11 +61,7 @@ const InstapayCryptoWallets = () => {
           </p>
         </div>
         {hasWallets && can("wallet.currencies.add") && (
-          <button
-            type="button"
-            className={styles.addBtn}
-            onClick={() => setShowAddCurrency(true)}
-          >
+          <button type="button" className={styles.addBtn} onClick={() => setShowAddCurrency(true)}>
             <Plus size={16} />
             {t("Add crypto wallet")}
           </button>
@@ -141,10 +126,7 @@ const InstapayCryptoWallets = () => {
         )}
       </div>
 
-      <AddCryptoWalletModal
-        isOpen={showAddCurrency}
-        toggle={() => setShowAddCurrency(false)}
-      />
+      <AddCryptoWalletModal isOpen={showAddCurrency} toggle={() => setShowAddCurrency(false)} />
     </div>
   );
 };

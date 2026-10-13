@@ -25,9 +25,7 @@ const PortfolioCard = ({ wallet, walletBalance, onSyncWallet, syncing }) => {
       }).then((dec) => dec?.data),
   });
 
-  const label = isWalletView
-    ? t("Wallet balance")
-    : t("Total crypto portfolio value");
+  const label = isWalletView ? t("Wallet balance") : t("Total crypto portfolio value");
   const currency = isWalletView ? code : "USD";
   const value = isWalletView
     ? formatCryptoAmount(walletBalance)
@@ -43,9 +41,7 @@ const PortfolioCard = ({ wallet, walletBalance, onSyncWallet, syncing }) => {
         <span className={styles.portfolioValue}>
           {isLoading ? (
             <>
-              <span style={{ fontSize: "25px" }}>
-                {t("Loading Balance...")}
-              </span>
+              <span style={{ fontSize: "25px" }}>{t("Loading Balance...")}</span>
             </>
           ) : (
             <>

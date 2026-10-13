@@ -12,9 +12,7 @@ const SelectedCountry = ({ country, setSubStep }) => {
       className="i_t_selected"
     >
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <span style={{ color: "black", fontSize: ".7rem" }}>
-          {t("Country")}
-        </span>
+        <span style={{ color: "black", fontSize: ".7rem" }}>{t("Country")}</span>
         <span
           style={{
             background: "white",

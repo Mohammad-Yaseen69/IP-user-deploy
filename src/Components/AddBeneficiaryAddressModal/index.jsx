@@ -9,13 +9,7 @@ import { useTranslation } from "react-i18next";
 import styles from "./index.module.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-const AddBeneficiaryAddressModal = ({
-  isOpen,
-  toggle,
-  beneficiaries = [],
-  close,
-  dataHandler,
-}) => {
+const AddBeneficiaryAddressModal = ({ isOpen, toggle, beneficiaries = [], close, dataHandler }) => {
   const { t } = useTranslation();
   const [loading, setIsLoading] = useState(false);
   const { authHeader } = useContext(UserContext);
@@ -33,9 +27,7 @@ const AddBeneficiaryAddressModal = ({
 
   useEffect(() => {
     if (beneficiaries.length > 0) {
-      beneficiaries.map((item) =>
-        setAddresses((prev) => ({ ...prev, [item?._id]: "" })),
-      );
+      beneficiaries.map((item) => setAddresses((prev) => ({ ...prev, [item?._id]: "" })));
     } else {
       setAddresses({});
     }
@@ -103,8 +95,7 @@ const AddBeneficiaryAddressModal = ({
     <Modal isOpen={isOpen} style={{ maxWidth: "920px", width: "100vw" }}>
       <ModalHeader toggle={close}>
         {t("Add Addresses For Beneficiaries")} (
-        {beneficiaries.findIndex((i) => i?._id === current) + 1}/
-        {beneficiaries.length})
+        {beneficiaries.findIndex((i) => i?._id === current) + 1}/{beneficiaries.length})
       </ModalHeader>
       <ModalBody>
         <Swiper
@@ -169,9 +160,7 @@ const AddBeneficiaryAddressModal = ({
         <Button
           color="primary"
           onClick={() =>
-            addBeneficiariesAddressHandler(
-              beneficiaries.find((i) => i?._id === current),
-            )
+            addBeneficiariesAddressHandler(beneficiaries.find((i) => i?._id === current))
           }
           disabled={loading || !addresses[current]}
         >

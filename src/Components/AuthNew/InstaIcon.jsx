@@ -36,15 +36,8 @@ const InstaIcon = ({ size }) => {
           <feOffset dy="4" />
           <feGaussianBlur stdDeviation="3.5" />
           <feComposite in2="hardAlpha" operator="out" />
-          <feColorMatrix
-            type="matrix"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.14 0"
-          />
-          <feBlend
-            mode="normal"
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_3813_7335"
-          />
+          <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.14 0" />
+          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3813_7335" />
           <feBlend
             mode="normal"
             in="SourceGraphic"

@@ -1,13 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import styles from "./styles/card_cvc.module.css";
 
-const CardCVC = ({
-  content,
-  setContent,
-  maxLength = 5,
-  isinVVC = false,
-  guest,
-}) => {
+const CardCVC = ({ content, setContent, maxLength = 5, isinVVC = false, guest }) => {
   const divRef = useRef(null);
   const caretPositionRef = useRef(0);
 
@@ -18,9 +12,7 @@ const CardCVC = ({
       const preCaretRange = range.cloneRange();
       preCaretRange.selectNodeContents(divRef.current);
       preCaretRange.setEnd(range.endContainer, range.endOffset);
-      caretPositionRef.current = preCaretRange
-        .toString()
-        .replace(/\D/g, "").length;
+      caretPositionRef.current = preCaretRange.toString().replace(/\D/g, "").length;
     }
   };
 
@@ -101,9 +93,7 @@ const CardCVC = ({
 
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
-      {guest && (
-        <label style={{ fontWeight: 600, marginBottom: "10px" }}>CVC:</label>
-      )}
+      {guest && <label style={{ fontWeight: 600, marginBottom: "10px" }}>CVC:</label>}
       <div className={styles.main}>
         <div
           ref={divRef}
@@ -120,10 +110,7 @@ const CardCVC = ({
           {content}
         </div>
         {content.length < 1 && (
-          <span
-            style={{ display: isinVVC && "none" }}
-            className={styles.placeholder}
-          >
+          <span style={{ display: isinVVC && "none" }} className={styles.placeholder}>
             CVC
           </span>
         )}

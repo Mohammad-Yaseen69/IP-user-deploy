@@ -48,13 +48,8 @@ const ConfirmSend = ({
   const divRef = useRef(null);
   const svgRef = useRef(null);
   const chevRef = useRef(null);
-  const {
-    userDetails,
-    userWallets,
-    profileCompleted,
-    authHeader,
-    setProfileLockTime,
-  } = useContext(UserContext);
+  const { userDetails, userWallets, profileCompleted, authHeader, setProfileLockTime } =
+    useContext(UserContext);
   const [isSlided, setIsSlided] = useState(false);
   const [showCompletionModal, setShowCompletionModal] = useState(false);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
@@ -92,8 +87,7 @@ const ConfirmSend = ({
         if (
           userDetails?.account_type === "individual"
             ? userDetails?.user?.kyc_status === "approved"
-            : userDetails?.company?.kyb_status === "approved" ||
-              userDetails?.level?.level_no !== 1
+            : userDetails?.company?.kyb_status === "approved" || userDetails?.level?.level_no !== 1
         ) {
           setShowVerificationModal(false);
         } else {
@@ -116,13 +110,10 @@ const ConfirmSend = ({
             purpose_of_remittance: reason,
             account_id: item?._id,
             service_id: payoutChannel?.id,
-            payer_id:
-              userWithdrawals?.[payoutChannel?.sub_value]?.[0]?.payer_id,
-            transaction_type:
-              item?.account_type === "individual" ? "C2C" : "B2B",
+            payer_id: userWithdrawals?.[payoutChannel?.sub_value]?.[0]?.payer_id,
+            transaction_type: item?.account_type === "individual" ? "C2C" : "B2B",
             wallet_id: userWallets?.filter(
-              (it) =>
-                it?.currency?.code?.toLowerCase() === currency?.toLowerCase(),
+              (it) => it?.currency?.code?.toLowerCase() === currency?.toLowerCase(),
             )[0]?._id,
             token: quotationDetails.token,
             type: userDetails?.tfa ? "authenticator" : "sms",
@@ -145,8 +136,7 @@ const ConfirmSend = ({
                 ? "C2C"
                 : "C2B",
             wallet_id: userWallets?.filter(
-              (it) =>
-                it?.currency?.code?.toLowerCase() === currency?.toLowerCase(),
+              (it) => it?.currency?.code?.toLowerCase() === currency?.toLowerCase(),
             )[0]?._id,
             token: quotationDetails.token,
             type: userDetails?.tfa ? "authenticator" : "sms",
@@ -309,11 +299,7 @@ const ConfirmSend = ({
                 color: "blue",
               }}
             >
-              {t(
-                userWithdrawals?._id
-                  ? "Go back to Wallet Page."
-                  : "Go back to Payments Page.",
-              )}
+              {t(userWithdrawals?._id ? "Go back to Wallet Page." : "Go back to Payments Page.")}
             </button>
           </p>
         </ModalBody>
@@ -330,16 +316,12 @@ const ConfirmSend = ({
           padding: window.innerWidth > 1000 ? "20px 30px" : "20px",
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
         className="conf_cont"
       >
         <SelectedCountry country={country} setSubStep={setSubStep} />
-        <SelectedPayoutChannel
-          payoutChannel={payoutChannel}
-          setSubStep={setSubStep}
-        />
+        <SelectedPayoutChannel payoutChannel={payoutChannel} setSubStep={setSubStep} />
         <SelectedAmountAndCurrency
           amount={amount}
           currency={currency}

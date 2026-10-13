@@ -153,12 +153,7 @@
   padding-bottom: 18px;
   color: white;
   font-size: 12px;
-  background: linear-gradient(
-    to top,
-    #4d0cff 0%,
-    #6b37ff 40%,
-    rgba(107, 55, 255, 0.15) 100%
-  );
+  background: linear-gradient(to top, #4d0cff 0%, #6b37ff 40%, rgba(107, 55, 255, 0.15) 100%);
 }
 
 @media (max-width: 900px) {

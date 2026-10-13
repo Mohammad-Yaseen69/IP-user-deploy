@@ -51,17 +51,9 @@ const formatClock = (seconds) => {
   return `${Math.floor(safe / 60)}:${String(safe % 60).padStart(2, "0")}`;
 };
 
-const ReviewStep = ({
-  feeDetails,
-  quoteExpiresAt,
-  wallet,
-  iban,
-  onRefreshQuote,
-  isRefreshing,
-}) => {
+const ReviewStep = ({ feeDetails, quoteExpiresAt, wallet, iban, onRefreshQuote, isRefreshing }) => {
   const { t } = useTranslation();
-  const remaining = () =>
-    Math.round(((quoteExpiresAt || 0) - Date.now()) / 1000);
+  const remaining = () => Math.round(((quoteExpiresAt || 0) - Date.now()) / 1000);
   const [secondsLeft, setSecondsLeft] = useState(remaining);
 
   useEffect(() => {
@@ -93,9 +85,7 @@ const ReviewStep = ({
             ) : (
               <>
                 {t("Quote valid for")}{" "}
-                <strong className={styles.timerSeconds}>
-                  {formatClock(secondsLeft)}
-                </strong>
+                <strong className={styles.timerSeconds}>{formatClock(secondsLeft)}</strong>
               </>
             )}
           </span>
@@ -112,16 +102,12 @@ const ReviewStep = ({
       </div>
 
       <div className={local.receiveCard}>
-        <span className={local.receiveLabel}>
-          {t("You receive (estimate)")}
-        </span>
+        <span className={local.receiveLabel}>{t("You receive (estimate)")}</span>
         <span className={local.receiveValue}>
           ≈ {formatMoney(recipient?.value, recipient?.currency, 6)}
         </span>
         <span className={local.receiveNote}>
-          {t(
-            "The final amount is set when the conversion settles and may differ slightly.",
-          )}
+          {t("The final amount is set when the conversion settles and may differ slightly.")}
         </span>
       </div>
 
@@ -133,9 +119,7 @@ const ReviewStep = ({
           </span>
         </div>
         <div className={styles.reviewRow}>
-          <span className={styles.reviewRowLabel}>
-            {t("Debited from your IBAN")}
-          </span>
+          <span className={styles.reviewRowLabel}>{t("Debited from your IBAN")}</span>
           <span className={styles.reviewRowValue}>
             {formatMoney(feeDetails?.total?.value, feeDetails?.total?.currency)}
           </span>
@@ -149,10 +133,7 @@ const ReviewStep = ({
         <div className={styles.reviewRow}>
           <span className={styles.reviewRowLabel}>{t("Amount converted")}</span>
           <span className={styles.reviewRowValue}>
-            {formatMoney(
-              feeDetails?.sending?.value,
-              feeDetails?.sending?.currency,
-            )}
+            {formatMoney(feeDetails?.sending?.value, feeDetails?.sending?.currency)}
           </span>
         </div>
         <div className={styles.reviewRow}>

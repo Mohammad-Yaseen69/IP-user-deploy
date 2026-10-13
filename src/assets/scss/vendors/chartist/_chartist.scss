@@ -28,10 +28,7 @@
   }
 }
 
-@mixin ct-align-justify(
-  $ct-text-align: $ct-text-align,
-  $ct-text-justify: $ct-text-justify
-) {
+@mixin ct-align-justify($ct-text-align: $ct-text-align, $ct-text-justify: $ct-text-justify) {
   -webkit-box-align: $ct-text-align;
   -webkit-align-items: $ct-text-align;
   -ms-flex-align: $ct-text-align;
@@ -84,18 +81,12 @@
   }
 }
 
-@mixin ct-chart-point(
-  $ct-point-size: $ct-point-size,
-  $ct-point-shape: $ct-point-shape
-) {
+@mixin ct-chart-point($ct-point-size: $ct-point-size, $ct-point-shape: $ct-point-shape) {
   stroke-width: $ct-point-size;
   strokelinecap: $ct-point-shape;
 }
 
-@mixin ct-chart-line(
-  $ct-line-width: $ct-line-width,
-  $ct-line-dasharray: $ct-line-dasharray
-) {
+@mixin ct-chart-line($ct-line-width: $ct-line-width, $ct-line-dasharray: $ct-line-dasharray) {
   fill: none;
   stroke-width: $ct-line-width;
 
@@ -187,15 +178,13 @@
     text-anchor: start;
   }
 
-  .#{$ct-class-chart-bar}
-    .#{$ct-class-label}.#{$ct-class-horizontal}.#{$ct-class-start} {
+  .#{$ct-class-chart-bar} .#{$ct-class-label}.#{$ct-class-horizontal}.#{$ct-class-start} {
     @include ct-align-justify(flex-end, center);
     // Fallback for browsers that don't support foreignObjects
     text-anchor: start;
   }
 
-  .#{$ct-class-chart-bar}
-    .#{$ct-class-label}.#{$ct-class-horizontal}.#{$ct-class-end} {
+  .#{$ct-class-chart-bar} .#{$ct-class-label}.#{$ct-class-horizontal}.#{$ct-class-end} {
     @include ct-align-justify(flex-start, center);
     // Fallback for browsers that don't support foreignObjects
     text-anchor: start;

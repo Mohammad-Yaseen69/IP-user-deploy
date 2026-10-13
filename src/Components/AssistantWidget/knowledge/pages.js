@@ -67,8 +67,7 @@ export const PAGES = [
     title: "Send A Quote",
     route: "/payments?payment_action=send_quote",
     permission: "payments.quote.send",
-    description:
-      "Propose an amount and terms to someone before any money moves.",
+    description: "Propose an amount and terms to someone before any money moves.",
   },
   {
     id: "airtime",
@@ -212,8 +211,7 @@ export const PAGES = [
     title: "IBAN Onboarding",
     route: "/onboarding-IBAN",
     permission: "virtual-iban.view",
-    description:
-      "Apply for a virtual IBAN: confirm details, choose a plan, activate.",
+    description: "Apply for a virtual IBAN: confirm details, choose a plan, activate.",
   },
   {
     id: "iban_statements",
@@ -228,8 +226,7 @@ export const PAGES = [
     title: "Virtual IBAN Beneficiaries",
     route: "/virtual-IBAN/beneficiaries-virtual",
     permission: "virtual-iban.view",
-    description:
-      "Bank accounts the virtual IBAN can push funds out to over the banking rails.",
+    description: "Bank accounts the virtual IBAN can push funds out to over the banking rails.",
   },
 
   {
@@ -253,8 +250,7 @@ export const PAGES = [
     title: "Payment Requests",
     route: "/payment-requests",
     permission: "payment-request.view",
-    description:
-      "Requests the user has sent and requests waiting on them to approve or decline.",
+    description: "Requests the user has sent and requests waiting on them to approve or decline.",
   },
   {
     id: "payment_requests_received",
@@ -332,8 +328,7 @@ export const PAGES = [
     title: "Analytics",
     route: "/analytics",
     permission: "analytics.view",
-    description:
-      "Money flow over time — inflows, outflows and activity by category.",
+    description: "Money flow over time — inflows, outflows and activity by category.",
   },
   {
     id: "activity_feed",
@@ -373,8 +368,7 @@ export const PAGES = [
     title: "Referrals",
     route: "/referrals",
     permission: "referrals.view",
-    description:
-      "Personal invite link, who signed up through it, and rewards earned.",
+    description: "Personal invite link, who signed up through it, and rewards earned.",
   },
   {
     id: "delegate_access",
@@ -412,8 +406,7 @@ export const PAGES = [
     title: "My QR Code Sticker",
     route: "/chips-in",
     permission: "qr-sticker.view",
-    description:
-      "Printable QR pointing at the payment address, downloadable as a poster.",
+    description: "Printable QR pointing at the payment address, downloadable as a poster.",
   },
   {
     id: "profile",
@@ -453,16 +446,14 @@ export const PAGES = [
     title: "Two Factor Authentication",
     route: "/settings?tab=tfa",
     permission: "settings.view",
-    description:
-      "Link an authenticator app so sign-in and sensitive actions require a code.",
+    description: "Link an authenticator app so sign-in and sensitive actions require a code.",
   },
   {
     id: "security_questions",
     title: "Security Questions",
     route: "/settings?tab=security",
     permission: "settings.view",
-    description:
-      "Recovery questions used to restore access and confirm sensitive changes.",
+    description: "Recovery questions used to restore access and confirm sensitive changes.",
   },
   {
     id: "social_accounts",
@@ -509,8 +500,7 @@ export const PAGES = [
     title: "Nominee Information",
     route: "/settings?tab=nominee",
     permission: "settings.nominee.view",
-    description:
-      "Who the account passes to. Names a nominee and their contact details.",
+    description: "Who the account passes to. Names a nominee and their contact details.",
   },
   {
     id: "how_others_find_you",
@@ -534,8 +524,7 @@ export const PAGES = [
     route: "/settings?tab=apikey",
     permission: "settings.api-key.view",
     businessOnly: true,
-    description:
-      "Business accounts only: the key for connecting their own systems to InstaPay.",
+    description: "Business accounts only: the key for connecting their own systems to InstaPay.",
   },
   {
     id: "login_activity",
@@ -572,8 +561,7 @@ export const PAGES = [
     id: "update_pin",
     title: "Transaction PIN",
     route: "/update-pin",
-    description:
-      "Set or change the PIN that protects payments and sensitive actions.",
+    description: "Set or change the PIN that protects payments and sensitive actions.",
   },
   {
     id: "geo_fencing",
@@ -589,8 +577,7 @@ export const PAGES = [
     title: "Dashboard",
     route: "/dashboard/default",
     permission: "dashboard.view",
-    description:
-      "Overview: balances, quick actions, recent transactions and recent beneficiaries.",
+    description: "Overview: balances, quick actions, recent transactions and recent beneficiaries.",
   },
 
   // Agent portal. These sit behind AgentRoute, which sends anyone without
@@ -647,8 +634,7 @@ export const PAGES = [
     route: "/reports",
     permission: "reports.view",
     agentOnly: true,
-    description:
-      "Performance reporting across the agent's leads, clients and earnings.",
+    description: "Performance reporting across the agent's leads, clients and earnings.",
   },
   {
     id: "agent_fee_requests",

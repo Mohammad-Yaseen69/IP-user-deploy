@@ -18,17 +18,14 @@ const AddCurrencyModal = ({ isOpen, toggle, setSavedWalelt }) => {
   const [isSaving, setIsSaving] = useState(false);
   const [currencies, setCurrencies] = useState([]);
   const [error, setError] = useState("");
-  const { authHeader, userWallets, userDetails, getUserWallets } =
-    useContext(UserContext);
+  const { authHeader, userWallets, userDetails, getUserWallets } = useContext(UserContext);
   const [showSuccess, setShowSuccess] = useState(false);
 
   const addNewCurrency = async () => {
     setIsSaving(true);
     setError("");
     try {
-      const currentCurrency = currencies.filter(
-        (item) => item.code === currency,
-      )?.[0];
+      const currentCurrency = currencies.filter((item) => item.code === currency)?.[0];
       if (currentCurrency) {
         const data = {
           code: currentCurrency?.code,
@@ -65,10 +62,7 @@ const AddCurrencyModal = ({ isOpen, toggle, setSavedWalelt }) => {
           ? "You Can Have Only 8 Wallets"
           : decrypted?.message;
       toast.error(
-        t(
-          message ??
-            "We cannot process your request at the moment, please try again later.",
-        ),
+        t(message ?? "We cannot process your request at the moment, please try again later."),
       );
     } finally {
       setIsSaving(false);

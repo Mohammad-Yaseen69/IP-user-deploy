@@ -4,14 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Icon } from "../../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/components";
 import styles from "../styles/WithdrawalsNew.module.css";
 
-const AccountRow = ({
-  row,
-  canEdit,
-  canDelete,
-  onSetDefault,
-  onEdit,
-  onRemove,
-}) => {
+const AccountRow = ({ row, canEdit, canDelete, onSetDefault, onEdit, onRemove }) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
@@ -44,9 +37,7 @@ const AccountRow = ({
       <div className={styles.rowText}>
         <div className={styles.rowTitle}>
           <p>{row.title}</p>
-          {row.isDefault && (
-            <span className={styles.badge}>{t("Default")}</span>
-          )}
+          {row.isDefault && <span className={styles.badge}>{t("Default")}</span>}
         </div>
         <p className={styles.rowSubtitle}>{row.subtitle}</p>
       </div>
@@ -66,11 +57,7 @@ const AccountRow = ({
           {open && (
             <div className={styles.menu} role="menu">
               {canDefault && (
-                <button
-                  type="button"
-                  role="menuitem"
-                  onClick={pick(onSetDefault)}
-                >
+                <button type="button" role="menuitem" onClick={pick(onSetDefault)}>
                   <Star size={16} />
                   {t("Set as default")}
                 </button>
@@ -83,9 +70,7 @@ const AccountRow = ({
               )}
               {canDelete && (
                 <>
-                  {(canDefault || editable) && (
-                    <span className={styles.menuDivider} />
-                  )}
+                  {(canDefault || editable) && <span className={styles.menuDivider} />}
                   <button
                     type="button"
                     role="menuitem"

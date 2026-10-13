@@ -82,9 +82,7 @@ const Bank = ({
         </div>
       ) : (
         <>
-          <FormGroup
-            style={{ flex: 1, margin: 0, width: "100%", marginBottom: "1rem" }}
-          >
+          <FormGroup style={{ flex: 1, margin: 0, width: "100%", marginBottom: "1rem" }}>
             <Label className="col-form-label">
               {t("Please Select A Payer")} <span className="req_star">*</span>
             </Label>
@@ -138,9 +136,7 @@ const Bank = ({
               </FormGroup>
               <FormGroup style={{ flex: 1, margin: 0, position: "relative" }}>
                 <Label className="col-form-label" htmlFor="bank_iban">
-                  {states.accNumType === "IBAN"
-                    ? t("IBAN Number")
-                    : t("Swift Code")}{" "}
+                  {states.accNumType === "IBAN" ? t("IBAN Number") : t("Swift Code")}{" "}
                   <span className="req_star">*</span>
                 </Label>
                 <Input
@@ -148,9 +144,7 @@ const Bank = ({
                   readOnly={!isEditMode}
                   className="form-control"
                   style={{ flex: 1, width: "100%", minWidth: "250px" }}
-                  placeholder={
-                    states.accNumType === "IBAN" ? "IBAN Number" : "Swift Code"
-                  }
+                  placeholder={states.accNumType === "IBAN" ? "IBAN Number" : "Swift Code"}
                   required
                   name={"bank_iban"}
                   value={values.bank_iban}
@@ -191,8 +185,7 @@ const Bank = ({
               {country?.toLowerCase() === "united states" && (
                 <FormGroup style={{ flex: 1, margin: 0 }}>
                   <Label className="col-form-label">
-                    {t("Routing/ABA Number")}{" "}
-                    <span className="req_star">*</span>
+                    {t("Routing/ABA Number")} <span className="req_star">*</span>
                   </Label>
                   <Input
                     disabled={!isEditMode}
@@ -334,8 +327,7 @@ const Bank = ({
               </FormGroup>
               <FormGroup style={{ flex: 1, margin: 0 }}>
                 <Label className="col-form-label">
-                  {t("Postal Code")}{" "}
-                  {!isAfricanBank && <span className="req_star">*</span>}
+                  {t("Postal Code")} {!isAfricanBank && <span className="req_star">*</span>}
                 </Label>
                 <Input
                   disabled={!isEditMode}
@@ -355,22 +347,16 @@ const Bank = ({
               {Object.keys(bankExtras).map((item) => {
                 return (
                   serviceFieldInfoValidate(
-                    services?.find((item) =>
-                      item?.method?.toLowerCase()?.includes("bank"),
-                    ),
+                    services?.find((item) => item?.method?.toLowerCase()?.includes("bank")),
                     "credit_party_identifiers_accepted",
                     item,
                   ) &&
                   ((item !== "iban" && item !== "swift_bic_code") ||
                     (item === "iban" && states.accNumType === "Swift") ||
-                    (item === "swift_bic_code" &&
-                      states.accNumType === "IBAN")) && (
-                    <FormGroup
-                      style={{ flex: 1, margin: 0, minWidth: "250px" }}
-                    >
+                    (item === "swift_bic_code" && states.accNumType === "IBAN")) && (
+                    <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                       <Label className="col-form-label">
-                        {t(service_name_formatter(item))}{" "}
-                        <span className="req_star">*</span>
+                        {t(service_name_formatter(item))} <span className="req_star">*</span>
                       </Label>
                       {item?.toString()?.toLowerCase() === "account_type" ? (
                         <Input

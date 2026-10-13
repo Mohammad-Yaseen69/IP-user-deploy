@@ -11,14 +11,7 @@ import useWindowWidth from "../../../utils/useWindowWidth";
 import { formatCurrency } from "../../../Helper/AmountFormat";
 import { usePermission } from "../../../hooks/GeneralUse/usePermission";
 
-const Preview = ({
-  invoiceId,
-  data,
-  isPending,
-  uploadData,
-  mutate,
-  onQrGenerateError,
-}) => {
+const Preview = ({ invoiceId, data, isPending, uploadData, mutate, onQrGenerateError }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
   const can = usePermission();
@@ -72,9 +65,7 @@ const Preview = ({
                 </div>
               </div>
               <div style={{ marginBottom: 8 }}>
-                <div style={{ color: "#8E8E8E", fontSize: "12px" }}>
-                  {t("Description")}:
-                </div>
+                <div style={{ color: "#8E8E8E", fontSize: "12px" }}>{t("Description")}:</div>
                 <div
                   style={{
                     whiteSpace: "pre-wrap",
@@ -88,9 +79,7 @@ const Preview = ({
                 </div>
               </div>
               <div style={{ marginBottom: 8 }}>
-                <div style={{ color: "#8E8E8E", fontSize: "12px" }}>
-                  {t("Amount")}:
-                </div>
+                <div style={{ color: "#8E8E8E", fontSize: "12px" }}>{t("Amount")}:</div>
                 <div
                   style={{
                     whiteSpace: "pre-wrap",
@@ -114,11 +103,7 @@ const Preview = ({
               gap: 12,
             }}
           >
-            <QrDetails
-              inInvoice={true}
-              invoiceId={invoiceId}
-              username={userDetails?.username}
-            />
+            <QrDetails inInvoice={true} invoiceId={invoiceId} username={userDetails?.username} />
             {canDownloadInvoice && <DownloadButton url={uploadData?.url} />}
           </div>
         </div>

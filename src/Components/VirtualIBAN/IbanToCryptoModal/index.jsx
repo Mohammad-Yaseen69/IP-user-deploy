@@ -75,15 +75,7 @@ const DiamondIcon = ({ color = "#F8F9FC" }) => (
 
 const IdBadgeIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-    <rect
-      x="3"
-      y="2.25"
-      width="12"
-      height="13.5"
-      rx="1.5"
-      stroke="#F8F9FC"
-      strokeWidth="1.2"
-    />
+    <rect x="3" y="2.25" width="12" height="13.5" rx="1.5" stroke="#F8F9FC" strokeWidth="1.2" />
     <circle cx="9" cy="8.25" r="2.25" stroke="#F8F9FC" strokeWidth="1.2" />
   </svg>
 );
@@ -120,9 +112,7 @@ const SIDEBAR_ICONS = {
 const getQuoteExpiry = (token) => {
   let exp;
   try {
-    exp = JSON.parse(
-      atob(String(token).split(".")[1].replace(/-/g, "+").replace(/_/g, "/")),
-    )?.exp;
+    exp = JSON.parse(atob(String(token).split(".")[1].replace(/-/g, "+").replace(/_/g, "/")))?.exp;
   } catch {
     exp = null;
   }
@@ -135,8 +125,7 @@ const IbanToCryptoModal = forwardRef(
     const width = useWindowWidth();
     const isMobile = width <= 600;
     const navigate = useNavigate();
-    const { userWallets, getUserWallets, setProfileLockTime } =
-      useContext(UserContext);
+    const { userWallets, getUserWallets, setProfileLockTime } = useContext(UserContext);
     const { getKey, reset: resetIdempotency } = useIdempotency();
 
     const [showDrawer, setShowDrawer] = useState(false);
@@ -165,12 +154,10 @@ const IbanToCryptoModal = forwardRef(
           .filter(
             (item) =>
               item?.wallet_type === "crypto" &&
-              String(item?.currency?.code || "").toUpperCase() ===
-                TARGET_CURRENCY &&
+              String(item?.currency?.code || "").toUpperCase() === TARGET_CURRENCY &&
               !isWalletBlocked(item),
           )
-          .sort((a, b) => Number(!!b?.default) - Number(!!a?.default))[0] ??
-        null,
+          .sort((a, b) => Number(!!b?.default) - Number(!!a?.default))[0] ?? null,
       [userWallets],
     );
 
@@ -248,10 +235,7 @@ const IbanToCryptoModal = forwardRef(
           toast.info(t("This conversion is already being processed."));
           return;
         }
-        const message = showError(
-          error,
-          "We couldn't start the conversion. Please try again.",
-        );
+        const message = showError(error, "We couldn't start the conversion. Please try again.");
         if (STALE_QUOTE.test(message) || error?.response?.status === 502) {
           await refreshQuote();
         }
@@ -368,10 +352,7 @@ const IbanToCryptoModal = forwardRef(
                   <h2>{t("Convert IBAN to crypto wallet")}</h2>
                 )}
               </div>
-              <div
-                className={addFundsStyles.progressEffect}
-                style={{ marginTop: "2rem" }}
-              >
+              <div className={addFundsStyles.progressEffect} style={{ marginTop: "2rem" }}>
                 {SIDEBAR_STEPS.map((item, index) => (
                   <SidebarProgress
                     key={item.stepName}
@@ -393,10 +374,7 @@ const IbanToCryptoModal = forwardRef(
           </div>
         )}
 
-        <div
-          className={styles.rightPanel}
-          style={{ width: width < 1000 ? "100%" : undefined }}
-        >
+        <div className={styles.rightPanel} style={{ width: width < 1000 ? "100%" : undefined }}>
           <div className={styles.content}>{renderStepContent()}</div>
           {isMobile ? (
             <MobileFooter
@@ -411,20 +389,12 @@ const IbanToCryptoModal = forwardRef(
               style={isDone ? { justifyContent: "flex-end" } : undefined}
             >
               {isDone ? (
-                <button
-                  type="button"
-                  className={styles.nextBtn}
-                  onClick={handleClose}
-                >
+                <button type="button" className={styles.nextBtn} onClick={handleClose}>
                   {t("Close")}
                 </button>
               ) : (
                 <>
-                  <button
-                    type="button"
-                    className={styles.cancelBtn}
-                    onClick={handleClose}
-                  >
+                  <button type="button" className={styles.cancelBtn} onClick={handleClose}>
                     {t("Cancel")}
                   </button>
                   <div className={styles.footerNav}>

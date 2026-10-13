@@ -110,9 +110,7 @@ const PlansSubscription = () => {
         isSubscription={true}
         subscriptionId={subscriptionId}
         url={url}
-        toggleCreditModal={() =>
-          dataHandler("showCreditModal", !state.showCreditModal)
-        }
+        toggleCreditModal={() => dataHandler("showCreditModal", !state.showCreditModal)}
       />
     </Wrapper>
   );

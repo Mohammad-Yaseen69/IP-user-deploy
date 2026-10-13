@@ -29,15 +29,11 @@ const W2WReceipt = ({
           padding: "14px",
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
         className="conf_cont"
       >
-        <div
-          style={{ display: "flex", flexDirection: "column" }}
-          className="conf_cont"
-        >
+        <div style={{ display: "flex", flexDirection: "column" }} className="conf_cont">
           <div style={{ textAlign: "center" }}>
             <span style={{ color: "#8a8a8a", fontSize: "1.1rem" }}>
               {t("You are transferring")}
@@ -65,8 +61,7 @@ const W2WReceipt = ({
                 >
                   {t("Total")}:
                   <span style={{ fontWeight: 600, fontSize: ".9rem" }}>
-                    {transactionDetails?.currency?.code}{" "}
-                    {transactionDetails?.total?.toFixed(2)}
+                    {transactionDetails?.currency?.code} {transactionDetails?.total?.toFixed(2)}
                   </span>
                 </div>
                 <div
@@ -85,8 +80,7 @@ const W2WReceipt = ({
                 >
                   {t("Fees")}:
                   <span style={{ fontWeight: 600, fontSize: ".9rem" }}>
-                    {transactionDetails?.currency?.code}{" "}
-                    {transactionDetails?.fee?.toFixed(2)}
+                    {transactionDetails?.currency?.code} {transactionDetails?.fee?.toFixed(2)}
                   </span>
                 </div>
               </>
@@ -144,17 +138,10 @@ const W2WReceipt = ({
               borderRadius: "10px",
             }}
           >
-            <span style={{ minWidth: "80px", color: "#8a8a8a" }}>
-              {t("To")}:
-            </span>
-            <div
-              style={{ display: "flex", alignItems: "center", gap: ".6rem" }}
-            >
+            <span style={{ minWidth: "80px", color: "#8a8a8a" }}>{t("To")}:</span>
+            <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
               <span style={{ fontWeight: 600, fontSize: ".9rem" }}>
-                {`${item?.first_name || item?.company_name} ${item?.last_name}`.slice(
-                  0,
-                  20,
-                )}
+                {`${item?.first_name || item?.company_name} ${item?.last_name}`.slice(0, 20)}
                 {t("(INSTA-")}
                 {walletDetails.wallet_id})
               </span>

@@ -12,8 +12,7 @@ export const ACCOUNT_TYPES = [
     id: "fiat",
     icon: "bank",
     title: "Fiat / IBAN account",
-    description:
-      "EUR, GBP, CHF and more. Receive by SEPA, SWIFT and local rails.",
+    description: "EUR, GBP, CHF and more. Receive by SEPA, SWIFT and local rails.",
     price: "No fee",
     priceNote: "Subject to eligibility",
   },
@@ -21,8 +20,7 @@ export const ACCOUNT_TYPES = [
     id: "crypto",
     icon: "wallet",
     title: "Crypto wallet",
-    description:
-      "USDT, USDC, ETH and BTC. Hold, receive and convert to any balance.",
+    description: "USDT, USDC, ETH and BTC. Hold, receive and convert to any balance.",
     price: ACTIVATION_FEE,
     priceNote: "No activation fee",
   },
@@ -38,8 +36,7 @@ export const ASSETS = [
     symbol: "USDT",
     name: "Tether",
     description: "Tron, Ethereum, Solana and BNB Smart Chain",
-    networks:
-      "Tron (TRC-20) · Ethereum (ERC-20) · Solana (SPL) · BNB Smart Chain (BEP-20)",
+    networks: "Tron (TRC-20) · Ethereum (ERC-20) · Solana (SPL) · BNB Smart Chain (BEP-20)",
     price: ACTIVATION_FEE,
     priceNote: "No activation fee",
     color: "#26A17B",

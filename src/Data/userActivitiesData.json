@@ -61,11 +61,7 @@
   },
   {
     "entity": "PAYMENTSREQUEST",
-    "actions": [
-      "CREATED_PAYMENTS_REQUEST",
-      "PAYMENT_REQUEST_ACCEPTED",
-      "PAYMENT_REQUEST_DECLINED"
-    ]
+    "actions": ["CREATED_PAYMENTS_REQUEST", "PAYMENT_REQUEST_ACCEPTED", "PAYMENT_REQUEST_DECLINED"]
   },
   {
     "entity": "QUOTATION",
@@ -80,11 +76,7 @@
   },
   {
     "entity": "BENEFICIARY",
-    "actions": [
-      "CREATE_BENEFICIARY",
-      "UPDATED_BENEFICIARY",
-      "DELETE_BENEFICIARY"
-    ]
+    "actions": ["CREATE_BENEFICIARY", "UPDATED_BENEFICIARY", "DELETE_BENEFICIARY"]
   },
   {
     "entity": "QRCODE",

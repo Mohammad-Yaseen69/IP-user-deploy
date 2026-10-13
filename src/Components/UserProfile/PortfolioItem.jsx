@@ -31,16 +31,11 @@ const PortfolioItem = ({ item }) => {
         toggle={() => setShowModal(!showModal)}
         style={{ minWidth: "700px" }}
       >
-        <ModalHeader toggle={() => setShowModal(!showModal)}>
-          Item Details
-        </ModalHeader>
+        <ModalHeader toggle={() => setShowModal(!showModal)}>Item Details</ModalHeader>
         <ModalBody>
           <div className={styles.modal_content}>
             {item?.file_type === "image" && (
-              <img
-                src={item?.document_details?.url}
-                className={styles.item_img}
-              />
+              <img src={item?.document_details?.url} className={styles.item_img} />
             )}
             {item?.file_type === "video" && (
               <video

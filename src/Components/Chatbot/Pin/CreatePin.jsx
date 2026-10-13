@@ -39,9 +39,7 @@ const CreatePin = () => {
 
   useEffect(() => {
     setDisabled(
-      loading ||
-        confirmPinFields.data.join("").length < 4 ||
-        pinFields.data.join("").length < 4,
+      loading || confirmPinFields.data.join("").length < 4 || pinFields.data.join("").length < 4,
     );
   }, [loading, confirmPinFields.data, pinFields.data]);
 
@@ -156,11 +154,7 @@ const CreatePin = () => {
   return !success ? (
     window.innerWidth > 600 ? (
       <div style={{ margin: "auto" }} className={styles.container}>
-        {walletId && (
-          <QrGenerate
-            wallets={[{ wallet_id: walletId, wallet_type: "insta" }]}
-          />
-        )}
+        {walletId && <QrGenerate wallets={[{ wallet_id: walletId, wallet_type: "insta" }]} />}
         <div className={styles.left}>
           <div className={styles.top}>
             <div className={styles.logo}>
@@ -211,11 +205,7 @@ const CreatePin = () => {
         </div>
 
         <div className={styles.right}>
-          <h4>
-            {t(
-              "For added security, please create a 4-digit PIN to protect your session.",
-            )}
-          </h4>
+          <h4>{t("For added security, please create a 4-digit PIN to protect your session.")}</h4>
 
           <div className={styles.fields}>
             <PinFields
@@ -238,16 +228,10 @@ const CreatePin = () => {
               handleInputKeyDown={handleInputKeyDown}
             />
 
-            {isPinMatch && (
-              <span>{t("PINs do  not match. Please try again.")}</span>
-            )}
+            {isPinMatch && <span>{t("PINs do  not match. Please try again.")}</span>}
           </div>
 
-          <button
-            disabled={disabled}
-            style={{ opacity: disabled ? 0.5 : 1 }}
-            onClick={setPin}
-          >
+          <button disabled={disabled} style={{ opacity: disabled ? 0.5 : 1 }} onClick={setPin}>
             {loading ? (
               <div class="d-flex justify-content-center">
                 <div class="spinner-border" color="primary" role="status">
@@ -261,10 +245,7 @@ const CreatePin = () => {
         </div>
       </div>
     ) : (
-      <div
-        style={{ margin: "auto", height: "100vh" }}
-        className={styles.container}
-      >
+      <div style={{ margin: "auto", height: "100vh" }} className={styles.container}>
         <div style={{ padding: "27px" }} className={styles.right}>
           <div>
             <div style={{ marginBottom: "15px" }} className={styles.top}>
@@ -298,17 +279,10 @@ const CreatePin = () => {
               <h4 style={{ color: "black" }}>{t("Set Your PIN")}</h4>
             </div>
 
-            <h4>
-              {t(
-                "For added security, please create a 4-digit PIN to protect your session.",
-              )}
-            </h4>
+            <h4>{t("For added security, please create a 4-digit PIN to protect your session.")}</h4>
           </div>
 
-          <div
-            style={{ width: "70%", alignSelf: "center" }}
-            className={styles.fields}
-          >
+          <div style={{ width: "70%", alignSelf: "center" }} className={styles.fields}>
             <PinFields
               label={t("New 4-digit PIN")}
               data={pinFields}
@@ -331,9 +305,7 @@ const CreatePin = () => {
               handleInputKeyDown={handleInputKeyDown}
             />
 
-            {isPinMatch && (
-              <span>{t("PINs do  not match. Please try again.")}</span>
-            )}
+            {isPinMatch && <span>{t("PINs do  not match. Please try again.")}</span>}
           </div>
 
           <div>
@@ -415,8 +387,7 @@ const CreatePin = () => {
           alignItems: "center",
           position: "relative",
           borderRadius: "16px",
-          background:
-            "linear-gradient(180deg, #FAFAFA 0%, rgba(250, 250, 250, 0.00) 132.78%)",
+          background: "linear-gradient(180deg, #FAFAFA 0%, rgba(250, 250, 250, 0.00) 132.78%)",
           boxShadow: "0px 16px 40px -8px rgba(88, 92, 95, 0.16)",
         }}
       >

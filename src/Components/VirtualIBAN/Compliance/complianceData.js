@@ -45,8 +45,7 @@ export const complianceMockData = {
       title: "Refreshed UBO declaration",
       category: "In progress",
       status: "in_progress",
-      description:
-        "Annual review of ultimate beneficial owners for your account.",
+      description: "Annual review of ultimate beneficial owners for your account.",
       deadline: "Due 29 Jul 2026",
       buttons: [],
     },

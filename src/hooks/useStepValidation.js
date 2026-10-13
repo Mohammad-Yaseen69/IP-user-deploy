@@ -14,10 +14,7 @@ export default function useStepValidation(form, rules) {
   const errors = useMemo(
     () =>
       Object.fromEntries(
-        Object.entries(rules).map(([key, isInvalid]) => [
-          key,
-          Boolean(isInvalid(form)),
-        ]),
+        Object.entries(rules).map(([key, isInvalid]) => [key, Boolean(isInvalid(form))]),
       ),
     [form, rules],
   );
@@ -26,11 +23,7 @@ export default function useStepValidation(form, rules) {
 
   const err = useCallback(
     (key, booleanValue) =>
-      booleanValue
-        ? showErrors && errors[key]
-        : showErrors && errors[key]
-          ? ERROR_STYLE
-          : NO_STYLE,
+      booleanValue ? showErrors && errors[key] : showErrors && errors[key] ? ERROR_STYLE : NO_STYLE,
     [showErrors, errors],
   );
 

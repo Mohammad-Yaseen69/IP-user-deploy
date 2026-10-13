@@ -50,8 +50,7 @@ const DeleteImageModal = ({ isOpen, toggle, imageType }) => {
         <Button
           onClick={toggle}
           style={{
-            background:
-              "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
             border: "none",
             outline: "none",
             borderRadius: "10px",
@@ -63,8 +62,7 @@ const DeleteImageModal = ({ isOpen, toggle, imageType }) => {
           onClick={deleteHandler}
           disabled={isDeleting}
           style={{
-            background:
-              "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
             border: "none",
             outline: "none",
             borderRadius: "10px",

@@ -71,12 +71,7 @@
   font-style: normal;
   font-weight: 600;
   line-height: 130.1%;
-  background: linear-gradient(
-    277deg,
-    #e64067 -9.52%,
-    #5926f0 62.22%,
-    #4828a0 119.38%
-  );
+  background: linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

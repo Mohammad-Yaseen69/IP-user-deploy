@@ -3,22 +3,13 @@ import { ChevronDown, X } from "react-feather";
 import { useTranslation } from "react-i18next";
 import styles from "../styles/Index.module.css";
 
-export const ActionDropdown = ({
-  selectedEntity,
-  value,
-  onChange,
-  adminActivitiesData,
-  fmt,
-}) => {
+export const ActionDropdown = ({ selectedEntity, value, onChange, adminActivitiesData, fmt }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef();
   const { t } = useTranslation();
   const availableActions = selectedEntity
-    ? (adminActivitiesData.find((e) => e.entity === selectedEntity)?.actions ??
-      [])
-    : adminActivitiesData
-        .flatMap((e) => e.actions)
-        .filter((a, i, arr) => arr.indexOf(a) === i);
+    ? (adminActivitiesData.find((e) => e.entity === selectedEntity)?.actions ?? [])
+    : adminActivitiesData.flatMap((e) => e.actions).filter((a, i, arr) => arr.indexOf(a) === i);
 
   useEffect(() => {
     const handler = (e) => {
@@ -34,9 +25,7 @@ export const ActionDropdown = ({
 
   const toggle = (action) => {
     onChange((prev) =>
-      prev.includes(action)
-        ? prev.filter((a) => a !== action)
-        : [...prev, action],
+      prev.includes(action) ? prev.filter((a) => a !== action) : [...prev, action],
     );
   };
 
@@ -87,9 +76,7 @@ export const ActionDropdown = ({
       {open && (
         <div className={styles.multiDropdownMenu}>
           {availableActions.length === 0 ? (
-            <div className={styles.noActionText}>
-              {t("No actions available")}
-            </div>
+            <div className={styles.noActionText}>{t("No actions available")}</div>
           ) : (
             availableActions.map((action) => {
               const checked = value.includes(action);
@@ -98,15 +85,12 @@ export const ActionDropdown = ({
                 <div
                   key={action}
                   onClick={() => toggle(action)}
-                  className={`${styles.multiDropdownItem} ${
-                    checked ? styles.multiActiveItem : ""
-                  }`}
+                  className={`${styles.multiDropdownItem} ${checked ? styles.multiActiveItem : ""}`}
                   onMouseEnter={(e) => {
                     if (!checked) e.currentTarget.style.background = "#f8fafc";
                   }}
                   onMouseLeave={(e) => {
-                    if (!checked)
-                      e.currentTarget.style.background = "transparent";
+                    if (!checked) e.currentTarget.style.background = "transparent";
                   }}
                 >
                   <div

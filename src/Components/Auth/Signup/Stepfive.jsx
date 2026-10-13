@@ -17,9 +17,7 @@ const Stepfive = ({ data, dataHandler }) => {
       </div>
       <div className={styles.info}>
         <Info color="#ffaa29" size={26} />
-        <span>
-          {t("It Will Be Autofill If You're Signing Up With Invitation Link")}
-        </span>
+        <span>{t("It Will Be Autofill If You're Signing Up With Invitation Link")}</span>
       </div>
     </div>
   );

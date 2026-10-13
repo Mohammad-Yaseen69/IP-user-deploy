@@ -21,13 +21,7 @@ import { useQueryClient } from "@tanstack/react-query";
 const counterTypes = ["10", "25", "50", "75", "Custom Amount"];
 let timeout;
 
-const BargainQuotation = ({
-  item,
-  isOpen,
-  toggle,
-  type = "bargain",
-  badgeColor = "",
-}) => {
+const BargainQuotation = ({ item, isOpen, toggle, type = "bargain", badgeColor = "" }) => {
   const { t } = useTranslation();
   const { authHeader, verifyToken, userDetails } = useContext(UserContext);
   const [saving, setSaving] = useState(false);
@@ -119,8 +113,7 @@ const BargainQuotation = ({
         setError("Receiver's receiving limit has been reached!");
       } else {
         setError(
-          dec?.message ??
-            "We cannot process your request at the moment, please try again later.",
+          dec?.message ?? "We cannot process your request at the moment, please try again later.",
         );
       }
     } finally {
@@ -129,19 +122,13 @@ const BargainQuotation = ({
   };
   const inputRef = useRef(null);
   return window.innerWidth > 1000 ? (
-    <Modal
-      isOpen={isOpen}
-      style={{ width: "100vw", maxWidth: step === 1 ? "900px" : "1200px" }}
-    >
+    <Modal isOpen={isOpen} style={{ width: "100vw", maxWidth: step === 1 ? "900px" : "1200px" }}>
       <ModalBody className={styles.body}>
         <div className={styles.left}>
           <img src={bargain} alt="" />
           <h4>
             {step === 1
-              ? t("Bargain Offer").replace(
-                  "Bargain",
-                  service_name_formatter(type),
-                )
+              ? t("Bargain Offer").replace("Bargain", service_name_formatter(type))
               : t("Then Offer is Sent!")}
           </h4>
         </div>
@@ -151,10 +138,7 @@ const BargainQuotation = ({
               <div className={styles.amount}>
                 <div className={styles.top}>
                   <span>{t("Amount")}</span>
-                  <div
-                    className={styles.badge}
-                    style={{ background: badgeColor }}
-                  >
+                  <div className={styles.badge} style={{ background: badgeColor }}>
                     {t(capitalizeStatus(item?.status))}
                   </div>
                 </div>
@@ -169,10 +153,7 @@ const BargainQuotation = ({
               <div className={styles.inp_amount}>
                 <div className={styles.top}>
                   <span>{t("Enter Counter Amount")}</span>
-                  <div
-                    className={styles.badge}
-                    style={{ background: badgeColor }}
-                  >
+                  <div className={styles.badge} style={{ background: badgeColor }}>
                     {counterType.includes("Custom") ? "" : "-"}
                     {counterType}
                     {counterType.includes("Custom") ? "" : "%"} {t("Applied")}
@@ -221,11 +202,7 @@ const BargainQuotation = ({
               <div className={styles.bottom}>
                 <p>{error}</p>
                 <div className={styles.btns}>
-                  <button
-                    disabled={saving}
-                    onClick={toggle}
-                    className={styles.trs}
-                  >
+                  <button disabled={saving} onClick={toggle} className={styles.trs}>
                     {t("Cancel")}
                   </button>
                   <button
@@ -248,24 +225,17 @@ const BargainQuotation = ({
               <div className={styles.inp_amount}>
                 <div className={styles.top}>
                   <span>{t("Countered Offer")}</span>
-                  <div
-                    className={styles.badge}
-                    style={{ background: badgeColor }}
-                  >
+                  <div className={styles.badge} style={{ background: badgeColor }}>
                     {counterType.includes("Custom") ? "" : "-"}
                     {counterType}
                     {counterType.includes("Custom") ? "" : "%"} {t("Applied")}
                   </div>
                 </div>
                 <h5>
-                  {item?.amount_reciever_currency?.currency?.code}{" "}
-                  {counterAmount}
+                  {item?.amount_reciever_currency?.currency?.code} {counterAmount}
                 </h5>
               </div>
-              <div
-                className={styles.bottom}
-                style={{ justifyContent: "flex-end" }}
-              >
+              <div className={styles.bottom} style={{ justifyContent: "flex-end" }}>
                 <button
                   disabled={saving}
                   onClick={() => {
@@ -325,10 +295,7 @@ const BargainQuotation = ({
                 <div className={styles.amount}>
                   <div className={styles.top}>
                     <span>{t("Amount")}</span>
-                    <div
-                      className={styles.badge}
-                      style={{ background: badgeColor }}
-                    >
+                    <div className={styles.badge} style={{ background: badgeColor }}>
                       {t(capitalizeStatus(item?.status))}
                     </div>
                   </div>
@@ -343,10 +310,7 @@ const BargainQuotation = ({
                 <div className={styles.inp_amount}>
                   <div className={styles.top}>
                     <span>{t("Enter Counter Amount")}</span>
-                    <div
-                      className={styles.badge}
-                      style={{ background: badgeColor }}
-                    >
+                    <div className={styles.badge} style={{ background: badgeColor }}>
                       -{counterType}% {t("Applied")}
                     </div>
                   </div>
@@ -378,9 +342,7 @@ const BargainQuotation = ({
                         console.log(calculatedAmount);
                         console.log(item?.amount);
                         setCounterAmount(
-                          Number(
-                            item?.amount - calculatedAmount,
-                          )?.toLocaleString("en-US", {
+                          Number(item?.amount - calculatedAmount)?.toLocaleString("en-US", {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2,
                           }),
@@ -407,16 +369,12 @@ const BargainQuotation = ({
                 <div className={styles.inp_amount}>
                   <div className={styles.top}>
                     <span>{t("Countered Offer")}</span>
-                    <div
-                      className={styles.badge}
-                      style={{ background: badgeColor }}
-                    >
+                    <div className={styles.badge} style={{ background: badgeColor }}>
                       -{counterType}% {t("Applied")}
                     </div>
                   </div>
                   <h5>
-                    {item?.amount_reciever_currency?.currency?.code}{" "}
-                    {counterAmount}
+                    {item?.amount_reciever_currency?.currency?.code} {counterAmount}
                   </h5>
                 </div>
               </>

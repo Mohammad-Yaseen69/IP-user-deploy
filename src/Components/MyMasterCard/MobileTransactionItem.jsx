@@ -5,13 +5,7 @@ import styles from "./MobileTransactionItem.module.css";
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 import { UserContext } from "../../Context/UserContext";
 
-const MobileTransactionItem = ({
-  item,
-  activeItem,
-  setActiveItem,
-  index,
-  cardNo,
-}) => {
+const MobileTransactionItem = ({ item, activeItem, setActiveItem, index, cardNo }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
 
@@ -37,13 +31,11 @@ const MobileTransactionItem = ({
       >
         <div className={styles.left}>
           <div className={styles.dp}>
-            {item?.senderCard?.account?.first_name &&
-            item?.senderCard?.account?.last_name
+            {item?.senderCard?.account?.first_name && item?.senderCard?.account?.last_name
               ? (item?.senderCard?.account?.first_name +
                   " " +
                   item?.senderCard?.account?.last_name)[0]
-              : item?.receiverCard?.account?.first_name &&
-                  item?.receiverCard?.account?.last_name
+              : item?.receiverCard?.account?.first_name && item?.receiverCard?.account?.last_name
                 ? (item?.receiverCard?.account?.first_name +
                     " " +
                     item?.receiverCard?.account?.last_name)[0]
@@ -62,13 +54,9 @@ const MobileTransactionItem = ({
                 width: activeItem === index + 1 ? "fit-content" : "30vw",
               }}
             >
-              {item?.senderCard?.account?.first_name &&
-              item?.senderCard?.account?.last_name
-                ? item?.senderCard?.account?.first_name +
-                  " " +
-                  item?.senderCard?.account?.last_name
-                : item?.receiverCard?.account?.first_name &&
-                    item?.receiverCard?.account?.last_name
+              {item?.senderCard?.account?.first_name && item?.senderCard?.account?.last_name
+                ? item?.senderCard?.account?.first_name + " " + item?.senderCard?.account?.last_name
+                : item?.receiverCard?.account?.first_name && item?.receiverCard?.account?.last_name
                   ? item?.receiverCard?.account?.first_name +
                     " " +
                     item?.receiverCard?.account?.last_name
@@ -96,8 +84,7 @@ const MobileTransactionItem = ({
             <h5
               className={styles.amount}
               style={{
-                color:
-                  item?.type?.toLowerCase() === "debit" ? "#FF7293" : "#1CB234",
+                color: item?.type?.toLowerCase() === "debit" ? "#FF7293" : "#1CB234",
                 display: activeItem === index + 1 ? "none" : "inherit",
               }}
             >
@@ -137,19 +124,12 @@ const MobileTransactionItem = ({
           </div>
           <div className={styles.tmdr_item}>
             <span>{t("Type")}</span>
-            <h4>
-              {(item?.type &&
-                item?.type[0]?.toUpperCase() + item?.type?.slice(1)) ||
-                "N/A"}
-            </h4>
+            <h4>{(item?.type && item?.type[0]?.toUpperCase() + item?.type?.slice(1)) || "N/A"}</h4>
           </div>
           <div className={styles.tmdr_item}>
             <span>{t("Transaction Type")}</span>
             <h4>
-              {t(service_name_formatter(item?.transaction_type)).replace(
-                "Mastercard",
-                "",
-              ) || "N/A"}
+              {t(service_name_formatter(item?.transaction_type)).replace("Mastercard", "") || "N/A"}
             </h4>
           </div>
           {item?.reason && (
@@ -162,10 +142,7 @@ const MobileTransactionItem = ({
             <span>{t("Total Amount")}</span>
             <h4>
               {item?.billCurrency ? item?.billCurrency : item?.currency || "$"}{" "}
-              {(item?.billAmount
-                ? item?.billAmount
-                : item?.amount
-              )?.toLocaleString("en-US", {
+              {(item?.billAmount ? item?.billAmount : item?.amount)?.toLocaleString("en-US", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}
@@ -196,9 +173,7 @@ const MobileTransactionItem = ({
 
           <div className={styles.tmdr_item}>
             <span>{t("Status")}</span>
-            <h4 style={{ color: badgeColor() }}>
-              {t(item?.status || "Unknown")}
-            </h4>
+            <h4 style={{ color: badgeColor() }}>{t(item?.status || "Unknown")}</h4>
           </div>
           <div className={styles.tmdr_item}>
             <span>{t("Date & Time")}</span>

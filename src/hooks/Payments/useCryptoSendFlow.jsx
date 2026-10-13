@@ -6,16 +6,9 @@ import { UserContext } from "../../Context/UserContext";
 import { useDebounce } from "../useDebounce/useDebounce";
 import useSendOtp from "../GeneralUse/useSendOtp";
 import { useIdempotency } from "./useIdempotency";
-import {
-  useCryptoPayout,
-  useCryptoPayoutFee,
-  useValidateCryptoAddress,
-} from "./useCryptoPayout";
+import { useCryptoPayout, useCryptoPayoutFee, useValidateCryptoAddress } from "./useCryptoPayout";
 import { handlePaymentApiError } from "../../utils/Functions/handlePaymentApiError";
-import {
-  getAmountError,
-  getAmountNumber,
-} from "../../stateMachines/cryptoPayout";
+import { getAmountError, getAmountNumber } from "../../stateMachines/cryptoPayout";
 import {
   filterProtocolsForAddress,
   getBeneficiaryCryptoChannels,
@@ -55,31 +48,18 @@ const isMissingBeneficiaryDetailsError = (message) =>
     .toLowerCase()
     .includes("missing details required for crypto payouts");
 
-export const getBeneficiaryId = (beneficiary) =>
-  beneficiary?._id || beneficiary?.id;
+export const getBeneficiaryId = (beneficiary) => beneficiary?._id || beneficiary?.id;
 
 export const getBeneficiaryName = (beneficiary) => {
-  const name = [beneficiary?.first_name, beneficiary?.last_name]
-    .filter(Boolean)
-    .join(" ");
-  return (
-    name ||
-    beneficiary?.company_name ||
-    beneficiary?.legalName ||
-    beneficiary?.name ||
-    "-"
-  );
+  const name = [beneficiary?.first_name, beneficiary?.last_name].filter(Boolean).join(" ");
+  return name || beneficiary?.company_name || beneficiary?.legalName || beneficiary?.name || "-";
 };
 
 export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const {
-    userDetails,
-    beneficiaries,
-    getUserBeneficiaries,
-    setProfileLockTime,
-  } = useContext(UserContext);
+  const { userDetails, beneficiaries, getUserBeneficiaries, setProfileLockTime } =
+    useContext(UserContext);
 
   const walletId = wallet?._id;
   const cryptoCurrency = String(wallet?.currency?.code || "").toUpperCase();
@@ -124,9 +104,7 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
 
   const cryptoBeneficiaries = useMemo(
     () =>
-      (beneficiaries || []).filter((beneficiary) =>
-        hasCryptoChannel(beneficiary, cryptoCurrency),
-      ),
+      (beneficiaries || []).filter((beneficiary) => hasCryptoChannel(beneficiary, cryptoCurrency)),
     [beneficiaries, cryptoCurrency],
   );
 
@@ -141,16 +119,12 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
 
   const address = getChannelAddress(selectedChannel);
 
-  const savedProtocol = useMemo(
-    () => getChannelProtocol(selectedChannel),
-    [selectedChannel],
-  );
+  const savedProtocol = useMemo(() => getChannelProtocol(selectedChannel), [selectedChannel]);
 
   const protocolOptions = useMemo(() => {
     if (!address) return [];
     if (savedProtocol) return [savedProtocol];
-    if (apiProtocols.length)
-      return filterProtocolsForAddress(apiProtocols, address);
+    if (apiProtocols.length) return filterProtocolsForAddress(apiProtocols, address);
     const fromAddress = getProtocolsForAddress(address);
     if (fromAddress.length) return fromAddress;
     const initial = getInitialProtocol(selectedChannel);
@@ -170,8 +144,7 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
   useEffect(() => {
     if (!selectedBeneficiary) return;
     const stillListed = cryptoBeneficiaries.some(
-      (beneficiary) =>
-        getBeneficiaryId(beneficiary) === getBeneficiaryId(selectedBeneficiary),
+      (beneficiary) => getBeneficiaryId(beneficiary) === getBeneficiaryId(selectedBeneficiary),
     );
     if (!stillListed) setSelectedBeneficiary(null);
   }, [cryptoBeneficiaries, selectedBeneficiary]);
@@ -412,8 +385,7 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
 
   const canEditBeneficiary =
     !!selectedBeneficiary &&
-    (isMissingBeneficiaryDetailsError(beneficiaryError) ||
-      addressStatus === "invalid");
+    (isMissingBeneficiaryDetailsError(beneficiaryError) || addressStatus === "invalid");
 
   const canGetQuote =
     getAmountNumber(amount) >= 0 &&
@@ -424,8 +396,7 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
     addressStatus !== "invalid" &&
     !feeMutation.isPending;
 
-  const canConfirm =
-    !!feeDetails?.token && confirmedNetwork && !isQuoteExpired && !isSendingOtp;
+  const canConfirm = !!feeDetails?.token && confirmedNetwork && !isQuoteExpired && !isSendingOtp;
 
   return {
     step,

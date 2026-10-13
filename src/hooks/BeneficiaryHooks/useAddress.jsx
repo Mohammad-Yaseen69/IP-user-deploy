@@ -66,12 +66,7 @@ const useAddress = ({ countryIsoCode, formData }) => {
       }
     };
 
-    if (
-      debouncedAddress.length >= 5 &&
-      position.lat &&
-      position.lng &&
-      addressInFocus
-    ) {
+    if (debouncedAddress.length >= 5 && position.lat && position.lng && addressInFocus) {
       getAddresses();
     }
 

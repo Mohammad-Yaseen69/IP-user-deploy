@@ -57,8 +57,7 @@ export const normalizeProtocol = (value) => {
 };
 
 export const getAssetProtocols = (asset) =>
-  CRYPTO_PAYOUT_PROTOCOLS[String(asset || "").toUpperCase()] ||
-  CRYPTO_PAYOUT_PROTOCOLS.USDT;
+  CRYPTO_PAYOUT_PROTOCOLS[String(asset || "").toUpperCase()] || CRYPTO_PAYOUT_PROTOCOLS.USDT;
 
 export const getAssetProtocolOptions = (asset) =>
   getAssetProtocols(asset).map((protocol) => ({
@@ -71,15 +70,12 @@ export const getProtocolsForAddress = (address) => {
   if (!value) return [];
   if (/^0x[a-fA-F0-9]{40}$/.test(value)) return EVM_PROTOCOLS;
   if (/^T[1-9A-HJ-NP-Za-km-z]{33}$/.test(value)) return ["TRC20"];
-  if (value.length >= 32 && value.length <= 44 && BASE58.test(value))
-    return ["SOL"];
+  if (value.length >= 32 && value.length <= 44 && BASE58.test(value)) return ["SOL"];
   return [];
 };
 
 export const filterProtocolsForAddress = (protocols = [], address = "") => {
-  const offered = (protocols || [])
-    .map((p) => String(p).toUpperCase())
-    .filter(isSupportedProtocol);
+  const offered = (protocols || []).map((p) => String(p).toUpperCase()).filter(isSupportedProtocol);
   const possible = getProtocolsForAddress(address);
   if (!possible.length) return offered;
   const narrowed = offered.filter((p) => possible.includes(p));
@@ -88,10 +84,7 @@ export const filterProtocolsForAddress = (protocols = [], address = "") => {
 
 export const getChannelProtocol = (channel) =>
   normalizeProtocol(
-    channel?.extras?.crypto_network ||
-      channel?.network ||
-      channel?.protocol ||
-      channel?.currency,
+    channel?.extras?.crypto_network || channel?.network || channel?.protocol || channel?.currency,
   );
 
 export const getInitialProtocol = (channel) => {
@@ -105,17 +98,15 @@ export const getChannelAddress = (channel) =>
   String(channel?.wallet_address || channel?.address || "").trim();
 
 export const getChannelAsset = (channel) => {
-  const asset = String(
-    channel?.extras?.crypto_asset || channel?.asset || channel?.currency || "",
-  )
+  const asset = String(channel?.extras?.crypto_asset || channel?.asset || channel?.currency || "")
     .trim()
     .toUpperCase();
   return asset === "USDT" || asset === "USDC" ? asset : "";
 };
 
 export const getBeneficiaryCryptoChannels = (beneficiary) =>
-  (Array.isArray(beneficiary?.crypto) ? beneficiary.crypto : []).filter(
-    (channel) => getChannelAddress(channel),
+  (Array.isArray(beneficiary?.crypto) ? beneficiary.crypto : []).filter((channel) =>
+    getChannelAddress(channel),
   );
 
 export const hasCryptoChannel = (beneficiary, cryptoCurrency = "") => {

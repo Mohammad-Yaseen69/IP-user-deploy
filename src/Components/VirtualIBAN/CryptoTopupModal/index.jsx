@@ -42,27 +42,14 @@ const CoinsIcon = () => (
 
 const IdBadgeIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-    <rect
-      x="3"
-      y="2.25"
-      width="12"
-      height="13.5"
-      rx="1.5"
-      stroke="#F8F9FC"
-      strokeWidth="1.2"
-    />
+    <rect x="3" y="2.25" width="12" height="13.5" rx="1.5" stroke="#F8F9FC" strokeWidth="1.2" />
     <circle cx="9" cy="8.25" r="2.25" stroke="#F8F9FC" strokeWidth="1.2" />
     <path
       d="M5.25 14.25C5.25 12.1789 6.92893 10.5 9 10.5C11.0711 10.5 12.75 12.1789 12.75 14.25"
       stroke="#F8F9FC"
       strokeWidth="1.2"
     />
-    <path
-      d="M7.5 3.75H10.5"
-      stroke="#F8F9FC"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
+    <path d="M7.5 3.75H10.5" stroke="#F8F9FC" strokeWidth="1.2" strokeLinecap="round" />
   </svg>
 );
 
@@ -225,8 +212,7 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
       returnUrl: `${base_url}/add-funds/crypto-success?isIban=true`,
       idempotencyKey: getKey(),
     });
-    const nextCheckoutUrl =
-      res?.data?.checkout_url || res?.data?.data?.checkout_url;
+    const nextCheckoutUrl = res?.data?.checkout_url || res?.data?.data?.checkout_url;
     if (nextCheckoutUrl) {
       setCheckoutUrl(nextCheckoutUrl);
     } else if (res?.message) {
@@ -258,9 +244,7 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
         setCurrentStep(nextStep);
       }
     } catch (error) {
-      toast.error(
-        getErrorMessage(error, t("Unable to process crypto topup request")),
-      );
+      toast.error(getErrorMessage(error, t("Unable to process crypto topup request")));
     }
   };
 
@@ -274,13 +258,7 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
   const renderStepContent = () => {
     switch (currentStep) {
       case STEPS.AMOUNT:
-        return (
-          <AmountStep
-            amount={amount}
-            setAmount={setAmount}
-            selectedIban={selectedIban}
-          />
-        );
+        return <AmountStep amount={amount} setAmount={setAmount} selectedIban={selectedIban} />;
       case STEPS.REVIEW:
         return (
           <ReviewStep
@@ -309,10 +287,7 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
   const footerDisabled = disabled || isProcessing || !selectedIban;
 
   const renderBody = () => (
-    <div
-      className={styles.modalLayout}
-      style={{ flexDirection: width < 1000 ? "column" : "row" }}
-    >
+    <div className={styles.modalLayout} style={{ flexDirection: width < 1000 ? "column" : "row" }}>
       <div className={addFundsStyles.left}>
         <div style={{ width: "100%" }}>
           <div className={styles.bankHeader}>
@@ -344,21 +319,14 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
             )}
             {width <= 480 && (
               <div className={styles.headerRightGroup}>
-                <button
-                  type="button"
-                  className={styles.cancelBtn}
-                  onClick={handleClose}
-                >
+                <button type="button" className={styles.cancelBtn} onClick={handleClose}>
                   {t("Cancel")}
                 </button>
                 <ContactBox isMobile={true} />
               </div>
             )}
           </div>
-          <div
-            className={addFundsStyles.progressEffect}
-            style={{ marginTop: "2rem" }}
-          >
+          <div className={addFundsStyles.progressEffect} style={{ marginTop: "2rem" }}>
             {width < 480 ? (
               <div style={{ display: "flex", gap: "6px", width: "100%" }}>
                 {SIDEBAR_STEPS.map((item) => {
@@ -404,19 +372,12 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
           </div>
         )}
       </div>
-      <div
-        className={styles.rightPanel}
-        style={{ width: width < 1000 ? "100%" : undefined }}
-      >
+      <div className={styles.rightPanel} style={{ width: width < 1000 ? "100%" : undefined }}>
         <div className={styles.content}>{renderStepContent()}</div>
 
         <div className={styles.footer}>
           {width >= 480 && (
-            <button
-              type="button"
-              className={styles.cancelBtn}
-              onClick={handleClose}
-            >
+            <button type="button" className={styles.cancelBtn} onClick={handleClose}>
               {t("Cancel")}
             </button>
           )}
@@ -438,11 +399,7 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
               disabled={footerDisabled}
               onClick={handleContinue}
             >
-              {isProcessing
-                ? t("Processing...")
-                : isDone
-                  ? t("Done")
-                  : continueLabel}
+              {isProcessing ? t("Processing...") : isDone ? t("Done") : continueLabel}
               <ChevronRight />
             </button>
           </div>
@@ -467,9 +424,7 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
         toggle={handleCheckoutClose}
         style={{ width: "700px", maxWidth: "calc(100% - 2rem)" }}
       >
-        <ModalHeader toggle={handleCheckoutClose}>
-          {t("Payment Checkout")}
-        </ModalHeader>
+        <ModalHeader toggle={handleCheckoutClose}>{t("Payment Checkout")}</ModalHeader>
         <ModalBody style={{ padding: 0 }}>
           <iframe
             title={t("Payment Checkout")}

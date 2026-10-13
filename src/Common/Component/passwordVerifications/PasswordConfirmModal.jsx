@@ -49,9 +49,7 @@ const PasswordConfirmModal = ({
     },
     onError: (error) => {
       const message = error?.message || error?.data?.message;
-      toast.error(
-        message ?? t("Something went wrong while verifying password."),
-      );
+      toast.error(message ?? t("Something went wrong while verifying password."));
     },
   });
 
@@ -104,10 +102,7 @@ const PasswordConfirmModal = ({
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => setShowPassword(!showPassword)}
-                    edge="end"
-                  >
+                  <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </IconButton>
                 </InputAdornment>
@@ -116,20 +111,14 @@ const PasswordConfirmModal = ({
           />
 
           <div className={styles.actions}>
-            <Button
-              onClick={handleClose}
-              disabled={loading}
-              className={styles.cancelBtn}
-            >
+            <Button onClick={handleClose} disabled={loading} className={styles.cancelBtn}>
               {t("Cancel")}
             </Button>
             <Button
               type="submit"
               disabled={loading || !password}
               className={styles.confirmBtn}
-              startIcon={
-                loading ? <CircularProgress size={16} color="inherit" /> : null
-              }
+              startIcon={loading ? <CircularProgress size={16} color="inherit" /> : null}
             >
               {t("Continue")}
             </Button>

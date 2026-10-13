@@ -138,8 +138,7 @@ const ConfirmSend = ({
           padding: "20px 30px",
           background: "rgba(0,0,0,.03)",
           paddingBottom: 0,
-          boxShadow:
-            "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
+          boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)",
         }}
         className="conf_cont"
       >
@@ -152,9 +151,7 @@ const ConfirmSend = ({
           className="i_t_selected"
         >
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <span style={{ color: "rgba(0,0,0,0.36)", fontSize: ".7rem" }}>
-              {t("Country")}
-            </span>
+            <span style={{ color: "rgba(0,0,0,0.36)", fontSize: ".7rem" }}>{t("Country")}</span>
           </div>
           <div
             style={{ display: "flex", alignItems: "center", gap: ".5rem" }}
@@ -302,9 +299,7 @@ const ConfirmSend = ({
                 </div>
                 <span style={{ fontSize: ".7rem" }}>
                   {" "}
-                  {payoutChannel &&
-                    payoutChannel?.value === "bank" &&
-                    `IBAN: ${item?.bank_iban}`}
+                  {payoutChannel && payoutChannel?.value === "bank" && `IBAN: ${item?.bank_iban}`}
                   {payoutChannel &&
                     payoutChannel?.value === "mobile" &&
                     `IBAN: ${item?.mobile_wallet_account_number}`}

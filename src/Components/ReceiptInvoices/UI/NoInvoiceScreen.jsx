@@ -11,22 +11,15 @@ const NoInvoiceScreen = ({ setShowModal }) => {
   const can = usePermission();
 
   return (
-    <div
-      style={{ gridTemplateColumns: width < 800 && "1fr" }}
-      className={styles.noReceiptCont}
-    >
+    <div style={{ gridTemplateColumns: width < 800 && "1fr" }} className={styles.noReceiptCont}>
       <div className={styles.left}>
         <div>
           <h3>{t("You haven’t created any invoices yet.")}</h3>
-          <p>
-            {t("Start by generating your first invoice in just a few steps.")}
-          </p>
+          <p>{t("Start by generating your first invoice in just a few steps.")}</p>
         </div>
 
         {can("invoices.create") && (
-          <button onClick={() => setShowModal(true)}>
-            {t("Generate Your Invoice")}
-          </button>
+          <button onClick={() => setShowModal(true)}>{t("Generate Your Invoice")}</button>
         )}
       </div>
 

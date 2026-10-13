@@ -2,10 +2,7 @@ import styles from "./styles/index.module.css";
 import bell from "./files/bell.svg";
 import { Button, Modal, ModalBody } from "reactstrap";
 import { useTranslation } from "react-i18next";
-import {
-  clearAuthStorage,
-  getLoginPath,
-} from "../../utils/Functions/loginPage";
+import { clearAuthStorage, getLoginPath } from "../../utils/Functions/loginPage";
 import { ChevronRight } from "react-feather";
 import { useNavigate } from "react-router";
 

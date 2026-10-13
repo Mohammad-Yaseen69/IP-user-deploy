@@ -36,18 +36,11 @@ const PLACEHOLDER_CARD_TYPE = {
   cvcLength: 3,
 };
 
-const AddFundsModal = ({
-  isOpen,
-  setOpen,
-  vvcCardType,
-  card,
-  setCurrentCardDetails,
-}) => {
+const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetails }) => {
   const [step, setStep] = useState(1);
   const [paymentType, setPaymentType] = useState("");
   const [selectedSaveCard, setSelectedSaveCard] = useState(null);
-  const { userWallets, authHeader, userDetails, setProfileLockTime } =
-    useContext(UserContext);
+  const { userWallets, authHeader, userDetails, setProfileLockTime } = useContext(UserContext);
   const [cards, setCards] = useState([]);
   const [codeType, setCodeType] = useState("sms");
   const [otpMethods, setOtpMethods] = useState(null);
@@ -234,11 +227,7 @@ const AddFundsModal = ({
       setshowOtpModal(true);
       setToken(dec?.token);
     } catch {
-      toast.error(
-        t(
-          "We couldn't process your request at the moment! please try again later.",
-        ),
-      );
+      toast.error(t("We couldn't process your request at the moment! please try again later."));
     } finally {
       setDisabled(false);
       setLoading(false);
@@ -305,8 +294,7 @@ const AddFundsModal = ({
     console.log(decrypted);
     setError(decrypted?.message ?? "Invalid Verification Code");
     if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-      const time =
-        decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+      const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
       const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
       setProfileLockTime(timeInSec);
       const coun = localStorage.getItem("ip_country");
@@ -426,9 +414,7 @@ const AddFundsModal = ({
       setStep((prev) => prev + 1);
       setCurrentCardDetails((prev) => ({
         ...prev,
-        balance: (
-          +prev?.balance + +feeDetails?.feeDetails?.amountToTopup
-        ).toFixed(2),
+        balance: (+prev?.balance + +feeDetails?.feeDetails?.amountToTopup).toFixed(2),
       }));
       console.log(dec);
     } catch (err) {
@@ -454,12 +440,8 @@ const AddFundsModal = ({
         setDisabled(!amount);
         break;
       case 2:
-        setSideText(
-          width > 1000 ? t("Choose the method") : t("Select Payment Type"),
-        );
-        setDisabled(
-          !paymentType || (paymentType === "paypal" && !feeDetails.token),
-        );
+        setSideText(width > 1000 ? t("Choose the method") : t("Select Payment Type"));
+        setDisabled(!paymentType || (paymentType === "paypal" && !feeDetails.token));
         break;
       case 3:
         setDisabled(!feeDetails.token && !walletState._id);
@@ -500,16 +482,7 @@ const AddFundsModal = ({
         setDisabled(false);
         break;
     }
-  }, [
-    step,
-    amount,
-    feeDetails,
-    walletState,
-    paymentType,
-    width,
-    cardDetail,
-    selectedSaveCard,
-  ]);
+  }, [step, amount, feeDetails, walletState, paymentType, width, cardDetail, selectedSaveCard]);
 
   const handleBack = () => {
     if (step === 2) {
@@ -607,10 +580,7 @@ const AddFundsModal = ({
           )}
 
           <div className={onboardStyles.paymentContent}>
-            <div
-              className={onboardStyles.right}
-              style={{ padding: "0px", flex: 1 }}
-            >
+            <div className={onboardStyles.right} style={{ padding: "0px", flex: 1 }}>
               {step === 2 && (
                 <PaymentSelect
                   styling={{
@@ -688,9 +658,7 @@ const AddFundsModal = ({
                   }
                   setAmount(e.target.value);
                 }}
-                onKeyUp={(e) =>
-                  formatCurrency(e.target.value, false, setAmount)
-                }
+                onKeyUp={(e) => formatCurrency(e.target.value, false, setAmount)}
                 onBlur={(e) => formatCurrency(e.target.value, true, setAmount)}
                 type="text"
                 placeholder={t("30.00")}
@@ -742,8 +710,7 @@ const AddFundsModal = ({
               className={styles.cancel}
               style={{
                 backgroundColor: "white",
-                display:
-                  (width > 1000 && step !== 5) || step === 5 ? "none" : "flex",
+                display: (width > 1000 && step !== 5) || step === 5 ? "none" : "flex",
                 width: "100%",
               }}
             >
@@ -756,11 +723,7 @@ const AddFundsModal = ({
   );
   return (
     <>
-      <Modal
-        isOpen={isOpen && width > 1000}
-        style={{ minWidth: "850px" }}
-        toggle={handleClose}
-      >
+      <Modal isOpen={isOpen && width > 1000} style={{ minWidth: "850px" }} toggle={handleClose}>
         <ModalBody>{renderData()}</ModalBody>
       </Modal>
 
@@ -774,10 +737,7 @@ const AddFundsModal = ({
       />
 
       <Modal isOpen={showOtpModal}>
-        <ModalHeader toggle={() => setshowOtpModal(false)}>
-          {" "}
-          {t("Confirm")}{" "}
-        </ModalHeader>
+        <ModalHeader toggle={() => setshowOtpModal(false)}> {t("Confirm")} </ModalHeader>
         <ModalBody>
           <OTPConfirmation
             variant="card"

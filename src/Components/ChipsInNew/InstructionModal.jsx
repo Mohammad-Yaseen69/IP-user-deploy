@@ -95,9 +95,7 @@ const InstructionsModal = ({ isOpen, toggle }) => {
                 fontWeight: 500,
               }}
             >
-              {t(
-                "Each payment includes customer information for your convenience.",
-              )}
+              {t("Each payment includes customer information for your convenience.")}
             </li>
           </ul>
 
@@ -122,9 +120,7 @@ const InstructionsModal = ({ isOpen, toggle }) => {
                 fontWeight: 500,
               }}
             >
-              {t(
-                "Zero activation fees – start immediately without upfront costs.",
-              )}
+              {t("Zero activation fees – start immediately without upfront costs.")}
             </li>
             <li
               style={{
@@ -148,9 +144,7 @@ const InstructionsModal = ({ isOpen, toggle }) => {
                 fontWeight: 500,
               }}
             >
-              {t(
-                "Ditch the hardware; no terminal costs mean more savings for you.",
-              )}
+              {t("Ditch the hardware; no terminal costs mean more savings for you.")}
             </li>
             <li
               style={{
@@ -162,9 +156,7 @@ const InstructionsModal = ({ isOpen, toggle }) => {
                 fontWeight: 500,
               }}
             >
-              {t(
-                "Enjoy low transaction fees at just 0.75% per QR code payment.",
-              )}
+              {t("Enjoy low transaction fees at just 0.75% per QR code payment.")}
             </li>
             <li
               style={{
@@ -176,9 +168,7 @@ const InstructionsModal = ({ isOpen, toggle }) => {
                 fontWeight: 500,
               }}
             >
-              {t(
-                "We don't impose minimum commissions; you save more with each transaction.",
-              )}
+              {t("We don't impose minimum commissions; you save more with each transaction.")}
             </li>
             <li
               style={{
@@ -190,9 +180,7 @@ const InstructionsModal = ({ isOpen, toggle }) => {
                 fontWeight: 500,
               }}
             >
-              {t(
-                "Experience the joy of instant payments, enhancing your cash flow.",
-              )}
+              {t("Experience the joy of instant payments, enhancing your cash flow.")}
             </li>
           </ul>
 

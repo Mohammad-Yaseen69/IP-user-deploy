@@ -102,10 +102,7 @@
   display: grid;
   grid-template-columns:
     minmax(220px, 1.8fr) minmax(110px, 1fr) minmax(120px, 1fr)
-    minmax(160px, 1.3fr) minmax(130px, 1.1fr) minmax(110px, 1fr) minmax(
-      100px,
-      1fr
-    )
+    minmax(160px, 1.3fr) minmax(130px, 1.1fr) minmax(110px, 1fr) minmax(100px, 1fr)
     minmax(80px, 0.8fr);
   align-items: center;
   padding: 14px 24px;

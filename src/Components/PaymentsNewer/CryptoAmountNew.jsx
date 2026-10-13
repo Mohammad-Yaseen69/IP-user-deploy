@@ -34,16 +34,11 @@ const CryptoAmountNew = ({ setSubStep, amount, setAmount, cryptoCurrency }) => {
           overflow: "hidden",
           padding: isBig ? "30px 20px" : "0px",
           paddingBottom: 0,
-          boxShadow: isBig
-            ? "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)"
-            : "none",
+          boxShadow: isBig ? "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)" : "none",
         }}
         className="i_t_pt"
       >
-        <h4
-          style={{ textAlign: "center", color: "#7d7d7d" }}
-          className="c_f_a_head"
-        >
+        <h4 style={{ textAlign: "center", color: "#7d7d7d" }} className="c_f_a_head">
           {t("Enter The Amount")}
         </h4>
         <div
@@ -54,10 +49,7 @@ const CryptoAmountNew = ({ setSubStep, amount, setAmount, cryptoCurrency }) => {
           }}
           className="m_t_1_0"
         >
-          <h4
-            style={{ fontWeight: 600, marginBottom: 0 }}
-            className="c_f_a_amount"
-          >
+          <h4 style={{ fontWeight: 600, marginBottom: 0 }} className="c_f_a_amount">
             $
           </h4>
           <input
@@ -91,9 +83,7 @@ const CryptoAmountNew = ({ setSubStep, amount, setAmount, cryptoCurrency }) => {
           className="c_f_a_warning"
         >
           <IoWarningOutline style={{ marginTop: "1px" }} />
-          <span>
-            {t("Minimum Transactional Value: $100.").replace("$", "USD ")}
-          </span>
+          <span>{t("Minimum Transactional Value: $100.").replace("$", "USD ")}</span>
         </div>
         <div
           style={{

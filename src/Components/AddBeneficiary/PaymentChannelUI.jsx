@@ -126,12 +126,9 @@ const PaymentChannelUI = ({
           width: "100%",
         }}
       >
-        {services?.some((item) =>
-          item?.method?.toLowerCase()?.includes("bank"),
-        ) &&
+        {services?.some((item) => item?.method?.toLowerCase()?.includes("bank")) &&
           userDetails?.level?.international_transfer?.bank &&
-          selectedCountryDetails?.individual_receiving_channels
-            ?.bank_account && (
+          selectedCountryDetails?.individual_receiving_channels?.bank_account && (
             <button
               type="button"
               style={{
@@ -159,20 +156,13 @@ const PaymentChannelUI = ({
               }}
               disabled={isEdit ? !isEdit : false}
             >
-              <p style={{ padding: 0, margin: 0, whiteSpace: "nowrap" }}>
-                {t("Bank Account")}
-              </p>
-              {!mobileView && (
-                <>{!completedBank ? <Circle /> : <CheckCircle />}</>
-              )}
+              <p style={{ padding: 0, margin: 0, whiteSpace: "nowrap" }}>{t("Bank Account")}</p>
+              {!mobileView && <>{!completedBank ? <Circle /> : <CheckCircle />}</>}
             </button>
           )}
-        {services?.some((item) =>
-          item?.method?.toLowerCase()?.includes("mobile"),
-        ) &&
+        {services?.some((item) => item?.method?.toLowerCase()?.includes("mobile")) &&
           userDetails?.level?.international_transfer?.mobile_money &&
-          selectedCountryDetails?.individual_receiving_channels
-            ?.mobile_money && (
+          selectedCountryDetails?.individual_receiving_channels?.mobile_money && (
             <button
               type="button"
               style={{
@@ -203,17 +193,12 @@ const PaymentChannelUI = ({
               <p style={{ padding: 0, margin: 0, whiteSpace: "nowrap" }}>
                 {t("Mobile Money/Mobile Wallet")}
               </p>
-              {!mobileView && (
-                <>{!completedWallet ? <Circle /> : <CheckCircle />}</>
-              )}
+              {!mobileView && <>{!completedWallet ? <Circle /> : <CheckCircle />}</>}
             </button>
           )}
-        {services?.some((item) =>
-          item?.method?.toLowerCase()?.includes("card"),
-        ) &&
+        {services?.some((item) => item?.method?.toLowerCase()?.includes("card")) &&
           userDetails?.level?.international_transfer?.card_payment &&
-          selectedCountryDetails?.individual_receiving_channels
-            ?.card_payment && (
+          selectedCountryDetails?.individual_receiving_channels?.card_payment && (
             <button
               type="button"
               style={{
@@ -241,12 +226,8 @@ const PaymentChannelUI = ({
               }}
               disabled={isEdit ? !isEdit : false}
             >
-              <p style={{ padding: 0, margin: 0, whiteSpace: "nowrap" }}>
-                {t("Payment Card")}
-              </p>
-              {!mobileView && (
-                <>{!completedCard ? <Circle /> : <CheckCircle />}</>
-              )}
+              <p style={{ padding: 0, margin: 0, whiteSpace: "nowrap" }}>{t("Payment Card")}</p>
+              {!mobileView && <>{!completedCard ? <Circle /> : <CheckCircle />}</>}
             </button>
           )}
         <button
@@ -275,12 +256,8 @@ const PaymentChannelUI = ({
             setActive(4);
           }}
         >
-          <p style={{ padding: 0, margin: 0, whiteSpace: "nowrap" }}>
-            {t("Crypto Wallet")}
-          </p>
-          {!mobileView && (
-            <>{!completedCrypto ? <Circle /> : <CheckCircle />}</>
-          )}
+          <p style={{ padding: 0, margin: 0, whiteSpace: "nowrap" }}>{t("Crypto Wallet")}</p>
+          {!mobileView && <>{!completedCrypto ? <Circle /> : <CheckCircle />}</>}
         </button>
         {userDetails?.level?.wallet_to_wallet?.send && (
           <button
@@ -310,9 +287,7 @@ const PaymentChannelUI = ({
             }}
             disabled={isEdit ? !isEdit : false}
           >
-            <p style={{ padding: 0, margin: 0, whiteSpace: "nowrap" }}>
-              {t("InstaPay Account")}
-            </p>
+            <p style={{ padding: 0, margin: 0, whiteSpace: "nowrap" }}>{t("InstaPay Account")}</p>
             {!mobileView && (
               <>
                 {!instapayWallets.every(walletIdLengthCheck) || walletError ? (
@@ -324,12 +299,9 @@ const PaymentChannelUI = ({
             )}
           </button>
         )}
-        {services?.some((item) =>
-          item?.method?.toLowerCase()?.includes("cash"),
-        ) &&
+        {services?.some((item) => item?.method?.toLowerCase()?.includes("cash")) &&
           userDetails?.level?.international_transfer?.cash_pickup &&
-          selectedCountryDetails?.individual_receiving_channels
-            ?.cash_pickup && (
+          selectedCountryDetails?.individual_receiving_channels?.cash_pickup && (
             <button
               type="button"
               style={{
@@ -357,12 +329,8 @@ const PaymentChannelUI = ({
               }}
               disabled={isEdit ? !isEdit : false}
             >
-              <p style={{ padding: 0, margin: 0, whiteSpace: "nowrap" }}>
-                {t("Cash Pickup")}
-              </p>
-              {!mobileView && (
-                <>{!cashPickupCompleted ? <Circle /> : <CheckCircle />}</>
-              )}
+              <p style={{ padding: 0, margin: 0, whiteSpace: "nowrap" }}>{t("Cash Pickup")}</p>
+              {!mobileView && <>{!cashPickupCompleted ? <Circle /> : <CheckCircle />}</>}
             </button>
           )}
       </div>
@@ -401,9 +369,7 @@ const PaymentChannelUI = ({
               disabled={isEdit ? !isEditMode : false}
               className="form-control"
               style={{ flex: 1, width: "100%", minWidth: "250px" }}
-              placeholder={
-                accNumType === "IBAN" ? t("IBAN Number") : t("Swift Code")
-              }
+              placeholder={accNumType === "IBAN" ? t("IBAN Number") : t("Swift Code")}
               required
               value={ibanSwift}
               onChange={(e) => getBankDetails(e, false)}
@@ -596,16 +562,9 @@ const PaymentChannelUI = ({
                 country={bankCountryCode || bankCountryIsoCode || bankCountry}
                 disabled={isEdit ? !isEditMode : false}
                 onSelect={(selected) => {
-                  const cName =
-                    selected?.country_name ||
-                    selected?.name ||
-                    selected?.alpha3 ||
-                    "";
+                  const cName = selected?.country_name || selected?.name || selected?.alpha3 || "";
                   const cCode =
-                    selected?.alpha3 ||
-                    selected?.country_iso_code ||
-                    selected?.code ||
-                    "";
+                    selected?.alpha3 || selected?.country_iso_code || selected?.code || "";
                   if (setBankCountry) setBankCountry(cName);
                   if (setBankCountryCode) setBankCountryCode(cCode);
                   if (setBankCountryIsoCode) setBankCountryIsoCode(cCode);
@@ -634,9 +593,7 @@ const PaymentChannelUI = ({
           {Object.keys(bankExtras).map((item) => {
             return (
               (serviceFieldInfoValidate(
-                services?.find((item) =>
-                  item?.method?.toLowerCase()?.includes("bank"),
-                ),
+                services?.find((item) => item?.method?.toLowerCase()?.includes("bank")),
                 "credit_party_identifiers_accepted",
                 item,
                 fieldsInfo,
@@ -661,9 +618,7 @@ const PaymentChannelUI = ({
                     <Input
                       className="form-control"
                       style={{ flex: 1, minWidth: "250px" }}
-                      disabled={
-                        isEdit ? !isValidIban || !isEditMode : !isValidIban
-                      }
+                      disabled={isEdit ? !isValidIban || !isEditMode : !isValidIban}
                       type="select"
                       value={bankExtras[item]}
                       name={item}
@@ -680,14 +635,11 @@ const PaymentChannelUI = ({
                     <>
                       {((item !== "iban" && item !== "swift_bic_code") ||
                         (item === "iban" && accNumType === "Swift") ||
-                        (item === "swift_bic_code" &&
-                          accNumType === "IBAN")) && (
+                        (item === "swift_bic_code" && accNumType === "IBAN")) && (
                         <Input
                           className="form-control"
                           style={{ flex: 1, minWidth: "250px" }}
-                          disabled={
-                            isEdit ? !isValidIban || !isEditMode : !isValidIban
-                          }
+                          disabled={isEdit ? !isValidIban || !isEditMode : !isValidIban}
                           type="text"
                           value={bankExtras[item]}
                           name={item}
@@ -750,10 +702,7 @@ const PaymentChannelUI = ({
             />
           </FormGroup>
           <FormGroup style={{ flex: 1, margin: 0 }}>
-            <Label
-              className="col-form-label"
-              htmlFor="mobile_wallet_account_number"
-            >
+            <Label className="col-form-label" htmlFor="mobile_wallet_account_number">
               {t("Wallet Number")} <span className="req_star">*</span>
             </Label>
             {/* <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} placeholder='Account Number' required onKeyPress={handleChangeNumber} name="mobile_wallet_account_number" value={formData.mobile_wallet_account_number} onChange={inputChangeHandler} /> */}
@@ -849,20 +798,14 @@ const PaymentChannelUI = ({
             {Object.keys(cardExtras).map(
               (item, idx) =>
                 serviceFieldInfoValidate(
-                  services?.find((item) =>
-                    item?.method?.toLowerCase()?.includes("card"),
-                  ),
+                  services?.find((item) => item?.method?.toLowerCase()?.includes("card")),
                   "credit_party_identifiers_accepted",
                   item,
                   fieldsInfo,
                 ) && (
-                  <FormGroup
-                    key={idx}
-                    style={{ flex: 1, margin: 0, minWidth: "250px" }}
-                  >
+                  <FormGroup key={idx} style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                     <Label className="col-form-label">
-                      {t(service_name_formatter(item))}{" "}
-                      <span className="req_star">*</span>
+                      {t(service_name_formatter(item))} <span className="req_star">*</span>
                     </Label>
                     <Input
                       disabled={!isEditMode}
@@ -1076,10 +1019,7 @@ const PaymentChannelUI = ({
         <>
           {instapayWallets.map((value, index) => {
             return (
-              <div
-                key={index}
-                style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}
-              >
+              <div key={index} style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
                 <FormGroup style={{ flex: 1, margin: 0 }}>
                   <Label className="col-form-label" htmlFor="card-holder-name">
                     {t("Wallet ID")} <span className="req_star">*</span>
@@ -1088,17 +1028,11 @@ const PaymentChannelUI = ({
                     className="form-control"
                     style={{ flex: 1, minWidth: "250px" }}
                     onKeyDown={preventEdgeSpaces}
-                    value={
-                      isEdit && typeof value === "object"
-                        ? value.wallet_id
-                        : value
-                    }
+                    value={isEdit && typeof value === "object" ? value.wallet_id : value}
                     onChange={(e) =>
                       handleInputChange(
                         index,
-                        isEdit
-                          ? { ...value, wallet_id: e.target.value }
-                          : e.target.value,
+                        isEdit ? { ...value, wallet_id: e.target.value } : e.target.value,
                       )
                     }
                     maxLength={8}
@@ -1123,9 +1057,7 @@ const PaymentChannelUI = ({
           })}
           {walletError && <span style={{ color: "red" }}>{walletError}</span>}
           {duplicateWallet && (
-            <span style={{ color: "red" }}>
-              {t("Wallet ID is already added.")}
-            </span>
+            <span style={{ color: "red" }}>{t("Wallet ID is already added.")}</span>
           )}
           <div
             style={{
@@ -1144,10 +1076,7 @@ const PaymentChannelUI = ({
             }}
             onClick={(_) =>
               instapayWallets.every(walletIdLengthCheck) && !walletError
-                ? setInstapayWallets((prev) => [
-                    ...prev,
-                    isEdit ? { wallet_id: "" } : "",
-                  ])
+                ? setInstapayWallets((prev) => [...prev, isEdit ? { wallet_id: "" } : ""])
                 : setInstapayWallets(instapayWallets)
             }
           >
@@ -1180,26 +1109,16 @@ const PaymentChannelUI = ({
                 readOnly={!mobileNumber || mobileNumber.length < 9}
               >
                 <option value="PASSPORT">{t("Passport")}</option>
-                <option value="NATIONAL_ID">
-                  {t("National Identity Card")}
-                </option>
+                <option value="NATIONAL_ID">{t("National Identity Card")}</option>
                 <option value="DRIVING_LICENSE">{t("Driving License")}</option>
-                <option value="SOCIAL_SECURITY">
-                  {t("Social Security Card/Number")}
-                </option>
-                <option value="SENIOR_CITIZEN_ID">
-                  {t("Senior Citizen Identification Card")}
-                </option>
+                <option value="SOCIAL_SECURITY">{t("Social Security Card/Number")}</option>
+                <option value="SENIOR_CITIZEN_ID">{t("Senior Citizen Identification Card")}</option>
                 <option value="RESIDENT_CARD">
                   {t("Permanent Residency Identification Card")}
                 </option>
                 <option value="PAN_CARD">{t("PAN Card")}</option>
-                <option value="HEALTH_CARD">
-                  {t("Health Insurance Card/Number")}
-                </option>
-                <option value="EMPLOYER_ID">
-                  {t("Employer Identification Card")}
-                </option>
+                <option value="HEALTH_CARD">{t("Health Insurance Card/Number")}</option>
+                <option value="EMPLOYER_ID">{t("Employer Identification Card")}</option>
               </Input>
             </FormGroup>
             <FormGroup style={{ flex: 1, margin: 0 }}>
@@ -1209,11 +1128,7 @@ const PaymentChannelUI = ({
               <Input
                 className="form-control"
                 value={cashPickupNumber}
-                onChange={(e) =>
-                  setCashPickupNumber(
-                    e.target.value.replace(/[^a-zA-Z0-9]/g, ""),
-                  )
-                }
+                onChange={(e) => setCashPickupNumber(e.target.value.replace(/[^a-zA-Z0-9]/g, ""))}
                 name="crypto_wallet_address"
                 style={{ flex: 1, minWidth: "250px" }}
                 placeholder="ABCD12345WAD2"
@@ -1224,20 +1139,14 @@ const PaymentChannelUI = ({
             {Object.keys(cashExtras)?.map(
               (item, idx) =>
                 serviceFieldInfoValidate(
-                  services?.find((item) =>
-                    item?.method?.toLowerCase()?.includes("cash"),
-                  ),
+                  services?.find((item) => item?.method?.toLowerCase()?.includes("cash")),
                   "credit_party_identifiers_accepted",
                   item,
                   fieldsInfo,
                 ) && (
-                  <FormGroup
-                    key={idx}
-                    style={{ flex: 1, margin: 0, minWidth: "250px" }}
-                  >
+                  <FormGroup key={idx} style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                     <Label className="col-form-label">
-                      {t(service_name_formatter(item))}{" "}
-                      <span className="req_star">*</span>
+                      {t(service_name_formatter(item))} <span className="req_star">*</span>
                     </Label>
                     <Input
                       className="form-control"

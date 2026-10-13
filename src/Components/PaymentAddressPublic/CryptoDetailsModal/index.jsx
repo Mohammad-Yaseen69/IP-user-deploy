@@ -56,13 +56,7 @@ const WarningIcon = () => (
   </svg>
 );
 
-const CryptoDetailsModal = ({
-  isOpen,
-  toggle,
-  amount,
-  currency,
-  paymentReference,
-}) => {
+const CryptoDetailsModal = ({ isOpen, toggle, amount, currency, paymentReference }) => {
   const { t } = useTranslation();
   const [copiedField, setCopiedField] = useState(null);
   const [convertedAmount, setConvertedAmount] = useState(null);
@@ -74,11 +68,7 @@ const CryptoDetailsModal = ({
       if (currency === "USD" || currency === "USDT") {
         setConvertedAmount(rawAmount);
       } else {
-        getExchangeRate(
-          currency === "USDT" ? "USD" : currency,
-          "USD",
-          rawAmount,
-        )
+        getExchangeRate(currency === "USDT" ? "USD" : currency, "USD", rawAmount)
           .then((result) => setConvertedAmount(result))
           .catch(() => setConvertedAmount(null));
       }
@@ -91,9 +81,7 @@ const CryptoDetailsModal = ({
     setTimeout(() => setCopiedField(null), 2000);
   };
 
-  const displayAmount = convertedAmount
-    ? `${formatCurrency(convertedAmount, true)} USDT`
-    : null;
+  const displayAmount = convertedAmount ? `${formatCurrency(convertedAmount, true)} USDT` : null;
 
   return (
     <Modal
@@ -144,9 +132,7 @@ const CryptoDetailsModal = ({
                 <span>{CRYPTO_INFO.walletAddress}</span>
                 <button
                   className={`${styles.copyBtn} ${copiedField === "wallet" ? styles.copied : ""}`}
-                  onClick={() =>
-                    handleCopy(CRYPTO_INFO.walletAddress, "wallet")
-                  }
+                  onClick={() => handleCopy(CRYPTO_INFO.walletAddress, "wallet")}
                 >
                   {copiedField === "wallet" ? (
                     <>

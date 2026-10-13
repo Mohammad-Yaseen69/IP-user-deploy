@@ -142,8 +142,7 @@ const InvoicePaymentQr = () => {
   }, [invoiceId, getInvoiceDetails]);
 
   const { mutateAsync: confirmTransactionMutation } = useMutation({
-    mutationFn: ({ payload, apiHeaders }) =>
-      confirmTransaction(apiHeaders, payload),
+    mutationFn: ({ payload, apiHeaders }) => confirmTransaction(apiHeaders, payload),
   });
 
   const handleConfirmTransaction = async (token, apiHeaders) => {
@@ -166,10 +165,9 @@ const InvoicePaymentQr = () => {
     }
   };
 
-  const { mutateAsync: sendOtpSkipMutation, isPending: sendOtpLoading } =
-    useMutation({
-      mutationFn: (payload) => sendOtpSkip(payload.token, payload),
-    });
+  const { mutateAsync: sendOtpSkipMutation, isPending: sendOtpLoading } = useMutation({
+    mutationFn: (payload) => sendOtpSkip(payload.token, payload),
+  });
 
   const handleSendOtpSkip = async () => {
     dataHandler("isPressed", true);
@@ -221,10 +219,7 @@ const InvoicePaymentQr = () => {
         return;
       }
       if (dec?.message?.toLowerCase()?.includes("exceeded")) {
-        dataHandler(
-          "error",
-          "The transaction amount exceeds your QR payment threshold amount.",
-        );
+        dataHandler("error", "The transaction amount exceeds your QR payment threshold amount.");
         dataHandler("showModal", true);
         return;
       }
@@ -243,14 +238,7 @@ const InvoicePaymentQr = () => {
   const isShippingValid = useMemo(() => {
     if (!data.showShippingAddress) return true;
     const s = data.shippingDetails || {};
-    return Boolean(
-      s?.houseNo &&
-      s?.street &&
-      s?.city &&
-      s?.state &&
-      s?.country?.iso &&
-      s?.zipCode,
-    );
+    return Boolean(s?.houseNo && s?.street && s?.city && s?.state && s?.country?.iso && s?.zipCode);
   }, [data.showShippingAddress, data.shippingDetails]);
 
   useEffect(() => {
@@ -345,43 +333,27 @@ const InvoicePaymentQr = () => {
                   <h1>{t("Pay Invoice")}</h1>
                   {data.step === 1 && !data.showShippingAddress && (
                     <div className={styles.detsText}>
-                      <h3 style={{ marginBottom: "0px" }}>
-                        {t("Receiver Details:")}
-                      </h3>
+                      <h3 style={{ marginBottom: "0px" }}>{t("Receiver Details:")}</h3>
                     </div>
                   )}
 
                   {data.step === 3 && <StepThree />}
 
                   {data.step !== 1 && (
-                    <span className={styles.label}>
-                      {t("Receiver Details")}:
-                    </span>
+                    <span className={styles.label}>{t("Receiver Details")}:</span>
                   )}
 
-                  <UserDets
-                    step={data.step}
-                    recipientDets={data.recipientDets}
-                    isInvoice={true}
-                  />
+                  <UserDets step={data.step} recipientDets={data.recipientDets} isInvoice={true} />
 
                   {data.step === 1 && !data.showShippingAddress && (
                     <>
-                      <div
-                        style={{ width: "100%" }}
-                        className={styles.detsText}
-                      >
+                      <div style={{ width: "100%" }} className={styles.detsText}>
                         <h3 style={{ marginBottom: "0px", textAlign: "left" }}>
                           {t("Invoice Title:")}
                         </h3>
-                        <p style={{ marginBottom: "20px", textAlign: "left" }}>
-                          {invoice?.title}
-                        </p>
+                        <p style={{ marginBottom: "20px", textAlign: "left" }}>{invoice?.title}</p>
                       </div>
-                      <div
-                        style={{ width: "100%" }}
-                        className={styles.detsText}
-                      >
+                      <div style={{ width: "100%" }} className={styles.detsText}>
                         <h3 style={{ marginBottom: "0px", textAlign: "left" }}>
                           {t("Invoice Description:")}
                         </h3>
@@ -418,18 +390,13 @@ const InvoicePaymentQr = () => {
                     <div className={styles.options}>
                       {paymentConfirmOptions.map((option) => (
                         <div
-                          onClick={() =>
-                            !option.link && navigate(option.navigate)
-                          }
+                          onClick={() => !option.link && navigate(option.navigate)}
                           key={option.text}
                         >
                           <img src={option.icon} alt="" loading="lazy" />
                           <span>
                             {option.link ? (
-                              <a
-                                style={{ color: "black" }}
-                                href={option.navigate}
-                              >
+                              <a style={{ color: "black" }} href={option.navigate}>
                                 {option.text}
                               </a>
                             ) : (
@@ -443,9 +410,7 @@ const InvoicePaymentQr = () => {
                 </div>
 
                 <DetsModal
-                  toggle={() =>
-                    dataHandler("showDetsModal", !data.showDetsModal)
-                  }
+                  toggle={() => dataHandler("showDetsModal", !data.showDetsModal)}
                   isOpen={data.showDetsModal}
                   country={country}
                   handleBiometricVerification={handleBiometricVerification}
@@ -454,9 +419,7 @@ const InvoicePaymentQr = () => {
                   phone={data.phone}
                   setPassword={(value) => dataHandler("password", value)}
                   setPhone={(value) => dataHandler("phone", value)}
-                  setShowPassword={(value) =>
-                    dataHandler("showPassword", value)
-                  }
+                  setShowPassword={(value) => dataHandler("showPassword", value)}
                   showPassword={data.showPassword}
                   setCountry={(value) => dataHandler("country", value)}
                 />
@@ -471,9 +434,7 @@ const InvoicePaymentQr = () => {
                               data.isPressed ||
                               (!data.showShippingAddress &&
                                 (!data.amount ||
-                                  /^0+$/.test(
-                                    data.amount.toString().replace(/\./g, ""),
-                                  ))) ||
+                                  /^0+$/.test(data.amount.toString().replace(/\./g, "")))) ||
                               (data.showShippingAddress && !isShippingValid) ||
                               feeLoading ||
                               sendOtpLoading
@@ -483,13 +444,8 @@ const InvoicePaymentQr = () => {
                                 (data.isPressed ||
                                   (!data.showShippingAddress &&
                                     (!data.amount ||
-                                      /^0+$/.test(
-                                        data.amount
-                                          .toString()
-                                          .replace(/\./g, ""),
-                                      ))) ||
-                                  (data.showShippingAddress &&
-                                    !isShippingValid) ||
+                                      /^0+$/.test(data.amount.toString().replace(/\./g, "")))) ||
+                                  (data.showShippingAddress && !isShippingValid) ||
                                   feeLoading ||
                                   sendOtpLoading) &&
                                 ".5",
@@ -500,8 +456,7 @@ const InvoicePaymentQr = () => {
                                   if (!isShippingValid) return;
                                   handleGetFeeDetails(
                                     data.userDetails?.walletDetails?._id,
-                                    data.userDetails?.walletDetails?.currency
-                                      ?.code,
+                                    data.userDetails?.walletDetails?.currency?.code,
                                     data.token,
                                     data.userDetails?._id,
                                     data.userDetails?.level_id,
@@ -513,8 +468,7 @@ const InvoicePaymentQr = () => {
                                 } else {
                                   handleGetFeeDetails(
                                     data.userDetails?.walletDetails?._id,
-                                    data.userDetails?.walletDetails?.currency
-                                      ?.code,
+                                    data.userDetails?.walletDetails?.currency?.code,
                                     data.token,
                                     data.userDetails?._id,
                                     data.userDetails?.level_id,
@@ -534,9 +488,7 @@ const InvoicePaymentQr = () => {
                           </button>
                         ) : (
                           <>
-                            <button onClick={navigateToInstapay}>
-                              {t("Pay Via Instapay")}
-                            </button>
+                            <button onClick={navigateToInstapay}>{t("Pay Via Instapay")}</button>
 
                             <button
                               style={{

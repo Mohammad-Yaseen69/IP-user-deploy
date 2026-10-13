@@ -33,10 +33,7 @@ const Threshold = ({ userDetails, authHeader }) => {
     setActive(userDetails?.otp_thresholds?.qr_pay?.enabled);
     setCAmount(userDetails?.otp_thresholds?.qr_pay?.amount?.toFixed(2));
     setAmount(userDetails?.otp_thresholds?.qr_pay?.amount?.toFixed(2));
-    setLocalCur(
-      countries.find((c) => c?.iso3 === userDetails?.country_iso_code)
-        ?.currency,
-    );
+    setLocalCur(countries.find((c) => c?.iso3 === userDetails?.country_iso_code)?.currency);
     setToggle(userDetails?.qr_quicker_pay_enabled);
 
     if (!userDetails?.otp_thresholds?.qr_pay?.amount) {
@@ -44,9 +41,7 @@ const Threshold = ({ userDetails, authHeader }) => {
     }
 
     const getPlainExchangeRate = async (amount, setter) => {
-      const localc = countries?.find(
-        (c) => c?.iso3 === userDetails?.country_iso_code,
-      )?.currency;
+      const localc = countries?.find((c) => c?.iso3 === userDetails?.country_iso_code)?.currency;
       try {
         const res = await axios.get(
           `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${"USD"}&to=${localc}&amount=${amount}`,
@@ -294,8 +289,7 @@ const Threshold = ({ userDetails, authHeader }) => {
                     {t("Transactions up to")} {localcur}
                     {cAmount} {t("can be auto-approved.")}
                     {t("Payments above")} {localcur}
-                    {cAmount}{" "}
-                    {t("will always require OTP verification for security.")}
+                    {cAmount} {t("will always require OTP verification for security.")}
                   </p>
                 ) : (
                   <p className={styles.txt}>
@@ -370,13 +364,8 @@ const Threshold = ({ userDetails, authHeader }) => {
                   <span
                     style={{
                       pointerEvents:
-                        maxAmount && parseFloat(amount) >= parseFloat(maxAmount)
-                          ? "none"
-                          : "auto",
-                      opacity:
-                        maxAmount && parseFloat(amount) >= parseFloat(maxAmount)
-                          ? 0.5
-                          : 1,
+                        maxAmount && parseFloat(amount) >= parseFloat(maxAmount) ? "none" : "auto",
+                      opacity: maxAmount && parseFloat(amount) >= parseFloat(maxAmount) ? 0.5 : 1,
                     }}
                     onClick={() => {
                       setAmount((prev) => {
@@ -392,9 +381,7 @@ const Threshold = ({ userDetails, authHeader }) => {
                   </span>
                 </div>
 
-                <button onClick={() => setShowPassword(true)}>
-                  {t("Save Changes")}
-                </button>
+                <button onClick={() => setShowPassword(true)}>{t("Save Changes")}</button>
               </div>
             )}
           </div>

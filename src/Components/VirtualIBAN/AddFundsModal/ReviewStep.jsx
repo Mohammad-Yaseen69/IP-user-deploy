@@ -1,8 +1,5 @@
 import { useTranslation } from "react-i18next";
-import {
-  FUNDING_METHODS,
-  MOCK_WALLETS,
-} from "../../../stateMachines/addFundsFlow";
+import { FUNDING_METHODS, MOCK_WALLETS } from "../../../stateMachines/addFundsFlow";
 import { getAmountNumber } from "../utils/amount";
 import styles from "./addFundsModal.module.scss";
 
@@ -55,9 +52,7 @@ const ReviewStep = ({ amount, fundingMethod, selectedWallet }) => {
         {fundingMethod === "instapay_wallet" && (
           <div className={styles.reviewRow}>
             <span className={styles.reviewRowLabel}>{t("Wallet")}</span>
-            <div className={styles.reviewRowMain}>
-              {walletInfo ? walletInfo.name : "—"}
-            </div>
+            <div className={styles.reviewRowMain}>{walletInfo ? walletInfo.name : "—"}</div>
           </div>
         )}
       </div>

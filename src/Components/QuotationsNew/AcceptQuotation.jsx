@@ -88,13 +88,8 @@ const headings = ["", "Select Payment Method", "Select the Currency"];
 const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
   const { t } = useTranslation();
   const [data, dispatch] = useReducer(reducer, initialState);
-  const {
-    userWallets,
-    userDetails,
-    authHeader,
-    setProfileLockTime,
-    verifyToken,
-  } = useContext(UserContext);
+  const { userWallets, userDetails, authHeader, setProfileLockTime, verifyToken } =
+    useContext(UserContext);
   const { limitStatus, clearStatus } = useTopupLimitCheck(
     item?.amount_reciever_currency?.currency?.code,
     +String(data?.amount)?.replaceAll(",", ""),
@@ -125,14 +120,8 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
         maximumFractionDigits: 2,
       }),
     );
-    dataHandler(
-      "recipient_currency",
-      item?.amount_reciever_currency?.currency?.code,
-    );
-    dataHandler(
-      "beneficiary",
-      type === "receive" ? item?.sender : item?.receiver,
-    );
+    dataHandler("recipient_currency", item?.amount_reciever_currency?.currency?.code);
+    dataHandler("beneficiary", type === "receive" ? item?.sender : item?.receiver);
   }, [item]);
   useEffect(() => {
     const def =
@@ -156,9 +145,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
         }
       case 2:
         if (data.payment_type?.value === "card") {
-          const [contentMonth, contentYear] = data.expiry
-            .split("/")
-            .map(Number);
+          const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
           const currentDate = new Date();
           const currentMonth = currentDate.getMonth() + 1;
           const currentYear = currentDate.getFullYear() % 100;
@@ -258,8 +245,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
         },
         limits: {
           daily_receiving_limit: {
-            limits_used:
-              decrypted?.data?.limits_used?.daily_receiving_limit_used,
+            limits_used: decrypted?.data?.limits_used?.daily_receiving_limit_used,
             total_limits: decrypted?.data?.limits?.daily_receiving_limit,
           },
           daily_sending_limit: {
@@ -267,23 +253,19 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
             total_limits: decrypted?.data?.limits?.daily_sending_limit,
           },
           monthly_receiving_limit: {
-            limits_used:
-              decrypted?.data?.limits_used?.monthly_receiving_limit_used,
+            limits_used: decrypted?.data?.limits_used?.monthly_receiving_limit_used,
             total_limits: decrypted?.data?.limits?.monthly_receiving_limit,
           },
           monthly_sending_limit: {
-            limits_used:
-              decrypted?.data?.limits_used?.monthly_sending_limit_used,
+            limits_used: decrypted?.data?.limits_used?.monthly_sending_limit_used,
             total_limits: decrypted?.data?.limits?.monthly_sending_limit,
           },
           yearly_receiving_limit: {
-            limits_used:
-              decrypted?.data?.limits_used?.yearly_receiving_limit_used,
+            limits_used: decrypted?.data?.limits_used?.yearly_receiving_limit_used,
             total_limits: decrypted?.data?.limits?.yearly_receiving_limit,
           },
           yearly_sending_limit: {
-            limits_used:
-              decrypted?.data?.limits_used?.yearly_sending_limit_used,
+            limits_used: decrypted?.data?.limits_used?.yearly_sending_limit_used,
             total_limits: decrypted?.data?.limits?.yearly_sending_limit,
           },
         },
@@ -292,32 +274,21 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
         token: decrypted?.data?.token ?? "",
       };
 
-      if (decrypted?.data?.paypal)
-        exchange_rate_details.paypal = decrypted?.data?.paypal;
+      if (decrypted?.data?.paypal) exchange_rate_details.paypal = decrypted?.data?.paypal;
       if (data.payment_type?.value === "bank_transfer") {
-        exchange_rate_details.plaid_currency =
-          decrypted?.data?.converted_currency;
+        exchange_rate_details.plaid_currency = decrypted?.data?.converted_currency;
         exchange_rate_details.plaid_amount = decrypted?.data?.converted_amount;
         exchange_rate_details.plaid_fx = decrypted?.data?.converted_rate;
       }
 
       dataHandler("exchange_rate", exchange_rate_details);
-      if (
-        +item?.amount >
-        exchange_rate_details?.limits_used?.daily_sending_limit_used
-      ) {
+      if (+item?.amount > exchange_rate_details?.limits_used?.daily_sending_limit_used) {
         dataHandler("exchange_rate_error", "exceed send");
         setLimitType("daily");
-      } else if (
-        +item?.amount >
-        exchange_rate_details?.limits_used?.monthly_sending_limit_used
-      ) {
+      } else if (+item?.amount > exchange_rate_details?.limits_used?.monthly_sending_limit_used) {
         dataHandler("exchange_rate_error", "exceed send");
         setLimitType("monthly");
-      } else if (
-        +item?.amount >
-        exchange_rate_details?.limits_used?.yearly_sending_limit_used
-      ) {
+      } else if (+item?.amount > exchange_rate_details?.limits_used?.yearly_sending_limit_used) {
         dataHandler("exchange_rate_error", "exceed send");
         setLimitType("yearly");
       } else {
@@ -378,9 +349,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
     }
   };
 
-  const getMobileWalletServices = async (
-    service_name = data.payment_type?.sub_name,
-  ) => {
+  const getMobileWalletServices = async (service_name = data.payment_type?.sub_name) => {
     dataHandler("loading", true);
     try {
       const res = await axios.get(
@@ -422,13 +391,10 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
       const payload = {
         data: {
           receiver_wallet_id:
-            data.payment_type?.value !== "wallet"
-              ? data.currency_wallet?._id
-              : data.wallet?._id,
+            data.payment_type?.value !== "wallet" ? data.currency_wallet?._id : data.wallet?._id,
           quotation_id: item?._id,
           token:
-            data.payment_type?.value === "paypal" ||
-            data?.payment_type?.value === "mobile_wallet"
+            data.payment_type?.value === "paypal" || data?.payment_type?.value === "mobile_wallet"
               ? data.exchange_rate?.token
               : "",
         },
@@ -454,8 +420,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
     } catch (error) {
       const err = decryptData(error?.response?.data?.data);
       toast.error(
-        err.message ??
-          "We cannot process your request at the moment, please try again later.",
+        err.message ?? "We cannot process your request at the moment, please try again later.",
       );
     } finally {
       dataHandler("loading", false);
@@ -527,19 +492,12 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
         dataHandler("otp_error", t(error2));
       } else {
         const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message);
-        dataHandler(
-          "otp_error",
-          decrypted?.message ?? "You have entered wrong OTP.",
-        );
+        dataHandler("otp_error", decrypted?.message ?? "You have entered wrong OTP.");
         if (error) {
           dataHandler("otp_error", error);
-        } else if (
-          decrypted.message?.toLowerCase()?.includes("account is locked")
-        ) {
-          const time =
-            decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
-          const timeInSec =
-            +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
+        } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+          const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+          const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
           setProfileLockTime(timeInSec);
           const coun = localStorage.getItem("ip_country");
           localStorage.clear();
@@ -574,17 +532,11 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
       const decrypted = decryptData(err.response.data.data);
       console.log(decrypted);
       const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message);
-      dataHandler(
-        "otpError",
-        decrypted?.message ?? "You have entered wrong OTP.",
-      );
+      dataHandler("otpError", decrypted?.message ?? "You have entered wrong OTP.");
       if (error) {
         dataHandler("otpError", error);
-      } else if (
-        decrypted.message?.toLowerCase()?.includes("account is locked")
-      ) {
-        const time =
-          decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+      } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+        const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
         const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
         setProfileLockTime(timeInSec);
         const coun = localStorage.getItem("ip_country");
@@ -610,13 +562,9 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
           ? "/api/collection/wallet-to-wallet"
           : "/api/quotation/quotation-wallet-to-wallet";
 
-      const res = await axios.post(
-        `${import.meta.env.VITE_IP_DEV_API}${url}`,
-        formdata,
-        {
-          headers: { ...authHeader, "idempotency-key": getKey() },
-        },
-      );
+      const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}${url}`, formdata, {
+        headers: { ...authHeader, "idempotency-key": getKey() },
+      });
 
       const dec = decryptData(res.data.data);
       dataHandler("transaction_details", dec);
@@ -636,11 +584,8 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
         dataHandler("otp_error", error);
       } else if (error2) {
         dataHandler("otp_error", error2);
-      } else if (
-        decrypted.message?.toLowerCase()?.includes("account is locked")
-      ) {
-        const time =
-          decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+      } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+        const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
         const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
         setProfileLockTime(timeInSec);
         const coun = localStorage.getItem("ip_country");
@@ -648,10 +593,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
         localStorage.setItem("ip_country", coun);
         navigate("/login");
       } else {
-        dataHandler(
-          "otp_error",
-          decrypted?.message ?? "You have entered wrong OTP.",
-        );
+        dataHandler("otp_error", decrypted?.message ?? "You have entered wrong OTP.");
       }
     } finally {
       dataHandler("loading", false);
@@ -717,8 +659,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
           }}
         />
       )}
-      {data.cardTransactionDetails?.intlToken ||
-      data.cardTransactionDetails?.w2w_data ? (
+      {data.cardTransactionDetails?.intlToken || data.cardTransactionDetails?.w2w_data ? (
         <TrustpaymentPage
           amount={""}
           card_cvc={data.cvc}
@@ -752,8 +693,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
             width: "96vw",
             maxWidth:
               data.step === 1 &&
-              (data.payment_type?.value === "wallet" ||
-                data.payment_type?.sub_name)
+              (data.payment_type?.value === "wallet" || data.payment_type?.sub_name)
                 ? "1300px"
                 : "1050px",
             transition: "500ms",
@@ -798,9 +738,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                   </h2>
 
                   {((data.step === 1 && data.wallet?._id) ||
-                    (data.step === 2 && data.payment_type?.value === "card"
-                      ? true
-                      : false)) &&
+                    (data.step === 2 && data.payment_type?.value === "card" ? true : false)) &&
                   data.loading ? (
                     <div
                       style={{
@@ -811,16 +749,11 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                     >
                       <InstaPayLoader />
                     </div>
-                  ) : (
-                      data.payment_type?.value === "wallet"
-                        ? data.wallet?._id
-                        : true
-                    ) ? (
+                  ) : (data.payment_type?.value === "wallet" ? data.wallet?._id : true) ? (
                     <>
                       <FeesComponent data={data} plaidValues />
                       {data.payment_type?.value === "paypal" &&
-                      !data?.exchange_rate?.paypal
-                        ?.paypal_currency_supported ? (
+                      !data?.exchange_rate?.paypal?.paypal_currency_supported ? (
                         <>
                           <div
                             style={{
@@ -845,11 +778,8 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                                 letterSpacing: "-0.28px",
                               }}
                             >
-                              <strong>
-                                {data?.exchange_rate?.paypal?.fee?.currency}
-                              </strong>{" "}
-                              {t("is not supported by Paypal,")}{" "}
-                              <strong>{t("USD")}</strong>{" "}
+                              <strong>{data?.exchange_rate?.paypal?.fee?.currency}</strong>{" "}
+                              {t("is not supported by Paypal,")} <strong>{t("USD")}</strong>{" "}
                               {t("will be used as the default currency.")}
                             </span>
                           </div>
@@ -861,8 +791,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                               padding: ".8rem",
                               background: "#fff",
                               borderRadius: "6px",
-                              boxShadow:
-                                "0px 1.5px 10.8px 0px rgba(0, 0, 0, 0.11)",
+                              boxShadow: "0px 1.5px 10.8px 0px rgba(0, 0, 0, 0.11)",
                             }}
                           >
                             <div
@@ -896,11 +825,9 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                                   letterSpacing: "-0.14px",
                                 }}
                               >
-                                1.00{" "}
-                                {data?.exchange_rate?.paypal?.fee?.currency} ={" "}
+                                1.00 {data?.exchange_rate?.paypal?.fee?.currency} ={" "}
                                 {Number(
-                                  data?.exchange_rate?.paypal?.paypal_rate
-                                    ?.value,
+                                  data?.exchange_rate?.paypal?.paypal_rate?.value,
                                 )?.toLocaleString("en-US", {
                                   minimumFractionDigits: 2,
                                   maximumFractionDigits: 4,
@@ -941,8 +868,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                                 }}
                               >
                                 {Number(
-                                  data?.exchange_rate?.paypal?.paypal_converted
-                                    ?.value,
+                                  data?.exchange_rate?.paypal?.paypal_converted?.value,
                                 )?.toLocaleString("en-US", {
                                   minimumFractionDigits: 2,
                                   maximumFractionDigits: 2,
@@ -962,11 +888,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                 </div>
                 <div className={styles.right} style={{ minWidth: "550px" }}>
                   {data.step === 1 && (
-                    <StepFour
-                      data={data}
-                      dataHandler={dataHandler}
-                      loading={data.loading}
-                    />
+                    <StepFour data={data} dataHandler={dataHandler} loading={data.loading} />
                   )}
                   {data.step === 2 && data.show_cards ? (
                     <CreditCard
@@ -1005,9 +927,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                     ) : (
                       <StepFive
                         showMid={false}
-                        sending_currency={
-                          item?.amount_reciever_currency?.currency?.code
-                        }
+                        sending_currency={item?.amount_reciever_currency?.currency?.code}
                         data={data}
                         dataHandler={dataHandler}
                       />
@@ -1063,10 +983,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                         >
                           {t("Back")}
                         </button>
-                        <button
-                          disabled={disabledButton || data.loading}
-                          onClick={handleClick}
-                        >
+                        <button disabled={disabledButton || data.loading} onClick={handleClick}>
                           {
                             // userDetails?.user?.kyc_status === "approved"
                             //     ?
@@ -1094,11 +1011,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
               ""
             )}
             {data.step === 1 && data.payment_type?.sub_name ? (
-              <MobileWalletServices
-                loading={data.loading}
-                data={data}
-                dataHandler={dataHandler}
-              />
+              <MobileWalletServices loading={data.loading} data={data} dataHandler={dataHandler} />
             ) : (
               ""
             )}
@@ -1145,10 +1058,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
               </div>
             </div>
             <div className={paym_styles.flow}>
-              <div
-                className={paym_styles.flow_com}
-                style={{ minHeight: "50vh" }}
-              >
+              <div className={paym_styles.flow_com} style={{ minHeight: "50vh" }}>
                 {data.verified ? (
                   <Receipt
                     data={data}
@@ -1159,8 +1069,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                     showBack={true}
                   />
                 ) : data.step === 1 &&
-                  (data.payment_type?.value === "wallet" ||
-                    data.payment_type?.sub_name) ? (
+                  (data.payment_type?.value === "wallet" || data.payment_type?.sub_name) ? (
                   data.payment_type?.value === "wallet" ? (
                     <WalletsComponent data={data} dataHandler={dataHandler} />
                   ) : data.payment_type?.sub_name ? (
@@ -1175,11 +1084,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                 ) : (
                   <>
                     {data.step === 1 && (
-                      <StepFour
-                        data={data}
-                        dataHandler={dataHandler}
-                        loading={data.loading}
-                      />
+                      <StepFour data={data} dataHandler={dataHandler} loading={data.loading} />
                     )}
                     {data.step === 2 && data.show_cards ? (
                       <CreditCard
@@ -1214,9 +1119,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                       ) : (
                         <StepFive
                           showMid={false}
-                          sending_currency={
-                            item?.amount_reciever_currency?.currency?.code
-                          }
+                          sending_currency={item?.amount_reciever_currency?.currency?.code}
                           data={data}
                           dataHandler={dataHandler}
                         />

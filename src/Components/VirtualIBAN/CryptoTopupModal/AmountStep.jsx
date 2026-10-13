@@ -30,11 +30,7 @@ const AmountStep = ({ amount, setAmount, selectedIban }) => {
         const rate = await getExchangeRate("USD", "EUR", 1);
         const normalizedRate = Number(rate);
 
-        if (
-          isMounted &&
-          Number.isFinite(normalizedRate) &&
-          normalizedRate > 0
-        ) {
+        if (isMounted && Number.isFinite(normalizedRate) && normalizedRate > 0) {
           setExchangeRate(normalizedRate);
         }
       } catch (error) {
@@ -51,13 +47,11 @@ const AmountStep = ({ amount, setAmount, selectedIban }) => {
     };
   }, [getExchangeRate]);
 
-  const maxUsdtAmount =
-    exchangeRate && exchangeRate > 0 ? MAX_EUR_AMOUNT / exchangeRate : null;
+  const maxUsdtAmount = exchangeRate && exchangeRate > 0 ? MAX_EUR_AMOUNT / exchangeRate : null;
 
   const isBelowMinimum = hasAmount && numericAmount < MIN_USDT_AMOUNT;
 
-  const isAboveMaximum =
-    hasAmount && maxUsdtAmount !== null && numericAmount > maxUsdtAmount;
+  const isAboveMaximum = hasAmount && maxUsdtAmount !== null && numericAmount > maxUsdtAmount;
 
   const showAmountError = isBelowMinimum || isAboveMaximum;
 
@@ -75,9 +69,7 @@ const AmountStep = ({ amount, setAmount, selectedIban }) => {
 
   return (
     <div>
-      <div className={styles.amountLabel}>
-        {t("Gross Deposit Amount in USDT")}
-      </div>
+      <div className={styles.amountLabel}>{t("Gross Deposit Amount in USDT")}</div>
       <div className={styles.amountInputBox}>
         <div className={styles.amountDisplay}>
           <span className={styles.currencySymbol}>$</span>

@@ -37,16 +37,10 @@ const Password = ({ isCollapsed, setIsCollapsed }) => {
         className={`pb-0 ${isCollapsed ? "collapsed" : "expanded"}`}
         onClick={toggleAccordion}
       >
-        <H4 attrH4={{ className: "card-title mb-0" }}>
-          {t("Change Password")}
-        </H4>
-        <div className="card-options">
-          {isCollapsed ? <ChevronDown /> : <ChevronUp />}
-        </div>
+        <H4 attrH4={{ className: "card-title mb-0" }}>{t("Change Password")}</H4>
+        <div className="card-options">{isCollapsed ? <ChevronDown /> : <ChevronUp />}</div>
       </CardHeader>
-      <div
-        className={`accordion-body ${isCollapsed ? "collapsed" : "expanded"}`}
-      >
+      <div className={`accordion-body ${isCollapsed ? "collapsed" : "expanded"}`}>
         <CardBody>
           <Row>
             <Col md="12">
@@ -58,9 +52,7 @@ const Password = ({ isCollapsed, setIsCollapsed }) => {
                   placeholder="Current Password"
                   {...register("company", { required: true })}
                 />
-                <span style={{ color: "red" }}>
-                  {errors.company && "Password is required"}{" "}
-                </span>
+                <span style={{ color: "red" }}>{errors.company && "Password is required"} </span>
               </FormGroup>
             </Col>
             <Col md="12">
@@ -72,25 +64,19 @@ const Password = ({ isCollapsed, setIsCollapsed }) => {
                   placeholder="Current Password"
                   {...register("company", { required: true })}
                 />
-                <span style={{ color: "red" }}>
-                  {errors.company && "Password is required"}{" "}
-                </span>
+                <span style={{ color: "red" }}>{errors.company && "Password is required"} </span>
               </FormGroup>
             </Col>
             <Col md="12">
               <FormGroup className="mb-3">
-                <Label className="form-label">
-                  {t("Re-enter New Password")}
-                </Label>
+                <Label className="form-label">{t("Re-enter New Password")}</Label>
                 <input
                   className="form-control"
                   type="text"
                   placeholder="Current Password"
                   {...register("company", { required: true })}
                 />
-                <span style={{ color: "red" }}>
-                  {errors.company && "Password is required"}{" "}
-                </span>
+                <span style={{ color: "red" }}>{errors.company && "Password is required"} </span>
               </FormGroup>
             </Col>
           </Row>

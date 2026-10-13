@@ -128,12 +128,7 @@ const Settings = () => {
             />
           </div>
         ) : (
-          <img
-            src={coverPhoto}
-            alt="cover"
-            loading="lazy"
-            className={styles.cover}
-          />
+          <img src={coverPhoto} alt="cover" loading="lazy" className={styles.cover} />
         )}
         {isEditing ? (
           <div
@@ -155,9 +150,7 @@ const Settings = () => {
               }}
             >
               <button
-                onClick={() =>
-                  setScale((prev) => (prev > 1 ? prev - 0.25 : prev))
-                }
+                onClick={() => setScale((prev) => (prev > 1 ? prev - 0.25 : prev))}
                 style={{
                   border: "none",
                   outline: "none",
@@ -184,9 +177,7 @@ const Settings = () => {
                 {scale}x
               </span>
               <button
-                onClick={() =>
-                  setScale((prev) => (prev < 4 ? prev + 0.25 : prev))
-                }
+                onClick={() => setScale((prev) => (prev < 4 ? prev + 0.25 : prev))}
                 style={{
                   border: "none",
                   outline: "none",
@@ -259,9 +250,7 @@ const Settings = () => {
                 }}
               >
                 <Camera size={18} />
-                <span style={{ whiteSpace: "nowrap" }}>
-                  {t("Edit Cover Photo")}
-                </span>
+                <span style={{ whiteSpace: "nowrap" }}>{t("Edit Cover Photo")}</span>
               </label>
               {userDetails?.profileImage?.url && (
                 <>
@@ -280,9 +269,7 @@ const Settings = () => {
                     }}
                   >
                     <Camera size={18} />
-                    <span style={{ whiteSpace: "nowrap" }}>
-                      {t("Adjust Cover Photo")}
-                    </span>
+                    <span style={{ whiteSpace: "nowrap" }}>{t("Adjust Cover Photo")}</span>
                   </label>
                   <label
                     style={{
@@ -299,9 +286,7 @@ const Settings = () => {
                     }}
                   >
                     <Trash2 size={18} />
-                    <span style={{ whiteSpace: "nowrap" }}>
-                      {t("Remove Cover Photo")}
-                    </span>
+                    <span style={{ whiteSpace: "nowrap" }}>{t("Remove Cover Photo")}</span>
                   </label>
                 </>
               )}
@@ -313,13 +298,7 @@ const Settings = () => {
           isOpen={showDelModal}
           toggle={() => setShowDelModal(!showDelModal)}
         />
-        <input
-          type="file"
-          name="cover_photo"
-          id="cover_photo"
-          hidden
-          onChange={handleFileSelect}
-        />
+        <input type="file" name="cover_photo" id="cover_photo" hidden onChange={handleFileSelect} />
       </div>
       <Card style={{ marginBottom: "0" }} className={styles.sub_container}>
         <CardBody className={styles.sc_body}>
@@ -328,10 +307,7 @@ const Settings = () => {
             {/* <Tabs activeTab={activeTab} setActiveTab={setActiveTab} /> */}
             <div className={styles.right}>
               {/* <Basic isCollapsed={activeTab !== "basic"} setIsCollapsed={setActiveTab} /> */}
-              <Password
-                isCollapsed={activeTab !== "password"}
-                setIsCollapsed={setActiveTab}
-              />
+              <Password isCollapsed={activeTab !== "password"} setIsCollapsed={setActiveTab} />
               <SecurityQuestions
                 isCollapsed={activeTab !== "security"}
                 setIsCollapsed={setActiveTab}
@@ -340,33 +316,18 @@ const Settings = () => {
                 isCollapsed={activeTab !== "two factor"}
                 setIsCollapsed={setActiveTab}
               />
-              <Nominee
-                isCollapsed={activeTab !== "nominee"}
-                setIsCollapsed={setActiveTab}
-              />
+              <Nominee isCollapsed={activeTab !== "nominee"} setIsCollapsed={setActiveTab} />
               {userDetails?.account_type !== "individual" && (
-                <ApiKey
-                  isCollapsed={activeTab !== "api"}
-                  setIsCollapsed={setActiveTab}
-                />
+                <ApiKey isCollapsed={activeTab !== "api"} setIsCollapsed={setActiveTab} />
               )}
-              <Accounts
-                isCollapsed={activeTab !== "accounts"}
-                setIsCollapsed={setActiveTab}
-              />
+              <Accounts isCollapsed={activeTab !== "accounts"} setIsCollapsed={setActiveTab} />
               <Notifications
                 isCollapsed={activeTab !== "notifications"}
                 setIsCollapsed={setActiveTab}
               />
-              <Sessions
-                isCollapsed={activeTab !== "sessions"}
-                setIsCollapsed={setActiveTab}
-              />
+              <Sessions isCollapsed={activeTab !== "sessions"} setIsCollapsed={setActiveTab} />
               {userDetails?.account_type !== "individual" && (
-                <KYB
-                  isCollapsed={activeTab !== "business"}
-                  setIsCollapsed={setActiveTab}
-                />
+                <KYB isCollapsed={activeTab !== "business"} setIsCollapsed={setActiveTab} />
               )}
               {userDetails?.account_type === "individual" && (
                 <Verification
@@ -378,14 +339,8 @@ const Settings = () => {
                 isCollapsed={activeTab !== "withdrawal"}
                 setIsCollapsed={setActiveTab}
               />
-              <DownloadData
-                isCollapsed={activeTab !== "download"}
-                setIsCollapsed={setActiveTab}
-              />
-              <DeleteAccount
-                isCollapsed={activeTab !== "delete"}
-                setIsCollapsed={setActiveTab}
-              />
+              <DownloadData isCollapsed={activeTab !== "download"} setIsCollapsed={setActiveTab} />
+              <DeleteAccount isCollapsed={activeTab !== "delete"} setIsCollapsed={setActiveTab} />
             </div>
           </div>
         </CardBody>

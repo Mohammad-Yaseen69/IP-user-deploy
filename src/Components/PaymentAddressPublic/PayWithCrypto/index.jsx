@@ -2,11 +2,7 @@ import { useEffect, useState } from "react";
 import { Modal, ModalBody } from "reactstrap";
 import styles from "./styles/index.module.scss";
 import { useTranslation } from "react-i18next";
-import {
-  ButtonForRequests,
-  Select,
-  TextInput,
-} from "../../ReceiptInvoices/UI/FormElements";
+import { ButtonForRequests, Select, TextInput } from "../../ReceiptInvoices/UI/FormElements";
 import PhoneInput from "../../PhoneInput";
 import { reasons } from "../../PaymentsNewer/AmountAndCurrency";
 import { toast } from "react-toastify";
@@ -121,14 +117,10 @@ const PayWithCrypto = ({
       if (selected <= minDate) {
         dataHandler("cryptoDetails", {
           ...data.cryptoDetails,
-          dob: date.format
-            ? date.format("YYYY-MM-DD")
-            : date.toISOString().split("T")[0],
+          dob: date.format ? date.format("YYYY-MM-DD") : date.toISOString().split("T")[0],
         });
       } else {
-        toast.error(
-          t("Please select a date at least 15 years ago or earlier."),
-        );
+        toast.error(t("Please select a date at least 15 years ago or earlier."));
       }
     } else {
       dataHandler("cryptoDetails", {
@@ -171,13 +163,9 @@ const PayWithCrypto = ({
     const createdTransaction = await mutation.mutateAsync(payload);
 
     // Save payment reference for the details modal
-    setCryptoPaymentRef(
-      createdTransaction?.payment_id || data?.cryptoDetails?.paymentRef || "",
-    );
+    setCryptoPaymentRef(createdTransaction?.payment_id || data?.cryptoDetails?.paymentRef || "");
 
-    const checkoutUrl =
-      createdTransaction?.checkout_url ||
-      createdTransaction?.data?.checkout_url;
+    const checkoutUrl = createdTransaction?.checkout_url || createdTransaction?.data?.checkout_url;
     if (checkoutUrl) {
       window.location.href = checkoutUrl;
       return;
@@ -195,9 +183,7 @@ const PayWithCrypto = ({
     if (numberCheck === "Verified") {
       cryptoTransactionHandler();
     } else {
-      toast.error(
-        t("Incorrect phone number, please enter a correct phone number"),
-      );
+      toast.error(t("Incorrect phone number, please enter a correct phone number"));
     }
   };
 
@@ -247,9 +233,7 @@ const PayWithCrypto = ({
               <div className={styles.form}>
                 <h3>{t("Personal details")}</h3>
                 <p>
-                  {t(
-                    "Please finalize your payment by entering the required personal information.",
-                  )}
+                  {t("Please finalize your payment by entering the required personal information.")}
                 </p>
 
                 <div>
@@ -286,9 +270,7 @@ const PayWithCrypto = ({
                     country={localStorage.getItem("ip_country") ?? "USA"}
                     setCountry={(e) => {
                       console.log("Phone country changed:", e);
-                      const country = countriesData.find(
-                        (item) => item.alpha3 === e,
-                      );
+                      const country = countriesData.find((item) => item.alpha3 === e);
                       if (country) {
                         setCountry(country);
                       }
@@ -315,11 +297,7 @@ const PayWithCrypto = ({
                       value={data?.cryptoDetails?.dob || null}
                       onChange={handleDateChange}
                       placeholder="YYYY-MM-DD"
-                      maxDate={
-                        new Date(
-                          new Date().setFullYear(new Date().getFullYear() - 15),
-                        )
-                      }
+                      maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 15))}
                       disableFuture
                       InputProps={{
                         disableUnderline: true,
@@ -379,9 +357,7 @@ const PayWithCrypto = ({
                 </div>
 
                 <div>
-                  <label htmlFor="paymentRef">
-                    {t("Payment Reference (Optional)")}
-                  </label>
+                  <label htmlFor="paymentRef">{t("Payment Reference (Optional)")}</label>
                   <TextInput
                     styles={{ background: "#f7f7f7" }}
                     id="paymentRef"
@@ -395,9 +371,7 @@ const PayWithCrypto = ({
                   />
                 </div>
 
-                {isShipping && (
-                  <ShippingDetails data={data} dataHandler={dataHandler} />
-                )}
+                {isShipping && <ShippingDetails data={data} dataHandler={dataHandler} />}
               </div>
 
               <div
@@ -434,9 +408,7 @@ const PayWithCrypto = ({
                     !data.cryptoDetails?.name ||
                     !data.cryptoDetails?.dob ||
                     (isShipping
-                      ? Object.values(data.shippingDetails || {}).some(
-                          (val) => !val,
-                        )
+                      ? Object.values(data.shippingDetails || {}).some((val) => !val)
                       : false)
                   }
                 >

@@ -68,8 +68,7 @@ function reducer(state, action) {
 const InvoiceModal = ({ isOpen, toggle, isEdit, inv, directCard = false }) => {
   const { t } = useTranslation();
   const [data, dispatch] = useReducer(reducer, initialData);
-  const { userDetails, allowedCountries, getAllActiveCountries } =
-    useContext(UserContext);
+  const { userDetails, allowedCountries, getAllActiveCountries } = useContext(UserContext);
   const queryClient = useQueryClient();
   const width = useWindowWidth();
   const { userWallets } = useContext(UserContext);
@@ -102,10 +101,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv, directCard = false }) => {
       dataHandler("invoiceId", inv.invoiceId);
       dataHandler("allowMultiple", inv.recurring);
       dataHandler("allowShipping", inv.shippingAddress);
-      dataHandler(
-        "countryIsoCode",
-        guestDetails.country_iso_code || inv.countryIsoCode,
-      );
+      dataHandler("countryIsoCode", guestDetails.country_iso_code || inv.countryIsoCode);
       dataHandler("fullName", guestDetails.name || "");
       dataHandler("email", guestDetails.email || "");
       dataHandler("phone", guestDetails.phone || "");
@@ -167,9 +163,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv, directCard = false }) => {
       !data.wallet;
     if (directCard) {
       return (
-        baseInvalid ||
-        !data.countryIsoCode ||
-        (data.mode === "recipient" && isGuestDetailsInvalid)
+        baseInvalid || !data.countryIsoCode || (data.mode === "recipient" && isGuestDetailsInvalid)
       );
     }
     if (data.specifyCountry) {
@@ -188,15 +182,11 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv, directCard = false }) => {
     isPending,
     data: addedData,
   } = useMutation({
-    mutationFn: (payload) =>
-      directCard ? addDirectCardInvoice(payload) : addInvoice(payload),
+    mutationFn: (payload) => (directCard ? addDirectCardInvoice(payload) : addInvoice(payload)),
     onError: (error) => {
       const dec = decryptData(error?.response?.data?.data);
       toast.error(
-        dec.message ||
-          t(
-            "We can't process your request at this moment please try again later.",
-          ),
+        dec.message || t("We can't process your request at this moment please try again later."),
       );
     },
     onSuccess: () => {
@@ -205,18 +195,13 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv, directCard = false }) => {
   });
   const { mutateAsync: editMutate, isPending: isEditing } = useMutation({
     mutationFn: ({ invoiceId, payload }) =>
-      directCard
-        ? editDirectCardInvoice(invoiceId, payload)
-        : editInvoice(invoiceId, payload),
+      directCard ? editDirectCardInvoice(invoiceId, payload) : editInvoice(invoiceId, payload),
     onError: (error) => {
       const dec = error?.response?.data?.data
         ? decryptData(error?.response?.data?.data)
         : error.response.data;
       toast.error(
-        dec.message ||
-          t(
-            "We can't process your request at this moment please try again later.",
-          ),
+        dec.message || t("We can't process your request at this moment please try again later."),
       );
     },
     onSuccess: () => {
@@ -307,9 +292,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv, directCard = false }) => {
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <img src={icon} alt="" />
           <span style={{ fontWeight: 600, fontSize: 18 }}>
-            {directCard
-              ? t("Generate Direct Card Invoice")
-              : t("Generate Your Invoice")}
+            {directCard ? t("Generate Direct Card Invoice") : t("Generate Your Invoice")}
           </span>
         </div>
       </ModalHeader>
@@ -399,13 +382,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv, directCard = false }) => {
                   </button>
                 )}
                 <ButtonForRequests
-                  isLoading={
-                    isInvalid ||
-                    isPending ||
-                    uploadPending ||
-                    isEditing ||
-                    false
-                  }
+                  isLoading={isInvalid || isPending || uploadPending || isEditing || false}
                   onClick={handleEditInvoice}
                 >
                   {t(directCard && data.mode === "form" ? "Next" : "Save")}
@@ -446,9 +423,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv, directCard = false }) => {
                 </button>
               )}
               <ButtonForRequests
-                isLoading={
-                  isInvalid || isPending || uploadPending || isEditing || false
-                }
+                isLoading={isInvalid || isPending || uploadPending || isEditing || false}
                 onClick={handleAddInvoice}
               >
                 {t(

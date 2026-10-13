@@ -34,9 +34,7 @@ const InstructionsModal = ({ isOpen, toggle }) => {
               fontSize: "min(3.5cqi, 26px)",
             }}
           >
-            {t(
-              "Maximize Your Social Media Earnings with Your InstaPay Payment Address",
-            )}
+            {t("Maximize Your Social Media Earnings with Your InstaPay Payment Address")}
           </p>
           <p
             style={{
@@ -59,9 +57,7 @@ const InstructionsModal = ({ isOpen, toggle }) => {
                 fontWeight: 500,
               }}
             >
-              {t(
-                "Easily integrate your InstaPay Payment Address into your social media posts.",
-              )}
+              {t("Easily integrate your InstaPay Payment Address into your social media posts.")}
             </li>
             <li
               style={{
@@ -154,9 +150,7 @@ const InstructionsModal = ({ isOpen, toggle }) => {
               fontSize: "min(2.5cqi, 20px)",
             }}
           >
-            {t(
-              "Where to Place Your InstaPay Payment Address for Maximum Impact:",
-            )}
+            {t("Where to Place Your InstaPay Payment Address for Maximum Impact:")}
           </p>
           <ul style={{ marginBottom: "1.5rem" }}>
             <li
@@ -250,9 +244,7 @@ const InstructionsModal = ({ isOpen, toggle }) => {
                 fontWeight: 500,
               }}
             >
-              {t(
-                "Enjoy the security and speed of InstaPay's trusted payment processing.",
-              )}
+              {t("Enjoy the security and speed of InstaPay's trusted payment processing.")}
             </li>
             <li
               style={{
@@ -300,32 +292,16 @@ const InstructionsModal = ({ isOpen, toggle }) => {
             }}
           >
             <SwiperSlide>
-              <img
-                src={i_1}
-                alt="."
-                style={{ width: "100%", objectFit: "cover" }}
-              />
+              <img src={i_1} alt="." style={{ width: "100%", objectFit: "cover" }} />
             </SwiperSlide>
             <SwiperSlide>
-              <img
-                src={i_2}
-                alt="."
-                style={{ width: "100%", objectFit: "cover" }}
-              />
+              <img src={i_2} alt="." style={{ width: "100%", objectFit: "cover" }} />
             </SwiperSlide>
             <SwiperSlide>
-              <img
-                src={i_3}
-                alt="."
-                style={{ width: "100%", objectFit: "cover" }}
-              />
+              <img src={i_3} alt="." style={{ width: "100%", objectFit: "cover" }} />
             </SwiperSlide>
             <SwiperSlide>
-              <img
-                src={i_4}
-                alt="."
-                style={{ width: "100%", objectFit: "cover" }}
-              />
+              <img src={i_4} alt="." style={{ width: "100%", objectFit: "cover" }} />
             </SwiperSlide>
           </Swiper>
         )}

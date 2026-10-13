@@ -1,14 +1,7 @@
 import { useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Briefcase, Edit2, Plus, Search, Trash2, User } from "react-feather";
-import {
-  Button,
-  Input,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-} from "reactstrap";
+import { Button, Input, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import TopRight from "../topRight";
@@ -42,8 +35,7 @@ const ThirdPartySenders = () => {
   const [typeFilter, setTypeFilter] = useState("all");
   const [showAddSenderModal, setShowAddSenderModal] = useState(false);
   const [showAddTypePicker, setShowAddTypePicker] = useState(false);
-  const [addSenderAccountType, setAddSenderAccountType] =
-    useState("individual");
+  const [addSenderAccountType, setAddSenderAccountType] = useState("individual");
   const [editingSender, setEditingSender] = useState(null);
   const [confirmDeleteSender, setConfirmDeleteSender] = useState(null);
 
@@ -75,61 +67,52 @@ const ThirdPartySenders = () => {
       setShowAddSenderModal(false);
     },
     onError: (error) => {
+      toast.error(error?.response?.data?.message || t("Unable to add sender. Please try again."));
+    },
+  });
+
+  const { mutateAsync: updateSender, isPending: isUpdatingSender } = useMutation({
+    mutationFn: ({ senderId, values }) =>
+      apiWrapper({
+        endpoint: `/api/sender/update-sender/${senderId}`,
+        method: "PUT",
+        payload: buildSenderFormData(values),
+        isFormData: true,
+        isDecrypted: true,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: senderQueryKey });
+      toast.success(t("Sender updated successfully"));
+      setEditingSender(null);
+    },
+    onError: (error) => {
       toast.error(
-        error?.response?.data?.message ||
-          t("Unable to add sender. Please try again."),
+        error?.response?.data?.message || t("Unable to update sender. Please try again."),
       );
     },
   });
 
-  const { mutateAsync: updateSender, isPending: isUpdatingSender } =
-    useMutation({
-      mutationFn: ({ senderId, values }) =>
-        apiWrapper({
-          endpoint: `/api/sender/update-sender/${senderId}`,
-          method: "PUT",
-          payload: buildSenderFormData(values),
-          isFormData: true,
-          isDecrypted: true,
-        }),
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: senderQueryKey });
-        toast.success(t("Sender updated successfully"));
-        setEditingSender(null);
-      },
-      onError: (error) => {
-        toast.error(
-          error?.response?.data?.message ||
-            t("Unable to update sender. Please try again."),
-        );
-      },
-    });
-
-  const { mutateAsync: deleteSender, isPending: isDeletingSender } =
-    useMutation({
-      mutationFn: (sender) =>
-        apiWrapper({
-          endpoint: `/api/sender/delete-sender/${sender?._id}/${userDetails?._id}`,
-          method: "DELETE",
-          isDecrypted: true,
-        }),
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: senderQueryKey });
-        toast.success(t("Sender removed successfully"));
-        setConfirmDeleteSender(null);
-      },
-      onError: (error) => {
-        toast.error(
-          error?.response?.data?.message ||
-            t("Unable to remove sender. Please try again."),
-        );
-      },
-    });
+  const { mutateAsync: deleteSender, isPending: isDeletingSender } = useMutation({
+    mutationFn: (sender) =>
+      apiWrapper({
+        endpoint: `/api/sender/delete-sender/${sender?._id}/${userDetails?._id}`,
+        method: "DELETE",
+        isDecrypted: true,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: senderQueryKey });
+      toast.success(t("Sender removed successfully"));
+      setConfirmDeleteSender(null);
+    },
+    onError: (error) => {
+      toast.error(
+        error?.response?.data?.message || t("Unable to remove sender. Please try again."),
+      );
+    },
+  });
 
   const displayedSenders = useMemo(() => {
-    let list = savedSenders.map((sender) =>
-      buildSelectedSender(sender, "saved"),
-    );
+    let list = savedSenders.map((sender) => buildSelectedSender(sender, "saved"));
 
     if (typeFilter !== "all") {
       list = list.filter((sender) => sender.sender_type === typeFilter);
@@ -218,9 +201,7 @@ const ThirdPartySenders = () => {
           marginTop: "4px",
         }}
       >
-        {[sender.city, sender.country_name || sender.country_iso_code]
-          .filter(Boolean)
-          .join(", ")}
+        {[sender.city, sender.country_name || sender.country_iso_code].filter(Boolean).join(", ")}
       </span>
       {sender.email ? (
         <span
@@ -264,11 +245,7 @@ const ThirdPartySenders = () => {
           onClick={() =>
             setEditingSender({
               ...sender,
-              phone: getExtractedPhone(
-                {},
-                sender.country_iso_code,
-                sender.phone,
-              ),
+              phone: getExtractedPhone({}, sender.country_iso_code, sender.phone),
             })
           }
           style={actionButtonStyle}
@@ -300,8 +277,7 @@ const ThirdPartySenders = () => {
           style={{
             border: `1px solid ${typeFilter === filter.value ? "#5926F0" : "#E8E8E8"}`,
             borderRadius: "999px",
-            background:
-              typeFilter === filter.value ? "rgba(89, 38, 240, 0.08)" : "#fff",
+            background: typeFilter === filter.value ? "rgba(89, 38, 240, 0.08)" : "#fff",
             color: typeFilter === filter.value ? "#5926F0" : "#606060",
             padding: "8px 14px",
             fontWeight: 800,
@@ -346,15 +322,11 @@ const ThirdPartySenders = () => {
             gap: "12px",
           }}
         >
-          <div style={{ color: "#202020", fontWeight: 800 }}>
-            {t("No saved senders yet")}
-          </div>
+          <div style={{ color: "#202020", fontWeight: 800 }}>{t("No saved senders yet")}</div>
           <div style={{ color: "#777", fontSize: "13px", fontWeight: 600 }}>
             {searchQuery
               ? t("No senders match your search.")
-              : t(
-                  "Add a third-party sender and save their details for your next transfer.",
-                )}
+              : t("Add a third-party sender and save their details for your next transfer.")}
           </div>
         </div>
       );
@@ -391,16 +363,9 @@ const ThirdPartySenders = () => {
   const renderToolbar = (isMobile = false) => (
     <div
       className={styles.table_header}
-      style={
-        isMobile
-          ? { flexDirection: "column", alignItems: "stretch" }
-          : { flexWrap: "wrap" }
-      }
+      style={isMobile ? { flexDirection: "column", alignItems: "stretch" } : { flexWrap: "wrap" }}
     >
-      <div
-        className={styles.search_field}
-        style={isMobile ? { width: "100%" } : { flex: 1 }}
-      >
+      <div className={styles.search_field} style={isMobile ? { width: "100%" } : { flex: 1 }}>
         <Search />
         <Input
           type="search"
@@ -418,9 +383,7 @@ const ThirdPartySenders = () => {
           style={{ padding: ".5rem 1rem" }}
           onClick={handleAddClick}
         >
-          <span
-            style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}
-          >
+          <span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
             <Plus size={16} />
             {t("Add sender")}
           </span>
@@ -485,23 +448,13 @@ const ThirdPartySenders = () => {
         data={{}}
         senderAccountType={editingSender?.sender_type || "individual"}
         editSender={editingSender}
-        onSubmit={(values) =>
-          updateSender({ senderId: editingSender?._id, values })
-        }
+        onSubmit={(values) => updateSender({ senderId: editingSender?._id, values })}
         isSubmitting={isUpdatingSender}
       />
 
-      <Modal
-        isOpen={showAddTypePicker}
-        toggle={() => setShowAddTypePicker(false)}
-        centered
-      >
-        <ModalHeader toggle={() => setShowAddTypePicker(false)}>
-          {t("Add New Sender")}
-        </ModalHeader>
-        <ModalBody
-          style={{ display: "flex", flexDirection: "column", gap: "12px" }}
-        >
+      <Modal isOpen={showAddTypePicker} toggle={() => setShowAddTypePicker(false)} centered>
+        <ModalHeader toggle={() => setShowAddTypePicker(false)}>{t("Add New Sender")}</ModalHeader>
+        <ModalBody style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           <button
             type="button"
             onClick={() => openAddSender("individual")}
@@ -541,22 +494,12 @@ const ThirdPartySenders = () => {
         </ModalBody>
       </Modal>
 
-      <Modal
-        isOpen={!!confirmDeleteSender}
-        toggle={() => setConfirmDeleteSender(null)}
-        centered
-      >
-        <ModalHeader toggle={() => setConfirmDeleteSender(null)}>
-          {t("Remove sender?")}
-        </ModalHeader>
+      <Modal isOpen={!!confirmDeleteSender} toggle={() => setConfirmDeleteSender(null)} centered>
+        <ModalHeader toggle={() => setConfirmDeleteSender(null)}>{t("Remove sender?")}</ModalHeader>
         <ModalBody>
-          {t(
-            "This sender will be permanently removed from your saved senders.",
-          )}
+          {t("This sender will be permanently removed from your saved senders.")}
         </ModalBody>
-        <ModalFooter
-          style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}
-        >
+        <ModalFooter style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
           <button
             type="button"
             disabled={isDeletingSender}

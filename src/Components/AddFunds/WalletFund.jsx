@@ -49,9 +49,7 @@ const WalletFund = ({ setAction }) => {
 
   useEffect(() => {
     if (wallet_address) {
-      const currentWallet = userWallets?.find(
-        (i) => i?.wallet_id === wallet_address,
-      );
+      const currentWallet = userWallets?.find((i) => i?.wallet_id === wallet_address);
       // console.log(currentWallet)
       setWallet(currentWallet);
       setSubStep(2);
@@ -244,8 +242,7 @@ const WalletFund = ({ setAction }) => {
             window.location.pathname = "/login";
           }
           setError(
-            dec?.message ??
-              "We cannot process your request at the moment, please try again later.",
+            dec?.message ?? "We cannot process your request at the moment, please try again later.",
           );
           console.log(dec);
         } finally {
@@ -323,8 +320,7 @@ const WalletFund = ({ setAction }) => {
           }
           console.log(dec);
           setError(
-            dec?.message ??
-              "We cannot process your request at the moment, please try again later.",
+            dec?.message ?? "We cannot process your request at the moment, please try again later.",
           );
         } finally {
           setLoading(false);
@@ -507,9 +503,7 @@ const WalletFund = ({ setAction }) => {
                       padding: "24px",
                     }}
                   >
-                    {subStep === 2 && (
-                      <SelectedWallet setSubStep={setSubStep} wallet={wallet} />
-                    )}
+                    {subStep === 2 && <SelectedWallet setSubStep={setSubStep} wallet={wallet} />}
                     {subStep == 2 && (
                       <SelectedAmountAndCurrency
                         amount={amount}
@@ -554,17 +548,9 @@ const WalletFund = ({ setAction }) => {
               <div style={{ flex: 1.5, minWidth: "300px", padding: "1.5rem" }}>
                 {externalLink ? (
                   <MobileWalletLink
-                    data={
-                      channel?.value === "paypal"
-                        ? { name: t("Paypal") }
-                        : thunesProvider
-                    }
+                    data={channel?.value === "paypal" ? { name: t("Paypal") } : thunesProvider}
                     setSubStep={setSubStep}
-                    type={
-                      channel?.value === "paypal"
-                        ? t("Payment Type")
-                        : t("Mobile Wallet")
-                    }
+                    type={channel?.value === "paypal" ? t("Payment Type") : t("Mobile Wallet")}
                     externalLink={externalLink}
                   />
                 ) : (
@@ -712,9 +698,7 @@ const WalletFund = ({ setAction }) => {
                 } else {
                   setSubStep((prev) =>
                     subStep === 1 ||
-                    (channel?.value?.toLowerCase() === "card"
-                      ? subStep === 5
-                      : subStep === 4)
+                    (channel?.value?.toLowerCase() === "card" ? subStep === 5 : subStep === 4)
                       ? prev
                       : prev - 1,
                   );
@@ -728,9 +712,7 @@ const WalletFund = ({ setAction }) => {
               <TopIcon fill={subStep > 1 ? "#5926f0" : "black"} />
             </div>
           </div>
-          {(channel?.value?.toLowerCase() === "card"
-            ? subStep < 5
-            : subStep < 4) && (
+          {(channel?.value?.toLowerCase() === "card" ? subStep < 5 : subStep < 4) && (
             <div
               style={{
                 marginTop: "1.5rem",
@@ -744,9 +726,7 @@ const WalletFund = ({ setAction }) => {
           )}
           {subStep >= 3 && channel?.name ? (
             loading ? (
-              <div
-                style={{ height: "100px", width: "100px", margin: "0 auto" }}
-              >
+              <div style={{ height: "100px", width: "100px", margin: "0 auto" }}>
                 <InstaPayLoader />
               </div>
             ) : (
@@ -761,9 +741,7 @@ const WalletFund = ({ setAction }) => {
                 />
 
                 {channel?.value === "paypal" &&
-                !PaypalCurrencies.some(
-                  (item) => item === wallet?.currency?.code,
-                ) ? (
+                !PaypalCurrencies.some((item) => item === wallet?.currency?.code) ? (
                   <>
                     <div
                       style={{
@@ -836,13 +814,10 @@ const WalletFund = ({ setAction }) => {
                           }}
                         >
                           1.00 {wallet?.currency?.code} ={" "}
-                          {Number(paypalFx?.exchange_rate)?.toLocaleString(
-                            "en-US",
-                            {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 4,
-                            },
-                          )}
+                          {Number(paypalFx?.exchange_rate)?.toLocaleString("en-US", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 4,
+                          })}
                           {t("USD")}
                         </strong>
                       </div>
@@ -899,9 +874,7 @@ const WalletFund = ({ setAction }) => {
             className={styles.bottom}
             style={{
               height:
-                subStep === 4 && channel?.value?.toLowerCase() === "card"
-                  ? "fit-content"
-                  : "400px",
+                subStep === 4 && channel?.value?.toLowerCase() === "card" ? "fit-content" : "400px",
               position: "relative",
             }}
           >

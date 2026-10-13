@@ -7,8 +7,7 @@ import styles from "./styles/RecentBenef.module.css";
 
 const RecentBeneficiaries = () => {
   const { t } = useTranslation();
-  const { userDetails, beneficiaries, getUserBeneficiaries } =
-    useContext(UserContext);
+  const { userDetails, beneficiaries, getUserBeneficiaries } = useContext(UserContext);
 
   useEffect(() => {
     if (userDetails) {
@@ -40,12 +39,7 @@ const RecentBeneficiaries = () => {
           <div className={styles.row}>
             {beneficiaries.length > 0 ? (
               beneficiaries.map((item, index) => (
-                <BenefCard
-                  index={index}
-                  total={beneficiaries?.length}
-                  key={item._id}
-                  item={item}
-                />
+                <BenefCard index={index} total={beneficiaries?.length} key={item._id} item={item} />
               ))
             ) : (
               <div style={{ margin: "2rem auto" }}>{t("No Beneficiaries")}</div>
@@ -67,12 +61,7 @@ const RecentBeneficiaries = () => {
         >
           {beneficiaries.length > 0 ? (
             beneficiaries.map((item, index) => (
-              <BenefCard
-                index={index}
-                total={beneficiaries?.length}
-                key={item._id}
-                item={item}
-              />
+              <BenefCard index={index} total={beneficiaries?.length} key={item._id} item={item} />
             ))
           ) : (
             <div style={{ margin: "2rem auto" }}>{t("No Beneficiaries")}</div>

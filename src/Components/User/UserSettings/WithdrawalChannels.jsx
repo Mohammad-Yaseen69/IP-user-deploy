@@ -43,24 +43,18 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
     const fetchData = async () => {
       try {
         // Fetch countries
-        const countriesResponse = await axios.get(
-          `${import.meta.env.VITE_THUNES_API}/Countries`,
-        );
+        const countriesResponse = await axios.get(`${import.meta.env.VITE_THUNES_API}/Countries`);
         const decryptedCountries = decryptData(countriesResponse.data.data);
 
         // Check if user's country is allowed
         const isIn = decryptedCountries.some((item) =>
-          userDetails?.country_name
-            ?.toLowerCase()
-            ?.includes(item.countryName.toLowerCase()),
+          userDetails?.country_name?.toLowerCase()?.includes(item.countryName.toLowerCase()),
         );
         setAllowedCountry(isIn);
 
         if (isIn) {
           // Fetch user country
-          const country = countries.find((item) =>
-            item.name.includes(userDetails?.country_name),
-          );
+          const country = countries.find((item) => item.name.includes(userDetails?.country_name));
           // const data = { country: country.alpha3 };
           // const encrypted = encryptData(data);
 
@@ -150,29 +144,22 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
       setbankMobCrypto({
         bank_swift_code: userWithdrawals?.bank_details?.[0]?.swift_code ?? "",
         bank_iban: userWithdrawals?.bank_details?.[0]?.iban ?? "",
-        bank_account_number:
-          userWithdrawals?.bank_details?.[0]?.account_number ?? "",
+        bank_account_number: userWithdrawals?.bank_details?.[0]?.account_number ?? "",
         bank_name: userWithdrawals?.bank_details?.[0]?.name ?? "",
         bank_branch_name: userWithdrawals?.bank_details?.[0]?.branch_name ?? "",
-        bank_branch_street:
-          userWithdrawals?.bank_details?.[0]?.branch_street ?? "",
+        bank_branch_street: userWithdrawals?.bank_details?.[0]?.branch_street ?? "",
         bank_city: userWithdrawals?.bank_details?.[0]?.city ?? "",
         bank_province: userWithdrawals?.bank_details?.[0]?.province ?? "",
         bank_postal_code: userWithdrawals?.bank_details?.[0]?.postal_code ?? "",
-        bank_account_holder_name:
-          userWithdrawals?.bank_details?.[0]?.account_holder_name ?? "",
-        mobile_money_provider:
-          userWithdrawals?.mobile_wallet?.[0]?.money_provider ?? "",
-        mobile_wallet_name:
-          userWithdrawals?.mobile_wallet?.[0]?.wallet_name ?? "",
+        bank_account_holder_name: userWithdrawals?.bank_details?.[0]?.account_holder_name ?? "",
+        mobile_money_provider: userWithdrawals?.mobile_wallet?.[0]?.money_provider ?? "",
+        mobile_wallet_name: userWithdrawals?.mobile_wallet?.[0]?.wallet_name ?? "",
         mobile_wallet_account_number:
           userWithdrawals?.mobile_wallet?.[0]?.wallet_account_number ?? "",
         crypto_currency: userWithdrawals?.crypto?.[0]?.currency ?? "",
-        crypto_wallet_address:
-          userWithdrawals?.crypto?.[0]?.wallet_address ?? "",
+        crypto_wallet_address: userWithdrawals?.crypto?.[0]?.wallet_address ?? "",
         document_type: userWithdrawals?.cash_pickup?.[0]?.document_type ?? "",
-        document_number:
-          userWithdrawals?.cash_pickup?.[0]?.document_number ?? "",
+        document_number: userWithdrawals?.cash_pickup?.[0]?.document_number ?? "",
       });
 
       setCard({
@@ -331,9 +318,7 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
       city: userDetails?.city ?? "",
       country: userDetails?.country_name ?? "",
       iso_code: countries.filter((item) =>
-        item.name
-          .toLowerCase()
-          .includes(userDetails?.country_name?.toLowerCase()),
+        item.name.toLowerCase().includes(userDetails?.country_name?.toLowerCase()),
       )?.[0]?.alpha3,
       account: userDetails._id,
       withdrawal_type: userDetails?.account_type,
@@ -344,8 +329,7 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
       bank_details: bankCompleted
         ? [
             {
-              swift_code:
-                accNumType === "Swift" ? bankMobCrypto.bank_swift_code : "",
+              swift_code: accNumType === "Swift" ? bankMobCrypto.bank_swift_code : "",
               iban: accNumType === "IBAN" ? bankMobCrypto.bank_iban : "",
               account_number: bankMobCrypto.bank_account_number,
               name: bankMobCrypto.bank_name,
@@ -448,9 +432,7 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
       city: userDetails?.city ?? "",
       country: userDetails?.country_name ?? "",
       iso_code: countries.filter((item) =>
-        item.name
-          .toLowerCase()
-          .includes(userDetails?.country_name?.toLowerCase()),
+        item.name.toLowerCase().includes(userDetails?.country_name?.toLowerCase()),
       )?.[0]?.alpha3,
       account: userDetails._id,
       withdrawal_type: userDetails?.account_type,
@@ -461,8 +443,7 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
       bank_details: bankCompleted
         ? [
             {
-              swift_code:
-                accNumType === "Swift" ? bankMobCrypto.bank_swift_code : "",
+              swift_code: accNumType === "Swift" ? bankMobCrypto.bank_swift_code : "",
               iban: accNumType === "IBAN" ? bankMobCrypto.bank_iban : "",
               account_number: bankMobCrypto.bank_account_number,
               name: bankMobCrypto.bank_name,
@@ -553,20 +534,14 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
         onClick={toggleAccordion}
       >
         <div>
-          <H4 attrH4={{ className: "card-title mb-0" }}>
-            {t("My Withdrawal Channels")}
-          </H4>
+          <H4 attrH4={{ className: "card-title mb-0" }}>{t("My Withdrawal Channels")}</H4>
           <p style={{ marginTop: ".5rem", color: "black", fontWeight: "300" }}>
             {t("Choose how you withdraw payments.")}
           </p>
         </div>
-        <div className="card-options">
-          {isCollapsed ? <ChevronDown /> : <ChevronUp />}
-        </div>
+        <div className="card-options">{isCollapsed ? <ChevronDown /> : <ChevronUp />}</div>
       </CardHeader>
-      <div
-        className={`accordion-body ${isCollapsed ? "collapsed" : "expanded"}`}
-      >
+      <div className={`accordion-body ${isCollapsed ? "collapsed" : "expanded"}`}>
         {payoutChannelData.length > 0 ? (
           <>
             <CardBody>
@@ -625,9 +600,7 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
                                 alignItems: "center",
                                 borderRadius: "6px",
                                 boxShadow: `0px 4px 7px rgba(172, 53, 159, ${
-                                  item?.name === payoutChannel?.name
-                                    ? 0.9
-                                    : 0.31
+                                  item?.name === payoutChannel?.name ? 0.9 : 0.31
                                 })`,
                               }}
                             >
@@ -646,10 +619,7 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
                               style={{
                                 marginBottom: 0,
                                 fontSize: ".8rem",
-                                color:
-                                  item?.name === payoutChannel?.name
-                                    ? "white"
-                                    : "#000",
+                                color: item?.name === payoutChannel?.name ? "white" : "#000",
                               }}
                             >
                               {t(item?.name)}
@@ -679,11 +649,7 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
                   />
                 )}
                 {payoutChannel?.value === "card" && (
-                  <CardP
-                    values={card}
-                    changeHandler={cardHandler}
-                    isEditMode={isEditMode}
-                  />
+                  <CardP values={card} changeHandler={cardHandler} isEditMode={isEditMode} />
                 )}
                 {/* {
                                         payoutChannel?.value === "crypto"
@@ -691,11 +657,7 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
                                         <Crypto values={bankMobCrypto} changeHandler={bmcHandler} isEditMode={isEditMode} />
                                     } */}
                 {payoutChannel?.value === "cash" && (
-                  <Cash
-                    values={bankMobCrypto}
-                    changeHandler={bmcHandler}
-                    isEditMode={isEditMode}
-                  />
+                  <Cash values={bankMobCrypto} changeHandler={bmcHandler} isEditMode={isEditMode} />
                 )}
               </div>
             </CardBody>
@@ -708,8 +670,7 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
                         disabled={isSaving}
                         size="sm"
                         style={{
-                          background:
-                            "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                          background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                           border: "none",
                           outline: "none",
                         }}
@@ -720,8 +681,7 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
                       <Button
                         size="sm"
                         style={{
-                          background:
-                            "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                          background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                           border: "none",
                           outline: "none",
                           marginLeft: "1rem",
@@ -744,8 +704,7 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
                       disabled={isSaving}
                       size="sm"
                       style={{
-                        background:
-                          "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                        background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                         border: "none",
                         outline: "none",
                       }}
@@ -767,8 +726,7 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
                   }
                   size="sm"
                   style={{
-                    background:
-                      "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                     border: "none",
                     outline: "none",
                   }}
@@ -781,9 +739,7 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
           </>
         ) : (
           <CardBody style={{ textAlign: "center" }}>
-            <h5 style={{ margin: "1.5rem 0" }}>
-              {t("No Withdrawals Supported In Your Country.")}
-            </h5>
+            <h5 style={{ margin: "1.5rem 0" }}>{t("No Withdrawals Supported In Your Country.")}</h5>
           </CardBody>
         )}
       </div>

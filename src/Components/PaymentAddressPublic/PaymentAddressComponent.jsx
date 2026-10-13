@@ -130,31 +130,19 @@ export const LeftJsx = ({
       {width > 1000 && (
         <div className={styles.left_top}>
           <AnimatedHeader />
-          <img
-            src={ip}
-            alt=""
-            onClick={() => (window.location.href = "https://insta-pay.ch")}
-          />
+          <img src={ip} alt="" onClick={() => (window.location.href = "https://insta-pay.ch")} />
         </div>
       )}
       {!isFromQr && (
         <div className={styles.left_bottom}>
           <div>
-            {(flagCheck("allowTitle", userDetails, "paymentAddress")
-              ? title
-              : "") ||
-            (flagCheck("allowDescription", userDetails, "paymentAddress")
-              ? description
-              : "") ? (
+            {(flagCheck("allowTitle", userDetails, "paymentAddress") ? title : "") ||
+            (flagCheck("allowDescription", userDetails, "paymentAddress") ? description : "") ? (
               <div className={styles.about}>
                 {flagCheck("allowTitle", userDetails, "paymentAddress") && (
                   <h4 style={{ marginBottom: "0px" }}>{t(title)}</h4>
                 )}
-                {flagCheck(
-                  "allowDescription",
-                  userDetails,
-                  "paymentAddress",
-                ) && (
+                {flagCheck("allowDescription", userDetails, "paymentAddress") && (
                   <p
                     style={{
                       fontSize: "14px",
@@ -256,15 +244,11 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
   };
 
   const handleKeyUp = (e) => {
-    formatCurrency(e.target.value, false, (value) =>
-      dataHandler("formattedAmount", value),
-    );
+    formatCurrency(e.target.value, false, (value) => dataHandler("formattedAmount", value));
   };
 
   const handleBlur = (e) => {
-    formatCurrency(e.target.value, true, (value) =>
-      dataHandler("formattedAmount", value),
-    );
+    formatCurrency(e.target.value, true, (value) => dataHandler("formattedAmount", value));
   };
 
   useEffect(() => {
@@ -312,24 +296,12 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
         .then((res) => {
           const decrypted = decryptData(res.data.data);
 
-          dataHandler(
-            "paymentAddressDetails",
-            decrypted?.paymentAddressDetails,
-          );
+          dataHandler("paymentAddressDetails", decrypted?.paymentAddressDetails);
           dataHandler("title", decrypted?.paymentAddressDetails?.title);
           dataHandler("currency", decrypted?.paymentAddressDetails?.currency);
-          dataHandler(
-            "description",
-            decrypted?.paymentAddressDetails?.description,
-          );
-          dataHandler(
-            "dp",
-            decrypted?.paymentAddressDetails?.profileImage?.url,
-          );
-          dataHandler(
-            "cover",
-            decrypted?.paymentAddressDetails?.coverImage?.url,
-          );
+          dataHandler("description", decrypted?.paymentAddressDetails?.description);
+          dataHandler("dp", decrypted?.paymentAddressDetails?.profileImage?.url);
+          dataHandler("cover", decrypted?.paymentAddressDetails?.coverImage?.url);
           dataHandler("currentWallet", decrypted?.wallet);
 
           const coverPromise = decrypted?.paymentAddressDetails?.coverImage?.url
@@ -359,8 +331,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
           } else if (err?.response?.status === 404) {
             errorMsg = "This user hasn't set their payment address yet.";
           } else {
-            errorMsg =
-              "Failed to load payment address details. Please try again.";
+            errorMsg = "Failed to load payment address details. Please try again.";
           }
           dataHandler("error", errorMsg);
           try {
@@ -524,9 +495,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                           description={state.description}
                           playerRefs={playerRefs}
                           playingMediaId={state.playingMediaId}
-                          setPlayingMediaId={(value) =>
-                            dataHandler("playingMediaId", value)
-                          }
+                          setPlayingMediaId={(value) => dataHandler("playingMediaId", value)}
                           title={state.title}
                           user_name={user_name}
                           userDetails={userDetails}
@@ -549,9 +518,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                           src={ip}
                           alt=""
                           style={{ margin: "20px auto", width: "200px" }}
-                          onClick={() =>
-                            (window.location.href = "https://insta-pay.ch")
-                          }
+                          onClick={() => (window.location.href = "https://insta-pay.ch")}
                         />
                       </div>
                     )}
@@ -564,9 +531,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                       description={state.description}
                       playerRefs={playerRefs}
                       playingMediaId={state.playingMediaId}
-                      setPlayingMediaId={(value) =>
-                        dataHandler("playingMediaId", value)
-                      }
+                      setPlayingMediaId={(value) => dataHandler("playingMediaId", value)}
                       title={state.title}
                       user_name={user_name}
                       userDetails={userDetails}
@@ -582,10 +547,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
               <CardBody>
                 <CardText>
                   {t("This user hasn't set their payment address yet.")}{" "}
-                  <Link
-                    to={"/"}
-                    style={{ textDecoration: "underline", fontWeight: 600 }}
-                  >
+                  <Link to={"/"} style={{ textDecoration: "underline", fontWeight: 600 }}>
                     {t("Go back to Home.")}
                   </Link>
                 </CardText>

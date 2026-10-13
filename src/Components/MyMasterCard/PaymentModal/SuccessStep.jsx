@@ -45,28 +45,18 @@ const SuccessStep = ({
               alignItems: "center",
             }}
           >
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "7px" }}
-            >
+            <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
               <p>{t("You Have Paid")}</p>
               <h1>
-                {!addFunds
-                  ? feeDetails.currency
-                  : feeDetails?.feeDetails?.currency}
-                {!addFunds
-                  ? feeDetails.fee
-                  : feeDetails?.feeDetails?.totalAmount}
+                {!addFunds ? feeDetails.currency : feeDetails?.feeDetails?.currency}
+                {!addFunds ? feeDetails.fee : feeDetails?.feeDetails?.totalAmount}
               </h1>
             </div>
 
             <img src={success} style={{ width: "100px" }} alt="" />
           </div>
 
-          <img
-            src={Svg}
-            style={{ position: "absolute", right: "10px", top: "0px" }}
-            alt=""
-          />
+          <img src={Svg} style={{ position: "absolute", right: "10px", top: "0px" }} alt="" />
         </div>
 
         <div
@@ -129,17 +119,14 @@ const SuccessStep = ({
               <div className={styles.feeInfo}>
                 <h3>{t("Total Amount")}</h3>
                 <h3>
-                  {feeDetails?.feeDetails?.currency}{" "}
-                  {feeDetails?.feeDetails?.totalAmount}
+                  {feeDetails?.feeDetails?.currency} {feeDetails?.feeDetails?.totalAmount}
                 </h3>
               </div>
               <div className={styles.feeInfo}>
                 <h3>{t("Exchange Rate")}</h3>
                 <h3>
                   {feeDetails?.feeDetails?.currency}{" "}
-                  {Number(
-                    feeDetails?.feeDetails?.exchangeRate?.replace(/[,]/g, ""),
-                  )?.toFixed(2)}
+                  {Number(feeDetails?.feeDetails?.exchangeRate?.replace(/[,]/g, ""))?.toFixed(2)}
                 </h3>
               </div>
             </>
@@ -151,8 +138,7 @@ const SuccessStep = ({
             flexDirection: width < 660 && "column",
             width: (width < 660 || !setStepParent) && "100%",
             display: !setStepParent && "grid",
-            gridTemplateColumns:
-              !setStepParent && width > 700 ? "1fr 1fr" : "1fr",
+            gridTemplateColumns: !setStepParent && width > 700 ? "1fr 1fr" : "1fr",
           }}
           className={styles.completeOptions}
         >

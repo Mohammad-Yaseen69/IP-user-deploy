@@ -155,8 +155,7 @@ const QuotationReceivedItem = ({ item, activeItem, setActiveItem, index }) => {
             {t(capitalizeStatus(item.status))}
           </div>
         </div>
-        {status?.toLowerCase() !== "accepted" &&
-        status?.toLowerCase() !== "declined" ? (
+        {status?.toLowerCase() !== "accepted" && status?.toLowerCase() !== "declined" ? (
           <div
             style={{
               display: "flex",
@@ -182,25 +181,23 @@ const QuotationReceivedItem = ({ item, activeItem, setActiveItem, index }) => {
                 }}
               />
             )}
-            {canBargainQuotation &&
-              item?.bargain &&
-              item?.status === "sent" && (
-                <img
-                  style={{
-                    cursor: "pointer",
-                    height: "30px",
-                    width: "30px",
-                    objectFit: "contain",
-                  }}
-                  title="Bargain quotation"
-                  src={bargain}
-                  alt=""
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowBargainModal(true);
-                  }}
-                />
-              )}
+            {canBargainQuotation && item?.bargain && item?.status === "sent" && (
+              <img
+                style={{
+                  cursor: "pointer",
+                  height: "30px",
+                  width: "30px",
+                  objectFit: "contain",
+                }}
+                title="Bargain quotation"
+                src={bargain}
+                alt=""
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowBargainModal(true);
+                }}
+              />
+            )}
             {canDeclineQuotation && (
               <img
                 style={{
@@ -226,9 +223,7 @@ const QuotationReceivedItem = ({ item, activeItem, setActiveItem, index }) => {
           {activeItem === index + 1 ? <ChevronDown /> : <ChevronRight />}
         </div>
       </div>
-      {activeItem === index + 1 && (
-        <QuoteDetails item={item} key={item?._id} type="receive" />
-      )}
+      {activeItem === index + 1 && <QuoteDetails item={item} key={item?._id} type="receive" />}
     </div>
   );
 };

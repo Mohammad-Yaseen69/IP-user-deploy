@@ -110,12 +110,7 @@ const CreatePassword = () => {
           justifyContent: "center",
         }}
       >
-        <img
-          src={Logo}
-          loading="lazy"
-          style={{ margin: "40px auto", width: "150px" }}
-          alt=""
-        />
+        <img src={Logo} loading="lazy" style={{ margin: "40px auto", width: "150px" }} alt="" />
       </div>
       {!success ? (
         <div className={styles.wrapper}>
@@ -146,16 +141,12 @@ const CreatePassword = () => {
               />
               {passwords.password.show ? (
                 <EyeOff
-                  onClick={() =>
-                    changePassShowHandler("password", !passwords.password.show)
-                  }
+                  onClick={() => changePassShowHandler("password", !passwords.password.show)}
                   style={{ cursor: "pointer" }}
                 />
               ) : (
                 <Eye
-                  onClick={() =>
-                    changePassShowHandler("password", !passwords.password.show)
-                  }
+                  onClick={() => changePassShowHandler("password", !passwords.password.show)}
                   style={{ cursor: "pointer" }}
                 />
               )}
@@ -164,8 +155,7 @@ const CreatePassword = () => {
               <h5 style={{ alignSelf: "flex-start" }}>{t("Password must:")}</h5>
               <ul className={styles.pg_list}>
                 <li>
-                  {passwords.password.value.length >= 9 &&
-                  passwords.password.value.length <= 64 ? (
+                  {passwords.password.value.length >= 9 && passwords.password.value.length <= 64 ? (
                     <Check />
                   ) : (
                     <Cross />
@@ -185,35 +175,19 @@ const CreatePassword = () => {
                 </li>
                 <ul className={styles.pg_sub_list}>
                   <li>
-                    {/[A-Z]/.test(passwords.password.value) ? (
-                      <Check />
-                    ) : (
-                      <Cross />
-                    )}
+                    {/[A-Z]/.test(passwords.password.value) ? <Check /> : <Cross />}
                     <p>{t("Uppercase character")}</p>
                   </li>
                   <li>
-                    {/[a-z]/.test(passwords.password.value) ? (
-                      <Check />
-                    ) : (
-                      <Cross />
-                    )}
+                    {/[a-z]/.test(passwords.password.value) ? <Check /> : <Cross />}
                     <p>{t("Lowercase Character")}</p>
                   </li>
                   <li>
-                    {/[0-9]/.test(passwords.password.value) ? (
-                      <Check />
-                    ) : (
-                      <Cross />
-                    )}
+                    {/[0-9]/.test(passwords.password.value) ? <Check /> : <Cross />}
                     <p>{t("Number")}</p>
                   </li>
                   <li>
-                    {/[^A-Za-z0-9]/.test(passwords.password.value) ? (
-                      <Check />
-                    ) : (
-                      <Cross />
-                    )}
+                    {/[^A-Za-z0-9]/.test(passwords.password.value) ? <Check /> : <Cross />}
                     <p>{t("Special Character")}</p>
                   </li>
                 </ul>
@@ -243,20 +217,14 @@ const CreatePassword = () => {
               {passwords.confirm_password.show ? (
                 <EyeOff
                   onClick={() =>
-                    changePassShowHandler(
-                      "confirm_password",
-                      !passwords.confirm_password.show,
-                    )
+                    changePassShowHandler("confirm_password", !passwords.confirm_password.show)
                   }
                   style={{ cursor: "pointer" }}
                 />
               ) : (
                 <Eye
                   onClick={() =>
-                    changePassShowHandler(
-                      "confirm_password",
-                      !passwords.confirm_password.show,
-                    )
+                    changePassShowHandler("confirm_password", !passwords.confirm_password.show)
                   }
                   style={{ cursor: "pointer" }}
                 />
@@ -311,12 +279,7 @@ const CreatePassword = () => {
             textAlign: "center",
           }}
         >
-          <img
-            src={Logo}
-            loading="lazy"
-            style={{ margin: "20px auto", width: "150px" }}
-            alt=""
-          />
+          <img src={Logo} loading="lazy" style={{ margin: "20px auto", width: "150px" }} alt="" />
           <img
             src={Gif}
             loading="lazy"
@@ -336,13 +299,9 @@ const CreatePassword = () => {
                 marginTop: "8px",
               }}
             >
-              {t(
-                "You may close this window and proceed further on {{platform}}",
-                {
-                  platform:
-                    data.platform === "telegram" ? "Telegram" : "Instagram",
-                },
-              )}
+              {t("You may close this window and proceed further on {{platform}}", {
+                platform: data.platform === "telegram" ? "Telegram" : "Instagram",
+              })}
             </p>
 
             <a

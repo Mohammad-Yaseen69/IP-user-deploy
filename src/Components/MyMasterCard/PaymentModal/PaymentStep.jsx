@@ -145,10 +145,7 @@ const PaymentStep = ({
                   gap: "10px",
                 }}
               >
-                <h3
-                  style={{ fontSize: cardToWallet && "20px" }}
-                  className={styles.walletNameHead}
-                >
+                <h3 style={{ fontSize: cardToWallet && "20px" }} className={styles.walletNameHead}>
                   {wallet_l.name}
                   {t("Wallet")}
                 </h3>
@@ -206,9 +203,7 @@ const PaymentStep = ({
       {paymentType === "card" && (
         <div className={styles.cardDiv}>
           <div className={styles.texts}>
-            <p>
-              {t("Complete your payment by providing your payment details")}
-            </p>
+            <p>{t("Complete your payment by providing your payment details")}</p>
           </div>
 
           <div className={styles.cardFormDiv}>
@@ -311,18 +306,10 @@ const PaymentStep = ({
           <div className={styles.pcontainer}>
             <div className={styles.secure}>
               <div className={styles.sectio1}>
-                <img
-                  src={lockIcon}
-                  alt="lock"
-                  style={{ width: "20px", height: "20px" }}
-                />
+                <img src={lockIcon} alt="lock" style={{ width: "20px", height: "20px" }} />
                 <p>{t("Payments are secure and encrypted by")}</p>
               </div>
-              <img
-                src={mainIcon}
-                alt="pci"
-                style={{ width: "60px", height: "25px" }}
-              />
+              <img src={mainIcon} alt="pci" style={{ width: "60px", height: "25px" }} />
             </div>
           </div>
         </div>

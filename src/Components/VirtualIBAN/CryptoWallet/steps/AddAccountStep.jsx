@@ -15,11 +15,7 @@ const AddAccountStep = ({ accountType, onSelect }) => {
 
   return (
     <>
-      <div
-        className={styles.optionList}
-        role="radiogroup"
-        aria-label={t("Account type")}
-      >
+      <div className={styles.optionList} role="radiogroup" aria-label={t("Account type")}>
         {ACCOUNT_TYPES.map((option) => {
           const Icon = LEADING_ICONS[option.icon];
           return (
@@ -42,9 +38,7 @@ const AddAccountStep = ({ accountType, onSelect }) => {
       </div>
 
       <Callout>
-        {t(
-          "Crypto wallets are charged once at activation. There is no monthly or recurring fee.",
-        )}
+        {t("Crypto wallets are charged once at activation. There is no monthly or recurring fee.")}
       </Callout>
     </>
   );

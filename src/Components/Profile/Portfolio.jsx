@@ -25,13 +25,9 @@ const Portfolio = () => {
         {userPortfolio && userPortfolio.length > 0 ? (
           userPortfolio
             ?.filter((item) =>
-              item?.file_type?.includes("video")
-                ? item?.jw_media?.status === "ready"
-                : item,
+              item?.file_type?.includes("video") ? item?.jw_media?.status === "ready" : item,
             )
-            ?.map((item, ind) => (
-              <>{item && <PortfolioItem item={item} key={ind} />}</>
-            ))
+            ?.map((item, ind) => <>{item && <PortfolioItem item={item} key={ind} />}</>)
         ) : (
           <div className="text-center my-4">{t("No Portfolio Items")}</div>
         )}

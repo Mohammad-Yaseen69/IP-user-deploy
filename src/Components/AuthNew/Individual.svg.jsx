@@ -10,14 +10,7 @@ const IndividualSVG = ({ size, color, isActive }) => {
       xmlns="http://www.w3.org/2000/svg"
     >
       <g filter="url(#filter0_d_3813_7885)">
-        <rect
-          x="22"
-          y="18"
-          width="140.916"
-          height="140.916"
-          rx="22.5466"
-          fill="white"
-        />
+        <rect x="22" y="18" width="140.916" height="140.916" rx="22.5466" fill="white" />
         <path
           fill-rule="evenodd"
           clip-rule="evenodd"
@@ -58,11 +51,7 @@ const IndividualSVG = ({ size, color, isActive }) => {
             type="matrix"
             values="0 0 0 0 0.34902 0 0 0 0 0.14902 0 0 0 0 0.941176 0 0 0 0.09 0"
           />
-          <feBlend
-            mode="normal"
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_3813_7885"
-          />
+          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3813_7885" />
           <feBlend
             mode="normal"
             in="SourceGraphic"
@@ -81,14 +70,7 @@ const IndividualSVG = ({ size, color, isActive }) => {
       xmlns="http://www.w3.org/2000/svg"
     >
       <g filter="url(#filter0_d_3813_7225)">
-        <rect
-          x="22"
-          y="18"
-          width="140.916"
-          height="140.916"
-          rx="22.5466"
-          fill="white"
-        />
+        <rect x="22" y="18" width="140.916" height="140.916" rx="22.5466" fill="white" />
         <path
           fill-rule="evenodd"
           clip-rule="evenodd"
@@ -120,11 +102,7 @@ const IndividualSVG = ({ size, color, isActive }) => {
             type="matrix"
             values="0 0 0 0 0.34902 0 0 0 0 0.14902 0 0 0 0 0.941176 0 0 0 0.09 0"
           />
-          <feBlend
-            mode="normal"
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_3813_7225"
-          />
+          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3813_7225" />
           <feBlend
             mode="normal"
             in="SourceGraphic"

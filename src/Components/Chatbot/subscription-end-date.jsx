@@ -111,10 +111,7 @@ export default function SubscriptionCalendarEndDate() {
 
     setSelectedDate(newDate);
 
-    if (
-      newDate.isBefore(minSelectableDate) ||
-      newDate.isSame(providedDate, "day")
-    ) {
+    if (newDate.isBefore(minSelectableDate) || newDate.isSame(providedDate, "day")) {
       setIsValidDate(false);
     } else {
       setIsValidDate(true);
@@ -139,8 +136,7 @@ export default function SubscriptionCalendarEndDate() {
     setLoading(true);
     setError(null);
     try {
-      const apiUrl =
-        "https://fontawesomev23.com/api/webhook/set-subscription-calendar-end-date";
+      const apiUrl = "https://fontawesomev23.com/api/webhook/set-subscription-calendar-end-date";
       const requestBody = {
         data: {
           token,
@@ -181,12 +177,9 @@ export default function SubscriptionCalendarEndDate() {
               autoplay={true}
             />
             <h5 style={{ padding: "1rem", textAlign: "center" }}>
-              {t(
-                "You can now close this webpage and go back to {{platform}}.",
-                {
-                  platform: platform === "telegram" ? "Telegram" : "Instagram",
-                },
-              )}
+              {t("You can now close this webpage and go back to {{platform}}.", {
+                platform: platform === "telegram" ? "Telegram" : "Instagram",
+              })}
             </h5>
             <RedirectButton platform={platform} />
           </CustomDatePickerContainer>
@@ -204,9 +197,7 @@ export default function SubscriptionCalendarEndDate() {
                   flexDirection: "column",
                 }}
               >
-                <CustomLabel htmlFor="datepicker">
-                  {t("Select an Ending Date:")}
-                </CustomLabel>
+                <CustomLabel htmlFor="datepicker">{t("Select an Ending Date:")}</CustomLabel>
                 <MobileDatePicker
                   id="datepicker"
                   value={selectedDate}

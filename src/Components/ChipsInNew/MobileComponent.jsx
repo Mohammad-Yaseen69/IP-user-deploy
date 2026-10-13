@@ -18,9 +18,7 @@ const MobileComponent = ({ wallet, current }) => {
   const [editMode, setEditMode] = useState(false);
   const [title, setTitle] = useState(wallet?.qrCode?.title);
   const [description, setDescription] = useState(wallet?.qrCode?.description);
-  const [status, setStatus] = useState(
-    wallet?.qrCode?.status === "true" ? true : false,
-  );
+  const [status, setStatus] = useState(wallet?.qrCode?.status === "true" ? true : false);
   const [saving, setSaving] = useState(false);
   const { setWalletRefresh, authHeader } = useContext(UserContext);
   const [showFullDesc, setShowFullDesc] = useState(false);
@@ -31,11 +29,7 @@ const MobileComponent = ({ wallet, current }) => {
     setShowFullDesc(false);
     setTitle(wallet?.qrCode?.title ?? "");
     setDescription(wallet?.qrCode?.description ?? "");
-    setStatus(
-      wallet?.qrCode?.status === "true" || wallet?.qrCode?.status === true
-        ? true
-        : false,
-    );
+    setStatus(wallet?.qrCode?.status === "true" || wallet?.qrCode?.status === true ? true : false);
   }, [current, wallet?.wallet_id]);
 
   const switchStyle = {
@@ -132,15 +126,11 @@ const MobileComponent = ({ wallet, current }) => {
               placeholder={t("Description")}
               value={description}
               onChange={(e) =>
-                e.target.value?.length >= 180
-                  ? ""
-                  : setDescription(e.target.value)
+                e.target.value?.length >= 180 ? "" : setDescription(e.target.value)
               }
             />
           </div>
-          <button disabled={saving || !description || !title}>
-            {t("Save")}
-          </button>
+          <button disabled={saving || !description || !title}>{t("Save")}</button>
         </form>
       ) : (
         <>
@@ -183,10 +173,7 @@ const MobileComponent = ({ wallet, current }) => {
             <img src={edit} alt="e" />
             <span>{t("Edit")}</span>
           </button>
-          <button
-            className={styles.share}
-            onClick={() => setShowShareModal(true)}
-          >
+          <button className={styles.share} onClick={() => setShowShareModal(true)}>
             <img src={s} alt="s" />
           </button>
         </div>
