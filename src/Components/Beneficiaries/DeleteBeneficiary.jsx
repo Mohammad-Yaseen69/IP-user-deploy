@@ -6,25 +6,27 @@ import axios from 'axios'
 import { UserContext } from '../../Context/UserContext'
 import { toast } from 'react-toastify'
 
-const DeleteBeneficiary = ({ isOpen, toggle, benef }) => {
+const DeleteBeneficiary = ({ isOpen, toggle, benef, onDeleted }) => {
     const { t } = useTranslation()
     const [isDeleting, setIsDeleting] = useState(false)
     const { userDetails, authHeader, getUserBeneficiaries, setBeneficiaries } = useContext(UserContext)
 
     const deleteBeneficiary = async () => {
+        if (!benef?._id) return
         setIsDeleting(true)
         try {
-            const res = await axios.delete(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/delete-beneficiary/${benef._id}/${userDetails?._id}`, {
+            await axios.delete(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/delete-beneficiary/${benef._id}/${userDetails?._id}`, {
                 headers: authHeader
             })
-            // console.log(decryptData(res.data.data))
-            setBeneficiaries(prev => prev.filter(i => i._id !== benef._id))
+             // console.log(decryptData(res.data.data))
+            setBeneficiaries?.(prev => prev.filter(i => i._id !== benef._id))
+            onDeleted?.(benef._id)
             toggle()
         } catch (error) {
-            // console.log(decryptData(error?.response?.data?.data))
-            toast.error("Something went wrong while deleting the beneficiary!")
+               // console.log(decryptData(error?.response?.data?.data))
+            toast.error(t("Something went wrong while deleting the beneficiary!"))
         } finally {
-            getUserBeneficiaries()
+            getUserBeneficiaries?.()
             setIsDeleting(false)
         }
     }
@@ -32,9 +34,7 @@ const DeleteBeneficiary = ({ isOpen, toggle, benef }) => {
     return (
         <Modal isOpen={isOpen} toggle={toggle}>
             <ModalHeader toggle={toggle}>
-                {
-                    t("Delete Beneficiary")
-                }
+                {t("Delete Beneficiary")}
             </ModalHeader>
             <ModalBody>
                 {t("Are you sure you want to delete this beneficiary?")}
