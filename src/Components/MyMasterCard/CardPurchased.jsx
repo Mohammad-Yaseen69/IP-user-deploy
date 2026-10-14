@@ -1495,7 +1495,7 @@ const CardPurchased = ({
                     <img src={Gpay} alt="" />
                     <h3>{t("Add to Google Pay")}</h3>
                   </div>
-                  <div
+                  {/* <div
                     onClick={() =>
                       window.open(
                         "https://www.samsung.com/us/support/answer/ANS10002609",
@@ -1507,7 +1507,7 @@ const CardPurchased = ({
                   >
                     <img src={Samsung} alt="" />
                     <h3>{t("Add to Samsung Wallet")}</h3>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
