@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   Copy,
   Plus,
@@ -38,10 +38,10 @@ const TYPE_OPTIONS = [
 ];
 
 const SORT_OPTIONS = [
-  { value: "name_asc", label: "Name (A-Z)" },
-  { value: "name_desc", label: "Name (Z-A)" },
   { value: "date_desc", label: "Date (Newest first)" },
   { value: "date_asc", label: "Date (Oldest first)" },
+  { value: "name_asc", label: "Name (A-Z)" },
+  { value: "name_desc", label: "Name (Z-A)" },
   { value: "type", label: "Type" },
 ];
 
@@ -62,7 +62,7 @@ const BeneficiariesVirtual = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("name_asc");
+  const [sortBy, setSortBy] = useState("date_desc");
   const [openMenu, setOpenMenu] = useState(null);
   const [selectedBeneficiaryId, setSelectedBeneficiaryId] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -131,6 +131,28 @@ const BeneficiariesVirtual = () => {
 
   const toggleMenu = (name) => setOpenMenu((prev) => (prev === name ? null : name));
 
+  const toolbarRef = useRef(null);
+
+  useEffect(() => {
+    if (!openMenu) return;
+
+    const handleClickOutside = (e) => {
+      if (toolbarRef.current && !toolbarRef.current.contains(e.target)) {
+        setOpenMenu(null);
+      }
+    };
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") setOpenMenu(null);
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [openMenu]);
   const activeBeneficiary =
     beneficiaries.find((b) => b._id === selectedBeneficiaryId) ||
     filteredBeneficiaries[0] ||
@@ -255,7 +277,7 @@ const BeneficiariesVirtual = () => {
                   />
                 </div>
 
-                <div className={styles.toolbarRow}>
+                <div className={styles.toolbarRow} ref={toolbarRef}>
                   <div className={styles.dropdown}>
                     <button
                       type="button"

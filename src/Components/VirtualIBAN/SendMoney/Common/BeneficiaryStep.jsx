@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Filter, Plus, Search, Sliders } from "react-feather";
 import styles from "./BeneficiaryStep.module.css";
@@ -17,10 +17,10 @@ const TYPE_OPTIONS = [
 ];
 
 const SORT_OPTIONS = [
-  { value: "name_asc", label: "Name (A-Z)" },
-  { value: "name_desc", label: "Name (Z-A)" },
   { value: "date_desc", label: "Date (Newest first)" },
   { value: "date_asc", label: "Date (Oldest first)" },
+  { value: "name_asc", label: "Name (A-Z)" },
+  { value: "name_desc", label: "Name (Z-A)" },
   { value: "type", label: "Type" },
 ];
 
@@ -37,8 +37,31 @@ const BeneficiaryStep = ({
   const { t } = useTranslation();
   const [query, setQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("name_asc");
+  const [sortBy, setSortBy] = useState("date_desc");
   const [openMenu, setOpenMenu] = useState(null);
+  const toolbarRef = useRef(null);
+
+  useEffect(() => {
+    if (!openMenu) return;
+
+    const handleClickOutside = (e) => {
+      if (toolbarRef.current && !toolbarRef.current.contains(e.target)) {
+        setOpenMenu(null);
+      }
+    };
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") setOpenMenu(null);
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [openMenu]);
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
 
@@ -84,7 +107,7 @@ const BeneficiaryStep = ({
         />
       </label>
 
-      <div className={styles.toolbarRow}>
+      <div className={styles.toolbarRow} ref={toolbarRef}>
         <div className={styles.dropdown}>
           <button type="button" className={styles.toolbarBtn} onClick={() => toggleMenu("filter")}>
             <Filter size={14} /> {t("Filter")}

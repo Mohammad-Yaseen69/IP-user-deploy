@@ -19,10 +19,10 @@ const TYPE_OPTIONS = [
 ];
 
 const SORT_OPTIONS = [
-  { value: "name_asc", label: "Name (A–Z)" },
-  { value: "name_desc", label: "Name (Z–A)" },
   { value: "date_desc", label: "Date (Newest first)" },
   { value: "date_asc", label: "Date (Oldest first)" },
+  { value: "name_asc", label: "Name (A-Z)" },
+  { value: "name_desc", label: "Name (Z-A)" },
   { value: "type", label: "Type" },
 ];
 
@@ -41,8 +41,8 @@ const Beneficiaries = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("name_asc");
-  const [openMenu, setOpenMenu] = useState(null); // "filter" | "sort" | null
+  const [sortBy, setSortBy] = useState("date_desc");
+  const [openMenu, setOpenMenu] = useState(null);
 
   useEffect(() => {
     if (userDetails) {
@@ -68,7 +68,6 @@ const Beneficiaries = () => {
     setBeneficiaryMode(mode);
   };
 
-  const activeFilterCount = typeFilter !== "all" ? 1 : 0;
 
   const filtered = useMemo(() => {
     const q = searchTerm.trim().toLowerCase();
@@ -104,8 +103,28 @@ const Beneficiaries = () => {
 
   const toggleMenu = (name) => setOpenMenu((prev) => (prev === name ? null : name));
 
+  useEffect(() => {
+    if (!openMenu) return;
+
+    const handleClickOutside = (e) => {
+      if (!e.target.closest("[data-dropdown-root]")) {
+        setOpenMenu(null);
+      }
+    };
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") setOpenMenu(null);
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [openMenu]);
   const renderToolbar = () => (
-    <div className={styles.toolbar}>
+    <div className={styles.toolbar} data-dropdown-root>
       <div className={styles.dropdown}>
         <Button
           color="transparent"
@@ -113,7 +132,6 @@ const Beneficiaries = () => {
           onClick={() => toggleMenu("filter")}
         >
           <Filter size={16} /> {t("Filter")}
-          {activeFilterCount > 0 && <span className={styles.badge}>{activeFilterCount}</span>}
         </Button>
         {openMenu === "filter" && (
           <div className={styles.menu}>
@@ -226,13 +244,13 @@ const Beneficiaries = () => {
         >
           {can("beneficiaries.view-all") && filtered.length > 0
             ? filtered.map((item) => (
-                <BeneficiaryCard
-                  key={item._id}
-                  user={item}
-                  onEdit={(ben) => openBeneficiary(ben, "edit")}
-                  onView={(ben) => openBeneficiary(ben, "view")}
-                />
-              ))
+              <BeneficiaryCard
+                key={item._id}
+                user={item}
+                onEdit={(ben) => openBeneficiary(ben, "edit")}
+                onView={(ben) => openBeneficiary(ben, "view")}
+              />
+            ))
             : t("No Beneficiaries")}
         </div>
       </div>
@@ -277,13 +295,13 @@ const Beneficiaries = () => {
           <div className={styles.table_body}>
             {filtered.length > 0
               ? filtered.map((item) => (
-                  <BeneficiaryCard
-                    key={item._id}
-                    user={item}
-                    onEdit={(ben) => openBeneficiary(ben, "edit")}
-                    onView={(ben) => openBeneficiary(ben, "view")}
-                  />
-                ))
+                <BeneficiaryCard
+                  key={item._id}
+                  user={item}
+                  onEdit={(ben) => openBeneficiary(ben, "edit")}
+                  onView={(ben) => openBeneficiary(ben, "view")}
+                />
+              ))
               : t("No Beneficiaries")}
           </div>
         </div>
