@@ -134,7 +134,6 @@ const HomeNewUpdated = () => {
     isAgentLogin,
     agentDetails,
     getUserBalances,
-    getUserWallets,
   } = useContext(UserContext);
   const [showCompletionModal, setShowCompletionModal] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState(null);
@@ -142,7 +141,6 @@ const HomeNewUpdated = () => {
   useEffect(() => {
     if (userDetails?._id) {
       getUserBalances?.();
-      getUserWallets?.();
     }
   }, [userDetails?._id]);
 

@@ -482,6 +482,7 @@ const UserState = ({ children }) => {
     }
   };
   useEffect(() => {
+    if (!userDetails?._id) return;
     if (userDetails?._id /*&& userWallets.length === 0*/) {
       getUserWallets();
       getPAddressDets();
