@@ -68,7 +68,6 @@ const Beneficiaries = () => {
     setBeneficiaryMode(mode);
   };
 
-
   const filtered = useMemo(() => {
     const q = searchTerm.trim().toLowerCase();
 
@@ -244,13 +243,13 @@ const Beneficiaries = () => {
         >
           {can("beneficiaries.view-all") && filtered.length > 0
             ? filtered.map((item) => (
-              <BeneficiaryCard
-                key={item._id}
-                user={item}
-                onEdit={(ben) => openBeneficiary(ben, "edit")}
-                onView={(ben) => openBeneficiary(ben, "view")}
-              />
-            ))
+                <BeneficiaryCard
+                  key={item._id}
+                  user={item}
+                  onEdit={(ben) => openBeneficiary(ben, "edit")}
+                  onView={(ben) => openBeneficiary(ben, "view")}
+                />
+              ))
             : t("No Beneficiaries")}
         </div>
       </div>
@@ -295,13 +294,13 @@ const Beneficiaries = () => {
           <div className={styles.table_body}>
             {filtered.length > 0
               ? filtered.map((item) => (
-                <BeneficiaryCard
-                  key={item._id}
-                  user={item}
-                  onEdit={(ben) => openBeneficiary(ben, "edit")}
-                  onView={(ben) => openBeneficiary(ben, "view")}
-                />
-              ))
+                  <BeneficiaryCard
+                    key={item._id}
+                    user={item}
+                    onEdit={(ben) => openBeneficiary(ben, "edit")}
+                    onView={(ben) => openBeneficiary(ben, "view")}
+                  />
+                ))
               : t("No Beneficiaries")}
           </div>
         </div>
