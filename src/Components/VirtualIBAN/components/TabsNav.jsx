@@ -17,7 +17,7 @@ const tabs = [
   },
   { id: "ibanassets", label: "My vIBAN details", icon: IBAN_icon },
   { id: "compliance", label: "Compliance", icon: IBAN_icon },
-  // { id: "crypto-channels", label: "Crypto Channels", icon: CryptoChannelsIcon },
+  { id: "crypto-channels", label: "Crypto Channels", icon: CryptoChannelsIcon },
   { id: "manage", label: "Manage", icon: mange },
 ];
 

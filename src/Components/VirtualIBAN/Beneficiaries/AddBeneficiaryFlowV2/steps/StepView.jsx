@@ -35,6 +35,7 @@ const StepView = ({ beneficiary, recipientName }) => {
     ["Nationality", extras.nationality_country_iso_code],
     ["Relationship", extras.beneficiary_relationship],
     ["Occupation", extras.occupation],
+    ["Registration number", extras.registration_number],
   ]);
 
   const contactRows = rowsFrom([
