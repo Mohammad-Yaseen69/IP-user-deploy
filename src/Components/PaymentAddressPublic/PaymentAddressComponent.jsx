@@ -362,18 +362,12 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
           " " +
           state.currentWallet?.currency?.code,
       );
-      setTimeout(() => {
-        dataHandler("guestPayError", "");
-      }, 3000);
     } else if (state.amount > limits?.topup_max_amount) {
       toast.error(
         t(
           "The recipient has reached their incoming/balance limit and cannot receive this amount at the moment.",
         ),
       );
-      setTimeout(() => {
-        dataHandler("guestPayError", "");
-      }, 3000);
     } else {
       dataHandler("showCreditModal", !state.showCreditModal);
     }
