@@ -21,6 +21,7 @@ import {
   ExternalLink,
   Eye,
   Type,
+  AlertCircle,
 } from "react-feather";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
@@ -541,6 +542,10 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
   const formatLabel = (item) =>
     item.input_type === "text" ? t("Text") : item.file_type || t("Any Format");
 
+  const hasPendingRequired = files.some(
+    (item) => item.isRequired && isActionableStatus(item.status),
+  );
+
   return (
     <Col md="12" className="mb-4" id="additional-files-section">
       <Card
@@ -576,6 +581,30 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
               "Please check the files requested by the administration below and upload the corresponding documents.",
             )}
           </p>
+          {hasPendingRequired && (
+            <div
+              style={{
+                display: "flex",
+                gap: "10px",
+                alignItems: "flex-start",
+                backgroundColor: "#fff1f2",
+                border: "1px solid #fecdd3",
+                borderRadius: "10px",
+                padding: "10px 12px",
+                marginTop: "12px",
+              }}
+            >
+              <AlertCircle
+                size={16}
+                style={{ color: "#e11d48", flexShrink: 0, marginTop: "1px" }}
+              />
+              <span style={{ fontSize: "12px", color: "#9f1239", lineHeight: "1.5" }}>
+                {t(
+                  "Items marked as Required must be submitted before you can continue using the rest of InstaPay.",
+                )}
+              </span>
+            </div>
+          )}
         </CardHeader>
         <CardBody style={{ padding: "20px" }}>
           <div className="table-responsive">
