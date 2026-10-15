@@ -864,6 +864,9 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
             active={sendPaymentType === "non-instapay"}
             sendPaymentType={sendPaymentType}
             shrinkWidth={data.step === 4 && data.payment_type?.value === "wallet"}
+            imageStyle={{
+              objectPosition: sendPaymentType === "non-instapay" ? "-32px 100%" : "0 100%",
+            }}
           />
           {sendPaymentType === "non-instapay" &&
             (data?.transaction_details ? (
