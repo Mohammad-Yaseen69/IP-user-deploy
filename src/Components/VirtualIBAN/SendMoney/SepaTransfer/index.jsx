@@ -224,7 +224,7 @@ const SepaAmountStep = ({
                     type="button"
                     className={`${styles.speedCard} ${
                       selectedSpeed.id === speed.id ? styles.selectedSpeedCard : ""
-                    }`}
+                    } h-100`}
                     onClick={() => !isComingSoon && setTransferSpeed(speed.id)}
                     disabled={isComingSoon}
                     style={{

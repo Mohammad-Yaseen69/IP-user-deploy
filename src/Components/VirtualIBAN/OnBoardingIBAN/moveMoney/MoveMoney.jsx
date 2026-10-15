@@ -191,9 +191,15 @@ const MoveMoney = () => {
                           )}
                         </p>
                         <div className={styles.badgeRow}>
-                          <span className={`${styles.tag}`}>{t("Worldwide")}</span>
-                          <span className={`${styles.tag}`}>{t("Fast lookup")}</span>
-                          <span className={`${styles.tag}`}>{t("Country-adaptive")}</span>
+                          <span className={`${styles.tag} ${styles.tagBlue}`}>
+                            {t("Worldwide")}
+                          </span>
+                          <span className={`${styles.tag} ${styles.tagGray}`}>
+                            {t("Fast lookup")}
+                          </span>
+                          <span className={`${styles.tag} ${styles.tagGray}`}>
+                            {t("Country-adaptive")}
+                          </span>
                         </div>
                       </div>
                     </div>
