@@ -975,7 +975,6 @@
 }
 
 @media (max-width: 1000px) {
-
   .leftPanel,
   .rightPanel {
     width: 100%;
@@ -997,7 +996,6 @@
 }
 
 @media (max-width: 700px) {
-
   .sourceCard,
   .footer,
   .doneActions,
