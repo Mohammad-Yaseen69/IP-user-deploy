@@ -10,12 +10,6 @@ import { clearAuthStorage, getLoginPath } from "../../utils/Functions/loginPage"
 
 const MAX_LISTED = 4;
 
-/**
- * Full-screen blocking modal shown when the admin has marked one or more
- * additional files / questions as required. Mirrors ProfileCompletionModal:
- * the user can only log out, change language, or go to the page where the
- * required information is submitted.
- */
 const ForcedAdditionalFilesModal = ({ files = [], target }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -75,7 +69,7 @@ const ForcedAdditionalFilesModal = ({ files = [], target }) => {
             />
           </svg>
 
-          <h4 className={styles.title}>{t("Required information needed to continue")}</h4>
+          <h4 className={styles.title}>{t("Additional information needed to continue")}</h4>
           <p className={styles.desc}>
             {t(
               "The administrator requires the following information before you can continue. Please provide it to regain full access.",

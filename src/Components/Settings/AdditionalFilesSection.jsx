@@ -528,15 +528,18 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
     ) : null;
 
   const renderResponse = (item, variant) => {
+    // The table only ever shows the "View Details" button; every response
+    // control (inputs, upload, submitted answer, document link) lives in the modal.
+    if (variant !== "modal") return null;
     const actionable = isActionableStatus(item.status);
-    if (item.input_type === "text") {
-      if (actionable) {
-        // In the table, pending text requests only expose "View Details".
-        return variant === "modal" ? renderTextControls(item) : null;
-      }
-      return renderSubmittedText(item, variant);
+    if (actionable) {
+      return item.input_type === "text"
+        ? renderTextControls(item)
+        : renderFileControls(item, variant);
     }
-    return actionable ? renderFileControls(item, variant) : renderSubmittedFile(item);
+    return item.input_type === "text"
+      ? renderSubmittedText(item, variant)
+      : renderSubmittedFile(item);
   };
 
   const formatLabel = (item) =>
@@ -567,7 +570,7 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
               margin: 0,
             }}
           >
-            {t("Additional Files")}
+            {t("Additional Information")}
           </h4>
           <p
             style={{
