@@ -388,78 +388,6 @@ const AgentCommission = () => {
       isCircleIcon: false,
     },
     {
-      id: 7,
-      title: "Sub-agent Network",
-      value: analytics.subAgentNetwork ?? 0,
-      hasSubtext: true,
-      isTrend: false,
-      subtext: "Network sub-agents",
-      icon: (
-        <svg
-          width="40"
-          height="40"
-          viewBox="0 0 40 40"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M0 6C0 2.68629 2.68629 0 6 0H34C37.3137 0 40 2.68629 40 6V34C40 37.3137 37.3137 40 34 40H6C2.68629 40 0 37.3137 0 34V6Z"
-            fill="#F2EEFF"
-          />
-          <path
-            d="M21.5 11H18.5C18.0858 11 17.75 11.3358 17.75 11.75V14.75C17.75 15.1642 18.0858 15.5 18.5 15.5H21.5C21.9142 15.5 22.25 15.1642 22.25 14.75V11.75C22.25 11.3358 21.9142 11 21.5 11Z"
-            stroke="#5926F0"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <path
-            d="M15.5 23.75H12.5C12.0858 23.75 11.75 24.0858 11.75 24.5V27.5C11.75 27.9142 12.0858 28.25 12.5 28.25H15.5C15.9142 28.25 16.25 27.9142 16.25 27.5V24.5C16.25 24.0858 15.9142 23.75 15.5 23.75Z"
-            stroke="#5926F0"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <path
-            d="M27.5 23.75H24.5C24.0858 23.75 23.75 24.0858 23.75 24.5V27.5C23.75 27.9142 24.0858 28.25 24.5 28.25H27.5C27.9142 28.25 28.25 27.9142 28.25 27.5V24.5C28.25 24.0858 27.9142 23.75 27.5 23.75Z"
-            stroke="#5926F0"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <path
-            d="M20 15.5V19.25"
-            stroke="#5926F0"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <path
-            d="M26 19.25V23.75"
-            stroke="#5926F0"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <path
-            d="M14 23.75V19.25"
-            stroke="#5926F0"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <path
-            d="M10.25 19.25H29.75"
-            stroke="#5926F0"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      ),
-      isCircleIcon: false,
-    },
-    {
       id: 8,
       title: "Claim Pending Leads",
       value: analytics.claimPending ?? 0,
@@ -604,7 +532,7 @@ const AgentCommission = () => {
             </div>
           </div>
 
-          <div className={styles.rightColumn}>
+          {/* <div className={styles.rightColumn}>
             <div className={styles.boxSection} style={{ height: "100%" }}>
               <div className={styles.subAgentHeaderRow}>
                 <h3 className={styles.sectionTitle}>{t("Sub-agent network")}</h3>
@@ -627,7 +555,7 @@ const AgentCommission = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
         {/* <div className={styles.boxSection}>
                     <h3 className={styles.sectionTitle}>{t("Quick actions")}</h3>

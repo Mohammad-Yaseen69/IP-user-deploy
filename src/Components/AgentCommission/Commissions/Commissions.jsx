@@ -212,7 +212,7 @@ const Commissions = () => {
           </div>
         </div>
 
-        <div className={styles.sectionCard}>
+        {/* <div className={styles.sectionCard}>
           <div className={styles.sectionHeader}>
             <h2>{t("Commission rules")}</h2>
           </div>
@@ -224,7 +224,7 @@ const Commissions = () => {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         <div className={styles.sectionCard}>
           <div className={styles.statementHeader}>
