@@ -1376,7 +1376,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                         {saveloading && (
                           <div className="d-flex justify-content-center">
                             <div className="spinner-border" color="primary" role="status">
-                              <span className="sr-only">Loading...</span>
+                              <span className="sr-only">{t("Loading...")}</span>
                             </div>
                           </div>
                         )}
