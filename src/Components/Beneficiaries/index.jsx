@@ -4,7 +4,7 @@ import TopRight from "../topRight";
 import { useTranslation } from "react-i18next";
 import { Search, Filter, Sliders } from "react-feather";
 import { Button, Input } from "reactstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import BeneficiaryCard from "./BeneficiaryCard";
 import { UserContext } from "../../Context/UserContext";
 import add_ben from "./add_ben.svg";
@@ -54,6 +54,12 @@ const Beneficiaries = () => {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [activeBeneficiary, setActiveBeneficiary] = useState(null);
   const [beneficiaryMode, setBeneficiaryMode] = useState("edit");
+
+  const location = useLocation();
+  useEffect(() => {
+    const wantsAdd = new URLSearchParams(location.search).get("action") === "add";
+    if (wantsAdd && USE_NEW_BENEFICIARY_FLOW && can("beneficiaries.add")) setIsAddOpen(true);
+  }, [location.search]);
 
   const openBeneficiary = (beneficiary, mode) => {
     verifyToken();

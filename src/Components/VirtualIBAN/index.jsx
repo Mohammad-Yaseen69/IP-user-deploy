@@ -155,11 +155,18 @@ const VirtualBank = () => {
     }
   }, [activeTab, selectedAccount]);
 
+  // Same gates as TabsNav, so a link can't open a tab the user can't see.
+  const linkableTabs = {
+    "crypto-channels": canViewDetails,
+    ibanassets: canViewDetails,
+    "transaction-history": canViewTransactions,
+    compliance: true,
+  };
   const location = useLocation();
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get("tab");
-    if (tab === "crypto-channels" && canViewDetails) setActiveTab(tab);
-  }, [location.search, canViewDetails]);
+    if (linkableTabs[tab]) setActiveTab(tab);
+  }, [location.search, canViewDetails, canViewTransactions]);
 
   useEffect(() => {
     refetch();
