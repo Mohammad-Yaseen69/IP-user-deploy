@@ -267,35 +267,35 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType, currentS
               {activity.averageTransaction && (
                 <div className={styles.item}>
                   <label>{t("Average transaction")}</label>
-                  <span>{formatVal(activity.averageTransaction)} EUR</span>
+                  <span>{formatVal(activity.averageTransaction)}{t("EUR")}</span>
                 </div>
               )}
 
               {activity.maximumTransaction && (
                 <div className={styles.item}>
                   <label>{t("Maximum transaction")}</label>
-                  <span>{formatVal(activity.maximumTransaction)} EUR</span>
+                  <span>{formatVal(activity.maximumTransaction)}{t("EUR")}</span>
                 </div>
               )}
 
               {activity.averageBalance && (
                 <div className={styles.item}>
                   <label>{t("Average balance")}</label>
-                  <span>{formatVal(activity.averageBalance)} EUR</span>
+                  <span>{formatVal(activity.averageBalance)}{t("EUR")}</span>
                 </div>
               )}
 
               {activity.incomingPayments && (
                 <div className={styles.item}>
                   <label>{t("Incoming payments / month")}</label>
-                  <span>{formatVal(activity.incomingPayments)} EUR</span>
+                  <span>{formatVal(activity.incomingPayments)}{t("EUR")}</span>
                 </div>
               )}
 
               {activity.outgoingPayments && (
                 <div className={styles.item}>
                   <label>{t("Outgoing payments / month")}</label>
-                  <span>{formatVal(activity.outgoingPayments)} EUR</span>
+                  <span>{formatVal(activity.outgoingPayments)}{t("EUR")}</span>
                 </div>
               )}
 

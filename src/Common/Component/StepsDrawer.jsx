@@ -73,8 +73,7 @@ const StepsDrawer = ({
         <div className={styles.checklistHeader}>
           <span className={styles.checkListHeading}>{t("Where you are")}</span>
 
-          <span className={styles.checkListCount}>
-            Step {doneCount} of {SIDEBAR_STEPS.length}
+          <span className={styles.checkListCount}>{t("Step")}{doneCount}{t("of")}{SIDEBAR_STEPS.length}
           </span>
         </div>
 

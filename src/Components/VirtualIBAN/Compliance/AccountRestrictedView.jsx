@@ -10,7 +10,7 @@ const AccountRestrictedView = ({ restrictedData, onResolve }) => {
   return (
     <div className={styles.restrictedContainer}>
       <div className={styles.warningIconBox}>
-        <span className={styles.alertIcon}>⚠️</span>
+        <span className={styles.alertIcon}>{t("⚠️")}</span>
       </div>
       <h2 className={styles.restrictedTitle}>
         {restrictedData.title ||

@@ -99,7 +99,7 @@ const DEFAULT_BENEFICIARY_FORM = {
 
 const sidebarIcons = {
   [SIDEBAR_STEP_NAMES.PAYMENT_RAIL]: Send,
-  [SIDEBAR_STEP_NAMES.AMOUNT]: () => <span className={styles.sidebarIconText}>EUR</span>,
+  [SIDEBAR_STEP_NAMES.AMOUNT]: () => <span className={styles.sidebarIconText}>{t("EUR")}</span>,
   [SIDEBAR_STEP_NAMES.BENEFICIARY]: User,
   [SIDEBAR_STEP_NAMES.PURPOSE]: List,
   [SIDEBAR_STEP_NAMES.REVIEW]: FileText,
@@ -1437,8 +1437,7 @@ const SepaTransfer = ({
                 width: "100%",
               }}
             >
-              <span style={styles.stepIndicator}>
-                Step {currentStepNumber} of {totalSteps} &nbsp;{" "}
+              <span style={styles.stepIndicator}>{t("Step")}{currentStepNumber}{t("of")}{totalSteps} &nbsp;{" "}
                 <span style={{ color: "gray" }}> {currentStepName} </span>
               </span>
             </div>

@@ -520,8 +520,7 @@ const AddByNameModal = ({ open, onClose }) => {
                                 textTransform: "capitalize",
                               }}
                             >
-                              {candidate.account_type} Account
-                            </div>
+                              {candidate.account_type}{t("Account")}</div>
                             <div style={{ fontSize: "11px", color: "#6B7280" }}>
                               @{candidate.username}
                             </div>
@@ -634,8 +633,7 @@ const AddByNameModal = ({ open, onClose }) => {
                           }}
                         >
                           <CreditCard size={13} color="#9CA3AF" />
-                          <span>
-                            IBAN:{" "}
+                          <span>{t("IBAN:")}{" "}
                             <strong
                               style={{
                                 color: candidate.ibanStatus === "ACTIVE" ? "#16A34A" : "#6B7280",
@@ -653,8 +651,7 @@ const AddByNameModal = ({ open, onClose }) => {
                           }}
                         >
                           <Shield size={13} color="#9CA3AF" />
-                          <span>
-                            KYC:{" "}
+                          <span>{t("KYC:")}{" "}
                             <strong
                               style={{
                                 color:
