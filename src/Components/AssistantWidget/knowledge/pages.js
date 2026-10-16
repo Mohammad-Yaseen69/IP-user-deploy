@@ -4,7 +4,7 @@ export const PAGES = [
     title: "Add Funds",
     route: "/add-funds",
     description:
-      "Top up a wallet by card, bank transfer or crypto. The user picks the method and the wallet to credit.",
+      "Top up a currency wallet by card, bank transfer or crypto. The user picks the method and the wallet to credit. This does not fund the virtual IBAN; that is Virtual IBAN Crypto or Virtual IBAN Deposit Details.",
   },
   {
     id: "request_money",
@@ -188,7 +188,7 @@ export const PAGES = [
     route: "/virtual-IBAN",
     permission: "virtual-iban.view",
     description:
-      "A bank account number in the user's own name for receiving ordinary bank transfers into InstaPay.",
+      "A bank account number in the user's own name. It receives bank transfers, and crypto through a crypto top-up or a crypto channel.",
   },
   {
     id: "iban_deposit",
@@ -205,6 +205,22 @@ export const PAGES = [
     permission: "virtual-iban.funds.convert",
     description:
       "Move funds from the virtual IBAN into an InstaPay wallet. Opens the convert-funds window on the virtual IBAN page, where the amount and destination wallet are chosen and the fee is shown before confirming.",
+  },
+  {
+    id: "iban_crypto",
+    title: "Virtual IBAN Crypto",
+    route: "/onboarding-IBAN/crypto",
+    permission: "virtual-iban.view",
+    description:
+      "Crypto actions for the virtual IBAN: top up the IBAN by paying in USDT and receiving euro, convert IBAN euro into the InstaPay USDT wallet, or pay out from the IBAN to an external crypto wallet. Offer this whenever someone wants to fund their IBAN with crypto or move IBAN money into crypto.",
+  },
+  {
+    id: "iban_crypto_channels",
+    title: "Virtual IBAN Crypto Channels",
+    route: "/virtual-IBAN?tab=crypto-channels",
+    permission: "virtual-iban.details.view",
+    description:
+      "Add a standing crypto receiving address to the virtual IBAN, one per crypto asset. Anything sent to it converts automatically to the IBAN's currency. Opens the Crypto Channels tab on the virtual IBAN page.",
   },
   {
     id: "iban_onboarding",
