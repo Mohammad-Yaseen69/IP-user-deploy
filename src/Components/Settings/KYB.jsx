@@ -874,26 +874,28 @@ const KYB = () => {
               }}
             >
               <h4>{t("Directors")}</h4>
-              <Button
-                style={{
-                  background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                  border: "none",
-                  outline: "none",
-                }}
-                disabled={
-                  isReadOnly ||
-                  !taxId ||
-                  !industryReference ||
-                  !registrationNum ||
-                  !dateOfI ||
-                  compnanyFiles?.length === 0 ||
-                  compnanyFileNames.length < requiredFilesLength ||
-                  !isEdit
-                }
-                onClick={() => setShowAddModal(!showAddModal)}
-              >
-                {t("Add New Director")}
-              </Button>
+              {userDetails?.company?.kyb_status !== "approved" && (
+                <Button
+                  style={{
+                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                    border: "none",
+                    outline: "none",
+                  }}
+                  disabled={
+                    isReadOnly ||
+                    !taxId ||
+                    !industryReference ||
+                    !registrationNum ||
+                    !dateOfI ||
+                    compnanyFiles?.length === 0 ||
+                    compnanyFileNames.length < requiredFilesLength ||
+                    !isEdit
+                  }
+                  onClick={() => setShowAddModal(!showAddModal)}
+                >
+                  {t("Add New Director")}
+                </Button>
+              )}
               <Modal isOpen={showAddModal} toggle={() => setShowAddModal(!showAddModal)}>
                 <ModalHeader toggle={() => setShowAddModal(!showAddModal)}>
                   {t("Add New Director")}
