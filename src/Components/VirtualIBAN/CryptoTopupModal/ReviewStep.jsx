@@ -114,23 +114,35 @@ const ReviewStep = ({ amount, feeDetails, selectedIban, onRefreshFee, isRefreshi
       <div className={styles.reviewTable}>
         <div className={styles.reviewRow}>
           <div className={styles.reviewRowLabel}>{t("Gross Deposit Amount")}</div>
-          <div className={styles.reviewRowValue}>${totalVal}{t("USDT")}</div>
+          <div className={styles.reviewRowValue}>
+            ${totalVal}
+            {t("USDT")}
+          </div>
         </div>
 
         <div className={styles.reviewRow}>
           <div className={styles.reviewRowLabel}>{t("Fee")}</div>
           <div className={styles.reviewRowValue} style={{ color: "#d92d20" }}>
-            -${feeVal}{t("USDT")}</div>
+            -${feeVal}
+            {t("USDT")}
+          </div>
         </div>
 
         <div className={styles.reviewRow}>
           <div className={styles.reviewRowLabel}>{t("Net Crypto Amount")}</div>
-          <div className={styles.reviewRowValue}>${netVal}{t("USDT")}</div>
+          <div className={styles.reviewRowValue}>
+            ${netVal}
+            {t("USDT")}
+          </div>
         </div>
 
         <div className={styles.reviewRow}>
           <div className={styles.reviewRowLabel}>{t("Exchange Rate")}</div>
-          <div className={styles.reviewRowValue}>{t("1 USDT =")}{rateVal}{t("EUR")}</div>
+          <div className={styles.reviewRowValue}>
+            {t("1 USDT =")}
+            {rateVal}
+            {t("EUR")}
+          </div>
         </div>
 
         <div className={styles.reviewRow} style={{ background: "#f2eeff" }}>
@@ -141,7 +153,9 @@ const ReviewStep = ({ amount, feeDetails, selectedIban, onRefreshFee, isRefreshi
             className={styles.reviewRowValue}
             style={{ fontWeight: 700, color: "#5926f0", fontSize: "16px" }}
           >
-            €{recipientVal}{t("EUR")}</div>
+            €{recipientVal}
+            {t("EUR")}
+          </div>
         </div>
 
         <div className={styles.reviewRow}>

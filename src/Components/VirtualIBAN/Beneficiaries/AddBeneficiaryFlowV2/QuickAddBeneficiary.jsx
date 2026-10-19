@@ -237,7 +237,11 @@ const QuickAddBeneficiary = ({
       )}
 
       {fieldsLoading && (
-        <p className={styles.optionSubtitle}>{t("Loading the details")}{methodLabel.toLowerCase()}{t("requires...")}</p>
+        <p className={styles.optionSubtitle}>
+          {t("Loading the details")}
+          {methodLabel.toLowerCase()}
+          {t("requires...")}
+        </p>
       )}
 
       {requirements && !fieldsLoading && (

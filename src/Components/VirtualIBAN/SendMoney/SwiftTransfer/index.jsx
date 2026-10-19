@@ -688,7 +688,11 @@ const ReviewStep = ({
               <>
                 <br />
                 <p style={{ marginTop: "4px" }}>{t("Rate")}&nbsp;</p>
-                <strong>{t("1 EUR =")}{exchangeRate.value.toFixed(4)}{t("USD")}</strong>
+                <strong>
+                  {t("1 EUR =")}
+                  {exchangeRate.value.toFixed(4)}
+                  {t("USD")}
+                </strong>
               </>
             )}
           </div>

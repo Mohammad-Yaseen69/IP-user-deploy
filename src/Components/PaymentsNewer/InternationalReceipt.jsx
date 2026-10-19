@@ -78,7 +78,9 @@ const Receipt = ({
             marginTop: "8px",
           }}
         >
-          {t("Redirecting to Wallets in")} {redirectSeconds}{t("s...")}</div>
+          {t("Redirecting to Wallets in")} {redirectSeconds}
+          {t("s...")}
+        </div>
         <div
           style={{ display: "flex", flexDirection: "column", padding: "14px" }}
           className="conf_cont transaction-receipt"
