@@ -36,7 +36,7 @@ import quote_m from "./Mobile/files/quote.png";
 import airtime_m from "./Mobile/files/airtime.png";
 import internation_m from "./Mobile/files/international.png";
 import wallet_m from "./Mobile/files/wallet.png";
-import noninstapay_m from "./Mobile/files/non_ip.png";
+import noninstapay_m from "./Mobile/files/non_ip_tablet.png";
 
 import sm_m_i from "./files/sm.svg";
 import rm_m_i from "./files/rm.svg";
