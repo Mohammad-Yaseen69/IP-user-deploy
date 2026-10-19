@@ -49,29 +49,25 @@ function reducer(state, action) {
   }
 }
 
-const Wrapper = ({ children, directCard = false }) => {
-  const { t } = useTranslation();
-
-  return (
-    <div
-      style={{
-        background: directCard ? "#f5f6f8" : `url(${background})`,
-        borderRadius: "none",
-        minHeight: "100vh",
-      }}
-      className={`${styles.container} ${directCard ? styles.directCardPage : ""}`}
+const Wrapper = ({ children, directCard = false }) => (
+  <div
+    style={{
+      background: directCard ? "#f5f6f8" : `url(${background})`,
+      borderRadius: "none",
+      minHeight: "100vh",
+    }}
+    className={`${styles.container} ${directCard ? styles.directCardPage : ""}`}
+  >
+    {!directCard && <div className={styles.overlay} />}
+    {directCard && <div className={styles.directCardWatermark}>{t("InstaPay")}</div>}
+    <Card
+      style={{ marginBottom: "0px" }}
+      className={`${styles.sub_container} ${directCard ? styles.directCardShell : ""}`}
     >
-      {!directCard && <div className={styles.overlay} />}
-      {directCard && <div className={styles.directCardWatermark}>{t("InstaPay")}</div>}
-      <Card
-        style={{ marginBottom: "0px" }}
-        className={`${styles.sub_container} ${directCard ? styles.directCardShell : ""}`}
-      >
-        {children}
-      </Card>
-    </div>
-  );
-};
+      {children}
+    </Card>
+  </div>
+);
 
 const InvoicePayment = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -117,10 +113,34 @@ const InvoicePayment = () => {
           " " +
           data?.currency,
       );
+      dataHandler(
+        "guestPayError",
+        t("Minimum amount for guest pay is") +
+          " " +
+          formatCurrency(state.limits?.topup_min_amount, true) +
+          " " +
+          data?.currency,
+      );
+      setTimeout(() => {
+        dataHandler("guestPayError", "");
+      }, 3000);
     } else if (data.amount > state.limits?.topup_max_amount) {
       toast.error(
-        "The recipient has reached their incoming/balance limit and cannot receive this amount at the moment.",
+        "Maximum amount for guest pay is " +
+          formatCurrency(state.limits?.topup_max_amount, true) +
+          " " +
+          data?.currency,
       );
+      dataHandler(
+        "guestPayError",
+        "Maximum amount for guest pay is " +
+          formatCurrency(state.limits?.topup_max_amount, true) +
+          " " +
+          data?.currency,
+      );
+      setTimeout(() => {
+        dataHandler("guestPayError", "");
+      }, 3000);
     } else {
       dataHandler("showCreditModal", !state.showCreditModal);
     }

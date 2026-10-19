@@ -13,15 +13,7 @@ import { getLimits } from "../../WalletsNew";
 import { removeCommasAndCurrency } from "../../WalletsNew/AccountLimits";
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
 
-const WalletsComponent = ({
-  data,
-  dataHandler,
-  loading = false,
-  inEsim,
-  markupValue,
-  markupOperation = "sub",
-  skipSameCurrencyConversion = false,
-}) => {
+const WalletsComponent = ({ data, dataHandler, loading = false, inEsim }) => {
   const { t } = useTranslation();
   const { userWallets, getUserWallets } = useContext(UserContext);
   useEffect(() => {
@@ -80,9 +72,6 @@ const WalletsComponent = ({
                 data={data}
                 dataHandler={dataHandler}
                 amount={data?.package?.prices?.amount}
-                markupValue={markupValue}
-                markupOperation={markupOperation}
-                skipSameCurrencyConversion={skipSameCurrencyConversion}
               />
             ))}
             {blockedWallets?.map((item) => (
@@ -141,9 +130,6 @@ export const WalletCard = ({
   paymentType,
   filteredWallets,
   cardToWallet,
-  markupValue,
-  markupOperation,
-  skipSameCurrencyConversion = false,
 }) => {
   const { t } = useTranslation();
   const { authHeader } = useContext(UserContext);
@@ -165,7 +151,7 @@ export const WalletCard = ({
   const getExchangedAmounts = async (from, to, amount) => {
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}${markupValue ? `&markupValue=${markupValue}` : ""}${markupOperation ? `&markupOperation=${markupOperation}` : ""}`,
+        `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`,
         {
           headers: authHeader,
         },
@@ -255,39 +241,15 @@ export const WalletCard = ({
           amount = data.package_details?.filteredData?.[0]?.total;
         }
 
-        if (skipSameCurrencyConversion) {
-          const receivingCurrency =
-            data?.recipient_currency || data?.exchange_rate?.receiver?.currency;
-          const walletCurrency = wallet?.currency?.code;
-          const sendingCurrency =
-            data?.currency_wallet?.currency?.code ?? data?.localWallet?.currency?.code;
+        const apidata = [
+          data?.currency_wallet?.currency?.code ?? data?.localWallet?.currency?.code,
+          wallet?.currency?.code,
+          Number(amount) || data?.package?.prices?.amount,
+        ];
 
-          if (receivingCurrency && walletCurrency && receivingCurrency === walletCurrency) {
-            const directAmount =
-              Number(data?.exchange_rate?.receiver?.amount) || data?.package?.prices?.amount;
-            setIsSufficient(wallet?.balance?.available > directAmount);
-          } else {
-            const apidata = [
-              sendingCurrency,
-              walletCurrency,
-              Number(amount) || data?.package?.prices?.amount,
-            ];
-
-            getExchangedAmounts(...apidata).then((res) => {
-              setIsSufficient(wallet?.balance?.available > res);
-            });
-          }
-        } else {
-          const apidata = [
-            data?.currency_wallet?.currency?.code ?? data?.localWallet?.currency?.code,
-            wallet?.currency?.code,
-            Number(amount) || data?.package?.prices?.amount,
-          ];
-
-          getExchangedAmounts(...apidata).then((res) => {
-            setIsSufficient(wallet?.balance?.available > res);
-          });
-        }
+        getExchangedAmounts(...apidata).then((res) => {
+          setIsSufficient(wallet?.balance?.available > res);
+        });
       }
     } else {
       getFee();

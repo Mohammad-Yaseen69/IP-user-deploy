@@ -9,8 +9,7 @@ import InstaPayLoader from "../../Loader";
 import { PlaidCurrencies } from "../../AddFunds/WalletFundsFlow";
 import CardMaintenanceModal from "../../CardMaintenanceModal";
 
-// cardEnabled: card goes through Paytently, so skip the Trust maintenance notice.
-const StepOne = ({ data, dataHandler, allowed, wallet, cardEnabled = false }) => {
+const StepOne = ({ data, dataHandler, allowed, wallet }) => {
   const [showCardMaintenanceModal, setShowCardMaintenanceModal] = useState(false);
   const payouts = [
     {
@@ -73,7 +72,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet, cardEnabled = false }) =>
             }}
             onClick={() => {
               if (item.coming_soon) return console.log("");
-              if (item.value === "card" && !cardEnabled) {
+              if (item.value === "card") {
                 setShowCardMaintenanceModal(true);
                 return;
               }

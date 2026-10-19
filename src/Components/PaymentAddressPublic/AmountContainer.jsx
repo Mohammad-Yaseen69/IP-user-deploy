@@ -158,10 +158,10 @@ const AmountContainer = ({
                           <span>
                             {userDetails?.username === "novamind" ? t("PAY") : t("Pay As Guest")}
                           </span>
-                          {/* {state.guestPayError && (
+                          {state.guestPayError && (
                             <div
                               style={{
-                                // position: "absolute",
+                                position: "absolute",
                                 top: "100%",
                                 left: 0,
                                 background: "white",
@@ -175,7 +175,7 @@ const AmountContainer = ({
                             >
                               {state.guestPayError}
                             </div>
-                          )} */}
+                          )}
                         </Link>
                       </div>
                     )}

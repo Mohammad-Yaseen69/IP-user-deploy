@@ -432,7 +432,6 @@ const UserState = ({ children }) => {
   };
 
   const getUserWallets = (dontSort) => {
-    if (!userDetails?._id) return;
     axios
       .get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-user-wallet/${userDetails?._id}`, {
         headers: authHeader,

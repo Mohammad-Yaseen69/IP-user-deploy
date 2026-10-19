@@ -133,9 +133,16 @@ const HomeNewUpdated = () => {
     croppedImages,
     isAgentLogin,
     agentDetails,
+    getUserBalances,
   } = useContext(UserContext);
   const [showCompletionModal, setShowCompletionModal] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState(null);
+
+  useEffect(() => {
+    if (userDetails?._id) {
+      getUserBalances?.();
+    }
+  }, [userDetails?._id]);
 
   const { t } = useTranslation();
 

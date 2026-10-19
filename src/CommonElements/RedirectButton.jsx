@@ -6,13 +6,10 @@ const RedirectButton = ({ platform }) => {
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
     if (platform === "instagram") {
-      // The handle differs per environment — a test build must send the
-      // user back to the account they were actually chatting with, not to
-      // the production one.
-      const handle = import.meta.env.VITE_INSTAGRAM_HANDLE || "Instapay_swiss";
-      const chatLink = `https://ig.me/m/${handle}`;
-      const androidIntent = `intent://ig.me/m/${handle}#Intent;scheme=https;package=com.instagram.android;end`;
-      const iosScheme = `instagram://user?username=${handle.toLowerCase()}`;
+      const chatLink = "https://ig.me/m/Instapay_swiss";
+      const androidIntent =
+        "intent://ig.me/m/Instapay_swiss#Intent;scheme=https;package=com.instagram.android;end";
+      const iosScheme = "instagram://user?username=instapay_swiss";
 
       if (/android/i.test(userAgent)) {
         window.location.href = androidIntent;

@@ -137,7 +137,7 @@ const Auth = () => {
                 <LanguagePicker selectUi={true} shouldOpenUpRequired={true} />
                 {showText && (
                   <span className={styles.footerText}>
-                    {t("© 2026 InstaPay | Kemit KIngdom SA")}
+                    {t("© 2024 InstaPay | Kemit KIngdom SA")}
                   </span>
                 )}
                 <span
@@ -167,7 +167,7 @@ const Auth = () => {
                   className={styles.footerText}
                   style={{ marginTop: "20px", marginInline: "auto" }}
                 >
-                  {t("© 2026 InstaPay | Kemit KIngdom SA")}
+                  {t("© 2024 InstaPay | Kemit KIngdom SA")}
                 </span>
               )}
             </div>

@@ -32,8 +32,6 @@ import GeneralNoticeModal from "../PaymentsNewer/GeneralNoticeModal";
 import PlaidBankTransfer from "../AddFunds/WalletFundsFlow/PlaidBankTransfer";
 import { useQueryClient } from "@tanstack/react-query";
 import { useIdempotency } from "../../hooks/Payments/useIdempotency";
-import PaytentlyHostedModal from "../AddFunds/PaytentlyHostedModal";
-import { initiatePaytentlyPayment, usePaytently } from "../../utils/Functions/paytently";
 
 const initialState = {
   step: 1,
@@ -146,8 +144,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
           return !data.payment_type?.value;
         }
       case 2:
-        // Paytently validates the card on its hosted form.
-        if (data.payment_type?.value === "card" && !usePaytently) {
+        if (data.payment_type?.value === "card") {
           const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
           const currentDate = new Date();
           const currentMonth = currentDate.getMonth() + 1;
@@ -187,7 +184,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
         }
         break;
       case 2:
-        if (data.payment_type?.value === "card" && data.show_receipt && !usePaytently) {
+        if (data.payment_type?.value === "card" && data.show_receipt) {
           dataHandler("show_receipt", false);
           dataHandler("show_cards", true);
         } else {
@@ -431,35 +428,9 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
   };
 
   const [showCardModal, setShowCardModal] = useState(false);
-  const [paytentlyHosted, setPaytentlyHosted] = useState(null);
   const initiateCardPayment = async (otp) => {
     dataHandler("loading", true);
     try {
-      if (usePaytently) {
-        const dec = await initiatePaytentlyPayment({
-          walletId: data.currency?._id,
-          flow: "wallet_to_wallet",
-          fields: {
-            type: data.codeType,
-            rates_token: data.exchange_rate?.token,
-            w2w_data: { type: "quotation", body: { otp, token: data.payment_token } },
-          },
-          idempotencyKey: getKey(),
-        });
-
-        if (!dec?.hosted_forms_url) {
-          dataHandler(
-            "otp_error",
-            dec?.message ?? "We cannot process your request at the moment, please try again later.",
-          );
-          return;
-        }
-
-        dataHandler("show_otp", false);
-        setPaytentlyHosted({ hostedUrl: dec.hosted_forms_url, authorizeUrl: dec.authorize_url });
-        return;
-      }
-
       let payload;
       if (data.selectedSavedCard?._id) {
         payload = {
@@ -645,8 +616,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
           dataHandler("show_receipt", true);
         }
         if (data.payment_type?.value === "card") {
-          // Paytently collects the card on its hosted form, so skip our card step.
-          dataHandler(usePaytently ? "show_receipt" : "show_cards", true);
+          dataHandler("show_cards", true);
           dataHandler("step", data.step + 1);
         }
         if (data.payment_type?.value === "bank_transfer") {
@@ -669,12 +639,6 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
 
   return (
     <>
-      <PaytentlyHostedModal
-        isOpen={!!paytentlyHosted?.hostedUrl}
-        hostedUrl={paytentlyHosted?.hostedUrl}
-        authorizeUrl={paytentlyHosted?.authorizeUrl}
-        onClose={() => setPaytentlyHosted(null)}
-      />
       {showCardModal && (
         <NotFoundModal
           isOpen={showCardModal}

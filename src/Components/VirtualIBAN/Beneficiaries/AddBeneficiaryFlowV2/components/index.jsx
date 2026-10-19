@@ -214,10 +214,7 @@ export const ContextCard = ({ initial, icon, name, meta, actionLabel, onAction }
 );
 
 export const FieldLabel = ({ children, htmlFor }) => (
-  <label
-    className={`${styles.fieldLabel} d-flex align-items-center justify-content-between`}
-    htmlFor={htmlFor}
-  >
+  <label className={styles.fieldLabel} htmlFor={htmlFor}>
     {children}
   </label>
 );
@@ -253,16 +250,7 @@ export const TextField = ({
   maxLength,
 }) => (
   <div className={`${styles.field} ${flex ? styles.fieldFlex : ""}`}>
-    {label && (
-      <FieldLabel htmlFor={id}>
-        {label}{" "}
-        {maxLength && (
-          <span className="text-secondary">
-            {value?.length}/{maxLength}
-          </span>
-        )}
-      </FieldLabel>
-    )}
+    {label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
     <div className={`${styles.inputShell} ${error ? styles.inputShellError : ""}`}>
       <input
         id={id}

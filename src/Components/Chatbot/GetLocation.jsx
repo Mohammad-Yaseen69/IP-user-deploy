@@ -26,14 +26,6 @@ const GetLocation = () => {
     i18next.changeLanguage(lang);
   }, [lang]);
 
-  const isAiBot = platform === "instagram_ai";
-
-  const displayPlatform = isAiBot ? "instagram" : platform;
-
-  const locationEndpoint = isAiBot
-    ? "/api/bot/instagram-bot/location"
-    : `/api/wallet/send-location-bot${platform === "telegram" ? "-telegram" : ""}`;
-
   const sendLocationToBot = async (accept) => {
     setLoading(true);
     try {
@@ -44,16 +36,14 @@ const GetLocation = () => {
         accept,
       };
       const res = await axios.post(
-        `${import.meta.env.VITE_IP_DEV_API}${locationEndpoint}`,
-        isAiBot ? payload : { data: encryptData(payload) },
+        `${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-location-bot${platform === "telegram" ? "-telegram" : ""}`,
+        { data: encryptData(payload) },
       );
-      console.log(isAiBot ? res.data : decryptData(res.data.data));
+      const dec = decryptData(res.data.data);
+      console.log(dec);
     } catch (error) {
-      try {
-        console.log(isAiBot ? error?.response?.data : decryptData(error?.response?.data?.data));
-      } catch {
-        console.log(error?.message);
-      }
+      const dec = decryptData(error?.response?.data?.data);
+      console.log(dec);
     } finally {
       setLoading(false);
       setIsDone(true);
@@ -83,7 +73,7 @@ const GetLocation = () => {
         })}
       </h5>
 
-      <RedirectButton platform={displayPlatform} />
+      <RedirectButton platform={platform} />
     </CustomDatePickerContainer>
   ) : (
     <RequestLocation

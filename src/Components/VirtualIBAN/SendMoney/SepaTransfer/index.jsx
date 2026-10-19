@@ -224,7 +224,7 @@ const SepaAmountStep = ({
                     type="button"
                     className={`${styles.speedCard} ${
                       selectedSpeed.id === speed.id ? styles.selectedSpeedCard : ""
-                    } h-100`}
+                    }`}
                     onClick={() => !isComingSoon && setTransferSpeed(speed.id)}
                     disabled={isComingSoon}
                     style={{
@@ -543,31 +543,24 @@ const downloadSepaReceipt = ({
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(130, 130, 138);
-  doc.text(`Generated: ${new Date().toLocaleString()}`, margin, 56);
+  doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 28);
 
   autoTable(doc, {
-    startY: 64,
+    startY: 36,
     head: [["Details", "Information"]],
     body: rows,
-    theme: "plain",
+    theme: "grid",
     styles: {
       fontSize: 9,
       cellPadding: 4,
-      textColor: [35, 35, 40],
     },
     headStyles: {
       fontStyle: "bold",
-      fillColor: [89, 38, 240],
-      textColor: [255, 255, 255],
-    },
-    alternateRowStyles: {
-      fillColor: [246, 245, 252],
     },
     columnStyles: {
       0: {
         cellWidth: 55,
         fontStyle: "bold",
-        textColor: [130, 130, 138],
       },
       1: {
         cellWidth: 125,
@@ -579,17 +572,15 @@ const downloadSepaReceipt = ({
 
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
-  doc.setTextColor(90, 90, 95);
 
   doc.text(
     "The recipient receives the full amount - no correspondent-bank deductions in SEPA.",
-    margin,
+    14,
     finalY,
   );
 
   doc.setFontSize(8);
-  doc.setTextColor(130, 130, 138);
-  doc.text("This receipt is generated electronically.", margin, finalY + 8);
+  doc.text("This receipt is generated electronically.", 14, finalY + 8);
   const safeTrackingReference = String(trackingReference || "receipt")
     .replace(/[<>:"/\\|?*\u0000-\u001F]/g, "-")
     .replace(/\s+/g, "-");

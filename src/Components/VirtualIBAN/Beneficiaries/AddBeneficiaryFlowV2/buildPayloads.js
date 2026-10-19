@@ -51,7 +51,7 @@ export const prefillBeneficiaryBag = (beneficiary) => {
   return bag;
 };
 
-export const EXTRAS_ALIASES = {
+const EXTRAS_ALIASES = {
   firstname: ["firstname", "firstName"],
   lastname: ["lastname", "lastName"],
   legalName: ["legalName", "company_name"],

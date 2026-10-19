@@ -113,7 +113,7 @@ const QrPoster = ({ wallet }) => {
       </div>
 
       <div className={styles.footer}>
-        <p className={styles.t}>{t("©2026 | KEMIT KINGDOM SA")}</p>
+        <p className={styles.t}>{t("©2024 | KEMIT KINGDOM SA")}</p>
         <p className={styles.b}>
           {t("If you need support, we would gladly answer your questions.")}
         </p>

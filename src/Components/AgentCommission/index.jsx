@@ -547,29 +547,11 @@ const AgentCommission = () => {
 
                 <div className={styles.tableDataRow}>
                   <div className={styles.colAgentName}>
-                    <div className={`${styles.avatar} ${styles.avatarPurple}`}>{t("BO")}</div>
-                    <span className={styles.agentName}>{t("Broker One")}</span>
+                    <div className={`${styles.avatar} ${styles.avatarPurple}`}>AN</div>
+                    <span className={styles.agentName}>{t("Active Network")}</span>
                   </div>
-                  <div className={styles.colActive}>5</div>
-                  <div className={styles.colConv}>50%</div>
-                </div>
-
-                <div className={styles.tableDataRow}>
-                  <div className={styles.colAgentName}>
-                    <div className={`${styles.avatar} ${styles.avatarBlue}`}>TL</div>
-                    <span className={styles.agentName}>TradeBridge Ltd</span>
-                  </div>
-                  <div className={styles.colActive}>11</div>
-                  <div className={styles.colConv}>58%</div>
-                </div>
-
-                <div className={styles.tableDataRow}>
-                  <div className={styles.colAgentName}>
-                    <div className={`${styles.avatar} ${styles.avatarPink}`}>AN</div>
-                    <span className={styles.agentName}>Aicha Ndiaye</span>
-                  </div>
-                  <div className={styles.colActive}>2</div>
-                  <div className={styles.colConv}>20%</div>
+                  <div className={styles.colActive}>{analytics.subAgentNetwork ?? 0}</div>
+                  <div className={styles.colConv}>{analytics.conversionRate || "0.0%"}</div>
                 </div>
               </div>
             </div>

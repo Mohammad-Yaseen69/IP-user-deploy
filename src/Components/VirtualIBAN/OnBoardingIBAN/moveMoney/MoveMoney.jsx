@@ -5,7 +5,16 @@ import TopRight from "../../../topRight";
 import styles from "../style/moveMoney.module.css";
 import IbanBreadcrumb from "../../components/IbanBreadcrumb";
 import Tooltip from "@mui/material/Tooltip";
-import { Compass, Globe, Briefcase, RefreshCw, CreditCard, ArrowLeft, Search } from "react-feather";
+import {
+  Compass,
+  Globe,
+  Briefcase,
+  RefreshCw,
+  CreditCard,
+  ArrowLeft,
+  Search,
+  ChevronLeft,
+} from "react-feather";
 import SepaTransfer from "../../SendMoney/SepaTransfer";
 import SwiftTransfer from "../../SendMoney/SwiftTransfer";
 import CryptoTopupModal from "../../CryptoTopupModal";
@@ -78,15 +87,16 @@ const MoveMoney = () => {
         <div className={styles.mainContent}>
           {showSepaPage ? (
             <>
-              {width > 600 && (
-                <IbanBreadcrumb
-                  items={[
-                    { label: "My virtual bank", path: "/virtual-IBAN" },
-                    { label: "Move money", onClick: handleClose },
-                    { label: "SEPA Transfer" },
-                  ]}
-                />
-              )}
+              <IbanBreadcrumb
+                items={[
+                  { label: "My virtual bank", path: "/virtual-IBAN" },
+                  {
+                    label: "Move money",
+                    onClick: () => setShowSepaPage(false),
+                  },
+                  { label: "SEPA Transfer" },
+                ]}
+              />
               <SepaTransfer
                 isPage={true}
                 selectedIban={selectedIban}
@@ -96,18 +106,21 @@ const MoveMoney = () => {
             </>
           ) : showSwiftPage ? (
             <>
-              <IbanBreadcrumb
-                items={[
-                  { label: "My virtual bank", path: "/virtual-IBAN" },
-                  { label: "Move money", onClick: () => setShowSwiftPage(false) },
-                  { label: "SWIFT Transfer" },
-                ]}
-              />
+              {width > 600 && (
+                <IbanBreadcrumb
+                  items={[
+                    { label: "My virtual bank", path: "/virtual-IBAN" },
+                    { label: "Move money", onClick: handleClose },
+                    { label: "SWIFT Transfer" },
+                  ]}
+                />
+              )}
               <SwiftTransfer
                 isPage={true}
                 selectedIban={selectedIban}
                 availableBalance={currentBalance}
-                toggle={() => setShowSwiftPage(false)}
+                toggle={handleClose}
+                ref={btnRef}
               />
             </>
           ) : (
@@ -134,7 +147,9 @@ const MoveMoney = () => {
                     <div
                       className={`${styles.card} ${isOutboundBlocked ? styles.cardDisabled : ""}`}
                       onClick={isOutboundBlocked ? undefined : () => setShowSepaPage(true)}
-                      style={{ cursor: isOutboundBlocked ? "not-allowed" : "pointer" }}
+                      style={{
+                        cursor: isOutboundBlocked ? "not-allowed" : "pointer",
+                      }}
                     >
                       <div className={`${styles.iconBox} ${styles.bgBlue}`}>
                         <Compass size={20} />
@@ -158,7 +173,9 @@ const MoveMoney = () => {
                     <div
                       className={`${styles.card} ${isOutboundBlocked ? styles.cardDisabled : ""}`}
                       onClick={isOutboundBlocked ? undefined : () => setShowSwiftPage(true)}
-                      style={{ cursor: isOutboundBlocked ? "not-allowed" : "pointer" }}
+                      style={{
+                        cursor: isOutboundBlocked ? "not-allowed" : "pointer",
+                      }}
                     >
                       <div className={`${styles.iconBox} ${styles.bgYellow}`}>
                         <Globe size={20} />
@@ -191,15 +208,9 @@ const MoveMoney = () => {
                           )}
                         </p>
                         <div className={styles.badgeRow}>
-                          <span className={`${styles.tag} ${styles.tagBlue}`}>
-                            {t("Worldwide")}
-                          </span>
-                          <span className={`${styles.tag} ${styles.tagGray}`}>
-                            {t("Fast lookup")}
-                          </span>
-                          <span className={`${styles.tag} ${styles.tagGray}`}>
-                            {t("Country-adaptive")}
-                          </span>
+                          <span className={`${styles.tag}`}>{t("Worldwide")}</span>
+                          <span className={`${styles.tag}`}>{t("Fast lookup")}</span>
+                          <span className={`${styles.tag}`}>{t("Country-adaptive")}</span>
                         </div>
                       </div>
                     </div>

@@ -206,35 +206,18 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
     }
   }, [services]);
 
-  // ids not unique
-  const selectedService = useMemo(() => {
-    if (!data?.payoutChannel?.id) return undefined;
-    return services.find((s) =>
-      data.payoutChannel.channelKey
-        ? s.channelKey === data.payoutChannel.channelKey
-        : s.id === data.payoutChannel.id,
-    );
-  }, [services, data?.payoutChannel?.channelKey, data?.payoutChannel?.id]);
-
   useEffect(() => {
-    if (selectedService?.payers) {
-      dataHandler("payers", selectedService.payers);
-    }
-  }, [selectedService]);
+    if (data?.payoutChannel?.id) {
+      const selectedService = services.find((s) => s.id === data.payoutChannel.id);
+      if (selectedService?.payers) {
+        dataHandler("payers", selectedService.payers);
 
-  useEffect(() => {
-    const payers = selectedService?.payers;
-    if (!payers) return;
-
-    if (payers.length === 1) {
-      if (data?.payer?.id !== payers[0]?.id) {
-        dataHandler("payer", payers[0]);
+        if (selectedService.payers.length === 1) {
+          dataHandler("payer", selectedService.payers[0]);
+        }
       }
-    } else if (data?.payer?.id && !payers.some((p) => String(p?.id) === String(data.payer.id))) {
-      // stale payer
-      dataHandler("payer", {});
     }
-  }, [selectedService, data?.payer?.id]);
+  }, [data?.payoutChannel?.id, services]);
 
   const [loading, setLoading] = useState(false);
   const [limitType, setLimitType] = useState("");
@@ -274,20 +257,6 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
     };
   }, [data?.currency, data?.payer, data.country, data?.payoutChannel]);
 
-  const noPayersAvailable =
-    !isLoadingServices && selectedService ? selectedService.payers?.length === 0 : false;
-
-  const noPayersMessage = useMemo(() => {
-    const method = data?.payoutChannel?.value;
-    if (method === "bank")
-      return "No banks are available for this destination right now. Please choose another receiving method.";
-    if (method === "cash")
-      return "No cash pickup partners are available for this destination right now. Please choose another receiving method.";
-    if (method === "mobile")
-      return "No mobile wallets are available for this destination right now. Please choose another receiving method.";
-    return "No payers are available for this destination right now. Please choose another receiving method.";
-  }, [data?.payoutChannel?.value]);
-
   const [showTypesModal, setShowTypesModal] = useState(false);
 
   const location = useLocation();
@@ -305,7 +274,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
 
   useEffect(() => {
     if (service_id && services.length > 0) {
-      const service = services.find((item) => String(item.id) === String(service_id));
+      const service = services.find((item) => item.id === service_id);
       if (service) {
         dataHandler("payoutChannel", service);
       }
@@ -466,10 +435,6 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
               {data?.exchange_rate_error === "payer_unavailable" &&
                 t(
                   `Unable to conduct the transaction to ${data?.payer?.name} at the moment. Please try again later.`,
-                )}
-              {data?.exchange_rate_error === "vendor unreachable" &&
-                t(
-                  "We couldn't get an exchange rate for this payer right now. Please try again in a few minutes.",
                 )}
               {data?.exchange_rate_error === "insufficient balance payer" &&
                 t("Payer currently doesn't have sufficient balance.")}
@@ -650,29 +615,25 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
             {data?.payoutChannel?.name && (
               <div className={styles.receiving_method}>
                 <span>{t("Payer")}</span>
-                {noPayersAvailable ? (
-                  <span className={styles.no_payers}>{t(noPayersMessage)}</span>
-                ) : (
-                  <div className={styles.channel_con} onClick={() => toggleModalHandler("payer")}>
-                    <div className={styles.channel}>
-                      <div className={styles.grad_icon}>
-                        <img src={data?.payoutChannel?.icon ?? channel} alt="" />
-                      </div>
-                      <span>
-                        {data?.payer?.name ??
-                          t("Select the payer").replace(
-                            "payer",
-                            data?.payoutChannel?.value === "mobile"
-                              ? "Mobile wallet"
-                              : data?.payoutChannel?.value === "cash"
-                                ? "Cash Partner"
-                                : "Bank",
-                          )}
-                      </span>
+                <div className={styles.channel_con} onClick={() => toggleModalHandler("payer")}>
+                  <div className={styles.channel}>
+                    <div className={styles.grad_icon}>
+                      <img src={data?.payoutChannel?.icon ?? channel} alt="" />
                     </div>
-                    <img className={styles.chev} src={chev_down} alt="" />
+                    <span>
+                      {data?.payer?.name ??
+                        t("Select the payer").replace(
+                          "payer",
+                          data?.payoutChannel?.value === "mobile"
+                            ? "Mobile wallet"
+                            : data?.payoutChannel?.value === "cash"
+                              ? "Cash Partner"
+                              : "Bank",
+                        )}
+                    </span>
                   </div>
-                )}
+                  <img className={styles.chev} src={chev_down} alt="" />
+                </div>
               </div>
             )}
           </div>

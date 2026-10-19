@@ -63,7 +63,7 @@ const STATUS_CONFIG = {
     title: "Your IBAN is active",
     description:
       "Congratulations! Your business IBAN activation request has been approved. You can now start using your IBAN for transfers and payments.",
-    // primaryLabel: "Go to Dashboard",
+    primaryLabel: "Go to Dashboard",
     secondaryLabel: "",
   },
   rejected: {

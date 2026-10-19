@@ -123,10 +123,7 @@ const StepTwo = ({ data, dataHandler }) => {
     }
 
     if (data.payoutChannel?.value === "mobile") {
-      // leading zeros count
-      fil = fil.filter(
-        (item) => String(item?.mobile_wallet?.[0]?.money_provider) === String(data.payer?.id),
-      );
+      fil = fil.filter((item) => +item?.mobile_wallet?.[0]?.money_provider === +data.payer?.id);
       setMessage(
         t(`No beneficiary found from {{country}} having {{value}} details.`, {
           value: data.payer?.name,

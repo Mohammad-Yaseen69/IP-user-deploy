@@ -74,7 +74,7 @@ const AuthNew = () => {
                 item?.country_name?.toLowerCase()?.includes(findCOuntry?.name?.toLowerCase()),
             );
 
-            setCountry(foundCount?.country_iso_code ?? "CHE");
+            setCountry(foundCount?.country_iso_code ?? "CHF");
           }
         }
       } catch (error) {
@@ -83,7 +83,7 @@ const AuthNew = () => {
         const filteredCountry = allowedCountries.filter((item) =>
           item.country_name.toLowerCase().includes(data?.country_name?.toLowerCase()),
         )?.[0]?.country_iso_code;
-        setCountry(filteredCountry ?? "CHE");
+        setCountry(filteredCountry ?? "CHF");
       }
     };
     if (allowedCountries?.length > 0) {
