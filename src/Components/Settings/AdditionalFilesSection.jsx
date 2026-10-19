@@ -21,6 +21,7 @@ import {
   ExternalLink,
   Eye,
   Type,
+  AlertCircle,
 } from "react-feather";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
@@ -527,19 +528,26 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
     ) : null;
 
   const renderResponse = (item, variant) => {
+    // The table only ever shows the "View Details" button; every response
+    // control (inputs, upload, submitted answer, document link) lives in the modal.
+    if (variant !== "modal") return null;
     const actionable = isActionableStatus(item.status);
-    if (item.input_type === "text") {
-      if (actionable) {
-        // In the table, pending text requests only expose "View Details".
-        return variant === "modal" ? renderTextControls(item) : null;
-      }
-      return renderSubmittedText(item, variant);
+    if (actionable) {
+      return item.input_type === "text"
+        ? renderTextControls(item)
+        : renderFileControls(item, variant);
     }
-    return actionable ? renderFileControls(item, variant) : renderSubmittedFile(item);
+    return item.input_type === "text"
+      ? renderSubmittedText(item, variant)
+      : renderSubmittedFile(item);
   };
 
   const formatLabel = (item) =>
     item.input_type === "text" ? t("Text") : item.file_type || t("Any Format");
+
+  const hasPendingRequired = files.some(
+    (item) => item.isRequired && isActionableStatus(item.status),
+  );
 
   return (
     <Col md="12" className="mb-4" id="additional-files-section">
@@ -562,7 +570,7 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
               margin: 0,
             }}
           >
-            {t("Additional Files")}
+            {t("Additional Information")}
           </h4>
           <p
             style={{
@@ -576,6 +584,30 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
               "Please check the files requested by the administration below and upload the corresponding documents.",
             )}
           </p>
+          {hasPendingRequired && (
+            <div
+              style={{
+                display: "flex",
+                gap: "10px",
+                alignItems: "flex-start",
+                backgroundColor: "#fff1f2",
+                border: "1px solid #fecdd3",
+                borderRadius: "10px",
+                padding: "10px 12px",
+                marginTop: "12px",
+              }}
+            >
+              <AlertCircle
+                size={16}
+                style={{ color: "#e11d48", flexShrink: 0, marginTop: "1px" }}
+              />
+              <span style={{ fontSize: "12px", color: "#9f1239", lineHeight: "1.5" }}>
+                {t(
+                  "Items marked as Required must be submitted before you can continue using the rest of InstaPay.",
+                )}
+              </span>
+            </div>
+          )}
         </CardHeader>
         <CardBody style={{ padding: "20px" }}>
           <div className="table-responsive">

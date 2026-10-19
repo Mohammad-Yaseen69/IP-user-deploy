@@ -28,6 +28,8 @@ import AnotherLoginModal from "../Components/AnotherLoginModal";
 import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
 import AdditionalDocumentModal from "./AdditionalDocumentModal";
+import ForcedAdditionalFilesModal from "../Components/ForcedAdditionalFilesModal";
+import { getPendingAdditionalFiles } from "../utils/Functions/additionalFiles";
 import NewMenu from "../Common/NewMenu";
 import AssistantWidget from "../Components/AssistantWidget";
 import { useVirtualIbans } from "../hooks/useVirtualIban";
@@ -135,33 +137,30 @@ const Layout = ({ children, classNames, ...rest }) => {
   const accountId = userDetails?.account?._id || userDetails?.account_id;
 
   const { data: virtualIbans = [], isLoading: virtualIbansLoading } = useVirtualIbans(accountId);
+
+  const pendingAdditionalFiles = useMemo(
+    () => getPendingAdditionalFiles(userDetails),
+    [userDetails],
+  );
+  const hasRequiredAdditionalFiles = pendingAdditionalFiles.required.length > 0;
+
+  const requiredFilesOnSettings = pendingAdditionalFiles.requiredVerification.length > 0;
+  const requiredFilesTarget = requiredFilesOnSettings
+    ? "/settings?tab=verification&scroll=additional-files"
+    : "/my-mastercard";
+  const onRequiredFilesPage = location.pathname
+    .toLowerCase()
+    .includes(requiredFilesOnSettings ? "settings" : "my-mastercard");
+  const showForcedFilesModal =
+    profileCompleted === true && !showModal && hasRequiredAdditionalFiles && !onRequiredFilesPage;
+
   useEffect(() => {
-    console.log("checking files status");
     if (location.pathname.toLowerCase().includes("my-mastercard")) return;
+    if (hasRequiredAdditionalFiles) return;
 
-    if (userDetails?.account_type === "individual") {
-      if (
-        userDetails?.user?.kyc_additional_file?.length > 0 &&
-        userDetails?.user?.kyc_additional_file?.find(
-          (item) => item?.status === "declined" || item?.status === "requested",
-        )
-      ) {
-        setShowAdditionalModal(true);
-      }
-    } else {
-      console.log("coming here", userDetails?.company?.kyb_additional_file);
-      if (
-        userDetails?.company?.kyb_additional_file?.length > 0 &&
-        userDetails?.company?.kyb_additional_file?.find(
-          (item) => item?.status === "declined" || item?.status === "requested",
-        )
-      ) {
-        console.log("coming here again");
-
-        setShowAdditionalModal(true);
-      }
+    if (pendingAdditionalFiles.optional.length > 0) {
+      setShowAdditionalModal(true);
     }
-    console.log("checking done");
   }, [userDetails]);
 
   useEffect(() => {
@@ -443,6 +442,12 @@ const Layout = ({ children, classNames, ...rest }) => {
                 kyc={showKyc && profileCompleted}
               />
             )}
+            {showForcedFilesModal && (
+              <ForcedAdditionalFilesModal
+                files={pendingAdditionalFiles.required}
+                target={requiredFilesTarget}
+              />
+            )}
             {canShowForcedAuthenticator && <ForcedAuthenticatorModal />}
             <Loader />
             <TapTop />
@@ -487,6 +492,12 @@ const Layout = ({ children, classNames, ...rest }) => {
                 setShowModal={setShowModal}
                 profileIncompleteReason={profileIncompleteReason}
                 kyc={showKyc && profileCompleted}
+              />
+            )}
+            {showForcedFilesModal && (
+              <ForcedAdditionalFilesModal
+                files={pendingAdditionalFiles.required}
+                target={requiredFilesTarget}
               />
             )}
             {canShowForcedAuthenticator && <ForcedAuthenticatorModal />}

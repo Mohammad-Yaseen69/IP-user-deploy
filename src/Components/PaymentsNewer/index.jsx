@@ -132,6 +132,11 @@ const PaymentsNewer = () => {
           setSendPaymentType("qr_pay");
           setStep(3);
         }
+        if (send_type === "non-instapay") {
+          setCurrentFlow("non-instapay");
+          setSendPaymentType("non-instapay");
+          setStep(3);
+        }
       }
     }
   }, [send_type]);

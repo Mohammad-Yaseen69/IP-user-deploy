@@ -2,7 +2,7 @@ import { useCallback, useContext, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../Context/UserContext";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
-import { PAGES } from "./knowledge/pages";
+import { PAGES, canOpenPage } from "./knowledge/pages";
 import { useNavigationTool } from "./useNavigationTool";
 
 // Same-origin on purpose: Vite proxies this in development and a reverse proxy
@@ -23,8 +23,6 @@ export const useAssistant = ({ authedFetch }) => {
   const can = usePermission();
   const navigateToPage = useNavigationTool();
   const { userDetails } = useContext(UserContext);
-  const isAgent = Boolean(userDetails?.isInstapayAgent);
-  const isBusiness = userDetails?.account_type === "business";
 
   const [messages, setMessages] = useState([]);
   const [isThinking, setIsThinking] = useState(false);
@@ -35,19 +33,15 @@ export const useAssistant = ({ authedFetch }) => {
    * can never offer a destination their role forbids, and so the page list
    * lives in one place rather than being mirrored in the bot service.
    *
-   * `agentOnly` and `businessOnly` are checked separately from `permission`:
-   * those pages are gated by who the account is rather than by a role
-   * permission, and usePermission answers true for every individual account.
+   * Account-type flags are checked alongside `permission` (see canOpenPage),
+   * because usePermission answers true for every individual account.
    */
   const allowedPages = useMemo(
     () =>
-      PAGES.filter(
-        (page) =>
-          (!page.agentOnly || isAgent) &&
-          (!page.businessOnly || isBusiness) &&
-          (!page.permission || can(page.permission)),
-      ).map(({ id, title, description }) => ({ id, title, description })),
-    [can, isAgent, isBusiness],
+      PAGES.filter((page) => canOpenPage(page, userDetails, can)).map(
+        ({ id, title, description }) => ({ id, title, description }),
+      ),
+    [can, userDetails],
   );
 
   const starterPrompts = useMemo(

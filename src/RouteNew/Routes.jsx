@@ -61,6 +61,8 @@ const SubscriptionCalendarEndDate = lazy(
 const SubscriptionRequestEndDate = lazy(
   () => import("../Components/Chatbot/subscription-request-end-date"),
 );
+const PayViaSocial = lazy(() => import("../Components/SocialPay/index.jsx"));
+
 const CreatePassword = lazy(() => import("../Components/CreatePassword/CreatePassword"));
 const GeoFencing = lazy(() => import("../Components/GeoFencing"));
 const MyMasterCard = lazy(() => import("../Components/MyMasterCard"));
@@ -310,6 +312,14 @@ export const routes = [
     component: (
       <PermissionRoute permission="analytics.view">
         <Analytics />
+      </PermissionRoute>
+    ),
+  },
+  {
+    path: "/pay-via-social",
+    component: (
+      <PermissionRoute permission="payviasocial.view">
+        <PayViaSocial />
       </PermissionRoute>
     ),
   },

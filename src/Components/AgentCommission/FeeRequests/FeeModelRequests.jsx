@@ -448,7 +448,7 @@ const FeeModelRequests = () => {
                           </div>
                         </div>
 
-                        {req.status === "approved" &&
+                        {/* {req.status === "approved" &&
                           (() => {
                             const cType =
                               req.comissionType ||
@@ -537,7 +537,7 @@ const FeeModelRequests = () => {
                                 </div>
                               </div>
                             );
-                          })()}
+                          })()} */}
                         {req.status === "approved" && req.model_code && (
                           <div
                             style={{

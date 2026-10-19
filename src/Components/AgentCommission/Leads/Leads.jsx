@@ -1,9 +1,19 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import useWindowWidth from "../../../utils/useWindowWidth";
 import { useTranslation } from "react-i18next";
 import styles from "../styles/leads.module.css";
 import TopRight from "../../topRight";
-import { AlertTriangle, Search, Send, Trash2, X, UserPlus, Eye, Edit2 } from "react-feather";
+import {
+  AlertTriangle,
+  Search,
+  Send,
+  Trash2,
+  X,
+  UserPlus,
+  Eye,
+  Edit2,
+  MoreVertical,
+} from "react-feather";
 import LeadModal from "./LeadModal";
 import AddByNameModal from "./AddByNameModal";
 import UpdateFeePackModal from "../UpdateFeePackModal";
@@ -11,6 +21,7 @@ import { Modal, ModalBody } from "reactstrap";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 import { UserContext } from "../../../Context/UserContext";
+import { createPortal } from "react-dom";
 
 const formatCountryName = (countryVal) => {
   if (!countryVal) return "—";
@@ -45,6 +56,33 @@ const Leads = () => {
   const [selectedStage, setSelectedStage] = useState("all");
   const [page, setPage] = useState(1);
   const [deleteConfirmLead, setDeleteConfirmLead] = useState(null);
+  const [openMenuLeadId, setOpenMenuLeadId] = useState(null);
+  const [menuPos, setMenuPos] = useState(null);
+
+  useEffect(() => {
+    if (!openMenuLeadId) return;
+    const close = () => setOpenMenuLeadId(null);
+    window.addEventListener("scroll", close, true);
+    window.addEventListener("resize", close);
+    return () => {
+      window.removeEventListener("scroll", close, true);
+      window.removeEventListener("resize", close);
+    };
+  }, [openMenuLeadId]);
+
+  const menuItemStyle = {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    width: "100%",
+    padding: "8px 12px",
+    background: "none",
+    border: "none",
+    textAlign: "left",
+    fontSize: "13px",
+    cursor: "pointer",
+    color: "#334155",
+  };
 
   const handleOpenModal = (type = "business") => {
     setInitialEntityType(type);
@@ -320,84 +358,114 @@ const Leads = () => {
                           <Edit2 size={11} style={{ opacity: 0.7 }} />
                         </span>
                       </td>
-
-                      <td
-                        className={styles.tdCell}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "6px",
-                        }}
-                      >
+                      <td className={styles.tdCell}>
                         <button
-                          onClick={() => setSelectedLead(row)}
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (openMenuLeadId === row._id) {
+                              setOpenMenuLeadId(null);
+                              return;
+                            }
+                            const rect = e.currentTarget.getBoundingClientRect();
+                            setMenuPos({
+                              top: rect.bottom + 4,
+                              right: window.innerWidth - rect.right,
+                            });
+                            setOpenMenuLeadId(row._id);
+                          }}
                           className={styles.secondaryBtn}
                           style={{
                             padding: "4px 8px",
-                            fontSize: "12px",
+                            cursor: "pointer",
                             display: "flex",
                             alignItems: "center",
-                            gap: "4px",
-                            cursor: "pointer",
                           }}
-                          title={t("View Details")}
+                          title={t("Actions")}
                         >
-                          <Eye size={13} />
+                          <MoreVertical size={14} />
                         </button>
 
-                        <button
-                          onClick={() => setEditingFeePackLead(row)}
-                          className={styles.secondaryBtn}
-                          style={{
-                            padding: "4px 8px",
-                            fontSize: "12px",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "4px",
-                            cursor: "pointer",
-                          }}
-                          title={t("Update Fee Pack")}
-                        >
-                          <Edit2 size={13} />
-                        </button>
+                        {openMenuLeadId === row._id &&
+                          menuPos &&
+                          createPortal(
+                            <>
+                              <div
+                                onClick={() => setOpenMenuLeadId(null)}
+                                style={{ position: "fixed", inset: 0, zIndex: 1000 }}
+                              />
+                              <div
+                                style={{
+                                  position: "fixed",
+                                  top: menuPos.top,
+                                  right: menuPos.right,
+                                  zIndex: 1001,
+                                  background: "#FFFFFF",
+                                  border: "1px solid #E2E8F0",
+                                  borderRadius: "8px",
+                                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                                  minWidth: "180px",
+                                  padding: "4px 0",
+                                  display: "flex",
+                                  flexDirection: "column",
+                                }}
+                              >
+                                <button
+                                  type="button"
+                                  style={menuItemStyle}
+                                  onClick={() => {
+                                    setOpenMenuLeadId(null);
+                                    setSelectedLead(row);
+                                  }}
+                                >
+                                  <Eye size={13} /> {t("View Details")}
+                                </button>
 
-                        {!row.addedByManager &&
-                          (row.stage === "not-registered" || row.stage === "claim-pending") && (
-                            <button
-                              onClick={() => resendInviteMutation.mutate(row._id)}
-                              disabled={resendInviteMutation.isPending}
-                              className={styles.secondaryBtn}
-                              style={{
-                                padding: "4px 8px",
-                                fontSize: "12px",
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "4px",
-                              }}
-                              title={t("Resend Invitation")}
-                            >
-                              <Send size={12} />
-                              {resendInviteMutation.isPending ? t("Sending...") : t("Resend")}
-                            </button>
+                                <button
+                                  type="button"
+                                  style={menuItemStyle}
+                                  onClick={() => {
+                                    setOpenMenuLeadId(null);
+                                    setEditingFeePackLead(row);
+                                  }}
+                                >
+                                  <Edit2 size={13} /> {t("Update Fee Pack")}
+                                </button>
+
+                                {!row.addedByManager &&
+                                  (row.stage === "not-registered" ||
+                                    row.stage === "claim-pending") && (
+                                    <button
+                                      type="button"
+                                      style={menuItemStyle}
+                                      disabled={resendInviteMutation.isPending}
+                                      onClick={() => {
+                                        setOpenMenuLeadId(null);
+                                        resendInviteMutation.mutate(row._id);
+                                      }}
+                                    >
+                                      <Send size={13} />
+                                      {resendInviteMutation.isPending
+                                        ? t("Sending...")
+                                        : t("Resend Invitation")}
+                                    </button>
+                                  )}
+
+                                <button
+                                  type="button"
+                                  style={{ ...menuItemStyle, color: "#d32f2f" }}
+                                  disabled={deleteLeadMutation.isPending}
+                                  onClick={() => {
+                                    setOpenMenuLeadId(null);
+                                    setDeleteConfirmLead(row);
+                                  }}
+                                >
+                                  <Trash2 size={13} /> {t("Delete Lead")}
+                                </button>
+                              </div>
+                            </>,
+                            document.body,
                           )}
-
-                        <button
-                          onClick={() => setDeleteConfirmLead(row)}
-                          disabled={deleteLeadMutation.isPending}
-                          className={styles.secondaryBtn}
-                          style={{
-                            padding: "4px 8px",
-                            fontSize: "12px",
-                            color: "#d32f2f",
-                            borderColor: "#ffcdd2",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "4px",
-                          }}
-                          title={t("Delete Lead")}
-                        >
-                          <Trash2 size={12} />
-                        </button>
                       </td>
                     </tr>
                   );

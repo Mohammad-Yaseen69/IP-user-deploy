@@ -219,6 +219,10 @@
   content: "Please Verify Your Identity Before Using Instapay";
 }
 
+.tab.disabled.required::before {
+  content: "Please provide the required information in Verification first.";
+}
+
 .tab.disabled:hover::before {
   opacity: 1;
 }

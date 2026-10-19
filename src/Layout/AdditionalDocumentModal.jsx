@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../Context/UserContext";
 import { FileText, Info, ChevronRight, Type } from "react-feather";
+import { getPendingAdditionalFiles, MASTERCARD_PURPOSE } from "../utils/Functions/additionalFiles";
 
 const AdditionalDocumentModal = ({ isOpen, toggle, accounType }) => {
   const navigate = useNavigate();
@@ -11,22 +12,12 @@ const AdditionalDocumentModal = ({ isOpen, toggle, accounType }) => {
   const { userDetails } = useContext(UserContext);
 
   const accountType = userDetails?.account_type || accounType;
-  const allFiles =
-    accountType === "individual"
-      ? userDetails?.user?.kyc_additional_file
-      : userDetails?.company?.kyb_additional_file;
+  // Required items are handled by the blocking ForcedAdditionalFilesModal;
+  // this reminder only lists the optional (non-required) pending ones.
+  const { optional } = getPendingAdditionalFiles({ ...userDetails, account_type: accountType });
 
-  const mastercardFiles = (allFiles || []).filter(
-    (item) =>
-      item?.purpose === "mastercard_kyc" &&
-      (item?.status === "requested" || item?.status === "decline" || item?.status === "declined"),
-  );
-
-  const otherFiles = (allFiles || []).filter(
-    (item) =>
-      item?.purpose !== "mastercard_kyc" &&
-      (item?.status === "requested" || item?.status === "decline" || item?.status === "declined"),
-  );
+  const mastercardFiles = optional.filter((item) => item?.purpose === MASTERCARD_PURPOSE);
+  const otherFiles = optional.filter((item) => item?.purpose !== MASTERCARD_PURPOSE);
 
   const showMastercardOnly = mastercardFiles.length > 0;
   const requestedFiles = showMastercardOnly ? mastercardFiles : otherFiles;
@@ -191,23 +182,6 @@ const AdditionalDocumentModal = ({ isOpen, toggle, accounType }) => {
                         marginLeft: "10px",
                       }}
                     >
-                      {file.isRequired && (
-                        <span
-                          style={{
-                            backgroundColor: "#fee2e2",
-                            color: "#ef4444",
-                            fontWeight: "600",
-                            fontSize: "10px",
-                            padding: "3px 6px",
-                            borderRadius: "4px",
-                            border: "1px solid #fecaca",
-                            textTransform: "uppercase",
-                            letterSpacing: "0.02em",
-                          }}
-                        >
-                          {t("Urgent")}
-                        </span>
-                      )}
                       {file.status === "requested" ? (
                         <span
                           style={{
