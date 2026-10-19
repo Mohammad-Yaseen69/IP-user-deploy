@@ -106,18 +106,14 @@ const InvoicePayment = () => {
 
   const toggleCreditModal = () => {
     if (data.amount < state.limits?.topup_min_amount) {
-      dataHandler(
-        "guestPayError",
+      toast.error(
         t("Minimum amount for guest pay is") +
           " " +
           formatCurrency(state.limits?.topup_min_amount, true) +
           " " +
           data?.currency,
       );
-      setTimeout(() => {
-        dataHandler("guestPayError", "");
-      }, 3000);
-    } else if (limits?.topup_max_amount === 0) {
+    } else if (state.limits?.topup_max_amount === 0) {
       toast.error(
         t(
           "The recipient has reached their incoming/balance limit and cannot receive this amount at the moment.",
@@ -130,16 +126,6 @@ const InvoicePayment = () => {
           " " +
           data?.currency,
       );
-      dataHandler(
-        "guestPayError",
-        "Maximum amount for guest pay is " +
-          formatCurrency(state.limits?.topup_max_amount, true) +
-          " " +
-          data?.currency,
-      );
-      setTimeout(() => {
-        dataHandler("guestPayError", "");
-      }, 3000);
     } else {
       dataHandler("showCreditModal", !state.showCreditModal);
     }

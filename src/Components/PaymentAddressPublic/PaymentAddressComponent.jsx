@@ -362,17 +362,6 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
           " " +
           state.currentWallet?.currency?.code,
       );
-      dataHandler(
-        "guestPayError",
-        t("Minimum amount for guest pay is") +
-          " " +
-          formatCurrency(limits?.topup_min_amount, true) +
-          " " +
-          state.currentWallet?.currency?.code,
-      );
-      setTimeout(() => {
-        dataHandler("guestPayError", "");
-      }, 3000);
     } else if (limits?.topup_max_amount === 0) {
       toast.error(
         t(
@@ -386,16 +375,6 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
           " " +
           state.currentWallet?.currency?.code,
       );
-      dataHandler(
-        "guestPayError",
-        t("Maximum amount for guest pay is ") +
-          formatCurrency(limits?.topup_max_amount, true) +
-          " " +
-          state.currentWallet?.currency?.code,
-      );
-      setTimeout(() => {
-        dataHandler("guestPayError", "");
-      }, 3000);
     } else {
       dataHandler("showCreditModal", !state.showCreditModal);
     }
