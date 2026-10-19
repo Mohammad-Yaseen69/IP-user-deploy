@@ -11,8 +11,8 @@ const SendActionCard = ({
   showDesc,
   active,
   sendPaymentType,
-  right = "-20%",
   shrinkWidth,
+  imageStyle = { right: "-20%" },
 }) => {
   const [winWidth, setWinWidth] = useState(window.innerWidth);
 
@@ -54,7 +54,7 @@ const SendActionCard = ({
         setter(setterValue);
       }}
     >
-      <img src={bg} alt={title} className={styles.bg} style={{ right: right }} />
+      <img src={bg} alt={title} className={styles.bg} style={imageStyle} />
       <div
         className={styles.item_dets}
         style={

@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router";
 import { UserContext } from "../../Context/UserContext";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import { useVirtualIbanProcessingStatus, useVirtualIbans } from "../../hooks/useVirtualIban";
@@ -153,6 +154,19 @@ const VirtualBank = () => {
       scrollToIbanDetails();
     }
   }, [activeTab, selectedAccount]);
+
+  // Same gates as TabsNav, so a link can't open a tab the user can't see.
+  const linkableTabs = {
+    "crypto-channels": canViewDetails,
+    ibanassets: canViewDetails,
+    "transaction-history": canViewTransactions,
+    compliance: true,
+  };
+  const location = useLocation();
+  useEffect(() => {
+    const tab = new URLSearchParams(location.search).get("tab");
+    if (linkableTabs[tab]) setActiveTab(tab);
+  }, [location.search, canViewDetails, canViewTransactions]);
 
   useEffect(() => {
     refetch();

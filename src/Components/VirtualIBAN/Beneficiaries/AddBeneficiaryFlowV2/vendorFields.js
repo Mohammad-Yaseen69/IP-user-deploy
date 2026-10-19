@@ -232,6 +232,13 @@ export const BVNK_FIELD_DEFS = {
     placeholder: "0x8f3A...c21E",
     hint: "Sending on the wrong network loses the funds.",
   },
+  registration_number: {
+    label: "Registration number",
+    type: "text",
+    required: true,
+    placeholder: "e.g. 12345678",
+    hint: "Required by the payout provider for crypto payouts.",
+  },
 };
 
 const BVNK_ADDRESS_FIELDS = ["address", "address_line_2", "city", "province_state", "postal_code"];
@@ -268,8 +275,10 @@ const BVNK_SWIFT = {
   ],
 };
 
+/* Unmapped beneficiary fields travel in extras, which is where the provider reads it. */
 const BVNK_CRYPTO = {
-  beneficiary: [],
+  beneficiary: ["registration_number"],
+  requiredBeneficiary: ["registration_number"],
   channel: ["crypto_asset", "crypto_network", "wallet_address"],
   requiredChannel: ["crypto_asset", "crypto_network", "wallet_address"],
 };

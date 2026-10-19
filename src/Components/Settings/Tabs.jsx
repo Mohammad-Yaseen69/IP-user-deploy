@@ -40,6 +40,7 @@ import { ChevronDown } from "react-feather";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import useWindowWidth from "../../utils/useWindowWidth";
 import NextStepModal from "./NextStepModal";
+import { getPendingAdditionalFiles } from "../../utils/Functions/additionalFiles";
 
 const TAB_PARAMS = [
   ["basic", "Basic Info"],
@@ -247,6 +248,32 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
         userDetails?.company?.kyb_status === "verified"
       : userDetails?.user?.kyc_status === "approved";
 
+  // Admin-required additional files / questions lock every tab except the
+  // verification tab (where they are submitted) until they are provided.
+  // The basic-profile lock takes priority, hence the profileCompleted guard.
+  const verificationTabName =
+    account_type === "individual" ? "Identity Verification" : "Business Verification";
+  const hasRequiredAdditionalFiles =
+    profileCompleted === true &&
+    getPendingAdditionalFiles(userDetails).requiredVerification.length > 0;
+
+  useEffect(() => {
+    if (hasRequiredAdditionalFiles && currentTab !== verificationTabName) {
+      setCurrentTab(verificationTabName);
+    }
+  }, [hasRequiredAdditionalFiles, currentTab, verificationTabName]);
+
+  const isTabDisabled = (item) =>
+    (item?.name !== "Basic Info" && profileIncompleteReason === "basic") ||
+    (userDetails?.country?.kyc_required &&
+      item?.name !== "Verification" &&
+      !ft &&
+      !isKycApproved) ||
+    (hasRequiredAdditionalFiles && item?.name !== verificationTabName);
+
+  const tabClassName = (item) =>
+    `${styles.tab} ${currentTab === item?.name ? styles.active : ""} ${isTabDisabled(item) ? styles.disabled : ""} ${userDetails?.country?.kyc_required && item?.name !== "Verification" ? styles.kyc : ""} ${hasRequiredAdditionalFiles && item?.name !== verificationTabName ? styles.required : ""}`;
+
   return (
     <div style={{ overflowX: width < 1000 && "visible" }} className={styles.container}>
       {missingTabsData?.length > 0 && width > 1000 && profileCompleted && (
@@ -256,8 +283,9 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             <div
               style={{ padding: "12px 5px", width: "100%" }}
               key={item?.name}
-              className={`${styles.tab} ${currentTab === item?.name ? styles.active : ""} ${(item?.name !== "Basic Info" && profileIncompleteReason === "basic") || (userDetails?.country?.kyc_required && item?.name !== "Verification" && !ft && !isKycApproved) ? styles.disabled : ""} ${userDetails?.country?.kyc_required && item?.name !== "Verification" ? styles.kyc : ""}`}
+              className={tabClassName(item)}
               onClick={() => {
+                if (isTabDisabled(item)) return;
                 window.history.replaceState(null, null, "");
                 setCurrentTab(item?.name);
                 verifyToken();
@@ -330,12 +358,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
               {tabsData
                 .filter((item) => item?.name.length > 0)
                 .map((item) => {
-                  const isDisabled =
-                    (item?.name !== "Basic Info" && profileIncompleteReason === "basic") ||
-                    (userDetails?.country?.kyc_required &&
-                      item?.name !== "Verification" &&
-                      !ft &&
-                      !isKycApproved);
+                  const isDisabled = isTabDisabled(item);
                   return (
                     <div
                       key={item?.name}
@@ -413,16 +436,9 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
         .map((item) => (
           <div
             key={item?.name}
-            className={`${styles.tab} ${currentTab === item?.name ? styles.active : ""} ${(item?.name !== "Basic Info" && profileIncompleteReason === "basic") || (userDetails?.country?.kyc_required && item?.name !== "Verification" && !ft && !isKycApproved) ? styles.disabled : ""} ${userDetails?.country?.kyc_required && item?.name !== "Verification" ? styles.kyc : ""}`}
+            className={tabClassName(item)}
             onClick={() => {
-              if (
-                (item?.name !== "Basic Info" && profileIncompleteReason === "basic") ||
-                (userDetails?.country?.kyc_required &&
-                  item?.name !== "Verification" &&
-                  !ft &&
-                  !isKycApproved)
-              )
-                return;
+              if (isTabDisabled(item)) return;
               window.history.replaceState(null, null, "");
               setCurrentTab(item?.name);
               verifyToken();
@@ -438,6 +454,22 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
           >
             <img alt="asdfaf" src={item?.name !== currentTab ? item?.active_icon : item?.icon} />
             {t(item?.name)}
+            {item?.name === verificationTabName && hasRequiredAdditionalFiles ? (
+              <div
+                style={{
+                  height: "5px",
+                  width: "5px",
+                  background: "red",
+                  borderRadius: "5px",
+                  position: "absolute",
+                  top: "50%",
+                  right: "10px",
+                  transform: "translateY(-50%)",
+                }}
+              />
+            ) : (
+              ""
+            )}
             {item?.name.toLowerCase().includes("basic") && profileIncompleteReason === "basic" ? (
               <div
                 style={{

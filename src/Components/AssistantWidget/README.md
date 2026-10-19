@@ -127,10 +127,14 @@ Append to `PAGES` in `knowledge/pages.js`:
     id: "snake_case_id",
     title: "Human Readable",
     route: "/some-page?tab=x",   // stays in the browser
-    permission: "some.view",     // optional; omit if everyone may open it
+    permission: "some.view",     // optional; an array means any of them
     description: "What the page does, in prose — the agent reads this to decide when to offer it.",
 }
 ```
+
+Optional account flags: `agentOnly`, `businessOnly`, `individualOnly`, `thirdPartyOnly`.
+`canOpenPage` in `pages.js` applies all gates, for both the list and navigation.
+Keep descriptions to what and where; step-by-step how-to belongs in the user manual the bot searches.
 
 Nothing to redeploy on the bot side: the list is sent with each request. The
 registry tests fail on a duplicate id, a non-snake_case id, a relative route or
