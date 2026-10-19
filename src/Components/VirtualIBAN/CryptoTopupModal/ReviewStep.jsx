@@ -139,7 +139,7 @@ const ReviewStep = ({ amount, feeDetails, selectedIban, onRefreshFee, isRefreshi
         <div className={styles.reviewRow}>
           <div className={styles.reviewRowLabel}>{t("Exchange Rate")}</div>
           <div className={styles.reviewRowValue}>
-            {t("1 USDT =")}
+            1&nbsp;{t("USDT")}&nbsp;= &nbsp;
             {rateVal}
             &nbsp;{t("EUR")}
           </div>
