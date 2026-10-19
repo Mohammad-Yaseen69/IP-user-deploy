@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { Card, CardBody } from "reactstrap";
 import styles from "./styles/balance.module.css";
 import { useTranslation } from "react-i18next";
@@ -6,18 +6,7 @@ import { UserContext } from "../../Context/UserContext";
 
 const BalanceComponent = () => {
   const { t } = useTranslation();
-  const {
-    available: totalBalance = 0,
-    balanceLoading: isLoading,
-    getUserBalances,
-    userDetails,
-  } = useContext(UserContext);
-
-  useEffect(() => {
-    if (userDetails?._id) {
-      getUserBalances?.();
-    }
-  }, [userDetails?._id]);
+  const { available: totalBalance = 0, balanceLoading: isLoading } = useContext(UserContext);
 
   return (
     <Card

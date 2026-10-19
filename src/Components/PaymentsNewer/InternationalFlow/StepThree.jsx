@@ -38,7 +38,8 @@ const StepThree = ({ data, dataHandler }) => {
   };
 
   const dynamicReasons = useMemo(() => {
-    if (data?.payoutChannel?.vendor === "thunes" || !data.neemaReasons) {
+    // onafriq too
+    if (data?.payoutChannel?.vendor !== "neema" || !data.neemaReasons) {
       return thunesReasons;
     }
     return data.neemaReasons;
