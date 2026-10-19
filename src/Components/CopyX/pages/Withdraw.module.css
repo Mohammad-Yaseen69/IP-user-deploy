@@ -1,0 +1,33 @@
+/* WEB-10 · Withdraw available cash. Shared tokens come from styles/copyTrading.module.css (.page scope). */
+
+/* The first section sits 40px below the intro block in the design (section top padding is 20px). */
+.intro {
+  padding-bottom: 20px;
+}
+
+/* Cash vs positions: available cash as a share of equity. */
+.cashBar {
+  position: relative;
+  height: 10px;
+  border-radius: 5px;
+  background: #f1f0f5;
+  overflow: hidden;
+}
+.cashFill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 10px;
+  background: var(--ct-success);
+}
+
+/* The amount block uses a 12px rhythm instead of the 20px section gap. */
+.amountBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: -8px;
+}
+.amountBody > [role="radiogroup"] {
+  align-self: flex-start;
+}

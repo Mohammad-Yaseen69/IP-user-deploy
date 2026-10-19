@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useReducer,
   useRef,
   useState,
@@ -39,6 +40,8 @@ import {
   isDraftFileRef,
 } from "../../../utils/Data/businessDraft";
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
+import { useRiskPreview } from "../../../hooks/useRiskPreview";
+import { RiskPreviewContext } from "./riskPreviewContext";
 
 const STEPS_BUSINESS = [
   "landing",
@@ -68,6 +71,20 @@ const DRAFT_COMPANY_KEYS = [
   "tradingName",
   "website",
   "mainContact",
+];
+
+const RISK_PREVIEW_STEPS = ["company", "activity", "ownership", "documents", "review"];
+const RISK_ACTIVITY_KEYS = [
+  "industry",
+  "industryReference",
+  "countries",
+  "originCountries",
+  "destinationCountries",
+  "services",
+  "paymentRails",
+  "currencies",
+  "monthlyVolume",
+  "maximumTransaction",
 ];
 
 const initialState = {
@@ -547,6 +564,34 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     onStepChange?.(state.step);
   }, [state.step, onStepChange]);
 
+  const riskPayload = useMemo(
+    () => ({
+      company: { countryOfIncorporation: state.company.countryOfIncorporation },
+      activity: RISK_ACTIVITY_KEYS.reduce(
+        (acc, key) => ({ ...acc, [key]: state.activity[key] }),
+        {},
+      ),
+      owners: (state.ownership.owners || []).map(
+        ({ type, fullName, email, ownershipPercent, isPep }) => ({
+          type,
+          fullName,
+          email,
+          ownershipPercent,
+          isPep,
+        }),
+      ),
+    }),
+    [state.company.countryOfIncorporation, state.activity, state.ownership.owners],
+  );
+  const riskPreview = useRiskPreview(
+    riskPayload,
+    draftEnabled && RISK_PREVIEW_STEPS.includes(state.step),
+  );
+  const riskPreviewValue = useMemo(
+    () => ({ data: riskPreview.data, isFetching: riskPreview.isFetching }),
+    [riskPreview.data, riskPreview.isFetching],
+  );
+
   if (loadingStatus || (draftEnabled && !draftHydrated)) {
     return (
       <div
@@ -564,7 +609,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
   }
 
   return (
-    <div>
+    <RiskPreviewContext.Provider value={riskPreviewValue}>
       {state.step === "landing" && (
         <div className={styles.mainContent}>
           <div className={styles.leftSection}>
@@ -834,7 +879,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
           />
         </ModalBody>
       </Modal>
-    </div>
+    </RiskPreviewContext.Provider>
   );
 });
 
