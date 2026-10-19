@@ -169,6 +169,8 @@ const initialState = {
   ex_extra_error: "",
   conversion_in: "",
   payerRequiredFields: {},
+  payerPurposes: null,
+  requiredDocFiles: {},
   transactionStatus: false,
   transactionType: "",
   flow: "",
@@ -298,6 +300,39 @@ const InternationFlow = ({
     retry: 3,
   });
 
+  const isThunesPayout = internationalData.payoutChannel?.vendor?.toLowerCase() === "thunes";
+
+  // Documents (e.g. invoice) the selected Thunes payer requires for this transaction type
+  const { data: payerRequiredDocuments = [] } = useQuery({
+    queryKey: [
+      "payerRequiredDocuments",
+      internationalData.country?.alpha3,
+      internationalData.payoutChannel?.id,
+      internationalData.flow,
+      internationalData.payer?.id,
+    ],
+    queryFn: async () => {
+      const res = await apiWrapper({
+        endpoint: `/api/payment/get-required-fields/${internationalData.country?.alpha3}/${internationalData.payoutChannel?.id}/${internationalData.flow}?destinationType=${internationalData.payoutChannel?.id}&payer_id=${internationalData.payer?.id}`,
+      });
+      const documents = res?.data?.required_documents;
+      return Array.isArray(documents) ? documents.filter((doc) => doc?.name) : [];
+    },
+    enabled:
+      isThunesPayout &&
+      !!internationalData.country?.alpha3 &&
+      !!internationalData.payoutChannel?.id &&
+      !!internationalData.flow &&
+      !!internationalData.payer?.id,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  // Purposes and required documents belong to one payer; drop them as soon as the payer changes
+  useEffect(() => {
+    updateInternationalData("payerPurposes", null);
+    updateInternationalData("requiredDocFiles", {});
+  }, [internationalData.payer?.id, internationalData.flow]);
+
   const { vendorBalance, vendorBalanceInUSD } = useVendorBalance(
     internationalData.currency,
     isOnafriq(internationalData.payoutChannel?.vendor)
@@ -391,7 +426,11 @@ const InternationFlow = ({
         return !internationalData.beneficiary?._id && !internationalData.beneficiary?.isNew;
 
       case 3:
-        return internationalData.reason.length < 1 || !internationalData.reason;
+        return (
+          internationalData.reason.length < 1 ||
+          !internationalData.reason ||
+          payerRequiredDocuments.some((doc) => !internationalData.requiredDocFiles?.[doc.name])
+        );
 
       case 4:
         return (
@@ -427,7 +466,7 @@ const InternationFlow = ({
       default:
         return false;
     }
-  }, [internationalData, subStep]);
+  }, [internationalData, subStep, payerRequiredDocuments]);
 
   const getCurrency = async () => {
     try {
@@ -440,6 +479,11 @@ const InternationFlow = ({
       const dec = await decryptData(res.data.data);
       updateInternationalData("recipient_currency", dec?.data?.destination_currency);
       updateInternationalData("payerRequiredFields", dec?.data?.payer_required_fields);
+      const purposes = dec?.data?.purpose_of_remittance_values_accepted;
+      updateInternationalData(
+        "payerPurposes",
+        isThunesPayout && Array.isArray(purposes) && purposes.length > 0 ? purposes : null,
+      );
       return dec?.data?.destination_currency;
     } catch {
       // payer carries currency
@@ -1634,6 +1678,10 @@ const InternationFlow = ({
         Array.from(internationalData.files).forEach((image) => {
           data.append("files", image);
         });
+        payerRequiredDocuments.forEach((doc) => {
+          const docFile = internationalData.requiredDocFiles?.[doc.name];
+          if (docFile) data.append("files", docFile);
+        });
         data.append("type", internationalData.codeType);
         data.append("description", internationalData.comment);
       } else {
@@ -2059,7 +2107,12 @@ const InternationFlow = ({
                       />
                     ))}
                   {subStep === 3 && (
-                    <StepThree data={internationalData} dataHandler={updateInternationalData} />
+                    <StepThree
+                      data={internationalData}
+                      dataHandler={updateInternationalData}
+                      purposeCodes={internationalData.payerPurposes}
+                      requiredDocuments={payerRequiredDocuments}
+                    />
                   )}
                   {subStep === 4 && (
                     <StepFour
@@ -2354,6 +2407,8 @@ const InternationFlow = ({
                             <StepThree
                               data={internationalData}
                               dataHandler={updateInternationalData}
+                              purposeCodes={internationalData.payerPurposes}
+                              requiredDocuments={payerRequiredDocuments}
                             />
                           )}
                           {subStep === 4 && (
