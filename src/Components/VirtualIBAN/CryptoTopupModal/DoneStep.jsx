@@ -66,7 +66,7 @@ const DoneStep = ({ confirmData, selectedIban, onOpenCheckout }) => {
           <div className={styles.reviewRowLabel}>{t("Payable Amount")}</div>
           <div className={styles.reviewRowValue}>
             ${totalAmount}
-            {t("USDT")}
+            &nbsp;{t("USDT")}
           </div>
         </div>
 
@@ -74,7 +74,7 @@ const DoneStep = ({ confirmData, selectedIban, onOpenCheckout }) => {
           <div className={styles.reviewRowLabel}>{t("IBAN Receives")}</div>
           <div className={styles.reviewRowValue} style={{ color: "#10b981", fontWeight: 700 }}>
             €{recipientEUR}
-            {t("EUR")}
+            &nbsp;{t("EUR")}
           </div>
         </div>
 

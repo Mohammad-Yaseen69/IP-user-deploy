@@ -116,7 +116,7 @@ const ReviewStep = ({ amount, feeDetails, selectedIban, onRefreshFee, isRefreshi
           <div className={styles.reviewRowLabel}>{t("Gross Deposit Amount")}</div>
           <div className={styles.reviewRowValue}>
             ${totalVal}
-            {t("USDT")}
+            &nbsp;{t("USDT")}
           </div>
         </div>
 
@@ -124,7 +124,7 @@ const ReviewStep = ({ amount, feeDetails, selectedIban, onRefreshFee, isRefreshi
           <div className={styles.reviewRowLabel}>{t("Fee")}</div>
           <div className={styles.reviewRowValue} style={{ color: "#d92d20" }}>
             -${feeVal}
-            {t("USDT")}
+            &nbsp;{t("USDT")}
           </div>
         </div>
 
@@ -132,7 +132,7 @@ const ReviewStep = ({ amount, feeDetails, selectedIban, onRefreshFee, isRefreshi
           <div className={styles.reviewRowLabel}>{t("Net Crypto Amount")}</div>
           <div className={styles.reviewRowValue}>
             ${netVal}
-            {t("USDT")}
+            &nbsp;{t("USDT")}
           </div>
         </div>
 
@@ -141,7 +141,7 @@ const ReviewStep = ({ amount, feeDetails, selectedIban, onRefreshFee, isRefreshi
           <div className={styles.reviewRowValue}>
             {t("1 USDT =")}
             {rateVal}
-            {t("EUR")}
+            &nbsp;{t("EUR")}
           </div>
         </div>
 
@@ -154,7 +154,7 @@ const ReviewStep = ({ amount, feeDetails, selectedIban, onRefreshFee, isRefreshi
             style={{ fontWeight: 700, color: "#5926f0", fontSize: "16px" }}
           >
             €{recipientVal}
-            {t("EUR")}
+            &nbsp;{t("EUR")}
           </div>
         </div>
 

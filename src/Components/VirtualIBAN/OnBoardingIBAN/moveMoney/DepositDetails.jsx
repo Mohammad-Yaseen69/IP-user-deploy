@@ -138,7 +138,7 @@ const DepositDetails = () => {
               </div>
               <p className={styles.remittanceExample}>
                 {t("Example")}: {reference}
-                {t("- ABC Trading Ltd")}
+                &nbsp;{t("- ABC Trading Ltd")}
               </p>
             </div>
 

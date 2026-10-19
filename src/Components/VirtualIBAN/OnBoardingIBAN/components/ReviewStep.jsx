@@ -269,7 +269,7 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType, currentS
                   <label>{t("Average transaction")}</label>
                   <span>
                     {formatVal(activity.averageTransaction)}
-                    {t("EUR")}
+                    &nbsp;{t("EUR")}
                   </span>
                 </div>
               )}
@@ -279,7 +279,7 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType, currentS
                   <label>{t("Maximum transaction")}</label>
                   <span>
                     {formatVal(activity.maximumTransaction)}
-                    {t("EUR")}
+                    &nbsp;{t("EUR")}
                   </span>
                 </div>
               )}
@@ -289,7 +289,7 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType, currentS
                   <label>{t("Average balance")}</label>
                   <span>
                     {formatVal(activity.averageBalance)}
-                    {t("EUR")}
+                    &nbsp;{t("EUR")}
                   </span>
                 </div>
               )}
@@ -299,7 +299,7 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType, currentS
                   <label>{t("Incoming payments / month")}</label>
                   <span>
                     {formatVal(activity.incomingPayments)}
-                    {t("EUR")}
+                    &nbsp;{t("EUR")}
                   </span>
                 </div>
               )}
@@ -309,7 +309,7 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType, currentS
                   <label>{t("Outgoing payments / month")}</label>
                   <span>
                     {formatVal(activity.outgoingPayments)}
-                    {t("EUR")}
+                    &nbsp;{t("EUR")}
                   </span>
                 </div>
               )}
