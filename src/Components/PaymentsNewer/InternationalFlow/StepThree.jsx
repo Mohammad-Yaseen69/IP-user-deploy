@@ -4,31 +4,27 @@ import thunesReasons from "./thunesReasons.json";
 import file from "../files/file.svg";
 import { useEffect, useMemo, useState } from "react";
 import useWindowWidth from "../../../utils/useWindowWidth";
-
-// Documents a Thunes payer can ask for (get-required-fields -> required_documents)
-const REQUIRED_DOCUMENTS = {
-  invoice: {
-    label: "Invoice",
-    hint: "Upload the invoice for this payment.",
-  },
-  purchase_order: {
-    label: "Purchase order",
-    hint: "Upload the purchase order linked to this payment.",
-  },
-  contract: {
-    label: "Contract",
-    hint: "Upload the signed contract covering this payment.",
-  },
-};
-
-const MAX_DOCUMENT_SIZE = 10 * 1024 * 1024;
+import {
+  THUNES_ACCEPT,
+  THUNES_DOCUMENT_TYPES,
+  THUNES_MAX_DOCUMENTS,
+  validateThunesFile,
+} from "./thunesDocuments";
 
 const humanizeCode = (code = "") => {
   const text = String(code).toLowerCase().replaceAll("_", " ").trim();
   return text.charAt(0).toUpperCase() + text.slice(1);
 };
 
-const StepThree = ({ data, dataHandler, purposeCodes, requiredDocuments = [] }) => {
+// purposeCodes, requiredDocuments and thunesDocuments are only passed by the international flow
+// for Thunes payouts; every other flow using this step keeps the default behaviour.
+const StepThree = ({
+  data,
+  dataHandler,
+  purposeCodes,
+  requiredDocuments = [],
+  thunesDocuments = false,
+}) => {
   const { t } = useTranslation();
   const [error, setError] = useState("");
   const [documentErrors, setDocumentErrors] = useState({});
@@ -36,30 +32,43 @@ const StepThree = ({ data, dataHandler, purposeCodes, requiredDocuments = [] }) 
 
   const documents = requiredDocuments.map((doc) => ({
     name: doc.name,
-    label: REQUIRED_DOCUMENTS[doc.name]?.label || humanizeCode(doc.name),
-    hint: REQUIRED_DOCUMENTS[doc.name]?.hint,
+    label: THUNES_DOCUMENT_TYPES[doc.name]?.label || humanizeCode(doc.name),
+    hint: THUNES_DOCUMENT_TYPES[doc.name]?.hint,
   }));
   const documentFiles = data.requiredDocFiles || {};
+  const pickedDocumentCount = documents.filter((doc) => documentFiles[doc.name]).length;
+  const tooManyDocumentsError = t("You can attach up to 3 documents.");
 
   const handleDocumentChange = (name, e) => {
     const selected = e.target.files?.[0];
     e.target.value = "";
     if (!selected) return;
 
-    const isAllowedType = selected.type.startsWith("image/") || selected.type === "application/pdf";
-    if (!isAllowedType || selected.size > MAX_DOCUMENT_SIZE) {
-      setDocumentErrors((prev) => ({
-        ...prev,
-        [name]: t("Please upload a PDF or image file of up to 10 MB."),
-      }));
-      return;
-    }
+    const otherDocuments = pickedDocumentCount - (documentFiles[name] ? 1 : 0);
+    const fileError =
+      validateThunesFile(selected, t) ||
+      (otherDocuments + data.files.length + 1 > THUNES_MAX_DOCUMENTS ? tooManyDocumentsError : "");
+    setDocumentErrors((prev) => ({ ...prev, [name]: fileError }));
+    if (fileError) return;
 
-    setDocumentErrors((prev) => ({ ...prev, [name]: "" }));
     dataHandler("requiredDocFiles", { ...documentFiles, [name]: selected });
   };
 
+  const handleThunesFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    e.target.value = "";
+    const fileError =
+      files.map((item) => validateThunesFile(item, t)).find(Boolean) ||
+      (files.length + pickedDocumentCount > THUNES_MAX_DOCUMENTS ? tooManyDocumentsError : "");
+    setError(fileError);
+    if (!fileError) dataHandler("files", files);
+  };
+
   const handleFileChange = (e) => {
+    if (thunesDocuments) {
+      handleThunesFileChange(e);
+      return;
+    }
     const files = Array.from(e.target.files);
     let totalSize = 0;
     let imageCount = 0;
@@ -165,7 +174,7 @@ const StepThree = ({ data, dataHandler, purposeCodes, requiredDocuments = [] }) 
                 id="files"
                 hidden
                 multiple
-                accept="image/*,video/*"
+                accept={thunesDocuments ? THUNES_ACCEPT : "image/*,video/*"}
                 onChange={handleFileChange}
               />
             </label>
@@ -188,7 +197,11 @@ const StepThree = ({ data, dataHandler, purposeCodes, requiredDocuments = [] }) 
                       {t(doc.label)} <span className={styles.required_star}>*</span>
                     </strong>
                     <span className={styles.required_doc_hint}>
-                      {selected ? selected.name : doc.hint ? t(doc.hint) : t("PDF or image")}
+                      {selected
+                        ? selected.name
+                        : doc.hint
+                          ? t(doc.hint)
+                          : t("PDF, Word, Excel, JPG, PNG, BMP, TXT or RTF")}
                     </span>
                     {documentErrors[doc.name] && (
                       <span className={styles.error}>{documentErrors[doc.name]}</span>
@@ -203,7 +216,7 @@ const StepThree = ({ data, dataHandler, purposeCodes, requiredDocuments = [] }) 
                       type="file"
                       id={inputId}
                       hidden
-                      accept="image/*,application/pdf"
+                      accept={THUNES_ACCEPT}
                       onChange={(e) => handleDocumentChange(doc.name, e)}
                     />
                   </label>

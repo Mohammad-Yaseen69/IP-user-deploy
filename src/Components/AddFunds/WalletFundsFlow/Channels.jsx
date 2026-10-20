@@ -125,8 +125,9 @@ const Channels = ({ setChannel, channel, thunesServices, thunesProviders = [] })
                 if (item?.coming_soon) return;
                 if (item?.value === "crypto") {
                   const isApproved =
-                    userDetails?.company?.kyb_status ||
-                    userDetails?.company?.kyc_status === "approved";
+                    userDetails?.account_type === "individual"
+                      ? userDetails?.user?.kyc_status === "approved"
+                      : userDetails?.company?.kyb_status === "approved";
 
                   if (!isApproved) {
                     setShowVerificationModal(true);

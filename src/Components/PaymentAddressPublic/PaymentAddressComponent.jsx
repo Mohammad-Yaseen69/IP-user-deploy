@@ -362,11 +362,18 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
           " " +
           state.currentWallet?.currency?.code,
       );
-    } else if (state.amount > limits?.topup_max_amount) {
+    } else if (limits?.topup_max_amount === 0) {
       toast.error(
         t(
           "The recipient has reached their incoming/balance limit and cannot receive this amount at the moment.",
         ),
+      );
+    } else if (state.amount > limits?.topup_max_amount) {
+      toast.error(
+        t("Maximum amount for guest pay is ") +
+          formatCurrency(limits?.topup_max_amount, true) +
+          " " +
+          state.currentWallet?.currency?.code,
       );
     } else {
       dataHandler("showCreditModal", !state.showCreditModal);
