@@ -48,6 +48,7 @@ import { usePermission } from "../../../hooks/GeneralUse/usePermission";
 import {
   appendThunesDocuments,
   getThunesDocumentEntries,
+  hasThunesRequiredDocuments,
   isThunesDocumentType,
 } from "./thunesDocuments";
 
@@ -424,7 +425,11 @@ const InternationFlow = ({
         return (
           internationalData.reason.length < 1 ||
           !internationalData.reason ||
-          payerRequiredDocuments.some((doc) => !internationalData.requiredDocFiles?.[doc.name])
+          !hasThunesRequiredDocuments({
+            requiredDocuments: payerRequiredDocuments,
+            requiredDocFiles: internationalData.requiredDocFiles,
+            files: internationalData.files,
+          })
         );
 
       case 4:
@@ -1552,6 +1557,7 @@ const InternationFlow = ({
         data.append("token", internationalData.created_transaction?.token);
         data.append("otp", otp);
         // required documents go under their type (invoice, contract, ...); optional ones as "files"
+        // (one required type: every attached file goes under that type)
         appendThunesDocuments(data, thunesDocumentEntries);
         data.append("type", internationalData.codeType);
         data.append("description", internationalData.comment);

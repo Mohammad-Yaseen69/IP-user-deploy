@@ -77,17 +77,42 @@ export const validateThunesFile = (file, t) => {
   return "";
 };
 
+// How step 3 collects documents, based on how many the payer requires:
+// "optional" - none required, Attach Files sends everything as "files"
+// "single"   - one required, Attach Files (1 to 3 files) sends everything under that type
+// "multiple" - more than one required, one upload per type and no extra files
+export const getThunesDocumentMode = (requiredDocuments = []) => {
+  if (requiredDocuments.length === 1) return "single";
+  if (requiredDocuments.length > 1) return "multiple";
+  return "optional";
+};
+
+export const hasThunesRequiredDocuments = ({
+  requiredDocuments = [],
+  requiredDocFiles = {},
+  files = [],
+}) => {
+  const mode = getThunesDocumentMode(requiredDocuments);
+  if (mode === "single") return files.length > 0;
+  if (mode === "multiple") return requiredDocuments.every((doc) => requiredDocFiles[doc.name]);
+  return true;
+};
+
 // [{ field, file }] for every document picked in step 3, in the order they are sent
 export const getThunesDocumentEntries = ({
   requiredDocuments = [],
   requiredDocFiles = {},
   files = [],
-}) => [
-  ...requiredDocuments
-    .filter((doc) => requiredDocFiles[doc.name])
-    .map((doc) => ({ field: doc.name, file: requiredDocFiles[doc.name] })),
-  ...Array.from(files).map((file) => ({ field: THUNES_OPTIONAL_FILES_FIELD, file })),
-];
+}) => {
+  const mode = getThunesDocumentMode(requiredDocuments);
+  if (mode === "multiple") {
+    return requiredDocuments
+      .filter((doc) => requiredDocFiles[doc.name])
+      .map((doc) => ({ field: doc.name, file: requiredDocFiles[doc.name] }));
+  }
+  const field = mode === "single" ? requiredDocuments[0].name : THUNES_OPTIONAL_FILES_FIELD;
+  return Array.from(files).map((file) => ({ field, file }));
+};
 
 export const appendThunesDocuments = (formData, entries) => {
   entries.forEach(({ field, file }) => formData.append(field, file));

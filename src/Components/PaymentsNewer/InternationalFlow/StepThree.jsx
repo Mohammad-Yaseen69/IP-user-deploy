@@ -8,6 +8,7 @@ import {
   THUNES_ACCEPT,
   THUNES_DOCUMENT_TYPES,
   THUNES_MAX_DOCUMENTS,
+  getThunesDocumentMode,
   validateThunesFile,
 } from "./thunesDocuments";
 
@@ -35,6 +36,9 @@ const StepThree = ({
     label: THUNES_DOCUMENT_TYPES[doc.name]?.label || humanizeCode(doc.name),
     hint: THUNES_DOCUMENT_TYPES[doc.name]?.hint,
   }));
+  // one required type is collected through Attach Files; several get one upload each
+  const documentMode = getThunesDocumentMode(documents);
+  const singleDocument = documentMode === "single" ? documents[0] : null;
   const documentFiles = data.requiredDocFiles || {};
   const pickedDocumentCount = documents.filter((doc) => documentFiles[doc.name]).length;
   const tooManyDocumentsError = t("You can attach up to 3 documents.");
@@ -166,23 +170,40 @@ const StepThree = ({
             >
               {data.comment.length}/120
             </div>
-            <label htmlFor="files" className={styles.files}>
-              <span style={{ whiteSpace: "nowrap" }}>{t("Attach Files")}</span>
-              <img src={file} alt="" />
-              <input
-                type="file"
-                id="files"
-                hidden
-                multiple
-                accept={thunesDocuments ? THUNES_ACCEPT : "image/*,video/*"}
-                onChange={handleFileChange}
-              />
-            </label>
+            {documentMode !== "multiple" && (
+              <label htmlFor="files" className={styles.files}>
+                <span style={{ whiteSpace: "nowrap" }}>{t("Attach Files")}</span>
+                <img src={file} alt="" />
+                <input
+                  type="file"
+                  id="files"
+                  hidden
+                  multiple
+                  accept={thunesDocuments ? THUNES_ACCEPT : "image/*,video/*"}
+                  onChange={handleFileChange}
+                />
+              </label>
+            )}
           </div>
         </div>
+        {singleDocument && (
+          <div className={styles.required_doc_info}>
+            <strong>
+              {t(singleDocument.label)} <span className={styles.required_star}>*</span>
+            </strong>
+            {singleDocument.hint && (
+              <span className={styles.required_doc_hint}>{t(singleDocument.hint)}</span>
+            )}
+            <span className={styles.required_doc_hint}>
+              {t(
+                "Attach 1 to 3 files: PDF, Word, Excel, JPG, PNG, BMP, TXT or RTF, up to 8 MB each.",
+              )}
+            </span>
+          </div>
+        )}
         {error && <p className={styles.error}>{error}</p>}
 
-        {documents.length > 0 && (
+        {documentMode === "multiple" && (
           <div className={styles.required_docs}>
             <p className={styles.required_note}>
               {t("This payer requires the following documents for this transfer.")}
