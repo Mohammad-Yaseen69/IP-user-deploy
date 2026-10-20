@@ -5811,5 +5811,6 @@
   "Each document must be 8 MB or smaller.": "Each document must be 8 MB or smaller.",
   "is not an accepted file type. Use PDF, Word, Excel, JPG, PNG, BMP, TXT or RTF.": "is not an accepted file type. Use PDF, Word, Excel, JPG, PNG, BMP, TXT or RTF.",
   "You can attach up to 3 documents.": "You can attach up to 3 documents.",
-  "PDF, Word, Excel, JPG, PNG, BMP, TXT or RTF": "PDF, Word, Excel, JPG, PNG, BMP, TXT or RTF"
+  "PDF, Word, Excel, JPG, PNG, BMP, TXT or RTF": "PDF, Word, Excel, JPG, PNG, BMP, TXT or RTF",
+  "Attach 1 to 3 files: PDF, Word, Excel, JPG, PNG, BMP, TXT or RTF, up to 8 MB each.": "Attach 1 to 3 files: PDF, Word, Excel, JPG, PNG, BMP, TXT or RTF, up to 8 MB each."
 }
