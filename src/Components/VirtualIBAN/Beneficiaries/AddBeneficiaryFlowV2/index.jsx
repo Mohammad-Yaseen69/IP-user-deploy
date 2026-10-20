@@ -17,6 +17,7 @@ import {
   buildBeneficiaryPayload,
   buildBeneficiaryUpdatePayload,
   buildChannelPayload,
+  EXTRAS_ALIASES,
   prefillBeneficiaryBag,
   prefillEditBag,
 } from "./buildPayloads";
@@ -301,9 +302,18 @@ const AddBeneficiaryFlowV2 = ({
   }, []);
 
   const setBeneficiaryField = useCallback((name, value, patch = {}) => {
+    const aliasesKeys = EXTRAS_ALIASES[name];
+    let keys = {};
+    if (aliasesKeys) {
+      aliasesKeys.forEach((x) => {
+        keys = { ...keys, [x]: value };
+      });
+    } else {
+      keys = { [name]: value };
+    }
     setForm((prev) => ({
       ...prev,
-      beneficiary: { ...prev.beneficiary, ...patch, [name]: value },
+      beneficiary: { ...prev.beneficiary, ...patch, ...keys },
     }));
     setErrors((prev) =>
       prev.beneficiary?.[name]
