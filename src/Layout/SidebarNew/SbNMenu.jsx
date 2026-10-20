@@ -76,14 +76,6 @@ export const MENU = [
         permission: "analytics.view",
       },
       {
-        title: "Pay Via Social",
-        icon: <img loading="lazy" src={payviasocial_unactive} style={{ marginRight: "12px" }} />,
-        activeIcon: <img loading="lazy" src={payviasocial} style={{ marginRight: "12px" }} />,
-        type: "link",
-        url: `${window.location.origin}/pay-via-social`,
-        permission: "pay-via-social.view",
-      },
-      {
         title: "Accounts & Assets",
         type: "text",
       },
@@ -192,6 +184,14 @@ export const MENU = [
         type: "link",
         url: `${window.location.origin}/other-transactions`,
         permission: "schedules.view",
+      },
+      {
+        title: "Pay Via Social",
+        icon: <img loading="lazy" src={payviasocial_unactive} style={{ marginRight: "12px" }} />,
+        activeIcon: <img loading="lazy" src={payviasocial} style={{ marginRight: "12px" }} />,
+        type: "link",
+        url: `${window.location.origin}/pay-via-social`,
+        permission: "pay-via-social.view",
       },
       {
         title: "Payments Tools",
