@@ -45,6 +45,11 @@ import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
 import SelectSender from "./SelectSender";
 import { getBeneficiaryDisplayName } from "./beneficiaryHelpers";
 import { usePermission } from "../../../hooks/GeneralUse/usePermission";
+import {
+  appendThunesDocuments,
+  getThunesDocumentEntries,
+  isThunesDocumentType,
+} from "./thunesDocuments";
 
 const leftSideContent = [
   "Select Transaction Type",
@@ -291,7 +296,10 @@ const InternationFlow = ({
         endpoint: `/api/payment/get-required-fields/${internationalData.country?.alpha3}/${internationalData.payoutChannel?.id}/${internationalData.flow}?destinationType=${internationalData.payoutChannel?.id}&payer_id=${internationalData.payer?.id}`,
       });
       const documents = res?.data?.required_documents;
-      return Array.isArray(documents) ? documents.filter((doc) => doc?.name) : [];
+      // Only types Thunes accepts as upload field names; anything else would be rejected on confirm
+      return Array.isArray(documents)
+        ? documents.filter((doc) => isThunesDocumentType(doc?.name))
+        : [];
     },
     enabled:
       isThunesPayout &&
@@ -302,11 +310,28 @@ const InternationFlow = ({
     staleTime: 5 * 60 * 1000,
   });
 
-  // Purposes and required documents belong to one payer; drop them as soon as the payer changes
   useEffect(() => {
     updateInternationalData("payerPurposes", null);
     updateInternationalData("requiredDocFiles", {});
+    updateInternationalData("files", []);
   }, [internationalData.payer?.id, internationalData.flow]);
+
+  const thunesDocumentEntries = isThunesPayout
+    ? getThunesDocumentEntries({
+        requiredDocuments: payerRequiredDocuments,
+        requiredDocFiles: internationalData.requiredDocFiles,
+        files: internationalData.files,
+      })
+    : [];
+
+  // Card, PayPal and mobile wallet keep their JSON body; it only becomes multipart when
+  // there are Thunes documents to attach.
+  const withThunesDocuments = (encryptedPayload) => {
+    if (!thunesDocumentEntries.length) return { data: encryptedPayload };
+    const form = new FormData();
+    form.append("data", encryptedPayload);
+    return appendThunesDocuments(form, thunesDocumentEntries);
+  };
 
   const { vendorBalance, vendorBalanceInUSD } = useVendorBalance(
     internationalData.currency,
@@ -1137,7 +1162,7 @@ const InternationFlow = ({
 
       const res = await axios.post(
         `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/initiat-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction`,
-        { data: enc },
+        withThunesDocuments(enc),
         {
           headers: { ...authHeader, "idempotency-key": getKey() },
           timeout: 50000,
@@ -1196,7 +1221,7 @@ const InternationFlow = ({
 
       const res = await axios.post(
         `${import.meta.env.VITE_IP_DEV_API}/api/paypal/initiate-international-${internationalData.payoutChannel?.vendor === "thunes" ? "payment" : "payout"}`,
-        { data: enc },
+        withThunesDocuments(enc),
         { headers: { ...authHeader, "idempotency-key": getKey() } },
       );
       const dec = decryptData(res.data.data);
@@ -1248,7 +1273,7 @@ const InternationFlow = ({
 
       const res = await axios.post(
         `${import.meta.env.VITE_IP_DEV_API}/api/collection/international`,
-        { data: enc },
+        withThunesDocuments(enc),
         { headers: { ...authHeader, "idempotency-key": getKey() } },
       );
       const decrypted = decryptData(res.data.data);
@@ -1526,13 +1551,8 @@ const InternationFlow = ({
         data = new FormData();
         data.append("token", internationalData.created_transaction?.token);
         data.append("otp", otp);
-        Array.from(internationalData.files).forEach((image) => {
-          data.append("files", image);
-        });
-        payerRequiredDocuments.forEach((doc) => {
-          const docFile = internationalData.requiredDocFiles?.[doc.name];
-          if (docFile) data.append("files", docFile);
-        });
+        // required documents go under their type (invoice, contract, ...); optional ones as "files"
+        appendThunesDocuments(data, thunesDocumentEntries);
         data.append("type", internationalData.codeType);
         data.append("description", internationalData.comment);
       } else {
@@ -1950,6 +1970,7 @@ const InternationFlow = ({
                       dataHandler={updateInternationalData}
                       purposeCodes={internationalData.payerPurposes}
                       requiredDocuments={payerRequiredDocuments}
+                      thunesDocuments={isThunesPayout}
                     />
                   )}
                   {subStep === 4 && (
@@ -2244,6 +2265,7 @@ const InternationFlow = ({
                               dataHandler={updateInternationalData}
                               purposeCodes={internationalData.payerPurposes}
                               requiredDocuments={payerRequiredDocuments}
+                              thunesDocuments={isThunesPayout}
                             />
                           )}
                           {subStep === 4 && (
