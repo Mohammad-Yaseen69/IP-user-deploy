@@ -12,6 +12,8 @@ import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
 import useVendorBalance from "../../../hooks/Payments/useVendorBalance";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
+import { initiatePaytentlyPayment, usePaytently } from "../../../utils/Functions/paytently";
+import PaytentlyHostedModal from "../../AddFunds/PaytentlyHostedModal";
 import AddBeneficiaryAddressModal from "../../AddBeneficiaryAddressModal";
 import AddBeneficiaryRequiredFields from "../../AddBeneficiaryRequiredFields";
 import errors from "../../AddFunds/TrustPaymentErrors.json";
@@ -50,6 +52,13 @@ import {
   getThunesDocumentEntries,
   isThunesDocumentType,
 } from "./thunesDocuments";
+import {
+  isOnafriq,
+  onafriqConfirmError,
+  onafriqQuoteError,
+  onafriqServiceId,
+  onafriqServiceName,
+} from "./onafriq";
 
 const leftSideContent = [
   "Select Transaction Type",
@@ -72,6 +81,10 @@ const apiErrors = {
     "The transaction couldn't be completed. Please try again or use a different method.",
   feature_not_allowed:
     "This feature is currently disabled for your account. Contact support for assistance.",
+  currency_not_supported:
+    "Card top-up isn't available for this wallet's currency. Please use a different payment method.",
+  amount_too_large:
+    "This amount is too large for card payment. Please enter a smaller amount or use a different method.",
   beneficiary_details_missing:
     "It appears that some required beneficiary details are either missing or incorrect. Please review and update the beneficiary information, ensuring all fields are properly filled, and try again.",
   insufficient_funds: "You don't have enough funds for this transaction.",
@@ -100,6 +113,17 @@ export const apiErrorMessage = (code) => {
   return error ?? false;
 };
 
+// 502 arrives unencrypted
+const decryptError = (err) => {
+  const body = err?.response?.data;
+  try {
+    return decryptData(body?.data);
+  } catch {
+    if (body && typeof body === "object") return body;
+    return { message: typeof body === "string" ? body : err?.message };
+  }
+};
+
 const initialState = {
   formatted_amount: 1.0,
   amount: 1.0,
@@ -121,6 +145,7 @@ const initialState = {
   payment_type: {},
   wallet: {},
   quotation_details: {},
+  quoted_wallet_id: "",
   created_quotation: {},
   created_transaction: {},
   transaction_details: {},
@@ -335,11 +360,16 @@ const InternationFlow = ({
 
   const { vendorBalance, vendorBalanceInUSD } = useVendorBalance(
     internationalData.currency,
-    internationalData.payoutChannel?.vendor?.toLowerCase(),
+    isOnafriq(internationalData.payoutChannel?.vendor)
+      ? ""
+      : internationalData.payoutChannel?.vendor?.toLowerCase(),
     (err) => updateInternationalData("error", err),
   );
 
   const checkVendorBalance = () => {
+    // no float balance
+    if (isOnafriq(internationalData.payoutChannel?.vendor)) return true;
+
     const amount = Number(String(internationalData.amount)?.replaceAll(",", ""));
     if (vendorBalanceInUSD < 4 || amount > vendorBalance) {
       return false;
@@ -437,7 +467,8 @@ const InternationFlow = ({
         );
 
       case 5:
-        if (internationalData.payment_type?.value === "card") {
+        // Paytently collects the card on its own page, so there is nothing to validate here.
+        if (internationalData.payment_type?.value === "card" && !usePaytently) {
           const [contentMonth, contentYear] = internationalData.expiry.split("/").map(Number);
           const currentDate = new Date();
           const currentMonth = currentDate.getMonth() + 1;
@@ -480,6 +511,11 @@ const InternationFlow = ({
       );
       return dec?.data?.destination_currency;
     } catch {
+      // payer carries currency
+      if (isOnafriq(internationalData.payoutChannel?.vendor) && internationalData.payer?.currency) {
+        updateInternationalData("recipient_currency", internationalData.payer.currency);
+        return internationalData.payer.currency;
+      }
       updateInternationalData("exchange_rate_error", "sww");
     }
   };
@@ -508,17 +544,20 @@ const InternationFlow = ({
                   ? "international_cash_pickup"
                   : "";
 
-        const url = `${import.meta.env.VITE_IP_DEV_API}/api/payment/markup-rates?from=${internationalData.currency_wallet?.currency?.code}&to=${destinationCurrency}&amount=${+String(amount)?.replaceAll(",", "")}&fromOrTo=${fromOrTo}&service_name=${service_name}&account_id=${userDetails?._id}&payer_id=${internationalData.payer?.id}&service_id=${internationalData.payoutChannel?.id}&vendor=${internationalData.payoutChannel?.vendor}&transaction_type=${internationalData.flow}`;
+        const onafriq = isOnafriq(internationalData.payoutChannel?.vendor);
+        const service_id = onafriq
+          ? onafriqServiceId(internationalData.payoutChannel)
+          : internationalData.payoutChannel?.id;
+
+        const url = `${import.meta.env.VITE_IP_DEV_API}/api/payment/markup-rates?from=${internationalData.currency_wallet?.currency?.code}&to=${destinationCurrency}&amount=${+String(amount)?.replaceAll(",", "")}&fromOrTo=${fromOrTo}&service_name=${service_name}&account_id=${userDetails?._id}&payer_id=${encodeURIComponent(internationalData.payer?.id ?? "")}&service_id=${service_id}&vendor=${internationalData.payoutChannel?.vendor}&transaction_type=${internationalData.flow}${onafriq ? `&country_iso_code=${internationalData?.country?.alpha3}` : ""}`;
 
         const res = await axios.get(url, { headers: authHeader });
 
         const decrypted = decryptData(res.data.data);
         const exchange_rate_details = {
           exchange_rate: decrypted?.data?.exchangeRate,
-          receiver: {
-            currency: destinationCurrency,
-            amount: decrypted?.data?.recipientAmount,
-          },
+          markupValue: decrypted?.data?.markupValue,
+          receiver: { currency: destinationCurrency, amount: decrypted?.data?.recipientAmount },
           fee: { amount: decrypted?.data?.result?.fee?.value },
           total: decrypted?.data?.result?.total?.value,
           limits_used: {
@@ -607,7 +646,7 @@ const InternationFlow = ({
         //     }
         // }
       } catch (err) {
-        const dec = decryptData(err?.response.data.data);
+        const dec = decryptError(err);
         if (fromOrTo === "from") {
           updateInternationalData("receiving_amount", 0);
           updateInternationalData(
@@ -617,6 +656,20 @@ const InternationFlow = ({
         } else {
           updateInternationalData("conversion_in", destinationCurrency);
           updateInternationalData("amount", 0);
+        }
+
+        const onafriqError =
+          isOnafriq(internationalData.payoutChannel?.vendor) && onafriqQuoteError(dec?.message);
+        if (onafriqError) {
+          updateInternationalData("exchange_rate_error", onafriqError);
+          updateInternationalData(
+            "exchange_rate_error_value",
+            Number(dec?.value ?? 0)?.toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }),
+          );
+          return;
         }
 
         if (typeof dec?.message == "object") {
@@ -706,6 +759,15 @@ const InternationFlow = ({
         token: internationalData?.exchange_rate?.token,
         transaction_type: internationalData.flow,
       };
+
+      if (isOnafriq(internationalData.payoutChannel?.vendor)) {
+        // channel_name mirrors service_name
+        dataa.mode = "SOURCE";
+        dataa.service_id = onafriqServiceId(internationalData.payoutChannel);
+        dataa.service_name = onafriqServiceName(internationalData.payoutChannel);
+        dataa.channel_name = dataa.service_name;
+      }
+
       const encrypted = encryptData(dataa);
 
       const res = await axios.post(
@@ -733,6 +795,9 @@ const InternationFlow = ({
         },
         total: decrypted?.data?.result?.total?.value,
         token: internationalData?.exchange_rate?.token,
+        min_amount:
+          decrypted?.data?.result?.min_amount ?? internationalData?.exchange_rate?.min_amount,
+        max_amount: internationalData?.exchange_rate?.max_amount,
         external_transaction_data: decrypted?.data?.result?.external_transaction_data,
       };
 
@@ -740,6 +805,7 @@ const InternationFlow = ({
         exchange_rate_details.paypal = decrypted?.data?.result?.paypal;
       updateInternationalData("exchange_rate", exchange_rate_details);
       updateInternationalData("quotation_details", decrypted?.data);
+      updateInternationalData("quoted_wallet_id", wallet_id);
 
       logger.info(
         `Exchange rate api called for user ${userDetails?.username} at ${formatDateTime(Date.now())} `,
@@ -766,7 +832,7 @@ const InternationFlow = ({
         }
       }
     } catch (err) {
-      const dec = decryptData(err?.response.data.data);
+      const dec = decryptError(err);
       updateInternationalData(
         "ex_extra_error",
         typeof dec?.message === "string"
@@ -784,6 +850,21 @@ const InternationFlow = ({
           userDetails: userDetails,
         },
       );
+
+      const onafriqError =
+        isOnafriq(internationalData.payoutChannel?.vendor) && onafriqQuoteError(dec?.message);
+      if (onafriqError) {
+        updateInternationalData("exchange_rate_error", onafriqError);
+        updateInternationalData(
+          "exchange_rate_error_value",
+          Number(dec?.value ?? 0)?.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }),
+        );
+        return;
+      }
+
       if (typeof dec?.message == "object") {
         if (dec?.message?.[0]?.code === "1003007") {
           updateInternationalData("exchange_rate_error", "payer_unavailable");
@@ -843,11 +924,11 @@ const InternationFlow = ({
     }
   };
 
-  const getPlainExchangeRate = async (from, to, amount) => {
+  const getPlainExchangeRate = async (from, to, amount, markup = false) => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`,
+        `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}&markupValue=${markup}`,
         {
           headers: authHeader,
         },
@@ -910,6 +991,11 @@ const InternationFlow = ({
     }
   }, [internationalData.payment_type]);
 
+  console.log(
+    internationalData?.exchange_rate,
+    "exchange rate for check",
+    internationalData.amount,
+  );
   useEffect(() => {
     let timeout;
     if (internationalData.payment_type?.value && subStep === 4) {
@@ -924,17 +1010,26 @@ const InternationFlow = ({
       const getAmount = async () => {
         try {
           let amount;
+          const receivingCurrency =
+            internationalData?.recipient_currency ||
+            internationalData?.exchange_rate?.receiver?.currency;
+          const walletCurrency = internationalData?.wallet?.currency?.code;
+
           if (
             internationalData.payment_type?.value === "wallet" &&
             internationalData?.wallet?.currency &&
-            internationalData?.currency_wallet?.currency
-              ?.code /*&& internationalData?.wallet?.currency?.code !== internationalData?.currency_wallet?.currency?.code*/
+            internationalData?.currency_wallet?.currency?.code
           ) {
-            amount = await getPlainExchangeRate(
-              internationalData?.currency_wallet?.currency?.code,
-              internationalData?.wallet?.currency?.code,
-              Number(String(internationalData.amount)?.replaceAll(",", "")),
-            );
+            if (receivingCurrency && walletCurrency && receivingCurrency === walletCurrency) {
+              amount = Number(String(internationalData.receiving_amount)?.replaceAll(",", ""));
+            } else {
+              amount = await getPlainExchangeRate(
+                internationalData?.currency_wallet?.currency?.code,
+                walletCurrency,
+                Number(String(internationalData.amount)?.replaceAll(",", "")),
+                internationalData?.exchange_rate?.markupValue,
+              );
+            }
           } else {
             amount = Number(String(internationalData.amount)?.replaceAll(",", ""));
           }
@@ -949,10 +1044,21 @@ const InternationFlow = ({
           internationalData.payment_type?.value === "wallet"
             ? (internationalData.wallet?._id ?? internationalData?.currency_wallet?._id)
             : internationalData?.currency_wallet?._id;
+
+        const receivingCurrency =
+          internationalData?.recipient_currency ||
+          internationalData?.exchange_rate?.receiver?.currency;
+        const walletCurrency = internationalData?.wallet?.currency?.code;
+        const isSameCurrency =
+          receivingCurrency && walletCurrency && receivingCurrency === walletCurrency;
+
         const currency_code =
           internationalData.payment_type?.value === "wallet"
-            ? (internationalData?.wallet?.currency?.code ?? internationalData?.currency)
+            ? isSameCurrency
+              ? receivingCurrency
+              : (walletCurrency ?? internationalData?.currency)
             : internationalData?.currency;
+
         getAmount().then((res) => {
           if (wallet_id) {
             getExchangeRateNew(res, () => {}, wallet_id, currency_code, false, setLoading);
@@ -990,7 +1096,7 @@ const InternationFlow = ({
       updateInternationalData("created_quotation", dec);
       setSubStep((prev) => prev + 1);
     } catch (error) {
-      const dec = decryptData(error?.response?.data?.data);
+      const dec = decryptError(error);
       toast.error(internationalData);
       updateInternationalData(
         "error",
@@ -1031,6 +1137,13 @@ const InternationFlow = ({
         vendor: internationalData.payoutChannel?.vendor,
       };
 
+      if (isOnafriq(internationalData.payoutChannel?.vendor)) {
+        // must match quote
+        transaction_data.wallet_id =
+          internationalData.quoted_wallet_id || transaction_data.wallet_id;
+        transaction_data.payment_type = internationalData.payment_type?.value;
+      }
+
       if (internationalData.payoutChannel?.vendor === "thunes") {
         if (isResend) {
           payload = {
@@ -1058,11 +1171,15 @@ const InternationFlow = ({
           },
           type: codeType || internationalData.codeType,
         };
+        const channel = internationalData.payoutChannel?.value?.toLowerCase();
+
         if (!isNewBeneficiary) {
-          internationalData.payoutChannel?.value?.toLowerCase()?.includes("bank")
-            ? (payload.data.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id)
-            : (payload.data.mobile_wallet_id =
-                internationalData.beneficiary?.mobile_wallet?.[0]?._id);
+          if (channel?.includes("bank")) {
+            payload.data.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id;
+          } else if (!(isOnafriq(internationalData.payoutChannel?.vendor) && channel === "cash")) {
+            // voucher, no account
+            payload.data.mobile_wallet_id = internationalData.beneficiary?.mobile_wallet?.[0]?._id;
+          }
         }
       }
       const enc = encryptData(payload);
@@ -1099,7 +1216,7 @@ const InternationFlow = ({
       updateInternationalData("created_transaction", dec);
       updateInternationalData("showOtpModal", true);
     } catch (error) {
-      const dec = decryptData(error?.response?.data?.data);
+      const dec = decryptError(error);
       console.log(dec);
       const error2 = apiErrorMessage(dec?.message);
 
@@ -1122,6 +1239,7 @@ const InternationFlow = ({
   };
 
   const [showCardModal, setShowCardModal] = useState(false);
+  const [paytentlyHosted, setPaytentlyHosted] = useState(null);
 
   const initiateCardPayment = async (otp) => {
     setLoading(true);
@@ -1135,10 +1253,40 @@ const InternationFlow = ({
         return;
       }
 
-      const data = {
+      const otpFields = {
         token: internationalData.created_transaction?.token,
         otp: otp,
         type: internationalData.codeType,
+      };
+
+      // Paytently collects the card itself, so no card data is built here. The intl
+      // payload rides inside the OTP token, so only the wallet is sent.
+      if (usePaytently) {
+        const dec = await initiatePaytentlyPayment({
+          walletId: internationalData.currency_wallet?._id,
+          flow: "international",
+          otp: otpFields,
+          idempotencyKey: getKey(),
+        });
+
+        if (!dec?.hosted_forms_url) {
+          updateInternationalData(
+            "otpError",
+            apiErrorMessage(dec?.message)
+              ? t(apiErrorMessage(dec?.message))
+              : (dec?.message ??
+                  "We cannot process your request at the moment, please try again later."),
+          );
+          return;
+        }
+
+        setPaytentlyHosted({ hostedUrl: dec.hosted_forms_url, authorizeUrl: dec.authorize_url });
+        updateInternationalData("showOtpModal", false);
+        return;
+      }
+
+      const data = {
+        ...otpFields,
         panData: {
           wallet_id: internationalData.currency_wallet?._id,
           amount: internationalData.exchange_rate?.total * 100,
@@ -1173,7 +1321,7 @@ const InternationFlow = ({
       updateInternationalData("cardTransactionDetails", dec);
       updateInternationalData("showOtpModal", false);
     } catch (err) {
-      const decrypted = decryptData(err.response.data.data);
+      const decrypted = decryptError(err);
       if (decrypted?.message === "invalid_card_details") {
         setShowCardModal(true);
       } else {
@@ -1227,7 +1375,7 @@ const InternationFlow = ({
       const dec = decryptData(res.data.data);
       window.location.href = dec?.url;
     } catch (err) {
-      const decrypted = decryptData(err.response.data.data);
+      const decrypted = decryptError(err);
       console.log(decrypted);
       const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message);
       updateInternationalData("otpError", decrypted?.message ?? "You have entered wrong OTP.");
@@ -1288,7 +1436,7 @@ const InternationFlow = ({
       setSubStep((prev) => prev + 1);
       updateInternationalData("showOtpModal", false);
     } catch (err) {
-      const decrypted = decryptData(err.response.data.data);
+      const decrypted = decryptError(err);
       console.log(decrypted);
       const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message);
       updateInternationalData("otpError", decrypted?.message ?? "You have entered wrong OTP.");
@@ -1456,7 +1604,8 @@ const InternationFlow = ({
         break;
       case 4:
         if (internationalData.payment_type?.value === "card") {
-          updateInternationalData("showCard", true);
+          // Paytently collects the card on its own hosted form, so our card step is skipped.
+          if (!usePaytently) updateInternationalData("showCard", true);
 
           if (internationalData.payoutChannel?.vendor === "thunes") {
             createQuotation(Number(String(internationalData.amount)?.replaceAll(",", "")));
@@ -1571,8 +1720,11 @@ const InternationFlow = ({
           timeout: 50000,
         });
       } else {
+        const confirmPath = isOnafriq(internationalData.payoutChannel?.vendor)
+          ? "confirm-onafriq-transaction"
+          : "confirm-transaction";
         res = await axios.post(
-          `${import.meta.env.VITE_IP_DEV_API}/api/payment/confirm-transaction`,
+          `${import.meta.env.VITE_IP_DEV_API}/api/payment/${confirmPath}`,
           { data: encryptData(data) },
           {
             headers: { ...authHeader, "idempotency-key": getKey() },
@@ -1588,12 +1740,16 @@ const InternationFlow = ({
       setSubStep((prev) => prev + 1);
       updateInternationalData("showOtpModal", false);
     } catch (err) {
-      const decrypted = decryptData(err.response.data.data);
+      const decrypted = decryptError(err);
       console.log(decrypted);
       const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message);
       updateInternationalData("otpError", decrypted?.message ?? "You have entered wrong OTP.");
 
       const error2 = apiErrorMessage(decrypted?.message);
+      // lockout wins
+      const onafriqError =
+        isOnafriq(internationalData.payoutChannel?.vendor) &&
+        onafriqConfirmError(decrypted?.message);
 
       if (error2) {
         updateInternationalData("otpError", t(error2));
@@ -1607,6 +1763,8 @@ const InternationFlow = ({
         localStorage.clear();
         localStorage.setItem("ip_country", coun);
         navigate("/login");
+      } else if (onafriqError) {
+        updateInternationalData("otpError", t(onafriqError));
       }
     } finally {
       setLoading(false);
@@ -1690,6 +1848,12 @@ const InternationFlow = ({
   // console.log("international.otpError",internationalData)
   return (
     <>
+      <PaytentlyHostedModal
+        isOpen={!!paytentlyHosted?.hostedUrl}
+        hostedUrl={paytentlyHosted?.hostedUrl}
+        authorizeUrl={paytentlyHosted?.authorizeUrl}
+        onClose={() => setPaytentlyHosted(null)}
+      />
       {showCardModal && (
         <NotFoundModal
           isOpen={showCardModal}
@@ -1882,9 +2046,7 @@ const InternationFlow = ({
                             <SelectedCard
                               title="Name"
                               list={[
-                                {
-                                  text: getBeneficiaryDisplayName(internationalData.beneficiary),
-                                },
+                                { text: getBeneficiaryDisplayName(internationalData.beneficiary) },
                               ]}
                               changeHandler={() => setSubStep(2)}
                             />
@@ -2151,6 +2313,8 @@ const InternationFlow = ({
                     loading={loading}
                     data={internationalData}
                     dataHandler={updateInternationalData}
+                    markupValue={internationalData?.exchange_rate?.markupValue}
+                    skipSameCurrencyConversion
                   />
                 ) : (
                   ""
@@ -2226,6 +2390,7 @@ const InternationFlow = ({
                             loading={loading}
                             data={internationalData}
                             dataHandler={updateInternationalData}
+                            skipSameCurrencyConversion
                           />
                         ) : internationalData.payment_type?.sub_name ? (
                           <MobileWalletServices
