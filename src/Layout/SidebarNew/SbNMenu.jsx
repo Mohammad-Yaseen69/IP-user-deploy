@@ -48,6 +48,7 @@ import Feed_a from "./files/Feed_a.svg";
 import v_bank_a from "./files/v_bank_a.svg";
 import v_bank from "./files/v_bank.svg";
 import payviasocial from "./files/payviasocial.svg";
+import payviasocial_unactive from "./files/payviasocial_unactive.svg";
 
 export const MENU = [
   {
@@ -76,7 +77,7 @@ export const MENU = [
       },
       {
         title: "Pay Via Social",
-        icon: <img loading="lazy" src={payviasocial} style={{ marginRight: "12px" }} />,
+        icon: <img loading="lazy" src={payviasocial_unactive} style={{ marginRight: "12px" }} />,
         activeIcon: <img loading="lazy" src={payviasocial} style={{ marginRight: "12px" }} />,
         type: "link",
         url: `${window.location.origin}/pay-via-social`,
