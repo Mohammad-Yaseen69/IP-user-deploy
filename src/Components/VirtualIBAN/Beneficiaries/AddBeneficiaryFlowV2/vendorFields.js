@@ -110,7 +110,7 @@ export const THUNES_IDENTIFIER_FIELDS = {
     alphanumeric: true,
   },
   routing_code: { label: "Routing code", type: "text", alphanumeric: true },
-  bsb_number: { label: "BSB number", type: "text", alphanumeric: true },
+  bsb_number: { label: "BSB number", type: "bsb_number", alphanumeric: true },
   branch_number: { label: "Branch number", type: "text", alphanumeric: true },
   entity_tt_id: { label: "Entity ID", type: "text" },
   account_type: {
