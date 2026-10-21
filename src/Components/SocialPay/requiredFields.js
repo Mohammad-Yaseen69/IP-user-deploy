@@ -53,6 +53,7 @@ export const socialPayConfig = {
   activeChannels: [
     {
       id: "instagram",
+      link: "https://www.instagram.com/",
       name: "Instagram",
       handle: "@instapay.bot",
       icon: instaIcon,
@@ -73,6 +74,7 @@ export const socialPayConfig = {
       id: "whatsapp",
       name: "WhatsApp",
       handle: "+41 XX XXXXX XX",
+      link: "https://www.whatsapp.com/",
       icon: whatsappIcon,
       isActive: true,
       tagline: "Chat to transfer.",
@@ -91,6 +93,7 @@ export const socialPayConfig = {
       id: "telegram",
       name: "Telegram",
       handle: "@instapaybot",
+      link: "https://www.telegram.com/",
       icon: telegramIcon,
       isActive: true,
       tagline: "Tap to send.",
