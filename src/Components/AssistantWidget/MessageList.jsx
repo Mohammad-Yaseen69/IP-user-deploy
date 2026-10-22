@@ -1,10 +1,21 @@
+import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./styles.module.css";
 
 const MessageList = ({ greeting, messages, isThinking, starterPrompts, onPick }) => {
   const { t } = useTranslation();
+  const reduceMotion = useReducedMotion();
   const endRef = useRef(null);
+
+  const reveal = (delay) =>
+    reduceMotion
+      ? {}
+      : {
+          initial: { opacity: 0, y: 8 },
+          animate: { opacity: 1, y: 0 },
+          transition: { delay, duration: 0.28, ease: "easeOut" },
+        };
 
   useEffect(() => {
     if (typeof endRef.current?.scrollIntoView === "function") {
@@ -16,10 +27,12 @@ const MessageList = ({ greeting, messages, isThinking, starterPrompts, onPick })
     <div className={styles.messages}>
       <div className={styles.row}>
         <div className={styles.block}>
-          <div className={`${styles.msg} ${styles.msgAssistant}`}>{greeting}</div>
+          <motion.div className={`${styles.msg} ${styles.msgAssistant}`} {...reveal(0.12)}>
+            {greeting}
+          </motion.div>
 
           {!messages.length && (
-            <>
+            <motion.div className={styles.starters} {...reveal(0.22)}>
               <p className={styles.chipsLabel}>{t("Try one of these")}</p>
               <div className={styles.chips}>
                 {starterPrompts.map((prompt) => (
@@ -33,7 +46,7 @@ const MessageList = ({ greeting, messages, isThinking, starterPrompts, onPick })
                   </button>
                 ))}
               </div>
-            </>
+            </motion.div>
           )}
         </div>
       </div>
