@@ -9,6 +9,7 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import InstaPayLoader from "../Loader";
+import { formatCurrency } from "../../Helper/AmountFormat";
 
 const CenterContainer = ({
   categories,
@@ -245,11 +246,7 @@ const CenterContainer = ({
           <div id="chart" style={{ height: "auto", position: "relative", width: "250px" }}>
             <div className={styles.balance_info}>
               <h4>
-                {currentWallet?.currency?.code}{" "}
-                {total.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                {currentWallet?.currency?.code}&nbsp; {formatCurrency(total, true)}
               </h4>
               {/* <span>{t(`${currentType === "credit" ? "Credit" : "Debit"} in`)} {`${t(new Date().toLocaleString('default', { month: 'short' }))}`}</span> */}
               <span>{t(`${currentType === "credit" ? "Credit" : "Debit"}`)}</span>
@@ -283,11 +280,7 @@ const CenterContainer = ({
                   </div>
                   <span>
                     {currentType === "credit" ? "+" : "-"}
-                    {currentWallet?.currency?.code}{" "}
-                    {item.value.toLocaleString("en-US", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
+                    {currentWallet?.currency?.code}&nbsp;{formatCurrency(item.value, true)}
                   </span>
                 </div>
               ))}

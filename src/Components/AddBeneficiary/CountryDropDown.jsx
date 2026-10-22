@@ -211,12 +211,11 @@ const CountryDropDown = ({
       >
         {filteredCountries?.map((country) => (
           <DropdownItem
-            key={country?.code}
+            key={country?.alpha3 || country?.country_iso_code || country?.name}
             onClick={() => handleBugSelect(country)}
             style={{ opacity: 1, color: "black" }}
           >
             <div
-              key={country?.code}
               style={{
                 display: "flex",
                 alignItems: "center",

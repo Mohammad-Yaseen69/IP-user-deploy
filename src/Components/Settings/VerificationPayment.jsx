@@ -30,6 +30,7 @@ import MobileWalletStatus from "../PaymentAddressPublic/PayAsGuest/MobileWalletS
 import PlaidBankTransfer from "../AddFunds/WalletFundsFlow/PlaidBankTransfer";
 import ErrorModal from "../PaymentsNewer/InternationalFlow/ErrorModal";
 import { useIdempotency } from "../../hooks/Payments/useIdempotency";
+import { quotePaytentlyVerification, usePaytently } from "../../utils/Functions/paytently";
 
 const paymentChannels = [
   {
@@ -175,6 +176,37 @@ const VerificationPayment = ({
 
   const wallets = useMemo(() => filteredWallets, [filteredWallets]);
 
+  // Card pays by topping a wallet up first, so this one is picked to receive the
+  // credit regardless of balance. USD avoids converting the USD fee twice.
+  // The card is charged the fee plus a topup fee, so the confirm screen has to
+  // show what Paytently will actually take.
+  const [cardQuote, setCardQuote] = useState(null);
+
+  const loadCardQuote = async () => {
+    if (!topupWallet?._id) return null;
+    try {
+      return await quotePaytentlyVerification({
+        kind: partnerId ? "partner_kyc" : isKYB ? "kyb" : "kyc",
+        partnerId,
+        walletId: topupWallet._id,
+      });
+    } catch {
+      return null;
+    }
+  };
+
+  const topupWallet = useMemo(() => {
+    const active =
+      userWallets?.filter(
+        (item) =>
+          item?.wallet_type === "insta" &&
+          !item?.blocked &&
+          !item?.admin_blocked &&
+          item?.status === "active",
+      ) ?? [];
+    return active.find((item) => item?.currency?.code === "USD") ?? active[0] ?? null;
+  }, [userWallets]);
+
   const sendOtp = async (method) => {
     setSaving(true);
     try {
@@ -290,7 +322,14 @@ const VerificationPayment = ({
   const handleClick = async () => {
     if (step === 1) {
       const skipStepMethods = ["paypal", "mobile_wallet"];
-      if (skipStepMethods?.includes(payoutChannel?.value)) {
+      // Paytently collects the card itself, so skip the card form and go to confirm.
+      if (usePaytently && payoutChannel?.value === "card") {
+        if (isKYB && !partnerId) {
+          setFeeDetails(await getFeeDetails({ payment_type: "card" }));
+        }
+        setCardQuote(await loadCardQuote());
+        setStep(3);
+      } else if (skipStepMethods?.includes(payoutChannel?.value)) {
         if (payoutChannel?.value === "paypal") {
           initiatePaypal();
         } else if (payoutChannel?.value === "mobile_wallet") {
@@ -357,7 +396,8 @@ const VerificationPayment = ({
                     )
                     .map((item) => {
                       const isPaypalDisabled =
-                        (isKYB && item?.value === "paypal") || item.value === "card";
+                        (isKYB && item?.value === "paypal") ||
+                        (item.value === "card" && !usePaytently);
                       return (
                         <Card
                           key={item.name}
@@ -618,7 +658,8 @@ const VerificationPayment = ({
                 sendKybWalletOTP={sendOtp}
                 kybFeeDets={feeDetails}
                 partnerId={partnerId}
-                // wallet={userWallets?.find(item => item?.currency?.code === "USD")}
+                wallet={topupWallet}
+                cardQuote={cardQuote}
               />
             )}
             {step === 2 && payoutChannel?.value === "bank" && (

@@ -91,6 +91,60 @@
   font-size: 0.8rem;
 }
 
+.required_docs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  width: 100%;
+}
+
+.required_note {
+  margin-bottom: 0;
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.8rem;
+}
+
+.required_doc {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.required_doc_info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  font-family: Manrope;
+}
+
+.required_doc_info strong {
+  font-size: 0.9rem;
+  color: #111827;
+}
+
+.required_doc_info .error {
+  text-align: left;
+}
+
+.required_doc_hint {
+  font-size: 0.78rem;
+  color: #6b7280;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.required_star {
+  color: #e64067;
+}
+
 .files_prev {
   display: flex;
   flex-direction: column;
