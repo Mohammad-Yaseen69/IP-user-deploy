@@ -99,7 +99,7 @@ export const THUNES_IDENTIFIER_FIELDS = {
   bik_code: { label: "BIK code", type: "text", alphanumeric: true },
   ifs_code: {
     label: "IFSC code",
-    type: "text",
+    type: "ifsc",
     alphanumeric: true,
     uppercase: true,
   },
