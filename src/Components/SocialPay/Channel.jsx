@@ -24,18 +24,22 @@ export const getThemeVars = (themes, themeKey) => {
     "--step-text": t.stepText,
   };
 };
+
+const OTP_PURPOSE = { UNLINK: "unlink", SWITCH: "switch" };
+const DEFAULT_ERROR = "We cannot process your request at the moment, please try again later.";
+
 const ChannelCard = ({ item, themes, isPinAdded }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [showOtp, setShowOtp] = useState(false);
   const { userDetails, authHeader, verifyToken } = useContext(UserContext);
+  const [showOtp, setShowOtp] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [otpToken, setOtpToken] = useState("");
   const [otpMethods, setOtpMethods] = useState(null);
+  const [otpPurpose, setOtpPurpose] = useState(null);
   const [saving, setSaving] = useState(false);
   const [channelEnabled, setChannelEnabled] = useState(false);
   const [codeType, setCodeType] = useState("sms");
-  const [token, setToken] = useState("");
   const [noUser, setNoUser] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [searchParams] = useSearchParams();
@@ -45,156 +49,117 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
   const telegram = item.name.toLowerCase().includes("telegram");
   const whatsapp = item.name.toLowerCase().includes("whatsapp");
 
-  const channelOtpCallback = (setter, type, otp, setError) => {
-    setSaving(true);
-    axios
-      .put(
-        `${import.meta.env.VITE_IP_DEV_API}/api/instagram/update-channel-switch`,
-        { token: otpToken, otp, type: codeType, enabled: !channelEnabled, channel: item.id },
-        {
-          headers: {
-            ...authHeader,
-            source: "user",
-            "Content-Type": "application/json",
-          },
-        },
-      )
-      .then(() => {
-        setChannelEnabled(true);
-        setShowOtp(false);
-        toast.success("Channel enabled successfully");
-        verifyToken();
-      })
-      .catch((error) => {
-        const dec = decryptData(error?.response?.data?.data);
-        setError(dec?.message || "OTP invalid");
-        toast.error(dec?.message || "OTP invalid");
-      })
-      .finally(() => setSaving(false));
-  };
-
-  const sendOtp = async (method) => {
-    setSaving(true);
-    const type = typeof method === "string" ? method : codeType;
-    const payload = {
-      data: {
-        type: whatsapp ? "unlink-whatsapp" : "unlink-insta",
-      },
-      type,
-    };
-    const enc = encryptData(payload);
+  const request = async (method, path, body) => {
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`,
-        { data: enc },
-        {
-          headers: authHeader,
-        },
-      );
-      const dec = decryptData(res.data?.data);
-      setToken(dec?.token);
-      setOtpMethods(dec);
-      if (!showOtp) setCodeType(dec?.otp_sent_on || "sms");
-      setShowOtp(true);
+      const res = await axios({
+        method,
+        url: `${import.meta.env.VITE_IP_DEV_API}/api${path}`,
+        headers: { ...authHeader, source: "user", "Content-Type": "application/json" },
+        data: body ? { data: encryptData(body) } : undefined,
+      });
+      return decryptData(res.data?.data);
     } catch (error) {
-      const dec = decryptData(error?.response?.data?.data);
-      toast.error(dec?.message);
-    } finally {
-      setSaving(false);
+      const dec = decryptData(error?.response?.data?.data) || {};
+      throw { ...dec, httpStatus: error?.response?.status };
     }
   };
 
-  const otpCallback = (setter, type, otp, setError) => {
-    setSaving(true);
-
-    const requestData = { token, otp, type: codeType };
-    axios
-      .put(
-        `${import.meta.env.VITE_IP_DEV_API}/api/instagram/${item.id}-unlink`,
-        { data: encryptData(requestData) },
-        { headers: authHeader },
-      )
-      .then((res) => {
-        verifyToken();
-        setter(true);
-        setIsConnected(false);
-        toast.success(`${item.name} account unlinked successfully!`);
-      })
-      .catch((error) => {
-        const dec = decryptData(error?.response?.data?.data);
-        setError(
-          dec?.message ?? "We cannot process your request at the moment, please try again later.",
-        );
-        toast.error(
-          dec?.message ?? "We cannot process your request at the moment, please try again later.",
-        );
-      })
-      .finally(() => setSaving(false));
+  const getOtpData = (purpose) => {
+    if (purpose === OTP_PURPOSE.SWITCH) return { channel: item.id, enabled: true };
+    if (instagram || telegram) return { type: "unlink-insta" };
+    return {};
   };
 
-  const sendChannelOtp = async (method) => {
+  const startOtp = async (purpose, method) => {
+    setSaving(true);
     try {
-      setSaving(true);
-
-      const payload = {
-        type: method || codeType,
-        data: {
-          channel: item.id,
-          enabled: true,
-        },
-      };
-
-      const enc = encryptData(payload);
-
-      const res = await axios.post(
-        `${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`,
-        { data: enc },
-        {
-          headers: {
-            ...authHeader,
-            source: "user",
-            "Content-Type": "application/json",
-          },
-        },
-      );
-
-      const dec = decryptData(res.data.data);
-
+      const type = typeof method === "string" ? method : codeType;
+      const dec = await request("POST", "/wallet/send-otp", { type, data: getOtpData(purpose) });
+      setOtpPurpose(purpose);
       setOtpToken(dec?.token);
       setOtpMethods(dec);
+      if (dec?.otp_sent_on) setCodeType(dec.otp_sent_on);
       setShowOtp(true);
     } catch (error) {
-      const dec = decryptData(error?.response?.data?.data);
-      toast.error(dec?.message || "Unable to send OTP");
+      toast.error(error?.message || t("Unable to send OTP"));
     } finally {
       setSaving(false);
     }
   };
 
-  const handleChannelToggle = async () => {
+  const switchOtpCallback = async (setter, type, otp, setError) => {
+    setSaving(true);
     try {
-      setSaving(true);
-
-      const channel = instagram ? "instagram" : telegram ? "telegram" : "whatsapp";
-
-      await axios.put(
-        `${import.meta.env.VITE_IP_DEV_API}/api/instagram/update-channel-switch`,
-        { channel, enabled: false },
-        { headers: { ...authHeader, source: "user" } },
-      );
-
-      setChannelEnabled(false);
-      toast.success("Channel disabled");
-    } catch (e) {
-      toast.error("Disable failed");
+      const res = await request("PUT", "/instagram/update-channel-switch", {
+        channel: item.id,
+        enabled: true,
+        token: otpToken,
+        otp,
+        type: codeType,
+      });
+      setChannelEnabled(Boolean(res?.channel_switch ?? true));
+      setShowOtp(false);
+      toast.success(t("Channel enabled successfully"));
+      verifyToken();
+    } catch (error) {
+      const msg = error?.message || t("OTP invalid");
+      setError(msg);
+      toast.error(msg);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const unlinkOtpCallback = async (setter, type, otp, setError) => {
+    setSaving(true);
+    try {
+      await request("PUT", `/instagram/${item.id}-unlink`, {
+        token: otpToken,
+        otp,
+        type: codeType,
+      });
+      verifyToken();
+      setter(true);
+      setIsConnected(false);
+      setShowOtp(false);
+      toast.success(`${item.name} account unlinked successfully!`);
+    } catch (error) {
+      const msg = error?.message ?? DEFAULT_ERROR;
+      setError(msg);
+      toast.error(msg);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const clearChannelSwitch = async () => {
+    setSaving(true);
+    try {
+      const res = await request("PUT", "/instagram/update-channel-switch", {
+        channel: item.id,
+        enabled: false,
+      });
+      setChannelEnabled(Boolean(res?.channel_switch ?? false));
+      toast.success(t("Channel disabled"));
+    } catch (error) {
+      toast.error(error?.message || t("Disable failed"));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleChannelToggle = () => {
+    if (saving) return;
+    if (channelEnabled) {
+      clearChannelSwitch();
+    } else {
+      startOtp(OTP_PURPOSE.SWITCH);
     }
   };
 
   useEffect(() => {
-    setChannelEnabled(item?.channel_switch && item.linked);
-    setIsConnected(item.linked);
+    setChannelEnabled(Boolean(item?.channel_switch && item.linked));
+    setIsConnected(Boolean(item.linked));
   }, [item?.channel_switch, item.linked]);
 
   useEffect(() => {
@@ -212,7 +177,6 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
   useEffect(() => {
     if (userDetails) {
       if (instagram) {
-        console.log(redirect);
         if (redirect && !userDetails?.insta_username) {
           setShowModal(true);
         }
@@ -241,7 +205,7 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
               role="switch"
               title={channelEnabled ? "Disable Channel" : "Enable Channel"}
               aria-checked={channelEnabled}
-              disabled={!isPinAdded}
+              disabled={!isPinAdded || saving}
               onClick={handleChannelToggle}
               className={`${styles.toggle} ${channelEnabled ? styles.toggleOn : ""}`}
             >
@@ -267,7 +231,12 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
 
       <div className={styles.actions}>
         {isConnected ? (
-          <button onClick={() => sendOtp()} type="button" className={styles.unlinkBtn}>
+          <button
+            onClick={() => startOtp(OTP_PURPOSE.UNLINK)}
+            type="button"
+            className={styles.unlinkBtn}
+            disabled={saving}
+          >
             {t("Unlink")}
           </button>
         ) : (
@@ -278,51 +247,28 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
         <button
           type="button"
           className={styles.primaryBtn}
-          onClick={() => window.open(item.link, "_blank")}
+          onClick={() => window.open(item.link, "_blank", "noopener,noreferrer")}
         >
           {item.primaryAction.label}
         </button>
       </div>
       {instagram && showModal && (
-        <LinkToInstagramModal
-          isOpen={showModal}
-          toggle={() => {
-            setShowModal(!showModal);
-          }}
-        />
+        <LinkToInstagramModal isOpen={showModal} toggle={() => setShowModal((s) => !s)} />
       )}
       {(whatsapp || telegram) && showModal && (
-        <LinktoTelegramModal
-          isOpen={showModal}
-          toggle={() => {
-            setShowModal(!showModal);
-          }}
-        />
+        <LinktoTelegramModal isOpen={showModal} toggle={() => setShowModal((s) => !s)} />
       )}
-      <Modal
-        isOpen={showOtp}
-        toggle={() => {
-          setShowOtp(false);
-        }}
-      >
-        <ModalHeader
-          toggle={() => {
-            setShowOtp(false);
-          }}
-        >
-          {t("Confirm")}
-        </ModalHeader>
+      <Modal isOpen={showOtp} toggle={() => setShowOtp(false)}>
+        <ModalHeader toggle={() => setShowOtp(false)}>{t("Confirm")}</ModalHeader>
         <ModalBody>
           <OTPConfirmation
             variant="card"
-            callback={isConnected ? otpCallback : channelOtpCallback}
+            callback={otpPurpose === OTP_PURPOSE.UNLINK ? unlinkOtpCallback : switchOtpCallback}
             setter={() => {}}
             setterValue={true}
-            hideOtp={() => {
-              setShowOtp(false);
-            }}
+            hideOtp={() => setShowOtp(false)}
             processing={saving}
-            resendHandler={isConnected ? sendOtp : sendChannelOtp}
+            resendHandler={(method) => startOtp(otpPurpose, method)}
             authType={codeType}
             setAuthType={setCodeType}
             methods={otpMethods}

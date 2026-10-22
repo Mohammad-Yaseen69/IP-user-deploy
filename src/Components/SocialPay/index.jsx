@@ -149,7 +149,6 @@ const PayViaSocial = () => {
           >
             {activeChannels.map((item) => {
               const channel = data?.channels?.[item.id];
-              console.log("channel", channel);
               return (
                 <ChannelCard
                   isPinAdded={isPinAdded}
