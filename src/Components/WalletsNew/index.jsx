@@ -13,6 +13,7 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { UserContext } from "../../Context/UserContext";
 import QrGenerate from "../Settings/QrGenerate";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
+import { formatCurrency } from "../../Helper/AmountFormat";
 // import { useLocation } from "react-router"
 
 export const getLimits = async (
@@ -34,13 +35,13 @@ export const getLimits = async (
     const { topup_values, limits, limits_used } = dec.data;
 
     const data = {
-      min_topup_amount: `${topup_values.topup_min_amount?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
-      max_topup_amount: `${topup_values.topup_max_amount?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
-      transaction_amount_limit: `${limits?.transaction_amount_limit?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
+      min_topup_amount: `${formatCurrency(topup_values.topup_min_amount, true)} ${currentWallet?.currency?.code} `,
+      max_topup_amount: `${formatCurrency(topup_values.topup_max_amount, true)} ${currentWallet?.currency?.code} `,
+      transaction_amount_limit: `${formatCurrency(limits?.transaction_amount_limit, true)} ${currentWallet?.currency?.code} `,
       balance_limits: {
-        total: `${limits.account_balance_limit?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
-        used: `${limits_used.account_balance_limit_used?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
-        remaining: `${(limits.account_balance_limit - limits_used.account_balance_limit_used)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
+        total: `${formatCurrency(limits.account_balance_limit, true)} ${currentWallet?.currency?.code} `,
+        used: `${formatCurrency(limits_used.account_balance_limit_used, true)} ${currentWallet?.currency?.code} `,
+        remaining: `${formatCurrency(limits.account_balance_limit - limits_used.account_balance_limit_used, true)} ${currentWallet?.currency?.code} `,
       },
       others: [
         {
@@ -49,19 +50,19 @@ export const getLimits = async (
           color_light: "#DCE5FF",
           limits: {
             daily: {
-              total: `${limits.daily_receiving_limit?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
-              used: `${limits_used.daily_receiving_limit_used?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
-              remaining: `${(limits.daily_receiving_limit - limits_used.daily_receiving_limit_used)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
+              total: `${formatCurrency(limits.daily_receiving_limit, true)} ${currentWallet?.currency?.code} `,
+              used: `${formatCurrency(limits_used.daily_receiving_limit_used, true)} ${currentWallet?.currency?.code} `,
+              remaining: `${formatCurrency(limits.daily_receiving_limit - limits_used.daily_receiving_limit_used, true)} ${currentWallet?.currency?.code} `,
             },
             monthly: {
-              total: `${limits.monthly_receiving_limit?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
-              used: `${limits_used.monthly_receiving_limit_used?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
-              remaining: `${(limits.monthly_receiving_limit - limits_used.monthly_receiving_limit_used)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
+              total: `${formatCurrency(limits.monthly_receiving_limit, true)} ${currentWallet?.currency?.code} `,
+              used: `${formatCurrency(limits_used.monthly_receiving_limit_used, true)} ${currentWallet?.currency?.code} `,
+              remaining: `${formatCurrency(limits.monthly_receiving_limit - limits_used.monthly_receiving_limit_used, true)} ${currentWallet?.currency?.code} `,
             },
             yearly: {
-              total: `${limits.yearly_receiving_limit?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
-              used: `${limits_used.yearly_receiving_limit_used?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
-              remaining: `${(limits.yearly_receiving_limit - limits_used.yearly_receiving_limit_used)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
+              total: `${formatCurrency(limits.yearly_receiving_limit, true)} ${currentWallet?.currency?.code} `,
+              used: `${formatCurrency(limits_used.yearly_receiving_limit_used, true)} ${currentWallet?.currency?.code} `,
+              remaining: `${formatCurrency(limits.yearly_receiving_limit - limits_used.yearly_receiving_limit_used, true)} ${currentWallet?.currency?.code} `,
             },
           },
         },
@@ -71,19 +72,19 @@ export const getLimits = async (
           color_light: "#FFE8D4",
           limits: {
             daily: {
-              total: `${limits.daily_sending_limit?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
-              used: `${limits_used.daily_sending_limit_used?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
-              remaining: `${(limits.daily_sending_limit - limits_used.daily_sending_limit_used)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
+              total: `${formatCurrency(limits.daily_sending_limit, true)} ${currentWallet?.currency?.code} `,
+              used: `${formatCurrency(limits_used.daily_sending_limit_used, true)} ${currentWallet?.currency?.code} `,
+              remaining: `${formatCurrency(limits.daily_sending_limit - limits_used.daily_sending_limit_used, true)} ${currentWallet?.currency?.code} `,
             },
             monthly: {
-              total: `${limits.monthly_sending_limit?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
-              used: `${limits_used.monthly_sending_limit_used?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
-              remaining: `${(limits.monthly_sending_limit - limits_used.monthly_sending_limit_used)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
+              total: `${formatCurrency(limits.monthly_sending_limit, true)} ${currentWallet?.currency?.code} `,
+              used: `${formatCurrency(limits_used.monthly_sending_limit_used, true)} ${currentWallet?.currency?.code} `,
+              remaining: `${formatCurrency(limits.monthly_sending_limit - limits_used.monthly_sending_limit_used, true)} ${currentWallet?.currency?.code} `,
             },
             yearly: {
-              total: `${limits.yearly_sending_limit?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
-              used: `${limits_used.yearly_sending_limit_used?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
-              remaining: `${(limits.yearly_sending_limit - limits_used.yearly_sending_limit_used)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
+              total: `${formatCurrency(limits.yearly_sending_limit, true)} ${currentWallet?.currency?.code} `,
+              used: `${formatCurrency(limits_used.yearly_sending_limit_used, true)} ${currentWallet?.currency?.code} `,
+              remaining: `${formatCurrency(limits.yearly_sending_limit - limits_used.yearly_sending_limit_used, true)} ${currentWallet?.currency?.code} `,
             },
           },
         },
