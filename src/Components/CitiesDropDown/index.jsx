@@ -27,6 +27,7 @@ const CitiesDropDown = ({
   stateCode = "",
   requireState = false,
   background = "#fff",
+  newUI = false,
 }) => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
@@ -124,6 +125,15 @@ const CitiesDropDown = ({
           padding: ".75rem",
           background: disabled || isWaitingForState ? "#e9ecef" : background,
           boxShadow: isMobile ? "0px 1px 2px 0px #1412200D" : "none",
+          ...(newUI
+            ? {
+                padding: "9px 12px",
+                borderRadius: "6px",
+                border: "1px solid #E1E5EE",
+                background: "#FFF",
+                boxShadow: "0 1px 1.5px 0 rgba(44, 54, 53, 0.03)",
+              }
+            : {}),
         }}
         disabled={disabled || isWaitingForState}
       >
@@ -148,7 +158,7 @@ const CitiesDropDown = ({
           <>
             {userCity ? (
               <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-                <span style={{ fontWeight: 700 }}>{userCity}</span>
+                <span style={{ fontWeight: newUI ? 400 : 700 }}>{userCity}</span>
               </div>
             ) : (
               <span style={{ color: "#a8a8a8" }}>{t(title)}</span>

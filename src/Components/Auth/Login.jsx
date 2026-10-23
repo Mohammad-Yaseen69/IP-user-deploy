@@ -1287,24 +1287,7 @@ const Login = ({ country, setIsLoginForm }) => {
                   }}
                 />
               ) : (
-                <PhoneInput
-                  phone={email}
-                  setPhone={setEmail}
-                  country={country}
-                  customStyles={{
-                    display: "flex",
-                    height: "100%",
-                    padding: "12px",
-                    alignItems: "center",
-                    gap: "12px",
-                    alignSelf: "stretch",
-                    borderRadius: "6px",
-                    border: "1px solid #E1E5EE",
-                    background: "#FFF",
-                    boxShadow: "0 1px 1.5px 0 rgba(44, 54, 53, 0.03)",
-                    width: "100%",
-                  }}
-                />
+                <PhoneInput phone={email} setPhone={setEmail} country={country} newUI={true} />
               )}
               <TextField
                 className={styles.inputField}

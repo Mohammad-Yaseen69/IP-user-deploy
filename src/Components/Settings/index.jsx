@@ -21,8 +21,6 @@ const DeleteAccount = React.lazy(() => import("./DeleteAccount"));
 const DownloadData = React.lazy(() => import("./DownloadAccountData"));
 const ApiKey = React.lazy(() => import("./ApiKey"));
 const KYB = React.lazy(() => import("./KYB"));
-const Cover = React.lazy(() => import("./Cover"));
-const Header = React.lazy(() => import("./Header"));
 const HowOthersFindYou = React.lazy(() => import("./HowOthersFindYou"));
 const WithdrawalsNew = React.lazy(() => import("./WithdrawalsNew"));
 const Threshold = React.lazy(() => import("./Threshold"));
@@ -46,12 +44,11 @@ const Settings = () => {
         {window.innerWidth > 1000 ? (
           <div className={styles.container}>
             <div className={styles.top}>
-              <h4>{t("Settings")}</h4>
+              <div className={styles.titles}>
+                <h4>{t("Settings")}</h4>
+                <p>{t("Your account, security and preferences.")}</p>
+              </div>
               <TopRight />
-            </div>
-            <div style={{ marginBottom: "-50px", zIndex: 1, position: "relative" }}>
-              <Cover />
-              <Header />
             </div>
             <div className={styles.bottom}>
               <Tabs
@@ -60,7 +57,10 @@ const Settings = () => {
                 account_type={userDetails?.account_type}
                 verifyToken={verifyToken}
               />
-              <div style={{ marginLeft: "1rem" }} className={styles.right}>
+              <div
+                style={{ marginLeft: "24px" }}
+                className={`${styles.right} ${currentTab === "Basic Info" ? styles.plain : ""}`}
+              >
                 {currentTab === "Basic Info" && <Basic setCurrentTab={setCurrentTab} />}
                 {currentTab === "Change Password" && <Password />}
                 {currentTab === "Security Questions" && <SecurityQuestions />}
@@ -171,10 +171,6 @@ const Settings = () => {
                 </div>
               </div>
             )}
-            <div className={styles.dp_cover}>
-              <Cover />
-              <Header />
-            </div>
             <div className={styles.bottom}>
               <Tabs
                 currentTab={currentTab}
