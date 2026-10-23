@@ -37,6 +37,7 @@ const REDESIGNED_TABS = [
   "Notifications",
   "Login Activity",
   "Receiving Accounts",
+  "Download Your Data",
 ];
 
 const Settings = () => {
