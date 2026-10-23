@@ -1343,6 +1343,11 @@ const Basic = ({ setCurrentTab }) => {
                 country={country === "Cabo Verde" ? "Cape Verde" : country}
                 setUserCity={setCity}
                 userCity={city}
+                background={
+                  isEditMode && (isVerified || (country === "USA" && !stateCode))
+                    ? "#f8f9fc"
+                    : "white"
+                }
                 disabled={!isEditMode || isVerified || (country === "USA" && !stateCode)}
                 iso_3={country}
                 stateCode={stateCode}

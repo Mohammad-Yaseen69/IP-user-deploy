@@ -1,316 +1,121 @@
-$text-primary: #1b1f2a;
-$text-secondary: #6e7687;
-$text-muted: #9aa3b2;
-$text-inverse: #f8f9fc;
-$border-subtle: #eff1f6;
-$bg-white: #ffffff;
-$bg-canvas: #f8f9fc;
-$primary: #5926f0;
-$primary-50: #f2eeff;
-$primary-900: #22106b;
-$success-bg: #ecfdf5;
-$success-text: #047857;
-$warning-bg: #fffbdf;
-$warning-text: #976600;
-$error: #dc2626;
-$unsaved-dot: #f97316;
+@use "settings-ui" as ui;
 
 .container {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  font-family: Inter, sans-serif;
-  color: $text-primary;
-
-  p,
-  h4,
-  label {
-    margin: 0;
-  }
+  @include ui.tab-root;
 }
 
-/* ---------- Section header ---------- */
+/* ---------- Shared pieces (see _settings-ui.scss) ---------- */
 
 .sectionHeader {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 8px 0 4px;
+  @include ui.section-header;
 }
 
 .sectionText {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 0;
+  @include ui.section-text;
 }
 
 .sectionTitle {
-  font-size: 24px;
-  font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.72px;
-  color: $text-primary;
+  @include ui.section-title;
 }
 
 .sectionSubtitle {
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: -0.48px;
-  color: $text-secondary;
+  @include ui.section-subtitle;
 }
 
-/* ---------- Buttons ---------- */
-
 .button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  height: 32px;
-  padding: 0 12px;
-  flex-shrink: 0;
-  border: none;
-  border-radius: 6px;
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: -0.36px;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: background-color 150ms;
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+  @include ui.button;
 }
 
 .buttonPrimary {
-  background: $primary;
-  color: #ffffff;
-
-  &:not(:disabled):hover {
-    background: #4a1ed6;
-  }
+  @include ui.button-primary;
 }
 
 .buttonSecondary {
-  background: $border-subtle;
-  color: $primary-900;
-
-  &:not(:disabled):hover {
-    background: #e2e5ee;
-  }
+  @include ui.button-secondary;
 }
 
-/* ---------- Cards ---------- */
-
 .card {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  background: $bg-white;
-  border: 1px solid $border-subtle;
-  border-radius: 14px;
-  box-shadow: 0px 1px 2px 0px rgba(27, 31, 42, 0.04);
+  @include ui.card;
 }
 
 .cardHeader {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 20px 24px 4px;
+  @include ui.card-header;
 }
 
 .cardTitle {
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 1.2;
-  color: $text-primary;
+  @include ui.card-title;
 }
 
 .cardSubtitle {
-  font-size: 14px;
-  font-weight: 400;
-  letter-spacing: -0.42px;
-  color: $text-secondary;
+  @include ui.card-subtitle;
 }
 
 .cardBody {
-  padding: 16px 24px 24px;
+  @include ui.card-body;
 }
 
 .grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px 16px;
-  align-items: start;
+  @include ui.grid;
 }
 
 .full {
-  grid-column: 1 / -1;
+  @include ui.full;
 }
 
-/* ---------- Fields ---------- */
-
 .field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 0;
-  margin: 0 !important;
+  @include ui.field;
 }
 
 .label {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: -0.36px;
-  color: $text-primary;
+  @include ui.label;
 }
 
 .required {
-  color: $error;
-  font-weight: 500;
+  @include ui.required;
 }
 
 .counter {
-  margin-left: auto;
-  font-weight: 400;
-  color: $text-secondary;
+  @include ui.counter;
 }
 
 .control {
-  position: relative;
-}
-
-.leadingIcon,
-.trailingIcon,
-.inlineSpinner {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  pointer-events: none;
+  @include ui.control;
 }
 
 .leadingIcon {
+  @include ui.overlay-icon;
   left: 12px;
 }
 
 .trailingIcon {
+  @include ui.overlay-icon;
   right: 16px;
 }
 
 .inlineSpinner {
+  @include ui.overlay-icon;
   right: 12px;
-  color: $primary;
+  color: ui.$primary;
 }
 
 .hint {
-  display: flex;
-  align-items: flex-start;
-  gap: 4px;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: -0.36px;
-  color: $text-secondary;
-
-  svg {
-    flex-shrink: 0;
-    margin-top: 3px;
-  }
+  @include ui.hint;
 }
 
 .hintError {
-  color: $error;
+  @include ui.hint-error;
 }
 
-/* Inputs rendered by reactstrap / MUI inside this tab (.form-select = reactstrap 9 selects) */
-.container :global(.form-control),
-.container :global(.form-select) {
-  height: 40px;
-  padding: 8px 12px;
-  border: 1px solid $border-subtle;
-  border-radius: 6px;
-  background-color: $bg-white;
-  box-shadow: 0px 1px 1.5px 0px rgba(27, 31, 42, 0.04);
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 400;
-  letter-spacing: -0.42px;
-  color: $text-primary;
-
-  &::placeholder {
-    color: $text-muted;
-  }
-
-  &:focus {
-    border-color: $primary;
-    box-shadow: 0 0 0 3px rgba(89, 38, 240, 0.12);
-    outline: none;
-  }
-
-  &:disabled,
-  &[readonly] {
-    background-color: $bg-white;
-    color: $text-primary;
-    opacity: 1;
-  }
-}
-
-.container textarea:global(.form-control) {
-  height: auto;
-  min-height: 40px;
-  line-height: 1.5;
-  resize: vertical;
-  field-sizing: content; // grows with the text where supported, falls back to rows
-}
-
-.container select:global(.form-control),
-.container :global(.form-select) {
-  appearance: none;
-  -webkit-appearance: none;
-  background-image: none;
-  padding-right: 40px;
-  cursor: pointer;
-
-  &:disabled {
-    cursor: default;
-  }
-}
-
-/* Room for leading / trailing icons (after the base rule so it wins) */
-.container .withLeadingIcon :global(.form-control) {
-  padding-left: 45px;
-}
-
-.container .withTrailingIcon :global(.form-control),
-.container .withTrailingIcon :global(.form-select) {
-  padding-right: 40px;
-}
-
-/* While editing, fields that stay locked (verified data) look read-only */
 .editing :global(.form-control):disabled,
 .editing :global(.form-select):disabled {
-  background-color: $bg-canvas;
-  color: $text-muted;
+  background-color: ui.$bg-canvas;
+  color: ui.$text-muted;
   cursor: not-allowed;
 }
 
-/* Country is always locked */
 .locked :global(.form-control),
 .locked :global(.form-control):disabled {
-  color: $text-muted;
+  color: ui.$text-muted;
 }
 
 /* PhoneInput and CitiesDropDown live outside Settings, styled from the outside only */
@@ -324,7 +129,7 @@ $unsaved-dot: #f97316;
     font-family: inherit;
     font-size: 14px;
     letter-spacing: -0.42px;
-    color: $text-primary;
+    color: ui.$text-primary;
   }
 }
 
@@ -356,8 +161,8 @@ $unsaved-dot: #f97316;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: $primary-50;
-  color: $primary;
+  background: ui.$primary-50;
+  color: ui.$primary;
   font-size: 24px;
   font-weight: 600;
   line-height: 1.2;
@@ -367,8 +172,8 @@ $unsaved-dot: #f97316;
 .avatarImg {
   display: block;
   object-fit: cover;
-  background: $bg-white;
-  box-shadow: 0 0 0 1px $border-subtle;
+  background: ui.$bg-white;
+  box-shadow: 0 0 0 1px ui.$border-subtle;
 }
 
 .avatarEdit {
@@ -381,14 +186,14 @@ $unsaved-dot: #f97316;
   width: 26px;
   height: 26px;
   padding: 0;
-  border: 1px solid $border-subtle;
+  border: 1px solid ui.$border-subtle;
   border-radius: 50%;
-  background: $bg-white;
+  background: ui.$bg-white;
   box-shadow: 0px 1px 2px 0px rgba(27, 31, 42, 0.08);
   cursor: pointer;
 
   &:hover {
-    background: $primary-50;
+    background: ui.$primary-50;
   }
 }
 
@@ -401,11 +206,10 @@ $unsaved-dot: #f97316;
   flex-direction: column;
   min-width: 180px;
   padding: 4px;
-  background: $bg-white;
-  border: 1px solid $border-subtle;
+  background: ui.$bg-white;
+  border: 1px solid ui.$border-subtle;
   border-radius: 10px;
   box-shadow: 0px 12px 32px -8px rgba(27, 31, 42, 0.18);
-  // stays mounted (like the old Header menu) so the Upload label still opens the file picker
   opacity: 0;
   pointer-events: none;
   transform: translateY(-4px);
@@ -430,12 +234,12 @@ $unsaved-dot: #f97316;
   font-size: 14px;
   font-weight: 500;
   letter-spacing: -0.42px;
-  color: $text-primary;
+  color: ui.$text-primary;
   white-space: nowrap;
   cursor: pointer;
 
   &:hover {
-    background: $bg-canvas;
+    background: ui.$bg-canvas;
   }
 }
 
@@ -461,7 +265,7 @@ $unsaved-dot: #f97316;
   font-size: 18px;
   font-weight: 600;
   line-height: 1.2;
-  color: $text-primary;
+  color: ui.$text-primary;
   overflow-wrap: anywhere;
 }
 
@@ -473,7 +277,7 @@ $unsaved-dot: #f97316;
   font-size: 14px;
   font-weight: 400;
   letter-spacing: -0.42px;
-  color: $text-secondary;
+  color: ui.$text-secondary;
 }
 
 .pill {
@@ -490,13 +294,13 @@ $unsaved-dot: #f97316;
 }
 
 .pillSuccess {
-  background: $success-bg;
-  color: $success-text;
+  background: ui.$success-bg;
+  color: ui.$success-text;
 }
 
 .pillWarning {
-  background: $warning-bg;
-  color: $warning-text;
+  background: ui.$warning-bg;
+  color: ui.$warning-text;
 }
 
 .linkBox {
@@ -507,8 +311,8 @@ $unsaved-dot: #f97316;
   max-width: 100%;
   padding: 4px 4px 4px 12px;
   flex-shrink: 0;
-  background: $bg-canvas;
-  border: 1px solid $border-subtle;
+  background: ui.$bg-canvas;
+  border: 1px solid ui.$border-subtle;
   border-radius: 10px;
 
   > svg {
@@ -522,17 +326,17 @@ $unsaved-dot: #f97316;
   font-size: 14px;
   font-weight: 400;
   letter-spacing: -0.42px;
-  color: $text-primary;
+  color: ui.$text-primary;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .copyButton {
   background: transparent;
-  color: $primary;
+  color: ui.$primary;
 
   &:not(:disabled):hover {
-    background: $primary-50;
+    background: ui.$primary-50;
   }
 }
 
@@ -541,12 +345,12 @@ $unsaved-dot: #f97316;
   align-items: center;
   gap: 12px;
   padding: 12px 24px;
-  border-top: 1px solid $border-subtle;
+  border-top: 1px solid ui.$border-subtle;
   font-size: 12px;
   font-weight: 500;
   line-height: 1.5;
   letter-spacing: -0.36px;
-  color: $text-secondary;
+  color: ui.$text-secondary;
   white-space: nowrap;
 }
 
@@ -556,13 +360,13 @@ $unsaved-dot: #f97316;
   height: 6px;
   overflow: hidden;
   border-radius: 100px;
-  background: $border-subtle;
+  background: ui.$border-subtle;
 }
 
 .completionFill {
   height: 100%;
   border-radius: 100px;
-  background: $primary;
+  background: ui.$primary;
 }
 
 /* ---------- Save bar ---------- */
@@ -576,7 +380,7 @@ $unsaved-dot: #f97316;
   gap: 12px;
   padding: 10px 10px 10px 18px;
   border-radius: 14px;
-  background: $text-primary;
+  background: ui.$text-primary;
   box-shadow: 0px 24px 60px -20px rgba(23, 20, 31, 0.28);
 }
 
@@ -585,11 +389,11 @@ $unsaved-dot: #f97316;
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: $unsaved-dot;
+  background: ui.$orange;
 }
 
 .saveDotIdle {
-  background: $text-secondary;
+  background: ui.$text-secondary;
 }
 
 .saveText {
@@ -599,10 +403,8 @@ $unsaved-dot: #f97316;
   font-weight: 500;
   line-height: 1.5;
   letter-spacing: -0.42px;
-  color: $text-inverse;
+  color: ui.$text-inverse;
 }
-
-/* ---------- Responsive ---------- */
 
 @media screen and (max-width: 1000px) {
   // index.jsx already shows the profile-completion banner on mobile
@@ -611,15 +413,7 @@ $unsaved-dot: #f97316;
   }
 }
 
-@media screen and (max-width: 768px) {
-  .sectionHeader {
-    flex-wrap: wrap;
-  }
-
-  .grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
+@media screen and (max-width: ui.$mobile) {
   .profileMain {
     flex-wrap: wrap;
     padding: 16px;
@@ -631,14 +425,6 @@ $unsaved-dot: #f97316;
 
   .linkText {
     flex: 1;
-  }
-
-  .cardHeader {
-    padding: 16px 16px 4px;
-  }
-
-  .cardBody {
-    padding: 12px 16px 16px;
   }
 
   .completion {

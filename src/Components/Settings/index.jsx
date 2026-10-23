@@ -27,6 +27,9 @@ const Threshold = React.lazy(() => import("./Threshold"));
 const ManageSaveCards = React.lazy(() => import("./ManageSaveCards"));
 const FinancialInfo = React.lazy(() => import("./FinancialInfo"));
 
+// Tabs already on the new card design draw their own cards, so they skip the old panel shadow.
+const REDESIGNED_TABS = ["Basic Info", "Change Password"];
+
 const Settings = () => {
   const { t } = useTranslation();
   const [currentTab, setCurrentTab] = useState("Basic Info");
@@ -59,7 +62,7 @@ const Settings = () => {
               />
               <div
                 style={{ marginLeft: "24px" }}
-                className={`${styles.right} ${currentTab === "Basic Info" ? styles.plain : ""}`}
+                className={`${styles.right} ${REDESIGNED_TABS.includes(currentTab) ? styles.plain : ""}`}
               >
                 {currentTab === "Basic Info" && <Basic setCurrentTab={setCurrentTab} />}
                 {currentTab === "Change Password" && <Password />}

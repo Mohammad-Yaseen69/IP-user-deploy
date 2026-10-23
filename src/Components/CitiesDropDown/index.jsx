@@ -130,7 +130,7 @@ const CitiesDropDown = ({
                 padding: "9px 12px",
                 borderRadius: "6px",
                 border: "1px solid #E1E5EE",
-                background: "#FFF",
+                background,
                 boxShadow: "0 1px 1.5px 0 rgba(44, 54, 53, 0.03)",
               }
             : {}),
