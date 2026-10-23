@@ -35,6 +35,7 @@ const REDESIGNED_TABS = [
   "Two Factor Authentication",
   "Nominee Information",
   "Notifications",
+  "Login Activity",
 ];
 
 const Settings = () => {

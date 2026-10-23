@@ -1,11 +1,12 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { Card, CardBody, CardHeader, Spinner } from "reactstrap";
-import { H4 } from "../../AbstractElements";
+import { Spinner } from "reactstrap";
 import SessionItem from "./SessionItem";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../Context/UserContext";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
+import styles from "./styles/Sessions.module.scss";
+import { SignOut, Warning } from "./Icons";
 const LIMIT = 10;
 
 const Sessions = () => {
@@ -44,43 +45,54 @@ const Sessions = () => {
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
-    <Card>
-      <CardHeader>
-        <div>
-          <h4>{t("Sessions")}</h4>
-          <p style={{ marginTop: ".5rem", color: "black", fontWeight: "300" }}>
-            {t("This is a list of devices that have logged into your account.")}
+    <div className={styles.container}>
+      <div className={styles.sectionHeader}>
+        <div className={styles.sectionText}>
+          <h4 className={styles.sectionTitle}>{t("Devices & sessions")}</h4>
+          <p className={styles.sectionSubtitle}>
+            {t("Everywhere you've signed in from recently.")}
           </p>
         </div>
-      </CardHeader>
-      <CardBody style={{ maxHeight: "700px", overflowY: "auto" }}>
-        {isLoading && <p style={{ textAlign: "center", color: "#888" }}>{t("Loading...")}</p>}
+        <button type="button" className={`${styles.button} ${styles.buttonSecondary}`}>
+          <SignOut />
+          {t("Sign out all others")}
+        </button>
+      </div>
 
-        {sessions.map((session, index) => (
-          <SessionItem key={session._id} session={session} index={index} />
-        ))}
+      <section className={styles.card}>
+        <div className={styles.rows}>
+          {isLoading && <p className={styles.listNote}>{t("Loading...")}</p>}
 
-        <div ref={observerRef} style={{ height: "1px" }} />
+          {sessions.map((session, index) => (
+            <SessionItem key={session._id} session={session} index={index} />
+          ))}
 
-        {isFetchingNextPage && (
-          <p style={{ textAlign: "center", color: "#888", padding: "10px" }}>
-            <Spinner />
-          </p>
-        )}
+          <div ref={observerRef} style={{ height: "1px" }} />
 
-        {!hasNextPage && sessions.length > 0 && (
-          <p style={{ textAlign: "center", color: "#aaa", padding: "10px" }}>
-            {t("No more sessions")}
-          </p>
-        )}
+          {isFetchingNextPage && (
+            <p className={styles.listNote}>
+              <Spinner size="sm" />
+            </p>
+          )}
 
-        {!isLoading && sessions.length === 0 && (
-          <p style={{ textAlign: "center", color: "#aaa", padding: "10px" }}>
-            {t("No login history found")}
-          </p>
-        )}
-      </CardBody>
-    </Card>
+          {!hasNextPage && sessions.length > 0 && (
+            <p className={styles.listNote}>{t("No more sessions")}</p>
+          )}
+
+          {!isLoading && sessions.length === 0 && (
+            <p className={styles.listNote}>{t("No login history found")}</p>
+          )}
+        </div>
+      </section>
+
+      <div className={styles.note}>
+        <Warning color="#6E7687" />
+        <p>
+          <strong>{t("See a device you don't know?")}</strong>{" "}
+          {t("Change your password right away.")}
+        </p>
+      </div>
+    </div>
   );
 };
 
