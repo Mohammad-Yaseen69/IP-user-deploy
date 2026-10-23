@@ -38,6 +38,7 @@ const REDESIGNED_TABS = [
   "Login Activity",
   "Receiving Accounts",
   "Download Your Data",
+  "Delete Your Account",
 ];
 
 const Settings = () => {
