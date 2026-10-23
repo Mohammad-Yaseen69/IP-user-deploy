@@ -1,18 +1,4 @@
-import { H4 } from "../../AbstractElements";
-import {
-  Row,
-  Col,
-  CardHeader,
-  CardBody,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  Button,
-} from "reactstrap";
+import { Form, FormGroup, Label, Input, Modal, ModalHeader, ModalBody } from "reactstrap";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
@@ -25,6 +11,17 @@ import { useLocation, useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import { preventEdgeSpaces } from "../../hooks/useTrimInput";
+import styles from "./styles/SecurityQuestion.module.scss";
+import { CaretDown, LockSimpleSmall, WarningCircle } from "./Icons";
+
+const Hint = ({ children }) => (
+  <div className={styles.hint}>
+    <WarningCircle />
+    <span>{children}</span>
+  </div>
+);
+
+const MASKED_ANSWER = "**********";
 
 const SecurityQuestions = () => {
   const {
@@ -55,6 +52,7 @@ const SecurityQuestions = () => {
   const [selectedQuesTwo, setSelectedQuesTwo] = useState("");
   const [selectedQuesThree, setSelectedQuesThree] = useState("");
   const [answerOne, setAnswerOne] = useState("");
+  const [prevAnswers, setPrevAnswers] = useState({ ans1: "", ans2: "", ans3: "" });
   const [answerTwo, setAnswerTwo] = useState("");
   const [answerThree, setAnswerThree] = useState("");
   const [saving, setSaving] = useState("");
@@ -76,15 +74,29 @@ const SecurityQuestions = () => {
   }, [userDetails]);
 
   const sendOtp = async (method) => {
+    if (
+      !selectedQuesOne ||
+      !answerOne ||
+      !answerTwo ||
+      !selectedQuesTwo ||
+      !selectedQuesThree ||
+      !answerThree
+    ) {
+      toast.error(t("Please fill all the required fields!"));
+      return;
+    }
     setSaving(true);
+    const ans1 = answerOne?.trim();
+    const ans2 = answerTwo?.trim();
+    const ans3 = answerThree?.trim();
     const data = {
       data: {
         question1: selectedQuesOne,
-        answer1: answerOne?.trim() || "",
+        answer1: ans1 === MASKED_ANSWER ? prevAnswers.ans1 : ans1,
         question2: selectedQuesTwo,
-        answer2: answerTwo?.trim() || "",
+        answer2: ans2 === MASKED_ANSWER ? prevAnswers.ans2 : ans2,
         question3: selectedQuesThree,
-        answer3: answerThree?.trim() || "",
+        answer3: ans3 === MASKED_ANSWER ? prevAnswers.ans3 : ans3,
       },
       type: typeof method === "string" ? method : codeType,
     };
@@ -115,7 +127,6 @@ const SecurityQuestions = () => {
         setShowOtp(true);
       } catch (error) {
         toast.error("Something went wrong while sending otp!");
-        // console.log(decryptData(error?.response?.data?.data))
       } finally {
         setSaving(false);
       }
@@ -152,15 +163,17 @@ const SecurityQuestions = () => {
       setSelectedQuesOne(userDetails?.user?.question1 ?? userDetails?.company?.question1 ?? "");
       setSelectedQuesTwo(userDetails?.user?.question2 ?? userDetails?.company?.question2 ?? "");
       setSelectedQuesThree(userDetails?.user?.question3 ?? userDetails?.company?.question3 ?? "");
-      setAnswerOne(
-        (userDetails?.user?.answer1 ?? userDetails?.company?.answer1) ? "**************" : "",
-      );
-      setAnswerTwo(
-        (userDetails?.user?.answer2 ?? userDetails?.company?.answer2) ? "**************" : "",
-      );
-      setAnswerThree(
-        (userDetails?.user?.answer3 ?? userDetails?.company?.answer3) ? "**************" : "",
-      );
+      const ans1 = userDetails?.user?.answer1 ?? userDetails?.company?.answer1;
+      const ans2 = userDetails?.user?.answer2 ?? userDetails?.company?.answer2;
+      const ans3 = userDetails?.user?.answer3 ?? userDetails?.company?.answer3;
+      setAnswerOne(ans1 ? MASKED_ANSWER : "");
+      setAnswerTwo(ans2 ? MASKED_ANSWER : "");
+      setAnswerThree(ans3 ? MASKED_ANSWER : "");
+      setPrevAnswers({
+        ans1: ans1 ?? "",
+        ans2: ans2 ?? "",
+        ans3: ans3 ?? "",
+      });
     }
   }, [userDetails, isEditable]);
 
@@ -171,8 +184,6 @@ const SecurityQuestions = () => {
       otp,
       type: codeType,
     };
-    // console.log(data)
-    // console.log(encryptData(data))
     axios
       .post(
         `${import.meta.env.VITE_IP_DEV_API}/api/user/set-security-question/${userDetails._id}`,
@@ -191,9 +202,7 @@ const SecurityQuestions = () => {
         }
       })
       .catch((err) => {
-        // console.log(decryptData(err.response.data.data))
         const decrypted = decryptData(err.response.data.data);
-        console.log(decrypted);
         if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
           const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
           const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
@@ -203,12 +212,14 @@ const SecurityQuestions = () => {
           localStorage.setItem("ip_country", coun);
           navigate("/login");
         }
-        error("We cannot process your request at the moment, please try again later.");
+        error("We cannot process your request at the moment, please try again later.");
       })
       .finally(() => setSaving(false));
   };
 
   const isValidAnswer = () => {
+    if (answerOne === MASKED_ANSWER && answerTwo === MASKED_ANSWER && answerThree === MASKED_ANSWER)
+      return false;
     return true;
   };
 
@@ -219,288 +230,172 @@ const SecurityQuestions = () => {
   useEffect(() => {
     setIsEditable(editmode);
   }, [editmode]);
-  // console.log(userDetails.user, "userDetails?.user?.question1")
-  return (
-    <Form className="card" id="security">
-      <CardHeader className={`pb-0`}>
-        <H4 attrH4={{ className: "card-title mb-0" }}>{t("Security Questions")}</H4>
-      </CardHeader>
-      <CardBody>
-        <Row>
-          <Col md="12">
-            <FormGroup className="mb-3" style={{ position: "relative" }}>
-              {(!answerOne || !selectedQuesOne) && (
-                <div
-                  style={{
-                    height: "9px",
-                    width: "9px",
-                    borderRadius: "9px",
-                    background: "red",
-                    position: "absolute",
-                    bottom: "20px",
-                    right: "-17px",
-                  }}
-                ></div>
-              )}
-              <Label className="form-label">
-                {t("Security Question")} 1{" "}
-                {(!answerOne || !selectedQuesOne) && (
-                  <span style={{ color: "red" }}>{t("(Required)")}</span>
-                )}
-              </Label>
-              <Input
-                disabled={!isEditable}
-                type="select"
-                value={selectedQuesOne}
-                onChange={(e) => {
-                  setSelectedQuesOne(e.target.value);
-                  setAnswerOne("");
-                }}
-              >
-                <option value="">{t("Select your question")}</option>
-                {userSecurityQues.map((que) => (
-                  <option
-                    value={que._id}
-                    key={que._id}
-                    disabled={selectedQuesThree === que._id || selectedQuesTwo === que._id}
-                  >
-                    {que.question}
-                  </option>
-                ))}
-              </Input>
-              <Input
-                disabled={!isEditable}
-                className="form-control mt-2"
-                type="text"
-                placeholder={t("Answer To The Question")}
-                value={answerOne}
-                onChange={(e) => {
-                  const value = e.target.value.slice(0, 50);
-                  setAnswerOne(value);
-                }}
-                onKeyDown={preventEdgeSpaces}
 
-                maxLength={50}
-                style={{
-                  borderColor: isValidAnswer(answerOne) ? "#eeeeee" : "red",
-                }}
-              />
-              <div
-                style={{
-                  fontSize: "12px",
-                  color: "#666",
-                  marginTop: "4px",
-                  textAlign: "right",
-                }}
-              >
-                {answerOne?.length || 0}/50
-              </div>
-            </FormGroup>
-          </Col>
-          <Col md="12">
-            <FormGroup className="mb-3" style={{ position: "relative" }}>
-              {(!answerTwo || !selectedQuesTwo) && (
-                <div
-                  style={{
-                    height: "9px",
-                    width: "9px",
-                    borderRadius: "9px",
-                    background: "red",
-                    position: "absolute",
-                    bottom: "20px",
-                    right: "-17px",
-                  }}
-                ></div>
-              )}
-              <Label className="form-label">
-                {t("Security Question")} 2{" "}
-                {(!answerTwo || !selectedQuesTwo) && (
-                  <span style={{ color: "red" }}>{t("(Required)")}</span>
-                )}
-              </Label>
-              <Input
-                disabled={!isEditable}
-                type="select"
-                value={selectedQuesTwo}
-                onChange={(e) => {
-                  setSelectedQuesTwo(e.target.value);
-                  setAnswerTwo("");
-                }}
-              >
-                <option value="">{t("Select your question")}</option>
-                {userSecurityQues.map((que) => (
-                  <option
-                    value={que._id}
-                    key={que._id}
-                    disabled={selectedQuesOne === que._id || selectedQuesThree === que._id}
-                  >
-                    {que.question}
-                  </option>
-                ))}
-              </Input>
-              <Input
-                disabled={!isEditable}
-                className="form-control mt-2"
-                type="text"
-                placeholder={t("Answer To The Question")}
-                value={answerTwo}
-                onChange={(e) => {
-                  const value = e.target.value.slice(0, 50);
-                  setAnswerTwo(value);
-                }}
-                onKeyDown={preventEdgeSpaces}
-                maxLength={50}
-                style={{
-                  borderColor: isValidAnswer(answerTwo) ? "#eeeeee" : "red",
-                }}
-              />
-              <div
-                style={{
-                  fontSize: "12px",
-                  color: "#666",
-                  marginTop: "4px",
-                  textAlign: "right",
-                }}
-              >
-                {answerTwo?.length || 0}/50
-              </div>
-            </FormGroup>
-          </Col>
-          <Col md="12">
-            <FormGroup className="mb-3" style={{ position: "relative" }}>
-              {(!answerThree || !selectedQuesThree) && (
-                <div
-                  style={{
-                    height: "9px",
-                    width: "9px",
-                    borderRadius: "9px",
-                    background: "red",
-                    position: "absolute",
-                    bottom: "20px",
-                    right: "-17px",
-                  }}
-                ></div>
-              )}
-              <Label className="form-label">
-                {t("Security Question")} 3{" "}
-                {(!answerThree || !selectedQuesThree) && (
-                  <span style={{ color: "red" }}>{t("(Required)")}</span>
-                )}
-              </Label>
-              <Input
-                disabled={!isEditable}
-                type="select"
-                value={selectedQuesThree}
-                onChange={(e) => {
-                  setSelectedQuesThree(e.target.value);
-                  setAnswerThree("");
-                }}
-              >
-                <option value="">{t("Select your question")}</option>
-                {userSecurityQues.map((que) => (
-                  <option
-                    value={que._id}
-                    key={que._id}
-                    disabled={selectedQuesOne === que._id || selectedQuesTwo === que._id}
-                  >
-                    {que.question}
-                  </option>
-                ))}
-              </Input>
-              <Input
-                disabled={!isEditable}
-                className="form-control mt-2"
-                type="text"
-                placeholder={t("Answer To The Question")}
-                value={answerThree}
-                onChange={(e) => {
-                  const value = e.target.value.slice(0, 50);
-                  setAnswerThree(value);
-                }}
-                onKeyDown={preventEdgeSpaces}
-                maxLength={50}
-                style={{
-                  borderColor: isValidAnswer(answerThree) ? "#eeeeee" : "red",
-                }}
-              />
-              <div
-                style={{
-                  fontSize: "12px",
-                  color: "#666",
-                  marginTop: "4px",
-                  textAlign: "right",
-                }}
-              >
-                {answerThree?.length || 0}/50
-              </div>
-            </FormGroup>
-          </Col>
-        </Row>
-      </CardBody>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "flex-end",
-          gap: "1rem",
-          flexWrap: "wrap",
-          padding: "1.5rem",
-        }}
-      >
-        {isEditable && (
-          <Button
-            style={{
-              background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-              border: "none",
-              outline: "none",
-              borderRadius: "10px",
-            }}
-            onClick={() => setIsEditable(false)}
+  const questionRows = [
+    {
+      number: 1,
+      question: selectedQuesOne,
+      setQuestion: setSelectedQuesOne,
+      answer: answerOne,
+      setAnswer: setAnswerOne,
+      takenByOthers: [selectedQuesThree, selectedQuesTwo],
+    },
+    {
+      number: 2,
+      question: selectedQuesTwo,
+      setQuestion: setSelectedQuesTwo,
+      answer: answerTwo,
+      setAnswer: setAnswerTwo,
+      takenByOthers: [selectedQuesOne, selectedQuesThree],
+    },
+    {
+      number: 3,
+      question: selectedQuesThree,
+      setQuestion: setSelectedQuesThree,
+      answer: answerThree,
+      setAnswer: setAnswerThree,
+      takenByOthers: [selectedQuesOne, selectedQuesTwo],
+    },
+  ];
+
+  const questionText = (id) =>
+    userSecurityQues?.find((que) => que._id === id)?.question ?? t("Loading...");
+
+  return (
+    <Form className={styles.container} id="security">
+      <div className={styles.sectionHeader}>
+        <div className={styles.sectionText}>
+          <h4 className={styles.sectionTitle}>{t("Recovery questions")}</h4>
+          <p className={styles.sectionSubtitle}>
+            {t("We ask these if you're locked out and can't receive a code.")}
+          </p>
+        </div>
+        {!isEditable && (
+          <button
             type="button"
-          >
-            {t("Cancel")}
-          </Button>
-        )}
-        {isEditable ? (
-          <Button
-            style={{
-              background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-              border: "none",
-              outline: "none",
-              borderRadius: "10px",
-            }}
-            onClick={() => sendOtp()}
-            disabled={
-              !selectedQuesOne ||
-              !answerOne ||
-              !answerTwo ||
-              !selectedQuesTwo ||
-              !selectedQuesThree ||
-              !answerThree ||
-              !isValidAnswer(answerOne) ||
-              !isValidAnswer(answerTwo) ||
-              !isValidAnswer(answerThree) ||
-              saving
-            }
-            type="button"
-          >
-            {t("Save")}
-          </Button>
-        ) : (
-          <Button
+            className={`${styles.button} ${styles.buttonPrimary}`}
             onClick={() => setIsEditable(true)}
-            type="button"
             disabled={!isEdit}
-            style={{
-              background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-              border: "none",
-              outline: "none",
-              borderRadius: "10px",
-            }}
           >
             {t("Edit")}
-          </Button>
+          </button>
         )}
+      </div>
+
+      <section className={styles.card}>
+        <div className={styles.rows}>
+          {questionRows.map((row) => {
+            const isMissing = !row.answer || !row.question;
+            return (
+              <div key={row.number} className={styles.questionBlock}>
+                <div className={styles.row}>
+                  <div className={styles.tile}>{row.number}</div>
+                  <p className={`${styles.rowTitle} ${!row.question ? styles.rowTitleEmpty : ""}`}>
+                    {row.question ? questionText(row.question) : t("Not set")}
+                    {isMissing && isEditable && (
+                      <span className={styles.required}>{t("(Required)")}</span>
+                    )}
+                  </p>
+                </div>
+
+                {isEditable && (
+                  <div className={styles.editor}>
+                    <div className={styles.grid}>
+                      <FormGroup className={styles.field}>
+                        <Label className={styles.label}>{t("Question")}</Label>
+                        <div className={`${styles.control} ${styles.withTrailingIcon}`}>
+                          <Input
+                            disabled={!isEditable}
+                            type="select"
+                            value={row.question}
+                            onChange={(e) => {
+                              row.setQuestion(e.target.value);
+                              row.setAnswer("");
+                            }}
+                          >
+                            <option value="">{t("Select your question")}</option>
+                            {userSecurityQues.map((que) => (
+                              <option
+                                value={que._id}
+                                key={que._id}
+                                disabled={row.takenByOthers.includes(que._id)}
+                              >
+                                {que.question}
+                              </option>
+                            ))}
+                          </Input>
+                          <span className={styles.trailingIcon}>
+                            <CaretDown />
+                          </span>
+                        </div>
+                      </FormGroup>
+                      <FormGroup className={styles.field}>
+                        <Label className={styles.label}>{t("New answer")}</Label>
+                        <Input
+                          disabled={!isEditable}
+                          className="form-control"
+                          type="text"
+                          placeholder={t("Type your answer")}
+                          value={row.answer}
+                          onChange={(e) => {
+                            const value = e.target.value.slice(0, 50);
+                            row.setAnswer(value);
+                          }}
+                          onKeyDown={preventEdgeSpaces}
+                          maxLength={50}
+                        />
+                        <Hint>{row.answer?.length || 0}/50</Hint>
+                      </FormGroup>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {isEditable && (
+          <div className={styles.actions}>
+            <button
+              type="button"
+              className={`${styles.button} ${styles.buttonTertiary}`}
+              onClick={() => setIsEditable(false)}
+            >
+              {t("Cancel")}
+            </button>
+            <button
+              type="button"
+              className={`${styles.button} ${styles.buttonPrimary}`}
+              onClick={() => sendOtp()}
+              disabled={
+                !selectedQuesOne ||
+                !answerOne ||
+                !answerTwo ||
+                !selectedQuesTwo ||
+                !selectedQuesThree ||
+                !answerThree ||
+                !isValidAnswer(answerOne) ||
+                !isValidAnswer(answerTwo) ||
+                !isValidAnswer(answerThree) ||
+                saving
+              }
+            >
+              {t("Save")}
+            </button>
+          </div>
+        )}
+      </section>
+
+      <div className={styles.note}>
+        <LockSimpleSmall />
+        <p>
+          {t(
+            "Answers aren't case-sensitive. Pick ones you'll remember but others can't look up online.",
+          )}
+        </p>
+      </div>
+
+      <div style={{ position: "absolute", width: 0, height: 0 }}>
         <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
           <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
           <ModalBody>
@@ -518,18 +413,18 @@ const SecurityQuestions = () => {
             />
           </ModalBody>
         </Modal>
+        <SuccessModal
+          isOpen={showSuccess}
+          message={"Security Questions Updated"}
+          subMessage={"Security questions updated successfully!"}
+          toggle={() => {
+            setShowSuccess(false);
+            if (profileCompletedPercentage != 100) {
+              navigate("/settings?tab=social&ft=true");
+            }
+          }}
+        />
       </div>
-      <SuccessModal
-        isOpen={showSuccess}
-        message={"Security Questions Updated"}
-        subMessage={"Security questions updated successfully!"}
-        toggle={() => {
-          setShowSuccess(false);
-          if (profileCompletedPercentage != 100) {
-            navigate("/settings?tab=social&ft=true");
-          }
-        }}
-      />
     </Form>
   );
 };

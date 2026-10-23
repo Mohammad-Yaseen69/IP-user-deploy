@@ -28,7 +28,7 @@ const ManageSaveCards = React.lazy(() => import("./ManageSaveCards"));
 const FinancialInfo = React.lazy(() => import("./FinancialInfo"));
 
 // Tabs already on the new card design draw their own cards, so they skip the old panel shadow.
-const REDESIGNED_TABS = ["Basic Info", "Change Password"];
+const REDESIGNED_TABS = ["Basic Info", "Change Password", "Security Questions"];
 
 const Settings = () => {
   const { t } = useTranslation();

@@ -9,6 +9,7 @@ $text-inverse: #f8f9fc;
 $border-subtle: #eff1f6;
 $bg-white: #ffffff;
 $bg-canvas: #f8f9fc;
+$bg-surface: #eff1f6;
 $primary: #5926f0;
 $primary-hover: #4a1ed6;
 $primary-50: #f2eeff;
@@ -165,6 +166,13 @@ $mobile: 768px;
   }
 }
 
+@mixin button-medium {
+  height: 36px;
+  padding: 0 16px;
+  font-size: 14px;
+  letter-spacing: -0.42px;
+}
+
 // 40px button (e.g. "Update password")
 @mixin button-large {
   height: 40px;
@@ -188,6 +196,15 @@ $mobile: 768px;
 
   &:not(:disabled):hover {
     background: #e2e5ee;
+  }
+}
+
+@mixin button-tertiary {
+  background: transparent;
+  color: $primary;
+
+  &:not(:disabled):hover {
+    background: $primary-50;
   }
 }
 
