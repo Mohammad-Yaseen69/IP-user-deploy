@@ -36,6 +36,7 @@ const REDESIGNED_TABS = [
   "Nominee Information",
   "Notifications",
   "Login Activity",
+  "Receiving Accounts",
 ];
 
 const Settings = () => {

@@ -1,10 +1,9 @@
 import { useTranslation } from "react-i18next";
-import styles from "../styles/WithdrawalsNew.module.css";
+import styles from "../styles/Withdrawals.module.scss";
 import { MAX_COUNTRIES } from "../withdrawalPayload";
 
 const CountryMeter = ({ used }) => {
   const { t } = useTranslation();
-  const left = Math.max(MAX_COUNTRIES - used, 0);
 
   return (
     <div className={styles.meter}>
@@ -17,21 +16,10 @@ const CountryMeter = ({ used }) => {
         ))}
       </div>
       <p className={styles.meterText}>
-        <strong>
-          {t("{{used}} of {{max}}", {
-            used: Math.min(used, MAX_COUNTRIES),
-            max: MAX_COUNTRIES,
-          })}
-        </strong>{" "}
-        {t("countries used")}
-        {left > 0 && (
-          <span className={styles.meterMuted}>
-            {" · "}
-            {left === 1
-              ? t("You can add one more")
-              : t("You can add {{count}} more", { count: left })}
-          </span>
-        )}
+        {t("{{used}} of {{max}} countries", {
+          used: Math.min(used, MAX_COUNTRIES),
+          max: MAX_COUNTRIES,
+        })}
       </p>
     </div>
   );

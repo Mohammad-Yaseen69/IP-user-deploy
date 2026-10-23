@@ -27,6 +27,11 @@ const tail = (value, count = 4) =>
     .replace(/\s/g, "")
     .slice(-count);
 
+const ending = (value) => {
+  const last = tail(value);
+  return last ? `ending ${last}` : "";
+};
+
 /* "FR76 •••• •••• 7890": enough to recognise the account, never the whole number. */
 export const maskIban = (value) => {
   const clean = String(value ?? "").replace(/\s/g, "");
@@ -60,20 +65,20 @@ const describeEntry = (method, entry) => {
       return {
         title: entry?.name || METHOD_LABELS.bank_account,
         detail: entry?.iban
-          ? maskIban(entry.iban)
-          : maskNumber(entry?.account_number || entry?.swift_code),
+          ? `IBAN ${ending(entry.iban)}`
+          : ending(entry?.account_number || entry?.swift_code),
       };
     case "mobile_wallet":
       return {
         title: entry?.wallet_name || METHOD_LABELS.mobile_wallet,
-        detail: maskPhone(entry?.wallet_account_number),
+        detail: ending(entry?.wallet_account_number),
       };
     case "cash_pickup":
       return {
         title: METHOD_LABELS.cash_pickup,
         detail: [
           entry?.document_type?.replace(/_/g, " ")?.toLowerCase(),
-          maskNumber(entry?.document_number),
+          ending(entry?.document_number),
         ]
           .filter(Boolean)
           .join(" · "),
@@ -81,7 +86,7 @@ const describeEntry = (method, entry) => {
     case "card_payment":
       return {
         title: entry?.card_name || METHOD_LABELS.card_payment,
-        detail: maskNumber(entry?.card_number),
+        detail: ending(entry?.card_number),
       };
     default:
       return { title: "", detail: "" };
