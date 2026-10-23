@@ -31,21 +31,7 @@ import {
   ShieldCheckLarge,
   Trash,
 } from "./Icons";
-
-// Display only: "m.shaheen.alan@gmail.com" -> "m.sh•••@gmail.com"
-const maskEmail = (email = "") => {
-  const [local = "", domain] = String(email).split("@");
-  if (!domain) return email;
-  const visible = local.length > 4 ? local.slice(0, 4) : local.slice(0, 1);
-  return `${visible}•••@${domain}`;
-};
-
-// Display only: "201024837719" -> "+20 ••• ••• 7719"
-const maskPhone = (phone = "", dialCode = "") => {
-  const lastFour = String(phone).replace(/\D/g, "").slice(-4);
-  const dial = dialCode ? (String(dialCode).startsWith("+") ? dialCode : `+${dialCode}`) : "";
-  return `${dial ? `${dial} ` : ""}••• ••• ${lastFour}`;
-};
+import { maskEmail, maskPhone } from "../../utils/Functions/maskContact";
 
 const protectionLevel = (count) => {
   if (count === 0) return { label: "Not protected", tone: tfa.toneDanger, color: "#DC2626" };

@@ -39,6 +39,7 @@ const REDESIGNED_TABS = [
   "Receiving Accounts",
   "Download Your Data",
   "Delete Your Account",
+  "How Others Can Find You",
 ];
 
 const Settings = () => {
