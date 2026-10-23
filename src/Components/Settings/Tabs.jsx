@@ -302,7 +302,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                 }
               }}
             >
-              <item.Icon className={styles.icon} />
+              <item.Icon className={styles.icon} color="#5926F0" />
               <span className={styles.label}>{t(item?.name)}</span>
             </div>
           ))}
