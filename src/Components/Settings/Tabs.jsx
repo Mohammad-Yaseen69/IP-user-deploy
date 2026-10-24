@@ -40,14 +40,11 @@ const TAB_PARAMS = [
   ["nominee", "Nominee Information"],
   ["tfa", "Two Factor Authentication"],
   ["find", "How Others Can Find You"],
-  ["social", "My Social Network Accounts"],
+  // ["social", "My Social Network Accounts"],
   ["notification", "Notifications"],
   ["apikey", "API Key"],
   ["activity", "Login Activity"],
-  // "withdraw" rather than "withdrawal" so the shorter link in the app
-  // matches too; it never did under the old check.
   ["withdraw", "Receiving Accounts"],
-  // Crypto wallets now live on the receiving accounts page.
   ["crypto", "Receiving Accounts"],
   ["cards", "Manage Saved Cards"],
   ["data", "Download Your Data"],
@@ -146,12 +143,12 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
         Icon: Eye,
         group: "Privacy & alerts",
       },
-      can("settings.social-accounts.view") && {
-        name: "My Social Network Accounts",
-        Icon: LinkSimple,
-        tabType: "social",
-        group: "Privacy & alerts",
-      },
+      // can("settings.social-accounts.view") && {
+      //   name: "My Social Network Accounts",
+      //   Icon: LinkSimple,
+      //   tabType: "social",
+      //   group: "Privacy & alerts",
+      // },
       can("settings.notifications.view") && {
         name: "Notifications",
         Icon: Bell,

@@ -1356,7 +1356,7 @@ const Basic = ({ setCurrentTab }) => {
             </div>
           </FormGroup>
 
-          {country === "USA" && (
+          {/* {country === "USA" && (
             <FormGroup className={styles.field}>
               <Label className={styles.label}>
                 {t("State")}
@@ -1383,7 +1383,7 @@ const Basic = ({ setCurrentTab }) => {
                 </span>
               </div>
             </FormGroup>
-          )}
+          )} */}
 
           <FormGroup className={styles.field}>
             <Label className={styles.label}>

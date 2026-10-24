@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import styles from "./styles/index.module.scss";
 import { UserContext } from "../../Context/UserContext";
-// ...existing code...
 import React, { Suspense, useContext, useState } from "react";
 import { Button, Card, CardBody } from "reactstrap";
 import { useNavigate } from "react-router";
@@ -15,7 +14,7 @@ const TwoFactorAuth = React.lazy(() => import("./TwoFactorAuth"));
 const Nominee = React.lazy(() => import("./Nominee"));
 const Notifications = React.lazy(() => import("./Notifications"));
 const Verification = React.lazy(() => import("./Verification"));
-const Accounts = React.lazy(() => import("./Accounts"));
+// const Accounts = React.lazy(() => import("./Accounts"));
 const Sessions = React.lazy(() => import("./Sessions"));
 const DeleteAccount = React.lazy(() => import("./DeleteAccount"));
 const DownloadData = React.lazy(() => import("./DownloadAccountData"));
@@ -129,7 +128,7 @@ const Settings = () => {
                       </CardBody>
                     </Card>
                   ))}
-                {currentTab === "My Social Network Accounts" && <Accounts />}
+                {/* {currentTab === "My Social Network Accounts" && <Accounts />} */}
                 {currentTab === "Login Activity" && <Sessions />}
                 {currentTab === "Receiving Accounts" && <WithdrawalsNew />}
                 {currentTab === "Payment Threshold" && (
@@ -204,7 +203,7 @@ const Settings = () => {
                 {currentTab === "Nominee Information" && <Nominee />}
                 {currentTab === "Notifications" && <Notifications />}
                 {currentTab === "Identity Verification" && <Verification />}
-                {currentTab === "My Social Network Accounts" && <Accounts />}
+                {/* {currentTab === "My Social Network Accounts" && <Accounts />} */}
                 {currentTab === "Login Activity" && <Sessions />}
                 {currentTab === "Receiving Accounts" && <WithdrawalsNew />}
                 {currentTab === "Download Your Data" && <DownloadData />}
