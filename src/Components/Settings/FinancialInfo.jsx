@@ -362,7 +362,11 @@ const FinancialInfo = () => {
                       options={selectOptions[question.question_key]}
                       value={
                         selectOptions[question.question_key]?.find(
-                          (opt) => opt.value === question.answers,
+                          (opt) =>
+                            opt.value ===
+                            (Array.isArray(question.answers)
+                              ? question.answers[0]
+                              : question.answers),
                         ) ||
                         (question.answers &&
                         typeof question.answers === "string" &&
