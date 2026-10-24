@@ -227,9 +227,16 @@ const FinancialInfo = () => {
   const updateData = (field, value) => {
     if (field === "country") {
       setQuestions(
-        questions.map((q) =>
-          q.question_key === field ? { ...q, answers: [...q.answers, value] } : q,
-        ),
+        questions.map((q) => {
+          if (q.question_key !== field) return q;
+          const current = Array.isArray(q.answers) ? q.answers : [];
+          return {
+            ...q,
+            answers: current.includes(value)
+              ? current.filter((iso3) => iso3 !== value)
+              : [...current, value],
+          };
+        }),
       );
     } else {
       setQuestions(questions.map((q) => (q.question_key === field ? { ...q, answers: value } : q)));
