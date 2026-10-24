@@ -40,6 +40,7 @@ const REDESIGNED_TABS = [
   "Delete Your Account",
   "How Others Can Find You",
   "Financial Info",
+  "Manage Saved Cards",
 ];
 
 const Settings = () => {
