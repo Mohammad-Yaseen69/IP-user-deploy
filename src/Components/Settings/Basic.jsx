@@ -894,105 +894,110 @@ const Basic = ({ setCurrentTab }) => {
         {/* Profile card */}
         <section className={styles.card}>
           <div className={styles.profileMain}>
-            <div className={styles.avatarWrap} ref={dpMenuRef}>
-              {userDetails?.profileImage?.url || isEditingDp ? (
-                <img
-                  src={croppedImages?.profileDP || dp}
-                  alt={
-                    userDetails?.account_type === "individual"
-                      ? userDetails?.user?.first_name
-                      : userDetails?.company?.company_name
-                  }
-                  className={styles.avatarImg}
+            <div className="d-flex align-items-center gap-3">
+              <div className={styles.avatarWrap} ref={dpMenuRef}>
+                {userDetails?.profileImage?.url || isEditingDp ? (
+                  <img
+                    src={croppedImages?.profileDP || dp}
+                    alt={
+                      userDetails?.account_type === "individual"
+                        ? userDetails?.user?.first_name
+                        : userDetails?.company?.company_name
+                    }
+                    className={styles.avatarImg}
+                  />
+                ) : (
+                  <div className={styles.avatar}>{initials}</div>
+                )}
+
+                {isEditingDp ? (
+                  <button
+                    type="button"
+                    className={`${styles.button} ${styles.buttonPrimary} ${styles.avatarSave}`}
+                    onClick={handleDpSave}
+                    disabled={isSavingDp}
+                  >
+                    {isSavingDp ? t("Saving") : t("Save")}
+                  </button>
+                ) : (
+                  can("user-profile.update") && (
+                    <>
+                      <button
+                        type="button"
+                        className={styles.avatarEdit}
+                        onClick={toggleDpMenu}
+                        aria-label={t("Change profile picture")}
+                      >
+                        <Camera size={14} color="#5926F0" />
+                      </button>
+                      <div
+                        className={`${styles.avatarMenu} ${showDpMenu ? styles.avatarMenuOpen : ""}`}
+                      >
+                        <label
+                          htmlFor="dp"
+                          onClick={toggleDpMenu}
+                          className={styles.avatarMenuItem}
+                        >
+                          <Camera />
+                          <span>{t("Upload")}</span>
+                        </label>
+                        {userDetails?.profileImage?.url && (
+                          <>
+                            <label
+                              className={styles.avatarMenuItem}
+                              onClick={() => {
+                                toggleDpMenu();
+                                setShowDpAdjustModal(true);
+                              }}
+                            >
+                              <Camera />
+                              <span>{t("Adjust")}</span>
+                            </label>
+                            <label
+                              className={styles.avatarMenuItem}
+                              onClick={() => {
+                                setShowDpDeleteModal(true);
+                                toggleDpMenu();
+                              }}
+                            >
+                              <Trash color="#1B1F2A" />
+                              <span>{t("Remove")}</span>
+                            </label>
+                          </>
+                        )}
+                      </div>
+                    </>
+                  )
+                )}
+                <input
+                  type="file"
+                  name="dp"
+                  id="dp"
+                  hidden
+                  onChange={handleDpFileSelect}
+                  accept="image/*"
                 />
-              ) : (
-                <div className={styles.avatar}>{initials}</div>
-              )}
+              </div>
 
-              {isEditingDp ? (
-                <button
-                  type="button"
-                  className={`${styles.button} ${styles.buttonPrimary} ${styles.avatarSave}`}
-                  onClick={handleDpSave}
-                  disabled={isSavingDp}
-                >
-                  {isSavingDp ? t("Saving") : t("Save")}
-                </button>
-              ) : (
-                can("user-profile.update") && (
-                  <>
-                    <button
-                      type="button"
-                      className={styles.avatarEdit}
-                      onClick={toggleDpMenu}
-                      aria-label={t("Change profile picture")}
-                    >
-                      <Camera size={14} color="#5926F0" />
-                    </button>
-                    <div
-                      className={`${styles.avatarMenu} ${showDpMenu ? styles.avatarMenuOpen : ""}`}
-                    >
-                      <label htmlFor="dp" onClick={toggleDpMenu} className={styles.avatarMenuItem}>
-                        <Camera />
-                        <span>{t("Upload")}</span>
-                      </label>
-                      {userDetails?.profileImage?.url && (
-                        <>
-                          <label
-                            className={styles.avatarMenuItem}
-                            onClick={() => {
-                              toggleDpMenu();
-                              setShowDpAdjustModal(true);
-                            }}
-                          >
-                            <Camera />
-                            <span>{t("Adjust")}</span>
-                          </label>
-                          <label
-                            className={styles.avatarMenuItem}
-                            onClick={() => {
-                              setShowDpDeleteModal(true);
-                              toggleDpMenu();
-                            }}
-                          >
-                            <Trash color="#1B1F2A" />
-                            <span>{t("Remove")}</span>
-                          </label>
-                        </>
-                      )}
-                    </div>
-                  </>
-                )
-              )}
-              <input
-                type="file"
-                name="dp"
-                id="dp"
-                hidden
-                onChange={handleDpFileSelect}
-                accept="image/*"
-              />
-            </div>
-
-            <div className={styles.profileInfo}>
-              <p className={styles.profileName}>{displayName}</p>
-              <div className={styles.profileMeta}>
-                <span
-                  className={`${styles.pill} ${isVerified ? styles.pillSuccess : styles.pillWarning}`}
-                >
-                  {isVerified ? t("Verified") : t("Unverified")}
-                </span>
-                <span>
-                  {userDetails?.account_type === "individual"
-                    ? t("Personal account")
-                    : t("Business account")}
-                  {userDetails.createdAt
-                    ? ` · ${t("member since")} ${dayjs(userDetails.createdAt).format("YYYY")}`
-                    : ""}
-                </span>
+              <div className={styles.profileInfo}>
+                <p className={styles.profileName}>{displayName}</p>
+                <div className={styles.profileMeta}>
+                  <span
+                    className={`${styles.pill} ${isVerified ? styles.pillSuccess : styles.pillWarning}`}
+                  >
+                    {isVerified ? t("Verified") : t("Unverified")}
+                  </span>
+                  <span>
+                    {userDetails?.account_type === "individual"
+                      ? t("Personal account")
+                      : t("Business account")}
+                    {userDetails.createdAt
+                      ? ` · ${t("member since")} ${dayjs(userDetails.createdAt).format("YYYY")}`
+                      : ""}
+                  </span>
+                </div>
               </div>
             </div>
-
             {referralLink && (
               <div className={styles.linkBox}>
                 <LinkSimpleSmall />

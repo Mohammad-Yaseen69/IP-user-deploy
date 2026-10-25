@@ -68,19 +68,22 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
     [
       can("settings.basic-info.view") && {
         name: "Basic Info",
+        label: "Personal details",
         Icon: User,
         group: "Account",
       },
       can("settings.financial-info.view") && {
         name: "Financial Info",
+        label: "Financial profile",
         Icon: ChartBar,
         group: "Account",
       },
       can("settings.nominee.view") && {
         name: "Nominee Information",
+        label: "Nominee",
         Icon: Heart,
         group: "Account",
-        badge: "Add", // static for now, as per Figma
+        badge: "Add",
       },
       account_type === "business"
         ? can("settings.business-verification.view") && {
@@ -91,6 +94,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
           }
         : {
             name: "Identity Verification",
+            label: "Identity verification",
             Icon: IdCard,
             tabType: "kyc",
             group: "Account",
@@ -102,44 +106,52 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
       },
       can("settings.password.view") && {
         name: "Change Password",
+        label: "Password",
         Icon: Key,
         group: "Security",
         badge: "Due soon", // static for now
       },
       {
         name: "Two Factor Authentication",
+        label: "Sign-in & 2FA",
         Icon: ShieldCheck,
         tabType: "tfa",
         group: "Security",
       },
       can("settings.security-questions.view") && {
         name: "Security Questions",
+        label: "Recovery questions",
         Icon: Question,
         group: "Security",
       },
       can("settings.payment-threshold.view") && {
         name: "Payment Threshold",
+        label: "Payment approvals",
         Icon: Gauge,
         group: "Security",
       },
       can("settings.login-activity.view") && {
         name: "Login Activity",
+        label: "Devices & sessions",
         Icon: Devices,
         group: "Security",
       },
       can("settings.receiving-accounts.view") && {
         name: "Receiving Accounts",
+        label: "Withdrawal accounts",
         Icon: Bank,
         tabType: "withdrawls",
         group: "Money",
       },
       can("settings.saved-cards.view") && {
         name: "Manage Saved Cards",
+        label: "Saved cards",
         Icon: CreditCard,
         group: "Money",
       },
       can("settings.how-others-find-you.view") && {
         name: "How Others Can Find You",
+        label: "How people find you",
         Icon: Eye,
         group: "Privacy & alerts",
       },
@@ -156,11 +168,13 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
       },
       can("settings.download-data.view") && {
         name: "Download Your Data",
+        label: "Export your data",
         Icon: DownloadSimple,
         group: "Your data",
       },
       can("settings.delete-account.view") && {
         name: "Delete Your Account",
+        label: "Close account",
         Icon: Trash,
         group: "Your data",
       },
@@ -266,7 +280,9 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
 
   const searchTerm = search.trim().toLowerCase();
   const visibleTabs = tabsData.filter(
-    (item) => item?.name?.length > 0 && t(item.name).toLowerCase().includes(searchTerm),
+    (item) =>
+      item?.name?.length > 0 &&
+      [item.label, item.name].some((text) => text && t(text).toLowerCase().includes(searchTerm)),
   );
   const groupTabs = (list) =>
     TAB_GROUPS.map((group) => ({
@@ -300,7 +316,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
               }}
             >
               <item.Icon className={styles.icon} color="#5926F0" />
-              <span className={styles.label}>{t(item?.name)}</span>
+              <span className={styles.label}>{t(item?.label || item?.name)}</span>
             </div>
           ))}
         </div>
@@ -360,11 +376,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                     style={{
                       background: isMissing && "rgba(255, 136, 0, 0.08)",
                     }}
-                    className={
-                      styles.mobileRow +
-                      (isDisabled ? " " + styles.disabled : "") +
-                      (currentTab === item?.name ? " " + styles.active : "")
-                    }
+                    className={styles.mobileRow + (isDisabled ? " " + styles.disabled : "")}
                     tabIndex={isDisabled ? -1 : 0}
                     onClick={() => {
                       if (isDisabled) return;
@@ -379,8 +391,8 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                       }
                     }}
                   >
-                    <item.Icon className={styles.icon} />
-                    <span className={styles.label}>{t(item?.name)}</span>
+                    <item.Icon className={styles.icon} color={"#6E7687"} />
+                    <span className={styles.label}>{t(item?.label || item?.name)}</span>
 
                     {item?.badge && <span className={styles.badge}>{t(item.badge)}</span>}
                     {item?.value && <span className={styles.rowValue}>{item.value}</span>}
@@ -440,7 +452,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                   color={currentTab === item?.name ? "#5926f0" : "#1b1f2a"}
                   className={styles.icon}
                 />
-                <span className={styles.label}>{t(item?.name)}</span>
+                <span className={styles.label}>{t(item?.label || item?.name)}</span>
                 {item?.badge && <span className={styles.badge}>{t(item.badge)}</span>}
                 {item?.name === verificationTabName && hasRequiredAdditionalFiles ? (
                   <div

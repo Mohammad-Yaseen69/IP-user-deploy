@@ -5,6 +5,7 @@ import React, { Suspense, useContext, useState } from "react";
 import { Button, Card, CardBody } from "reactstrap";
 import { useNavigate } from "react-router";
 import InstaPayLoader from "../Loader";
+import { ArrowLeft } from "./Icons";
 const TopRight = React.lazy(() => import("../topRight"));
 const Tabs = React.lazy(() => import("./Tabs"));
 const Basic = React.lazy(() => import("./Basic"));
@@ -46,6 +47,13 @@ const REDESIGNED_TABS = [
 const Settings = () => {
   const { t } = useTranslation();
   const [currentTab, setCurrentTab] = useState("Basic Info");
+  const [mobileTabOpen, setMobileTabOpen] = useState(false);
+
+  const openMobileTab = (tab) => {
+    setCurrentTab(tab);
+    setMobileTabOpen(true);
+    window.scrollTo(0, 0);
+  };
   const { userDetails, verifyToken, profileCompletedPercentage, authHeader, setUpdateToken } =
     useContext(UserContext);
   const navigate = useNavigate();
@@ -154,7 +162,18 @@ const Settings = () => {
         ) : (
           <div className={styles.mobile}>
             <div className={styles.top}>
-              <h4>{t("Settings")}</h4>
+              {mobileTabOpen ? (
+                <button
+                  type="button"
+                  className={styles.back}
+                  onClick={() => setMobileTabOpen(false)}
+                >
+                  <ArrowLeft />
+                  {t("Settings")}
+                </button>
+              ) : (
+                <h4>{t("Settings")}</h4>
+              )}
             </div>
             {profileCompletedPercentage < 100 && (
               <div className={styles.profile_complete}>
@@ -188,13 +207,15 @@ const Settings = () => {
               </div>
             )}
             <div className={styles.bottom}>
-              <Tabs
-                currentTab={currentTab}
-                setCurrentTab={setCurrentTab}
-                account_type={userDetails?.account_type}
-                verifyToken={verifyToken}
-              />
-              <div className={styles.right}>
+              <div hidden={mobileTabOpen}>
+                <Tabs
+                  currentTab={currentTab}
+                  setCurrentTab={openMobileTab}
+                  account_type={userDetails?.account_type}
+                  verifyToken={verifyToken}
+                />
+              </div>
+              <div className={styles.right} hidden={!mobileTabOpen}>
                 {currentTab === "Basic Info" && <Basic setCurrentTab={setCurrentTab} />}
                 {currentTab === "Change Password" && <Password />}
                 {currentTab === "Security Questions" && <SecurityQuestions />}

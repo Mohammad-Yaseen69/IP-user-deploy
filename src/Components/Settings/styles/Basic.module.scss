@@ -140,6 +140,8 @@
   align-items: center;
   gap: 16px;
   padding: 20px 24px;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .avatarWrap {
@@ -415,7 +417,6 @@
 
 @media screen and (max-width: ui.$mobile) {
   .profileMain {
-    flex-wrap: wrap;
     padding: 16px;
   }
 
