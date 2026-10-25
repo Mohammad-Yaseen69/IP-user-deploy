@@ -166,7 +166,11 @@ const Settings = () => {
                 <button
                   type="button"
                   className={styles.back}
-                  onClick={() => setMobileTabOpen(false)}
+                  onClick={() => {
+                    setMobileTabOpen(false);
+                    const ft = new URLSearchParams(window.location.search).get("ft");
+                    navigate(`?${new URLSearchParams(ft ? { ft } : {})}`, { replace: true });
+                  }}
                 >
                   <ArrowLeft />
                   {t("Settings")}

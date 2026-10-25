@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router";
 import { UserContext } from "../../Context/UserContext";
@@ -83,7 +83,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
         label: "Nominee",
         Icon: Heart,
         group: "Account",
-        badge: "Add",
+        badge: "Add", // static for now, as per Figma
       },
       account_type === "business"
         ? can("settings.business-verification.view") && {
@@ -206,12 +206,6 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
     }
   }, [tab, tabsData]);
 
-  const [navigatedTabs] = useState([
-    { param: "tfa", name: "Two Factor Authentication" },
-    { param: "social", name: "My Social Network Accounts" },
-    { param: "crypto", name: "Receiving Accounts" },
-    { param: "verification", name: "Identity Verification" },
-  ]);
   useEffect(() => {
     if (userDetails?._id && typeof userWithdrawals !== "undefined" && profileCompleted) {
       if (missingTabsData.length > 0) {
@@ -267,6 +261,24 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
     }
   }, [hasRequiredAdditionalFiles, currentTab, verificationTabName]);
 
+  const urlTabName = tab?.toLowerCase().includes("verification")
+    ? verificationTabName
+    : TAB_PARAMS.find(([param]) => tab?.toLowerCase().includes(param))?.[1];
+
+  const syncTabParam = (name) => {
+    const param =
+      name === verificationTabName ? "verification" : TAB_PARAMS.find(([, n]) => n === name)?.[0];
+    if (!param || name === urlTabName) return;
+    navigate(`?${new URLSearchParams({ tab: param, ...(ft && { ft }) })}`, { replace: true });
+  };
+
+  const lastTab = useRef(currentTab);
+
+  useEffect(() => {
+    if (lastTab.current !== currentTab) syncTabParam(currentTab);
+    lastTab.current = currentTab;
+  }, [currentTab]);
+
   const isTabDisabled = (item) =>
     (item?.name !== "Basic Info" && profileIncompleteReason === "basic") ||
     (userDetails?.country?.kyc_required &&
@@ -305,14 +317,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                 window.history.replaceState(null, null, "");
                 setCurrentTab(item?.name);
                 verifyToken();
-
-                const activeUrlTab = navigatedTabs?.find((tab) =>
-                  window.location.href.includes(tab.param),
-                );
-
-                if (activeUrlTab && item?.name === activeUrlTab?.name) {
-                  navigate(`/settings`);
-                }
+                syncTabParam(item?.name);
               }}
             >
               <item.Icon className={styles.icon} color="#5926F0" />
@@ -382,13 +387,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                       if (isDisabled) return;
                       setCurrentTab(item?.name);
                       verifyToken();
-                      const activeUrlTab = navigatedTabs.find((tab) =>
-                        window.location.href.includes(tab.param),
-                      );
-
-                      if (activeUrlTab && item?.name === activeUrlTab.name) {
-                        navigate(`/settings`);
-                      }
+                      syncTabParam(item?.name);
                     }}
                   >
                     <item.Icon className={styles.icon} color={"#6E7687"} />
@@ -438,14 +437,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                   window.history.replaceState(null, null, "");
                   setCurrentTab(item?.name);
                   verifyToken();
-
-                  const activeUrlTab = navigatedTabs.find((tab) =>
-                    window.location.href.includes(tab.param),
-                  );
-
-                  if (activeUrlTab) {
-                    navigate(`/settings`);
-                  }
+                  syncTabParam(item?.name);
                 }}
               >
                 <item.Icon
