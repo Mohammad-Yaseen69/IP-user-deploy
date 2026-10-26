@@ -42,6 +42,31 @@ const linkStyle = {
 const isPhoneNumber = /^\d{9,20}$/;
 const isEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
+export const maskValue = (value) => {
+  const str = String(value ?? "");
+  if (!str) return "";
+
+  if (str.includes("@")) {
+    const [username, domain] = str.split("@");
+
+    if (!username || !domain) return str;
+
+    if (username.length <= 3) {
+      return `${"*".repeat(username.length)}@${domain}`;
+    }
+
+    const visibleSuffix = username.slice(-3);
+    const maskedLength = username.length - 3;
+    return `${"*".repeat(maskedLength)}${visibleSuffix}@${domain}`;
+  }
+
+  if (str.length <= 4) {
+    return str.replace(/./g, "*");
+  }
+
+  return `${str.slice(0, str.length - 4).replace(/./g, "*")}${str.slice(-4)}`;
+};
+
 const Login = ({ country, setIsLoginForm }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -1114,31 +1139,6 @@ const Login = ({ country, setIsLoginForm }) => {
   const availableMethods = methods.filter((m) => m.avail && m.attr !== currentOtpMethod);
 
   const getOtpLabel = () => {
-    const maskValue = (value) => {
-      const str = String(value ?? "");
-      if (!str) return "";
-
-      if (str.includes("@")) {
-        const [username, domain] = str.split("@");
-
-        if (!username || !domain) return str;
-
-        if (username.length <= 3) {
-          return `${"*".repeat(username.length)}@${domain}`;
-        }
-
-        const visibleSuffix = username.slice(-3);
-        const maskedLength = username.length - 3;
-        return `${"*".repeat(maskedLength)}${visibleSuffix}@${domain}`;
-      }
-
-      if (str.length <= 4) {
-        return str.replace(/./g, "*");
-      }
-
-      return `${str.slice(0, str.length - 4).replace(/./g, "*")}${str.slice(-4)}`;
-    };
-
     const maskedEmail = maskValue(otpDeliveryInfo.email);
     const maskedPhone = maskValue(otpDeliveryInfo.phone);
     const service = String(otpDeliveryInfo.phone ?? "").slice(0, 3) === "971" ? "WhatsApp" : "SMS";
