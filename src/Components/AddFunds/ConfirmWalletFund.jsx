@@ -23,6 +23,8 @@ import MobileWalletStatus from "../PaymentAddressPublic/PayAsGuest/MobileWalletS
 import { useIdempotency } from "../../hooks/Payments/useIdempotency";
 import { LimitsErrorMessage } from "../../utils/Functions/paymentLimits";
 import { initiatePaytentlyVerificationPayment } from "../../utils/Functions/paytently";
+import PaytentlyModal from "./PaytentlyModal";
+import useWindowWidth from "../../utils/useWindowWidth";
 
 
 const sdk = new WidgetSDK({
@@ -35,9 +37,10 @@ const base_url = window.location.origin || 'https://my.insta-pay.ch';
 // Paytently is the card provider (hosted-forms iframe).
 const usePaytently = true;
 
-const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, card_number, card_expiry, card_cvc, saveCard, type = "add_fund", paymentWithSavedCard = false, currentCard, merchant = "", payer = {}, setExternalLink = () => { }, paypalAmount, token, rate, reEnterCallback = () => { }, sendKybWalletOTP, kybFeeDets, partnerId, exchangeRate, cardQuote = null, }) => {
+const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, card_number, card_expiry, card_cvc, saveCard, type = "add_fund", paymentWithSavedCard = false, currentCard, merchant = "", payer = {}, setExternalLink = () => { }, paypalAmount, token, rate, reEnterCallback = () => { }, sendKybWalletOTP, kybFeeDets, partnerId, exchangeRate, cardQuote = null, toggleConfirmation }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
+    const width = useWindowWidth();
     const [complete, setComplete] = useState(false);
     const [mobileSuccess, setMobileSuccess] = useState(false)
     const [mobileWalletTrxId, setMobileWalletTrxId] = useState("")
@@ -458,6 +461,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
 
                         {isPaytentlyCard ? (
                             paytentlyHosted?.hostedUrl ? (
+                              width>1310?
                                 <iframe
                                     title={t("Card payment")}
                                     src={paytentlyHosted.hostedUrl}
@@ -473,6 +477,8 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                                         display: "block",
                                     }}
                                 />
+                                :
+                                <PaytentlyModal onClose={toggleConfirmation} hostedUrl={paytentlyHosted.hostedUrl}/>                            
                             ) : (
                                 <button
                                     type="button"

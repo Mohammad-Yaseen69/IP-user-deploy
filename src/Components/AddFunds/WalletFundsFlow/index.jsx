@@ -1028,6 +1028,7 @@ const WalletFundsFlow = ({ setAction }) => {
                   payer={data.mobile_wallet_service}
                   currentCard={data.selectedSavedCard}
                   paymentWithSavedCard={data.selectedSavedCard?._id}
+                  toggleConfirmation={() => dataHandler("show_confirmation", false)}
                   setSubStep={(e) => {
                     dataHandler("show_confirmation", false);
                     dataHandler("step", e);
