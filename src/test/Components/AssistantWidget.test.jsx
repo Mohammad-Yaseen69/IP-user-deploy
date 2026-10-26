@@ -6,12 +6,21 @@ import AssistantWidget from "../../Components/AssistantWidget";
 import {
   BUBBLE_DELAY_MS,
   INTRO_MS,
+  LABEL_HIDE_MS,
+  LABEL_SHOW_MS,
   QUIET_AFTER_MODAL_MS,
   QUIET_MS,
   WINK_AT_MS,
   WINK_MS,
 } from "../../Components/AssistantWidget/useLauncherChoreography";
 import { UserContext } from "../../Context/UserContext";
+
+// Exit animations need animation frames, which fake timers never run; the
+// tests care about what is on screen, not how it leaves.
+vi.mock("framer-motion", async (importOriginal) => ({
+  ...(await importOriginal()),
+  AnimatePresence: ({ children }) => children,
+}));
 
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({ t: (key) => key, i18n: { language: "en" } }),
@@ -431,6 +440,23 @@ describe("AssistantWidget", () => {
         expect(screen.queryByText("Ask InstaPay")).not.toBeInTheDocument();
 
         advance(INTRO_MS - WINK_AT_MS - WINK_MS);
+        expect(screen.getByText("Ask InstaPay")).toBeInTheDocument();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it("shows the docked label briefly, then rests it", () => {
+      vi.useFakeTimers();
+      try {
+        renderWidget();
+        advance(UNTIL_GREETING + INTRO_MS);
+        expect(screen.getByText("Ask InstaPay")).toBeInTheDocument();
+
+        advance(LABEL_SHOW_MS + 1000);
+        expect(screen.queryByText("Ask InstaPay")).not.toBeInTheDocument();
+
+        advance(LABEL_HIDE_MS);
         expect(screen.getByText("Ask InstaPay")).toBeInTheDocument();
       } finally {
         vi.useRealTimers();
