@@ -92,7 +92,7 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
     try {
       const res = await request("PUT", "/instagram/update-channel-switch", {
         channel: item.id,
-        enabled: true,
+        enabled: false,
         token: otpToken,
         otp,
         type: codeType,
@@ -137,7 +137,7 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
     try {
       const res = await request("PUT", "/instagram/update-channel-switch", {
         channel: item.id,
-        enabled: false,
+        enabled: true,
       });
       setChannelEnabled(Boolean(res?.channel_switch ?? false));
       toast.success(t("Channel disabled"));
