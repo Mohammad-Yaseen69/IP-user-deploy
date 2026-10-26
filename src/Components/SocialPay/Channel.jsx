@@ -158,7 +158,7 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
   };
 
   useEffect(() => {
-    setChannelEnabled(Boolean(item?.channel_switch && item.linked));
+    setChannelEnabled(Boolean(!item?.channel_switch && item.linked));
     setIsConnected(Boolean(item.linked));
   }, [item?.channel_switch, item.linked]);
 
