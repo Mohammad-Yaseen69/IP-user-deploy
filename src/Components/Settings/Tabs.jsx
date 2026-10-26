@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router";
 import { UserContext } from "../../Context/UserContext";
@@ -190,6 +190,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
   const navigate = useNavigate();
   const width = useWindowWidth();
   const [showMissingModal, setShowMissingModal] = useState(false);
+  const isIndividualAccount = account_type?.toLowerCase() === "individual";
 
   useEffect(() => {
     if (!tab) return;
@@ -223,9 +224,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
 
   useEffect(() => {
     if (tab?.toLowerCase()?.includes("verification")) {
-      setCurrentTab(
-        account_type === "individual" ? "Identity Verification" : "Business Verification",
-      );
+      setCurrentTab(isIndividualAccount ? "Identity Verification" : "Business Verification");
     }
   }, [tab, userDetails]);
 
@@ -249,8 +248,9 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
   // Admin-required additional files / questions lock every tab except the
   // verification tab (where they are submitted) until they are provided.
   // The basic-profile lock takes priority, hence the profileCompleted guard.
-  const verificationTabName =
-    account_type === "individual" ? "Identity Verification" : "Business Verification";
+  const verificationTabName = isIndividualAccount
+    ? "Identity Verification"
+    : "Business Verification";
   const hasRequiredAdditionalFiles =
     profileCompleted === true &&
     getPendingAdditionalFiles(userDetails).requiredVerification.length > 0;
@@ -302,6 +302,12 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
       items: list.filter((item) => item.group === group),
     })).filter((g) => g.items.length > 0);
 
+  const displayName = isIndividualAccount
+    ? `${userDetails?.user?.first_name ?? ""} ${userDetails?.user?.last_name ?? ""}`.trim()
+    : (userDetails?.company?.company_name ?? "");
+
+  const isVerified = useMemo(() => isKycApproved, [isKycApproved]);
+
   return (
     <div style={{ overflowX: width < 1000 && "visible" }} className={styles.container}>
       {missingTabsData?.length > 0 && width > 1000 && profileCompleted && (
@@ -349,8 +355,11 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
         <div className={styles.profileCard}>
           <div className={styles.avatar}>MS</div>
           <div className={styles.profileInfo}>
-            <p className={styles.profileName}>Muhammed Shaheen A</p>
-            <p className={styles.profileMeta}>Personal account · Verified</p>
+            <p className={styles.profileName}>{displayName}</p>
+            <p className={styles.profileMeta}>
+              {isIndividualAccount ? t("Personal account") : t("Business account")} ·{" "}
+              {isVerified ? t("Verified") : t("Unverified")}
+            </p>
           </div>
           <CaretRight size={16} strokeWidth={1.5} className={styles.caret} />
         </div>
