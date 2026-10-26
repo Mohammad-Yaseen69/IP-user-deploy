@@ -327,7 +327,14 @@ const AmountAndCurrency = ({
               >
                 <span style={{ color: "#a0a0a0" }}>{t("Exchange Rate")}:</span>
                 <span style={{ color: "#a0a0a0" }}>
-                  {formatCurrency(exchangeRate?.wholesale_fx_rate, true)}{" "}
+                  {formatCurrency(
+                    exchangeRate?.wholesale_fx_rate,
+                    true,
+                    undefined,
+                    undefined,
+                    undefined,
+                    6,
+                  )}{" "}
                   {exchangeRate?.destination?.currency ?? ""}
                 </span>
               </p>
