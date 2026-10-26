@@ -190,7 +190,7 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
   }, [redirect, userDetails]);
 
   const handleOpen = () => {
-    const handle = whatsapp ? item?.handle?.replace("+", "") : item?.handle;
+    const handle = instagram ? item?.handle : item?.handle?.replace("+", "");
     window.open(`${item.link}/${handle}`, "_blank", "noopener,noreferrer");
   };
 
@@ -203,7 +203,7 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
             <div>
               <h4 className={styles.channelName}>{item.name}</h4>
               <span className={styles.handle}>
-                {whatsapp ? maskValue(item.handle) : item?.handle}
+                {instagram ? item?.recipient : maskValue(item.recipient)}
               </span>
             </div>
           </div>
