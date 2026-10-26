@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
+import { toast } from "react-toastify";
 
 const BASE = import.meta.env.VITE_IP_DEV_API;
 
@@ -78,6 +79,10 @@ export const useUpdateWebhookUrl = ({ headers, accountId }) => {
         });
       }
     },
+    onError: (err) => {
+      const errorMessage = decryptData(err?.response?.data?.data)?.message;
+      toast.error(errorMessage ?? "Failed to update webhook URL");
+    },
   });
 };
 export const useUpdateFeatures = ({ headers, accountId }) => {
@@ -139,6 +144,31 @@ export const useUpdateUserKeyStatus = ({ headers, accountId }) => {
           return {
             ...prev,
             userKey: { ...prevKey, status: resp?.userKey?.status },
+          };
+        });
+      }
+    },
+  });
+};
+
+export const useRegenerateWebhookSecret = ({ headers, accountId }) => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      const res = await axios.post(
+        `${BASE}/api/userkey/regenerate-webhook-secret`,
+        {},
+        { headers },
+      );
+      return decryptData(res.data.data);
+    },
+    onSuccess: (data) => {
+      if (accountId) {
+        qc.setQueryData(["userApiKey", accountId], (prev) => {
+          const prevKey = prev?.userKey || {};
+          return {
+            ...prev,
+            userKey: { ...prevKey, webhook_secret: data?.webhook_secret },
           };
         });
       }
