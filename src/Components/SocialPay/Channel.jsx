@@ -114,7 +114,7 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
   const unlinkOtpCallback = async (setter, type, otp, setError) => {
     setSaving(true);
     try {
-      await request("PUT", `/instagram/${item.id}-unlink`, {
+      await request("PUT", `/instagram/channel-unlink`, {
         token: otpToken,
         otp,
         type: codeType,
