@@ -1,42 +1,31 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router";
 import { UserContext } from "../../Context/UserContext";
 import styles from "./styles/tabs.module.css";
 
 // icons
-import basic from "./tabs_icons/basic.svg";
-import basic_active from "./tabs_icons/basic_a.svg";
-import dyd from "./tabs_icons/delete.svg";
-import dyd_active from "./tabs_icons/delete_a.svg";
-import dwd from "./tabs_icons/download.svg";
-import dwd_active from "./tabs_icons/download_a.svg";
-import fin_info from "./tabs_icons/fin_info.svg";
-import fin_info_a from "./tabs_icons/fin_info_a.svg";
-import hocfy from "./tabs_icons/hocfy.svg";
-import hocfy_active from "./tabs_icons/hocfy_a.svg";
-import login from "./tabs_icons/login.svg";
-import login_active from "./tabs_icons/login_a.svg";
-import nominee from "./tabs_icons/nominee.svg";
-import nominee_active from "./tabs_icons/nominee_a.svg";
-import notif from "./tabs_icons/notification.svg";
-import notif_active from "./tabs_icons/notifications_a.svg";
-import pass from "./tabs_icons/password.svg";
-import pass_active from "./tabs_icons/password_a.svg";
-import mwc from "./tabs_icons/receiving.svg";
-import mwc_active from "./tabs_icons/receiving_a.svg";
-import sec from "./tabs_icons/security.svg";
-import sec_active from "./tabs_icons/security_a.svg";
-import sa from "./tabs_icons/social.svg";
-import sa_active from "./tabs_icons/social_a.svg";
-import tfa from "./tabs_icons/tfa.svg";
-import tfa_active from "./tabs_icons/tfa_a.svg";
-import thres from "./tabs_icons/thres.svg";
-import thres_a from "./tabs_icons/thres_a.svg";
-import iv from "./tabs_icons/verification.svg";
-import iv_active from "./tabs_icons/verification_a.svg";
+import {
+  Bank,
+  Bell,
+  ChartBar,
+  User,
+  CreditCard,
+  Devices,
+  DownloadSimple,
+  Eye,
+  IdCard,
+  Gauge,
+  Heart,
+  LinkSimple,
+  MagnifyingGlass,
+  Question,
+  ShieldCheck,
+  Trash,
+  Key,
+  CaretRight,
+} from "./Icons";
 
-import { ChevronDown } from "react-feather";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import useWindowWidth from "../../utils/useWindowWidth";
 import NextStepModal from "./NextStepModal";
@@ -51,19 +40,18 @@ const TAB_PARAMS = [
   ["nominee", "Nominee Information"],
   ["tfa", "Two Factor Authentication"],
   ["find", "How Others Can Find You"],
-  ["social", "My Social Network Accounts"],
+  // ["social", "My Social Network Accounts"],
   ["notification", "Notifications"],
   ["apikey", "API Key"],
   ["activity", "Login Activity"],
-  // "withdraw" rather than "withdrawal" so the shorter link in the app
-  // matches too; it never did under the old check.
   ["withdraw", "Receiving Accounts"],
-  // Crypto wallets now live on the receiving accounts page.
   ["crypto", "Receiving Accounts"],
   ["cards", "Manage Saved Cards"],
   ["data", "Download Your Data"],
   ["delete", "Delete Your Account"],
 ];
+
+const TAB_GROUPS = ["Account", "Security", "Money", "Privacy & alerts", "Your data"];
 
 const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
   const can = usePermission();
@@ -80,105 +68,121 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
     [
       can("settings.basic-info.view") && {
         name: "Basic Info",
-        icon: basic,
-        active_icon: basic_active,
-      },
-      can("settings.password.view") && {
-        name: "Change Password",
-        icon: pass,
-        active_icon: pass_active,
-      },
-      can("settings.payment-threshold.view") && {
-        name: "Payment Threshold",
-        icon: thres_a,
-        active_icon: thres,
+        label: "Personal details",
+        Icon: User,
+        group: "Account",
       },
       can("settings.financial-info.view") && {
         name: "Financial Info",
-        icon: fin_info,
-        active_icon: fin_info_a,
-      },
-      can("settings.security-questions.view") && {
-        name: "Security Questions",
-        icon: sec,
-        active_icon: sec_active,
+        label: "Financial profile",
+        Icon: ChartBar,
+        group: "Account",
       },
       can("settings.nominee.view") && {
         name: "Nominee Information",
-        icon: nominee,
-        active_icon: nominee_active,
-      },
-      {
-        name: "Two Factor Authentication",
-        icon: tfa,
-        active_icon: tfa_active,
-        tabType: "tfa",
-      },
-      can("settings.how-others-find-you.view") && {
-        name: "How Others Can Find You",
-        icon: hocfy,
-        active_icon: hocfy_active,
-      },
-      can("settings.social-accounts.view") && {
-        name: "My Social Network Accounts",
-        icon: sa,
-        active_icon: sa_active,
-        tabType: "social",
-      },
-      can("settings.notifications.view") && {
-        name: "Notifications",
-        icon: notif,
-        active_icon: notif_active,
-      },
-      can("settings.api-key.view") && {
-        name: account_type === "business" ? "API Key" : "",
-        icon: iv,
-        active_icon: iv_active,
+        label: "Nominee",
+        Icon: Heart,
+        group: "Account",
+        badge: "Add", // static for now, as per Figma
       },
       account_type === "business"
         ? can("settings.business-verification.view") && {
             name: "Business Verification",
-            icon: iv,
-            active_icon: iv_active,
+            Icon: IdCard,
             tabType: "kyc",
+            group: "Account",
           }
         : {
             name: "Identity Verification",
-            icon: iv,
-            active_icon: iv_active,
+            label: "Identity verification",
+            Icon: IdCard,
             tabType: "kyc",
+            group: "Account",
           },
+      can("settings.api-key.view") && {
+        name: account_type === "business" ? "API Key" : "",
+        Icon: Key,
+        group: "Account",
+      },
+      can("settings.password.view") && {
+        name: "Change Password",
+        label: "Password",
+        Icon: Key,
+        group: "Security",
+        badge: "Due soon", // static for now
+      },
+      {
+        name: "Two Factor Authentication",
+        label: "Sign-in & 2FA",
+        Icon: ShieldCheck,
+        tabType: "tfa",
+        group: "Security",
+      },
+      can("settings.security-questions.view") && {
+        name: "Security Questions",
+        label: "Recovery questions",
+        Icon: Question,
+        group: "Security",
+      },
+      can("settings.payment-threshold.view") && {
+        name: "Payment Threshold",
+        label: "Payment approvals",
+        Icon: Gauge,
+        group: "Security",
+      },
       can("settings.login-activity.view") && {
         name: "Login Activity",
-        icon: login,
-        active_icon: login_active,
+        label: "Devices & sessions",
+        Icon: Devices,
+        group: "Security",
       },
       can("settings.receiving-accounts.view") && {
         name: "Receiving Accounts",
-        icon: mwc,
-        active_icon: mwc_active,
+        label: "Withdrawal accounts",
+        Icon: Bank,
         tabType: "withdrawls",
+        group: "Money",
       },
       can("settings.saved-cards.view") && {
         name: "Manage Saved Cards",
-        icon: dwd,
-        active_icon: dwd_active,
+        label: "Saved cards",
+        Icon: CreditCard,
+        group: "Money",
+      },
+      can("settings.how-others-find-you.view") && {
+        name: "How Others Can Find You",
+        label: "How people find you",
+        Icon: Eye,
+        group: "Privacy & alerts",
+      },
+      // can("settings.social-accounts.view") && {
+      //   name: "My Social Network Accounts",
+      //   Icon: LinkSimple,
+      //   tabType: "social",
+      //   group: "Privacy & alerts",
+      // },
+      can("settings.notifications.view") && {
+        name: "Notifications",
+        Icon: Bell,
+        group: "Privacy & alerts",
       },
       can("settings.download-data.view") && {
         name: "Download Your Data",
-        icon: dwd,
-        active_icon: dwd_active,
+        label: "Export your data",
+        Icon: DownloadSimple,
+        group: "Your data",
       },
       can("settings.delete-account.view") && {
         name: "Delete Your Account",
-        icon: dyd,
-        active_icon: dyd_active,
+        label: "Close account",
+        Icon: Trash,
+        group: "Your data",
       },
     ].filter(Boolean),
   );
   const { t } = useTranslation();
   const [missingTabs, setMissingTabs] = useState([]);
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [search, setSearch] = useState("");
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const tab = queryParams.get("tab");
@@ -186,6 +190,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
   const navigate = useNavigate();
   const width = useWindowWidth();
   const [showMissingModal, setShowMissingModal] = useState(false);
+  const isIndividualAccount = account_type?.toLowerCase() === "individual";
 
   useEffect(() => {
     if (!tab) return;
@@ -202,12 +207,6 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
     }
   }, [tab, tabsData]);
 
-  const [navigatedTabs] = useState([
-    { param: "tfa", name: "Two Factor Authentication" },
-    { param: "social", name: "My Social Network Accounts" },
-    { param: "crypto", name: "Receiving Accounts" },
-    { param: "verification", name: "Identity Verification" },
-  ]);
   useEffect(() => {
     if (userDetails?._id && typeof userWithdrawals !== "undefined" && profileCompleted) {
       if (missingTabsData.length > 0) {
@@ -225,9 +224,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
 
   useEffect(() => {
     if (tab?.toLowerCase()?.includes("verification")) {
-      setCurrentTab(
-        account_type === "individual" ? "Identity Verification" : "Business Verification",
-      );
+      setCurrentTab(isIndividualAccount ? "Identity Verification" : "Business Verification");
     }
   }, [tab, userDetails]);
 
@@ -251,8 +248,9 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
   // Admin-required additional files / questions lock every tab except the
   // verification tab (where they are submitted) until they are provided.
   // The basic-profile lock takes priority, hence the profileCompleted guard.
-  const verificationTabName =
-    account_type === "individual" ? "Identity Verification" : "Business Verification";
+  const verificationTabName = isIndividualAccount
+    ? "Identity Verification"
+    : "Business Verification";
   const hasRequiredAdditionalFiles =
     profileCompleted === true &&
     getPendingAdditionalFiles(userDetails).requiredVerification.length > 0;
@@ -262,6 +260,24 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
       setCurrentTab(verificationTabName);
     }
   }, [hasRequiredAdditionalFiles, currentTab, verificationTabName]);
+
+  const urlTabName = tab?.toLowerCase().includes("verification")
+    ? verificationTabName
+    : TAB_PARAMS.find(([param]) => tab?.toLowerCase().includes(param))?.[1];
+
+  const syncTabParam = (name) => {
+    const param =
+      name === verificationTabName ? "verification" : TAB_PARAMS.find(([, n]) => n === name)?.[0];
+    if (!param || name === urlTabName) return;
+    navigate(`?${new URLSearchParams({ tab: param, ...(ft && { ft }) })}`, { replace: true });
+  };
+
+  const lastTab = useRef(currentTab);
+
+  useEffect(() => {
+    if (lastTab.current !== currentTab) syncTabParam(currentTab);
+    lastTab.current = currentTab;
+  }, [currentTab]);
 
   const isTabDisabled = (item) =>
     (item?.name !== "Basic Info" && profileIncompleteReason === "basic") ||
@@ -273,6 +289,24 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
 
   const tabClassName = (item) =>
     `${styles.tab} ${currentTab === item?.name ? styles.active : ""} ${isTabDisabled(item) ? styles.disabled : ""} ${userDetails?.country?.kyc_required && item?.name !== "Verification" ? styles.kyc : ""} ${hasRequiredAdditionalFiles && item?.name !== verificationTabName ? styles.required : ""}`;
+
+  const searchTerm = search.trim().toLowerCase();
+  const visibleTabs = tabsData.filter(
+    (item) =>
+      item?.name?.length > 0 &&
+      [item.label, item.name].some((text) => text && t(text).toLowerCase().includes(searchTerm)),
+  );
+  const groupTabs = (list) =>
+    TAB_GROUPS.map((group) => ({
+      group,
+      items: list.filter((item) => item.group === group),
+    })).filter((g) => g.items.length > 0);
+
+  const displayName = isIndividualAccount
+    ? `${userDetails?.user?.first_name ?? ""} ${userDetails?.user?.last_name ?? ""}`.trim()
+    : (userDetails?.company?.company_name ?? "");
+
+  const isVerified = useMemo(() => isKycApproved, [isKycApproved]);
 
   return (
     <div style={{ overflowX: width < 1000 && "visible" }} className={styles.container}>
@@ -289,18 +323,11 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                 window.history.replaceState(null, null, "");
                 setCurrentTab(item?.name);
                 verifyToken();
-
-                const activeUrlTab = navigatedTabs?.find((tab) =>
-                  window.location.href.includes(tab.param),
-                );
-
-                if (activeUrlTab && item?.name === activeUrlTab?.name) {
-                  navigate(`/settings`);
-                }
+                syncTabParam(item?.name);
               }}
             >
-              <img alt="asdfaf" src={item?.name !== currentTab ? item?.active_icon : item?.icon} />
-              {t(item?.name)}
+              <item.Icon className={styles.icon} color="#5926F0" />
+              <span className={styles.label}>{t(item?.label || item?.name)}</span>
             </div>
           ))}
         </div>
@@ -325,202 +352,161 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
       />
 
       {width < 1000 && (
-        <div className={styles.customDropdownWrapper}>
-          <div
-            className={styles.customDropdownSelected}
-            onClick={() => setShowDropdown((prev) => !prev)}
-            tabIndex={0}
-            style={{ justifyContent: "space-between" }}
-            onBlur={(e) => {
-              if (!e.currentTarget.contains(e?.relatedTarget)) setShowDropdown(false);
-            }}
-          >
-            {(() => {
-              const selected = tabsData.find((tab) => tab.name === currentTab);
-              return selected ? (
-                <>
-                  <div>
-                    <img
-                      alt="tab-icon"
-                      style={{ height: "40px", width: "40px" }}
-                      src={selected.active_icon}
-                      className={styles.tabIcon}
-                    />
-                    <span style={{ fontWeight: 600, fontSize: "15px" }}>{t(selected.name)}</span>
-                  </div>
-                  <ChevronDown />
-                </>
-              ) : null;
-            })()}
+        <div className={styles.profileCard}>
+          <div className={styles.avatar}>MS</div>
+          <div className={styles.profileInfo}>
+            <p className={styles.profileName}>{displayName}</p>
+            <p className={styles.profileMeta}>
+              {isIndividualAccount ? t("Personal account") : t("Business account")} ·{" "}
+              {isVerified ? t("Verified") : t("Unverified")}
+            </p>
           </div>
-          {showDropdown && (
-            <div className={styles.customDropdownList} tabIndex={-1}>
-              {tabsData
-                .filter((item) => item?.name.length > 0)
-                .map((item) => {
-                  const isDisabled = isTabDisabled(item);
-                  return (
-                    <div
-                      key={item?.name}
-                      style={{
-                        background:
-                          currentTab !== item?.name &&
-                          missingTabs.some((i) => i.name === item?.name) &&
-                          "rgba(255, 136, 0, 0.08)",
-                        justifyContent: "space-between",
-                      }}
-                      className={
-                        styles.customDropdownOption +
-                        (isDisabled ? " " + styles.disabled : "") +
-                        (currentTab === item?.name ? " " + styles.active : "")
-                      }
-                      tabIndex={isDisabled ? -1 : 0}
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        if (isDisabled) return;
-                        setCurrentTab(item?.name);
-                        setShowDropdown(false);
-                        verifyToken();
-                        const activeUrlTab = navigatedTabs.find((tab) =>
-                          window.location.href.includes(tab.param),
-                        );
-
-                        if (activeUrlTab && item?.name === activeUrlTab.name) {
-                          navigate(`/settings`);
-                        }
-                      }}
-                    >
-                      <div>
-                        <img
-                          alt="tab-icon"
-                          style={{ width: "40px", height: "40px" }}
-                          src={item?.active_icon}
-                          className={styles.tabIcon}
-                        />
-                        <span style={{ fontWeight: 600, fontSize: "15px" }}>{t(item?.name)}</span>
-                      </div>
-
-                      {currentTab !== item?.name &&
-                        missingTabs.some((i) => i.name === item?.name) && (
-                          <div
-                            style={{
-                              width: "14px",
-                              height: "14px",
-                              background: "#EB8C1D",
-                              borderRadius: "50%",
-                              flexShrink: "0",
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              color: "white",
-                              fontWeight: 600,
-                            }}
-                          >
-                            i
-                          </div>
-                        )}
-                    </div>
-                  );
-                })}
-            </div>
-          )}
+          <CaretRight size={16} strokeWidth={1.5} className={styles.caret} />
         </div>
       )}
-      {tabsData
-        .filter(
-          (item) =>
-            item?.name?.length > 0 &&
-            !missingTabs.some((i) => i.name === item?.name) &&
-            width > 1000,
-        )
-        .map((item) => (
-          <div
-            key={item?.name}
-            className={tabClassName(item)}
-            onClick={() => {
-              if (isTabDisabled(item)) return;
-              window.history.replaceState(null, null, "");
-              setCurrentTab(item?.name);
-              verifyToken();
 
-              const activeUrlTab = navigatedTabs.find((tab) =>
-                window.location.href.includes(tab.param),
-              );
+      <div className={styles.search}>
+        <MagnifyingGlass size={21} strokeWidth={1.5} className={styles.searchIcon} />
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder={t("Search settings")}
+        />
+      </div>
 
-              if (activeUrlTab) {
-                navigate(`/settings`);
-              }
-            }}
-          >
-            <img alt="asdfaf" src={item?.name !== currentTab ? item?.active_icon : item?.icon} />
-            {t(item?.name)}
-            {item?.name === verificationTabName && hasRequiredAdditionalFiles ? (
+      {width < 1000 &&
+        groupTabs(visibleTabs).map(({ group, items }) => (
+          <div key={group} className={styles.mobileGroup}>
+            <p className={styles.mobileGroupLabel}>{t(group)}</p>
+            <div className={styles.mobileList}>
+              {items.map((item) => {
+                const isDisabled = isTabDisabled(item);
+                const isMissing =
+                  currentTab !== item?.name && missingTabs.some((i) => i.name === item?.name);
+                return (
+                  <div
+                    key={item?.name}
+                    style={{
+                      background: isMissing && "rgba(255, 136, 0, 0.08)",
+                    }}
+                    className={styles.mobileRow + (isDisabled ? " " + styles.disabled : "")}
+                    tabIndex={isDisabled ? -1 : 0}
+                    onClick={() => {
+                      if (isDisabled) return;
+                      setCurrentTab(item?.name);
+                      verifyToken();
+                      syncTabParam(item?.name);
+                    }}
+                  >
+                    <item.Icon className={styles.icon} color={"#6E7687"} />
+                    <span className={styles.label}>{t(item?.label || item?.name)}</span>
+
+                    {item?.badge && <span className={styles.badge}>{t(item.badge)}</span>}
+                    {item?.value && <span className={styles.rowValue}>{item.value}</span>}
+
+                    {isMissing && (
+                      <div
+                        style={{
+                          width: "14px",
+                          height: "14px",
+                          background: "#EB8C1D",
+                          borderRadius: "50%",
+                          flexShrink: "0",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          color: "white",
+                          fontWeight: 600,
+                        }}
+                      >
+                        i
+                      </div>
+                    )}
+                    <CaretRight size={16} strokeWidth={1.5} className={styles.caret} />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+
+      {width > 1000 &&
+        groupTabs(
+          visibleTabs.filter((item) => !missingTabs.some((i) => i.name === item?.name)),
+        ).map(({ group, items }) => (
+          <div key={group} className={styles.group}>
+            <p className={styles.groupLabel}>{t(group)}</p>
+            {items.map((item) => (
               <div
-                style={{
-                  height: "5px",
-                  width: "5px",
-                  background: "red",
-                  borderRadius: "5px",
-                  position: "absolute",
-                  top: "50%",
-                  right: "10px",
-                  transform: "translateY(-50%)",
+                key={item?.name}
+                className={tabClassName(item)}
+                onClick={() => {
+                  if (isTabDisabled(item)) return;
+                  window.history.replaceState(null, null, "");
+                  setCurrentTab(item?.name);
+                  verifyToken();
+                  syncTabParam(item?.name);
                 }}
-              />
-            ) : (
-              ""
-            )}
-            {item?.name.toLowerCase().includes("basic") && profileIncompleteReason === "basic" ? (
-              <div
-                style={{
-                  height: "5px",
-                  width: "5px",
-                  background: "red",
-                  borderRadius: "5px",
-                  position: "absolute",
-                  top: "50%",
-                  right: "10px",
-                  transform: "translateY(-50%)",
-                }}
-              />
-            ) : (
-              ""
-            )}
-            {item?.name.toLowerCase().includes("security") &&
-            profileIncompleteReason === "security" ? (
-              <div
-                style={{
-                  height: "5px",
-                  width: "5px",
-                  background: "red",
-                  borderRadius: "5px",
-                  position: "absolute",
-                  top: "50%",
-                  right: "10px",
-                  transform: "translateY(-50%)",
-                }}
-              />
-            ) : (
-              ""
-            )}
-            {/* {
-                            item?.name.toLowerCase().includes("preferences")
-                                &&
-                                !userDetails?.tfa
-                                ?
-                                <div style={{ height: "5px", width: "5px", background: "red", borderRadius: "5px", position: "absolute", top: "50%", right: "10px", transform: "translateY(-50%)" }} />
-                                :
-                                ""
-                        } */}
-            {/* {
-                            item?.name.toLowerCase().includes("identity")
-                                &&
-                                userDetails?.user?.kyc_status !== "approved"
-                                ?
-                                <div style={{ height: "5px", width: "5px", background: "red", borderRadius: "5px", position: "absolute", top: "50%", right: "10px", transform: "translateY(-50%)" }} />
-                                :
-                                ""
-                        } */}
+              >
+                <item.Icon
+                  color={currentTab === item?.name ? "#5926f0" : "#1b1f2a"}
+                  className={styles.icon}
+                />
+                <span className={styles.label}>{t(item?.label || item?.name)}</span>
+                {item?.badge && <span className={styles.badge}>{t(item.badge)}</span>}
+                {item?.name === verificationTabName && hasRequiredAdditionalFiles ? (
+                  <div
+                    style={{
+                      height: "5px",
+                      width: "5px",
+                      background: "red",
+                      borderRadius: "5px",
+                      position: "absolute",
+                      top: "50%",
+                      right: "10px",
+                      transform: "translateY(-50%)",
+                    }}
+                  />
+                ) : (
+                  ""
+                )}
+                {item?.name.toLowerCase().includes("basic") &&
+                profileIncompleteReason === "basic" ? (
+                  <div
+                    style={{
+                      height: "5px",
+                      width: "5px",
+                      background: "red",
+                      borderRadius: "5px",
+                      position: "absolute",
+                      top: "50%",
+                      right: "10px",
+                      transform: "translateY(-50%)",
+                    }}
+                  />
+                ) : (
+                  ""
+                )}
+                {item?.name.toLowerCase().includes("security") &&
+                profileIncompleteReason === "security" ? (
+                  <div
+                    style={{
+                      height: "5px",
+                      width: "5px",
+                      background: "red",
+                      borderRadius: "5px",
+                      position: "absolute",
+                      top: "50%",
+                      right: "10px",
+                      transform: "translateY(-50%)",
+                    }}
+                  />
+                ) : (
+                  ""
+                )}
+              </div>
+            ))}
           </div>
         ))}
     </div>
