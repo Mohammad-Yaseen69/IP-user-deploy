@@ -118,6 +118,7 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
         token: otpToken,
         otp,
         type: codeType,
+        channel: item.id,
       });
       verifyToken();
       setter(true);
