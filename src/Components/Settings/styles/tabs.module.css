@@ -348,7 +348,7 @@
   cursor: pointer;
 }
 
-.mobileRow+.mobileRow {
+.mobileRow + .mobileRow {
   border-top: 1px solid #eff1f6;
 }
 
