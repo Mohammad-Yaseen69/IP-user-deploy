@@ -20,7 +20,14 @@ const getDecimalPointIndex = (val) => {
   return 2;
 };
 
-export const formatCurrency = (inputValue, blur, setValue = undefined, centeredInput, e) => {
+export const formatCurrency = (
+  inputValue,
+  blur,
+  setValue = undefined,
+  centeredInput,
+  e,
+  minDecimals,
+) => {
   if (inputValue === "") return "";
   if (inputValue === 0) return "0.00";
   if (!inputValue) return "";
@@ -40,7 +47,8 @@ export const formatCurrency = (inputValue, blur, setValue = undefined, centeredI
 
     // Get number of decimal places based on value
     const rawNumberForDecimals = Number(inputVal.toString().replace(/,/g, ""));
-    const numDecimals = rawNumberForDecimals >= 0.01 ? 2 : getDecimalPointIndex(inputVal);
+    const numDecimals =
+      minDecimals ?? (rawNumberForDecimals >= 0.01 ? 2 : getDecimalPointIndex(inputVal));
 
     // On blur, ensure proper decimal places
     if (blur) rightSide += "0".repeat(numDecimals);
@@ -57,7 +65,8 @@ export const formatCurrency = (inputValue, blur, setValue = undefined, centeredI
     // Final formatting on blur
     if (blur) {
       const rawNumberForDecimals = Number(inputVal.toString().replace(/,/g, ""));
-      const numDecimals = rawNumberForDecimals >= 0.01 ? 2 : getDecimalPointIndex(inputVal);
+      const numDecimals =
+        minDecimals ?? (rawNumberForDecimals >= 0.01 ? 2 : getDecimalPointIndex(inputVal));
       inputVal += "." + "0".repeat(numDecimals);
     }
   }
