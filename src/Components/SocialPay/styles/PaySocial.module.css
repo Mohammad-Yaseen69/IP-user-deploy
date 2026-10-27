@@ -1,114 +1,46 @@
 .container {
+  padding: 32px 20px 40px 48px;
   min-height: 100vh;
-  box-sizing: border-box;
-  padding: 1rem 1rem 1rem 2rem;
+  font-family: "Inter", sans-serif;
 }
 
-.wrapper {
-  background-color: white;
-  padding: 20px 0 40px;
-  color: #0f172a;
-}
-
-.header {
+.top {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  padding: 0 20px 20px;
-}
-
-.title {
-  margin: 0;
-  font-size: 36px;
-  font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-  color: #5b3df5;
-}
-
-.subtitle {
-  margin: 4px 0 0;
-  font-size: 13px;
-  line-height: 1.5;
-  color: #64748b;
-}
-
-.userSection {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.notificationBtn {
+  align-items: flex-start;
   position: relative;
-  width: 36px;
-  height: 36px;
-  border-radius: 999px;
-  border: 1px solid #e2e8f0;
-  background: #fff;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
+  margin: 0px;
+  padding: 0px;
 }
 
-.notifBadge {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  min-width: 16px;
-  height: 16px;
-  padding: 0 4px;
-  box-sizing: border-box;
-  border-radius: 999px;
-  background: #7c3aed;
-  color: #fff;
-  font-size: 10px;
-  font-weight: 600;
-  display: grid;
-  place-items: center;
-  border: 2px solid #fff;
+.headerTitle {
+  margin: 0px;
+  padding: 0px;
 }
 
-.userBadge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 10px 4px 4px;
-  border: 1px solid #e2e8f0;
-  border-radius: 999px;
-  cursor: pointer;
-}
-
-.avatar,
-.avatarFallback {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.avatar {
-  object-fit: cover;
-}
-
-.avatarFallback {
-  background: #e0e7ff;
-  color: #3730a3;
-  font-size: 11px;
+.headerTitle h1 {
+  color: #5626e6;
+  font-size: 40px;
+  font-style: normal;
   font-weight: 700;
-  display: grid;
-  place-items: center;
+  margin: 0px;
+  padding: 0px;
 }
 
-.userName {
-  font-size: 13px;
-  font-weight: 600;
+.headerTitle p {
+  color: #868686;
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0px;
+  padding: 0px;
+}
+
+.topright {
+  margin-top: 100px;
 }
 
 .hero {
   position: relative;
-  margin: 0 20px;
   padding: 36px 40px;
   box-sizing: border-box;
   min-height: 220px;
@@ -219,7 +151,7 @@
 }
 
 .pinBanner {
-  margin: 16px 20px 0;
+  margin: 16px 0;
   padding: 16px 20px;
   box-sizing: border-box;
   border-radius: 14px;
@@ -267,7 +199,7 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
-  padding: 18px 20px 0;
+  padding: 18px 0;
 }
 
 .card {
@@ -406,7 +338,7 @@
   border-radius: 999px;
   background: var(--step-bg);
   color: var(--accent);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   line-height: 1.4;
   cursor: pointer;
@@ -417,7 +349,7 @@
   border-radius: 999px;
   background: #dcfce7;
   color: #15803d;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   line-height: 1.4;
 }
@@ -428,14 +360,14 @@
   border-radius: 10px;
   background: var(--accent);
   color: #fff;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   line-height: 1.4;
   cursor: pointer;
 }
 
 .sectionHeading {
-  margin: 28px 20px 12px;
+  margin: 28px 0px 12px;
   font-size: 13px;
   font-weight: 600;
   color: #334155;
@@ -445,7 +377,6 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
-  padding: 0 20px;
 }
 
 .comingCard {
