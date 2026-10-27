@@ -1,0 +1,628 @@
+.container {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 1rem 1rem 1rem 2rem;
+}
+
+.wrapper {
+  background-color: white;
+  padding: 20px 0 40px;
+  color: #0f172a;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 20px 20px;
+}
+
+.title {
+  margin: 0;
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: #5b3df5;
+}
+
+.subtitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #64748b;
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.notificationBtn {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.notifBadge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  box-sizing: border-box;
+  border-radius: 999px;
+  background: #7c3aed;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  display: grid;
+  place-items: center;
+  border: 2px solid #fff;
+}
+
+.userBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px 4px 4px;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.avatar,
+.avatarFallback {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.avatar {
+  object-fit: cover;
+}
+
+.avatarFallback {
+  background: #e0e7ff;
+  color: #3730a3;
+  font-size: 11px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+
+.userName {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.hero {
+  position: relative;
+  margin: 0 20px;
+  padding: 36px 40px;
+  box-sizing: border-box;
+  min-height: 220px;
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  background-image: var(--hero-bg);
+  background-size: auto 100%;
+  background-position: right center;
+  background-repeat: no-repeat;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(21, 18, 43, 0.85) 0%, rgba(21, 18, 43, 0) 45%);
+  pointer-events: none;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  max-width: 480px;
+}
+
+.heroTitle {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.heroDesc {
+  margin: 12px 0 0;
+  max-width: auto;
+  line-height: 1.2;
+  color: #ffffff80;
+  font: size 8px;
+}
+
+.hiBubble {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  margin: 0 -9px;
+  padding: 0;
+  vertical-align: middle;
+  top: -2px;
+  left: 0;
+  border-radius: 27px;
+  letter-spacing: -0.02em;
+}
+
+.cluster {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.clusterRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.socialIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.socialIcon:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.socialIcon img {
+  width: 16px;
+  height: 16px;
+  filter: brightness(0) invert(1);
+}
+
+.centerLogo {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.centerLogo img {
+  width: 28px;
+  height: 28px;
+}
+
+.pinBanner {
+  margin: 16px 20px 0;
+  padding: 16px 20px;
+  box-sizing: border-box;
+  border-radius: 14px;
+  background: #fff3a3;
+  border: 1px solid #fef08a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.pinLeft {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.pinTitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.pinSub {
+  margin: 2px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #64748b;
+}
+
+.pinBtn {
+  padding: 9px 16px;
+  border-radius: 8px;
+  border: 1px solid #fde68a;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.activeGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  padding: 18px 20px 0;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 22px;
+  min-height: 440px;
+  padding: 22px;
+  box-sizing: border-box;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--tint) 0%, #fff 60%);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.channelMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.channelIcon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+.channelName {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.handle {
+  display: block;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #64748b;
+}
+
+.toggle {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: #cbd5e1;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.toggleOn {
+  background: var(--accent);
+}
+
+.toggleKnob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.toggleOn .toggleKnob {
+  transform: translateX(18px);
+}
+
+.tagline {
+  margin: 14px 0 8px;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.cardDesc {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.75;
+  color: #475569;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.stepItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #1e293b;
+}
+
+.stepBadge {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--step-bg);
+  color: var(--step-text);
+  font-size: 10px;
+  font-weight: 600;
+  display: grid;
+  place-items: center;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.unlinkBtn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 999px;
+  background: var(--step-bg);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.connectedBadge {
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #dcfce7;
+  color: #15803d;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.primaryBtn {
+  padding: 11px 18px;
+  border: none;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.sectionHeading {
+  margin: 28px 20px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.comingSoonGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  padding: 0 20px;
+}
+
+.comingCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 220px;
+  padding: 24px;
+  box-sizing: border-box;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--tint) 0%, #fff 70%);
+}
+
+.comingHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.comingTagline {
+  margin: 8px 0 0;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.comingDesc {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.75;
+  color: #475569;
+}
+
+.comingNote {
+  margin: 4px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #64748b;
+}
+
+@media (max-width: 1024px) {
+  .activeGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .activeGrid,
+  .comingSoonGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 28px 24px;
+  }
+
+  .hero::before {
+    background: linear-gradient(180deg, rgba(21, 18, 43, 0.9) 0%, rgba(21, 18, 43, 0.7) 100%);
+  }
+
+  .heroTitle {
+    font-size: 30px;
+  }
+
+  .cluster {
+    position: static;
+    transform: none;
+    margin-top: 20px;
+  }
+
+  .socialIcon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .centerLogo {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 28px;
+  }
+
+  .activeGrid {
+    gap: 20px;
+    padding: 16px 12px 0;
+  }
+
+  .card {
+    gap: 20px;
+    min-height: auto;
+    padding: 20px 18px;
+  }
+
+  .tagline {
+    margin: 18px 0 10px;
+    font-size: 20px;
+  }
+
+  .cardDesc {
+    line-height: 1.75;
+    font-size: 13.5px;
+  }
+
+  .steps {
+    gap: 14px;
+    margin-top: 20px;
+  }
+
+  .stepItem {
+    gap: 12px;
+    font-size: 13px;
+  }
+
+  .stepBadge {
+    width: 22px;
+    height: 22px;
+    font-size: 11px;
+  }
+
+  .actions {
+    gap: 14px;
+    margin-top: 6px;
+  }
+
+  .unlinkBtn,
+  .connectedBadge {
+    padding: 9px 16px;
+  }
+
+  .primaryBtn {
+    padding: 12px 18px;
+    font-size: 14px;
+  }
+
+  .pinBanner {
+    padding: 18px 16px;
+    margin-top: 16px;
+  }
+
+  .pinBtn {
+    padding: 11px 16px;
+    font-size: 13px;
+  }
+
+  .sectionHeading {
+    margin: 28px 12px 14px;
+  }
+
+  .comingSoonGrid {
+    gap: 20px;
+    padding: 0 12px;
+  }
+
+  .comingCard {
+    gap: 14px;
+    padding: 22px 18px;
+  }
+
+  .comingTagline {
+    margin: 12px 0 0;
+    font-size: 20px;
+  }
+
+  .comingDesc {
+    line-height: 1.75;
+  }
+}

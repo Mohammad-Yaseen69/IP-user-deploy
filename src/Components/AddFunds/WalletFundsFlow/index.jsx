@@ -25,6 +25,8 @@ import wallet_ic from "../files/add_f_ic.png";
 import BankDeposit from "./BankDeposit";
 import PlaidBankTransfer from "./PlaidBankTransfer";
 import TopIcon from "../../PaymentsNewer/Mobile/files/Top";
+import SriPayWalletPicker from "./SriPayWalletPicker";
+import SriPayPaymentStatus from "./SriPayPaymentStatus";
 
 export const PlaidCurrencies = ["EUR", "GBP", "SEK", "DKK", "NOK", "CHF"];
 const initialState = {
@@ -52,6 +54,8 @@ const initialState = {
   mobile_wallet_services: [],
   mobile_wallet_channel: {},
   mobile_wallet_service: {},
+  sripay_method: null,
+  sripay_payment: null,
   error: "",
   exchange_rate: "",
   exchange_rate_error: "",
@@ -61,6 +65,8 @@ const initialState = {
   show_confirmation: false,
   paypal_fx: {},
   plaid_fx: {},
+  card_fx: {},
+  card_unsupported_currency: false,
   exchange_rate_backup: {},
 };
 function reducer(state, action) {
@@ -154,7 +160,8 @@ const ExtraContentOnFee = ({ data, fxRate, fxCurrency, fxAmount }) => {
             letterSpacing: "-0.14px",
           }}
         >
-          {t("Amount in CHF")}
+          {t("Amount in")}{" "}
+          {data?.exchange_rate?.sendFromMobileWallet?.currency || fxCurrency || "USD"}
         </span>
         <strong
           style={{
@@ -182,6 +189,7 @@ const ExtraContentOnFee = ({ data, fxRate, fxCurrency, fxAmount }) => {
 
 const WalletFundsFlow = ({ setAction }) => {
   const { t } = useTranslation();
+  const usePaytently = true; // Paytently is the card provider (hosted-forms iframe).
   const [data, dispatch] = useReducer(reducer, initialState);
   const { userDetails, authHeader, userWallets } = useContext(UserContext);
   const navigate = useNavigate();
@@ -374,6 +382,29 @@ const WalletFundsFlow = ({ setAction }) => {
       dataHandler("loading", true);
       if (data.channel?.value === "card" || data.channel?.value === "bank") {
         try {
+          if (usePaytently && data.channel?.value === "card") {
+            const res = await axios.get(
+              `${import.meta.env.VITE_IP_DEV_API}/api/paytently/fee/${data.wallet?._id}/${parseFloat(data.amount)}`,
+              { headers: authHeader },
+            );
+            const dec = decryptData(res.data.data);
+            dataHandler("exchange_rate", {
+              fee: { amount: dec?.feeDetails },
+              sending: { currency: data.wallet?.currency?.code, amount: data.amount },
+              receiver: {
+                currency: data.wallet?.currency?.code,
+                amount: data.amount - dec?.feeDetails,
+              },
+              total: parseFloat(data.amount),
+            });
+            dataHandler("card_unsupported_currency", dec?.unsupported || false);
+            dataHandler("card_fx", {
+              amount: dec?.converted_amount,
+              exchange_rate: dec?.rate,
+              currency: dec?.charge_currency,
+            });
+            return;
+          }
           const res = await axios.get(
             `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/get-tbc-fee/${data.wallet?._id}/${parseFloat(data.amount)}?isBankFee=${data.channel?.value === "bank" ? true : false}`,
             {
@@ -531,6 +562,8 @@ const WalletFundsFlow = ({ setAction }) => {
             },
             total: dec?.data?.amount?.value,
             token: dec?.data?.token,
+            vendor: dec?.data?.vendor,
+            payment_options: dec?.data?.payment_options ?? [],
           });
         } catch (error) {
           const dec = decryptData(error?.response?.data?.data);
@@ -638,6 +671,16 @@ const WalletFundsFlow = ({ setAction }) => {
     }
   }, [data.step]);
 
+  const isSriPay =
+    data.channel?.value === "mobile_wallet" && data.exchange_rate?.vendor === "sripay";
+
+  const restartSriPay = (step = 1) => {
+    dataHandler("sripay_payment", null);
+    dataHandler("sripay_method", null);
+    dataHandler("show_confirmation", false);
+    dataHandler("step", step);
+  };
+
   const onClickHandler = () => {
     switch (data.step) {
       case 1:
@@ -647,10 +690,14 @@ const WalletFundsFlow = ({ setAction }) => {
         dataHandler("step", 3);
         break;
       case 3:
-        if (
+        if (isSriPay) {
+          // SriPay: pick the wallet first (step 4), then confirm.
+          dataHandler("step", 4);
+        } else if (
           data.channel?.value === "paypal" ||
           data?.channel?.value === "crypto" ||
-          data?.channel?.value === "mobile_wallet"
+          data?.channel?.value === "mobile_wallet" ||
+          (usePaytently && data?.channel?.value === "card")
         ) {
           dataHandler("show_confirmation", true);
         } else {
@@ -690,6 +737,7 @@ const WalletFundsFlow = ({ setAction }) => {
         dataHandler("selectedSavedCard", {});
         dataHandler("bankStep", 1);
         dataHandler("mobile_wallet_service", {});
+        dataHandler("sripay_method", null);
 
         break;
 
@@ -725,6 +773,9 @@ const WalletFundsFlow = ({ setAction }) => {
       case 3:
         return !data.channel?.value || data.exchange_rate_error || data.error;
       case 4:
+        if (isSriPay) {
+          return !data.sripay_method;
+        }
         if (data.channel?.value === "card") {
           const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
           const currentDate = new Date();
@@ -806,13 +857,15 @@ const WalletFundsFlow = ({ setAction }) => {
               minHeight: "auto",
             }}
           >
-            <div className={styles.left}>
+            <div className={styles.left} style={{ justifyContent: "flex-start" }}>
               <div className={styles.l_top}>
                 <h1>{t("Top-Up Wallet")}</h1>
                 <h2>
                   {data.step === 4
                     ? data.channel?.sub_name === "wallet"
-                      ? "Select The Payer"
+                      ? isSriPay
+                        ? t("Select Your Wallet")
+                        : "Select The Payer"
                       : data.channel?.value === "card"
                         ? t("Select Or Add Payment Card")
                         : t("Add Funds to Wallet")
@@ -851,6 +904,42 @@ const WalletFundsFlow = ({ setAction }) => {
                         sendingLabel="Sending"
                         totalLabel="Amount To Pay"
                       />
+                      {usePaytently &&
+                        data.channel?.value === "card" &&
+                        data.card_unsupported_currency && (
+                          <>
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "flex-start",
+                                gap: ".7rem",
+                                padding: "12px",
+                                borderRadius: "6px",
+                                background: "rgba(89, 38, 240, 0.13)",
+                              }}
+                            >
+                              <Info color="#5926f0" size={20} />
+                              <span
+                                style={{
+                                  color: "#5926F0",
+                                  fontFamily: "Manrope",
+                                  fontSize: ".7rem",
+                                  fontWeight: 700,
+                                  lineHeight: 1.3,
+                                  letterSpacing: "-0.28px",
+                                }}
+                              >
+                                {`${data.wallet?.currency?.code} is not supported for card payment, USD will be used as the default currency.`}
+                              </span>
+                            </div>
+                            <ExtraContentOnFee
+                              data={data}
+                              fxRate={data.card_fx?.exchange_rate}
+                              fxCurrency={data.card_fx?.currency}
+                              fxAmount={data.card_fx?.amount}
+                            />
+                          </>
+                        )}
                       {data.channel?.value === "paypal" &&
                       !PaypalCurrencies.some((item) => item === data.wallet?.currency?.code) ? (
                         <>
@@ -935,7 +1024,14 @@ const WalletFundsFlow = ({ setAction }) => {
               </div>
             </div>
             <div className={styles.right} style={{ "--color-white": "#fff" }}>
-              {data.externalLink ? (
+              {data.sripay_payment ? (
+                <SriPayPaymentStatus
+                  transactionId={data.sripay_payment.transactionId}
+                  redirectUrl={data.sripay_payment.redirectUrl}
+                  walletName={data.sripay_method?.name}
+                  onRestart={restartSriPay}
+                />
+              ) : data.externalLink ? (
                 <MobileWalletLink
                   data={
                     data.channel?.value === "paypal"
@@ -972,6 +1068,8 @@ const WalletFundsFlow = ({ setAction }) => {
                   token={data.exchange_rate?.paypal_token}
                   rate={data.exchange_rate?.rate}
                   exchangeRate={data.exchange_rate}
+                  sriPayMethod={isSriPay ? data.sripay_method : null}
+                  onSriPayInitiated={(e) => dataHandler("sripay_payment", e)}
                 />
               ) : (
                 <>
@@ -1002,7 +1100,14 @@ const WalletFundsFlow = ({ setAction }) => {
                   )}
 
                   {data.step === 4 ? (
-                    data.channel?.sub_name === "wallet" ? (
+                    isSriPay ? (
+                      <SriPayWalletPicker
+                        options={data.exchange_rate?.payment_options}
+                        selected={data.sripay_method}
+                        setSelected={(e) => dataHandler("sripay_method", e)}
+                        channelIcon={data.channel?.icon}
+                      />
+                    ) : data.channel?.sub_name === "wallet" ? (
                       <Providers
                         channel={data.channel}
                         provider={data.mobile_wallet_service}
@@ -1104,7 +1209,9 @@ const WalletFundsFlow = ({ setAction }) => {
             <h2>
               {data.step === 4
                 ? data.channel?.sub_name === "wallet"
-                  ? "Select The Payer"
+                  ? isSriPay
+                    ? t("Select Your Wallet")
+                    : "Select The Payer"
                   : data.channel?.value === "card"
                     ? t("Select Or Add Payment Card")
                     : t("Add Funds to Wallet")
@@ -1131,6 +1238,42 @@ const WalletFundsFlow = ({ setAction }) => {
                     sendingLabel="Sending"
                     totalLabel="Amount To Pay"
                   />
+                  {usePaytently &&
+                    data.channel?.value === "card" &&
+                    data.card_unsupported_currency && (
+                      <>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "flex-start",
+                            gap: ".7rem",
+                            padding: "12px",
+                            borderRadius: "6px",
+                            background: "rgba(89, 38, 240, 0.13)",
+                          }}
+                        >
+                          <Info color="#5926f0" size={20} />
+                          <span
+                            style={{
+                              color: "#5926F0",
+                              fontFamily: "Manrope",
+                              fontSize: ".7rem",
+                              fontWeight: 700,
+                              lineHeight: 1.3,
+                              letterSpacing: "-0.28px",
+                            }}
+                          >
+                            {`${data.wallet?.currency?.code} is not supported for card payment, USD will be used as the default currency.`}
+                          </span>
+                        </div>
+                        <ExtraContentOnFee
+                          data={data}
+                          fxRate={data.card_fx?.exchange_rate}
+                          fxCurrency={data.card_fx?.currency}
+                          fxAmount={data.card_fx?.amount}
+                        />
+                      </>
+                    )}
                   {data.channel?.value === "paypal" &&
                   !PaypalCurrencies.some((item) => item === data.wallet?.currency?.code) ? (
                     <>
@@ -1229,7 +1372,7 @@ const WalletFundsFlow = ({ setAction }) => {
                               letterSpacing: "-0.14px",
                             }}
                           >
-                            {t("Amount in US")}
+                            {t("Amount in USD")}
                           </span>
                           <strong
                             style={{
@@ -1262,7 +1405,14 @@ const WalletFundsFlow = ({ setAction }) => {
           </div>
           <div className={styles.flow}>
             <div className={styles.flow_com} style={{ minHeight: "50vh" }}>
-              {data.externalLink ? (
+              {data.sripay_payment ? (
+                <SriPayPaymentStatus
+                  transactionId={data.sripay_payment.transactionId}
+                  redirectUrl={data.sripay_payment.redirectUrl}
+                  walletName={data.sripay_method?.name}
+                  onRestart={restartSriPay}
+                />
+              ) : data.externalLink ? (
                 <MobileWalletLink
                   data={
                     data.channel?.value === "paypal"
@@ -1299,6 +1449,8 @@ const WalletFundsFlow = ({ setAction }) => {
                   token={data.exchange_rate?.paypal_token}
                   rate={data.exchange_rate?.rate}
                   exchangeRate={data.exchange_rate}
+                  sriPayMethod={isSriPay ? data.sripay_method : null}
+                  onSriPayInitiated={(e) => dataHandler("sripay_payment", e)}
                 />
               ) : (
                 <>
@@ -1329,7 +1481,14 @@ const WalletFundsFlow = ({ setAction }) => {
                   )}
 
                   {data.step === 4 ? (
-                    data.channel?.value === "mobile_wallet" ? (
+                    isSriPay ? (
+                      <SriPayWalletPicker
+                        options={data.exchange_rate?.payment_options}
+                        selected={data.sripay_method}
+                        setSelected={(e) => dataHandler("sripay_method", e)}
+                        channelIcon={data.channel?.icon}
+                      />
+                    ) : data.channel?.value === "mobile_wallet" ? (
                       <Providers
                         channel={data.channel}
                         provider={data.mobile_wallet_service}
