@@ -11,6 +11,7 @@ import { useContext, useEffect, useState } from "react";
 // import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
 import r_styles from "../HomeNewUpdated/styles/Reserved.module.css";
 import { removeCommasAndCurrency } from "./AccountLimits";
+import { formatCurrency } from "../../Helper/AmountFormat";
 
 const Card = ({ wallet, current, index, data }) => {
   const [copied, setCopied] = useState(false);
@@ -78,10 +79,7 @@ const Card = ({ wallet, current, index, data }) => {
             <span style={{ fontSize: "10px", fontWeight: 600 }}>{t("Total Balance")}:</span>
             <h5>
               {wallet.currency?.code}{" "}
-              {Number(wallet.balance.available + wallet.balance.reserved)?.toLocaleString("en-US", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
+              {formatCurrency(wallet.balance.available + wallet.balance.reserved, true)}
             </h5>
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
@@ -97,11 +95,7 @@ const Card = ({ wallet, current, index, data }) => {
             >
               <span style={{ fontSize: "9px", fontWeight: 600 }}>{t("Available balance")}:</span>
               <h5>
-                {wallet.currency?.code}{" "}
-                {Number(wallet.balance.available)?.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                {wallet.currency?.code}&nbsp;{formatCurrency(wallet.balance.available, true)}
               </h5>
             </div>
             <div
@@ -116,11 +110,7 @@ const Card = ({ wallet, current, index, data }) => {
             >
               <span style={{ fontSize: "9px", fontWeight: 600 }}>{t("Blocked balance")}:</span>
               <h5>
-                {wallet.currency?.code}{" "}
-                {Number(wallet.balance.reserved)?.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                {wallet.currency?.code}&nbsp;{formatCurrency(wallet.balance.reserved, true)}
               </h5>
             </div>
           </div>
@@ -169,11 +159,7 @@ const Card = ({ wallet, current, index, data }) => {
             <div className={styles.left}>
               <span>{t("Balance")}</span>
               <h3>
-                {wallet?.currency?.code}{" "}
-                {wallet?.balance?.available?.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                {wallet?.currency?.code}&nbsp;{formatCurrency(wallet?.balance?.available, true)}
               </h3>
             </div>
             <div className={styles.right}>

@@ -82,7 +82,7 @@ const RecentTrans = ({ currentWallet }) => {
     };
 
     fetchData();
-  }, [currentWallet]);
+  }, [currentWallet?.wallet_id]);
   return (
     <Card
       style={{

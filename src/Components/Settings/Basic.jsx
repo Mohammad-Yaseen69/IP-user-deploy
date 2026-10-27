@@ -15,7 +15,6 @@ import citiesData from "../CitiesDropDown/CitiesData.json";
 import countryAlpha2Map from "../AddFunds/WalletFund/countries_iso2.json";
 import countriesData from "../PaymentsNewer/CountriesData.json";
 import PhoneInput from "../PhoneInput";
-import CountryBasedPhone from "../PhoneInput/PhoneNumberBasedOnCountry.json";
 import OTPConfirmation from "../../Common/Component/OtpVerification";
 import NextStepModal from "./NextStepModal";
 import QrGenerate from "./QrGenerate";
@@ -24,6 +23,7 @@ import AdjustModal from "./AdjustModal";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import { useQuery } from "@tanstack/react-query";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
+import { getPhoneCountry } from "../../utils/Functions";
 import {
   POSTAL_CODE_FORMATS,
   postalCodeRegex,
@@ -43,6 +43,7 @@ import {
   WarningCircle,
 } from "./Icons";
 import dayjs from "dayjs";
+import CountryBasedPhone from "../PhoneInput/PhoneNumberBasedOnCountry.json";
 
 export const currentDate = new Date();
 export const minDate = new Date(
@@ -83,6 +84,7 @@ const Basic = ({ setCurrentTab }) => {
     profileCompletedPercentage,
     croppedImages,
     setCroppedImages,
+    allowedCountries,
   } = useContext(UserContext);
   const [company, setCompany] = useState("");
   const [username, setUsername] = useState(userDetails?.username ?? "");
@@ -129,6 +131,16 @@ const Basic = ({ setCurrentTab }) => {
     [userDetails],
   );
   const isVerified = useMemo(() => isKycApproved || isKybApproved, [isKycApproved, isKybApproved]);
+  const isBusiness = userDetails?.account_type === "business";
+  const phoneCountry = useMemo(
+    () =>
+      getPhoneCountry(
+        userDetails?.phone,
+        userDetails?.country_iso_code,
+        (allowedCountries ?? []).map((item) => item?.country_iso_code),
+      ),
+    [userDetails?.phone, userDetails?.country_iso_code, allowedCountries],
+  );
 
   const { data: statesResponse, isLoading: isStatesLoading } = useQuery({
     queryKey: ["country-states", "US"],
@@ -320,14 +332,14 @@ const Basic = ({ setCurrentTab }) => {
       : arg;
     const channel = isChannel ? arg : codeType;
 
-    setIsSaving(true);
-    setOtpType(type === "email" ? "email" : "phone");
-
     if (type === "email") {
       if (!email) return false;
     } else {
       if (!phone) return false;
     }
+
+    setIsSaving(true);
+    setOtpType(type === "email" ? "email" : "phone");
 
     try {
       const body = {
@@ -569,25 +581,12 @@ const Basic = ({ setCurrentTab }) => {
   const [showUsernameGuide, setShowUsernameGuide] = useState(false);
 
   const handleSaveClick = () => {
-    const dialCode = String(CountryBasedPhone[country].dial_code)?.replace("+", "");
-
-    const filterNumber = (num) => {
-      if (typeof num === "string") {
-        const withoutDialCode = num.replace(dialCode, "");
-        return withoutDialCode ? withoutDialCode : undefined;
-      } else {
-        num ? num : undefined;
-      }
-    };
-
     if (userDetails?.account_type === "individual") {
       if (!email) return editProfileHandler();
       return userDetails?.email === email ? editProfileHandler() : sendOtp("email");
     }
     if (userDetails?.account_type === "business") {
-      return filterNumber(userDetails?.phone) === filterNumber(phone)
-        ? editProfileHandler()
-        : sendOtp("phone");
+      return (userDetails?.phone || "") === (phone || "") ? editProfileHandler() : sendOtp("phone");
     }
   };
 
@@ -1252,6 +1251,7 @@ const Basic = ({ setCurrentTab }) => {
               />
             </div>
             {isKybApproved && <Hint>{t("Verified · contact support to change it")}</Hint>}
+            {/* <Input disabled={1 + 1 === 2} readOnly={1 + 1 === 2} value={phone} onChange={e => setPhone(e.target.value)} /> */}
           </FormGroup>
 
           <FormGroup className={styles.field}>
@@ -1261,9 +1261,14 @@ const Basic = ({ setCurrentTab }) => {
             </Label>
             <div className={styles.external}>
               <PhoneInput
+                key={`${isEditMode}-${userDetails?.phone}`}
                 phone={phone}
-                country={countriesData.find((item) => item.alpha3 === country)?.alpha3}
-                disableDropdown={true}
+                country={
+                  isBusiness
+                    ? phoneCountry
+                    : countriesData.find((item) => item.alpha3 === country)?.alpha3
+                }
+                disableDropdown={!isBusiness}
                 setPhone={setPhone}
                 disabled={!isEditMode || isKycApproved}
                 newUI={true}

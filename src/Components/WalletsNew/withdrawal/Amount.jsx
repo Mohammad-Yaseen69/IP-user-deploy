@@ -152,12 +152,7 @@ const AmountAndCurrency = ({
             .catch((err) => {
               const dec = decryptData(err?.response.data.data);
               console.log(dec);
-              setLimValue(
-                dec?.value?.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                }),
-              );
+              setLimValue(formatCurrency(dec?.value, true));
               const error = LimitsErrorMessage(dec?.code ?? dec?.message);
               if (error) {
                 setExchangeError(error);
@@ -332,10 +327,7 @@ const AmountAndCurrency = ({
               >
                 <span style={{ color: "#a0a0a0" }}>{t("Exchange Rate")}:</span>
                 <span style={{ color: "#a0a0a0" }}>
-                  {exchangeRate?.wholesale_fx_rate?.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 4,
-                  }) ?? ""}{" "}
+                  {formatCurrency(exchangeRate?.wholesale_fx_rate, true)}{" "}
                   {exchangeRate?.destination?.currency ?? ""}
                 </span>
               </p>
@@ -351,11 +343,7 @@ const AmountAndCurrency = ({
             >
               <span style={{ color: "black" }}>{t("Fees")}</span>
               <span style={{ color: "black" }}>
-                {Number(exchangeRate?.fee?.amount)?.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                }) ?? ""}{" "}
-                {currency}
+                {formatCurrency(exchangeRate?.fee?.amount, true)} {currency}
               </span>
             </p>
             <p
@@ -367,10 +355,7 @@ const AmountAndCurrency = ({
             >
               <span style={{ fontWeight: "600" }}>{t("Amount the recipient will receive")}:</span>
               <span style={{ fontWeight: "600", whiteSpace: "nowrap" }}>
-                {exchangeRate?.destination?.amount?.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                }) ?? ""}{" "}
+                {formatCurrency(exchangeRate?.destination?.amount, true)}{" "}
                 {exchangeRate?.destination?.currency ?? ""}
               </span>
             </p>
@@ -465,9 +450,10 @@ const AmountAndCurrency = ({
                   >
                     {t("This amount exceeds our limit of")}{" "}
                     <b>
-                      {
-                        +subService?.transaction_types?.C2C?.maximum_transaction_amount.toLocaleString()
-                      }{" "}
+                      {formatCurrency(
+                        subService?.transaction_types?.C2C?.maximum_transaction_amount,
+                        true,
+                      )}{" "}
                       {subService?.currency}{" "}
                     </b>{" "}
                     {t("for a single transfer to")} <b> {subService.name}</b>.
