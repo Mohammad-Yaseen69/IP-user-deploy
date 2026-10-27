@@ -209,6 +209,7 @@ const DocumentsStep = ({
     const isVerified = isKeyVerifiedFromKyb(key);
     const isRequired = requiredDocKeys.includes(key);
     const isPOF = IBAN_POA_DOC_KEYS.includes(key);
+
     return (
       <div className={styles.right}>
         {selectedFile ? (

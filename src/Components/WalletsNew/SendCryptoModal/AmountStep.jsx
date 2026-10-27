@@ -15,6 +15,7 @@ import {
   getQuickAmounts,
   getSpendableBalance,
 } from "../../../stateMachines/cryptoPayout";
+import { formatCurrency } from "../../../Helper/AmountFormat";
 
 const QUICK_PERCENTAGES = [25, 50, 75, 100];
 
@@ -55,11 +56,7 @@ const AmountStep = ({ amount, setAmount, amountError, availableBalance, cryptoCu
         <div className={convertStyles.availableText}>
           {t("Available")}:{" "}
           <strong>
-            {getSpendableBalance(availableBalance).toLocaleString("en-US", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}{" "}
-            {cryptoCurrency}
+            {formatCurrency(getSpendableBalance(availableBalance), true)}&nbsp;{cryptoCurrency}
           </strong>
         </div>
 
