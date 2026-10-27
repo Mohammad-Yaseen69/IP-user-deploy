@@ -46,7 +46,7 @@ const TAB_PARAMS = [
   ["activity", "Login Activity"],
   ["withdraw", "Receiving Accounts"],
   ["crypto", "Receiving Accounts"],
-  ["cards", "Manage Saved Cards"],
+  // ["cards", "Manage Saved Cards"],
   ["data", "Download Your Data"],
   ["delete", "Delete Your Account"],
 ];
@@ -143,12 +143,12 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
         tabType: "withdrawls",
         group: "Money",
       },
-      can("settings.saved-cards.view") && {
-        name: "Manage Saved Cards",
-        label: "Saved cards",
-        Icon: CreditCard,
-        group: "Money",
-      },
+      // can("settings.saved-cards.view") && {
+      //   name: "Manage Saved Cards",
+      //   label: "Saved cards",
+      //   Icon: CreditCard,
+      //   group: "Money",
+      // },
       can("settings.how-others-find-you.view") && {
         name: "How Others Can Find You",
         label: "How people find you",

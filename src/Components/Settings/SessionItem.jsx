@@ -105,11 +105,11 @@ const SessionItem = ({ session, index }) => {
         >
           {t("View")}
         </button>
-        {!isCurrent && (
+        {/* {!isCurrent && (
           <button type="button" className={`${styles.button} ${styles.buttonTertiary}`}>
             {t("Sign out")}
           </button>
-        )}
+        )} */}
       </div>
     </div>
   );

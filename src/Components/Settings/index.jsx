@@ -152,7 +152,7 @@ const Settings = () => {
                 {currentTab === "Delete Your Account" && <DeleteAccount />}
                 {currentTab === "Financial Info" && <FinancialInfo />}
                 {currentTab === "API Key" && <ApiKey />}
-                {currentTab === "Manage Saved Cards" && <ManageSaveCards />}
+                {/* {currentTab === "Manage Saved Cards" && <ManageSaveCards />} */}
                 {currentTab === "Business Verification" &&
                   (profileCompletedPercentage === 100 ? <KYB /> : "Complete Your Profile First")}
                 {currentTab === "How Others Can Find You" && <HowOthersFindYou />}
@@ -236,7 +236,7 @@ const Settings = () => {
                 {currentTab === "Download Your Data" && <DownloadData />}
                 {currentTab === "Delete Your Account" && <DeleteAccount />}
                 {currentTab === "API Key" && <ApiKey />}
-                {currentTab === "Manage Saved Cards" && <ManageSaveCards />}
+                {/* {currentTab === "Manage Saved Cards" && <ManageSaveCards />} */}
                 {currentTab === "Business Verification" && <KYB />}
                 {currentTab === "Financial Info" && <FinancialInfo />}
                 {currentTab === "How Others Can Find You" && <HowOthersFindYou />}
