@@ -66,6 +66,7 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
   };
 
   const getOtpData = (purpose) => {
+    if (purpose === OTP_PURPOSE.UNLINK) return { channel: item.id };
     if (purpose === OTP_PURPOSE.SWITCH) return { channel: item.id, enabled: false };
     if (instagram || telegram) return { type: "unlink-insta" };
     return {};
@@ -123,6 +124,7 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
       verifyToken();
       setter(true);
       setIsConnected(false);
+      setChannelEnabled(false);
       setShowOtp(false);
       toast.success(`${item.name} account unlinked successfully!`);
     } catch (error) {
@@ -191,8 +193,17 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
   }, [redirect, userDetails]);
 
   const handleOpen = () => {
-    const handle = instagram ? item?.handle : item?.handle?.replace("+", "");
+    const handle = whatsapp ? item?.handle?.replace("+", "") : item?.handle;
     window.open(`${item.link}/${handle}`, "_blank", "noopener,noreferrer");
+  };
+
+  const handleDisconnect = () => {
+    if (channelEnabled) {
+      toast.error("Please disable your channel first!");
+      return;
+    }
+
+    startOtp(OTP_PURPOSE.UNLINK);
   };
 
   return (
@@ -204,7 +215,7 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
             <div>
               <h4 className={styles.channelName}>{item.name}</h4>
               <span className={styles.handle}>
-                {instagram ? item?.recipient : maskValue(item.recipient)}
+                {whatsapp ? maskValue(item.recipient) : item?.recipient}
               </span>
             </div>
           </div>
@@ -241,12 +252,12 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
       <div className={styles.actions}>
         {isConnected ? (
           <button
-            onClick={() => startOtp(OTP_PURPOSE.UNLINK)}
+            onClick={handleDisconnect}
             type="button"
             className={styles.unlinkBtn}
             disabled={saving}
           >
-            {t("Unlink")}
+            {t("Disconnect")}
           </button>
         ) : (
           <span className={channelEnabled ? styles.connectedBadge : styles.unlinkBtn}>
