@@ -15,11 +15,7 @@ const SidebarProgress = ({
 
   const checklist = [
     { key: "account", label: t("Account"), icon: <Check size={15} /> },
-    {
-      key: "company",
-      label: t("Company details"),
-      icon: <ArrowRight size={15} />,
-    },
+    { key: "company", label: t("Company details"), icon: <ArrowRight size={15} /> },
     {
       key: "activity",
       label: t("Activity"),

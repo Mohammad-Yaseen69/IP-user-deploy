@@ -325,13 +325,7 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType, currentS
             </div>
 
             {owners && owners.length > 0 ? (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "12px",
-                }}
-              >
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                 {owners.map((o, idx) => (
                   <div
                     key={o.id || idx}
@@ -433,21 +427,9 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType, currentS
                           border: "1px solid #F3F4F6",
                         }}
                       >
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "8px",
-                          }}
-                        >
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                           <FileText size={14} color="#6D4EFF" />
-                          <span
-                            style={{
-                              fontSize: "12px",
-                              color: "#374151",
-                              fontWeight: 500,
-                            }}
-                          >
+                          <span style={{ fontSize: "12px", color: "#374151", fontWeight: 500 }}>
                             {title}
                           </span>
                         </div>

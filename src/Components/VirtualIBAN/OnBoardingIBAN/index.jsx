@@ -161,10 +161,7 @@ function onboardingReducer(state, action) {
         step: action.payload.step || state.step,
         company: { ...state.company, ...action.payload.company },
         activity: { ...state.activity, ...action.payload.activity },
-        ownership: {
-          ...state.ownership,
-          owners: action.payload.owners || state.ownership.owners,
-        },
+        ownership: { ...state.ownership, owners: action.payload.owners || state.ownership.owners },
         documents: {
           ...state.documents,
           files: { ...state.documents.files, ...action.payload.files },
@@ -197,9 +194,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
   const hydratedForRef = useRef(null);
 
   const draftEnabled = Boolean(userDetails?._id) && userDetails?.account_type === "business";
-  const profileDraft = useDraft(BUSINESS_PROFILE_SCOPE, {
-    enabled: draftEnabled,
-  });
+  const profileDraft = useDraft(BUSINESS_PROFILE_SCOPE, { enabled: draftEnabled });
   const ibanDraft = useDraft(IBAN_ONBOARDING_SCOPE, { enabled: draftEnabled });
 
   const checkRequestStatus = async () => {
@@ -267,10 +262,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
           activity: {
             ...savedActivity,
             ...(industryReference
-              ? {
-                  industryReference,
-                  industry: industryReference.name || savedActivity.industry,
-                }
+              ? { industryReference, industry: industryReference.name || savedActivity.industry }
               : {}),
           },
           owners:
@@ -379,20 +371,11 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     else if (sectionKey === "company")
       dispatch({ type: "UPDATE_COMPANY", payload: newData.company || newData });
     else if (sectionKey === "activity")
-      dispatch({
-        type: "UPDATE_ACTIVITY",
-        payload: newData.activity || newData,
-      });
+      dispatch({ type: "UPDATE_ACTIVITY", payload: newData.activity || newData });
     else if (sectionKey === "ownership")
-      dispatch({
-        type: "UPDATE_OWNERSHIP",
-        payload: newData.ownership || newData,
-      });
+      dispatch({ type: "UPDATE_OWNERSHIP", payload: newData.ownership || newData });
     else if (sectionKey === "documents")
-      dispatch({
-        type: "UPDATE_DOCUMENTS",
-        payload: newData.documents || newData,
-      });
+      dispatch({ type: "UPDATE_DOCUMENTS", payload: newData.documents || newData });
     else if (newData.company) dispatch({ type: "UPDATE_COMPANY", payload: newData.company });
     else if (newData.activity) dispatch({ type: "UPDATE_ACTIVITY", payload: newData.activity });
     else if (newData.ownership) dispatch({ type: "UPDATE_OWNERSHIP", payload: newData.ownership });
@@ -413,10 +396,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
 
   const handleTypeSelect = (type) => {
     dispatch({ type: "SET_USER_TYPE", payload: type });
-    dispatch({
-      type: "SET_STEP",
-      payload: type === "individual" ? "review" : "company",
-    });
+    dispatch({ type: "SET_STEP", payload: type === "individual" ? "review" : "company" });
   };
 
   const handleInitiatePayment = async () => {
@@ -684,21 +664,9 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
             <div className={styles.bannerCards}>
               {[
                 { Icon: Globe, title: "Banking", sub: "IBAN · SEPA · SWIFT" },
-                {
-                  Icon: Activity,
-                  title: "Treasury",
-                  sub: "Hold & convert · live FX",
-                },
-                {
-                  Icon: CreditCard,
-                  title: "Cards",
-                  sub: "Spend your balances",
-                },
-                {
-                  Icon: Zap,
-                  title: "Crypto → Fiat",
-                  sub: "Receive · convert · settle",
-                },
+                { Icon: Activity, title: "Treasury", sub: "Hold & convert · live FX" },
+                { Icon: CreditCard, title: "Cards", sub: "Spend your balances" },
+                { Icon: Zap, title: "Crypto → Fiat", sub: "Receive · convert · settle" },
                 { Icon: Cpu, title: "AI Assistant", sub: "Guides every step" },
               ].map(({ Icon, title, sub }) => (
                 <div key={title} className={styles.bannerCard}>
@@ -714,13 +682,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
             </div>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginTop: "25px",
-            }}
-          >
+          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "25px" }}>
             <button
               className={styles.buttonGroup1}
               style={{

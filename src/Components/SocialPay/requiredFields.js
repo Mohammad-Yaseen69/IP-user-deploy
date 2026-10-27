@@ -53,16 +53,17 @@ export const socialPayConfig = {
   activeChannels: [
     {
       id: "instagram",
-      link: "https://www.instagram.com/",
+      link: "https://www.instagram.com",
       name: "Instagram",
-      handle: "@instapay.bot",
+      handle: "gaspardgoudjo",
+      recipient: "instabot",
       icon: instaIcon,
       isActive: true,
       tagline: "DM to pay.",
       description:
         "Open Instagram, message the InstaPay bot, log in once — then send money, check balances, and request payments without leaving the app.",
       steps: [
-        { step: 1, text: "DM @instapay.bot on Instagram" },
+        { step: 1, text: "DM bot on Instagram" },
         { step: 2, text: 'Type "Hi" — the bot replies instantly' },
         { step: 3, text: "Log in once, then your full wallet is in the chat" },
       ],
@@ -73,8 +74,9 @@ export const socialPayConfig = {
     {
       id: "whatsapp",
       name: "WhatsApp",
-      handle: "+41 XX XXXXX XX",
-      link: "https://www.whatsapp.com/",
+      handle: "+41783228400",
+      recipient: "+41783228403",
+      link: "https://wa.me/",
       icon: whatsappIcon,
       isActive: true,
       tagline: "Chat to transfer.",
@@ -92,8 +94,9 @@ export const socialPayConfig = {
     {
       id: "telegram",
       name: "Telegram",
-      handle: "@instapaybot",
-      link: "https://www.telegram.com/",
+      handle: "IPstaging_bot",
+      recipient: "telebot",
+      link: "https://t.me",
       icon: telegramIcon,
       isActive: true,
       tagline: "Tap to send.",

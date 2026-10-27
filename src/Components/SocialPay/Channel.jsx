@@ -13,6 +13,7 @@ import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { useSearchParams } from "react-router-dom";
 import { Info } from "react-feather";
 import OTPConfirmation from "../../Common/Component/OtpVerification";
+import { maskValue } from "../Auth/Login";
 
 export const getThemeVars = (themes, themeKey) => {
   const t = themes[themeKey] ?? themes.x;
@@ -65,7 +66,8 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
   };
 
   const getOtpData = (purpose) => {
-    if (purpose === OTP_PURPOSE.SWITCH) return { channel: item.id, enabled: true };
+    if (purpose === OTP_PURPOSE.UNLINK) return { channel: item.id };
+    if (purpose === OTP_PURPOSE.SWITCH) return { channel: item.id, enabled: false };
     if (instagram || telegram) return { type: "unlink-insta" };
     return {};
   };
@@ -90,14 +92,14 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
   const switchOtpCallback = async (setter, type, otp, setError) => {
     setSaving(true);
     try {
-      const res = await request("PUT", "/instagram/update-channel-switch", {
+      await request("PUT", "/instagram/update-channel-switch", {
         channel: item.id,
-        enabled: true,
+        enabled: false,
         token: otpToken,
         otp,
         type: codeType,
       });
-      setChannelEnabled(Boolean(res?.channel_switch ?? true));
+      setChannelEnabled(true);
       setShowOtp(false);
       toast.success(t("Channel enabled successfully"));
       verifyToken();
@@ -113,14 +115,16 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
   const unlinkOtpCallback = async (setter, type, otp, setError) => {
     setSaving(true);
     try {
-      await request("PUT", `/instagram/${item.id}-unlink`, {
+      await request("PUT", `/instagram/channel-unlink`, {
         token: otpToken,
         otp,
         type: codeType,
+        channel: item.id,
       });
       verifyToken();
       setter(true);
       setIsConnected(false);
+      setChannelEnabled(false);
       setShowOtp(false);
       toast.success(`${item.name} account unlinked successfully!`);
     } catch (error) {
@@ -135,11 +139,11 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
   const clearChannelSwitch = async () => {
     setSaving(true);
     try {
-      const res = await request("PUT", "/instagram/update-channel-switch", {
+      await request("PUT", "/instagram/update-channel-switch", {
         channel: item.id,
-        enabled: false,
+        enabled: true,
       });
-      setChannelEnabled(Boolean(res?.channel_switch ?? false));
+      setChannelEnabled(false);
       toast.success(t("Channel disabled"));
     } catch (error) {
       toast.error(error?.message || t("Disable failed"));
@@ -158,7 +162,7 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
   };
 
   useEffect(() => {
-    setChannelEnabled(Boolean(item?.channel_switch && item.linked));
+    setChannelEnabled(Boolean(!item?.channel_switch && item.linked));
     setIsConnected(Boolean(item.linked));
   }, [item?.channel_switch, item.linked]);
 
@@ -188,6 +192,20 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
     }
   }, [redirect, userDetails]);
 
+  const handleOpen = () => {
+    const handle = whatsapp ? item?.handle?.replace("+", "") : item?.handle;
+    window.open(`${item.link}/${handle}`, "_blank", "noopener,noreferrer");
+  };
+
+  const handleDisconnect = () => {
+    if (channelEnabled) {
+      toast.error("Please disable your channel first!");
+      return;
+    }
+
+    startOtp(OTP_PURPOSE.UNLINK);
+  };
+
   return (
     <article className={styles.card} style={getThemeVars(themes, item.theme)}>
       <div>
@@ -196,7 +214,9 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
             <img src={item.icon} alt={item.name} className={styles.channelIcon} />
             <div>
               <h4 className={styles.channelName}>{item.name}</h4>
-              <span className={styles.handle}>{item.handle}</span>
+              <span className={styles.handle}>
+                {whatsapp ? maskValue(item.recipient) : item?.recipient}
+              </span>
             </div>
           </div>
           {isConnected ? (
@@ -232,23 +252,19 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
       <div className={styles.actions}>
         {isConnected ? (
           <button
-            onClick={() => startOtp(OTP_PURPOSE.UNLINK)}
+            onClick={handleDisconnect}
             type="button"
             className={styles.unlinkBtn}
             disabled={saving}
           >
-            {t("Unlink")}
+            {t("Disconnect")}
           </button>
         ) : (
           <span className={channelEnabled ? styles.connectedBadge : styles.unlinkBtn}>
             {t(channelEnabled ? "Connected" : "Not Connected")}
           </span>
         )}
-        <button
-          type="button"
-          className={styles.primaryBtn}
-          onClick={() => window.open(item.link, "_blank", "noopener,noreferrer")}
-        >
+        <button type="button" className={styles.primaryBtn} onClick={handleOpen}>
           {item.primaryAction.label}
         </button>
       </div>
