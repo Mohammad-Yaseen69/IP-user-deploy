@@ -198,7 +198,7 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
   };
 
   const handleDisconnect = () => {
-    if (channelEnabled) {
+    if (!channelEnabled) {
       toast.error("Please disable your channel first!");
       return;
     }
