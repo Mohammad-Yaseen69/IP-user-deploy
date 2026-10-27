@@ -119,6 +119,9 @@ const CryptoChannels = ({ selectedIban }) => {
                 className={styles.detailMark}
                 style={{
                   background: getWalletAccentColor(selectedChannel?.payCurrency),
+                  width: 50,
+                  height: 50,
+                  fontSize: 14,
                 }}
               >
                 {selectedChannel?.payCurrency}

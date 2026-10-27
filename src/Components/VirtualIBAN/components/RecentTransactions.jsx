@@ -121,7 +121,7 @@ const TransactionRow = ({ tx, selectedIban }) => {
 
         <td>
           {tx?.type === "iban_payin"
-            ? tx?.originator?.name
+            ? (tx?.originator?.name ?? tx?.originator?.bank_code)
             : tx?.beneficiary?.name || tx.virtual_iban?.account_holder_name || "N/A"}
         </td>
 

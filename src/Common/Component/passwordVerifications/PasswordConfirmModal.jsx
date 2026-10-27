@@ -1,15 +1,6 @@
 import { useContext, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import {
-  Dialog,
-  DialogContent,
-  IconButton,
-  InputAdornment,
-  TextField,
-  Button,
-  CircularProgress,
-} from "@mui/material";
-import { X, Eye, EyeOff } from "react-feather";
+import { X, Eye, EyeOff, Lock } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import styles from "./styles.module.css";
@@ -65,67 +56,62 @@ const PasswordConfirmModal = ({
     verifyPassword(password);
   };
 
+  if (!isOpen) return null;
+
   return (
-    <Dialog
-      open={isOpen}
-      onClose={handleClose}
-      maxWidth="xs"
-      fullWidth
-      PaperProps={{ className: styles.paper }}
-    >
-      <DialogContent className={styles.container}>
+    <div className={styles.overlay} onClick={handleClose}>
+      <div className={styles.paper} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
           <h2>{t(title)}</h2>
-          <IconButton onClick={handleClose} size="small" disabled={loading}>
+          <button
+            type="button"
+            className={styles.closeBtn}
+            onClick={handleClose}
+            disabled={loading}
+          >
             <X size={18} />
-          </IconButton>
+          </button>
         </div>
 
         {description && <p className={styles.description}>{t(description)}</p>}
 
         <form onSubmit={handleSubmit} className={styles.form}>
-          <TextField
-            autoFocus
-            fullWidth
-            label={t("Enter your password")}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "8px",
-              },
-              "& .MuiOutlinedInput-input": {
-                padding: "14px 12px",
-              },
-            }}
-            type={showPassword ? "text" : "password"}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
+          <div className={styles.inputWrapper}>
+            <Lock size={18} className={styles.inputIcon} />
+            <input
+              autoFocus
+              type={showPassword ? "text" : "password"}
+              placeholder={t("Enter your password")}
+              autoComplete="new-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={styles.input}
+            />
+            <button
+              type="button"
+              className={styles.eyeBtn}
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
 
           <div className={styles.actions}>
-            <Button onClick={handleClose} disabled={loading} className={styles.cancelBtn}>
-              {t("Cancel")}
-            </Button>
-            <Button
-              type="submit"
-              disabled={loading || !password}
-              className={styles.confirmBtn}
-              startIcon={loading ? <CircularProgress size={16} color="inherit" /> : null}
+            <button
+              type="button"
+              onClick={handleClose}
+              disabled={loading}
+              className={styles.cancelBtn}
             >
-              {t("Continue")}
-            </Button>
+              {t("Cancel")}
+            </button>
+            <button type="submit" disabled={loading || !password} className={styles.confirmBtn}>
+              {loading ? t("Please wait...") : t("Continue")}
+            </button>
           </div>
         </form>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 };
 

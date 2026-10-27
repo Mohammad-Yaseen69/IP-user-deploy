@@ -1,34 +1,14 @@
-import React, { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import ActionNeededView from "./ActionNeededView";
 import AccountRestrictedView from "./AccountRestrictedView";
 import AllCaughtUpView from "./AllCaughtUpView";
 import InstaPayLoader from "../../Loader";
-import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 import styles from "./compliance.module.css";
 
-const Compliance = () => {
+const Compliance = ({ inquiries = [], refetch, isLoading }) => {
   const { t } = useTranslation();
   const [forcedView, setForcedView] = useState(null);
-
-  const {
-    data: inquiries = [],
-    isLoading,
-    refetch,
-  } = useQuery({
-    queryKey: ["user-compliance-inquiries"],
-    queryFn: async () => {
-      const res = await apiWrapper({
-        endpoint: "/api/compliance/inquiries",
-        method: "GET",
-        isDecrypted: true,
-      });
-      if (Array.isArray(res)) return res;
-      if (Array.isArray(res?.data)) return res.data;
-      return [];
-    },
-  });
 
   const isItemOverdue = (item) => {
     if (!item?.deadline?.isSet) return false;
