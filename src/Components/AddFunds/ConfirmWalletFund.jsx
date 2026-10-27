@@ -478,7 +478,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                                     }}
                                 />
                                 :
-                                <PaytentlyModal onClose={toggleConfirmation} hostedUrl={paytentlyHosted.hostedUrl}/>                            
+                                <PaytentlyModal onClose={() => {setPaytentlyHosted(null); setComplete(false);} } hostedUrl={paytentlyHosted?.hostedUrl}/>                            
                             ) : (
                                 <button
                                     type="button"
