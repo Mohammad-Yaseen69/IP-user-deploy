@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { Spinner } from "reactstrap";
 import SessionItem from "./SessionItem";
 import { useTranslation } from "react-i18next";
@@ -6,7 +6,7 @@ import { UserContext } from "../../Context/UserContext";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import styles from "./styles/Sessions.module.scss";
-import { SignOut, Warning } from "./Icons";
+import { Warning } from "./Icons";
 const LIMIT = 10;
 
 const Sessions = () => {
@@ -53,10 +53,10 @@ const Sessions = () => {
             {t("Everywhere you've signed in from recently.")}
           </p>
         </div>
-        <button type="button" className={`${styles.button} ${styles.buttonSecondary}`}>
+        {/* <button type="button" className={`${styles.button} ${styles.buttonSecondary}`}>
           <SignOut />
           {t("Sign out all others")}
-        </button>
+        </button> */}
       </div>
 
       <section className={styles.card}>
