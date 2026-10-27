@@ -33,7 +33,15 @@ const FEATURE_LIST = [
   { id: "international", label: "International Transfers" },
   { id: "local", label: "Local Transfers" },
   { id: "external_payment", label: "External Payments" },
+  { id: "iban", label: "IBAN" },
 ];
+
+const defaultFeatures = {
+  international: false,
+  local: false,
+  external_payment: false,
+  iban: false,
+};
 
 const ApiKey = () => {
   const { t } = useTranslation();
@@ -41,16 +49,8 @@ const ApiKey = () => {
   const [webhookUrl, setWebHookUrl] = useState("");
   const [showKey, setShowKey] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState("enabled");
-  const [features, setFeatures] = useState({
-    international: false,
-    local: false,
-    external_payment: false,
-  });
-  const [adminFeatures, setAdminFeatures] = useState({
-    international: false,
-    local: false,
-    external_payment: false,
-  });
+  const [features, setFeatures] = useState(defaultFeatures);
+  const [adminFeatures, setAdminFeatures] = useState(defaultFeatures);
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   const accountId = userDetails?._id;

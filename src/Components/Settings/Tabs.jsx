@@ -191,6 +191,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
   const width = useWindowWidth();
   const [showMissingModal, setShowMissingModal] = useState(false);
   const isIndividualAccount = account_type?.toLowerCase() === "individual";
+  const [searchLocked, setSearchLocked] = useState(true);
 
   useEffect(() => {
     if (!tab) return;
@@ -310,7 +311,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
 
   return (
     <div style={{ overflowX: width < 1000 && "visible" }} className={styles.container}>
-      {missingTabsData?.length > 0 && width > 1000 && profileCompleted && (
+      {missingTabs?.length > 0 && width > 1000 && profileCompleted && (
         <div className={styles.missingTabs}>
           <span>{t("Please complete the following important steps")}</span>
           {missingTabs?.map((item) => (
@@ -369,6 +370,11 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
         <MagnifyingGlass size={21} strokeWidth={1.5} className={styles.searchIcon} />
         <input
           type="text"
+          name="settings-search"
+          autoComplete="off"
+          readOnly={searchLocked}
+          onFocus={() => setSearchLocked(false)}
+          onBlur={() => setSearchLocked(true)}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={t("Search settings")}

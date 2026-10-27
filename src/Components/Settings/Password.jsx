@@ -282,8 +282,7 @@ const Password = () => {
           </ul>
         </div>
 
-        <div className={styles.cardFooter}>
-          <p className={styles.footerText}>{t("Other devices will be signed out.")}</p>
+        <div className={`${styles.cardFooter} justify-content-end`}>
           <button
             type="button"
             className={`${styles.button} ${styles.buttonPrimary}`}
