@@ -171,6 +171,7 @@ const TransactionRow = ({ item, activeItem, setActiveItem, index, fromReferral =
     .join("")
     .toUpperCase();
 
+  const loggedInUserId = userDetails?.user?._id ?? userDetails?.company?._id;
   return (
     <>
       <div
@@ -196,7 +197,7 @@ const TransactionRow = ({ item, activeItem, setActiveItem, index, fromReferral =
           {initials && <div className={s.avatar}>{initials}</div>}
           <div className={s.lines}>
             <p className={s.title}>{counterparty.name}</p>
-            {counterparty.id === userDetails?._id && <p className={s.sub}>{t("Your account")}</p>}
+            {counterparty.id === loggedInUserId && <p className={s.sub}>{t("Your account")}</p>}
           </div>
         </div>
 

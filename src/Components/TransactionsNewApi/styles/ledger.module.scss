@@ -584,4 +584,8 @@ p.note {
     grid-area: st;
     justify-self: end;
   }
+
+  .btn {
+    @include type(12px, 500, $navy, -0.42px);
+  }
 }

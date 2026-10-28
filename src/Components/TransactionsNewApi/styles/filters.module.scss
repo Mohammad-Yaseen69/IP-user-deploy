@@ -1,0 +1,152 @@
+$primary: #5926f0;
+$text: #1b1f2a;
+$text-2: #6e7687;
+$muted: #9aa3b2;
+$border: #eff1f6;
+$border-default: #d1d6e0;
+$canvas: #f8f9fc;
+$tint: #f2eeff;
+$mobile: 1000px;
+
+@mixin xs($weight: 400, $color: $text) {
+  font:
+    #{$weight} 12px / 1.5 "Inter",
+    sans-serif;
+  letter-spacing: -0.36px;
+  color: $color;
+}
+
+.wrap {
+  position: relative;
+}
+
+.panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  width: 360px;
+  max-width: calc(100vw - 40px);
+  max-height: 70vh;
+  background: #fff;
+  border: 1px solid $border;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(27, 31, 42, 0.1);
+  overflow: hidden;
+}
+
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.heading {
+  @include xs(500, $text-2);
+  margin: 0 0 8px;
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pill {
+  @include xs(400, $text);
+  height: 28px;
+  padding: 0 10px;
+  background: #fff;
+  border: 1px solid $border-default;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+
+  &:hover {
+    background: $canvas;
+  }
+
+  &.on {
+    @include xs(500, $primary);
+    background: $tint;
+    border-color: $primary;
+  }
+}
+
+.foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid $border;
+  background: #fff;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 0 20px 14px;
+}
+
+.chip {
+  @include xs(400, $text-2);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 7px 5px 10px;
+  background: $canvas;
+  border: 1px solid $border-default;
+  border-radius: 8px;
+
+  b {
+    @include xs(500, $text);
+  }
+
+  button {
+    display: grid;
+    place-items: center;
+    width: 14px;
+    height: 14px;
+    padding: 0;
+    color: $muted;
+    background: none;
+    border: 0;
+    cursor: pointer;
+
+    &:hover {
+      color: $text;
+    }
+  }
+}
+
+.clearAll {
+  @include xs(500, $primary);
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+@media screen and (max-width: $mobile) {
+  .wrap {
+    position: static; // anchor panel to the (relative) actions bar instead
+  }
+
+  .panel {
+    width: 100%;
+    max-width: 100%;
+  }
+}

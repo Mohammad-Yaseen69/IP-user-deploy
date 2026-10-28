@@ -13,6 +13,7 @@ import InstaPayLoader from "../Loader";
 import DownloadStatement from "../WalletsNew/DownloadStatement";
 import s from "./styles/ledger.module.scss";
 import TransactionRow from "./Transactionrow";
+import TransactionFilters, { ActiveFilters } from "./TransactionFilters";
 
 const TABS = ["All", "Sent", "Received", "Requests", "Quotes"];
 
@@ -74,6 +75,7 @@ const TransactionsTable = () => {
   const [stopLoader, setStopLoader] = useState(false);
   const [exportLoading] = useState(false);
   const [showStatementModal, setShowStatementModal] = useState(false);
+  const [filters, setFilters] = useState({});
   const can = usePermission();
 
   useEffect(() => {
@@ -103,10 +105,10 @@ const TransactionsTable = () => {
     }
 
     if (debouncedSearchQuery) return;
-
+    const params = new URLSearchParams(filters);
     axios
       .get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/transaction/account-transactions/${userDetails?._id}/${page}/15`,
+        `${import.meta.env.VITE_IP_DEV_API}/api/transaction/account-transactions/${userDetails?._id}/${page}/15?${params.toString()}`,
         {
           headers: authHeader,
         },
@@ -139,9 +141,10 @@ const TransactionsTable = () => {
     if (page === 1) {
       setIsLoading(true);
     }
+    const params = new URLSearchParams(filters);
     axios
       .get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions/${userDetails?._id}/${page}/15/${search ?? debouncedSearchQuery}`,
+        `${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions/${userDetails?._id}/${page}/15/${search ?? debouncedSearchQuery}?${params.toString()}`,
         {
           headers: authHeader,
         },
@@ -191,10 +194,11 @@ const TransactionsTable = () => {
       query: debouncedSearchQuery,
     };
     const encrypted = encryptData(data);
+    const params = new URLSearchParams(filters);
 
     axios
       .post(
-        `${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions-by-date/${userDetails?._id}/${page}/15`,
+        `${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions-by-date/${userDetails?._id}/${page}/15?${params.toString()}`,
         {
           data: encrypted,
         },
@@ -241,7 +245,7 @@ const TransactionsTable = () => {
     if (currentTrxType === "date_and_query" && !maxLimit && userDetails) {
       getTransactionsByQueryAndDate();
     }
-  }, [page, currentTrxType, debouncedSearchQuery, apiDates]);
+  }, [page, currentTrxType, debouncedSearchQuery, apiDates, filters]);
 
   useEffect(() => {
     setTransactions([]);
@@ -266,6 +270,15 @@ const TransactionsTable = () => {
     setPage(1);
     verifyToken();
   }, [currentTrxType]);
+
+  const applyFilters = (next) => {
+    setPage(1);
+    setMaxLimit(false);
+    setStopLoader(false);
+    setTransactions([]);
+    setFiltered([]);
+    setFilters(next);
+  };
 
   const handleChange = (ranges) => {
     if (ranges.selection) {
@@ -353,8 +366,8 @@ const TransactionsTable = () => {
   };
 
   const clearFilters = () => {
+    setPage(1);
     changeSearch("");
-    setDateRange(defaultRange);
     getAllTransactions();
   };
 
@@ -402,10 +415,11 @@ const TransactionsTable = () => {
             <Calendar size={16} />
             {dateLabel}
           </button>
-          <button type="button" className={s.btn} disabled>
-            <Funnel size={16} />
-            {t("Filters")}
-          </button>
+          <TransactionFilters
+            filters={filters}
+            count={Object.keys(filters).length}
+            onApply={applyFilters}
+          />
           {can("transactions.main.export") && (
             <button
               type="button"
@@ -423,6 +437,20 @@ const TransactionsTable = () => {
           )}
         </div>
       </div>
+      <ActiveFilters
+        filters={filters}
+        dateLabel={apiDates ? dateLabel : null}
+        onApply={applyFilters}
+        onClearDate={() => {
+          setApiDates(null);
+          setDateRange(defaultRange);
+        }}
+        onClearAll={() => {
+          applyFilters({});
+          setApiDates(null);
+          setDateRange(defaultRange);
+        }}
+      />
 
       <div className={s.scroll}>
         <div className={s.table}>
