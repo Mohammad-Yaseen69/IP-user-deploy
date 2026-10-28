@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import Magicsvg from "../magicsvg";
 import styles from "../style/onboardingSteps.module.css";
 import MobileProgress from "./MobileProgress";
+import RiskProfileCard from "./RiskProfileCard";
 const SidebarProgress = ({
   percent = 15,
   stepsLeft = 5,
@@ -14,11 +15,7 @@ const SidebarProgress = ({
 
   const checklist = [
     { key: "account", label: t("Account"), icon: <Check size={15} /> },
-    {
-      key: "company",
-      label: t("Company details"),
-      icon: <ArrowRight size={15} />,
-    },
+    { key: "company", label: t("Company details"), icon: <ArrowRight size={15} /> },
     {
       key: "activity",
       label: t("Activity"),
@@ -78,13 +75,18 @@ const SidebarProgress = ({
 
   if (mobileView) {
     return (
-      <MobileProgress
-        percent={percent}
-        stepsLeft={stepsLeft}
-        doneCount={doneCount}
-        checklist={checklist}
-        getStatus={getStatus}
-      />
+      <>
+        <MobileProgress
+          percent={percent}
+          stepsLeft={stepsLeft}
+          doneCount={doneCount}
+          checklist={checklist}
+          getStatus={getStatus}
+        />
+        <div style={{ padding: "0 16px 16px" }}>
+          <RiskProfileCard />
+        </div>
+      </>
     );
   }
 
@@ -142,6 +144,8 @@ const SidebarProgress = ({
 
         <p>{t(assistantMessage)}</p>
       </div>
+
+      <RiskProfileCard />
 
       <div className={styles.checklist}>
         <div className={styles.checklistHeader}>

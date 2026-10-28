@@ -12,6 +12,8 @@ export const BUBBLE_DELAY_MS = 600;
 export const WINK_AT_MS = 2300;
 export const WINK_MS = 500;
 export const INTRO_MS = 3200;
+export const LABEL_SHOW_MS = 3000;
+export const LABEL_HIDE_MS = 20000;
 const REST = { x: 0, y: 0 };
 
 const COVER_SELECTOR = [
@@ -65,6 +67,18 @@ export const useLauncherChoreography = ({ enabled, isOpen, hovered, rootRef, slo
   const [header, setHeader] = useState(null);
   const [pageLoaded, setPageLoaded] = useState(() => document.readyState === "complete");
   const coveredOnce = useRef(false);
+  const [labelShown, setLabelShown] = useState(true);
+
+  // Only the "Ask InstaPay" pill cycles; it hides most of the time so it does
+  // not cover what sits under the corner or keep begging for attention.
+  useEffect(() => {
+    if (phase !== "docked" || isOpen) return undefined;
+    const timer = setTimeout(
+      () => setLabelShown((shown) => !shown),
+      labelShown ? LABEL_SHOW_MS : LABEL_HIDE_MS,
+    );
+    return () => clearTimeout(timer);
+  }, [isOpen, labelShown, phase]);
 
   const dock = useCallback(() => {
     setBubbleVisible(false);
@@ -214,7 +228,7 @@ export const useLauncherChoreography = ({ enabled, isOpen, hovered, rootRef, slo
     phase,
     orb,
     bubbleVisible: phase === "intro" && bubbleVisible,
-    labelVisible: phase === "docked" && !isOpen,
+    labelVisible: phase === "docked" && !isOpen && labelShown,
     reduceMotion,
   };
 };

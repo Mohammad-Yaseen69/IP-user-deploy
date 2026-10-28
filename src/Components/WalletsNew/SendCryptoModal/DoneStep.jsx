@@ -5,10 +5,11 @@ import { Copy } from "react-feather";
 import convertStyles from "../../VirtualIBAN/ConvertFundsModal/convertFunds.module.scss";
 import styles from "./sendCrypto.module.scss";
 import { getProtocolLabel } from "./cryptoProtocols";
+import { formatCurrency } from "../../../Helper/AmountFormat";
 
 const formatMoney = (value, currency) => {
   const amount = Number(value ?? 0);
-  return `${Number.isFinite(amount) ? amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 8 }) : value} ${currency}`;
+  return `${Number.isFinite(amount) ? formatCurrency(amount, true) : value} ${currency}`;
 };
 
 const DoneStep = ({

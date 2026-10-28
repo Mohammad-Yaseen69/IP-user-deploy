@@ -108,6 +108,30 @@ const VirtualBank = () => {
     keepPreviousData: true,
   });
 
+  const {
+    data: inquiries = [],
+    isLoading: inquriesLoading,
+    refetch: refetchInquries,
+  } = useQuery({
+    queryKey: ["user-compliance-inquiries"],
+    queryFn: async () => {
+      const res = await apiWrapper({
+        endpoint: "/api/compliance/inquiries",
+        method: "GET",
+        isDecrypted: true,
+      });
+      if (Array.isArray(res)) return res;
+      if (Array.isArray(res?.data)) return res.data;
+      return [];
+    },
+  });
+
+  useEffect(() => {
+    if (inquiries.find((req) => req.status === "REQUESTED" || req.status === "action_needed")) {
+      setActiveTab("compliance");
+    }
+  }, [inquiries]);
+
   useEffect(() => {
     if (!selectedAccount && ibans?.length) {
       setSelectedAccount(ibans[0]?._id || ibans[0]?.id);
@@ -324,7 +348,11 @@ const VirtualBank = () => {
           {activeTab === "compliance" && (
             <div className={styles.tabContent}>
               <div className={styles.section}>
-                <Compliance />
+                <Compliance
+                  refetch={refetchInquries}
+                  inquiries={inquiries}
+                  isLoading={inquriesLoading}
+                />
               </div>
             </div>
           )}

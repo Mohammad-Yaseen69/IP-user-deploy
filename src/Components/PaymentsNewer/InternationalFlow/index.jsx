@@ -51,6 +51,7 @@ import {
   hasThunesRequiredDocuments,
   isThunesDocumentType,
 } from "./thunesDocuments";
+import { formatCurrency } from "../../../Helper/AmountFormat";
 
 const leftSideContent = [
   "Select Transaction Type",
@@ -640,19 +641,13 @@ const InternationFlow = ({
             updateInternationalData("exchange_rate_error", "max payer");
             updateInternationalData(
               "exchange_rate_error_value",
-              Number(dec?.value ?? 0)?.toLocaleString("en-US", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              }),
+              formatCurrency(dec?.value ?? 0, true),
             );
           } else if (dec?.message?.toLowerCase()?.includes("below the min")) {
             updateInternationalData("exchange_rate_error", "min payer");
             updateInternationalData(
               "exchange_rate_error_value",
-              Number(dec?.value ?? 0)?.toLocaleString("en-US", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              }),
+              formatCurrency(dec?.value ?? 0, true),
             );
           } else {
             updateInternationalData("exchange_rate_error", "sww");
