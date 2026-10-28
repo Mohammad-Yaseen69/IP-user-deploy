@@ -1,30 +1,20 @@
 import axios from "axios";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import dayjs from "dayjs";
+import { Calendar, Download, Funnel, Receipt, Search } from "lucide-react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DateRangePicker } from "react-date-range";
-import { Search } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router";
-import { Input } from "reactstrap";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
+import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import InstaPayLoader from "../Loader";
 import DownloadStatement from "../WalletsNew/DownloadStatement";
-import TransactionItemMobile from "./Mobile/TransactionItemMobile";
-import TransactionItem from "./TransactionItem";
-import all_grey from "./files/all_grey.png";
-import all_white from "./files/all_white.png";
-import calendar from "./files/calendar.png";
-import quoted_grey from "./files/quoted_grey.png";
-import quoted_white from "./files/quoted_white.png";
-import received_grey from "./files/received_grey.png";
-import received_white from "./files/received_white.png";
-import requested_grey from "./files/requested_grey.png";
-import requested_white from "./files/requested_white.png";
-import sent_grey from "./files/sent_grey.png";
-import sent_white from "./files/sent_white.png";
-import styles from "./styles/index.module.scss";
-import { usePermission } from "../../hooks/GeneralUse/usePermission";
+import s from "./styles/ledger.module.scss";
+import TransactionRow from "./Transactionrow";
+
+const TABS = ["All", "Sent", "Received", "Requests", "Quotes"];
 
 const transactionFilter = (t) => {
   if (
@@ -38,15 +28,17 @@ const transactionFilter = (t) => {
   }
 };
 
+const defaultRange = {
+  startDate: undefined,
+  endDate: undefined,
+  key: "selection",
+};
+
 const TransactionsTable = () => {
   const { t } = useTranslation();
   const [active, setActive] = useState("All");
   const [activeItem, setActiveItem] = useState(0);
-  const [dateRange, setDateRange] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
-    key: "selection",
-  });
+  const [dateRange, setDateRange] = useState(defaultRange);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const datePickerRef = useRef(null);
 
@@ -79,9 +71,8 @@ const TransactionsTable = () => {
   const [debounceTimer, setDebounceTimer] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const loaderRef = useRef();
-  const mobileLoaderRef = useRef();
   const [stopLoader, setStopLoader] = useState(false);
-  const [exportLoading, setExportLoading] = useState(false);
+  const [exportLoading] = useState(false);
   const [showStatementModal, setShowStatementModal] = useState(false);
   const can = usePermission();
 
@@ -105,7 +96,7 @@ const TransactionsTable = () => {
 
   const getAllTransactions = () => {
     const queryParams = new URLSearchParams(window.location.search);
-    if (queryParams.has("search")) return; // Don't fetch or spread if search param exists
+    if (queryParams.has("search")) return;
 
     if (page === 1) {
       setIsLoading(true);
@@ -113,7 +104,6 @@ const TransactionsTable = () => {
 
     if (debouncedSearchQuery) return;
 
-    // axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/account-transactions/${userDetails?._id}/${(page - 1) * 15}/15`, {
     axios
       .get(
         `${import.meta.env.VITE_IP_DEV_API}/api/transaction/account-transactions/${userDetails?._id}/${page}/15`,
@@ -132,7 +122,6 @@ const TransactionsTable = () => {
           setMaxLimit(true);
           setStopLoader(true);
         }
-        // console.log("all", decrypted)
         setIsLoading(false);
       })
       .catch((err) => {
@@ -147,9 +136,6 @@ const TransactionsTable = () => {
 
   const getTransactionsByQuery = (search = null) => {
     setActive("All");
-    if (search) {
-      console.log("calling from search");
-    }
     if (page === 1) {
       setIsLoading(true);
     }
@@ -181,7 +167,6 @@ const TransactionsTable = () => {
           setMaxLimit(true);
           setStopLoader(true);
         }
-        // console.log("query", decrypted)
         setIsLoading(false);
       })
       .catch((err) => {
@@ -205,7 +190,6 @@ const TransactionsTable = () => {
       ...apiDates,
       query: debouncedSearchQuery,
     };
-    // console.log(data)
     const encrypted = encryptData(data);
 
     axios
@@ -229,7 +213,6 @@ const TransactionsTable = () => {
           setMaxLimit(true);
           setStopLoader(true);
         }
-        // console.log("date & query", decrypted)
         setIsLoading(false);
       })
       .catch((err) => {
@@ -285,18 +268,6 @@ const TransactionsTable = () => {
   }, [currentTrxType]);
 
   const handleChange = (ranges) => {
-    // if (ranges.selection) {
-    //     const startDate = ranges.selection.startDate.toISOString().split('T')[0];
-    //     const endDate = ranges.selection.endDate.toISOString().split('T')[0];
-
-    //     const formattedDateRange = {
-    //         from: startDate,
-    //         to: endDate,
-    //     };
-
-    //     setApiDates(formattedDateRange)
-    //     setDateRange(ranges.selection);
-    // }
     if (ranges.selection) {
       const startDate = new Date(ranges.selection.startDate);
       startDate.setDate(startDate.getDate() + 1);
@@ -314,39 +285,6 @@ const TransactionsTable = () => {
     }
   };
 
-  const menuData = [
-    {
-      id: 1,
-      name: "All",
-      icon_white: all_white,
-      icon_grey: all_grey,
-    },
-    {
-      id: 2,
-      name: "Sent",
-      icon_white: sent_white,
-      icon_grey: sent_grey,
-    },
-    {
-      id: 3,
-      name: "Received",
-      icon_white: received_white,
-      icon_grey: received_grey,
-    },
-    {
-      id: 4,
-      name: "Requested",
-      icon_white: requested_white,
-      icon_grey: requested_grey,
-    },
-    {
-      id: 5,
-      name: "Quoted",
-      icon_white: quoted_white,
-      icon_grey: quoted_grey,
-    },
-  ];
-
   useEffect(() => {
     if (isLoading || maxLimit) return;
 
@@ -360,12 +298,11 @@ const TransactionsTable = () => {
     );
 
     if (loaderRef.current) observer.observe(loaderRef.current);
-    if (mobileLoaderRef.current) observer.observe(mobileLoaderRef.current);
 
     return () => {
       observer.disconnect();
     };
-  }, [loaderRef.current, mobileLoaderRef.current, isLoading, maxLimit]);
+  }, [loaderRef.current, isLoading, maxLimit]);
 
   useEffect(() => {
     if (active === "All") {
@@ -381,11 +318,11 @@ const TransactionsTable = () => {
       );
       setFiltered(receivedTransactions);
     }
-    if (active === "Quoted") {
+    if (active === "Quotes") {
       const quotedTransactions = transactions?.filter((item) => item?.payment_type === "quotation");
       setFiltered(quotedTransactions);
     }
-    if (active === "Requested") {
+    if (active === "Requests") {
       const requestedTransactions = transactions?.filter(
         (item) => item?.payment_type === "payment_request",
       );
@@ -396,7 +333,6 @@ const TransactionsTable = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const search = queryParams.get("search");
-  const currentIndex = queryParams.get("current-index");
 
   useEffect(() => {
     if (search) {
@@ -405,233 +341,144 @@ const TransactionsTable = () => {
     }
   }, [search]);
 
-  return (
-    <div className={styles.table}>
-      <div className={styles.menu}>
-        <div className={styles.right}>
-          {menuData.map((item) => (
-            <div
-              key={item.id}
-              style={{
-                background:
-                  active === item.name
-                    ? "linear-gradient(346deg, #E64067 0%, #5926F0 55.65%, #4828A0 100%), #D9D9D9"
-                    : "#f8f8f8",
-                boxShadow:
-                  active === item.name
-                    ? "0px 11.90068244934082px 8.655041694641113px rgba(89, 38, 240, 0.17)"
-                    : "none",
-                color: active === item.name ? "white" : "#848484",
-                minWidth: "125px",
-              }}
-              className={styles.menu_item}
-              onClick={() => setActive(item.name)}
-            >
-              <img
-                src={active === item.name ? item.icon_white : item.icon_grey}
-                style={{ width: "18px" }}
-              />
-              <span>{t(item.name)}</span>
-              {active === item.name && <div className={styles.dot}></div>}
-            </div>
-          ))}
-        </div>
-        <div className={styles.left}>
-          <div className={styles.search}>
-            <Search size={16} color="#848484" />
-            <Input
-              placeholder={t("Search Transactions")}
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                const urlParams = new URLSearchParams(window.location.search);
-                if (urlParams.has("search")) {
-                  urlParams.delete("search");
-                  const newUrl =
-                    window.location.pathname +
-                    (urlParams.toString() ? "?" + urlParams.toString() : "");
-                  window.history.replaceState({}, document.title, newUrl);
-                }
-              }}
-            />
-          </div>
-          <img src={calendar} alt="c" onClick={handleDatePickerClick} />
-          {can("transactions.main.export") && (
-            <span
-              onClick={() => setShowStatementModal(!showStatementModal)}
+  const changeSearch = (value) => {
+    setSearchQuery(value);
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has("search")) {
+      urlParams.delete("search");
+      const newUrl =
+        window.location.pathname + (urlParams.toString() ? "?" + urlParams.toString() : "");
+      window.history.replaceState({}, document.title, newUrl);
+    }
+  };
 
-              // onClick={() => exportToExcel(transactions, userDetails, setExportLoading)}
-              style={{
-                background:
-                  "linear-gradient(346deg, rgb(230, 64, 103) 0%, rgb(89, 38, 240) 55.65%, rgb(72, 40, 160) 100%), rgb(217, 217, 217)",
-                borderRadius: "8px",
-                padding: "4px",
-                marginBottom: "3px",
-                pointerEvents: exportLoading && "none",
-                opacity: exportLoading && 0.6,
-                display: "flex",
-              }}
+  const clearFilters = () => {
+    changeSearch("");
+    setDateRange(defaultRange);
+    getAllTransactions();
+  };
+
+  const groups = useMemo(() => {
+    const byDay = new Map();
+    [...filtered]
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .forEach((item, index) => {
+        const day = dayjs(item.createdAt).format("D MMM YYYY");
+        byDay.set(day, [...(byDay.get(day) ?? []), { item, index }]);
+      });
+    return [...byDay];
+  }, [filtered]);
+
+  const dateLabel = apiDates
+    ? `${dayjs(dateRange.startDate).format("MMM D")} - ${dayjs(dateRange.endDate).format("MMM D, YYYY")}`
+    : t("All dates");
+
+  return (
+    <div className={s.ledger}>
+      <div className={s.tabs}>
+        {TABS.map((name) => (
+          <button
+            key={name}
+            type="button"
+            className={`${s.tab} ${active === name ? s.active : ""}`}
+            onClick={() => setActive(name)}
+          >
+            {t(name)}
+          </button>
+        ))}
+      </div>
+
+      <div className={s.tools}>
+        <label className={s.search}>
+          <Search size={20} />
+          <input
+            placeholder={t("Search transactions, names or IDs")}
+            value={searchQuery}
+            onChange={(e) => changeSearch(e.target.value)}
+          />
+        </label>
+        <div className={s.actions}>
+          <button type="button" className={s.btn} onClick={handleDatePickerClick}>
+            <Calendar size={16} />
+            {dateLabel}
+          </button>
+          <button type="button" className={s.btn} disabled>
+            <Funnel size={16} />
+            {t("Filters")}
+          </button>
+          {can("transactions.main.export") && (
+            <button
+              type="button"
+              className={s.iconBtn}
+              disabled={exportLoading}
+              onClick={() => setShowStatementModal(!showStatementModal)}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-              >
-                <path
-                  d="M21 6H17.8C16.1198 6 15.2798 6 14.638 6.32698C14.0735 6.6146 13.6146 7.07354 13.327 7.63803C13 8.27976 13 9.11984 13 10.8V12M21 6L18 3M21 6L18 9M10 3H7.8C6.11984 3 5.27976 3 4.63803 3.32698C4.07354 3.6146 3.6146 4.07354 3.32698 4.63803C3 5.27976 3 6.11984 3 7.8V16.2C3 17.8802 3 18.7202 3.32698 19.362C3.6146 19.9265 4.07354 20.3854 4.63803 20.673C5.27976 21 6.11984 21 7.8 21H16.2C17.8802 21 18.7202 21 19.362 20.673C19.9265 20.3854 20.3854 19.9265 20.673 19.362C21 18.7202 21 17.8802 21 16.2V14"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </span>
+              <Download size={20} />
+            </button>
           )}
           {showDatePicker && (
-            <div
-              ref={datePickerRef}
-              style={{
-                position: "absolute",
-                top: "100%",
-                right: 0,
-                boxShadow: "0px 0px 3px rgba(0,0,0,0.1)",
-                borderRadius: "10xp",
-                overflow: "hidden",
-                zIndex: 10000000,
-              }}
-            >
+            <div ref={datePickerRef} className={s.picker}>
               <DateRangePicker maxDate={new Date()} ranges={[dateRange]} onChange={handleChange} />
             </div>
           )}
         </div>
       </div>
-      <div className={styles.tableWrapper}>
-        <div className={styles.table_header}>
-          <div>{t("Date & Time")}</div>
-          <div>{t("Type")}</div>
-          <div>{t("Transaction ID")}</div>
-          <div>{t("Payment Type")}</div>
-          {/* <div>{t("Sender Name")}</div> */}
-          <div>{t("Recipient")}</div>
-          <div>{t("Amount")}</div>
-          <div>{t("Status")}</div>
-          <div style={{ maxWidth: "15px" }}></div>
-        </div>
-        <div className={styles.table_body}>
+
+      <div className={s.scroll}>
+        <div className={s.table}>
+          <div className={`${s.cols} ${s.head}`}>
+            <div>{t("Transaction")}</div>
+            <div>{t("Sent to / from")}</div>
+            <div>{t("Status")}</div>
+            <div>{t("Time")}</div>
+            <div>{t("Amount")}</div>
+            <div />
+          </div>
+
           {isLoading ? (
-            <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
+            <div className={s.loader}>
               <InstaPayLoader />
             </div>
-          ) : (
-            <>
-              {filtered.length > 0 ? (
-                filtered
-                  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                  .map((item, index) => {
-                    let color;
-                    if (item?.status?.toLowerCase() === "completed") {
-                      color = "#15bd43";
-                    }
-                    if (item?.status?.toLowerCase() === "pending") {
-                      color = "rgba(89, 38, 240, 0.55)";
-                    }
-                    if (item?.status?.toLowerCase() === "cancelled") {
-                      color = "#ed1d1d";
-                    }
-
-                    return (
-                      <TransactionItem
-                        color={color}
-                        item={item}
-                        key={item.id}
-                        activeItem={activeItem}
-                        setActiveItem={setActiveItem}
-                        index={index}
-                      />
-                    );
-                  })
-              ) : (
-                <span style={{ textAlign: "center", marginTop: "2rem" }}>
-                  {t("No transactions")}
-                </span>
-              )}
-            </>
-          )}
-
-          {!isLoading && !stopLoader && (
-            <div
-              ref={loaderRef}
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                width: "100%",
-              }}
-            >
-              <div style={{ width: "200px" }}>
-                <InstaPayLoader />
+          ) : groups.length > 0 ? (
+            groups.map(([day, rows]) => (
+              <div key={day}>
+                <div className={s.group}>{day}</div>
+                {rows.map(({ item, index }) => (
+                  <TransactionRow
+                    key={item._id ?? item.id}
+                    item={item}
+                    index={index}
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                ))}
               </div>
-            </div>
-          )}
-        </div>
-        <div className={styles.table_body_mobile}>
-          {isLoading ? (
-            <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
-              <InstaPayLoader />
-            </div>
+            ))
           ) : (
-            <>
-              {filtered.length > 0 ? (
-                filtered
-                  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                  .map((item, index) => {
-                    let color;
-                    if (item?.status?.toLowerCase() === "completed") {
-                      color = "#15bd43";
-                    }
-                    if (item?.status?.toLowerCase() === "pending") {
-                      color = "rgba(89, 38, 240, 0.55)";
-                    }
-                    if (item?.status?.toLowerCase() === "cancelled") {
-                      color = "#ed1d1d";
-                    }
-
-                    return (
-                      <TransactionItemMobile
-                        color={color}
-                        item={item}
-                        key={item.id}
-                        activeItem={activeItem}
-                        setActiveItem={setActiveItem}
-                        index={index}
-                      />
-                    );
-                  })
-              ) : (
-                <span style={{ textAlign: "center", marginTop: "2rem" }}>
-                  {t("No transactions")}
-                </span>
-              )}
-            </>
-          )}
-
-          {!isLoading && !stopLoader && (
-            <div
-              ref={mobileLoaderRef}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                width: "100%",
-              }}
-            >
-              <div style={{ width: "200px" }}>
-                <InstaPayLoader />
+            <div className={s.empty}>
+              <div className={`${s.tile} ${s.big}`}>
+                <Receipt size={22} />
+              </div>
+              <h5>{t("No transactions yet")}</h5>
+              <p>{t("Money you send and receive will appear here, grouped by day.")}</p>
+              <div>
+                <button type="button" className={s.btnPrimary}>
+                  {t("Add funds")}
+                </button>
+                <button type="button" className={s.btn} onClick={clearFilters}>
+                  {t("Clear search")}
+                </button>
               </div>
             </div>
           )}
         </div>
       </div>
+
+      {!isLoading && !stopLoader && (
+        <div ref={loaderRef} className={s.loader}>
+          <InstaPayLoader />
+        </div>
+      )}
       {showStatementModal && (
         <DownloadStatement
           showModal={showStatementModal}

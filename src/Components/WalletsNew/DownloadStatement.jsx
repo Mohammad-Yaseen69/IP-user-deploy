@@ -8,7 +8,7 @@ import { UserContext } from "../../Context/UserContext";
 import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import jsPDF from "jspdf";
-import img from "../../assets/images/logo/logo2.webp";
+import img from "../../assets/images/logo/logo2.png";
 import { toast } from "react-toastify";
 import "jspdf-autotable";
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
@@ -187,7 +187,7 @@ const DownloadStatement = ({ showModal, setShowModal, wallet, isTransection }) =
     // Set landscape orientation by passing parameters to jsPDF
     const doc = new jsPDF({ orientation: "landscape" });
 
-    doc.addImage(img, "png", 14, 10, 46.5, 13);
+    doc.addImage(img, "png", 14, 10, 40, 11);
     // doc.setFont("montserrat", "normal", "bolder");
     // doc.setFontSize(20);
     // doc.text("InstaPay", 14, 25);
