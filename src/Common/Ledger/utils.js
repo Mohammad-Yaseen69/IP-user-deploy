@@ -35,3 +35,8 @@ export const statusDot = (status) => DOT_COLORS[status?.toLowerCase()] ?? "#9aa3
 
 export const isVoid = (status) =>
   ["failed", "cancelled", "declined", "rejected"].includes(status?.toLowerCase());
+
+export const partyName = ({ user, company, company_name } = {}) =>
+  [user?.first_name || company?.company_name || company_name, user?.last_name]
+    .filter(Boolean)
+    .join(" ");

@@ -1,33 +1,27 @@
 import { useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import dayjs from "dayjs";
-import { ChevronRight, MessageSquare, Receipt } from "lucide-react";
+import { ChevronRight, Receipt } from "lucide-react";
 import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router";
-import { AmountCell, PartyCell, StatusCell, TxCell } from "../../Common/Ledger/Cells";
-import s from "../../Common/Ledger/ledger.module.scss";
-import { capitalizeStatus, isVoid } from "../../Common/Ledger/utils";
 import { UserContext } from "../../Context/UserContext";
-import { formatCurrency } from "../../Helper/AmountFormat";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
-import PaymentRequestSheet from "./Paymentrequestsheet";
-import RejectModal from "./RejectModal";
+import { AmountCell, PartyCell, StatusCell, TxCell } from "../../Common/Ledger/Cells";
+import s from "../../Common/Ledger/ledger.module.scss";
+import RejectModal from "../../Common/Ledger/RejectModal";
+import { capitalizeStatus, partyName } from "../../Common/Ledger/utils";
+import PaymentRequestSheet from "./PaymentRequestSheet";
 import ReviewModal from "./ReviewModal";
-import r from "./requests.module.scss";
-
-const partyName = ({ user, company, company_name } = {}) =>
-  [user?.first_name || company?.company_name || company_name, user?.last_name]
-    .filter(Boolean)
-    .join(" ");
+import { formatCurrency } from "../../Helper/AmountFormat";
 
 const stop = (fn) => (e) => {
   e.stopPropagation();
   fn();
 };
 
-const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "received" }) => {
+const PaymentRequestRow = ({ item, type = "received", isActive, setActive }) => {
   const { t } = useTranslation();
   const can = usePermission();
   const navigate = useNavigate();
@@ -47,10 +41,18 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
   const itemRef = useRef(null);
 
   const received = type === "received";
-  const isActive = activeItem === index + 1;
   const pending = status?.toLowerCase() === "pending";
   const name = partyName(item?.[received ? "sender" : "receiver"]);
-  const label = t(capitalizeStatus(status));
+  const lowered = status?.toLowerCase();
+
+  const label = t(
+    lowered === "cancelled"
+      ? "Rejected"
+      : lowered === "bargain-accepted"
+        ? "Bargain-Accepted"
+        : capitalizeStatus(status),
+  );
+  const rejected = lowered === "cancelled";
 
   useEffect(() => setStatus(item?.status), [item]);
 
@@ -70,7 +72,7 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
         }
       })
       .catch(() => {});
-  }, [activeItem]);
+  }, [isActive]);
 
   useLayoutEffect(() => {
     if (!id) return;
@@ -82,11 +84,10 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
     if (hit) {
       scroll();
       setShowReview(true);
-      setActiveItem(index + 1);
+      setActive(item._id);
     }
   }, [id]);
 
-  // TODO: RejectModal collects a reason/note, but the decline endpoint doesn't accept them yet
   const rejectRequest = async () => {
     setRejecting(true);
     try {
@@ -97,6 +98,7 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
       );
       navigate("/payment-requests");
       setStatus("cancelled");
+      setShowReject(false);
       await Promise.all(
         ["receivedPaymentRequests", "sentPaymentRequests"].map((key) =>
           queryClient.invalidateQueries({ queryKey: [key, userDetails?._id] }),
@@ -106,22 +108,16 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
       console.log(error);
     } finally {
       setRejecting(false);
-      setShowReject(false);
     }
   };
 
-  // TODO: API has no dueDate yet; "Paid {date}" / "Rejected {date}" also need dates from the API
-  const due = item?.dueDate && `${t("Due")} ${dayjs(item.dueDate).format("D MMM")}`;
+  const due = pending && item?.dueDate && `${t("Due")} ${dayjs(item.dueDate).format("D MMM")}`;
 
   return (
-    <>
-      <div
-        ref={itemRef}
-        className={`${s.cols} ${s.row}`}
-        onClick={() => setActiveItem(isActive ? 0 : index + 1)}
-      >
+    <div ref={itemRef}>
+      <div className={`${s.cols} ${s.row}`} onClick={() => setActive(isActive ? 0 : item._id)}>
         <TxCell
-          Icon={item?.attachments?.length ? Receipt : MessageSquare}
+          Icon={Receipt}
           title={item?.display_name || t("Payment request")}
           sub={[item?.reference_id, dayjs(item?.createdAt).format("D MMM YYYY")].join(" · ")}
         />
@@ -131,21 +127,25 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
         <AmountCell
           value={formatCurrency(item?.amount, true)}
           code={item?.currency?.code}
-          variant={[isVoid(status) ? "void" : !received && "in"]}
+          variant={[rejected ? "dim" : !received && "in"]}
         />
-        <div className={r.actions}>
+        <div className={s.act}>
           {pending && received ? (
             <>
               {can("payment-request.decline") && (
-                <button type="button" className={r.ghost} onClick={stop(() => setShowReject(true))}>
+                <button
+                  type="button"
+                  className={s.textBtn}
+                  onClick={stop(() => setShowReject(true))}
+                >
                   {t("Reject")}
                 </button>
               )}
               {can("payment-request.accept") && (
                 <button
                   type="button"
-                  className={`${s.btnPrimary} ${r.sm}`}
-                  onClick={stop(() => setActiveItem(index + 1))}
+                  className={`${s.btnPrimary} ${s.sm}`}
+                  onClick={stop(() => setActive(item._id))}
                 >
                   {t("Accept & pay")}
                 </button>
@@ -153,13 +153,12 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
             </>
           ) : pending ? (
             <>
-              {/* TODO: no cancel / reminder endpoints yet */}
-              <button type="button" className={r.ghost} disabled onClick={stop(() => {})}>
+              <button type="button" className={s.textBtn} disabled onClick={stop(() => {})}>
                 {t("Cancel")}
               </button>
               <button
                 type="button"
-                className={`${s.btn} ${r.sm}`}
+                className={`${s.btn} ${s.sm}`}
                 disabled
                 onClick={stop(() => {})}
               >
@@ -173,40 +172,39 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
       </div>
 
       {isActive && (
-        <PaymentRequestSheet
-          item={item}
-          type={type}
-          name={name}
-          label={label}
-          allRating={allRating}
-          allReviews={allReviews}
-          onClose={() => setActiveItem(0)}
-          onReject={() => setShowReject(true)}
-          onReview={() => setShowReview(true)}
-        />
+        <>
+          <PaymentRequestSheet
+            item={item}
+            type={type}
+            name={name}
+            label={label}
+            allRating={allRating}
+            allReviews={allReviews}
+            onClose={() => setActive(0)}
+            onReject={() => setShowReject(true)}
+            onReview={() => setShowReview(true)}
+          />
+          <ReviewModal
+            isOpen={showReview}
+            toggle={() => setShowReview(false)}
+            item={item}
+            type={received ? "Received" : "Send"}
+          />
+        </>
       )}
 
-      {showReject && (
-        <RejectModal
-          isOpen
-          toggle={() => setShowReject(false)}
-          name={name}
-          amount={item?.amount}
-          code={item?.currency?.code}
-          loading={rejecting}
-          onConfirm={rejectRequest}
-        />
-      )}
-
-      {showReview && (
-        <ReviewModal
-          isOpen
-          toggle={() => setShowReview(false)}
-          item={item}
-          type={received ? "Received" : "Send"}
-        />
-      )}
-    </>
+      <RejectModal
+        isOpen={showReject}
+        toggle={() => setShowReject(false)}
+        title={t("Reject this payment request?")}
+        text={`${name} ${t("will be told you rejected their request for")} ${formatCurrency(item?.amount, true)} ${item?.currency?.code}. ${t("No money moves, and this can't be undone.")}`}
+        noteFor={name}
+        keepLabel={t("Keep request")}
+        confirmLabel={t("Reject request")}
+        loading={rejecting}
+        onConfirm={rejectRequest}
+      />
+    </div>
   );
 };
 
