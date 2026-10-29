@@ -8,7 +8,7 @@ import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
-import { DateGroup, EmptyState } from "../../Common/Ledger/cells";
+import { DateGroup, EmptyState } from "../../Common/Ledger/Cells";
 import { ActiveFilters, FilterPanel } from "../../Common/Ledger/Filters";
 import Ledger from "../../Common/Ledger/Ledger";
 import s from "../../Common/Ledger/ledger.module.scss";

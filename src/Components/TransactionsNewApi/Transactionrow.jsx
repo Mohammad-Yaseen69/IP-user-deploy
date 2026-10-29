@@ -7,7 +7,7 @@ import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
-import { AmountCell, PartyCell, StatusCell, TxCell } from "../../Common/Ledger/cells";
+import { AmountCell, PartyCell, StatusCell, TxCell } from "../../Common/Ledger/Cells";
 import s from "../../Common/Ledger/ledger.module.scss";
 import { capitalizeStatus, isVoid } from "../../Common/Ledger/utils";
 import statuses from "./files/thunesTransactionStatus.json";
