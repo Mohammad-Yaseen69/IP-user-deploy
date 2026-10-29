@@ -47,9 +47,12 @@ import OTPConfirmation from "../../../Common/Component/OtpVerification";
 import usePlainFx from "../../../hooks/Payments/usePlainFx";
 import {
   useCreateVirtualIban,
+  useIbanPaymentModel,
   useVirtualIbans,
   virtualIbanQueryKeys,
 } from "../../../hooks/useVirtualIban";
+import Pricing from "../OnBoardingIBAN/components/Pricing";
+import { FileText } from "react-feather";
 import SocketsService from "../../../Services/Socket";
 import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError";
 import InstaPayLoader from "../../Loader";
@@ -68,6 +71,7 @@ const SIDEBAR_ICONS = {
   [STEPS.FEES]: Coins,
   [STEPS.VERIFICATION]: Verification,
   [STEPS.PAYMENT_METHOD]: Payment,
+  [STEPS.PRICING]: FileText,
   [STEPS.DONE]: SealCheck,
 };
 
@@ -115,6 +119,7 @@ const VirtualIbanModal = ({
   const [currentStep, setCurrentStep] = useState(STEPS.JURISDICTION);
   const [jurisdiction, setJurisdiction] = useState("");
   const [feesAccepted, setFeesAccepted] = useState(false);
+  const [pricingAccepted, setPricingAccepted] = useState(false);
   const [paymentType, setPaymentType] = useState("");
   const [walletState, setWalletState] = useState({});
   const [showOtp, setShowOtp] = useState(false);
@@ -147,6 +152,7 @@ const VirtualIbanModal = ({
 
   const createVirtualIban = useCreateVirtualIban();
   const { data: existingIbans = [], isLoading: existingIbansLoading } = useVirtualIbans();
+  const { data: paymentModel, isLoading: paymentModelLoading } = useIbanPaymentModel(isOpen);
   const activationFee = useMemo(
     () => getActivationFeeConfig(activationFeeConfig),
     [activationFeeConfig],
@@ -476,6 +482,7 @@ const VirtualIbanModal = ({
     () => ({
       jurisdiction,
       feesAccepted,
+      pricingAccepted,
       paymentType,
       walletState,
       selectedSaveCard,
@@ -487,6 +494,7 @@ const VirtualIbanModal = ({
     [
       jurisdiction,
       feesAccepted,
+      pricingAccepted,
       paymentType,
       walletState,
       selectedSaveCard,
@@ -576,10 +584,21 @@ const VirtualIbanModal = ({
       ? t("Continue")
       : getContinueLabel(currentStep, t);
 
+  const ensureWalletSelected = (nextStep) => {
+    if (
+      nextStep === STEPS.PRICING &&
+      paymentType === "wallet" &&
+      Object.keys(walletState).length === 0
+    ) {
+      setWalletState(filteredWallets?.[0] || MOCK_WALLET_STATE);
+    }
+  };
+
   const resetState = () => {
     setCurrentStep(STEPS.JURISDICTION);
     setJurisdiction("");
     setFeesAccepted(false);
+    setPricingAccepted(false);
     setPaymentType("");
     setWalletState({});
     setShowOtp(false);
@@ -736,13 +755,7 @@ const VirtualIbanModal = ({
 
     const { nextStep } = goNext(currentStep, machineData);
     if (nextStep) {
-      if (
-        nextStep === STEPS.SUMMARY &&
-        paymentType === "wallet" &&
-        Object.keys(walletState).length === 0
-      ) {
-        setWalletState(filteredWallets?.[0] || MOCK_WALLET_STATE);
-      }
+      ensureWalletSelected(nextStep);
       setCurrentStep(nextStep);
     } else if (currentStep === STEPS.DONE) {
       handleClose();
@@ -751,6 +764,7 @@ const VirtualIbanModal = ({
 
   const handleBack = () => {
     if (currentStep === STEPS.FEES) setFeesAccepted(false);
+    if (currentStep === STEPS.PRICING) setPricingAccepted(false);
     if (currentStep === STEPS.PAYMENT_METHOD) setPaymentType("");
     if (currentStep === STEPS.PAYMENT_DETAILS) {
       setWalletState({});
@@ -787,10 +801,19 @@ const VirtualIbanModal = ({
           <FeesStep
             jurisdiction={jurisdiction}
             feesAccepted={feesAccepted}
-            monthlyFeeCurr={"USD"}
             setFeesAccepted={setFeesAccepted}
-            activationFeeAmount={activationFee.amount}
-            activationFeeCurrency={activationFee.currency}
+            activationFee={paymentModel?.activationFee ?? null}
+            monthlyFee={paymentModel?.monthlyFee ?? null}
+            feesLoading={paymentModelLoading}
+          />
+        );
+      case STEPS.PRICING:
+        return (
+          <Pricing
+            t={t}
+            variant="embedded"
+            accepted={pricingAccepted}
+            onAcceptedChange={setPricingAccepted}
           />
         );
       case STEPS.VERIFICATION:

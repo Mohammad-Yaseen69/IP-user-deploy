@@ -1,10 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
-import styles from "./styles/FinInfo.module.scss";
+import styles from "./styles/FinancialInfo.module.scss";
 import CitiesData from "../CitiesDropDown/CitiesData.json";
-import { Check, ChevronRight } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../Context/UserContext";
-import Select from "react-select";
+import Select, { components } from "react-select";
+import {
+  CaretDown,
+  CaretRightSmall,
+  Check,
+  Info,
+  MagnifyingGlassSmall,
+  PencilSimple,
+} from "./Icons";
 import {
   sourceOfFunds,
   sourceOfWealth,
@@ -68,6 +75,70 @@ const questionsArray = [
     answers: null,
   },
 ];
+const LAST_REVIEWED = "Last reviewed 12 Mar 2026";
+const TIER_LABEL = "Tier 1 limits";
+
+const selectStyles = {
+  container: (base) => ({ ...base, width: "100%", outline: "none" }),
+  control: (base, state) => ({
+    ...base,
+    minHeight: 40,
+    borderRadius: 6,
+    borderColor: state.isFocused ? "#5926F0" : "#EFF1F6",
+    boxShadow: state.isFocused
+      ? "0 0 0 3px rgba(89, 38, 240, 0.12)"
+      : "0px 1px 1.5px 0px rgba(27, 31, 42, 0.04)",
+    "&:hover": { borderColor: state.isFocused ? "#5926F0" : "#D1D6E0" },
+    fontFamily: "Inter, sans-serif",
+    fontSize: 14,
+    fontWeight: 400,
+    letterSpacing: "-0.42px",
+  }),
+  valueContainer: (base) => ({ ...base, padding: "2px 12px", gap: 4 }),
+  placeholder: (base) => ({ ...base, color: "#9AA3B2" }),
+  singleValue: (base) => ({ ...base, color: "#1B1F2A" }),
+  input: (base) => ({ ...base, color: "#1B1F2A" }),
+  indicatorSeparator: () => ({ display: "none" }),
+  dropdownIndicator: (base) => ({ ...base, padding: "0 16px 0 8px" }),
+  clearIndicator: (base) => ({ ...base, color: "#9AA3B2", padding: "0 4px" }),
+  menu: (base) => ({
+    ...base,
+    zIndex: 20,
+    overflow: "hidden",
+    border: "1px solid #EFF1F6",
+    borderRadius: 10,
+    boxShadow: "0px 12px 32px -8px rgba(27, 31, 42, 0.18)",
+  }),
+  option: (base, state) => ({
+    ...base,
+    fontFamily: "Inter, sans-serif",
+    fontSize: 14,
+    letterSpacing: "-0.42px",
+    color: "#1B1F2A",
+    backgroundColor: state.isSelected ? "#F2EEFF" : state.isFocused ? "#F8F9FC" : "#FFFFFF",
+    cursor: "pointer",
+  }),
+  multiValue: (base) => ({ ...base, margin: 0, borderRadius: 100, backgroundColor: "#F2EEFF" }),
+  multiValueLabel: (base) => ({
+    ...base,
+    padding: "2px 4px 2px 10px",
+    fontSize: 12,
+    fontWeight: 500,
+    color: "#3B17A8",
+  }),
+  multiValueRemove: (base) => ({
+    ...base,
+    borderRadius: 100,
+    color: "#3B17A8",
+    ":hover": { backgroundColor: "#E4DBFF", color: "#22106B" },
+  }),
+};
+
+const DropdownIndicator = (props) => (
+  <components.DropdownIndicator {...props}>
+    <CaretDown />
+  </components.DropdownIndicator>
+);
 
 const FinancialInfo = () => {
   const [questions, setQuestions] = useState(questionsArray);
@@ -156,9 +227,16 @@ const FinancialInfo = () => {
   const updateData = (field, value) => {
     if (field === "country") {
       setQuestions(
-        questions.map((q) =>
-          q.question_key === field ? { ...q, answers: [...q.answers, value] } : q,
-        ),
+        questions.map((q) => {
+          if (q.question_key !== field) return q;
+          const current = Array.isArray(q.answers) ? q.answers : [];
+          return {
+            ...q,
+            answers: current.includes(value)
+              ? current.filter((iso3) => iso3 !== value)
+              : [...current, value],
+          };
+        }),
       );
     } else {
       setQuestions(questions.map((q) => (q.question_key === field ? { ...q, answers: value } : q)));
@@ -205,303 +283,278 @@ const FinancialInfo = () => {
     }
   };
 
+  const answerText = (question) => {
+    switch (question?.question_key) {
+      case "keeps_busy":
+        return question?.answers;
+      case "profession":
+        return Array.isArray(question.answers)
+          ? question.answers.map((item) => t(item)).join(", ")
+          : "";
+      case "country":
+        return CitiesData.filter((cont) => question?.answers?.includes(cont?.iso3))
+          .map((cont) => t(cont?.name))
+          .join(", ");
+      case "crypto":
+        return question.answers === true ? t("Yes") : question.answers === false ? t("No") : "";
+      default:
+        return t(question?.answers);
+    }
+  };
+
   return (
-    <div style={{ backgroundColor: "white" }} className={styles.container}>
-      {!editMode && (
-        <button onClick={() => setEditMode(true)} disabled={!isEdit} className={styles.editBtn}>
-          {t("Edit")}
-        </button>
-      )}
-      {questions?.map((question, idx) => (
-        <div key={idx} className={styles.contentBox}>
-          <span className={styles.label}>{t(question?.question)}</span>
+    <div className={styles.container}>
+      <div className={styles.sectionHeader}>
+        <div className={styles.sectionText}>
+          <h4 className={styles.sectionTitle}>{t("Financial profile")}</h4>
+          <p className={styles.sectionSubtitle}>
+            {t("Answers that set your account limits. We review changes before they apply.")}
+          </p>
+        </div>
+        {!editMode && (
+          <button
+            type="button"
+            onClick={() => setEditMode(true)}
+            disabled={!isEdit}
+            className={`${styles.button} ${styles.buttonSecondary}`}
+          >
+            <PencilSimple />
+            {t("Edit answers")}
+          </button>
+        )}
+      </div>
 
-          {question?.question_key !== "profession" &&
-            question?.question_key !== "country" &&
-            question?.question_key !== "keeps_busy" &&
-            question?.question_key !== "crypto" &&
-            (!editMode ? (
-              <div className={styles.option}>
-                <span>{t(question?.answers)}</span>
-              </div>
-            ) : (
-              Select && (
-                <Select
-                  options={selectOptions[question.question_key]}
-                  value={
-                    selectOptions[question.question_key]?.find(
-                      (opt) => opt.value === question.answers,
-                    ) ||
-                    (question.answers &&
-                    typeof question.answers === "string" &&
-                    selectOptions[question.question_key]?.some(
-                      (opt) => opt.value === question.answers,
-                    ) === false
-                      ? { label: question.answers, value: question.answers }
-                      : null)
-                  }
-                  styles={{
-                    container: (base) => ({
-                      ...base,
-                      width: "100%",
-                      outline: "none",
-                    }),
-                    control: (base) => ({ ...base, fontWeight: 600 }),
-                  }}
-                  onChange={(option) =>
-                    updateData(question.question_key, option ? option.value : "")
-                  }
-                />
-              )
-            ))}
-          {question?.question_key === "keeps_busy" && (
-            <div style={{ position: "relative", width: "100%" }}>
-              <textarea
-                onChange={(e) =>
-                  editMode ? updateData("keeps_busy", e.target.value) : e.preventDefault()
-                }
-                value={question?.answers}
-                placeholder={t("Type your answer")}
-                maxLength={250}
-                style={{ width: "100%", height: "120px", resize: "none" }}
-              />
-              {editMode && (
-                <span
-                  style={{
-                    position: "absolute",
-                    bottom: "10px",
-                    right: "10px",
-                    fontSize: "12px",
-                    color: "#888",
-                  }}
-                >
-                  {questions.find((q) => q.question_key === "keeps_busy").answers?.length}
-                  {" / 250"}
-                </span>
-              )}
-            </div>
-          )}
-          {question?.question_key === "profession" &&
-            (!editMode ? (
+      <section className={styles.card}>
+        <div className={styles.cardHeader}>
+          <div className={styles.cardHeaderText}>
+            <h4 className={styles.cardTitle}>{t("Your answers")}</h4>
+            <p className={styles.cardSubtitle}>{t(LAST_REVIEWED)}</p>
+          </div>
+          <span className={styles.pill}>{t(TIER_LABEL)}</span>
+        </div>
+
+        {!editMode ? (
+          <div className={styles.answers}>
+            {questions?.map((question, idx) => (
               <div
-                style={{ flexDirection: window.innerWidth < 700 && "column" }}
-                className={styles.multiOptions}
+                key={idx}
+                className={`${styles.answer} ${
+                  question?.question_key === "keeps_busy" ? styles.answerFull : ""
+                }`}
               >
-                {Array.isArray(question.answers) &&
-                  question?.answers?.map((item, idx2) => (
-                    <div key={idx2} style={{ flex: 1, minWidth: "45%" }} className={styles.option}>
-                      <span>{t(item)}</span>
-                    </div>
-                  ))}
+                <p className={styles.answerLabel}>{t(question?.question)}</p>
+                <p className={styles.answerValue}>{answerText(question)}</p>
               </div>
-            ) : (
-              Select && (
-                <Select
-                  options={selectOptions.profession}
-                  value={selectOptions.profession.filter(
-                    (opt) =>
-                      Array.isArray(question.answers) && question.answers.includes(opt.value),
-                  )}
-                  onChange={(options) =>
-                    updateData("profession", options ? options.map((opt) => opt.value) : [])
-                  }
-                  isMulti
-                  styles={{
-                    container: (base) => ({ ...base, width: "100%" }),
-                    control: (base) => ({ ...base, fontWeight: 600 }),
-                  }}
-                />
-              )
             ))}
-          {question?.question_key === "country" && (
-            <div className={styles.countryOptions}>
-              <div className={`${styles.option} ${styles.inputBox}`}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                >
-                  <g clip-path="url(#clip0_5081_2957)">
-                    <path
-                      d="M10.5 10.5L8.75005 8.75M10 5.75C10 8.09721 8.09721 10 5.75 10C3.40279 10 1.5 8.09721 1.5 5.75C1.5 3.40279 3.40279 1.5 5.75 1.5C8.09721 1.5 10 3.40279 10 5.75Z"
-                      stroke="#A4A4A4"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+          </div>
+        ) : (
+          <div className={styles.form}>
+            {questions?.map((question, idx) => (
+              <div key={idx} className={styles.field}>
+                <span className={styles.label}>{t(question?.question)}</span>
+
+                {question?.question_key !== "profession" &&
+                  question?.question_key !== "country" &&
+                  question?.question_key !== "keeps_busy" &&
+                  question?.question_key !== "crypto" &&
+                  Select && (
+                    <Select
+                      options={selectOptions[question.question_key]}
+                      value={
+                        selectOptions[question.question_key]?.find(
+                          (opt) =>
+                            opt.value ===
+                            (Array.isArray(question.answers)
+                              ? question.answers[0]
+                              : question.answers),
+                        ) ||
+                        (question.answers &&
+                        typeof question.answers === "string" &&
+                        selectOptions[question.question_key]?.some(
+                          (opt) => opt.value === question.answers,
+                        ) === false
+                          ? { label: question.answers, value: question.answers }
+                          : null)
+                      }
+                      styles={selectStyles}
+                      components={{ DropdownIndicator }}
+                      onChange={(option) =>
+                        updateData(question.question_key, option ? option.value : "")
+                      }
                     />
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_5081_2957">
-                      <rect width="12" height="12" fill="white" />
-                    </clipPath>
-                  </defs>
-                </svg>
+                  )}
 
-                <input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  question_key="text"
-                  placeholder={t("Search...")}
-                  style={{
-                    border: "none",
-                    outline: "none",
-                    background: "transparent",
-                    fontWeight: 600,
-                  }}
-                />
-              </div>
+                {question?.question_key === "keeps_busy" && (
+                  <>
+                    <textarea
+                      className="form-control"
+                      onChange={(e) =>
+                        editMode ? updateData("keeps_busy", e.target.value) : e.preventDefault()
+                      }
+                      value={question?.answers}
+                      placeholder={t("Type your answer")}
+                      maxLength={250}
+                      rows={4}
+                    />
+                    <span className={styles.counter}>
+                      {questions.find((q) => q.question_key === "keeps_busy").answers?.length}
+                      {" / 250"}
+                    </span>
+                  </>
+                )}
 
-              <div className={styles.dropDownCont}>
-                {Object.entries(filteredCountriesWithRegion)?.map(([region, countries], idx) => (
-                  <div
-                    style={{ overflow: "auto" }}
-                    key={`${idx}-${region}`}
-                    className={styles.dropdown}
-                  >
-                    <div
-                      className={styles.head}
-                      onClick={() => setActiveDropdown(activeDropdown === idx + 1 ? null : idx + 1)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <span>{t(region)}</span>
-                      <ChevronRight
-                        style={{
-                          transition: "0.3s",
-                          transform: activeDropdown === idx + 1 ? "rotate(90deg)" : undefined,
-                        }}
+                {question?.question_key === "profession" && Select && (
+                  <Select
+                    options={selectOptions.profession}
+                    value={selectOptions.profession.filter(
+                      (opt) =>
+                        Array.isArray(question.answers) && question.answers.includes(opt.value),
+                    )}
+                    onChange={(options) =>
+                      updateData("profession", options ? options.map((opt) => opt.value) : [])
+                    }
+                    isMulti
+                    styles={selectStyles}
+                    components={{ DropdownIndicator }}
+                  />
+                )}
+
+                {question?.question_key === "country" && (
+                  <div className={styles.countryPicker}>
+                    <div className={`${styles.control} ${styles.withLeadingIcon}`}>
+                      <span className={styles.leadingIcon}>
+                        <MagnifyingGlassSmall />
+                      </span>
+                      <input
+                        className="form-control"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        question_key="text"
+                        placeholder={t("Search...")}
                       />
                     </div>
-                    {activeDropdown === idx + 1 && (
-                      <div className={styles.countries}>
-                        {countries?.map((cont, i) => (
-                          <div
-                            onClick={() => updateData("country", cont.iso3)}
-                            key={i}
-                            className={styles.option}
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                              borderColor: !question.answers.includes(cont.iso3) && "transparent",
-                            }}
-                          >
-                            <span>{t(cont?.name)}</span>
-                            {question.answers.includes(cont.iso3) && <Check width={15} />}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
 
-          {question?.question_key === "crypto" &&
-            (!editMode ? (
-              <div className={`${styles.option}`}>
-                <span>
-                  {question.answers === true ? t("Yes") : question.answers === false ? t("No") : ""}
-                </span>
-              </div>
-            ) : (
-              <div className={styles.multiOptions}>
-                <div
-                  onClick={() => updateData("crypto", true)}
-                  style={{
-                    justifyContent: "flex-start",
-                    gap: "10px",
-                    width: "100%",
-                  }}
-                  className={`${styles.option} ${question.answers === true && styles.checked}`}
-                >
-                  <span className={styles.circle}>
-                    {question.answers === true && <span></span>}
-                  </span>
-                  <p
-                    style={{
-                      fontSize: "15px",
-                      fontWeight: 600,
-                      marginBottom: "0px",
-                    }}
-                  >
-                    {t("Yes")}
-                  </p>
-                </div>
-                <div
-                  onClick={() => updateData("crypto", false)}
-                  style={{
-                    justifyContent: "flex-start",
-                    gap: "10px",
-                    width: "100%",
-                  }}
-                  className={`${styles.option}  ${question.answers === false && styles.checked}`}
-                >
-                  <span className={styles.circle}>
-                    {question.answers === false && <span></span>}
-                  </span>
-                  <p
-                    style={{
-                      fontSize: "15px",
-                      fontWeight: 600,
-                      marginBottom: "0px",
-                    }}
-                  >
-                    {t("No")}
-                  </p>
-                </div>
+                    <div className={styles.regions}>
+                      {Object.entries(filteredCountriesWithRegion)?.map(
+                        ([region, countries], idx) => (
+                          <div key={`${idx}-${region}`} className={styles.region}>
+                            <button
+                              type="button"
+                              className={styles.regionHead}
+                              aria-expanded={activeDropdown === idx + 1}
+                              onClick={() =>
+                                setActiveDropdown(activeDropdown === idx + 1 ? null : idx + 1)
+                              }
+                            >
+                              <span>{t(region)}</span>
+                              <span
+                                className={`${styles.regionCaret} ${
+                                  activeDropdown === idx + 1 ? styles.regionCaretOpen : ""
+                                }`}
+                              >
+                                <CaretRightSmall />
+                              </span>
+                            </button>
+                            {activeDropdown === idx + 1 && (
+                              <div className={styles.countries}>
+                                {countries?.map((cont, i) => (
+                                  <button
+                                    type="button"
+                                    onClick={() => updateData("country", cont.iso3)}
+                                    key={i}
+                                    className={`${styles.country} ${
+                                      question.answers.includes(cont.iso3) ? styles.countryOn : ""
+                                    }`}
+                                  >
+                                    <span>{t(cont?.name)}</span>
+                                    {question.answers.includes(cont.iso3) && (
+                                      <Check color="#5926F0" />
+                                    )}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        ),
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {question?.question_key === "crypto" && (
+                  <div className={styles.choices} role="radiogroup">
+                    <button
+                      type="button"
+                      role="radio"
+                      aria-checked={question.answers === true}
+                      onClick={() => updateData("crypto", true)}
+                      className={`${styles.choice} ${
+                        question.answers === true ? styles.choiceOn : ""
+                      }`}
+                    >
+                      <span className={styles.radio}>{question.answers === true && <span />}</span>
+                      {t("Yes")}
+                    </button>
+                    <button
+                      type="button"
+                      role="radio"
+                      aria-checked={question.answers === false}
+                      onClick={() => updateData("crypto", false)}
+                      className={`${styles.choice} ${
+                        question.answers === false ? styles.choiceOn : ""
+                      }`}
+                    >
+                      <span className={styles.radio}>{question.answers === false && <span />}</span>
+                      {t("No")}
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
-        </div>
-      ))}
+          </div>
+        )}
 
-      {editMode && (
-        <div style={{ display: "flex", gap: "1rem", marginTop: "4rem" }}>
-          <button
-            onClick={() => {
-              setEditMode(false);
-              setQuestions(apiQuestions);
-            }}
-            style={{
-              fontWeight: 600,
-              background: "transparent",
-              border: "none",
-              outline: "none",
-            }}
-          >
-            {t("Cancel")}
-          </button>
-          <button
-            onClick={saveHandler}
-            disabled={
-              questions.some(
-                (q) =>
-                  q.answers === "" ||
-                  q.answers === undefined ||
-                  q.answers === null ||
-                  q.answers.length === 0,
-              ) || loading
-            }
-            style={{
-              opacity:
-                (questions.some(
+        {editMode && (
+          <div className={styles.cardFooter}>
+            <button
+              type="button"
+              className={`${styles.button} ${styles.buttonSecondary}`}
+              onClick={() => {
+                setEditMode(false);
+                setQuestions(apiQuestions);
+              }}
+            >
+              {t("Cancel")}
+            </button>
+            <button
+              type="button"
+              className={`${styles.button} ${styles.buttonPrimary}`}
+              onClick={saveHandler}
+              disabled={
+                questions.some(
                   (q) =>
                     q.answers === "" ||
                     q.answers === undefined ||
                     q.answers === null ||
                     q.answers.length === 0,
-                ) ||
-                  loading) &&
-                0.3,
-            }}
-            className={styles.editBtn}
-          >
-            {t("Save")}
-          </button>
-        </div>
-      )}
+                ) || loading
+              }
+            >
+              {t("Save")}
+            </button>
+          </div>
+        )}
+      </section>
+
+      <div className={styles.note}>
+        <Info />
+        <p>
+          <strong>{t("Why we ask.")}</strong>{" "}
+          {t(
+            "Swiss financial regulation requires us to understand how you'll use your account. Your answers are never shared with people you pay.",
+          )}
+        </p>
+      </div>
     </div>
   );
 };

@@ -1,23 +1,11 @@
 import DateMomentUtils from "@date-io/moment";
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import axios from "axios";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router";
 import { toast } from "react-toastify";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  FormGroup,
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalHeader,
-} from "reactstrap";
+import { FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
@@ -27,18 +15,35 @@ import citiesData from "../CitiesDropDown/CitiesData.json";
 import countryAlpha2Map from "../AddFunds/WalletFund/countries_iso2.json";
 import countriesData from "../PaymentsNewer/CountriesData.json";
 import PhoneInput from "../PhoneInput";
-import CountryBasedPhone from "../PhoneInput/PhoneNumberBasedOnCountry.json";
 import OTPConfirmation from "../../Common/Component/OtpVerification";
 import NextStepModal from "./NextStepModal";
 import QrGenerate from "./QrGenerate";
+import DeleteImageModal from "./DeleteImageModal";
+import AdjustModal from "./AdjustModal";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import { useQuery } from "@tanstack/react-query";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
+import { getPhoneCountry } from "../../utils/Functions";
 import {
   POSTAL_CODE_FORMATS,
   postalCodeRegex,
 } from "../../Data/CountriesWithTranslations/PostalCode";
 import { preventEdgeSpaces } from "../../hooks/useTrimInput";
+import styles from "./styles/Basic.module.scss";
+import {
+  At,
+  Camera,
+  CaretDown,
+  Copy,
+  EnvelopeSimple,
+  LinkSimpleSmall,
+  LockSimple,
+  MapPin,
+  Trash,
+  WarningCircle,
+} from "./Icons";
+import dayjs from "dayjs";
+import CountryBasedPhone from "../PhoneInput/PhoneNumberBasedOnCountry.json";
 
 export const currentDate = new Date();
 export const minDate = new Date(
@@ -48,10 +53,39 @@ export const minDate = new Date(
 );
 let timeout;
 
+const Hint = ({ children, error = false }) => (
+  <div className={`${styles.hint} ${error ? styles.hintError : ""}`}>
+    <WarningCircle color={error ? "#DC2626" : "#6E7687"} />
+    <span>{children}</span>
+  </div>
+);
+
+const SectionCard = ({ title, subtitle, children }) => (
+  <section className={styles.card}>
+    <div className={styles.cardHeader}>
+      <h4 className={styles.cardTitle}>{title}</h4>
+      <p className={styles.cardSubtitle}>{subtitle}</p>
+    </div>
+    <div className={styles.cardBody}>
+      <div className={styles.grid}>{children}</div>
+    </div>
+  </section>
+);
+
 const Basic = ({ setCurrentTab }) => {
   const { t } = useTranslation();
-  const { userDetails, authHeader, missingTabsData, userWallets, setUserDetails } =
-    useContext(UserContext);
+  const {
+    userDetails,
+    authHeader,
+    missingTabsData,
+    userWallets,
+    setUserDetails,
+    verifyToken,
+    profileCompletedPercentage,
+    croppedImages,
+    setCroppedImages,
+    allowedCountries,
+  } = useContext(UserContext);
   const [company, setCompany] = useState("");
   const [username, setUsername] = useState(userDetails?.username ?? "");
   const [phone, setPhone] = useState(userDetails?.phone ?? "");
@@ -97,6 +131,16 @@ const Basic = ({ setCurrentTab }) => {
     [userDetails],
   );
   const isVerified = useMemo(() => isKycApproved || isKybApproved, [isKycApproved, isKybApproved]);
+  const isBusiness = userDetails?.account_type === "business";
+  const phoneCountry = useMemo(
+    () =>
+      getPhoneCountry(
+        userDetails?.phone,
+        userDetails?.country_iso_code,
+        (allowedCountries ?? []).map((item) => item?.country_iso_code),
+      ),
+    [userDetails?.phone, userDetails?.country_iso_code, allowedCountries],
+  );
 
   const { data: statesResponse, isLoading: isStatesLoading } = useQuery({
     queryKey: ["country-states", "US"],
@@ -288,14 +332,14 @@ const Basic = ({ setCurrentTab }) => {
       : arg;
     const channel = isChannel ? arg : codeType;
 
-    setIsSaving(true);
-    setOtpType(type === "email" ? "email" : "phone");
-
     if (type === "email") {
       if (!email) return false;
     } else {
       if (!phone) return false;
     }
+
+    setIsSaving(true);
+    setOtpType(type === "email" ? "email" : "phone");
 
     try {
       const body = {
@@ -537,25 +581,12 @@ const Basic = ({ setCurrentTab }) => {
   const [showUsernameGuide, setShowUsernameGuide] = useState(false);
 
   const handleSaveClick = () => {
-    const dialCode = String(CountryBasedPhone[country].dial_code)?.replace("+", "");
-
-    const filterNumber = (num) => {
-      if (typeof num === "string") {
-        const withoutDialCode = num.replace(dialCode, "");
-        return withoutDialCode ? withoutDialCode : undefined;
-      } else {
-        num ? num : undefined;
-      }
-    };
-
     if (userDetails?.account_type === "individual") {
       if (!email) return editProfileHandler();
       return userDetails?.email === email ? editProfileHandler() : sendOtp("email");
     }
     if (userDetails?.account_type === "business") {
-      return filterNumber(userDetails?.phone) === filterNumber(phone)
-        ? editProfileHandler()
-        : sendOtp("phone");
+      return (userDetails?.phone || "") === (phone || "") ? editProfileHandler() : sendOtp("phone");
     }
   };
 
@@ -620,80 +651,399 @@ const Basic = ({ setCurrentTab }) => {
     postalCode,
     isPostalCodeValid,
   });
+
+  const [dp, setDp] = useState();
+  const [isEditingDp, setIsEditingDp] = useState(false);
+  const [isSavingDp, setIsSavingDp] = useState(false);
+  const [dpFile, setDpFile] = useState(null);
+  const [showDpMenu, setShowDpMenu] = useState(false);
+  const [showDpDeleteModal, setShowDpDeleteModal] = useState(false);
+  const [showDpAdjustModal, setShowDpAdjustModal] = useState(false);
+  const dpMenuRef = useRef(null);
+  const toggleDpMenu = () => setShowDpMenu(!showDpMenu);
+
+  useEffect(() => {
+    if (userDetails) {
+      setDp(userDetails?.profileImage?.url ?? "");
+    }
+  }, [userDetails]);
+
+  const handleDpFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (!file?.type?.toLowerCase()?.includes("image")) {
+      toast.error(t("Only images are allowed!"));
+      return;
+    }
+    const maxSize = 5 * 1024 * 1024;
+
+    if (file.size > maxSize) {
+      toast.error(t("File too big! Must be less than 5MB."));
+      e.target.value = "";
+      return;
+    }
+    setDpFile(file);
+    const reader = new FileReader();
+    reader.onload = () => {
+      setCroppedImages((prev) => ({ ...prev, profileDP: reader.result }));
+      setDp(reader.result);
+    };
+    reader.readAsDataURL(file);
+    if (file) {
+      setIsEditingDp(true);
+    }
+  };
+
+  const handleDpSave = () => {
+    setIsSavingDp(true);
+    const formData = new FormData();
+    formData.append("file", dpFile);
+    axios
+      .post(
+        `${import.meta.env.VITE_IP_DEV_API}/api/account/upload-profile-image/${userDetails._id}`,
+        formData,
+        {
+          headers: authHeader,
+        },
+      )
+      .then((res) => {
+        const dec = decryptData(res.data.data);
+        verifyToken(true);
+      })
+      .catch((err) => {})
+      .finally(() => {
+        setIsSavingDp(false);
+        setIsEditingDp(false);
+      });
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dpMenuRef.current && !dpMenuRef.current.contains(event.target)) {
+        setShowDpMenu(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+  const isIndividualAccount = userDetails?.account_type?.toLowerCase() === "individual";
+  const displayName = isIndividualAccount
+    ? `${userDetails?.user?.first_name ?? ""} ${userDetails?.user?.last_name ?? ""}`.trim()
+    : (userDetails?.company?.company_name ?? "");
+  const initials = displayName
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word[0])
+    .join("")
+    .toUpperCase();
+
+  const completion = Number(profileCompletedPercentage);
+
+  const referralLink = userDetails?.username
+    ? `${window.location.origin}/signup/${userDetails.username}`
+    : "";
+  const [linkCopied, setLinkCopied] = useState(false);
+  const copyReferralLink = async () => {
+    try {
+      await navigator.clipboard.writeText(referralLink);
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 2000);
+    } catch (err) {
+      toast.error(t("Could not copy the link."));
+    }
+  };
+
+  const changedCount = useMemo(() => {
+    if (!isEditMode) return 0;
+    const norm = (value) => (value ?? "").toString().trim();
+    const dial = String(CountryBasedPhone?.[country]?.dial_code ?? "").replace("+", "");
+    const localPhone = (value) => {
+      const digits = norm(value).replace(/\D/g, "");
+      return dial && digits.startsWith(dial) ? digits.slice(dial.length) : digits;
+    };
+    const savedDob = userDetails?.dob ? userDetails.dob.split("-").reverse().join("-") : "";
+
+    const pairs = [
+      [username, userDetails?.username],
+      [aboutMe, userDetails?.about_me],
+      [email, userDetails?.email],
+      [address, userDetails?.address],
+      [city, userDetails?.city],
+      [timezone, userDetails?.timezone],
+      [postalCode, userDetails?.postal_code],
+    ];
+    if (userDetails?.account_type === "individual") {
+      pairs.push(
+        [firstName, userDetails?.user?.first_name],
+        [lastName, userDetails?.user?.last_name],
+        [dateOfBirth, savedDob],
+      );
+    } else {
+      pairs.push([company, userDetails?.company?.company_name]);
+    }
+    if (country === "USA") pairs.push([state, userDetails?.state]);
+
+    const fieldChanges = pairs.filter(([current, saved]) => norm(current) !== norm(saved)).length;
+    const phoneChanged = localPhone(phone) !== localPhone(userDetails?.phone);
+    return fieldChanges + (phoneChanged ? 1 : 0);
+  }, [
+    isEditMode,
+    userDetails,
+    country,
+    username,
+    aboutMe,
+    email,
+    address,
+    city,
+    timezone,
+    postalCode,
+    firstName,
+    lastName,
+    dateOfBirth,
+    company,
+    state,
+    phone,
+  ]);
+
+  const requiredMark = <span className={styles.required}>{t("(Required)")}</span>;
+
   return (
     <MuiPickersUtilsProvider utils={DateMomentUtils}>
-      <Card>
-        {userDetails?.username ? (
-          <QrGenerate wallets={userWallets?.filter((item) => !item?.qrCode?.url)} />
-        ) : (
-          ""
-        )}
-        <SuccessModal
-          isOpen={showSuccess}
-          message={"Profile Updated"}
-          subMessage={"Profile has been updated successfully!"}
-          toggle={() => {
-            setShowSuccess(false);
-            if (missingTabsData.length > 0) {
-              setShowNextStepModal(true);
-            }
-          }}
-        />
-        <NextStepModal
-          isOpen={showNextStepModal}
-          toggle={() => setShowNextStepModal(false)}
-          setCurrentTab={setCurrentTab}
-        />
-        <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-          <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
-          <ModalBody>
-            <OTPConfirmation
-              type={userDetails?.account_type === "individual" ? "email" : "phone"}
-              callback={verifyOTP}
-              setter={setShowSuccess}
-              setterValue={true}
-              hideOtp={() => setShowOtp(false)}
-              processing={isSaving}
-              resendHandler={sendOtp}
-              authType={codeType}
-              setAuthType={setCodeType}
-              methods={otpMethods}
-              hideTfaSwitch={!otpMethods}
-              otpTypeOnProfile={otpType}
-              inBasic={true}
-            />
-          </ModalBody>
-        </Modal>
-        <CardHeader
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: "2rem",
-          }}
+      <div className={`${styles.container} ${isEditMode ? styles.editing : ""}`}>
+        <div style={{ position: "absolute", width: 0, height: 0 }}>
+          {userDetails?.username ? (
+            <QrGenerate wallets={userWallets?.filter((item) => !item?.qrCode?.url)} />
+          ) : (
+            ""
+          )}
+          <SuccessModal
+            isOpen={showSuccess}
+            message={"Profile Updated"}
+            subMessage={"Profile has been updated successfully!"}
+            toggle={() => {
+              setShowSuccess(false);
+              if (missingTabsData.length > 0) {
+                setShowNextStepModal(true);
+              }
+            }}
+          />
+          <NextStepModal
+            isOpen={showNextStepModal}
+            toggle={() => setShowNextStepModal(false)}
+            setCurrentTab={setCurrentTab}
+          />
+          <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
+            <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
+            <ModalBody>
+              <OTPConfirmation
+                type={userDetails?.account_type === "individual" ? "email" : "phone"}
+                callback={verifyOTP}
+                setter={setShowSuccess}
+                setterValue={true}
+                hideOtp={() => setShowOtp(false)}
+                processing={isSaving}
+                resendHandler={sendOtp}
+                authType={codeType}
+                setAuthType={setCodeType}
+                methods={otpMethods}
+                hideTfaSwitch={!otpMethods}
+                otpTypeOnProfile={otpType}
+                inBasic={true}
+              />
+            </ModalBody>
+          </Modal>
+          <DeleteImageModal
+            imageType={"Profile"}
+            isOpen={showDpDeleteModal}
+            toggle={() => setShowDpDeleteModal(!showDpDeleteModal)}
+          />
+          <AdjustModal
+            isOpen={showDpAdjustModal}
+            toggle={() => setShowDpAdjustModal(!showDpAdjustModal)}
+            imageUrl={dp}
+            accountId={userDetails?._id}
+            authHeader={authHeader}
+            type={"profile"}
+            name={"dp"}
+          />
+        </div>
+
+        {/* Section header */}
+        <div className={styles.sectionHeader}>
+          <div className={styles.sectionText}>
+            <h4 className={styles.sectionTitle}>{t("Personal details")}</h4>
+            <p className={styles.sectionSubtitle}>
+              {t("How you appear on transfers, receipts and invoices.")}
+            </p>
+          </div>
+          {!isEditMode && can("settings.basic-info.update") && (
+            <button
+              type="button"
+              className={`${styles.button} ${styles.buttonPrimary}`}
+              onClick={() => setIsEditMode(true)}
+            >
+              {t("Edit Profile")}
+            </button>
+          )}
+        </div>
+
+        {/* Profile card */}
+        <section className={styles.card}>
+          <div className={styles.profileMain}>
+            <div className="d-flex align-items-center gap-3">
+              <div className={styles.avatarWrap} ref={dpMenuRef}>
+                {userDetails?.profileImage?.url || isEditingDp ? (
+                  <img
+                    src={croppedImages?.profileDP || dp}
+                    alt={
+                      userDetails?.account_type === "individual"
+                        ? userDetails?.user?.first_name
+                        : userDetails?.company?.company_name
+                    }
+                    className={styles.avatarImg}
+                  />
+                ) : (
+                  <div className={styles.avatar}>{initials}</div>
+                )}
+
+                {isEditingDp ? (
+                  <button
+                    type="button"
+                    className={`${styles.button} ${styles.buttonPrimary} ${styles.avatarSave}`}
+                    onClick={handleDpSave}
+                    disabled={isSavingDp}
+                  >
+                    {isSavingDp ? t("Saving") : t("Save")}
+                  </button>
+                ) : (
+                  can("user-profile.update") && (
+                    <>
+                      <button
+                        type="button"
+                        className={styles.avatarEdit}
+                        onClick={toggleDpMenu}
+                        aria-label={t("Change profile picture")}
+                      >
+                        <Camera size={14} color="#5926F0" />
+                      </button>
+                      <div
+                        className={`${styles.avatarMenu} ${showDpMenu ? styles.avatarMenuOpen : ""}`}
+                      >
+                        <label
+                          htmlFor="dp"
+                          onClick={toggleDpMenu}
+                          className={styles.avatarMenuItem}
+                        >
+                          <Camera />
+                          <span>{t("Upload")}</span>
+                        </label>
+                        {userDetails?.profileImage?.url && (
+                          <>
+                            <label
+                              className={styles.avatarMenuItem}
+                              onClick={() => {
+                                toggleDpMenu();
+                                setShowDpAdjustModal(true);
+                              }}
+                            >
+                              <Camera />
+                              <span>{t("Adjust")}</span>
+                            </label>
+                            <label
+                              className={styles.avatarMenuItem}
+                              onClick={() => {
+                                setShowDpDeleteModal(true);
+                                toggleDpMenu();
+                              }}
+                            >
+                              <Trash color="#1B1F2A" />
+                              <span>{t("Remove")}</span>
+                            </label>
+                          </>
+                        )}
+                      </div>
+                    </>
+                  )
+                )}
+                <input
+                  type="file"
+                  name="dp"
+                  id="dp"
+                  hidden
+                  onChange={handleDpFileSelect}
+                  accept="image/*"
+                />
+              </div>
+
+              <div className={styles.profileInfo}>
+                <p className={styles.profileName}>{displayName}</p>
+                <div className={styles.profileMeta}>
+                  <span
+                    className={`${styles.pill} ${isVerified ? styles.pillSuccess : styles.pillWarning}`}
+                  >
+                    {isVerified ? t("Verified") : t("Unverified")}
+                  </span>
+                  <span>
+                    {userDetails?.account_type === "individual"
+                      ? t("Personal account")
+                      : t("Business account")}
+                    {userDetails.createdAt
+                      ? ` · ${t("member since")} ${dayjs(userDetails.createdAt).format("YYYY")}`
+                      : ""}
+                  </span>
+                </div>
+              </div>
+            </div>
+            {referralLink && (
+              <div className={styles.linkBox}>
+                <LinkSimpleSmall />
+                <span className={styles.linkText} title={referralLink}>
+                  {referralLink.replace(/^https?:\/\//, "")}
+                </span>
+                <button
+                  type="button"
+                  className={`${styles.button} ${styles.copyButton}`}
+                  onClick={copyReferralLink}
+                >
+                  <Copy />
+                  {linkCopied ? t("Copied") : t("Copy")}
+                </button>
+              </div>
+            )}
+          </div>
+
+          {Number.isFinite(completion) && completion < 100 && (
+            <div className={styles.completion}>
+              <span>{t("Profile Completion")}</span>
+              <div className={styles.completionTrack}>
+                <div
+                  className={styles.completionFill}
+                  style={{ width: `${Math.max(0, completion)}%` }}
+                />
+              </div>
+              <span>{completion.toFixed(0)}%</span>
+            </div>
+          )}
+        </section>
+
+        {/* About you */}
+        <SectionCard
+          title={t("About you")}
+          subtitle={
+            userDetails?.account_type === "individual"
+              ? t("Use your legal name. It must match your ID.")
+              : t("Use your registered company name. It must match your business documents.")
+          }
         >
-          <h4 style={{ width: "50%" }}>{t("Basic Info")}</h4>
-        </CardHeader>
-        <CardBody>
           {userDetails?.account_type === "individual" ? (
             <>
-              <FormGroup style={{ position: "relative" }}>
-                {!firstName && (
-                  <div
-                    style={{
-                      height: "9px",
-                      width: "9px",
-                      borderRadius: "9px",
-                      background: "red",
-                      position: "absolute",
-                      bottom: "20px",
-                      right: "-17px",
-                    }}
-                  ></div>
-                )}
-                <Label>
-                  {t("First Name")}
-                  {!firstName && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+              <FormGroup className={styles.field}>
+                <Label className={styles.label}>
+                  {t("First name")}
+                  {!firstName && requiredMark}
                 </Label>
                 <Input
                   disabled={!isEditMode || isVerified}
@@ -702,23 +1052,10 @@ const Basic = ({ setCurrentTab }) => {
                   onChange={(e) => setFirstName(e.target.value)}
                 />
               </FormGroup>
-              <FormGroup style={{ position: "relative" }}>
-                {!lastName && (
-                  <div
-                    style={{
-                      height: "9px",
-                      width: "9px",
-                      borderRadius: "9px",
-                      background: "red",
-                      position: "absolute",
-                      bottom: "20px",
-                      right: "-17px",
-                    }}
-                  ></div>
-                )}
-                <Label>
-                  {t("Last Name")}
-                  {!lastName && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+              <FormGroup className={styles.field}>
+                <Label className={styles.label}>
+                  {t("Last name")}
+                  {!lastName && requiredMark}
                 </Label>
                 <Input
                   disabled={!isEditMode || isVerified}
@@ -729,23 +1066,10 @@ const Basic = ({ setCurrentTab }) => {
               </FormGroup>
             </>
           ) : (
-            <FormGroup style={{ position: "relative" }}>
-              {!company && (
-                <div
-                  style={{
-                    height: "9px",
-                    width: "9px",
-                    borderRadius: "9px",
-                    background: "red",
-                    position: "absolute",
-                    bottom: "20px",
-                    right: "-17px",
-                  }}
-                ></div>
-              )}
-              <Label>
+            <FormGroup className={`${styles.field} ${styles.full}`}>
+              <Label className={styles.label}>
                 {t("Company Name")}
-                {!company && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+                {!company && requiredMark}
               </Label>
               <Input
                 disabled={!isEditMode || isVerified}
@@ -755,164 +1079,80 @@ const Basic = ({ setCurrentTab }) => {
               />
             </FormGroup>
           )}
-          <FormGroup style={{ position: "relative" }}>
-            {!username && (
-              <div
-                style={{
-                  height: "9px",
-                  width: "9px",
-                  borderRadius: "9px",
-                  background: "red",
-                  position: "absolute",
-                  top: "30px",
-                  right: "-17px",
-                }}
-              ></div>
-            )}
-            {isEditMode && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "0px",
-                  right: "5px",
-                  fontSize: ".8rem",
-                  fontWeight: 600,
-                }}
-              >
-                {username?.length ?? 0}
-                {t("/30 Chars")}
-              </div>
-            )}
-            <Label>
+
+          <FormGroup className={styles.field}>
+            <Label className={styles.label}>
               {t("Username")}
-              {!username && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+              {!username && requiredMark}
+              {isEditMode && (
+                <span className={styles.counter}>
+                  {username?.length ?? 0}
+                  {t("/30 Chars")}
+                </span>
+              )}
             </Label>
-            <div style={{ position: "relative" }}>
+            <div className={`${styles.control} ${styles.withLeadingIcon}`}>
+              <span className={styles.leadingIcon}>
+                <At />
+              </span>
               <Input
                 onKeyDown={preventEdgeSpaces}
                 disabled={!isEditMode || isVerified}
                 readOnly={!isEditMode || isVerified}
                 style={{
                   borderColor:
-                    !isEditMode || isVerified ? "#eeeeee" : usernameValid ? "green" : "red",
+                    !isEditMode || isVerified ? "#eff1f6" : usernameValid ? "#047857" : "#DC2626",
                 }}
                 value={username}
                 onChange={handleUsernameChange}
                 onFocus={() => setShowUsernameGuide(true)}
                 onBlur={() => setShowUsernameGuide(false)}
               />
-
               {loading && (
-                <div style={{ position: "absolute", right: "7px", top: "7px" }}>
-                  <div className="d-flex justify-content-center">
-                    <div className="spinner-border" color="primary" role="status">
-                      <span className="sr-only">{t("Loading...")}</span>
-                    </div>
+                <div className={styles.inlineSpinner}>
+                  <div className="spinner-border spinner-border-sm" role="status">
+                    <span className="sr-only">{t("Loading...")}</span>
                   </div>
                 </div>
               )}
             </div>
-            {username && usernameError && (
-              <div
-                style={{
-                  fontSize: ".8rem",
-                  fontWeight: 600,
-                  color: "red",
-                  marginTop: "5px",
-                }}
-              >
-                {usernameError}
-              </div>
-            )}
+            {username && usernameError && <Hint error>{usernameError}</Hint>}
             {showUsernameGuide && (
-              <div
-                style={{
-                  padding: "1rem",
-                  borderRadius: "10px",
-                  background: "#5926f0f3",
-                  color: "white",
-                  marginTop: "1rem",
-                }}
-              >
-                {t("Username may includes only alphabets, numbers and _ (underscores).")}
-              </div>
+              <Hint>{t("Username may includes only alphabets, numbers and _ (underscores).")}</Hint>
+            )}
+            {username && !usernameError && !showUsernameGuide && (
+              <Hint>
+                {t("People can pay you at")} {window.location.host}/@{username}
+              </Hint>
             )}
           </FormGroup>
-          <FormGroup style={{ position: "relative" }}>
-            {/* {
-                        !aboutMe
-                        &&
-                        <div style={{
-                            height: "9px",
-                            width: "9px",
-                            borderRadius: "9px",
-                            background: "red",
-                            position: "absolute",
-                            bottom: "20px",
-                            right: "-17px"
-                        }}></div>
-                    } */}
-            <Label>{t("About Me")}</Label>
-            <Input
-              disabled={!isEditMode}
-              readOnly={!isEditMode}
-              type="textarea"
-              onKeyDown={preventEdgeSpaces}
-              value={aboutMe}
-              onChange={(e) => setAboutMe(e.target.value)}
-            />
-          </FormGroup>
+
           {userDetails?.gender && (
-            <FormGroup style={{ position: "relative" }}>
-              {!gender && (
-                <div
-                  style={{
-                    height: "9px",
-                    width: "9px",
-                    borderRadius: "9px",
-                    background: "red",
-                    position: "absolute",
-                    bottom: "20px",
-                    right: "-17px",
-                  }}
-                ></div>
-              )}
-              <Label>
+            <FormGroup className={styles.field}>
+              <Label className={styles.label}>
                 {t("Gender")}
-                {!gender && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+                {!gender && requiredMark}
               </Label>
-              <Input
-                disabled={true}
-                readOnly={true}
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
-              />
-              {/* <Input type='select' disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={gender} onChange={e => setGender(e.target.value)}>
-                            <option value="">{t("--Select-Gender--")}</option>
-                            <option value="male">{t("Male")}</option>
-                            <option value="female">{t("Female")}</option>
-                            <option value="other">{t("Other")}</option>
-                        </Input> */}
+              <div className={`${styles.control} ${styles.withTrailingIcon}`}>
+                <Input
+                  disabled={true}
+                  readOnly={true}
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
+                  style={{ textTransform: "capitalize" }}
+                />
+                <span className={styles.trailingIcon}>
+                  <CaretDown />
+                </span>
+              </div>
             </FormGroup>
           )}
+
           {userDetails?.account_type === "individual" && (
-            <FormGroup style={{ position: "relative" }}>
-              {!dateOfBirth && (
-                <div
-                  style={{
-                    height: "9px",
-                    width: "9px",
-                    borderRadius: "9px",
-                    background: "red",
-                    position: "absolute",
-                    bottom: "20px",
-                    right: "-17px",
-                  }}
-                ></div>
-              )}
-              <Label>
-                {t("Date Of Birth")}
-                {!dateOfBirth && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+            <FormGroup className={styles.field}>
+              <Label className={styles.label}>
+                {t("Date of birth")}
+                {!dateOfBirth && requiredMark}
               </Label>
               {!isEditMode ? (
                 <Input
@@ -926,9 +1166,9 @@ const Basic = ({ setCurrentTab }) => {
                   className="form-control custom-datepicker"
                   style={{
                     background: "#fff",
-                    border: "1px solid #e9e9e9",
+                    border: "1px solid #eff1f6",
                     borderRadius: "6px",
-                    boxShadow: "none",
+                    boxShadow: "0px 1px 1.5px 0px rgba(27, 31, 42, 0.04)",
                     padding: "0px",
                     display: "flex",
                     justifyContent: "center",
@@ -942,21 +1182,26 @@ const Basic = ({ setCurrentTab }) => {
                   InputProps={{
                     disableUnderline: true,
                     style: {
-                      background: isVerified ? "#e9ecef" : "#fff",
+                      background: isVerified ? "#f8f9fc" : "#fff",
                       border: "none",
+                      borderRadius: "6px",
                       boxShadow: "none",
-                      padding: "0 10px",
-                      minHeight: "40px",
-                      fontWeight: 500,
+                      padding: "0 12px",
+                      minHeight: "38px",
+                      fontFamily: "Inter, sans-serif",
+                      fontSize: "14px",
+                      fontWeight: 400,
+                      letterSpacing: "-0.42px",
+                      color: isVerified ? "#9aa3b2" : "#1b1f2a",
                     },
                   }}
                   inputProps={{
                     style: {
-                      background: isVerified ? "#e9ecef" : "#fff",
+                      background: isVerified ? "#f8f9fc" : "#fff",
                       border: "none",
                       boxShadow: "none",
                       padding: "2px 0px",
-                      minHeight: "40px",
+                      minHeight: "38px",
                     },
                   }}
                   clearable
@@ -965,281 +1210,195 @@ const Basic = ({ setCurrentTab }) => {
               )}
             </FormGroup>
           )}
-          <FormGroup style={{ position: "relative" }}>
-            {!email && userDetails?.account_type !== "individual" && (
-              <div
-                style={{
-                  height: "9px",
-                  width: "9px",
-                  borderRadius: "9px",
-                  background: "red",
-                  position: "absolute",
-                  bottom: "20px",
-                  right: "-17px",
-                }}
-              ></div>
-            )}
-            <Label>
-              {t("Email Address")}{" "}
-              {!email && userDetails?.account_type !== "individual" && (
-                <span style={{ color: "red" }}>{t("(Required)")}</span>
-              )}
-            </Label>
+
+          <FormGroup className={`${styles.field} ${styles.full}`}>
+            <Label className={styles.label}>{t("About me")}</Label>
             <Input
-              disabled={!isEditMode || isKybApproved}
-              readOnly={!isEditMode || isKybApproved}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              disabled={!isEditMode}
+              readOnly={!isEditMode}
+              type="textarea"
+              rows={2}
+              maxLength={160}
+              onKeyDown={preventEdgeSpaces}
+              value={aboutMe}
+              onChange={(e) => setAboutMe(e.target.value)}
             />
+            <Hint>
+              {aboutMe?.length ?? 0}/160 · {t("Shown on your payment page")}
+            </Hint>
           </FormGroup>
-          <FormGroup style={{ position: "relative" }}>
-            {!phone && userDetails?.account_type !== "business" && (
-              <div
-                style={{
-                  height: "9px",
-                  width: "9px",
-                  borderRadius: "9px",
-                  background: "red",
-                  position: "absolute",
-                  bottom: "20px",
-                  right: "-17px",
-                }}
-              ></div>
-            )}
-            <Label>
-              {t("Phone Number")}{" "}
-              {!phone && userDetails?.account_type !== "business" && (
-                <span style={{ color: "red" }}>{t("(Required)")}</span>
-              )}
+        </SectionCard>
+
+        {/* Contact */}
+        <SectionCard
+          title={t("Contact")}
+          subtitle={t("We use these for sign-in codes and important account updates.")}
+        >
+          <FormGroup className={styles.field}>
+            <Label className={styles.label}>
+              {t("Email address")}
+              {!email && userDetails?.account_type !== "individual" && requiredMark}
             </Label>
-            <PhoneInput
-              phone={phone}
-              country={countriesData.find((item) => item.alpha3 === country)?.alpha3}
-              disableDropdown={true}
-              setPhone={setPhone}
-              disabled={!isEditMode || isKycApproved}
-              customStyles={{
-                width: "100%",
-                background: !isEditMode || isKycApproved ? "#e9ecef" : "white",
-                alignItems: "center",
-              }}
-            />
+            <div className={`${styles.control} ${styles.withLeadingIcon}`}>
+              <span className={styles.leadingIcon}>
+                <EnvelopeSimple />
+              </span>
+              <Input
+                disabled={!isEditMode || isKybApproved}
+                readOnly={!isEditMode || isKybApproved}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            {isKybApproved && <Hint>{t("Verified · contact support to change it")}</Hint>}
             {/* <Input disabled={1 + 1 === 2} readOnly={1 + 1 === 2} value={phone} onChange={e => setPhone(e.target.value)} /> */}
           </FormGroup>
-          {
-            <FormGroup style={{ position: "relative" }}>
-              {!address && (
-                <div
-                  style={{
-                    height: "9px",
-                    width: "9px",
-                    borderRadius: "9px",
-                    background: "red",
-                    position: "absolute",
-                    bottom: "20px",
-                    right: "-17px",
-                  }}
-                ></div>
-              )}
-              <Label>
-                {t("Address")} {!address && <span style={{ color: "red" }}>{t("(Required)")}</span>}
-              </Label>
+
+          <FormGroup className={styles.field}>
+            <Label className={styles.label}>
+              {t("Phone number")}
+              {!phone && userDetails?.account_type !== "business" && requiredMark}
+            </Label>
+            <div className={styles.external}>
+              <PhoneInput
+                key={`${isEditMode}-${userDetails?.phone}`}
+                phone={phone}
+                country={
+                  isBusiness
+                    ? phoneCountry
+                    : countriesData.find((item) => item.alpha3 === country)?.alpha3
+                }
+                disableDropdown={!isBusiness}
+                setPhone={setPhone}
+                disabled={!isEditMode || isKycApproved}
+                newUI={true}
+                customStyles={{
+                  padding: "10px 12px",
+                  background: isEditMode && isKycApproved ? "#f8f9fc" : "white",
+                }}
+              />
+            </div>
+          </FormGroup>
+        </SectionCard>
+
+        {/* Address */}
+        <SectionCard
+          title={t("Address")}
+          subtitle={
+            userDetails?.account_type === "individual"
+              ? t("Your home address, used to verify your identity.")
+              : t("Your registered business address, used to verify your business.")
+          }
+        >
+          <FormGroup className={`${styles.field} ${styles.full}`}>
+            <Label className={styles.label}>
+              {t("Street address")}
+              {!address && requiredMark}
+            </Label>
+            <div className={`${styles.control} ${styles.withLeadingIcon}`}>
+              <span className={styles.leadingIcon}>
+                <MapPin />
+              </span>
               <Input
                 disabled={!isEditMode || isVerified}
                 readOnly={!isEditMode || isVerified}
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
               />
-            </FormGroup>
-          }
-
-          <FormGroup style={{ position: "relative" }}>
-            {!country && (
-              <div
-                style={{
-                  height: "9px",
-                  width: "9px",
-                  borderRadius: "9px",
-                  background: "red",
-                  position: "absolute",
-                  bottom: "20px",
-                  right: "-17px",
-                }}
-              ></div>
-            )}
-            <Label>
-              {t("Country")} {!country && <span style={{ color: "red" }}>{t("(Required)")}</span>}
-            </Label>
-            <Input
-              disabled={true}
-              readOnly={true}
-              value={countriesData.find((item) => item.alpha3 === country).name}
-              onChange={(e) => setCountry(e.target.value)}
-            />
+            </div>
           </FormGroup>
+
           {country === "USA" && (
-            <FormGroup style={{ position: "relative" }}>
-              {!state && (
-                <div
-                  style={{
-                    height: "9px",
-                    width: "9px",
-                    borderRadius: "9px",
-                    background: "red",
-                    position: "absolute",
-                    bottom: "20px",
-                    right: "-17px",
-                  }}
-                ></div>
-              )}
-
-              <Label>
+            <FormGroup className={styles.field}>
+              <Label className={styles.label}>
                 {t("State")}
-                {!state && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+                {!state && requiredMark}
               </Label>
-
-              <Input
-                type="select"
-                disabled={!isEditMode || isVerified}
-                value={state}
-                onChange={(e) => {
-                  const selectedState = states.find((item) => item.value === e.target.value);
-                  setState(e.target.value);
-                  setStateCode(selectedState?.isoCode || "");
-                  setCity("");
-                }}
-              >
-                <option value="">
-                  {isStatesLoading ? t("Loading...") : t("--Select-State--")}
-                </option>
-                {states.map((item) => (
-                  <option key={item.value} value={item.value}>
-                    {item.label}
+              <div className={`${styles.control} ${styles.withTrailingIcon}`}>
+                <Input
+                  type="select"
+                  disabled={!isEditMode || isVerified}
+                  value={state}
+                  onChange={(e) => {
+                    const selectedState = states.find((item) => item.value === e.target.value);
+                    setState(e.target.value);
+                    setStateCode(selectedState?.isoCode || "");
+                    setCity("");
+                  }}
+                >
+                  <option value="">
+                    {isStatesLoading ? t("Loading...") : t("--Select-State--")}
                   </option>
-                ))}
-              </Input>
+                  {states.map((item) => (
+                    <option key={item.value} value={item.value}>
+                      {item.label}
+                    </option>
+                  ))}
+                </Input>
+                <span className={styles.trailingIcon}>
+                  <CaretDown />
+                </span>
+              </div>
             </FormGroup>
           )}
-          <FormGroup style={{ position: "relative" }}>
-            {!city && (
-              <div
-                style={{
-                  height: "9px",
-                  width: "9px",
-                  borderRadius: "9px",
-                  background: "red",
-                  position: "absolute",
-                  bottom: "20px",
-                  right: "-17px",
-                }}
-              ></div>
-            )}
-            <Label>
-              {t("City")} {!city && <span style={{ color: "red" }}>{t("(Required)")}</span>}
-            </Label>
-            <CitiesDropDown
-              country={country === "Cabo Verde" ? "Cape Verde" : country}
-              setUserCity={setCity}
-              userCity={city}
-              disabled={!isEditMode || isVerified || (country === "USA" && !stateCode)}
-              iso_3={country}
-              stateCode={stateCode}
-              requireState={country === "USA"}
-            />
-          </FormGroup>
-          {country === "USA" && (
-            <FormGroup style={{ position: "relative" }}>
-              {!state && (
-                <div
-                  style={{
-                    height: "9px",
-                    width: "9px",
-                    borderRadius: "9px",
-                    background: "red",
-                    position: "absolute",
-                    bottom: "20px",
-                    right: "-17px",
-                  }}
-                ></div>
-              )}
 
-              <Label>
+          <FormGroup className={styles.field}>
+            <Label className={styles.label}>
+              {t("City")}
+              {!city && requiredMark}
+            </Label>
+            <div className={styles.external}>
+              <CitiesDropDown
+                newUI={true}
+                country={country === "Cabo Verde" ? "Cape Verde" : country}
+                setUserCity={setCity}
+                userCity={city}
+                background={
+                  isEditMode && (isVerified || (country === "USA" && !stateCode))
+                    ? "#f8f9fc"
+                    : "white"
+                }
+                disabled={!isEditMode || isVerified || (country === "USA" && !stateCode)}
+                iso_3={country}
+                stateCode={stateCode}
+                requireState={country === "USA"}
+              />
+            </div>
+          </FormGroup>
+
+          {/* {country === "USA" && (
+            <FormGroup className={styles.field}>
+              <Label className={styles.label}>
                 {t("State")}
-                {!state && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+                {!state && requiredMark}
               </Label>
-
-              <Input
-                type="select"
-                disabled={!isEditMode || isVerified}
-                value={state}
-                onChange={(e) => setState(e.target.value)}
-              >
-                <option value="">
-                  {isStatesLoading ? t("Loading...") : t("--Select-State--")}
-                </option>
-                {states.map((item) => (
-                  <option key={item.value} value={item.value}>
-                    {item.label}
+              <div className={`${styles.control} ${styles.withTrailingIcon}`}>
+                <Input
+                  type="select"
+                  disabled={!isEditMode || isVerified}
+                  value={state}
+                  onChange={(e) => setState(e.target.value)}
+                >
+                  <option value="">
+                    {isStatesLoading ? t("Loading...") : t("--Select-State--")}
                   </option>
-                ))}
-              </Input>
+                  {states.map((item) => (
+                    <option key={item.value} value={item.value}>
+                      {item.label}
+                    </option>
+                  ))}
+                </Input>
+                <span className={styles.trailingIcon}>
+                  <CaretDown />
+                </span>
+              </div>
             </FormGroup>
-          )}
-          <FormGroup style={{ position: "relative" }}>
-            {!timezone && (
-              <div
-                style={{
-                  height: "9px",
-                  width: "9px",
-                  borderRadius: "9px",
-                  background: "red",
-                  position: "absolute",
-                  bottom: "20px",
-                  right: "-17px",
-                }}
-              ></div>
-            )}
-            <Label>
-              {t("Timezone")} {!timezone && <span style={{ color: "red" }}>{t("(Required)")}</span>}
-            </Label>
-            {/* {
-                        isEditMode
-                            ? */}
-            <Input
-              disabled={!isEditMode || isVerified}
-              value={timezone}
-              onChange={(e) => setTimezone(e.target.value)}
-              type="select"
-            >
-              <option value="">{t("--Select-Your-Timezone--")}</option>
-              {availableTimezones.map((i) => (
-                <option value={i?.split(" GMT")?.[0]}>{i}</option>
-              ))}
-            </Input>
-            {/* :
-                            <Input disabled={1 + 1 === 2} readOnly={1 + 1 === 2} value={timezone} />
-                    } */}
-          </FormGroup>
+          )} */}
 
-          <FormGroup style={{ position: "relative" }}>
-            {!userDetails?.postal_code && !isAfricanCountry && (
-              <div
-                style={{
-                  height: "9px",
-                  width: "9px",
-                  borderRadius: "9px",
-                  background: "red",
-                  position: "absolute",
-                  bottom: "20px",
-                  right: "-17px",
-                }}
-              ></div>
-            )}
-            <Label>
-              {t("Postal Code")}
-              {!userDetails?.postal_code && !isAfricanCountry && (
-                <span style={{ color: "red" }}>{t("(Required)")}</span>
-              )}
+          <FormGroup className={styles.field}>
+            <Label className={styles.label}>
+              {t("Postal code")}
+              {!userDetails?.postal_code && !isAfricanCountry && requiredMark}
             </Label>
             <Input
               disabled={!isEditMode || isVerified}
@@ -1252,76 +1411,92 @@ const Basic = ({ setCurrentTab }) => {
               placeholder={countryAlpha2 ? POSTAL_CODE_FORMATS[countryAlpha2] || "" : ""}
             />
             {postalCode && !isPostalCodeValid && (
-              <div
-                style={{
-                  color: "red",
-                  fontSize: "0.8rem",
-                  fontWeight: 600,
-                  marginTop: "5px",
-                }}
-              >
-                {t("Invalid postal code format.")}
-              </div>
+              <Hint error>{t("Invalid postal code format.")}</Hint>
             )}
           </FormGroup>
-        </CardBody>
-        <CardFooter style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
-          {isEditMode ? (
-            <>
-              <Button
-                style={{
-                  background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                  border: "none",
-                  outline: "none",
-                  borderRadius: "10px",
-                }}
-                onClick={() => setIsEditMode(false)}
-                disabled={isSaving}
+
+          <FormGroup className={`${styles.field} ${styles.locked}`}>
+            <Label className={styles.label}>
+              {t("Country")}
+              {!country && requiredMark}
+            </Label>
+            <div className={`${styles.control} ${styles.withLeadingIcon}`}>
+              <span className={styles.leadingIcon}>
+                <LockSimple />
+              </span>
+              <Input
+                disabled={true}
+                readOnly={true}
+                value={countriesData.find((item) => item.alpha3 === country).name}
+                onChange={(e) => setCountry(e.target.value)}
+              />
+            </div>
+            <Hint>{t("Set during verification. Contact support to change it.")}</Hint>
+          </FormGroup>
+
+          <FormGroup className={styles.field}>
+            <Label className={styles.label}>
+              {t("Time zone")}
+              {!timezone && requiredMark}
+            </Label>
+            <div className={`${styles.control} ${styles.withTrailingIcon}`}>
+              <Input
+                disabled={!isEditMode || isVerified}
+                value={timezone}
+                onChange={(e) => setTimezone(e.target.value)}
+                type="select"
               >
-                {t("Cancel")}
-              </Button>
-              <Button
-                style={{
-                  background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                  border: "none",
-                  outline: "none",
-                  borderRadius: "10px",
-                }}
-                onClick={handleSaveClick}
-                // (userDetails?.account_type === "individual" ? !firstName || !lastName : !company) || !address || !city || !country || !email || !phone || !postalCode || !timezone || !username || !usernameValid || phone.length < 8
-                disabled={
-                  isSaving ||
-                  (!isVerified &&
-                    (usernameError ||
-                      !usernameValid ||
-                      !city ||
-                      !username ||
-                      (country === "USA" && !state?.trim()) ||
-                      (userDetails?.account_type === "business" && !company?.trim()) ||
-                      (!isAfricanCountry && !postalCode?.trim()) ||
-                      !isPostalCodeValid))
-                }
-              >
-                {isSaving ? t("Saving") : t("Save")}
-              </Button>
-            </>
-          ) : (
-            can("settings.basic-info.update") && (
-              <Button
-                style={{
-                  background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                  border: "none",
-                  outline: "none",
-                  borderRadius: "10px",
-                }}
-                onClick={() => setIsEditMode(true)}
-              >
-                {t("Edit Profile")}
-              </Button>
-            )
-          )}
-        </CardFooter>
-      </Card>
+                <option value="">{t("--Select-Your-Timezone--")}</option>
+                {availableTimezones.map((i) => (
+                  <option value={i?.split(" GMT")?.[0]}>{i}</option>
+                ))}
+              </Input>
+              <span className={styles.trailingIcon}>
+                <CaretDown />
+              </span>
+            </div>
+          </FormGroup>
+        </SectionCard>
+
+        {/* Save bar (edit mode) */}
+        {isEditMode && (
+          <div className={styles.saveBar}>
+            <span className={`${styles.saveDot} ${changedCount === 0 ? styles.saveDotIdle : ""}`} />
+            <p className={styles.saveText}>
+              {changedCount === 0
+                ? t("No unsaved changes")
+                : `${changedCount} ${changedCount === 1 ? t("unsaved change") : t("unsaved changes")}`}
+            </p>
+            <button
+              type="button"
+              className={`${styles.button} ${styles.buttonSecondary}`}
+              onClick={() => setIsEditMode(false)}
+              disabled={isSaving}
+            >
+              {t("Discard")}
+            </button>
+            <button
+              type="button"
+              className={`${styles.button} ${styles.buttonPrimary}`}
+              onClick={handleSaveClick}
+              disabled={
+                isSaving ||
+                (!isVerified &&
+                  (usernameError ||
+                    !usernameValid ||
+                    !city ||
+                    !username ||
+                    (country === "USA" && !state?.trim()) ||
+                    (userDetails?.account_type === "business" && !company?.trim()) ||
+                    (!isAfricanCountry && !postalCode?.trim()) ||
+                    !isPostalCodeValid))
+              }
+            >
+              {isSaving ? t("Saving") : t("Save")}
+            </button>
+          </div>
+        )}
+      </div>
     </MuiPickersUtilsProvider>
   );
 };
