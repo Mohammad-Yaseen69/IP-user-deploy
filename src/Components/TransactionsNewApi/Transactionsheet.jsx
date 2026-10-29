@@ -1,28 +1,25 @@
-import Drawer from "@mui/material/Drawer";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import dayjs from "dayjs";
-import { Copy, X } from "lucide-react";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import logo from "../../assets/images/logo/logo2.png";
 import { UserContext } from "../../Context/UserContext";
 import { formatCurrency } from "../../Helper/AmountFormat";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
+import {
+  Copyable,
+  DetailSheet,
+  KeyValues,
+  Section,
+  Timeline,
+} from "../../Common/Ledger/DetailSheet";
+import s from "../../Common/Ledger/ledger.module.scss";
+import { capitalizeStatus, isVoid, statusDot } from "../../Common/Ledger/utils";
 import ImageSwiperView from "../ImageSwiperView";
 import countries from "../PaymentsNewer/CountriesData.json";
 import CatDown from "./CatDown";
-import s from "./styles/ledger.module.scss";
 import { service_name_formatter } from "./TransactionItem";
-import { capitalizeStatus, downloadTransactionPdf, isVoid, statusDot } from "./txutils";
-import logo from "../../assets/images/logo/logo2.png";
+import { downloadTransactionPdf } from "./txutils";
 import { toast } from "react-toastify";
-import { Check } from "react-feather";
-
-const Section = ({ title, children }) => (
-  <div>
-    <p className={s.eyebrow}>{title}</p>
-    {children}
-  </div>
-);
 
 const TransactionSheet = ({
   onClose,
@@ -49,7 +46,6 @@ const TransactionSheet = ({
   const { userDetails } = useContext(UserContext);
   const can = usePermission();
   const [isCopied, setIsCopied] = useState(null);
-  const isMobile = useMediaQuery("(max-width:1000px)");
   const [showImgPreview, setShowImgPreview] = useState(false);
   const timerRef = useRef();
 
@@ -64,15 +60,6 @@ const TransactionSheet = ({
       toast.error(t("Failed to copy"));
     }
   };
-
-  const Copyable = ({ text }) => (
-    <>
-      {text}
-      <button type="button" className={s.copy} onClick={() => handleCopy(text, "1")}>
-        {isCopied === "1" ? <Check size={14} /> : <Copy size={14} />}
-      </button>
-    </>
-  );
 
   const country = useMemo(() => {
     return countries.find((c) =>
@@ -133,17 +120,22 @@ const TransactionSheet = ({
   const merchant = vvc && item?.transaction_type === "card_to_merchant";
   const thirdParty = item?.third_party_sender;
   const canEdit = can("transactions.category.add");
-  const showNote = !item?.cardNo;
+  const walletLabelFirst =
+    item?.payment_type === "conversion" || item?.service_type === "withdrawal";
 
   const rows = [
-    [t("Transaction ID"), item?.reference_id && <Copyable text={item.reference_id} />],
     [
-      item?.payment_type === "conversion" || item?.service_type === "withdrawal"
-        ? t("Wallet ID")
-        : t("From / to"),
-      recipientName,
+      t("Transaction ID"),
+      item?.reference_id && (
+        <Copyable
+          isCopied={isCopied === "1"}
+          handleCopy={(text) => handleCopy(text, "1")}
+          text={item.reference_id}
+        />
+      ),
     ],
-    !(item?.payment_type === "conversion" || item?.service_type === "withdrawal") &&
+    [walletLabelFirst ? t("Wallet ID") : t("From / to"), recipientName],
+    !walletLabelFirst &&
       !(item?.service_type === "payment_address" && item?.guest_details) &&
       !item?.cardNo && [t("Wallet ID"), item?.wallet_id && `${t("INSTA-")}${item.wallet_id}`],
     item?.cardNo && [t("Card Number"), `••${cardNo?.slice(-4)}`],
@@ -206,179 +198,160 @@ const TransactionSheet = ({
         countries.find((c) => c.alpha3 === item.merchantCountry)?.name || item.merchantCountry,
       ],
     [t("Reason"), item?.reason],
-  ].filter((row) => row && row[1]);
-
+  ];
   useEffect(() => () => clearTimeout(timerRef.current), []);
 
   return (
-    <Drawer
-      open
+    <DetailSheet
+      title={t("Transaction details")}
       onClose={onClose}
-      anchor={isMobile ? "bottom" : "right"}
-      sx={{ zIndex: 1040 }}
-      PaperProps={{ className: s.sheet }}
+      footer={
+        <>
+          <button
+            type="button"
+            className={s.btnPrimary}
+            onClick={() => downloadTransactionPdf({ item, userDetails, logo })}
+          >
+            {t("Download transaction summary")}
+          </button>
+          <button
+            type="button"
+            className={s.btn}
+            onClick={() => handleCopy(item?.reference_id, "2")}
+          >
+            {t(isCopied === "2" ? "Copied to clipboard" : "Copy transaction ID")}
+          </button>
+        </>
+      }
     >
-      <div className={s.top}>
-        <h5>{t("Transaction details")}</h5>
-        <button type="button" className={s.iconBtn} onClick={onClose}>
-          <X size={20} />
-        </button>
+      <div className={s.hero}>
+        <div className={`${s.tile} ${s.big}`}>
+          <Icon size={22} />
+        </div>
+        <p>{title}</p>
+        <div className={`${s.amount} ${s.lg} ${isVoid(item?.status) ? s.void : ""}`}>
+          <b>
+            {isDebit ? "−" : "+"}
+            {formatCurrency(heroValue, true)}
+          </b>
+          <span>{heroCode}</span>
+        </div>
+        <div className={s.status}>
+          <span>
+            <i className={s.dot} style={{ background: statusDot(item?.status) }} />
+            {t(capitalizeStatus(item?.status))}
+          </span>
+          <span style={{ color: "#9aa3b2", fontWeight: 400 }}>
+            {dayjs(item?.createdAt).format("D MMM YYYY, HH:mm")}
+          </span>
+        </div>
       </div>
 
-      <div className={s.body}>
-        <div className={s.hero}>
-          <div className={`${s.tile} ${s.big}`}>
-            <Icon size={22} />
-          </div>
-          <p>{title}</p>
-          <div className={`${s.amount} ${s.lg} ${isVoid(item?.status) ? s.void : ""}`}>
-            <b>
-              {isDebit ? "−" : "+"}
-              {formatCurrency(heroValue, true)}
-            </b>
-            <span>{heroCode}</span>
-          </div>
-          <div className={s.status}>
-            <span>
-              <i className={s.dot} style={{ background: statusDot(item?.status) }} />
-              {t(capitalizeStatus(item?.status))}
-            </span>
-            <span style={{ color: "#9aa3b2", fontWeight: 400 }}>
-              {dayjs(item?.createdAt).format("D MMM YYYY, HH:mm")}
-            </span>
-          </div>
-        </div>
+      <Section title={t("Transaction")}>
+        <KeyValues rows={rows} />
+      </Section>
 
-        <Section title={t("Transaction")}>
-          <div className={s.kv}>
-            {rows.map(([label, val]) => (
-              <div key={label}>
-                <span>{label}</span>
-                <b>{val}</b>
-              </div>
-            ))}
+      {item?.display_name && item?.lat && item?.long && (
+        <Section title={t("Transaction Map")}>
+          <div className={s.map}>
+            <p>{item.display_name}</p>
+            <iframe
+              title="map"
+              src={`//maps.google.com/maps?q=${item.lat},${item.long}&z=15&output=embed`}
+            />
           </div>
         </Section>
+      )}
 
-        {item?.display_name && item?.lat && item?.long && (
-          <Section title={t("Transaction Map")}>
-            <div className={s.map}>
-              <p>{item.display_name}</p>
-              <iframe
-                title="map"
-                src={`//maps.google.com/maps?q=${item.lat},${item.long}&z=15&output=embed`}
-              />
-            </div>
-          </Section>
-        )}
+      {showCategories && !item?.cardNo && canEdit && (
+        <Section title={t("Category")}>
+          <CatDown
+            selectedCategories={selectedCategory}
+            setSelectedCategories={setSelectedCategory}
+            isEditMode={isEditMode}
+            item={item}
+          />
+        </Section>
+      )}
 
-        {!item?.cardNo && (
-          <Section title={t("Attached Files")}>
-            <div className={s.kv}>
-              <div>
-                <span>{t("File", { count: item?.attachments?.length })}</span>
-                {item?.attachments?.length > 0 && (
-                  <b>
-                    <button
-                      type="button"
-                      className={s.link}
-                      onClick={() => setShowImgPreview(true)}
-                    >
-                      {t("Open")}
-                    </button>
-                  </b>
-                )}
-              </div>
-            </div>
-            {showImgPreview && (
-              <ImageSwiperView
-                isOpen={showImgPreview}
-                toggle={() => setShowImgPreview(false)}
-                images={item?.attachments}
-              />
-            )}
-          </Section>
-        )}
-
-        {item?.timeline?.length > 0 && (
-          <Section title={t("Progress")}>
-            <ul className={s.timeline}>
-              {item.timeline.map((it) => (
-                <li key={it?._id}>
-                  <i className={s.dot} style={{ background: statusDot(it?.status) }} />
-                  <span>{t("Transfer created").replace("created", it?.status?.toLowerCase())}</span>
-                  <time>{dayjs(it?.date).format("D MMM, HH:mm")}</time>
-                </li>
-              ))}
-            </ul>
-          </Section>
-        )}
-
-        {showCategories && !item?.cardNo && canEdit && (
-          <Section title={t("Category")}>
-            <CatDown
-              selectedCategories={selectedCategory}
-              setSelectedCategories={setSelectedCategory}
-              isEditMode={isEditMode}
-              item={item}
-            />
-          </Section>
-        )}
-
-        {showNote && (
-          <Section title={t("Note")}>
-            {isEditMode && canEdit ? (
-              <textarea
-                className={s.note}
-                value={note ?? ""}
-                onChange={(e) => setNote(e.target.value)}
-              />
-            ) : (
-              <p className={s.note}>{note}</p>
-            )}
-            {canEdit && (
-              <div className={s.noteBar}>
-                {message && <span>{message}</span>}
-                {isEditMode ? (
-                  <button
-                    type="button"
-                    className={s.btnPrimary}
-                    onClick={addCategoriesToTransaction}
-                    disabled={isSaving || (selectedCategory.length < 1 && !note)}
-                  >
-                    {isSaving ? t("Saving") : t("Save")}
+      {!item?.cardNo && (
+        <Section title={t("Attached Files")}>
+          <KeyValues
+            rows={[
+              [
+                t("File", { count: item?.attachments?.length }),
+                item?.attachments?.length > 0 ? (
+                  <button type="button" className={s.link} onClick={() => setShowImgPreview(true)}>
+                    {t("Open")}
                   </button>
                 ) : (
-                  <button
-                    type="button"
-                    className={s.btnPrimary}
-                    onClick={() => {
-                      setIsEditMode(true);
-                      setMessage("");
-                    }}
-                  >
-                    {t("Edit")}
-                  </button>
-                )}
-              </div>
-            )}
-          </Section>
-        )}
-      </div>
+                  "—"
+                ),
+              ],
+            ]}
+          />
+          {showImgPreview && (
+            <ImageSwiperView
+              isOpen={showImgPreview}
+              toggle={() => setShowImgPreview(false)}
+              images={item?.attachments}
+            />
+          )}
+        </Section>
+      )}
 
-      <div className={s.foot}>
-        <button
-          type="button"
-          className={s.btnPrimary}
-          onClick={() => downloadTransactionPdf({ item, userDetails, logo })}
-        >
-          {t("Download transaction summary")}
-        </button>
-        <button type="button" className={s.btn} onClick={() => handleCopy(item?.reference_id, "2")}>
-          {t(isCopied === "2" ? "Copied to clipboard" : "Copy transaction ID")}
-        </button>
-      </div>
-    </Drawer>
+      {item?.timeline?.length > 0 && (
+        <Section title={t("Progress")}>
+          <Timeline
+            items={item.timeline.map((it) => ({
+              status: it?.status,
+              text: t("Transfer created").replace("created", it?.status?.toLowerCase()),
+              time: dayjs(it?.date).format("D MMM, HH:mm"),
+            }))}
+          />
+        </Section>
+      )}
+
+      {!item?.cardNo && (
+        <Section title={t("Note")}>
+          {isEditMode && canEdit ? (
+            <textarea
+              className={s.note}
+              value={note ?? ""}
+              onChange={(e) => setNote(e.target.value)}
+            />
+          ) : (
+            <p className={s.note}>{note}</p>
+          )}
+          {canEdit && (
+            <div className={s.noteBar}>
+              {message && <span>{message}</span>}
+              {isEditMode ? (
+                <button
+                  type="button"
+                  className={s.btnPrimary}
+                  onClick={addCategoriesToTransaction}
+                  disabled={isSaving || (selectedCategory.length < 1 && !note)}
+                >
+                  {isSaving ? t("Saving") : t("Save")}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className={s.btnPrimary}
+                  onClick={() => {
+                    setIsEditMode(true);
+                    setMessage("");
+                  }}
+                >
+                  {t("Edit")}
+                </button>
+              )}
+            </div>
+          )}
+        </Section>
+      )}
+    </DetailSheet>
   );
 };
 

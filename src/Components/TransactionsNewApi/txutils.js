@@ -1,36 +1,6 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-export const capitalizeStatus = (str = "") =>
-  str
-    .split(" ")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(" ");
-
-const DOT_COLORS = {
-  initiated: "#5926f0",
-  processing: "#5926f0",
-  available: "#5926f0",
-  completed: "#12b76a",
-  success: "#12b76a",
-  confirmed: "#12b76a",
-  pending: "#ca9a04",
-  submitted: "#ca9a04",
-  abandoned: "#ca9a04",
-  reversed: "#ca9a04",
-  refunded: "#9f83f2",
-  reverted: "#9f83f2",
-  rejected: "#dc3545",
-  cancelled: "#dc3545",
-  declined: "#dc3545",
-  failed: "#dc3545",
-};
-
-export const statusDot = (status) => DOT_COLORS[status?.toLowerCase()] ?? "#9aa3b2";
-
-export const isVoid = (status) =>
-  ["failed", "cancelled", "declined", "rejected"].includes(status?.toLowerCase());
-
 const HIDDEN_KEYS = ["__v", "vespia", "didit", "vendor", "ipAddress"];
 const PURPLE = [89, 38, 240];
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/;
@@ -44,7 +14,6 @@ const humanize = (key) =>
 
 const isEmpty = (v) => v == null || v === "" || (typeof v === "object" && !Object.keys(v).length);
 
-// jsPDF's built-in fonts only cover Latin-1, so other characters (e.g. ₨) are dropped.
 const format = (v) =>
   (typeof v === "boolean"
     ? v
@@ -65,7 +34,6 @@ const flatten = (value, prefix = "") =>
     return text ? [[label, text]] : [];
   });
 
-// One section for the top-level scalars, then one per top-level object/array.
 const buildSections = (item) => {
   const entries = Object.entries(item).filter(([k, v]) => !HIDDEN_KEYS.includes(k) && !isEmpty(v));
   return [

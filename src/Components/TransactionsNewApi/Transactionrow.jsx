@@ -7,11 +7,12 @@ import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
+import { AmountCell, PartyCell, StatusCell, TxCell } from "../../Common/Ledger/cells";
+import s from "../../Common/Ledger/ledger.module.scss";
+import { capitalizeStatus, isVoid } from "../../Common/Ledger/utils";
 import statuses from "./files/thunesTransactionStatus.json";
-import s from "./styles/ledger.module.scss";
 import { service_name_formatter } from "./TransactionItem";
 import TransactionSheet from "./Transactionsheet";
-import { capitalizeStatus, isVoid, statusDot } from "./txutils";
 import { formatCurrency } from "../../Helper/AmountFormat";
 
 const TransactionRow = ({ item, activeItem, setActiveItem, index, fromReferral = false }) => {
@@ -163,59 +164,33 @@ const TransactionRow = ({ item, activeItem, setActiveItem, index, fromReferral =
     .join(" ");
   const method = displayAsText && t(displayAsText);
   const time = dayjs(item?.createdAt).format("HH:mm");
-  const dot = statusDot(item?.status);
-  const initials = counterparty.name
-    .split(" ")
-    .map((word) => word[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
 
   const loggedInUserId = userDetails?.user?._id ?? userDetails?.company?._id;
+
   return (
     <>
       <div
         className={`${s.cols} ${s.row}`}
         onClick={() => canView && setActiveItem(isActive ? 0 : index + 1)}
       >
-        <div className={s.tx}>
-          <div className={s.tile}>
-            <Icon size={18} />
-          </div>
-          <div className={s.lines}>
-            <p className={s.title}>{title}</p>
-            <p className={s.sub}>
-              <span className={s.d}>
-                {[method, item?.reference_id].filter(Boolean).join(" · ")}
-              </span>
-              <span className={s.m}>{[time, method].filter(Boolean).join(" · ")}</span>
-            </p>
-          </div>
-        </div>
-
-        <div className={`${s.tx} ${s.cp}`}>
-          {initials && <div className={s.avatar}>{initials}</div>}
-          <div className={s.lines}>
-            <p className={s.title}>{counterparty.name}</p>
-            {counterparty.id === loggedInUserId && <p className={s.sub}>{t("Your account")}</p>}
-          </div>
-        </div>
-
-        <div className={s.status}>
-          <span className={s.dot} style={{ background: dot }} />
-          {t(capitalizeStatus(item?.status))}
-        </div>
-
+        <TxCell
+          Icon={Icon}
+          title={title}
+          sub={[method, item?.reference_id].filter(Boolean).join(" · ")}
+          subMobile={[time, method].filter(Boolean).join(" · ")}
+        />
+        <PartyCell
+          name={counterparty.name}
+          note={counterparty.id === loggedInUserId && t("Your account")}
+        />
+        <StatusCell status={item?.status} label={t(capitalizeStatus(item?.status))} />
         <div className={s.time}>{time}</div>
-
-        <div className={`${s.amount} ${isVoid(item?.status) ? s.void : ""} ${isDebit ? "" : s.in}`}>
-          <b>
-            {isDebit ? "−" : "+"}
-            {value == null ? "" : formatCurrency(value, true)}
-          </b>
-          <span>{code}</span>
-        </div>
-
+        <AmountCell
+          sign={isDebit ? "−" : "+"}
+          value={value == null ? "" : formatCurrency(value, true)}
+          code={code}
+          variant={[isVoid(item?.status) && "void", !isDebit && "in"]}
+        />
         <ChevronRight size={16} className={s.chev} />
       </div>
 

@@ -5,6 +5,7 @@ $muted: #9aa3b2;
 $border: #eff1f6;
 $canvas: #f8f9fc;
 $green: #047857;
+$red: #d92d20;
 $tint: #f2eeff;
 $navy: #22106b;
 $mobile: 1000px;
@@ -37,11 +38,54 @@ $mobile: 1000px;
 }
 
 .ledger,
-.sheet {
+.sheet,
+.dlg {
   font-family: "Inter", sans-serif;
   color: $text;
 }
 
+/* ---------- Buttons ---------- */
+.btn {
+  @include button($border, $navy);
+}
+
+.btnPrimary {
+  @include button($primary, #fff);
+}
+
+.btnDanger {
+  @include button(#e11d1d, #fff);
+}
+
+.btnSoftDanger {
+  @include button(#fdeeee, $red);
+}
+
+.textBtn {
+  @include button(transparent, $primary, 32px);
+  padding: 0 8px;
+  font-size: 12px;
+}
+
+.sm {
+  height: 32px;
+  padding: 0 12px;
+  font-size: 12px;
+}
+
+.iconBtn {
+  @include button($border, $navy);
+  width: 36px;
+  padding: 0;
+}
+
+.pageActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+/* ---------- Ledger ---------- */
 .ledger {
   background: #fff;
   border: 1px solid $border;
@@ -61,21 +105,20 @@ $mobile: 1000px;
   flex: none;
   height: 48px;
   padding: 8px 16px;
-  //   margin-bottom: -.5px;
+  margin-bottom: -1px;
   background: none;
   border: 0;
   border-bottom: 1px solid #d1d6e0;
   cursor: pointer;
 
+  span {
+    margin-left: 6px;
+  }
+
   &.active {
     color: $primary;
     border-color: $primary;
   }
-}
-
-.tab:focus {
-  border: 0 !important;
-  border-bottom: 1px solid #5926f0 !important;
 }
 
 .tools {
@@ -121,20 +164,6 @@ $mobile: 1000px;
   gap: 8px;
 }
 
-.btn {
-  @include button($border, $navy);
-}
-
-.btnPrimary {
-  @include button($primary, #fff);
-}
-
-.iconBtn {
-  @include button($border, $navy);
-  width: 36px;
-  padding: 0;
-}
-
 .picker {
   position: absolute;
   top: calc(100% + 8px);
@@ -155,7 +184,7 @@ $mobile: 1000px;
 
 .cols {
   display: grid;
-  grid-template-columns: 2.2fr 1.6fr 112px 90px 1.3fr 16px;
+  grid-template-columns: var(--cols);
   column-gap: 14px;
   align-items: center;
   padding: 0 20px;
@@ -176,10 +205,16 @@ $mobile: 1000px;
   @include type(12px, 500, $text-2);
   display: flex;
   align-items: center;
+  justify-content: space-between;
   height: 35px;
   padding: 0 20px;
   background: $canvas;
   border-bottom: 1px solid $border;
+
+  span {
+    font-weight: 400;
+    color: $muted;
+  }
 }
 
 .row {
@@ -191,6 +226,12 @@ $mobile: 1000px;
   &:hover {
     background: $canvas;
   }
+}
+
+.count {
+  @include type(12px, 400, $muted);
+  margin: 0;
+  padding: 14px 20px;
 }
 
 .tx {
@@ -220,6 +261,11 @@ $mobile: 1000px;
     background: $tint;
     color: $primary;
   }
+
+  &.danger {
+    background: #fdeeee;
+    color: $red;
+  }
 }
 
 .avatar {
@@ -231,6 +277,14 @@ $mobile: 1000px;
   height: 28px;
   border-radius: 50%;
   background: $border;
+
+  &.lg {
+    width: 44px;
+    height: 44px;
+    font-size: 14px;
+    color: $primary;
+    background: $tint;
+  }
 }
 
 .lines {
@@ -270,6 +324,10 @@ $mobile: 1000px;
   @include type(12px, 400, $muted);
 }
 
+.due {
+  color: #ca9a04;
+}
+
 .amount {
   display: flex;
   align-items: baseline;
@@ -292,6 +350,10 @@ $mobile: 1000px;
     text-decoration: line-through;
   }
 
+  &.dim b {
+    color: $muted;
+  }
+
   &.lg {
     b {
       font-size: 24px;
@@ -303,6 +365,13 @@ $mobile: 1000px;
       font-size: 14px;
     }
   }
+}
+
+.act {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
 .chev {
@@ -369,6 +438,16 @@ div.sheet {
   }
 }
 
+.close {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: $primary;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
 .body {
   flex: 1;
   display: flex;
@@ -399,10 +478,32 @@ div.sheet {
   }
 }
 
+.heroRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .eyebrow {
   @include type(12px, 500, $muted, 0.72px);
   margin: 0 0 10px;
   text-transform: uppercase;
+}
+
+.callout {
+  padding: 12px 14px;
+  background: $canvas;
+  border-radius: 10px;
+
+  small {
+    @include type(11px, 400, $muted);
+    display: block;
+  }
+
+  p {
+    @include type(14px, 400, $text, -0.42px);
+    margin: 2px 0 0;
+  }
 }
 
 .kv {
@@ -430,6 +531,34 @@ div.sheet {
     @include type(12px, 500);
     text-align: right;
     word-break: break-word;
+  }
+}
+
+.file {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+  color: $muted;
+  text-decoration: none;
+  border: 1px solid $border;
+  border-radius: 12px;
+
+  .lines {
+    flex: 1;
+  }
+}
+
+.review {
+  padding: 12px;
+  margin-top: 8px;
+  background: $canvas;
+  border-radius: 10px;
+
+  p {
+    @include type(12px, 400, $text-2);
+    margin: 6px 0 0;
   }
 }
 
@@ -539,7 +668,86 @@ p.note {
 
   button {
     height: 40px;
+  }
+
+  > button {
     width: 100%;
+  }
+}
+
+.footRow {
+  display: flex;
+  gap: 8px;
+
+  button {
+    flex: 1;
+    height: 40px;
+  }
+}
+
+.payFrom {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+
+  span {
+    @include type(12px, 400, $text-2);
+  }
+
+  b {
+    @include type(12px, 500);
+  }
+}
+
+.hint {
+  @include type(11px, 400, $muted);
+  margin: 0;
+  text-align: center;
+}
+
+/* ---------- Dialog ---------- */
+.dlg {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 24px;
+  border: 0;
+  border-radius: 16px;
+
+  h5 {
+    @include type(18px, 600);
+    margin: 8px 0 0;
+  }
+
+  p {
+    @include type(14px, 400, $text-2, -0.42px);
+    margin: 0;
+  }
+
+  label {
+    @include type(12px, 500);
+    margin: 6px 0 -4px;
+  }
+}
+
+.field {
+  @include type(14px, 400, $text, -0.42px);
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  outline: 0;
+  background: #fff;
+  border: 1px solid $border;
+  border-radius: 8px;
+
+  &:focus {
+    border-color: $primary;
+  }
+}
+
+@media screen and (max-width: 675px) {
+  .picker {
+    right: -68px;
   }
 }
 
@@ -558,6 +766,7 @@ p.note {
   .cp,
   .time,
   .chev,
+  .act,
   .d {
     display: none;
   }
@@ -583,9 +792,5 @@ p.note {
   .row .status {
     grid-area: st;
     justify-self: end;
-  }
-
-  .btn {
-    @include type(12px, 500, $navy, -0.42px);
   }
 }

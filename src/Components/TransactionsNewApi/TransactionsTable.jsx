@@ -1,21 +1,31 @@
 import axios from "axios";
 import dayjs from "dayjs";
-import { Calendar, Download, Funnel, Receipt, Search } from "lucide-react";
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { DateRangePicker } from "react-date-range";
+import { Receipt } from "lucide-react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
+import { DateGroup, EmptyState } from "../../Common/Ledger/cells";
+import { ActiveFilters, FilterPanel } from "../../Common/Ledger/Filters";
+import Ledger from "../../Common/Ledger/Ledger";
+import s from "../../Common/Ledger/ledger.module.scss";
 import InstaPayLoader from "../Loader";
 import DownloadStatement from "../WalletsNew/DownloadStatement";
-import s from "./styles/ledger.module.scss";
 import TransactionRow from "./Transactionrow";
-import TransactionFilters, { ActiveFilters } from "./TransactionFilters";
 
-const TABS = ["All", "Sent", "Received", "Requests", "Quotes"];
+const TABS = ["All", "Sent", "Received", "Requests", "Quotes"].map((key) => ({ key, label: key }));
+
+const FILTER_GROUPS = [
+  {
+    key: "status",
+    label: "Status",
+    options: ["CANCELLED", "COMPLETED", "DECLINED", "FAILED", "INITIATED", "PENDING", "PROCESSING"],
+  },
+  { key: "transaction_type", label: "Type", options: ["credit", "debit"] },
+];
 
 const transactionFilter = (t) => {
   if (
@@ -40,30 +50,11 @@ const TransactionsTable = () => {
   const [active, setActive] = useState("All");
   const [activeItem, setActiveItem] = useState(0);
   const [dateRange, setDateRange] = useState(defaultRange);
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const datePickerRef = useRef(null);
-
-  const handleClickOutside = useCallback((event) => {
-    if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
-      setShowDatePicker(false);
-    }
-  }, []);
-
-  const handleDatePickerClick = useCallback(() => {
-    setShowDatePicker(true);
-  }, []);
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [handleClickOutside]);
-
   const [transactions, setTransactions] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [apiDates, setApiDates] = useState(null);
+  const [filters, setFilters] = useState({});
   const [page, setPage] = useState(1);
   const [currentTrxType, setCurrentTrxType] = useState("all");
   const [maxLimit, setMaxLimit] = useState(false);
@@ -73,10 +64,11 @@ const TransactionsTable = () => {
   const [isLoading, setIsLoading] = useState(true);
   const loaderRef = useRef();
   const [stopLoader, setStopLoader] = useState(false);
-  const [exportLoading] = useState(false);
   const [showStatementModal, setShowStatementModal] = useState(false);
-  const [filters, setFilters] = useState({});
   const can = usePermission();
+
+  const filterQuery = new URLSearchParams(filters).toString();
+  const withFilters = (url) => (filterQuery ? `${url}?${filterQuery}` : url);
 
   useEffect(() => {
     getUserBeneficiaries();
@@ -105,13 +97,13 @@ const TransactionsTable = () => {
     }
 
     if (debouncedSearchQuery) return;
-    const params = new URLSearchParams(filters);
+
     axios
       .get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/transaction/account-transactions/${userDetails?._id}/${page}/15?${params.toString()}`,
-        {
-          headers: authHeader,
-        },
+        withFilters(
+          `${import.meta.env.VITE_IP_DEV_API}/api/transaction/account-transactions/${userDetails?._id}/${page}/15`,
+        ),
+        { headers: authHeader },
       )
       .then((res) => {
         const decrypted = decryptData(res.data.data);
@@ -141,13 +133,12 @@ const TransactionsTable = () => {
     if (page === 1) {
       setIsLoading(true);
     }
-    const params = new URLSearchParams(filters);
     axios
       .get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions/${userDetails?._id}/${page}/15/${search ?? debouncedSearchQuery}?${params.toString()}`,
-        {
-          headers: authHeader,
-        },
+        withFilters(
+          `${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions/${userDetails?._id}/${page}/15/${search ?? debouncedSearchQuery}`,
+        ),
+        { headers: authHeader },
       )
       .then((res) => {
         const decrypted = decryptData(res.data.data);
@@ -194,17 +185,14 @@ const TransactionsTable = () => {
       query: debouncedSearchQuery,
     };
     const encrypted = encryptData(data);
-    const params = new URLSearchParams(filters);
 
     axios
       .post(
-        `${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions-by-date/${userDetails?._id}/${page}/15?${params.toString()}`,
-        {
-          data: encrypted,
-        },
-        {
-          headers: authHeader,
-        },
+        withFilters(
+          `${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions-by-date/${userDetails?._id}/${page}/15`,
+        ),
+        { data: encrypted },
+        { headers: authHeader },
       )
       .then((res) => {
         const decrypted = decryptData(res.data.data);
@@ -365,10 +353,19 @@ const TransactionsTable = () => {
     }
   };
 
+  const clearDates = () => {
+    setApiDates(null);
+    setDateRange(defaultRange);
+  };
+
+  const clearChips = () => {
+    clearDates();
+    applyFilters({});
+  };
+
   const clearFilters = () => {
-    setPage(1);
     changeSearch("");
-    getAllTransactions();
+    clearChips();
   };
 
   const groups = useMemo(() => {
@@ -387,126 +384,83 @@ const TransactionsTable = () => {
     : t("All dates");
 
   return (
-    <div className={s.ledger}>
-      <div className={s.tabs}>
-        {TABS.map((name) => (
-          <button
-            key={name}
-            type="button"
-            className={`${s.tab} ${active === name ? s.active : ""}`}
-            onClick={() => setActive(name)}
-          >
-            {t(name)}
-          </button>
-        ))}
-      </div>
-
-      <div className={s.tools}>
-        <label className={s.search}>
-          <Search size={20} />
-          <input
-            placeholder={t("Search transactions, names or IDs")}
-            value={searchQuery}
-            onChange={(e) => changeSearch(e.target.value)}
-          />
-        </label>
-        <div className={s.actions}>
-          <button type="button" className={s.btn} onClick={handleDatePickerClick}>
-            <Calendar size={16} />
-            {dateLabel}
-          </button>
-          <TransactionFilters
+    <>
+      <Ledger
+        tabs={TABS}
+        active={active}
+        onTab={setActive}
+        search={{
+          value: searchQuery,
+          onChange: changeSearch,
+          placeholder: t("Search transactions, names or IDs"),
+        }}
+        dateRange={dateRange}
+        onDateChange={handleChange}
+        dateLabel={dateLabel}
+        filters={
+          <FilterPanel
+            groups={FILTER_GROUPS}
             filters={filters}
-            count={Object.keys(filters).length}
+            count={Object.keys(filters).length + (apiDates ? 1 : 0)}
             onApply={applyFilters}
           />
-          {can("transactions.main.export") && (
-            <button
-              type="button"
-              className={s.iconBtn}
-              disabled={exportLoading}
-              onClick={() => setShowStatementModal(!showStatementModal)}
-            >
-              <Download size={20} />
-            </button>
-          )}
-          {showDatePicker && (
-            <div ref={datePickerRef} className={s.picker}>
-              <DateRangePicker maxDate={new Date()} ranges={[dateRange]} onChange={handleChange} />
-            </div>
-          )}
-        </div>
-      </div>
-      <ActiveFilters
-        filters={filters}
-        dateLabel={apiDates ? dateLabel : null}
-        onApply={applyFilters}
-        onClearDate={() => {
-          setApiDates(null);
-          setDateRange(defaultRange);
-        }}
-        onClearAll={() => {
-          applyFilters({});
-          setApiDates(null);
-          setDateRange(defaultRange);
-        }}
-      />
-
-      <div className={s.scroll}>
-        <div className={s.table}>
-          <div className={`${s.cols} ${s.head}`}>
-            <div>{t("Transaction")}</div>
-            <div>{t("Sent to / from")}</div>
-            <div>{t("Status")}</div>
-            <div>{t("Time")}</div>
-            <div>{t("Amount")}</div>
-            <div />
+        }
+        activeFilters={
+          <ActiveFilters
+            groups={FILTER_GROUPS}
+            filters={filters}
+            dateLabel={apiDates && dateLabel}
+            onApply={applyFilters}
+            onClearDate={clearDates}
+            onClearAll={clearChips}
+          />
+        }
+        hideDownload={!can("transactions.main.export")}
+        onDownload={() => setShowStatementModal(!showStatementModal)}
+        columns={["Transaction", "Sent to / from", "Status", "Time", "Amount", ""]}
+        template="2.2fr 1.6fr 112px 90px 1.3fr 16px"
+      >
+        {isLoading ? (
+          <div className={s.loader}>
+            <InstaPayLoader />
           </div>
-
-          {isLoading ? (
-            <div className={s.loader}>
-              <InstaPayLoader />
+        ) : groups.length > 0 ? (
+          groups.map(([day, rows]) => (
+            <div key={day}>
+              <DateGroup label={day} />
+              {rows.map(({ item, index }) => (
+                <TransactionRow
+                  key={item._id ?? item.id}
+                  item={item}
+                  index={index}
+                  activeItem={activeItem}
+                  setActiveItem={setActiveItem}
+                />
+              ))}
             </div>
-          ) : groups.length > 0 ? (
-            groups.map(([day, rows]) => (
-              <div key={day}>
-                <div className={s.group}>{day}</div>
-                {rows.map(({ item, index }) => (
-                  <TransactionRow
-                    key={item._id ?? item.id}
-                    item={item}
-                    index={index}
-                    activeItem={activeItem}
-                    setActiveItem={setActiveItem}
-                  />
-                ))}
-              </div>
-            ))
-          ) : (
-            <div className={s.empty}>
-              <div className={`${s.tile} ${s.big}`}>
-                <Receipt size={22} />
-              </div>
-              <h5>{t("No transactions yet")}</h5>
-              <p>{t("Money you send and receive will appear here, grouped by day.")}</p>
-              <div>
-                <button type="button" className={s.btnPrimary}>
-                  {t("Add funds")}
-                </button>
-                <button type="button" className={s.btn} onClick={clearFilters}>
-                  {t("Clear search")}
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+          ))
+        ) : (
+          <EmptyState
+            Icon={Receipt}
+            title={t("No transactions yet")}
+            text={t("Money you send and receive will appear here, grouped by day.")}
+          >
+            <button type="button" className={s.btnPrimary}>
+              {t("Add funds")}
+            </button>
+            <button type="button" className={s.btn} onClick={clearFilters}>
+              {t("Clear search")}
+            </button>
+          </EmptyState>
+        )}
 
-      {!isLoading && !stopLoader && (
-        <div ref={loaderRef} className={s.loader}>
-          <InstaPayLoader />
-        </div>
-      )}
+        {!isLoading && !stopLoader && (
+          <div ref={loaderRef} className={s.loader}>
+            <InstaPayLoader />
+          </div>
+        )}
+      </Ledger>
+
       {showStatementModal && (
         <DownloadStatement
           showModal={showStatementModal}
@@ -515,7 +469,7 @@ const TransactionsTable = () => {
           isTransection={true}
         />
       )}
-    </div>
+    </>
   );
 };
 

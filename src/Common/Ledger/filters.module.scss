@@ -6,11 +6,10 @@ $border: #eff1f6;
 $border-default: #d1d6e0;
 $canvas: #f8f9fc;
 $tint: #f2eeff;
-$mobile: 1000px;
 
 @mixin xs($weight: 400, $color: $text) {
   font:
-    #{$weight} 12px / 1.5 "Inter",
+    #{$weight} 12px/1.5 "Inter",
     sans-serif;
   letter-spacing: -0.36px;
   color: $color;
@@ -27,22 +26,14 @@ $mobile: 1000px;
   z-index: 20;
   display: flex;
   flex-direction: column;
+  gap: 18px;
   width: 360px;
   max-width: calc(100vw - 40px);
-  max-height: 70vh;
+  padding: 18px;
   background: #fff;
   border: 1px solid $border;
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(27, 31, 42, 0.1);
-  overflow: hidden;
-}
-
-.groups {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  padding: 16px;
-  overflow-y: auto;
+  box-shadow: 0 12px 32px rgba(27, 31, 42, 0.12);
 }
 
 .heading {
@@ -53,28 +44,20 @@ $mobile: 1000px;
 .pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
 }
 
 .pill {
-  @include xs(400, $text);
-  height: 28px;
-  padding: 0 10px;
-  background: #fff;
+  @include xs(500, $text-2);
+  height: 30px;
+  padding: 0 12px;
+  background: $canvas;
   border: 1px solid $border-default;
   border-radius: 8px;
   cursor: pointer;
-  transition:
-    background 0.15s,
-    border-color 0.15s,
-    color 0.15s;
-
-  &:hover {
-    background: $canvas;
-  }
 
   &.on {
-    @include xs(500, $primary);
+    color: $primary;
     background: $tint;
     border-color: $primary;
   }
@@ -84,9 +67,6 @@ $mobile: 1000px;
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  padding: 12px 16px;
-  border-top: 1px solid $border;
-  background: #fff;
 }
 
 .chips {
@@ -99,7 +79,7 @@ $mobile: 1000px;
 
 .chip {
   @include xs(400, $text-2);
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 6px;
   padding: 5px 7px 5px 10px;
@@ -108,23 +88,17 @@ $mobile: 1000px;
   border-radius: 8px;
 
   b {
-    @include xs(500, $text);
+    font-weight: 500;
+    color: $text;
   }
 
   button {
-    display: grid;
-    place-items: center;
-    width: 14px;
-    height: 14px;
+    display: inline-flex;
     padding: 0;
     color: $muted;
     background: none;
     border: 0;
     cursor: pointer;
-
-    &:hover {
-      color: $text;
-    }
   }
 }
 
@@ -134,19 +108,10 @@ $mobile: 1000px;
   background: none;
   border: 0;
   cursor: pointer;
-
-  &:hover {
-    text-decoration: underline;
-  }
 }
 
-@media screen and (max-width: $mobile) {
-  .wrap {
-    position: static; // anchor panel to the (relative) actions bar instead
-  }
-
+@media screen and (max-width: 675px) {
   .panel {
-    width: 100%;
-    max-width: 100%;
+    right: -127px;
   }
 }
