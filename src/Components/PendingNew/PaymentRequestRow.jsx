@@ -1,27 +1,32 @@
 import { useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import dayjs from "dayjs";
-import { ChevronRight, Receipt } from "lucide-react";
+import { ChevronRight, MessageSquare, Receipt } from "lucide-react";
 import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router";
+import { AmountCell, PartyCell, StatusCell, TxCell } from "../../Common/Ledger/cells";
+import s from "../../Common/Ledger/ledger.module.scss";
+import { capitalizeStatus, isVoid } from "../../Common/Ledger/utils";
 import { UserContext } from "../../Context/UserContext";
+import { formatCurrency } from "../../Helper/AmountFormat";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
-import { AmountCell, PartyCell, StatusCell, TxCell } from "../../Common/Ledger/Cells";
-import s from "../../Common/Ledger/ledger.module.scss";
-import RejectModal from "../../Common/Ledger/RejectModal";
-import { capitalizeStatus, partyName } from "../../Common/Ledger/utils";
-import PaymentRequestSheet from "./PaymentRequestSheet";
+import PaymentRequestSheet from "./Paymentrequestsheet";
+import RejectModal from "./RejectModal";
 import ReviewModal from "./ReviewModal";
-import { formatCurrency } from "../../Helper/AmountFormat";
+
+const partyName = ({ user, company, company_name } = {}) =>
+  [user?.first_name || company?.company_name || company_name, user?.last_name]
+    .filter(Boolean)
+    .join(" ");
 
 const stop = (fn) => (e) => {
   e.stopPropagation();
   fn();
 };
 
-const PaymentRequestRow = ({ item, type = "received", isActive, setActive }) => {
+const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "received" }) => {
   const { t } = useTranslation();
   const can = usePermission();
   const navigate = useNavigate();
@@ -41,6 +46,7 @@ const PaymentRequestRow = ({ item, type = "received", isActive, setActive }) => 
   const itemRef = useRef(null);
 
   const received = type === "received";
+  const isActive = activeItem === index + 1;
   const pending = status?.toLowerCase() === "pending";
   const name = partyName(item?.[received ? "sender" : "receiver"]);
   const lowered = status?.toLowerCase();
@@ -72,7 +78,7 @@ const PaymentRequestRow = ({ item, type = "received", isActive, setActive }) => 
         }
       })
       .catch(() => {});
-  }, [isActive]);
+  }, [activeItem]);
 
   useLayoutEffect(() => {
     if (!id) return;
@@ -84,7 +90,7 @@ const PaymentRequestRow = ({ item, type = "received", isActive, setActive }) => 
     if (hit) {
       scroll();
       setShowReview(true);
-      setActive(item._id);
+      setActiveItem(index + 1);
     }
   }, [id]);
 
@@ -111,13 +117,17 @@ const PaymentRequestRow = ({ item, type = "received", isActive, setActive }) => 
     }
   };
 
-  const due = pending && item?.dueDate && `${t("Due")} ${dayjs(item.dueDate).format("D MMM")}`;
+  const due = item?.dueDate && `${t("Due")} ${dayjs(item.dueDate).format("D MMM")}`;
 
   return (
-    <div ref={itemRef}>
-      <div className={`${s.cols} ${s.row}`} onClick={() => setActive(isActive ? 0 : item._id)}>
+    <>
+      <div
+        ref={itemRef}
+        className={`${s.cols} ${s.row}`}
+        onClick={() => setActiveItem(isActive ? 0 : index + 1)}
+      >
         <TxCell
-          Icon={Receipt}
+          Icon={item?.attachments?.length ? Receipt : MessageSquare}
           title={item?.display_name || t("Payment request")}
           sub={[item?.reference_id, dayjs(item?.createdAt).format("D MMM YYYY")].join(" · ")}
         />
@@ -145,7 +155,7 @@ const PaymentRequestRow = ({ item, type = "received", isActive, setActive }) => 
                 <button
                   type="button"
                   className={`${s.btnPrimary} ${s.sm}`}
-                  onClick={stop(() => setActive(item._id))}
+                  onClick={stop(() => setActiveItem(index + 1))}
                 >
                   {t("Accept & pay")}
                 </button>
@@ -172,25 +182,26 @@ const PaymentRequestRow = ({ item, type = "received", isActive, setActive }) => 
       </div>
 
       {isActive && (
-        <>
-          <PaymentRequestSheet
-            item={item}
-            type={type}
-            name={name}
-            label={label}
-            allRating={allRating}
-            allReviews={allReviews}
-            onClose={() => setActive(0)}
-            onReject={() => setShowReject(true)}
-            onReview={() => setShowReview(true)}
-          />
-          <ReviewModal
-            isOpen={showReview}
-            toggle={() => setShowReview(false)}
-            item={item}
-            type={received ? "Received" : "Send"}
-          />
-        </>
+        <PaymentRequestSheet
+          item={item}
+          type={type}
+          name={name}
+          label={label}
+          allRating={allRating}
+          allReviews={allReviews}
+          onClose={() => setActiveItem(0)}
+          onReject={() => setShowReject(true)}
+          onReview={() => setShowReview(true)}
+        />
+      )}
+
+      {showReview && (
+        <ReviewModal
+          isOpen={showReview}
+          toggle={() => setShowReview(false)}
+          item={item}
+          type={received ? "Received" : "Send"}
+        />
       )}
 
       <RejectModal
@@ -204,7 +215,7 @@ const PaymentRequestRow = ({ item, type = "received", isActive, setActive }) => 
         loading={rejecting}
         onConfirm={rejectRequest}
       />
-    </div>
+    </>
   );
 };
 

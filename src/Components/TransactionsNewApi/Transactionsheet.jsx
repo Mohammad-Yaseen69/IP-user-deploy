@@ -20,6 +20,7 @@ import CatDown from "./CatDown";
 import { service_name_formatter } from "./TransactionItem";
 import { downloadTransactionPdf } from "./txutils";
 import { toast } from "react-toastify";
+import useCopyToClipboard from "../../hooks/useCopyToClipboard";
 
 const TransactionSheet = ({
   onClose,
@@ -45,21 +46,9 @@ const TransactionSheet = ({
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
   const can = usePermission();
-  const [isCopied, setIsCopied] = useState(null);
+  const { handleCopy, isCopied } = useCopyToClipboard(t);
   const [showImgPreview, setShowImgPreview] = useState(false);
   const timerRef = useRef();
-
-  const handleCopy = async (val, type) => {
-    try {
-      if (!val) return;
-      await navigator.clipboard.writeText(val);
-      setIsCopied(type);
-      clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => setIsCopied(""), 3000);
-    } catch {
-      toast.error(t("Failed to copy"));
-    }
-  };
 
   const country = useMemo(() => {
     return countries.find((c) =>

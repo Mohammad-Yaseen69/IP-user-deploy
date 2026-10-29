@@ -16,6 +16,7 @@ import s from "../../Common/Ledger/ledger.module.scss";
 import { initials, statusDot } from "../../Common/Ledger/utils";
 import PaymentsFlow from "./PaymentsFlow/index";
 import { formatCurrency } from "../../Helper/AmountFormat";
+import useCopyToClipboard from "../../hooks/useCopyToClipboard";
 
 const fileName = (key = "") => decodeURIComponent(key.split("/").pop());
 
@@ -34,6 +35,7 @@ const PaymentRequestSheet = ({
   const { userWallets } = useContext(UserContext);
   const can = usePermission();
   const payRef = useRef(null);
+  const { handleCopy, isCopied } = useCopyToClipboard(t);
 
   const received = type === "received";
   const status = item?.status?.toLowerCase();
@@ -48,12 +50,21 @@ const PaymentRequestSheet = ({
   const dueText = item?.dueDate && `${t("Due")} ${dayjs(item.dueDate).format("D MMM YYYY")}`;
 
   const rows = [
-    [t("Request ID"), item?.reference_id && <Copyable text={item.reference_id} />],
+    [
+      t("Request ID"),
+      item?.reference_id && (
+        <Copyable
+          isCopied={isCopied}
+          handleCopy={(val) => handleCopy(val, true)}
+          text={item.reference_id}
+        />
+      ),
+    ],
     [
       received ? t("Requested on") : t("Sent on"),
       dayjs(item?.createdAt).format("D MMM YYYY, HH:mm"),
     ],
-    [t("Due date"), item?.dueDate && dayjs(item.dueDate).format("D MMM YYYY")], // TODO: no due date in API
+    [t("Due date"), item?.dueDate && dayjs(item.dueDate).format("D MMM YYYY")],
     [
       received ? t("Requested by") : t("Sent to"),
       [name, !received && item?.receiver?.phone && `+${item.receiver.phone}`]
