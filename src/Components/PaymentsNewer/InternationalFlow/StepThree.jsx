@@ -59,10 +59,12 @@ const StepThree = ({
   };
 
   const handleThunesFileChange = (e) => {
-    const files = Array.from(e.target.files);
+    const picked = Array.from(e.target.files);
     e.target.value = "";
+    // each pick adds to the earlier ones (up to the max) instead of replacing them
+    const files = [...data.files, ...picked];
     const fileError =
-      files.map((item) => validateThunesFile(item, t)).find(Boolean) ||
+      picked.map((item) => validateThunesFile(item, t)).find(Boolean) ||
       (files.length + pickedDocumentCount > THUNES_MAX_DOCUMENTS ? tooManyDocumentsError : "");
     setError(fileError);
     if (!fileError) dataHandler("files", files);
@@ -252,6 +254,26 @@ const StepThree = ({
             ? data.files.map((item, idx) => (
                 <span key={idx}>
                   <strong>{t("File Name")}</strong>: {item?.name}
+                  {thunesDocuments && (
+                    <button
+                      type="button"
+                      aria-label={t("Remove")}
+                      style={{
+                        marginLeft: 8,
+                        border: "none",
+                        background: "none",
+                        cursor: "pointer",
+                      }}
+                      onClick={() =>
+                        dataHandler(
+                          "files",
+                          data.files.filter((_, i) => i !== idx),
+                        )
+                      }
+                    >
+                      ×
+                    </button>
+                  )}
                 </span>
               ))
             : ""}

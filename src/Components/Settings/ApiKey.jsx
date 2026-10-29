@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Button,
@@ -29,7 +29,7 @@ import styles from "./styles/apiKey.module.css";
 import { Toggle } from "../MyMasterCard/CardPurchased";
 import apiKeyImg from "./apiKeyCreate.png";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
-import { Copy } from "react-feather";
+import { Check, Copy } from "react-feather";
 import ConfirmationModal from "../AddBeneficiary/ConfirmationModal";
 
 const FEATURE_LIST = [
@@ -56,8 +56,10 @@ const ApiKey = () => {
   const [features, setFeatures] = useState(defaultFeatures);
   const [adminFeatures, setAdminFeatures] = useState(defaultFeatures);
   const [confirmModal, setConfirmModal] = useState(false);
-
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [isCopied, setIsCopied] = useState("");
+
+  const timerRef = useRef();
 
   const accountId = userDetails?._id;
   const { data, isLoading, isFetching } = useGetApiKey({
@@ -200,15 +202,19 @@ const ApiKey = () => {
     );
   };
 
-  const handleCopy = async (val) => {
+  const handleCopy = async (val, type) => {
     try {
       if (!val) return;
       await navigator.clipboard.writeText(val);
-      toast.success(t("Copied to clipboard"));
+      setIsCopied(type);
+      clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => setIsCopied(""), 3000);
     } catch {
       toast.error(t("Failed to copy"));
     }
   };
+
+  useEffect(() => () => clearTimeout(timerRef.current), []);
 
   useEffect(() => {
     if (data) {
@@ -309,10 +315,14 @@ const ApiKey = () => {
                       </button>
                       <button
                         className={styles.btn}
-                        onClick={() => handleCopy(apiKey)}
+                        onClick={() => handleCopy(apiKey, "key")}
                         disabled={!apiKey || featureStatus !== "enabled"}
                       >
-                        {t("Copy")}
+                        {isCopied === "key" ? (
+                          <Check size={18} color="black" style={{ transform: "none" }} />
+                        ) : (
+                          t("Copy")
+                        )}
                       </button>
                     </div>
                   </div>
@@ -379,10 +389,14 @@ const ApiKey = () => {
                             marginBlock: "auto",
                             cursor: "pointer",
                           }}
-                          onClick={() => handleCopy(webhookSecret)}
+                          onClick={() => handleCopy(webhookSecret, "secret")}
                           disabled={!webhookSecret}
                         >
-                          <Copy size={16} />
+                          {isCopied === "secret" ? (
+                            <Check size={16} color="black" style={{ transform: "none" }} />
+                          ) : (
+                            <Copy size={16} />
+                          )}
                         </div>
                       </div>
                       <div
