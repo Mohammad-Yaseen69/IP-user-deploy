@@ -71,6 +71,14 @@ const SectionCard = ({ title, subtitle, children }) => (
   </section>
 );
 
+const validateUsername = (value) => {
+  if ([...value].length < 3) return "Username must be at least 3 characters";
+  if (/^\p{N}+$/u.test(value)) return "Username cannot be only numbers";
+  if (!/^[\p{L}\p{M}\p{N}_]+$/u.test(value)) return "Only letters, numbers and _ are allowed";
+  if ((value.match(/\p{L}/gu) || []).length < 3) return "Username must contain at least 3 letters";
+  return "";
+};
+
 const Basic = ({ setCurrentTab }) => {
   const { t } = useTranslation();
   const {
@@ -363,8 +371,9 @@ const Basic = ({ setCurrentTab }) => {
   };
 
   const editProfileHandler = () => {
+    if (usernameError || !usernameValid) return;
     setIsSaving(true);
-    if (!usernameError && usernameValid && !isVerified && userDetails.username !== username) {
+    if (!isVerified && userDetails.username !== username) {
       updateUsername();
     }
 
@@ -550,19 +559,24 @@ const Basic = ({ setCurrentTab }) => {
   const handleUsernameChange = (e) => {
     const value = e.target.value;
     if (value.length > 30) return;
-    if (/^[a-zA-Z0-9_]*$/.test(value)) {
+    const hasError = validateUsername(value);
+    if (hasError) {
+      setUsernameValid(false);
+      setUserNameError(hasError);
       setUsername(value?.trim()?.toLowerCase());
-      if (timeout) {
-        clearTimeout(timeout);
-      }
-      if (value.length >= 6) {
-        timeout = setTimeout(() => {
-          checkUsername(value?.trim()?.toLowerCase());
-        }, 1000);
-      } else {
-        setUsernameValid(false);
-        setUserNameError("User name must be atleast 6 characters.");
-      }
+      return;
+    }
+    setUsername(value?.trim()?.toLowerCase());
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+    if (value.length >= 6) {
+      timeout = setTimeout(() => {
+        checkUsername(value?.trim()?.toLowerCase());
+      }, 1000);
+    } else {
+      setUsernameValid(false);
+      setUserNameError("User name must be atleast 6 characters.");
     }
   };
 
@@ -810,6 +824,12 @@ const Basic = ({ setCurrentTab }) => {
   ]);
 
   const requiredMark = <span className={styles.required}>{t("(Required)")}</span>;
+
+  const handleDiscard = () => {
+    setIsEditMode(false);
+    setUserNameError("");
+    setUsernameValid(true);
+  };
 
   return (
     <MuiPickersUtilsProvider utils={DateMomentUtils}>
@@ -1465,7 +1485,7 @@ const Basic = ({ setCurrentTab }) => {
             <button
               type="button"
               className={`${styles.button} ${styles.buttonSecondary}`}
-              onClick={() => setIsEditMode(false)}
+              onClick={handleDiscard}
               disabled={isSaving}
             >
               {t("Discard")}
