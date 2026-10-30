@@ -305,12 +305,14 @@ export const SelectField = ({
         disabled={disabled}
         onChange={(event) => onChange && onChange(event.target.value)}
       >
-        <option value="">{placeholder}</option>
+        <option className={styles.options} value="">
+          {placeholder}
+        </option>
         {options.map((option) => {
           const optionValue = typeof option === "string" ? option : option.value;
           const optionLabel = typeof option === "string" ? option : option.label;
           return (
-            <option key={optionValue} value={optionValue}>
+            <option key={optionValue} className={styles.options} value={optionValue}>
               {optionLabel}
             </option>
           );
