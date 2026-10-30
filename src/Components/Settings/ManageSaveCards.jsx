@@ -5,13 +5,18 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import cardStyles from "../PaymentsNewer/InternationalFlow/styles/creditcard.module.css";
 import logo_w from "../../assets/images/logo/logo_white.png";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import { current } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
+import { useNavigate } from "react-router";
+import InstaPayLoader from "../Loader";
+import styles from "./styles/ManageSaveCards.module.scss";
+import { CreditCardLarge, Plus } from "./Icons";
 
 const ManageSaveCards = () => {
   const [cards, setCards] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
   const { authHeader, userDetails } = useContext(UserContext);
   const { t } = useTranslation();
   const [isDeleting, setIsDeleting] = useState();
@@ -34,6 +39,8 @@ const ManageSaveCards = () => {
         setCards(dec?.panList);
       } catch {
         setCards([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -57,93 +64,123 @@ const ManageSaveCards = () => {
   };
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1 style={{ fontWeight: 600, color: "black", fontSize: "24px" }}>
-        {t("Manage Your Save Cards")}
-      </h1>
+    <div className={styles.container}>
+      <div className={styles.sectionHeader}>
+        <div className={styles.sectionText}>
+          <h4 className={styles.sectionTitle}>{t("Saved cards")}</h4>
+          <p className={styles.sectionSubtitle}>
+            {t("Cards you've saved for topping up your wallet.")}
+          </p>
+        </div>
+      </div>
 
-      <div
-        style={{
-          display: "flex",
-          // gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-          gap: "20px",
-          marginTop: "2rem",
-          width: "100%",
-          justifyItems: "flex-start",
-          flexWrap: "wrap",
-        }}
-      >
-        {cards?.map((item) => (
-          <div
-            key={item?._id}
-            style={{
-              width: "100%",
-              maxWidth: "300px", // Never bigger than 300px
-              minWidth: "220px", // Minimum reasonable size
-            }}
-            className={cardStyles.card}
-            onClick={() => {}}
+      {isLoading ? (
+        <div className={styles.loader}>
+          <InstaPayLoader />
+        </div>
+      ) : !cards?.length ? (
+        <section className={styles.empty}>
+          <span className={styles.emptyTile}>
+            <CreditCardLarge />
+          </span>
+          <h3 className={styles.emptyTitle}>{t("No saved cards yet")}</h3>
+          <p className={styles.emptyText}>
+            {t(
+              'Tick "Save this card" the next time you top up and it will appear here. You can remove it any time.',
+            )}
+          </p>
+          <button
+            type="button"
+            className={`${styles.button} ${styles.buttonSecondary}`}
+            onClick={() => navigate("/my-mastercard")}
           >
-            <div className={cardStyles.c_top}>
-              <img src={logo_w} alt="" />
-            </div>
-            <div className={cardStyles.c_bot}>
-              <span>
-                {t("XXXX XXXX XXXX")}
-                {item?.last4}
-              </span>
-              <div style={{ position: "relative", display: "inline-block" }}>
-                <svg
-                  title="Delete"
-                  onClick={() => setDeleteData({ show: true, current: item })}
-                  style={{ marginLeft: "12px", cursor: "pointer" }}
-                  width="44"
-                  height="44"
-                  viewBox="0 0 44 44"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  onMouseEnter={(e) => {
-                    const tooltip = e.currentTarget.nextSibling;
-                    if (tooltip) tooltip.style.opacity = 1;
-                  }}
-                  onMouseLeave={(e) => {
-                    const tooltip = e.currentTarget.nextSibling;
-                    if (tooltip) tooltip.style.opacity = 0;
-                  }}
-                >
-                  <path
-                    d="M19 13H25M13 16H31M29 16L28.2987 26.5193C28.1935 28.0975 28.1409 28.8867 27.8 29.485C27.4999 30.0118 27.0472 30.4353 26.5017 30.6997C25.882 31 25.0911 31 23.5093 31H20.4907C18.9089 31 18.118 31 17.4983 30.6997C16.9528 30.4353 16.5001 30.0118 16.2 29.485C15.8591 28.8867 15.8065 28.0975 15.7013 26.5193L15 16"
-                    stroke="red"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <span
-                  style={{
-                    position: "absolute",
-                    left: "100%",
-                    top: "-30%",
-                    transform: "translateX(-50%)",
-                    background: "#222",
-                    color: "#fff",
-                    fontSize: "12px",
-                    padding: "2px 8px",
-                    borderRadius: "4px",
-                    whiteSpace: "nowrap",
-                    opacity: 0,
-                    pointerEvents: "none",
-                    transition: "opacity 0.2s",
-                    zIndex: 10,
-                  }}
-                >
-                  {t("Delete")}
+            <Plus />
+            {t("Top up wallet")}
+          </button>
+        </section>
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            // gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gap: "20px",
+            width: "100%",
+            justifyItems: "flex-start",
+            flexWrap: "wrap",
+          }}
+        >
+          {cards?.map((item) => (
+            <div
+              key={item?._id}
+              style={{
+                width: "100%",
+                maxWidth: "300px", // Never bigger than 300px
+                minWidth: "220px", // Minimum reasonable size
+              }}
+              className={cardStyles.card}
+              onClick={() => {}}
+            >
+              <div className={cardStyles.c_top}>
+                <img src={logo_w} alt="" />
+              </div>
+              <div className={cardStyles.c_bot}>
+                <span>
+                  {t("XXXX XXXX XXXX")}
+                  {item?.last4}
                 </span>
+                <div style={{ position: "relative", display: "inline-block" }}>
+                  <svg
+                    title="Delete"
+                    onClick={() => setDeleteData({ show: true, current: item })}
+                    style={{ marginLeft: "12px", cursor: "pointer" }}
+                    width="44"
+                    height="44"
+                    viewBox="0 0 44 44"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    onMouseEnter={(e) => {
+                      const tooltip = e.currentTarget.nextSibling;
+                      if (tooltip) tooltip.style.opacity = 1;
+                    }}
+                    onMouseLeave={(e) => {
+                      const tooltip = e.currentTarget.nextSibling;
+                      if (tooltip) tooltip.style.opacity = 0;
+                    }}
+                  >
+                    <path
+                      d="M19 13H25M13 16H31M29 16L28.2987 26.5193C28.1935 28.0975 28.1409 28.8867 27.8 29.485C27.4999 30.0118 27.0472 30.4353 26.5017 30.6997C25.882 31 25.0911 31 23.5093 31H20.4907C18.9089 31 18.118 31 17.4983 30.6997C16.9528 30.4353 16.5001 30.0118 16.2 29.485C15.8591 28.8867 15.8065 28.0975 15.7013 26.5193L15 16"
+                      stroke="red"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <span
+                    style={{
+                      position: "absolute",
+                      left: "100%",
+                      top: "-30%",
+                      transform: "translateX(-50%)",
+                      background: "#222",
+                      color: "#fff",
+                      fontSize: "12px",
+                      padding: "2px 8px",
+                      borderRadius: "4px",
+                      whiteSpace: "nowrap",
+                      opacity: 0,
+                      pointerEvents: "none",
+                      transition: "opacity 0.2s",
+                      zIndex: 10,
+                    }}
+                  >
+                    {t("Delete")}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       <Modal isOpen={deleteData.show} toggle={() => setDeleteData({ show: false, current: {} })}>
         <ModalHeader toggle={() => setDeleteData({ show: false, current: {} })}>

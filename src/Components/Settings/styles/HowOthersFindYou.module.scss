@@ -1,0 +1,230 @@
+@use "settings-ui" as ui;
+
+.container {
+  @include ui.tab-root;
+
+  :global(.switch) {
+    margin: 0;
+  }
+}
+
+.sectionHeader {
+  @include ui.section-header;
+}
+
+.sectionText {
+  @include ui.section-text;
+}
+
+.sectionTitle {
+  @include ui.section-title;
+}
+
+.sectionSubtitle {
+  @include ui.section-subtitle;
+}
+
+.button {
+  @include ui.button;
+  @include ui.button-large;
+  margin: 0;
+}
+
+.buttonPrimary {
+  @include ui.button-primary;
+}
+
+// "Updated Successfully!" (shown for 2s after saving)
+.buttonSuccess {
+  background: ui.$success-bg;
+  color: ui.$success-text;
+  cursor: default;
+}
+
+.card {
+  @include ui.card;
+  overflow: hidden;
+}
+
+.cardFooter {
+  @include ui.card-footer;
+  justify-content: flex-end;
+}
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 24px;
+  background: ui.$bg-canvas;
+  border-bottom: 1px solid ui.$border-subtle;
+
+  @media screen and (max-width: ui.$mobile) {
+    padding: 16px;
+  }
+}
+
+.previewLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.36px;
+  color: ui.$text-secondary;
+}
+
+.result {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid ui.$border-subtle;
+  border-radius: 10px;
+  background: ui.$bg-white;
+  box-shadow: 0px 1px 2px 0px rgba(27, 31, 42, 0.04);
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: ui.$primary-50;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: -0.42px;
+  color: ui.$primary;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.resultText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.resultName {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: -0.42px;
+  color: ui.$text-primary;
+  overflow-wrap: anywhere;
+}
+
+.resultUsername {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.42px;
+  color: ui.$primary;
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-top: 6px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: 100px;
+  background: ui.$bg-surface;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.33px;
+  color: ui.$text-primary;
+  white-space: nowrap;
+}
+
+.rows {
+  padding: 0 24px 4px;
+
+  @media screen and (max-width: ui.$mobile) {
+    padding: 0 16px 4px;
+  }
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 0;
+
+  & + & {
+    border-top: 1px solid ui.$border-subtle;
+  }
+}
+
+.tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: ui.$bg-surface;
+}
+
+.rowText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.rowTitle {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.42px;
+  color: ui.$text-primary;
+}
+
+.rowSubtitle {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.42px;
+  color: ui.$text-secondary;
+  overflow-wrap: anywhere;
+}
+
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: ui.$bg-surface;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.42px;
+  color: ui.$text-primary;
+
+  svg {
+    flex-shrink: 0;
+  }
+}

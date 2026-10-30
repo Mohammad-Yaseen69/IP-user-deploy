@@ -293,9 +293,9 @@ const UserState = ({ children }) => {
           if (isKycMissing) {
             setMissingTabsData((prev) => (prev.includes("kyc") ? prev : [...prev, "kyc"]));
           }
-          if (!decrypted?.insta_username && !decrypted?.telegram_bot) {
-            setMissingTabsData((prev) => (prev.includes("social") ? prev : [...prev, "social"]));
-          }
+          // if (!decrypted?.insta_username && !decrypted?.telegram_bot) {
+          //   setMissingTabsData((prev) => (prev.includes("social") ? prev : [...prev, "social"]));
+          // }
 
           return decrypted;
         })

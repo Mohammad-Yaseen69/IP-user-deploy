@@ -1,0 +1,434 @@
+@use "settings-ui" as ui;
+
+.container {
+  @include ui.tab-root;
+}
+
+/* ---------- Shared pieces (see _settings-ui.scss) ---------- */
+
+.sectionHeader {
+  @include ui.section-header;
+}
+
+.sectionText {
+  @include ui.section-text;
+}
+
+.sectionTitle {
+  @include ui.section-title;
+}
+
+.sectionSubtitle {
+  @include ui.section-subtitle;
+}
+
+.button {
+  @include ui.button;
+}
+
+.buttonPrimary {
+  @include ui.button-primary;
+}
+
+.buttonSecondary {
+  @include ui.button-secondary;
+}
+
+.card {
+  @include ui.card;
+}
+
+.cardHeader {
+  @include ui.card-header;
+}
+
+.cardTitle {
+  @include ui.card-title;
+}
+
+.cardSubtitle {
+  @include ui.card-subtitle;
+}
+
+.cardBody {
+  @include ui.card-body;
+}
+
+.grid {
+  @include ui.grid;
+}
+
+.full {
+  @include ui.full;
+}
+
+.field {
+  @include ui.field;
+}
+
+.label {
+  @include ui.label;
+}
+
+.required {
+  @include ui.required;
+}
+
+.counter {
+  @include ui.counter;
+}
+
+.control {
+  @include ui.control;
+}
+
+.leadingIcon {
+  @include ui.overlay-icon;
+  left: 12px;
+}
+
+.trailingIcon {
+  @include ui.overlay-icon;
+  right: 16px;
+}
+
+.inlineSpinner {
+  @include ui.overlay-icon;
+  right: 12px;
+  color: ui.$primary;
+}
+
+.hint {
+  @include ui.hint;
+}
+
+.hintError {
+  @include ui.hint-error;
+}
+
+.editing :global(.form-control):disabled,
+.editing :global(.form-select):disabled {
+  background-color: ui.$bg-canvas;
+  color: ui.$text-muted;
+  cursor: not-allowed;
+}
+
+.locked :global(.form-control),
+.locked :global(.form-control):disabled {
+  color: ui.$text-muted;
+}
+
+/* PhoneInput and CitiesDropDown live outside Settings, styled from the outside only */
+.external {
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  letter-spacing: -0.42px;
+
+  :global(input),
+  :global(select) {
+    font-family: inherit;
+    font-size: 14px;
+    letter-spacing: -0.42px;
+    color: ui.$text-primary;
+  }
+}
+
+/* ---------- Profile card ---------- */
+
+.profileMain {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.avatarWrap {
+  position: relative;
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+}
+
+.avatar,
+.avatarImg {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: ui.$primary-50;
+  color: ui.$primary;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.72px;
+}
+
+.avatarImg {
+  display: block;
+  object-fit: cover;
+  background: ui.$bg-white;
+  box-shadow: 0 0 0 1px ui.$border-subtle;
+}
+
+.avatarEdit {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid ui.$border-subtle;
+  border-radius: 50%;
+  background: ui.$bg-white;
+  box-shadow: 0px 1px 2px 0px rgba(27, 31, 42, 0.08);
+  cursor: pointer;
+
+  &:hover {
+    background: ui.$primary-50;
+  }
+}
+
+.avatarMenu {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+  padding: 4px;
+  background: ui.$bg-white;
+  border: 1px solid ui.$border-subtle;
+  border-radius: 10px;
+  box-shadow: 0px 12px 32px -8px rgba(27, 31, 42, 0.18);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition:
+    opacity 150ms,
+    transform 150ms;
+}
+
+.avatarMenuOpen {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.avatarMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  margin: 0;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.42px;
+  color: ui.$text-primary;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover {
+    background: ui.$bg-canvas;
+  }
+}
+
+.avatarSave {
+  position: absolute;
+  left: 50%;
+  bottom: -12px;
+  transform: translateX(-50%);
+  height: 24px;
+  padding: 0 10px;
+  font-size: 11px;
+}
+
+.profileInfo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.profileName {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: ui.$text-primary;
+  overflow-wrap: anywhere;
+}
+
+.profileMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.42px;
+  color: ui.$text-secondary;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.33px;
+  white-space: nowrap;
+}
+
+.pillSuccess {
+  background: ui.$success-bg;
+  color: ui.$success-text;
+}
+
+.pillWarning {
+  background: ui.$warning-bg;
+  color: ui.$warning-text;
+}
+
+.linkBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+  padding: 4px 4px 4px 12px;
+  flex-shrink: 0;
+  background: ui.$bg-canvas;
+  border: 1px solid ui.$border-subtle;
+  border-radius: 10px;
+
+  > svg {
+    flex-shrink: 0;
+  }
+}
+
+.linkText {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.42px;
+  color: ui.$text-primary;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.copyButton {
+  background: transparent;
+  color: ui.$primary;
+
+  &:not(:disabled):hover {
+    background: ui.$primary-50;
+  }
+}
+
+.completion {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  border-top: 1px solid ui.$border-subtle;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.36px;
+  color: ui.$text-secondary;
+  white-space: nowrap;
+}
+
+.completionTrack {
+  position: relative;
+  flex: 1;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 100px;
+  background: ui.$border-subtle;
+}
+
+.completionFill {
+  height: 100%;
+  border-radius: 100px;
+  background: ui.$primary;
+}
+
+/* ---------- Save bar ---------- */
+
+.saveBar {
+  position: sticky;
+  bottom: 16px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px 10px 18px;
+  border-radius: 14px;
+  background: ui.$text-primary;
+  box-shadow: 0px 24px 60px -20px rgba(23, 20, 31, 0.28);
+}
+
+.saveDot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: ui.$orange;
+}
+
+.saveDotIdle {
+  background: ui.$text-secondary;
+}
+
+.saveText {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.42px;
+  color: ui.$text-inverse;
+}
+
+@media screen and (max-width: 1000px) {
+  // index.jsx already shows the profile-completion banner on mobile
+  .completion {
+    display: none;
+  }
+}
+
+@media screen and (max-width: ui.$mobile) {
+  .profileMain {
+    padding: 16px;
+  }
+
+  .linkBox {
+    width: 100%;
+  }
+
+  .linkText {
+    flex: 1;
+  }
+
+  .completion {
+    padding: 12px 16px;
+  }
+}
