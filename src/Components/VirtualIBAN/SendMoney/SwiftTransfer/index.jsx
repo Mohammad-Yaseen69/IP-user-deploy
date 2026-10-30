@@ -101,6 +101,7 @@ import {
 import MobileStepProgress from "../../VirtualIbanModal/MobileStepProgress";
 import MobileFooter from "../../../../Common/Component/MobileFooter";
 import StepsDrawer from "../../../../Common/Component/StepsDrawer";
+import img from "../../../../assets/images/logo/logo2.png";
 
 const DEFAULT_BENEFICIARY_FORM = {
   type: "individual",
@@ -838,34 +839,37 @@ const downloadSwiftReceipt = ({
     ["Status", status],
   ];
 
+  doc.addImage(img, "png", 14, 10, 46.5, 13);
   doc.setFontSize(20);
-  doc.setFont("helvetica", "bold");
-  doc.text("SWIFT Transfer Receipt", 14, 20);
+  doc.setFont("sans-serif", "normal", "normal");
+  doc.text("SWIFT Transfer Receipt", 14, 35);
 
   doc.setFontSize(10);
-  doc.setFont("helvetica", "normal");
-  doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 28);
+  doc.setFont("sans-serif", "normal", "normal");
+  doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 45);
 
   autoTable(doc, {
-    startY: 36,
+    startY: 50,
     head: [["Details", "Information"]],
     body: rows,
     theme: "grid",
-    styles: { fontSize: 9, cellPadding: 4 },
-    headStyles: { fontStyle: "bold" },
-    columnStyles: {
-      0: { cellWidth: 55, fontStyle: "bold" },
-      1: { cellWidth: 125 },
+    styles: { fontSize: 7 },
+    headStyles: {
+      fontSize: 7,
+      fillColor: [89, 38, 240],
+      textColor: [255, 255, 255],
     },
   });
 
   const finalY = doc.lastAutoTable.finalY + 12;
+  doc.setFont("sans-serif", "normal", "normal");
   doc.setFontSize(9);
   doc.text(
     "The recipient receives the exact previewed USD amount — rate was locked at the time of quote.",
     14,
     finalY,
   );
+  doc.setFont("sans-serif", "normal", "normal");
   doc.setFontSize(8);
   doc.text("This receipt is generated electronically.", 14, finalY + 8);
 
