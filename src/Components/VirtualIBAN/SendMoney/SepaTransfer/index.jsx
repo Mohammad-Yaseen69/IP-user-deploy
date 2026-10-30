@@ -83,6 +83,7 @@ import {
 import { formatCurrency } from "../../../../Helper/AmountFormat";
 import { decryptData } from "../../../../Helper/EssentilaMethods/Decryption";
 import { Info } from "lucide-react";
+import img from "../../../../assets/images/logo/logo2.png";
 
 const DEFAULT_BENEFICIARY_FORM = {
   type: "individual",
@@ -535,61 +536,43 @@ const downloadSepaReceipt = ({
     ["Status", status],
   ];
 
-  doc.setFontSize(24);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(89, 38, 240);
-  doc.text("SEPA Transfer Receipt", margin, 48);
+  doc.addImage(img, "png", 14, 10, 46.5, 13);
+  doc.setFontSize(20);
+  doc.setFont("sans-serif", "normal", "normal");
+  doc.text("SEPA Transfer Receipt", 14, 35);
 
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(130, 130, 138);
-  doc.text(`Generated: ${new Date().toLocaleString()}`, margin, 56);
+  doc.setFontSize(10);
+  doc.setFont("sans-serif", "normal", "normal");
+  doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 45);
 
   autoTable(doc, {
-    startY: 64,
+    startY: 50,
     head: [["Details", "Information"]],
     body: rows,
-    theme: "plain",
+    theme: "grid",
     styles: {
-      fontSize: 9,
-      cellPadding: 4,
-      textColor: [35, 35, 40],
+      fontSize: 7,
     },
     headStyles: {
-      fontStyle: "bold",
+      fontSize: 7,
       fillColor: [89, 38, 240],
       textColor: [255, 255, 255],
-    },
-    alternateRowStyles: {
-      fillColor: [246, 245, 252],
-    },
-    columnStyles: {
-      0: {
-        cellWidth: 55,
-        fontStyle: "bold",
-        textColor: [130, 130, 138],
-      },
-      1: {
-        cellWidth: 125,
-      },
     },
   });
 
   const finalY = doc.lastAutoTable.finalY + 12;
 
+  doc.setFont("sans-serif", "normal", "normal");
   doc.setFontSize(9);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(90, 90, 95);
 
   doc.text(
     "The recipient receives the full amount - no correspondent-bank deductions in SEPA.",
-    margin,
+    14,
     finalY,
   );
 
   doc.setFontSize(8);
-  doc.setTextColor(130, 130, 138);
-  doc.text("This receipt is generated electronically.", margin, finalY + 8);
+  doc.text("This receipt is generated electronically.", 14, finalY + 8);
   const safeTrackingReference = String(trackingReference || "receipt")
     .replace(/[<>:"/\\|?*\u0000-\u001F]/g, "-")
     .replace(/\s+/g, "-");
