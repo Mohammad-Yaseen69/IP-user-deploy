@@ -1,6 +1,10 @@
+import { lazy, Suspense } from "react";
 import load from "../../assets/load.gif";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import LottieFile from "./LoaderLottie.lottie";
+
+const DotLottieReact = lazy(() =>
+  import("@lottiefiles/dotlottie-react").then((m) => ({ default: m.DotLottieReact })),
+);
 
 const InstaPayLoader = ({ opacity = 1, fallback = false, transparent, fullHeight = false }) => {
   if (fallback) {
@@ -18,15 +22,17 @@ const InstaPayLoader = ({ opacity = 1, fallback = false, transparent, fullHeight
         }}
         aria-hidden="true"
       >
-        <DotLottieReact
-          src={LottieFile}
-          backgroundColor="transparent"
-          speed="1"
-          style={{ width: "100%", height: "100%" }}
-          playMode="normal"
-          loop={true}
-          autoplay={true}
-        />
+        <Suspense fallback={null}>
+          <DotLottieReact
+            src={LottieFile}
+            backgroundColor="transparent"
+            speed="1"
+            style={{ width: "100%", height: "100%" }}
+            playMode="normal"
+            loop={true}
+            autoplay={true}
+          />
+        </Suspense>
       </div>
     );
   }
