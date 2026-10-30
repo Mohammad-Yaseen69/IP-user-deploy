@@ -549,7 +549,7 @@ const downloadSepaReceipt = ({
     startY: 50,
     head: [["Details", "Information"]],
     body: rows,
-    theme: "plain",
+    theme: "grid",
     styles: {
       fontSize: 7,
     },
@@ -567,13 +567,12 @@ const downloadSepaReceipt = ({
 
   doc.text(
     "The recipient receives the full amount - no correspondent-bank deductions in SEPA.",
-    margin,
+    14,
     finalY,
   );
 
   doc.setFontSize(8);
-  doc.setTextColor(130, 130, 138);
-  doc.text("This receipt is generated electronically.", margin, finalY + 8);
+  doc.text("This receipt is generated electronically.", 14, finalY + 8);
   const safeTrackingReference = String(trackingReference || "receipt")
     .replace(/[<>:"/\\|?*\u0000-\u001F]/g, "-")
     .replace(/\s+/g, "-");
