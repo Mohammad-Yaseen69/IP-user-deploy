@@ -5,7 +5,7 @@ import { ChevronRight, MessageSquare, Receipt } from "lucide-react";
 import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router";
-import { AmountCell, PartyCell, StatusCell, TxCell } from "../../Common/Ledger/cells";
+import { AmountCell, PartyCell, StatusCell, TxCell } from "../../Common/Ledger/Cells";
 import s from "../../Common/Ledger/ledger.module.scss";
 import { capitalizeStatus, isVoid } from "../../Common/Ledger/utils";
 import { UserContext } from "../../Context/UserContext";
