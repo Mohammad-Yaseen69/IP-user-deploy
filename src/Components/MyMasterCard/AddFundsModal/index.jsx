@@ -18,6 +18,9 @@ import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow";
 import ErrorModal from "../../PaymentsNewer/InternationalFlow/ErrorModal";
 import { LimitsErrorMessage } from "../../../utils/Functions/paymentLimits";
 import OTPConfirmation from "../../../Common/Component/OtpVerification";
+import PaytentlyHostedModal from "../../AddFunds/PaytentlyHostedModal";
+import { initiatePaytentlyPayment, usePaytently } from "../../../utils/Functions/paytently";
+import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
 import { AddFunds, CircleCheck, Currency, Receipt } from "../files";
 import ConfirmationStep from "../PaymentModal/ConfirmationStep";
 import ContactBox from "../PaymentModal/ContactBox";
@@ -180,6 +183,23 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
   const navigate = useNavigate();
   const [disabled, setDisabled] = useState(false);
   const [cardTransactionDetails, setCardTransactionDetails] = useState({});
+  const [paytentlyHosted, setPaytentlyHosted] = useState(null);
+  const { getKey } = useIdempotency();
+
+  // The quote is priced in the card's currency and the wallet is credited that
+  // same figure, so the wallet has to match the card.
+  const vccWallet = useMemo(
+    () =>
+      (userWallets ?? []).find(
+        (item) =>
+          item?.wallet_type === "insta" &&
+          !item?.blocked &&
+          !item?.admin_blocked &&
+          item?.status === "active" &&
+          item?.currency?.code === (card?.currency || "USD"),
+      ) ?? null,
+    [userWallets, card],
+  );
 
   const sendOtp = async (methodId) => {
     const otpMethod = typeof methodId === "string" ? methodId : codeType;
@@ -243,7 +263,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
       sendOtp();
       return;
     }
-    if (paymentType === "paypal" && step === 2) {
+    if ((paymentType === "paypal" || (usePaytently && paymentType === "card")) && step === 2) {
       mutateAsync(amount).finally(() => setStep((prev) => prev + 2));
     } else if (step === 3) {
       mutateAsync(amount).finally(() => setStep((prev) => prev + 1));
@@ -327,8 +347,38 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
 
     const enc = encryptData(data);
 
-    console.log(data);
     try {
+      // Paytently collects the card on its own hosted form; the topup credits the
+      // wallet and the flow moves it straight onto the card.
+      if (usePaytently) {
+        if (!vccWallet?._id) {
+          setError(
+            t("You need an active {{currency}} wallet to top up this card by card.", {
+              currency: card?.currency || "USD",
+            }),
+          );
+          return;
+        }
+        const dec = await initiatePaytentlyPayment({
+          walletId: vccWallet._id,
+          flow: "vcc",
+          otp: { token, otp, type: codeType },
+          idempotencyKey: getKey(),
+        });
+        if (!dec?.hosted_forms_url) {
+          setError(
+            LimitsErrorMessage(dec?.code ?? dec?.message) ??
+              dec?.message ??
+              t("We couldn't process your request at the moment! please try again later."),
+          );
+          return;
+        }
+        setToken(null);
+        setshowOtpModal(false);
+        setPaytentlyHosted({ hostedUrl: dec.hosted_forms_url, authorizeUrl: dec.authorize_url });
+        return;
+      }
+
       const res = await axios.post(
         `${import.meta.env.VITE_IP_DEV_API}/api/mastercard/topup-by${!selectedSaveCard?._id ? "-new" : ""}-card`,
         { data: enc },
@@ -340,9 +390,8 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
       setshowOtpModal(false);
       const dec = decryptData(res.data.data);
       setCardTransactionDetails(dec.data);
-      console.log(dec);
     } catch (err) {
-      const decrypted = decryptData(err.response.data.data);
+      const decrypted = err?.response?.data?.data ? decryptData(err.response.data.data) : {};
       const error1 = LimitsErrorMessage(decrypted?.code ?? decrypted?.message);
       const error2 = apiErrorMessage(decrypted?.message);
       if (error2) {
@@ -441,7 +490,11 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
         break;
       case 2:
         setSideText(width > 1000 ? t("Choose the method") : t("Select Payment Type"));
-        setDisabled(!paymentType || (paymentType === "paypal" && !feeDetails.token));
+        setDisabled(
+          !paymentType ||
+            ((paymentType === "paypal" || (usePaytently && paymentType === "card")) &&
+              !feeDetails.token),
+        );
         break;
       case 3:
         setDisabled(!feeDetails.token && !walletState._id);
@@ -498,7 +551,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
       });
       setSelectedSaveCard({});
     }
-    if (step === 4 && paymentType === "paypal") {
+    if (step === 4 && (paymentType === "paypal" || (usePaytently && paymentType === "card"))) {
       setStep((prev) => prev - 2);
     } else {
       setStep((prev) => prev - 1);
@@ -759,6 +812,13 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
           />
         </ModalBody>
       </Modal>
+
+      <PaytentlyHostedModal
+        isOpen={!!paytentlyHosted?.hostedUrl}
+        hostedUrl={paytentlyHosted?.hostedUrl}
+        authorizeUrl={paytentlyHosted?.authorizeUrl}
+        onClose={() => setPaytentlyHosted(null)}
+      />
 
       {cardTransactionDetails?.transaction_id ? (
         <TrustpaymentPage

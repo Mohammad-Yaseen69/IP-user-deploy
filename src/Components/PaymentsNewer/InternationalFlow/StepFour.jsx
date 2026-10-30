@@ -17,6 +17,7 @@ import TypingSpan from "../../TypingSpan";
 import { UserContext } from "../../../Context/UserContext";
 import { useQuery } from "@tanstack/react-query";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
+import { usePaytently } from "../../../utils/Functions/paytently";
 
 export const typesData = [
   {
@@ -303,7 +304,7 @@ const StepFour = ({
                 className={`${styles.item} ${item.status !== "Active" ? styles.disabled : ""}`}
                 key={item.name}
                 onClick={() => {
-                  if (item.value === "card" && userDetails?.username !== "ahmed") {
+                  if (item.value === "card" && !usePaytently) {
                     setShowCardMaintenanceModal(true);
                     return;
                   }
