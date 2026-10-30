@@ -128,6 +128,10 @@ export const isValidRoutingNumber = (value) => {
 
 export const isValidSwiftCode = (value) => isValidBic(value);
 
+export const isValidBsbNumber = (value) => /^\d{3}-?\d{3}$/.test(value);
+
+export const isValidIfscCode = (value) => /^[A-Z]{4}0[A-Z0-9]{6}$/.test(value);
+
 const CHECKS = {
   iban: {
     isValid: isValidIban,
@@ -141,6 +145,14 @@ const CHECKS = {
     isValid: isValidSwiftCode,
     error: "A SWIFT / BIC code is 8 or 11 characters.",
   },
+  bsb_number: {
+    isValid: isValidBsbNumber,
+    error: "A BSB number is 6 numeric characters.",
+  },
+  ifsc: {
+    isValid: isValidIfscCode,
+    error: "Please enter a valid 11-character IFSC code XXXX0YYYYYY",
+  },
 };
 
 export const isCheckedIdentifier = (kind) => !!CHECKS[kind];
@@ -150,6 +162,7 @@ export const isCheckedIdentifier = (kind) => !!CHECKS[kind];
 export const collectIdentifierErrors = (names, values, getType) =>
   names.reduce((errors, name) => {
     const check = CHECKS[getType(name)];
+
     const value = String(values?.[name] || "").trim();
 
     if (!check || !value || check.isValid(value)) return errors;
@@ -177,6 +190,13 @@ export const checkIdentifier = (kind, value) => {
 
   return {
     state: "valid",
-    message: kind === "bic" ? "Valid SWIFT / BIC" : "Valid routing number",
+    message:
+      kind === "bic"
+        ? "Valid SWIFT / BIC"
+        : kind === "bsb_number"
+          ? "Valid BSB number"
+          : kind === "ifsc"
+            ? "Valid IFSC code"
+            : "Valid routing number",
   };
 };

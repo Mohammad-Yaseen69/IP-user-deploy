@@ -67,6 +67,20 @@
   outline-offset: 2px;
 }
 
+.bounds {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.bubble {
+  cursor: grab;
+}
+
+.bubble:active {
+  cursor: grabbing;
+}
+
 /* While the chat is open the orb sits in the header, so the corner is empty. */
 .bubbleParked {
   pointer-events: none;
@@ -136,6 +150,7 @@
 }
 
 @keyframes orbBlink {
+
   0%,
   90%,
   100% {
@@ -154,6 +169,7 @@
 }
 
 @keyframes orbWink {
+
   0%,
   100% {
     transform: scaleY(1);
@@ -318,6 +334,7 @@
 }
 
 @keyframes pulse {
+
   0%,
   100% {
     box-shadow: 0 0 0 0 rgba(224, 67, 67, 0.5);
@@ -329,6 +346,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .recording,
   .orbEye,
   .orb[data-wink="true"] .orbEye:first-child {
@@ -495,6 +513,7 @@
 }
 
 @keyframes blink {
+
   0%,
   80%,
   100% {
