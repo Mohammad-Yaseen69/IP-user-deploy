@@ -9,31 +9,48 @@ import { useLocation, useNavigate } from "react-router";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { DateGroup, EmptyState } from "../../Common/Ledger/Cells";
+import { ActiveFilters } from "../../Common/Ledger/Filters";
 import Ledger from "../../Common/Ledger/Ledger";
 import s from "../../Common/Ledger/ledger.module.scss";
-import { partyName } from "../../Common/Ledger/utils";
+import Pagination from "../../Common/Ledger/Pagination";
 import InstaPayLoader from "../Loader";
 import styles from "../TransactionsNewApi/styles/index.module.scss";
 import TopRight from "../topRight";
 import QuotationRow, { isOpenQuotation } from "./QuotationRow";
 
+const LIMIT = 15;
+const FIRST_PAGES = { received: 1, sent: 1 };
+
+const defaultRange = { startDate: new Date(), endDate: new Date(), key: "selection" };
+
 const byNewest = (a, b) => new Date(b.createdAt) - new Date(a.createdAt);
 
-const useQuotations = (key, path) => {
+const useQuotations = (key, path, page, search, apiDates) => {
   const { userDetails, authHeader } = useContext(UserContext);
   return useQuery({
-    queryKey: [key, userDetails?._id],
+    queryKey: [key, userDetails?._id, page, search, apiDates],
     queryFn: async () => {
+      const query = new URLSearchParams({
+        ...(search && { search }),
+        ...apiDates,
+        page,
+        limit: LIMIT,
+      }).toString();
       const response = await axios.get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/quotation/${path}/${userDetails?._id}`,
+        `${import.meta.env.VITE_IP_DEV_API}/api/quotation/${path}/${userDetails?._id}${query ? `?${query}` : ""}`,
         { headers: authHeader },
       );
       const decrypted = await decryptData(response?.data?.data);
-      return decrypted?.quotation ?? [];
+      return {
+        list: decrypted?.quotation ?? [],
+        total: decrypted?.total ?? 0,
+      };
     },
     enabled: !!userDetails?._id,
   });
 };
+
+const totalOf = (query) => query.data?.total || query.data?.list.length || 0;
 
 const Quotations = () => {
   const navigate = useNavigate();
@@ -46,44 +63,49 @@ const Quotations = () => {
 
   const [active, setActive] = useState("received");
   const [activeItem, setActiveItem] = useState(0);
+  const [pages, setPages] = useState(FIRST_PAGES);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [apiDates, setApiDates] = useState(null);
-  const [dateRange, setDateRange] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
-    key: "selection",
-  });
+  const [dateRange, setDateRange] = useState(defaultRange);
 
-  const { data: receivedQuotations = [], isLoading: loadingReceived } = useQuotations(
+  const receivedQuery = useQuotations(
     "receivedQuotations",
     "get-quotation-by-reciever",
+    pages.received,
+    debouncedSearch,
+    apiDates,
   );
-  const { data: sentQuotations = [], isLoading: loadingSent } = useQuotations(
+  const sentQuery = useQuotations(
     "sentQuotations",
     "get-quotation-by-sender",
+    pages.sent,
+    debouncedSearch,
+    apiDates,
   );
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setPages(FIRST_PAGES);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   useEffect(() => {
     if (tab) setActive(tab === "received" ? "received" : "sent");
   }, [tab]);
 
   useEffect(() => {
-    const list = tab === "sent" ? sentQuotations : tab === "received" ? receivedQuotations : [];
-    if (id && list.some((i) => i?._id === id)) setActiveItem(id);
-  }, [tab, id, sentQuotations, receivedQuotations]);
-
-  const visible = (list, party) =>
-    [...list]
-      .sort(byNewest)
-      .filter((item) => partyName(item?.[party]).toLowerCase().includes(searchQuery.toLowerCase()));
-  const received = useMemo(
-    () => visible(receivedQuotations, "sender"),
-    [receivedQuotations, searchQuery],
-  );
-  const sent = useMemo(() => visible(sentQuotations, "reciever"), [sentQuotations, searchQuery]);
+    const list =
+      tab === "sent" ? sentQuery.data?.list : tab === "received" ? receivedQuery.data?.list : [];
+    if (id && list?.some((i) => i?._id === id)) setActiveItem(id);
+  }, [tab, id, sentQuery.data, receivedQuery.data]);
 
   const isReceived = active === "received";
-  const list = isReceived ? received : sent;
+  const current = isReceived ? receivedQuery : sentQuery;
+  const total = totalOf(current);
+  const list = useMemo(() => [...(current.data?.list ?? [])].sort(byNewest), [current.data]);
 
   const groups = useMemo(() => {
     const open = list.filter(isOpenQuotation);
@@ -100,6 +122,13 @@ const Quotations = () => {
       to: selection.endDate.toISOString().split("T")[0],
     });
     setDateRange(selection);
+    setPages(FIRST_PAGES);
+  };
+
+  const clearDates = () => {
+    setApiDates(null);
+    setDateRange(defaultRange);
+    setPages(FIRST_PAGES);
   };
 
   const dateLabel = apiDates
@@ -111,8 +140,8 @@ const Quotations = () => {
   const ledger = (
     <Ledger
       tabs={[
-        { key: "received", label: "Received", count: receivedQuotations.length },
-        { key: "sent", label: "Sent", count: sentQuotations.length },
+        { key: "received", label: "Received", count: totalOf(receivedQuery) },
+        { key: "sent", label: "Sent", count: totalOf(sentQuery) },
       ]}
       active={active}
       onTab={(key) => {
@@ -124,9 +153,20 @@ const Quotations = () => {
         onChange: setSearchQuery,
         placeholder: t("Search name, amount or quotation ID"),
       }}
+      hideFilters={true}
+      hideDownload={true}
       dateRange={dateRange}
       onDateChange={handleChange}
       dateLabel={dateLabel}
+      activeFilters={
+        <ActiveFilters
+          groups={[]}
+          filters={{}}
+          dateLabel={apiDates && dateLabel}
+          onClearDate={clearDates}
+          onClearAll={clearDates}
+        />
+      }
       columns={[
         "Quotation",
         isReceived ? "From" : "Sent to",
@@ -137,7 +177,7 @@ const Quotations = () => {
       ]}
       template="2.2fr 1.6fr 112px 1fr 1fr 180px"
     >
-      {loadingReceived || loadingSent ? (
+      {current.isLoading ? (
         <div className={s.loader}>
           <InstaPayLoader />
         </div>
@@ -157,9 +197,16 @@ const Quotations = () => {
               ))}
             </div>
           ))}
-          <p className={s.count}>
-            {t("Showing")} {list.length} {t(isReceived ? "received quotations" : "sent quotations")}
-          </p>
+          <Pagination
+            page={pages[active]}
+            total={total}
+            limit={LIMIT}
+            noun={t("quotations")}
+            onPage={(page) => {
+              setPages((prev) => ({ ...prev, [active]: page }));
+              setActiveItem(0);
+            }}
+          />
         </>
       ) : (
         <EmptyState Icon={FileText} title={t("No Quotations")} />

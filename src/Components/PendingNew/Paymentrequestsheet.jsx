@@ -127,9 +127,9 @@ const PaymentRequestSheet = ({
       ) : (
         <>
           <div className={s.footRow}>
-            <button type="button" className={s.btnSoftDanger} disabled>
+            {/* <button type="button" className={s.btnSoftDanger} disabled>
               {t("Cancel request")}
-            </button>
+            </button> */}
             <button type="button" className={s.btnPrimary} disabled>
               {t("Send reminder")}
             </button>

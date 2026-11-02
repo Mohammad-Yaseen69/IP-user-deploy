@@ -163,9 +163,9 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
             </>
           ) : pending ? (
             <>
-              <button type="button" className={s.textBtn} disabled onClick={stop(() => {})}>
+              {/* <button type="button" className={s.textBtn} disabled onClick={stop(() => {})}>
                 {t("Cancel")}
-              </button>
+              </button> */}
               <button
                 type="button"
                 className={`${s.btn} ${s.sm}`}

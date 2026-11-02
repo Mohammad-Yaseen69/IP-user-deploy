@@ -6,40 +6,47 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router";
 import { DateGroup, EmptyState } from "../../Common/Ledger/Cells";
+import { ActiveFilters } from "../../Common/Ledger/Filters";
 import Ledger from "../../Common/Ledger/Ledger";
 import s from "../../Common/Ledger/ledger.module.scss";
+import Pagination from "../../Common/Ledger/Pagination";
 import { UserContext } from "../../Context/UserContext";
 import { formatCurrency } from "../../Helper/AmountFormat";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import InstaPayLoader from "../Loader";
 import PaymentRequestRow from "./PaymentRequestRow";
-import r from "./requests.module.scss";
 
 const RECEIVED = "Received Requests";
 const SENT = "Sent Requests";
-const SEARCH_FIELDS = ["first_name", "last_name", "company_name"];
+const LIMIT = 15;
+const FIRST_PAGES = { [RECEIVED]: 1, [SENT]: 1 };
+
+const defaultRange = { startDate: new Date(), endDate: new Date(), key: "selection" };
 
 const byNewest = (a, b) => new Date(b.createdAt) - new Date(a.createdAt);
 
-const visible = (list, party, query) => {
-  const q = query.toLowerCase();
-  const matches = (item) =>
-    SEARCH_FIELDS.some((k) => item?.[party]?.user?.[k]?.toLowerCase()?.includes(q));
-  return [...list].sort(byNewest).filter((item) => !q || matches(item));
-};
-
-const useRequests = (key, path, label) => {
+const useRequests = (key, path, label, page, search, apiDates) => {
   const { userDetails, authHeader } = useContext(UserContext);
   return useQuery({
-    queryKey: [key, userDetails?._id],
+    queryKey: [key, userDetails?._id, page, search, apiDates],
     queryFn: async () => {
       try {
+        const query = new URLSearchParams({
+          ...(search && { search }),
+          ...apiDates,
+          page,
+          limit: LIMIT,
+        }).toString();
         const res = await axios.get(
-          `${import.meta.env.VITE_IP_DEV_API}/api/account/${path}/${userDetails?._id}`,
+          `${import.meta.env.VITE_IP_DEV_API}/api/account/${path}/${userDetails?._id}${query ? `?${query}` : ""}`,
           { headers: authHeader },
         );
-        return decryptData(res.data.data)?.paymentRequests ?? [];
+        const decrypted = decryptData(res.data.data);
+        return {
+          list: decrypted?.paymentRequests ?? [],
+          total: decrypted?.total ?? 0,
+        };
       } catch (err) {
         throw new Error(err.response?.data?.message || `Failed to fetch ${label} requests`);
       }
@@ -47,6 +54,8 @@ const useRequests = (key, path, label) => {
     enabled: !!userDetails?._id,
   });
 };
+
+const totalOf = (query) => query.data?.total || query.data?.list.length || 0;
 
 const PaymentRequestsTable = () => {
   const { t } = useTranslation();
@@ -59,24 +68,39 @@ const PaymentRequestsTable = () => {
 
   const [active, setActive] = useState(RECEIVED);
   const [activeItem, setActiveItem] = useState(0);
+  const [pages, setPages] = useState(FIRST_PAGES);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [apiDates, setApiDates] = useState(null);
-  const [dateRange, setDateRange] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
-    key: "selection",
-  });
+  const [dateRange, setDateRange] = useState(defaultRange);
 
-  const { data: receivedRequests = [], isLoading: loadingReceived } = useRequests(
+  const receivedQuery = useRequests(
     "receivedPaymentRequests",
     "get-user-receive-payment-request",
     "received",
+    pages[RECEIVED],
+    debouncedSearch,
+    apiDates,
   );
-  const { data: sentRequests = [], isLoading: loadingSent } = useRequests(
+  const sentQuery = useRequests(
     "sentPaymentRequests",
     "get-user-send-payment-request",
     "sent",
+    pages[SENT],
+    debouncedSearch,
+    apiDates,
   );
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setPages(FIRST_PAGES);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  const receivedRequests = receivedQuery.data?.list ?? [];
+  const sentRequests = sentQuery.data?.list ?? [];
 
   useEffect(() => {
     if (tab) setActive(tab.toLowerCase().includes("received") ? RECEIVED : SENT);
@@ -89,20 +113,15 @@ const PaymentRequestsTable = () => {
     if (tab === "received" && receivedRequests.length > 0) {
       setActiveItem(receivedRequests.findIndex((i) => i?._id === id) + 1);
     }
-  }, [tab, id, sentRequests, receivedRequests, currentIndex]);
+  }, [tab, id, sentQuery.data, receivedQuery.data, currentIndex]);
 
-  const received = useMemo(
-    () => visible(receivedRequests, "sender", searchQuery),
-    [receivedRequests, searchQuery],
-  );
-  const sent = useMemo(
-    () => visible(sentRequests, "receiver", searchQuery),
-    [sentRequests, searchQuery],
-  );
+  const received = useMemo(() => [...receivedRequests].sort(byNewest), [receivedQuery.data]);
+  const sent = useMemo(() => [...sentRequests].sort(byNewest), [sentQuery.data]);
 
+  const isUnfilteredFirstPage = pages[RECEIVED] === 1 && !debouncedSearch && !apiDates;
   useEffect(() => {
     const latest = received[0]?._id;
-    if (!latest) return;
+    if (!latest || !isUnfilteredFirstPage) return;
     axios.put(
       `${import.meta.env.VITE_IP_DEV_API}/api/account/update-${userDetails?.account_type}/${userDetails?._id}`,
       {
@@ -116,7 +135,9 @@ const PaymentRequestsTable = () => {
   }, [received, userDetails]);
 
   const isReceived = active === RECEIVED;
+  const current = isReceived ? receivedQuery : sentQuery;
   const list = isReceived ? received : sent;
+  const total = totalOf(current);
 
   const groups = useMemo(() => {
     const rows = list.map((item, index) => ({ item, index }));
@@ -129,10 +150,10 @@ const PaymentRequestsTable = () => {
 
   const meta = (rows, withTotal) => {
     const codes = [...new Set(rows.map(({ item }) => item?.currency?.code))];
-    const total = rows.reduce((sum, { item }) => sum + Number(item?.amount ?? 0), 0);
+    const sum = rows.reduce((acc, { item }) => acc + Number(item?.amount ?? 0), 0);
     return [
       `${rows.length} ${t(rows.length === 1 ? "request" : "requests")}`,
-      withTotal && codes.length === 1 && `${formatCurrency(total, true)} ${codes[0]}`,
+      withTotal && codes.length === 1 && `${formatCurrency(sum, true)} ${codes[0]}`,
     ]
       .filter(Boolean)
       .join(" · ");
@@ -145,6 +166,13 @@ const PaymentRequestsTable = () => {
       to: selection.endDate.toISOString().split("T")[0],
     });
     setDateRange(selection);
+    setPages(FIRST_PAGES);
+  };
+
+  const clearDates = () => {
+    setApiDates(null);
+    setDateRange(defaultRange);
+    setPages(FIRST_PAGES);
   };
 
   const dateLabel = apiDates
@@ -153,12 +181,17 @@ const PaymentRequestsTable = () => {
 
   return (
     <Ledger
+      hideFilters={true}
+      hideDownload={true}
       tabs={[
-        { key: RECEIVED, label: "Received", count: receivedRequests.length },
-        { key: SENT, label: "Sent", count: sentRequests.length },
+        { key: RECEIVED, label: "Received", count: totalOf(receivedQuery) },
+        { key: SENT, label: "Sent", count: totalOf(sentQuery) },
       ]}
       active={active}
-      onTab={setActive}
+      onTab={(key) => {
+        setActive(key);
+        setActiveItem(0);
+      }}
       search={{
         value: searchQuery,
         onChange: setSearchQuery,
@@ -167,10 +200,19 @@ const PaymentRequestsTable = () => {
       dateRange={dateRange}
       onDateChange={handleChange}
       dateLabel={dateLabel}
+      activeFilters={
+        <ActiveFilters
+          groups={[]}
+          filters={{}}
+          dateLabel={apiDates && dateLabel}
+          onClearDate={clearDates}
+          onClearAll={clearDates}
+        />
+      }
       columns={["Request", isReceived ? "From" : "Sent to", "Status", "Due", "Amount", ""]}
       template="minmax(0, 1fr) 196px 104px 110px 150px 172px"
     >
-      {loadingReceived || loadingSent ? (
+      {current.isLoading ? (
         <div className={s.loader}>
           <InstaPayLoader />
         </div>
@@ -191,9 +233,16 @@ const PaymentRequestsTable = () => {
               ))}
             </div>
           ))}
-          <p className={r.foot}>
-            {t("Showing")} {list.length} {t(isReceived ? "received requests" : "sent requests")}
-          </p>
+          <Pagination
+            page={pages[active]}
+            total={total}
+            limit={LIMIT}
+            noun={t(isReceived ? "received requests" : "sent requests")}
+            onPage={(page) => {
+              setPages((prev) => ({ ...prev, [active]: page }));
+              setActiveItem(0);
+            }}
+          />
         </>
       ) : (
         <EmptyState Icon={Receipt} title={t("No Pending Items")} />
