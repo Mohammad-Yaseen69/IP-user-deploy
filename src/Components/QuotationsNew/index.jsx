@@ -25,16 +25,16 @@ const defaultRange = { startDate: new Date(), endDate: new Date(), key: "selecti
 
 const byNewest = (a, b) => new Date(b.createdAt) - new Date(a.createdAt);
 
-const useQuotations = (key, path, page, search, apiDates) => {
+const useQuotations = (key, path, page, limit, search, apiDates) => {
   const { userDetails, authHeader } = useContext(UserContext);
   return useQuery({
-    queryKey: [key, userDetails?._id, page, search, apiDates],
+    queryKey: [key, userDetails?._id, page, limit, search, apiDates],
     queryFn: async () => {
       const query = new URLSearchParams({
         ...(search && { search }),
         ...apiDates,
         page,
-        limit: LIMIT,
+        limit,
       }).toString();
       const response = await axios.get(
         `${import.meta.env.VITE_IP_DEV_API}/api/quotation/${path}/${userDetails?._id}${query ? `?${query}` : ""}`,
@@ -43,10 +43,11 @@ const useQuotations = (key, path, page, search, apiDates) => {
       const decrypted = await decryptData(response?.data?.data);
       return {
         list: decrypted?.quotation ?? [],
-        total: decrypted?.total ?? 0,
+        total: decrypted?.pagination?.total ?? 0,
       };
     },
     enabled: !!userDetails?._id,
+    retry: false,
   });
 };
 
@@ -64,6 +65,7 @@ const Quotations = () => {
   const [active, setActive] = useState("received");
   const [activeItem, setActiveItem] = useState(0);
   const [pages, setPages] = useState(FIRST_PAGES);
+  const [limit, setLimit] = useState(10);
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [apiDates, setApiDates] = useState(null);
@@ -73,6 +75,7 @@ const Quotations = () => {
     "receivedQuotations",
     "get-quotation-by-reciever",
     pages.received,
+    limit,
     debouncedSearch,
     apiDates,
   );
@@ -80,6 +83,7 @@ const Quotations = () => {
     "sentQuotations",
     "get-quotation-by-sender",
     pages.sent,
+    limit,
     debouncedSearch,
     apiDates,
   );
@@ -200,7 +204,8 @@ const Quotations = () => {
           <Pagination
             page={pages[active]}
             total={total}
-            limit={LIMIT}
+            limit={limit}
+            setLimit={setLimit}
             noun={t("quotations")}
             onPage={(page) => {
               setPages((prev) => ({ ...prev, [active]: page }));

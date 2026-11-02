@@ -1,11 +1,11 @@
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import dayjs from "dayjs";
 import { ChevronRight, MessageSquare, Receipt } from "lucide-react";
 import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router";
-import { AmountCell, PartyCell, StatusCell, TxCell } from "../../Common/Ledger/cells";
+import { AmountCell, PartyCell, StatusCell, TxCell } from "../../Common/Ledger/Cells";
 import s from "../../Common/Ledger/ledger.module.scss";
 import { capitalizeStatus, isVoid } from "../../Common/Ledger/utils";
 import { UserContext } from "../../Context/UserContext";
@@ -15,6 +15,8 @@ import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import PaymentRequestSheet from "./Paymentrequestsheet";
 import RejectModal from "./RejectModal";
 import ReviewModal from "./ReviewModal";
+import { apiWrapper } from "../../utils/Functions/apiWrapper";
+import { toast } from "react-toastify";
 
 const partyName = ({ user, company, company_name } = {}) =>
   [user?.first_name || company?.company_name || company_name, user?.last_name]
@@ -117,6 +119,23 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
     }
   };
 
+  const { mutate: sendReminder, isPending } = useMutation({
+    mutationFn: async () => {
+      return await apiWrapper({
+        endpoint: `/api/account/send-payment-request-reminder/${item?._id}`,
+        method: "POST",
+        isDecrypted: true,
+      });
+    },
+    onSuccess: (res) => {
+      toast.success(res?.message ?? t("Reminder sent successfully"));
+    },
+    onError: (error) => {
+      const decrypted = decryptData(error?.response?.data?.data);
+      toast.error(decrypted?.message ?? t("Failed to send reminder!"));
+    },
+  });
+
   const due = item?.dueDate && `${t("Due")} ${dayjs(item.dueDate).format("D MMM")}`;
 
   return (
@@ -169,8 +188,8 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
               <button
                 type="button"
                 className={`${s.btn} ${s.sm}`}
-                disabled
-                onClick={stop(() => {})}
+                disabled={isPending}
+                onClick={stop(sendReminder)}
               >
                 {t("Send reminder")}
               </button>
@@ -189,6 +208,8 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
           label={label}
           allRating={allRating}
           allReviews={allReviews}
+          reminderLoading={isPending}
+          onSendReminder={sendReminder}
           onClose={() => setActiveItem(0)}
           onReject={() => setShowReject(true)}
           onReview={() => setShowReview(true)}

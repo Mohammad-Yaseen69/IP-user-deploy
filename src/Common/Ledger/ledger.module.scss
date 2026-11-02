@@ -789,6 +789,12 @@ p.note {
     }
   }
 
+  select {
+    border: 1px solid $muted;
+    border-radius: 6px;
+    padding: 4px;
+  }
+
   span {
     color: $muted;
   }

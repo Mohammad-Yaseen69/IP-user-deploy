@@ -30,6 +30,8 @@ const PaymentRequestSheet = ({
   onClose,
   onReject,
   onReview,
+  onSendReminder,
+  reminderLoading,
 }) => {
   const { t } = useTranslation();
   const { userWallets } = useContext(UserContext);
@@ -130,7 +132,12 @@ const PaymentRequestSheet = ({
             {/* <button type="button" className={s.btnSoftDanger} disabled>
               {t("Cancel request")}
             </button> */}
-            <button type="button" className={s.btnPrimary} disabled>
+            <button
+              type="button"
+              className={s.btnPrimary}
+              disabled={reminderLoading}
+              onClick={onSendReminder}
+            >
               {t("Send reminder")}
             </button>
           </div>

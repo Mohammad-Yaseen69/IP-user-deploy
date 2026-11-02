@@ -19,24 +19,23 @@ import PaymentRequestRow from "./PaymentRequestRow";
 
 const RECEIVED = "Received Requests";
 const SENT = "Sent Requests";
-const LIMIT = 15;
 const FIRST_PAGES = { [RECEIVED]: 1, [SENT]: 1 };
 
 const defaultRange = { startDate: new Date(), endDate: new Date(), key: "selection" };
 
 const byNewest = (a, b) => new Date(b.createdAt) - new Date(a.createdAt);
 
-const useRequests = (key, path, label, page, search, apiDates) => {
+const useRequests = (key, path, label, page, limit, search, apiDates) => {
   const { userDetails, authHeader } = useContext(UserContext);
   return useQuery({
-    queryKey: [key, userDetails?._id, page, search, apiDates],
+    queryKey: [key, userDetails?._id, page, limit, search, apiDates],
     queryFn: async () => {
       try {
         const query = new URLSearchParams({
           ...(search && { search }),
           ...apiDates,
           page,
-          limit: LIMIT,
+          limit,
         }).toString();
         const res = await axios.get(
           `${import.meta.env.VITE_IP_DEV_API}/api/account/${path}/${userDetails?._id}${query ? `?${query}` : ""}`,
@@ -45,13 +44,14 @@ const useRequests = (key, path, label, page, search, apiDates) => {
         const decrypted = decryptData(res.data.data);
         return {
           list: decrypted?.paymentRequests ?? [],
-          total: decrypted?.total ?? 0,
+          total: decrypted?.pagination?.total ?? 0,
         };
       } catch (err) {
         throw new Error(err.response?.data?.message || `Failed to fetch ${label} requests`);
       }
     },
     enabled: !!userDetails?._id,
+    retry: false,
   });
 };
 
@@ -69,6 +69,7 @@ const PaymentRequestsTable = () => {
   const [active, setActive] = useState(RECEIVED);
   const [activeItem, setActiveItem] = useState(0);
   const [pages, setPages] = useState(FIRST_PAGES);
+  const [limit, setLimit] = useState(10);
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [apiDates, setApiDates] = useState(null);
@@ -79,6 +80,7 @@ const PaymentRequestsTable = () => {
     "get-user-receive-payment-request",
     "received",
     pages[RECEIVED],
+    limit,
     debouncedSearch,
     apiDates,
   );
@@ -87,6 +89,7 @@ const PaymentRequestsTable = () => {
     "get-user-send-payment-request",
     "sent",
     pages[SENT],
+    limit,
     debouncedSearch,
     apiDates,
   );
@@ -236,12 +239,13 @@ const PaymentRequestsTable = () => {
           <Pagination
             page={pages[active]}
             total={total}
-            limit={LIMIT}
+            limit={limit}
             noun={t(isReceived ? "received requests" : "sent requests")}
             onPage={(page) => {
               setPages((prev) => ({ ...prev, [active]: page }));
               setActiveItem(0);
             }}
+            setLimit={setLimit}
           />
         </>
       ) : (
