@@ -83,7 +83,6 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
         label: "Nominee",
         Icon: Heart,
         group: "Account",
-        badge: "Add", // static for now, as per Figma
       },
       account_type === "business"
         ? can("settings.business-verification.view") && {
@@ -109,7 +108,6 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
         label: "Password",
         Icon: Key,
         group: "Security",
-        badge: "Due soon", // static for now
       },
       {
         name: "Two Factor Authentication",
