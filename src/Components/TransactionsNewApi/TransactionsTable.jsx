@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { Receipt } from "lucide-react";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
@@ -46,6 +46,7 @@ const defaultRange = {
 };
 
 const TransactionsTable = () => {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [active, setActive] = useState("All");
   const [activeItem, setActiveItem] = useState(0);
@@ -445,7 +446,7 @@ const TransactionsTable = () => {
             title={t("No transactions yet")}
             text={t("Money you send and receive will appear here, grouped by day.")}
           >
-            <button type="button" className={s.btnPrimary}>
+            <button type="button" className={s.btnPrimary} onClick={() => navigate("/wallets")}>
               {t("Add funds")}
             </button>
             <button type="button" className={s.btn} onClick={clearFilters}>
