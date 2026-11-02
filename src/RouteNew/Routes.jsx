@@ -1,10 +1,10 @@
 import { lazy } from "react";
 import { Navigate } from "react-router";
-import BusinessAccount from "../Components/AddBeneficiary/BusinessAccount";
 import { usePermission } from "../hooks/GeneralUse/usePermission";
 import { MENU } from "../Layout/SidebarNew/SbNMenu";
 import { BusinessRoute } from "../hooks/GeneralUse/useBusiness";
 import { AgentRoute } from "../hooks/GeneralUse/useAgent";
+const BusinessAccount = lazy(() => import("../Components/AddBeneficiary/BusinessAccount"));
 const QrCode = lazy(() => import("../Components/QrCode"));
 const QRScan = lazy(() => import("../Components/QrScan"));
 const ChatbotQrCode = lazy(() => import("../Components/ChatbotQrCode"));

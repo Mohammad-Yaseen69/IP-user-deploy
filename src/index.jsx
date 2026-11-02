@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./index.scss";
 import App from "./App";
 // import reportWebVitals from './reportWebVitals';
-import "./i18n";
+import { i18nReady } from "./i18n";
 
 // import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
@@ -75,12 +75,14 @@ if (!import.meta.env.DEV) {
 const container = document.getElementById("root");
 const root = createRoot(container);
 
-root.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
-  document.getElementById("root"),
-);
+i18nReady.then(() => {
+  root.render(
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>,
+    document.getElementById("root"),
+  );
+});
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
