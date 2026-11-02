@@ -1265,8 +1265,8 @@ const Basic = ({ setCurrentTab }) => {
                 <EnvelopeSimple />
               </span>
               <Input
-                disabled={!isEditMode || isKybApproved}
-                readOnly={!isEditMode || isKybApproved}
+                disabled={!isEditMode || !isIndividualAccount}
+                readOnly={!isEditMode || !isIndividualAccount}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -1285,11 +1285,11 @@ const Basic = ({ setCurrentTab }) => {
                 country={countriesData.find((item) => item.alpha3 === country)?.alpha3}
                 disableDropdown={true}
                 setPhone={setPhone}
-                disabled={!isEditMode || isKycApproved}
+                disabled={!isEditMode || isIndividualAccount}
                 newUI={true}
                 customStyles={{
                   padding: "10px 12px",
-                  background: isEditMode && isKycApproved ? "#f8f9fc" : "white",
+                  background: isEditMode && isIndividualAccount ? "#f8f9fc" : "white",
                 }}
               />
             </div>

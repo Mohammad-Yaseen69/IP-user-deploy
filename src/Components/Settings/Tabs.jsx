@@ -309,6 +309,12 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
 
   const isVerified = useMemo(() => isKycApproved, [isKycApproved]);
 
+  const setTab = (tab) => {
+    setCurrentTab(tab);
+    verifyToken();
+    syncTabParam(tab);
+  };
+
   return (
     <div style={{ overflowX: width < 1000 && "visible" }} className={styles.container}>
       {missingTabs?.length > 0 && width > 1000 && profileCompleted && (
@@ -322,9 +328,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
               onClick={() => {
                 if (isTabDisabled(item)) return;
                 window.history.replaceState(null, null, "");
-                setCurrentTab(item?.name);
-                verifyToken();
-                syncTabParam(item?.name);
+                setTab(item?.name);
               }}
             >
               <item.Icon className={styles.icon} color="#5926F0" />
@@ -353,7 +357,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
       />
 
       {width < 1000 && (
-        <div className={styles.profileCard}>
+        <div className={styles.profileCard} onClick={() => setTab(tabsData[0]?.name)}>
           <div className={styles.avatar}>MS</div>
           <div className={styles.profileInfo}>
             <p className={styles.profileName}>{displayName}</p>
@@ -400,9 +404,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                     tabIndex={isDisabled ? -1 : 0}
                     onClick={() => {
                       if (isDisabled) return;
-                      setCurrentTab(item?.name);
-                      verifyToken();
-                      syncTabParam(item?.name);
+                      setTab(item?.name);
                     }}
                   >
                     <item.Icon className={styles.icon} color={"#6E7687"} />
@@ -450,9 +452,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                 onClick={() => {
                   if (isTabDisabled(item)) return;
                   window.history.replaceState(null, null, "");
-                  setCurrentTab(item?.name);
-                  verifyToken();
-                  syncTabParam(item?.name);
+                  setTab(item?.name);
                 }}
               >
                 <item.Icon
