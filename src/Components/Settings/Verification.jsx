@@ -32,6 +32,7 @@ import { useMutation } from "@tanstack/react-query";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import AdditionalFilesSection from "./AdditionalFilesSection";
 import { useIdempotency } from "../../hooks/Payments/useIdempotency";
+import { verifyPaytentlyReturn } from "../../utils/Functions/paytently";
 
 const industries = [
   "Arts & Entertainment",
@@ -233,6 +234,14 @@ const Verification = () => {
       }
     }
   }, [status, userDetails]);
+
+  // Settles a Paytently card fee now in case the webhook is late; no-op for other providers.
+  useEffect(() => {
+    if (!status) return;
+    verifyPaytentlyReturn().then((result) => {
+      if (result) verifyToken(true);
+    });
+  }, [status]);
 
   const clearStatus = () => {
     setStatusModal("");

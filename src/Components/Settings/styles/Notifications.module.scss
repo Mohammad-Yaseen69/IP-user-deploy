@@ -1,0 +1,200 @@
+@use "settings-ui" as ui;
+
+.container {
+  @include ui.tab-root;
+
+  :global(.switch) {
+    margin: 0;
+  }
+}
+
+.sectionHeader {
+  @include ui.section-header;
+}
+
+.sectionText {
+  @include ui.section-text;
+}
+
+.sectionTitle {
+  @include ui.section-title;
+}
+
+.sectionSubtitle {
+  @include ui.section-subtitle;
+}
+
+.button {
+  @include ui.button;
+  @include ui.button-large;
+  margin: 0;
+}
+
+.buttonPrimary {
+  @include ui.button-primary;
+}
+
+.buttonSuccess {
+  background: ui.$success-bg;
+  color: ui.$success-text;
+  cursor: default;
+}
+
+.card {
+  @include ui.card;
+  overflow: hidden;
+}
+
+.cardFooter {
+  @include ui.card-footer;
+  justify-content: flex-end;
+}
+
+.pushRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 24px;
+
+  @media screen and (max-width: ui.$mobile) {
+    padding: 16px;
+  }
+}
+
+.tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: ui.$bg-surface;
+}
+
+.rowText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.rowTitle {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.42px;
+  color: ui.$text-primary;
+}
+
+.rowSubtitle {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.42px;
+  color: ui.$text-secondary;
+}
+
+.rowSubtitleOn {
+  color: ui.$success-text;
+}
+
+/* ---------- Notification matrix ---------- */
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 20px 24px 16px;
+
+  @media screen and (max-width: ui.$mobile) {
+    padding: 16px;
+  }
+}
+
+.count {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.42px;
+  color: ui.$text-secondary;
+  white-space: nowrap;
+}
+
+.tableScroll {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+
+  th,
+  td {
+    border-top: 1px solid ui.$border-subtle;
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  th {
+    width: 84px;
+    padding: 12px 0;
+    background: ui.$bg-canvas;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: -0.36px;
+    color: ui.$text-muted;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 14px 0;
+  }
+
+  th:first-child,
+  td:first-child {
+    width: auto;
+    padding-left: 24px;
+    text-align: left;
+  }
+
+  th:last-child,
+  td:last-child {
+    padding-right: 16px;
+  }
+
+  @media screen and (max-width: ui.$mobile) {
+    th:first-child,
+    td:first-child {
+      padding-left: 16px;
+    }
+  }
+
+  :global(.switch) {
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+.activity,
+.activityHint {
+  display: block;
+  font-size: 14px;
+  letter-spacing: -0.42px;
+}
+
+.activity {
+  font-weight: 500;
+  line-height: 1.5;
+  color: ui.$text-primary;
+}
+
+.activityHint {
+  margin-top: 2px;
+  font-weight: 400;
+  line-height: normal;
+  color: ui.$text-secondary;
+}

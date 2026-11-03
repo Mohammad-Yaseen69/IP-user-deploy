@@ -17,6 +17,9 @@ import PaymentActionsButtons from "./PaymentActionsButtons";
 import PayWithCrypto from "../../PaymentAddressPublic/PayWithCrypto";
 import InvoiceDetails from "./InvoiceDetails";
 import { useState } from "react";
+import useEffectivePermission, {
+  PERMISSIONS,
+} from "../../../hooks/GeneralUse/useEffectivePermission";
 
 const PaymentUI = ({ data, user_name, state, dataHandler, url, toggleCreditModal }) => {
   const { t } = useTranslation();
@@ -24,6 +27,8 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url, toggleCreditModal
   const width = useWindowWidth();
   const [verificationBadge, setShowVerificationBadge] = useState(false);
   const userDetails = data?.account;
+  const hasPermission = useEffectivePermission();
+  const canGuestPayWithCrypto = hasPermission(PERMISSIONS.CRYPTO_GUEST_PAY);
 
   const actionButtons = [
     {
@@ -44,7 +49,7 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url, toggleCreditModal
       disabled: !flagCheck("payments.allowInstapay", userDetails, "invoice"),
       disabledMessage: t("This method is disabled for this payment address by admin."),
     },
-    {
+    canGuestPayWithCrypto && {
       label: "Pay with Crypto",
       logo: CryptoPay,
       onClick: () => {
@@ -60,7 +65,7 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url, toggleCreditModal
       disabled: !flagCheck("payments.allowGuestPay", userDetails, "invoice"),
       disabledMessage: t("This method is disabled for this payment address by admin."),
     },
-  ];
+  ].filter(Boolean);
 
   const visibleButtons = actionButtons.filter((btn) => !btn.disabled);
 

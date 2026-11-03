@@ -1,0 +1,382 @@
+/* WEB-02 strategy catalog and WEB-02b strategy details drawer (Figma 14235:37040, 14235:37200). */
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding-top: 8px;
+}
+
+/* ------------------------------------ toolbar ------------------------------------ */
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 280px;
+  height: 40px;
+  padding: 8px 12px;
+  border: 1px solid #eff1f6;
+  border-radius: 6px;
+  background: #ffffff;
+  filter: drop-shadow(0 1px 0.75px rgba(27, 31, 42, 0.04));
+}
+.search img {
+  width: 21.333px;
+  height: 21.333px;
+  flex-shrink: 0;
+}
+.search input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  color: #1b1f2a;
+}
+.search input::placeholder {
+  color: #6e7687;
+  opacity: 1;
+}
+.search:focus-within {
+  border-color: #5926f0;
+}
+
+/* ------------------------------------ table ------------------------------------ */
+
+.tableCard {
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: #ffffff;
+}
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.table th {
+  padding: 12px 16px;
+  border-bottom: 1px solid #eff1f6;
+  text-align: left;
+  white-space: nowrap;
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 500;
+  color: #6e7687;
+}
+.table td {
+  padding: 0 16px;
+  border-bottom: 1px solid #eff1f6;
+  vertical-align: middle;
+  white-space: nowrap;
+  font-size: 14px;
+  line-height: normal;
+  font-weight: 400;
+  color: #1b1f2a;
+}
+/* Body is inset by 4px top and bottom inside the card. */
+.table tbody tr:first-child td {
+  border-top: 4px solid transparent;
+}
+.table tbody tr:last-child td {
+  border-bottom: 4px solid transparent;
+}
+
+.colTrack {
+  width: 104.88px;
+}
+.colDrawdown {
+  width: 119.89px;
+}
+.colFee {
+  width: 143.31px;
+}
+.colCaret {
+  width: 32px;
+  height: 39.5px;
+  padding: 0 !important;
+}
+
+.row {
+  cursor: pointer;
+}
+.row:hover td {
+  background: #fafafc;
+  background-clip: padding-box;
+}
+.row:focus-visible {
+  outline: 2px solid #5926f0;
+  outline-offset: -2px;
+}
+
+.strategyCell {
+  padding: 20px 16px !important;
+}
+.strategy {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  background: #5926f0;
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 600;
+}
+.strategyName {
+  display: block;
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 600;
+  color: #1b1f2a;
+}
+.nameBadge {
+  display: inline-flex;
+  margin-left: 8px;
+  vertical-align: middle;
+  font-weight: 500;
+}
+.strategyMeta {
+  display: block;
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #6e7687;
+}
+
+.caretCell {
+  width: 32px;
+  padding: 0 0 0 16px !important;
+}
+.caretCell img {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+.empty {
+  padding: 20px 16px !important;
+  font-size: 12px !important;
+  line-height: 1.5 !important;
+  color: #5e5a6b !important;
+}
+
+.footnote {
+  min-height: 17px;
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #5e5a6b;
+}
+
+/* ------------------------------------ drawer ------------------------------------ */
+
+.scrim.scrim {
+  background: rgba(23, 20, 31, 0.32);
+}
+/* index.scss forces every right drawer to 35% wide; this one is the 440px Figma panel. */
+.drawerPaper.drawerPaper {
+  width: 440px !important;
+  max-width: calc(100vw - 20px);
+  overflow: hidden;
+  box-shadow: -8px 0 40px 0 rgba(23, 20, 31, 0.16);
+}
+
+.drawer.drawer {
+  width: 100%;
+}
+.drawerBody {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+}
+
+.drawerHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.drawerAvatar {
+  width: 54px;
+  flex-shrink: 0;
+  padding: 13.5px 0 14.5px;
+  border-radius: 13px;
+  text-align: center;
+  background: #5926f0;
+  color: #ffffff;
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.drawerHeadText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.drawerTitle {
+  margin-bottom: -0.5px;
+  font-size: 24px;
+  line-height: 1.2;
+  font-weight: 600;
+  color: #17141f;
+}
+.drawerSub {
+  font-size: 14px;
+  line-height: normal;
+  font-weight: 400;
+  color: #8c889a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.closeBtn {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+}
+.closeBtn:hover {
+  background: #f3efff;
+}
+.closeBtn img {
+  width: 20px;
+  height: 20px;
+}
+
+.drawerLead {
+  font-size: 14px;
+  line-height: normal;
+  font-weight: 400;
+  color: #5e5a6b;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 4px;
+  height: 80px;
+  padding: 20px 24px;
+  border-radius: 14px;
+  background: #f7f6fa;
+}
+.metricLabel {
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #5e5a6b;
+}
+.metricValue {
+  font-size: 14px;
+  line-height: normal;
+  font-weight: 400;
+  color: #17141f;
+}
+
+.warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 18px;
+  border-radius: 10px;
+  background: #fff4e0;
+}
+.warning img {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.warning p {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  line-height: normal;
+  font-weight: 400;
+  color: #17141f;
+}
+
+.drawerFoot {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 24px;
+  border: 1px solid #eff1f6;
+  box-shadow: inset 0 1px 0 #e9e7ef;
+}
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 24px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-size: 16px;
+  line-height: normal;
+  font-weight: 500;
+  color: #5926f0;
+}
+.backBtn:hover {
+  background: #f3efff;
+}
+.backBtn img {
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 900px) {
+  .search {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .drawer {
+    width: 100vw;
+  }
+  .drawerPaper.drawerPaper {
+    border-radius: 0;
+  }
+}

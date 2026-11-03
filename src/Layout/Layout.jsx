@@ -290,7 +290,8 @@ const Layout = ({ children, classNames, ...rest }) => {
       path === "/" ||
       path === "/dashboard/default" ||
       path === "/my-mastercard" ||
-      path === "/payments"
+      path === "/payments" ||
+      path.startsWith("/copy-trading")
     ) {
       setTogglSidebar(true);
     } else {

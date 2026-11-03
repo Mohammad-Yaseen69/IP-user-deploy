@@ -53,7 +53,11 @@ const DoneStep = ({
         </div>
         <div className={convertStyles.doneText}>
           <h3>{t("Crypto payout submitted")}</h3>
-          <p>{t("We will update this transaction once the network confirms it.")}</p>
+          <p>
+            {payoutResult?.under_review
+              ? t(payoutResult.review_message)
+              : t("We will update this transaction once the network confirms it.")}
+          </p>
         </div>
       </div>
 
@@ -89,20 +93,23 @@ const DoneStep = ({
           </div>
         </div>
 
-        <div className={convertStyles.reviewRow} style={{ background: "#f2eeff" }}>
-          <div
-            className={convertStyles.reviewRowLabel}
-            style={{ fontWeight: 600, color: "#5926f0" }}
-          >
-            {t("Recipient receives")}
+        {/* A compliance hold reply carries no recipient amount yet. */}
+        {payoutResult?.recipient && (
+          <div className={convertStyles.reviewRow} style={{ background: "#f2eeff" }}>
+            <div
+              className={convertStyles.reviewRowLabel}
+              style={{ fontWeight: 600, color: "#5926f0" }}
+            >
+              {t("Recipient receives")}
+            </div>
+            <div
+              className={convertStyles.reviewRowValue}
+              style={{ fontWeight: 700, color: "#5926f0", fontSize: "16px" }}
+            >
+              {formatMoney(payoutResult?.recipient?.value, recipientCurrency)}
+            </div>
           </div>
-          <div
-            className={convertStyles.reviewRowValue}
-            style={{ fontWeight: 700, color: "#5926f0", fontSize: "16px" }}
-          >
-            {formatMoney(payoutResult?.recipient?.value, recipientCurrency)}
-          </div>
-        </div>
+        )}
 
         <div className={convertStyles.reviewRow}>
           <div className={convertStyles.reviewRowLabel}>{t("Beneficiary")}</div>
