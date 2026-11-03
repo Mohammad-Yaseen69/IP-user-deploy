@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { Receipt } from "lucide-react";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
@@ -46,27 +46,31 @@ const defaultRange = {
 };
 
 const TransactionsTable = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation();
+  const search = new URLSearchParams(location.search).get("search") ?? "";
   const [active, setActive] = useState("All");
   const [activeItem, setActiveItem] = useState(0);
   const [dateRange, setDateRange] = useState(defaultRange);
   const [transactions, setTransactions] = useState([]);
-  const [filtered, setFiltered] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(search);
   const [apiDates, setApiDates] = useState(null);
   const [filters, setFilters] = useState({});
   const [page, setPage] = useState(1);
-  const [currentTrxType, setCurrentTrxType] = useState("all");
   const [maxLimit, setMaxLimit] = useState(false);
   const { userDetails, authHeader, verifyToken, getUserBeneficiaries } = useContext(UserContext);
-  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
-  const [debounceTimer, setDebounceTimer] = useState(null);
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(search);
   const [isLoading, setIsLoading] = useState(true);
-  const loaderRef = useRef();
+  const loaderRef = useRef(null);
   const [stopLoader, setStopLoader] = useState(false);
   const [showStatementModal, setShowStatementModal] = useState(false);
+  const debounceTimerRef = useRef(null);
+  const lastQueryKeyRef = useRef(null);
+  const isFetchingRef = useRef(false);
   const can = usePermission();
 
+  const currentTrxType = apiDates ? "date_and_query" : debouncedSearchQuery ? "query" : "all";
   const filterQuery = new URLSearchParams(filters).toString();
   const withFilters = (url) => (filterQuery ? `${url}?${filterQuery}` : url);
 
@@ -75,197 +79,126 @@ const TransactionsTable = () => {
   }, []);
 
   useEffect(() => {
-    if (searchQuery !== debouncedSearchQuery) {
-      if (debounceTimer) {
-        clearTimeout(debounceTimer);
+    if (searchQuery === debouncedSearchQuery) return;
+
+    debounceTimerRef.current = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 1000);
+
+    return () => clearTimeout(debounceTimerRef.current);
+  }, [searchQuery, debouncedSearchQuery]);
+
+  useEffect(() => {
+    if (!userDetails?._id) {
+      setIsLoading(false);
+      return;
+    }
+
+    const queryKey = JSON.stringify([
+      currentTrxType,
+      debouncedSearchQuery,
+      apiDates,
+      filters,
+      userDetails._id,
+    ]);
+    const queryChanged = lastQueryKeyRef.current !== queryKey;
+
+    if (queryChanged) {
+      lastQueryKeyRef.current = queryKey;
+      setTransactions([]);
+      setMaxLimit(false);
+      setStopLoader(false);
+      setActive("All");
+      if (page !== 1) {
+        setPage(1);
+        return;
       }
-
-      const timerId = setTimeout(() => {
-        setDebouncedSearchQuery(searchQuery);
-      }, 1000);
-
-      setDebounceTimer(timerId);
-    }
-  }, [searchQuery]);
-
-  const getAllTransactions = () => {
-    const queryParams = new URLSearchParams(window.location.search);
-    if (queryParams.has("search")) return;
-
-    if (page === 1) {
-      setIsLoading(true);
     }
 
-    if (debouncedSearchQuery) return;
+    if (maxLimit && !queryChanged) return;
 
-    axios
-      .get(
-        withFilters(
-          `${import.meta.env.VITE_IP_DEV_API}/api/transaction/account-transactions/${userDetails?._id}/${page}/15`,
-        ),
-        { headers: authHeader },
-      )
-      .then((res) => {
-        const decrypted = decryptData(res.data.data);
-        setTransactions((prev) => [
-          ...prev,
-          ...decrypted.transactionList.filter(transactionFilter),
-        ]);
-        setFiltered((prev) => [...prev, ...decrypted.transactionList.filter(transactionFilter)]);
-        if (decrypted.transactionList.length < 15) {
-          setMaxLimit(true);
-          setStopLoader(true);
-        }
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        const decrypted = decryptData(err.response.data.data);
-        setIsLoading(false);
-        setStopLoader(true);
-        if (decrypted.status === false) {
-          setMaxLimit(true);
-        }
-      });
-  };
+    const controller = new AbortController();
+    let isCurrentRequest = true;
+    isFetchingRef.current = true;
+    setIsLoading(true);
 
-  const getTransactionsByQuery = (search = null) => {
-    setActive("All");
-    if (page === 1) {
-      setIsLoading(true);
-    }
-    axios
-      .get(
-        withFilters(
-          `${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions/${userDetails?._id}/${page}/15/${search ?? debouncedSearchQuery}`,
-        ),
-        { headers: authHeader },
-      )
-      .then((res) => {
-        const decrypted = decryptData(res.data.data);
-        const newTransactions = decrypted.transactionList.filter(transactionFilter);
+    const handleSuccess = (response) => {
+      if (!isCurrentRequest) return;
+      const decrypted = decryptData(response.data.data);
+      const pageTransactions = (decrypted?.transactionList ?? []).filter(transactionFilter);
 
-        if (search) {
-          setTransactions(decrypted.transactionList);
-          setFiltered(decrypted.transactionList);
-        } else {
-          if (page === 1) {
-            setTransactions(newTransactions);
-            setFiltered(newTransactions);
-          } else {
-            setTransactions((prev) => [...prev, ...newTransactions]);
-            setFiltered((prev) => [...prev, ...newTransactions]);
-          }
-        }
-
-        if (decrypted.transactionList.length < 15) {
-          setMaxLimit(true);
-          setStopLoader(true);
-        }
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        const decrypted = decryptData(err.response.data.data);
-        setIsLoading(false);
-        setFiltered([]);
-        setTransactions([]);
-        setStopLoader(true);
-        if (decrypted.status === false) {
-          setMaxLimit(true);
-        }
-      });
-  };
-
-  const getTransactionsByQueryAndDate = () => {
-    setActive("All");
-    if (page === 1) {
-      setIsLoading(true);
-    }
-    const data = {
-      ...apiDates,
-      query: debouncedSearchQuery,
+      setTransactions((previous) =>
+        page === 1 ? pageTransactions : [...previous, ...pageTransactions],
+      );
+      const hasMore = (decrypted?.transactionList ?? []).length >= 15;
+      setMaxLimit(!hasMore);
+      setStopLoader(!hasMore);
+      isFetchingRef.current = false;
+      setIsLoading(false);
     };
-    const encrypted = encryptData(data);
 
-    axios
-      .post(
+    const handleFailure = (error) => {
+      if (!isCurrentRequest || axios.isCancel(error) || error?.code === "ERR_CANCELED") return;
+      isFetchingRef.current = false;
+      setIsLoading(false);
+      setStopLoader(true);
+      if (page === 1) setTransactions([]);
+      const encryptedErrorData = error?.response?.data?.data;
+      if (encryptedErrorData) {
+        try {
+          const decrypted = decryptData(encryptedErrorData);
+          if (decrypted?.status === false) setMaxLimit(true);
+        } catch {}
+      }
+    };
+
+    const baseUrl = import.meta.env.VITE_IP_DEV_API;
+    const headers = { headers: authHeader, signal: controller.signal };
+    let request;
+
+    if (currentTrxType === "all") {
+      request = axios.get(
         withFilters(
-          `${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions-by-date/${userDetails?._id}/${page}/15`,
+          `${baseUrl}/api/transaction/account-transactions/${userDetails._id}/${page}/15`,
+        ),
+        headers,
+      );
+    } else if (currentTrxType === "query") {
+      request = axios.get(
+        withFilters(
+          `${baseUrl}/api/transaction/search-account-transactions/${userDetails._id}/${page}/15/${encodeURIComponent(debouncedSearchQuery)}`,
+        ),
+        headers,
+      );
+    } else {
+      const encrypted = encryptData({ ...apiDates, query: debouncedSearchQuery });
+      request = axios.post(
+        withFilters(
+          `${baseUrl}/api/transaction/search-account-transactions-by-date/${userDetails._id}/${page}/15`,
         ),
         { data: encrypted },
-        { headers: authHeader },
-      )
-      .then((res) => {
-        const decrypted = decryptData(res.data.data);
-        setTransactions((prev) => [
-          ...prev,
-          ...decrypted.transactionList.filter(transactionFilter),
-        ]);
-        setFiltered((prev) => [...prev, ...decrypted.transactionList.filter(transactionFilter)]);
-        if (decrypted.transactionList.length < 15) {
-          setMaxLimit(true);
-          setStopLoader(true);
-        }
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        const decrypted = decryptData(err.response.data.data);
-        setIsLoading(false);
-        setFiltered([]);
-        setTransactions([]);
-        setStopLoader(true);
-        if (decrypted.status === false) {
-          setMaxLimit(true);
-        }
-      });
-  };
+        headers,
+      );
+    }
+
+    request.then(handleSuccess).catch(handleFailure);
+
+    return () => {
+      isCurrentRequest = false;
+      controller.abort();
+      isFetchingRef.current = false;
+    };
+  }, [page, currentTrxType, debouncedSearchQuery, apiDates, filters, userDetails?._id, authHeader]);
 
   useEffect(() => {
-    if (page === 1) {
-      setTransactions([]);
-      setFiltered([]);
-    }
-    if (currentTrxType === "all" && !maxLimit && userDetails) {
-      getAllTransactions();
-    }
-    if (currentTrxType === "query" && !maxLimit && userDetails) {
-      getTransactionsByQuery();
-    }
-    if (currentTrxType === "date_and_query" && !maxLimit && userDetails) {
-      getTransactionsByQueryAndDate();
-    }
-  }, [page, currentTrxType, debouncedSearchQuery, apiDates, filters]);
-
-  useEffect(() => {
-    setTransactions([]);
-    setFiltered([]);
-    setMaxLimit(false);
-    setStopLoader(false);
-    setPage(1);
-    if (apiDates !== null) {
-      setCurrentTrxType("date_and_query");
-    } else if (debouncedSearchQuery.length > 0 && apiDates === null) {
-      setCurrentTrxType("query");
-    } else if (debouncedSearchQuery.length === 0 && apiDates === null) {
-      setCurrentTrxType("all");
-    }
-  }, [debouncedSearchQuery, apiDates]);
-
-  useEffect(() => {
-    setTransactions([]);
-    setFiltered([]);
-    setMaxLimit(false);
-    setStopLoader(false);
-    setPage(1);
     verifyToken();
   }, [currentTrxType]);
 
   const applyFilters = (next) => {
+    setFilters(next);
     setPage(1);
     setMaxLimit(false);
     setStopLoader(false);
-    setTransactions([]);
-    setFiltered([]);
-    setFilters(next);
   };
 
   const handleChange = (ranges) => {
@@ -276,79 +209,58 @@ const TransactionsTable = () => {
       const endDate = new Date(ranges.selection.endDate);
       endDate.setDate(endDate.getDate() + 1);
 
-      const formattedDateRange = {
+      setApiDates({
         from: startDate.toISOString().split("T")[0],
         to: endDate.toISOString().split("T")[0],
-      };
-
-      setApiDates(formattedDateRange);
+      });
       setDateRange(ranges.selection);
+      setPage(1);
     }
   };
 
   useEffect(() => {
-    if (isLoading || maxLimit) return;
+    if (isLoading || maxLimit || stopLoader) return;
+
+    const node = loaderRef.current;
+    if (!node) return;
 
     const observer = new IntersectionObserver(
-      (enteries) => {
-        if (enteries[0].isIntersecting) {
+      ([entry]) => {
+        if (entry.isIntersecting && !isFetchingRef.current) {
+          isFetchingRef.current = true;
           setPage((prev) => prev + 1);
         }
       },
       { threshold: 0.1 },
     );
 
-    if (loaderRef.current) observer.observe(loaderRef.current);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [isLoading, maxLimit, stopLoader]);
 
-    return () => {
-      observer.disconnect();
-    };
-  }, [loaderRef.current, isLoading, maxLimit]);
-
-  useEffect(() => {
-    if (active === "All") {
-      setFiltered(transactions);
-    }
-    if (active === "Sent") {
-      const sentTransactions = transactions?.filter((item) => item?.transaction_type === "debit");
-      setFiltered(sentTransactions);
-    }
-    if (active === "Received") {
-      const receivedTransactions = transactions?.filter(
-        (item) => item?.transaction_type === "credit",
-      );
-      setFiltered(receivedTransactions);
-    }
-    if (active === "Quotes") {
-      const quotedTransactions = transactions?.filter((item) => item?.payment_type === "quotation");
-      setFiltered(quotedTransactions);
-    }
-    if (active === "Requests") {
-      const requestedTransactions = transactions?.filter(
-        (item) => item?.payment_type === "payment_request",
-      );
-      setFiltered(requestedTransactions);
+  const filtered = useMemo(() => {
+    switch (active) {
+      case "Sent":
+        return transactions.filter((item) => item?.transaction_type === "debit");
+      case "Received":
+        return transactions.filter((item) => item?.transaction_type === "credit");
+      case "Quotes":
+        return transactions.filter((item) => item?.payment_type === "quotation");
+      case "Requests":
+        return transactions.filter((item) => item?.payment_type === "payment_request");
+      default:
+        return transactions;
     }
   }, [active, transactions]);
 
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const search = queryParams.get("search");
-
-  useEffect(() => {
-    if (search) {
-      setSearchQuery(search);
-      setDebouncedSearchQuery(search);
-    }
-  }, [search]);
-
   const changeSearch = (value) => {
     setSearchQuery(value);
+    setPage(1);
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has("search")) {
       urlParams.delete("search");
       const newUrl =
-        window.location.pathname + (urlParams.toString() ? "?" + urlParams.toString() : "");
+        window.location.pathname + (urlParams.toString() ? `?${urlParams.toString()}` : "");
       window.history.replaceState({}, document.title, newUrl);
     }
   };
@@ -356,6 +268,7 @@ const TransactionsTable = () => {
   const clearDates = () => {
     setApiDates(null);
     setDateRange(defaultRange);
+    setPage(1);
   };
 
   const clearChips = () => {
@@ -445,7 +358,7 @@ const TransactionsTable = () => {
             title={t("No transactions yet")}
             text={t("Money you send and receive will appear here, grouped by day.")}
           >
-            <button type="button" className={s.btnPrimary}>
+            <button type="button" className={s.btnPrimary} onClick={() => navigate("/wallets")}>
               {t("Add funds")}
             </button>
             <button type="button" className={s.btn} onClick={clearFilters}>

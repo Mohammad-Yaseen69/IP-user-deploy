@@ -19,6 +19,7 @@ const Ledger = ({
   columns,
   template,
   children,
+  hideFilters,
 }) => {
   const { t } = useTranslation();
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -61,12 +62,13 @@ const Ledger = ({
             <Calendar size={16} />
             {dateLabel}
           </button>
-          {filters ?? (
-            <button type="button" className={s.btn} disabled>
-              <Funnel size={16} />
-              {t("Filters")}
-            </button>
-          )}
+          {filters ??
+            (hideFilters ? undefined : (
+              <button type="button" className={s.btn} disabled>
+                <Funnel size={16} />
+                {t("Filters")}
+              </button>
+            ))}
           {!hideDownload && (
             <button type="button" className={s.iconBtn} disabled={!onDownload} onClick={onDownload}>
               <Download size={20} />

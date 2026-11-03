@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import dayjs from "dayjs";
 import { Receipt } from "lucide-react";
@@ -6,6 +6,7 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router";
 import { DateGroup, EmptyState } from "../../Common/Ledger/Cells";
+import { ActiveFilters } from "../../Common/Ledger/Filters";
 import Ledger from "../../Common/Ledger/Ledger";
 import s from "../../Common/Ledger/ledger.module.scss";
 import { UserContext } from "../../Context/UserContext";
@@ -14,39 +15,53 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import InstaPayLoader from "../Loader";
 import PaymentRequestRow from "./PaymentRequestRow";
-import r from "./requests.module.scss";
+import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
 
 const RECEIVED = "Received Requests";
 const SENT = "Sent Requests";
-const SEARCH_FIELDS = ["first_name", "last_name", "company_name"];
+
+const defaultRange = { startDate: new Date(), endDate: new Date(), key: "selection" };
 
 const byNewest = (a, b) => new Date(b.createdAt) - new Date(a.createdAt);
 
-const visible = (list, party, query) => {
-  const q = query.toLowerCase();
-  const matches = (item) =>
-    SEARCH_FIELDS.some((k) => item?.[party]?.user?.[k]?.toLowerCase()?.includes(q));
-  return [...list].sort(byNewest).filter((item) => !q || matches(item));
-};
+const START_PAGE = 0;
 
-const useRequests = (key, path, label) => {
+const useRequests = (key, path, label, search, apiDates) => {
   const { userDetails, authHeader } = useContext(UserContext);
-  return useQuery({
-    queryKey: [key, userDetails?._id],
-    queryFn: async () => {
+  return useInfiniteQuery({
+    queryKey: [key, userDetails?._id, search, apiDates],
+    initialPageParam: START_PAGE,
+    queryFn: async ({ pageParam = START_PAGE }) => {
       try {
+        const query = new URLSearchParams({
+          ...(search && { search }),
+          ...apiDates,
+          skip: pageParam,
+          limit: 10,
+        }).toString();
         const res = await axios.get(
-          `${import.meta.env.VITE_IP_DEV_API}/api/account/${path}/${userDetails?._id}`,
+          `${import.meta.env.VITE_IP_DEV_API}/api/account/${path}/${userDetails?._id}?${query}`,
           { headers: authHeader },
         );
-        return decryptData(res.data.data)?.paymentRequests ?? [];
+        const decrypted = decryptData(res.data.data);
+        return {
+          list: decrypted?.paymentRequests ?? [],
+          total: decrypted?.pagination?.total ?? 0,
+          hasMore: decrypted?.pagination?.hasMore ?? false,
+        };
       } catch (err) {
         throw new Error(err.response?.data?.message || `Failed to fetch ${label} requests`);
       }
     },
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage.hasMore ? allPages.length + START_PAGE : undefined,
     enabled: !!userDetails?._id,
+    retry: false,
   });
 };
+
+const listOf = (query) => query.data?.pages.flatMap((page) => page.list) ?? [];
+const totalOf = (query) => query.data?.pages[0]?.total || 0;
 
 const PaymentRequestsTable = () => {
   const { t } = useTranslation();
@@ -60,49 +75,50 @@ const PaymentRequestsTable = () => {
   const [active, setActive] = useState(RECEIVED);
   const [activeItem, setActiveItem] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [apiDates, setApiDates] = useState(null);
-  const [dateRange, setDateRange] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
-    key: "selection",
-  });
+  const [dateRange, setDateRange] = useState(defaultRange);
 
-  const { data: receivedRequests = [], isLoading: loadingReceived } = useRequests(
+  const receivedQuery = useRequests(
     "receivedPaymentRequests",
     "get-user-receive-payment-request",
     "received",
+    debouncedSearch,
+    apiDates,
   );
-  const { data: sentRequests = [], isLoading: loadingSent } = useRequests(
+  const sentQuery = useRequests(
     "sentPaymentRequests",
     "get-user-send-payment-request",
     "sent",
+    debouncedSearch,
+    apiDates,
   );
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchQuery), 1000);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  const received = useMemo(() => listOf(receivedQuery).sort(byNewest), [receivedQuery.data]);
+  const sent = useMemo(() => listOf(sentQuery).sort(byNewest), [sentQuery.data]);
 
   useEffect(() => {
     if (tab) setActive(tab.toLowerCase().includes("received") ? RECEIVED : SENT);
   }, [tab]);
 
   useEffect(() => {
-    if (tab === "sent" && sentRequests.length > 0) {
-      setActiveItem(currentIndex || sentRequests.findIndex((i) => i?._id === id) + 1);
+    if (tab === "sent" && sent.length > 0) {
+      setActiveItem(currentIndex || sent.findIndex((i) => i?._id === id) + 1);
     }
-    if (tab === "received" && receivedRequests.length > 0) {
-      setActiveItem(receivedRequests.findIndex((i) => i?._id === id) + 1);
+    if (tab === "received" && received.length > 0) {
+      setActiveItem(received.findIndex((i) => i?._id === id) + 1);
     }
-  }, [tab, id, sentRequests, receivedRequests, currentIndex]);
+  }, [tab, id, sent, received, currentIndex]);
 
-  const received = useMemo(
-    () => visible(receivedRequests, "sender", searchQuery),
-    [receivedRequests, searchQuery],
-  );
-  const sent = useMemo(
-    () => visible(sentRequests, "receiver", searchQuery),
-    [sentRequests, searchQuery],
-  );
-
+  const isUnfiltered = !debouncedSearch && !apiDates;
   useEffect(() => {
     const latest = received[0]?._id;
-    if (!latest) return;
+    if (!latest || !isUnfiltered) return;
     axios.put(
       `${import.meta.env.VITE_IP_DEV_API}/api/account/update-${userDetails?.account_type}/${userDetails?._id}`,
       {
@@ -116,7 +132,14 @@ const PaymentRequestsTable = () => {
   }, [received, userDetails]);
 
   const isReceived = active === RECEIVED;
+  const current = isReceived ? receivedQuery : sentQuery;
   const list = isReceived ? received : sent;
+
+  const loaderRef = useInfiniteScroll({
+    hasNextPage: current.hasNextPage,
+    isFetching: current.isFetching,
+    fetchNextPage: current.fetchNextPage,
+  });
 
   const groups = useMemo(() => {
     const rows = list.map((item, index) => ({ item, index }));
@@ -129,10 +152,10 @@ const PaymentRequestsTable = () => {
 
   const meta = (rows, withTotal) => {
     const codes = [...new Set(rows.map(({ item }) => item?.currency?.code))];
-    const total = rows.reduce((sum, { item }) => sum + Number(item?.amount ?? 0), 0);
+    const sum = rows.reduce((acc, { item }) => acc + Number(item?.amount ?? 0), 0);
     return [
       `${rows.length} ${t(rows.length === 1 ? "request" : "requests")}`,
-      withTotal && codes.length === 1 && `${formatCurrency(total, true)} ${codes[0]}`,
+      withTotal && codes.length === 1 && `${formatCurrency(sum, true)} ${codes[0]}`,
     ]
       .filter(Boolean)
       .join(" · ");
@@ -147,18 +170,28 @@ const PaymentRequestsTable = () => {
     setDateRange(selection);
   };
 
+  const clearDates = () => {
+    setApiDates(null);
+    setDateRange(defaultRange);
+  };
+
   const dateLabel = apiDates
     ? `${dayjs(dateRange.startDate).format("MMM D")} - ${dayjs(dateRange.endDate).format("MMM D, YYYY")}`
     : t("All dates");
 
   return (
     <Ledger
+      hideFilters={true}
+      hideDownload={true}
       tabs={[
-        { key: RECEIVED, label: "Received", count: receivedRequests.length },
-        { key: SENT, label: "Sent", count: sentRequests.length },
+        { key: RECEIVED, label: "Received", count: totalOf(receivedQuery) },
+        { key: SENT, label: "Sent", count: totalOf(sentQuery) },
       ]}
       active={active}
-      onTab={setActive}
+      onTab={(key) => {
+        setActive(key);
+        setActiveItem(0);
+      }}
       search={{
         value: searchQuery,
         onChange: setSearchQuery,
@@ -167,10 +200,19 @@ const PaymentRequestsTable = () => {
       dateRange={dateRange}
       onDateChange={handleChange}
       dateLabel={dateLabel}
+      activeFilters={
+        <ActiveFilters
+          groups={[]}
+          filters={{}}
+          dateLabel={apiDates && dateLabel}
+          onClearDate={clearDates}
+          onClearAll={clearDates}
+        />
+      }
       columns={["Request", isReceived ? "From" : "Sent to", "Status", "Due", "Amount", ""]}
       template="minmax(0, 1fr) 196px 104px 110px 150px 172px"
     >
-      {loadingReceived || loadingSent ? (
+      {current.isLoading ? (
         <div className={s.loader}>
           <InstaPayLoader />
         </div>
@@ -191,9 +233,11 @@ const PaymentRequestsTable = () => {
               ))}
             </div>
           ))}
-          <p className={r.foot}>
-            {t("Showing")} {list.length} {t(isReceived ? "received requests" : "sent requests")}
-          </p>
+          {current?.hasNextPage && (
+            <div ref={loaderRef} className={s.loader}>
+              <InstaPayLoader />
+            </div>
+          )}
         </>
       ) : (
         <EmptyState Icon={Receipt} title={t("No Pending Items")} />
