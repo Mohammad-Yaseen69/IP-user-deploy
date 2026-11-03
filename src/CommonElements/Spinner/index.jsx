@@ -1,7 +1,5 @@
-import React from 'react';
+import React from "react";
 
-const Spinner = (props) =>(
-  <div {...props.attrSpinner}  />
-);
+const Spinner = (props) => <div {...props.attrSpinner} />;
 
 export default Spinner;

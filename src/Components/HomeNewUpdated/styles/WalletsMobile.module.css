@@ -1,81 +1,81 @@
 .container {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .container h5 {
-    font-size: 1rem;
-    font-weight: 700;
+  font-size: 1rem;
+  font-weight: 700;
 }
 
 .details {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
 }
 
 .left {
-    flex: 1;
-    display: flex;
-    min-width: 45%;
-    flex-direction: column;
-    gap: 10px;
+  flex: 1;
+  display: flex;
+  min-width: 45%;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.left>span {
-    font-size: .9rem;
-    color: #888;
-    margin-bottom: 0;
+.left > span {
+  font-size: 0.9rem;
+  color: #888;
+  margin-bottom: 0;
 }
 
 .left h4 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: .5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
 }
 
 .ref_dets {
-    /* display: flex;
+  /* display: flex;
     gap: 10px; */
-    margin-top: 1.5rem;
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    background: #f5f5f5;
-    border-radius: 8px;
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #f5f5f5;
+  border-radius: 8px;
 }
 
 .ref_amount {
-    display: flex;
-    background: linear-gradient(to right, #24BA33, #1B9B27, #12941F);
-    padding: 3px 10px;
-    gap: 4px;
-    border-radius: 3px;
-    align-items: center;
-    color: white;
+  display: flex;
+  background: linear-gradient(to right, #24ba33, #1b9b27, #12941f);
+  padding: 3px 10px;
+  gap: 4px;
+  border-radius: 3px;
+  align-items: center;
+  color: white;
 }
 
 .ref_amount img {
-    width: 10px;
-    height: 10px;
-    object-fit: contain;
+  width: 10px;
+  height: 10px;
+  object-fit: contain;
 }
 
 .ref_amount span {
-    font-size: .8rem;
-    font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 600;
 }
 
 .ref_dets a {
-    white-space: nowrap;
-    font-size: 1rem;
-    color: #b8b8b8;
+  white-space: nowrap;
+  font-size: 1rem;
+  color: #b8b8b8;
 }
 
 .cards {
-    flex: 1;
-    /* height: 180px; */
+  flex: 1;
+  /* height: 180px; */
 }

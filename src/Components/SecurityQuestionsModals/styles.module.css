@@ -1,101 +1,103 @@
 .content {
-    border-radius: 1rem;
-    width: 100%;
-    min-width: 620px;
+  border-radius: 1rem;
+  width: 100%;
+  min-width: 620px;
 }
 
 .body {
-    padding: 1.7rem 2.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    align-items: center;
+  padding: 1.7rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
 }
 
 .body img {
-    width: 4rem;
-    height: 4rem;
-    object-fit: contain;
+  width: 4rem;
+  height: 4rem;
+  object-fit: contain;
 }
 
 .body h4 {
-    color: #E64067;
-    text-align: center;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 1.5rem;
-    font-style: normal;
-    font-weight: 800;
-    line-height: 130%;
-    /* 31.2px */
-    letter-spacing: -0.48px;
-    margin-bottom: 0;
+  color: #e64067;
+  text-align: center;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 130%;
+  /* 31.2px */
+  letter-spacing: -0.48px;
+  margin-bottom: 0;
 }
 
 .body p {
-    margin-bottom: 0;
-    color: #545454;
-    text-align: center;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 150%;
-    /* 27px */
-    letter-spacing: -0.18px;
+  margin-bottom: 0;
+  color: #545454;
+  text-align: center;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
+  /* 27px */
+  letter-spacing: -0.18px;
 }
 
 .body div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
-    flex-wrap: wrap-reverse;
-    margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap-reverse;
+  margin-top: 2rem;
 }
 
 .body div button {
-    border-radius: 8px;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.50) 100%), linear-gradient(259deg, #E64067 8.36%, #5926F0 54.71%, #4828A0 91.64%);
-    background-blend-mode: soft-light, normal;
-    display: flex;
-    align-items: center;
-    padding: .85rem 1.25rem;
-    gap: 1.2rem;
-    white-space: nowrap;
-    border: none;
-    outline: none;
-    color: #FFF;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 1.1rem;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    letter-spacing: -0.36px;
+  border-radius: 8px;
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.5) 100%),
+    linear-gradient(259deg, #e64067 8.36%, #5926f0 54.71%, #4828a0 91.64%);
+  background-blend-mode: soft-light, normal;
+  display: flex;
+  align-items: center;
+  padding: 0.85rem 1.25rem;
+  gap: 1.2rem;
+  white-space: nowrap;
+  border: none;
+  outline: none;
+  color: #fff;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 1.1rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.36px;
 }
 
 .body div button.trns {
-    all: unset;
-    cursor: pointer;
-    color: #545454;
-    text-align: center;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 1.1rem;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 150%;
-    letter-spacing: -0.18px;
+  all: unset;
+  cursor: pointer;
+  color: #545454;
+  text-align: center;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 1.1rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
+  letter-spacing: -0.18px;
 }
 
 @media screen and (max-width: 650px) {
-    .content {
-        min-width: unset;
-    }
+  .content {
+    min-width: unset;
+  }
 }

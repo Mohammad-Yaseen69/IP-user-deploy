@@ -1,21 +1,11 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import "./index.scss";
-import App from "./App";
-// import reportWebVitals from './reportWebVitals';
-import "./i18n";
+import { i18nReady } from "./i18n";
 
 // import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 // libs css
-import "swiper/swiper-bundle.css";
-import "react-date-range/dist/styles.css";
-import "react-date-range/dist/theme/default.css";
-import "react-phone-input-2/lib/style.css";
-import "./Components/PaymentsNewer/styles/i_transfer.css";
-import "./Components/PaymentsNewer/styles/ConfirmContainer.css";
-import "./Components/PaymentsNewer/styles/Timeline.css";
-import "./Components/AddFunds/styles/creditcard.css";
 import { BrowserRouter } from "react-router-dom";
 import * as Sentry from "@sentry/react";
 
@@ -31,7 +21,7 @@ window.addEventListener("error", (e) => {
 
 // In index.js or App.js (dev only)
 if (import.meta.env.NODE_ENV === "development") {
-  window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = () => { };
+  window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = () => {};
 }
 
 Sentry.init({
@@ -53,8 +43,7 @@ Sentry.init({
   ],
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0,
-  environment:
-    import.meta.env.DEV ? "development" : "production",
+  environment: import.meta.env.DEV ? "development" : "production",
   beforeSend(event) {
     console.log(event, "Sentry Event");
     if (import.meta.env.DEV) {
@@ -67,27 +56,31 @@ Sentry.init({
   enableLogs: true,
 });
 
-
-
-
-
 if (!import.meta.env.DEV) {
-  window.console.log = () => { };
-  window.console.warn = () => { };
-  window.console.error = () => { };
+  window.console.log = () => {};
+  window.console.warn = () => {};
+  window.console.error = () => {};
 }
-
 
 const container = document.getElementById("root");
 const root = createRoot(container);
 
-root.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
-  document.getElementById("root")
-);
+async function bootstrap() {
+  try {
+    await i18nReady;
+    const { default: App } = await import("./App");
 
+    root.render(
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>,
+    );
+  } catch (error) {
+    console.error("Application initialization failed:", error);
+  }
+}
+
+bootstrap();
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://cra.link/PWA

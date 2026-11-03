@@ -1,40 +1,54 @@
-import React, { useLayoutEffect, useState } from 'react'
-import Routers from "./RouteNew"
-import CustomizerProvider from './Helper/Customizer/CustomizerProvider'
-import AnimationThemeProvider from './Helper/AnimationTheme/AnimationThemeProvider'
-import UserState from './Context/UserContextState'
-import InactivityWrapper from './InactivityWrapper'
-import { Suspense } from 'react'
-import InstaPayLoader from './Components/Loader'
-import { TimezonesProvider } from './Context/TimezoneContext'
-import ErrorBoundary from './ErrorBoundary'
-import BroadcastPage from './BroadcastPage'
+import "react-phone-input-2/lib/style.css";
+import React, { lazy, useLayoutEffect, useState } from "react";
+import Routers from "./RouteNew";
+const CustomizerProvider = lazy(() => import("./Helper/Customizer/CustomizerProvider"));
+const AnimationThemeProvider = lazy(() => import("./Helper/AnimationTheme/AnimationThemeProvider"));
+const InactivityWrapper = lazy(() => import("./InactivityWrapper"));
+const BroadcastPage = lazy(() => import("./BroadcastPage"));
+const MaintenancePage = lazy(() => import("./Components/Maintenance/MaintenancePage"));
+import UserState from "./Context/UserContextState";
+import { Suspense } from "react";
+import InstaPayLoader from "./Components/Loader";
+import { TimezonesProvider } from "./Context/TimezoneContext";
+import ErrorBoundary from "./ErrorBoundary";
 import { ToastContainer } from "react-toastify";
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import DateMomentUtils from '@date-io/moment';
-import AdBlockCheck from './Components/AdBlockCheck/AdBlockCheck'
-import LanguageAttributeSync from './Common/LanguageAttributeSync'
-import MaintenancePage from './Components/Maintenance/MaintenancePage'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DateMomentUtils from "@date-io/moment";
+import AdBlockCheck from "./Components/AdBlockCheck/AdBlockCheck";
+import LanguageAttributeSync from "./Common/LanguageAttributeSync";
 
+import "react-date-range/dist/styles.css";
+import "react-date-range/dist/theme/default.css";
+import "swiper/swiper-bundle.css";
+import "./Components/PaymentsNewer/styles/i_transfer.css";
+import "./Components/PaymentsNewer/styles/ConfirmContainer.css";
+import "./Components/PaymentsNewer/styles/Timeline.css";
+import "./Components/AddFunds/styles/creditcard.css";
 
-const underMaintaince = false
+const underMaintaince = false;
 
 const App = () => {
-  const [showOtherTabError, setShowOtherTabError] = useState(false)
-  const client = new QueryClient({
-    defaultOptions: {
-      queries: {
-        refetchOnWindowFocus: false,
-        refetchOnMount: false,
-      }
-    }
-  })
+  const [showOtherTabError, setShowOtherTabError] = useState(false);
+  const [client] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+            refetchOnMount: false,
+          },
+        },
+      }),
+  );
 
   useLayoutEffect(() => {
     const bc = new BroadcastChannel("dcode");
     // unique id for this tab/instance so we can ignore our own messages
-    const instanceId = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`;
+    const instanceId =
+      typeof crypto !== "undefined" && crypto.randomUUID
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random()}`;
     let appInUse = false;
     const paths = ["/profile/", "/pay/", "/invoice", "/paytently/"];
 
@@ -42,15 +56,17 @@ const App = () => {
       try {
         const data = e?.data;
         // support both string messages (legacy) and object messages
-        const messageText = typeof data === 'string' ? data : data?.text;
-        const senderId = typeof data === 'string' ? null : data?.id;
+        const messageText = typeof data === "string" ? data : data?.text;
+        const senderId = typeof data === "string" ? null : data?.id;
 
         // ignore messages coming from this same instance
         if (senderId && senderId === instanceId) return;
 
         if (messageText === "App is already in use!") {
           // Only show the broadcast page if current path is not one of the excluded paths
-          if (!paths.some(item => window.location.href.toLowerCase().includes(item.toLowerCase()))) {
+          if (
+            !paths.some((item) => window.location.href.toLowerCase().includes(item.toLowerCase()))
+          ) {
             appInUse = true;
             setShowOtherTabError(true);
           }
@@ -63,7 +79,11 @@ const App = () => {
     const checkTabVisibility = () => {
       if (!document.hidden && !appInUse) {
         // include our instance id so other tabs can ignore their own messages
-        bc.postMessage({ text: "App is already in use!", id: instanceId, origin: window.location.origin });
+        bc.postMessage({
+          text: "App is already in use!",
+          id: instanceId,
+          origin: window.location.origin,
+        });
       }
     };
 
@@ -99,7 +119,7 @@ const App = () => {
   //     const isHardRefresh = performance.navigation?.type === 1;
   //     if (isHardRefresh) {
   //       sessionStorage.setItem("isRefresh", "true");
-  //     } 
+  //     }
   //   };
 
   //   window.addEventListener("beforeunload", handleBeforeUnload);
@@ -127,48 +147,40 @@ const App = () => {
   //   };
   // }, []);
 
-
-
   return (
-    <div className='App' id='main_app'>
+    <div className="App" id="main_app">
       <AdBlockCheck />
-      {
-        underMaintaince
-          ?
-          <MaintenancePage />
-          :
-          showOtherTabError
-            ?
-            <BroadcastPage />
-            :
-            <ErrorBoundary>
-              <Suspense fallback={<InstaPayLoader opacity={1} fallback={true} />}>
-                <TimezonesProvider>
-                  <LanguageAttributeSync>
-                    <QueryClientProvider client={client}>
-                      <UserState>
-                        <InactivityWrapper>
-                          <CustomizerProvider>
-                            <AnimationThemeProvider>
-                              <MuiPickersUtilsProvider utils={DateMomentUtils}>
-                                {" "}
-                                <Routers />
-                                {" "}
-                              </MuiPickersUtilsProvider>
-                            </AnimationThemeProvider>
-                          </CustomizerProvider>
-                        </InactivityWrapper>
-                      </UserState>
-                    </QueryClientProvider>
-                  </LanguageAttributeSync>
-
-                </TimezonesProvider>
-              </Suspense>
-            </ErrorBoundary>
-      }
+      {underMaintaince ? (
+        <MaintenancePage />
+      ) : showOtherTabError ? (
+        <BroadcastPage />
+      ) : (
+        <ErrorBoundary>
+          <Suspense fallback={<InstaPayLoader opacity={1} fallback={true} />}>
+            <TimezonesProvider>
+              <LanguageAttributeSync>
+                <QueryClientProvider client={client}>
+                  <UserState>
+                    <InactivityWrapper>
+                      <CustomizerProvider>
+                        <AnimationThemeProvider>
+                          <MuiPickersUtilsProvider utils={DateMomentUtils}>
+                            {" "}
+                            <Routers />{" "}
+                          </MuiPickersUtilsProvider>
+                        </AnimationThemeProvider>
+                      </CustomizerProvider>
+                    </InactivityWrapper>
+                  </UserState>
+                </QueryClientProvider>
+              </LanguageAttributeSync>
+            </TimezonesProvider>
+          </Suspense>
+        </ErrorBoundary>
+      )}
       <ToastContainer />
     </div>
-  )
-}
+  );
+};
 
 export default App;

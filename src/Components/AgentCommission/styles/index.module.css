@@ -1,360 +1,364 @@
 .container {
-    padding: 24px;
-    min-height: 100vh;
-    font-family: 'Inter', sans-serif;
+  padding: 24px;
+  min-height: 100vh;
+  font-family: "Inter", sans-serif;
 }
 
 .top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    position: relative;
-    margin: 0px;
-    padding: 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  margin: 0px;
+  padding: 0px;
 }
 
 .headerTitle {
-    margin: 0px;
-    padding: 0px;
+  margin: 0px;
+  padding: 0px;
 }
 
 .headerTitle h1 {
-    color: #5626e6;
-    font-size: 40px;
-    font-style: normal;
-    font-weight: 700;
-    margin: 0px;
-    padding: 0px;
+  color: #5626e6;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 700;
+  margin: 0px;
+  padding: 0px;
 }
 
 .headerTitle p {
-    color: #868686;
-    font-size: 14px;
-    font-weight: 400;
-    margin: 0px;
-    padding: 0px;
+  color: #868686;
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0px;
+  padding: 0px;
 }
 
 .topright {
-    margin-top: 100px;
+  margin-top: 100px;
 }
 
 .main {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    max-width: 1400px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 1400px;
 }
 
 .metricsGrid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
 }
 
 .metricCard {
-    background: #FFFFFF;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    border-radius: 14px;
-    border-top: 2px solid #5926F0;
-    box-shadow: 0 2px 15px 0 rgba(12, 10, 32, 0.06);
+  background: #ffffff;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: 14px;
+  border-top: 2px solid #5926f0;
+  box-shadow: 0 2px 15px 0 rgba(12, 10, 32, 0.06);
 }
 
 .cardHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .cardTitle {
-    font-size: 13px;
-    font-weight: 500;
-    color: #475467;
+  font-size: 13px;
+  font-weight: 500;
+  color: #475467;
 }
 
 .iconWrapperCircle,
 .iconWrapperSquare {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    background: #EEF2FF;
-    border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #eef2ff;
+  border-radius: 6px;
 }
 
 .iconWrapperSquare {
-    border-radius: 8px;
+  border-radius: 8px;
 }
 
 .cardValue {
-    font-size: 28px;
-    font-weight: 600;
-    color: #101828;
-    line-height: 1.2;
+  font-size: 28px;
+  font-weight: 600;
+  color: #101828;
+  line-height: 1.2;
 }
 
 .cardSubtext {
-    font-size: 13px;
-    color: #667085;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  font-size: 13px;
+  color: #667085;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .trendUp {
-    color: #027A48;
-    font-weight: 500;
+  color: #027a48;
+  font-weight: 500;
 }
 
 .bottomContent {
-    display: flex;
-    gap: 24px;
+  display: flex;
+  gap: 24px;
 }
 
 .leftColumn {
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .rightColumn {
-    width: 50%;
-
+  width: 50%;
 }
 
 .boxSection {
-    background: #FFFFFF;
-    border-radius: 13px;
-    border: 1px solid #EBE8F5;
-    box-shadow: 0 1px 2px 0 rgba(15, 15, 15, 0.05);
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  background: #ffffff;
+  border-radius: 13px;
+  border: 1px solid #ebe8f5;
+  box-shadow: 0 1px 2px 0 rgba(15, 15, 15, 0.05);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .sectionTitle {
-    font-size: 14px;
-    font-weight: 600;
-    color: #101828;
-    margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #101828;
+  margin: 0;
 }
 
 .funnelList {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .funnelItem {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
 }
 
 .funnelLabelContainer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 .funnelLabel {
-    font-size: 13px;
-    font-weight: 500;
-    color: #475467;
+  font-size: 13px;
+  font-weight: 500;
+  color: #475467;
 }
 
 .funnelValueDark {
-    font-size: 13px;
-    font-weight: 600;
-    color: #101828;
+  font-size: 13px;
+  font-weight: 600;
+  color: #101828;
 }
 
 .funnelBarContainer {
-    width: 100%;
-    height: 8px;
-    background: #F2F4F7;
-    border-radius: 99px;
-    overflow: hidden;
+  width: 100%;
+  height: 8px;
+  background: #f2f4f7;
+  border-radius: 99px;
+  overflow: hidden;
 }
 
 .funnelBar {
-    height: 100%;
-    border-radius: 99px;
-    transition: width 0.4s ease-in-out;
-    background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 0px, rgba(255, 255, 255, 0.15) 4px, transparent 4px, transparent 8px);
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.4s ease-in-out;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 0px,
+    rgba(255, 255, 255, 0.15) 4px,
+    transparent 4px,
+    transparent 8px
+  );
 }
 
 .actionButtons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .actionBtn {
-    display: flex;
-    height: 64px;
-    padding: var(--sm, 8px) var(--md, 16px);
-    align-items: center;
-    grid-row: span 1;
-    grid-column: span 1;
-    justify-self: stretch;
-    border-radius: var(--md, 10px);
-    border: 1px solid var(--border-subtle, #E1E5EE);
-    background: var(--gray-gray-50, #F8F9FC);
-    color: var(--text-primary, #1B1F2A);
-    font-family: Inter;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 150%;
-    letter-spacing: -0.42px;
-    width: 23.9%;
-    gap: 8px;
+  display: flex;
+  height: 64px;
+  padding: var(--sm, 8px) var(--md, 16px);
+  align-items: center;
+  grid-row: span 1;
+  grid-column: span 1;
+  justify-self: stretch;
+  border-radius: var(--md, 10px);
+  border: 1px solid var(--border-subtle, #e1e5ee);
+  background: var(--gray-gray-50, #f8f9fc);
+  color: var(--text-primary, #1b1f2a);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+  letter-spacing: -0.42px;
+  width: 23.9%;
+  gap: 8px;
 }
 
 .actionBtn:hover {
-    background: #F9FAFB;
-    border-color: #D0D5DD;
+  background: #f9fafb;
+  border-color: #d0d5dd;
 }
-
 
 /* --- SUB-AGENT PERFORMANCE TABLE STYLES --- */
 .subAgentHeaderRow {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .manageLink {
-    font-size: 13px;
-    font-weight: 600;
-    color: #5926F0;
-    text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: #5926f0;
+  text-decoration: none;
 }
 
 .manageLink:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .subAgentTable {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 /* 3-Column Grid for Table headers and rows */
 .tableHeaderRow,
 .tableDataRow {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    align-items: center;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  align-items: center;
 }
 
 .tableHeaderRow {
-    font-size: 11px;
-    font-weight: 600;
-    color: #667085;
-    letter-spacing: 0.5px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #EAECF0;
+  font-size: 11px;
+  font-weight: 600;
+  color: #667085;
+  letter-spacing: 0.5px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eaecf0;
 }
 
 .colAgentName {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .colActive,
 .colConv {
-    text-align: right;
-    /* Values right aligned like standard data tables */
+  text-align: right;
+  /* Values right aligned like standard data tables */
 }
 
 /* Data Row Text Styles */
 .tableDataRow .colActive,
 .tableDataRow .colConv {
-    font-size: 13px;
-    color: #101828;
-    font-weight: 500;
+  font-size: 13px;
+  color: #101828;
+  font-weight: 500;
 }
 
 .agentName {
-    font-size: 14px;
-    font-weight: 500;
-    color: #101828;
+  font-size: 14px;
+  font-weight: 500;
+  color: #101828;
 }
 
 .avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 600;
-    color: #FFFFFF;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
 }
 
 .avatarPurple {
-    background: #7F56D9;
+  background: #7f56d9;
 }
 
 .avatarBlue {
-    background: #0086C9;
+  background: #0086c9;
 }
 
 .avatarPink {
-    background: #E31B54;
+  background: #e31b54;
 }
 
 @media (max-width: 900px) {
-    .bottomContent {
-        flex-direction: column;
-    }
+  .bottomContent {
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 768px) {
-    .metricsGrid {
-        grid-template-columns: repeat(2, 1fr) !important;
-    }
-    .leftColumn,
-    .rightColumn {
-        width: 100% !important;
-    }
-    .tableHeaderRow,
-    .tableDataRow {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        gap: 8px !important;
-    }
-    .colAgentName {
-        flex: 1.5 !important;
-        min-width: 0 !important;
-    }
-    .colActive,
-    .colConv {
-        flex: 1 !important;
-        text-align: right !important;
-        word-break: break-word !important;
-    }
-    .tableHeaderRow {
-        font-size: 10px !important;
-        letter-spacing: 0px !important;
-    }
-    .agentName,
-    .tableDataRow .colActive,
-    .tableDataRow .colConv {
-        font-size: 11px !important;
-    }
+  .metricsGrid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .leftColumn,
+  .rightColumn {
+    width: 100% !important;
+  }
+  .tableHeaderRow,
+  .tableDataRow {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+  .colAgentName {
+    flex: 1.5 !important;
+    min-width: 0 !important;
+  }
+  .colActive,
+  .colConv {
+    flex: 1 !important;
+    text-align: right !important;
+    word-break: break-word !important;
+  }
+  .tableHeaderRow {
+    font-size: 10px !important;
+    letter-spacing: 0px !important;
+  }
+  .agentName,
+  .tableDataRow .colActive,
+  .tableDataRow .colConv {
+    font-size: 11px !important;
+  }
 }

@@ -1,0 +1,18 @@
+/* WEB-06 funding review and WEB-06b funding pending (Figma 14235:39008, 14235:39513). */
+
+.section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 40px;
+  box-shadow: inset 0 1px 0 #e9e7ef;
+}
+.details {
+  gap: 16px;
+}
+
+/* Rows line up across the payment and broker columns whether or not an item carries a hint. */
+.timelines ol > li:not(:last-child) {
+  min-height: 64px;
+}

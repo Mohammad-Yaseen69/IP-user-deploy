@@ -1,44 +1,44 @@
 .container {
-    margin: 2rem 0;
+  margin: 2rem 0;
 }
 
 .com_name {
-    margin-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
-.container>h5 {
-    font-size: 1.2rem;
-    margin-top: 2rem;
+.container > h5 {
+  font-size: 1.2rem;
+  margin-top: 2rem;
 }
 
 .content {
-    margin-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
 .container label {
-    font-weight: 600;
-    margin-top: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  font-weight: 600;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .info_icon:hover {
-    color: orange;
-    cursor: pointer;
+  color: orange;
+  cursor: pointer;
 }
 
 .content p {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .content ul {
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
-    margin-left: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-left: 2rem;
 }
 
 .content ul li {
-    list-style-type: disc;
+  list-style-type: disc;
 }
