@@ -745,61 +745,6 @@ p.note {
   }
 }
 
-/* ---------- Pagination ---------- */
-.pager {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 14px 20px;
-
-  p {
-    @include type(12px, 400, $muted);
-    margin: 0;
-  }
-}
-
-.pages {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-
-  button {
-    @include type(12px, 500, $text-2);
-    display: inline-grid;
-    place-items: center;
-    min-width: 32px;
-    height: 32px;
-    padding: 0 8px;
-    background: #fff;
-    border: 1px solid $border;
-    border-radius: 6px;
-    cursor: pointer;
-
-    &.on {
-      color: $primary;
-      background: $tint;
-      border-color: $primary;
-    }
-
-    &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-  }
-
-  select {
-    border: 1px solid $muted;
-    border-radius: 6px;
-    padding: 4px;
-  }
-
-  span {
-    color: $muted;
-  }
-}
-
 @media screen and (max-width: 675px) {
   .picker {
     right: -68px;

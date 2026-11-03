@@ -1,5 +1,5 @@
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import dayjs from "dayjs";
 import { FileText, Plus } from "lucide-react";
@@ -12,46 +12,47 @@ import { DateGroup, EmptyState } from "../../Common/Ledger/Cells";
 import { ActiveFilters } from "../../Common/Ledger/Filters";
 import Ledger from "../../Common/Ledger/Ledger";
 import s from "../../Common/Ledger/ledger.module.scss";
-import Pagination from "../../Common/Ledger/Pagination";
 import InstaPayLoader from "../Loader";
 import styles from "../TransactionsNewApi/styles/index.module.scss";
 import TopRight from "../topRight";
 import QuotationRow, { isOpenQuotation } from "./QuotationRow";
-
-const LIMIT = 15;
-const FIRST_PAGES = { received: 1, sent: 1 };
+import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
 
 const defaultRange = { startDate: new Date(), endDate: new Date(), key: "selection" };
 
 const byNewest = (a, b) => new Date(b.createdAt) - new Date(a.createdAt);
 
-const useQuotations = (key, path, page, limit, search, apiDates) => {
+const useQuotations = (key, path, search, apiDates) => {
   const { userDetails, authHeader } = useContext(UserContext);
-  return useQuery({
-    queryKey: [key, userDetails?._id, page, limit, search, apiDates],
-    queryFn: async () => {
+  return useInfiniteQuery({
+    queryKey: [key, userDetails?._id, search, apiDates],
+    initialPageParam: 1,
+    queryFn: async ({ pageParam = 1 }) => {
       const query = new URLSearchParams({
         ...(search && { search }),
         ...apiDates,
-        page,
-        limit,
+        skip: pageParam,
+        limit: 10,
       }).toString();
       const response = await axios.get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/quotation/${path}/${userDetails?._id}${query ? `?${query}` : ""}`,
+        `${import.meta.env.VITE_IP_DEV_API}/api/quotation/${path}/${userDetails?._id}?${query}`,
         { headers: authHeader },
       );
       const decrypted = await decryptData(response?.data?.data);
       return {
         list: decrypted?.quotation ?? [],
         total: decrypted?.pagination?.total ?? 0,
+        hasMore: decrypted?.pagination?.hasMore ?? false,
       };
     },
+    getNextPageParam: (lastPage, allPages) => (lastPage.hasMore ? allPages.length + 1 : undefined),
     enabled: !!userDetails?._id,
     retry: false,
   });
 };
 
-const totalOf = (query) => query.data?.total || query.data?.list.length || 0;
+const listOf = (query) => query.data?.pages.flatMap((page) => page.list) ?? [];
+const totalOf = (query) => query.data?.pages[0]?.total || 0;
 
 const Quotations = () => {
   const navigate = useNavigate();
@@ -64,8 +65,6 @@ const Quotations = () => {
 
   const [active, setActive] = useState("received");
   const [activeItem, setActiveItem] = useState(0);
-  const [pages, setPages] = useState(FIRST_PAGES);
-  const [limit, setLimit] = useState(10);
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [apiDates, setApiDates] = useState(null);
@@ -74,25 +73,18 @@ const Quotations = () => {
   const receivedQuery = useQuotations(
     "receivedQuotations",
     "get-quotation-by-reciever",
-    pages.received,
-    limit,
     debouncedSearch,
     apiDates,
   );
   const sentQuery = useQuotations(
     "sentQuotations",
     "get-quotation-by-sender",
-    pages.sent,
-    limit,
     debouncedSearch,
     apiDates,
   );
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearch(searchQuery);
-      setPages(FIRST_PAGES);
-    }, 1000);
+    const timer = setTimeout(() => setDebouncedSearch(searchQuery), 1000);
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
@@ -102,14 +94,19 @@ const Quotations = () => {
 
   useEffect(() => {
     const list =
-      tab === "sent" ? sentQuery.data?.list : tab === "received" ? receivedQuery.data?.list : [];
-    if (id && list?.some((i) => i?._id === id)) setActiveItem(id);
+      tab === "sent" ? listOf(sentQuery) : tab === "received" ? listOf(receivedQuery) : [];
+    if (id && list.some((i) => i?._id === id)) setActiveItem(id);
   }, [tab, id, sentQuery.data, receivedQuery.data]);
 
   const isReceived = active === "received";
   const current = isReceived ? receivedQuery : sentQuery;
-  const total = totalOf(current);
-  const list = useMemo(() => [...(current.data?.list ?? [])].sort(byNewest), [current.data]);
+  const list = useMemo(() => listOf(current).sort(byNewest), [current.data]);
+
+  const loaderRef = useInfiniteScroll({
+    hasNextPage: current.hasNextPage,
+    isFetching: current.isFetching,
+    fetchNextPage: current.fetchNextPage,
+  });
 
   const groups = useMemo(() => {
     const open = list.filter(isOpenQuotation);
@@ -126,13 +123,11 @@ const Quotations = () => {
       to: selection.endDate.toISOString().split("T")[0],
     });
     setDateRange(selection);
-    setPages(FIRST_PAGES);
   };
 
   const clearDates = () => {
     setApiDates(null);
     setDateRange(defaultRange);
-    setPages(FIRST_PAGES);
   };
 
   const dateLabel = apiDates
@@ -201,17 +196,11 @@ const Quotations = () => {
               ))}
             </div>
           ))}
-          <Pagination
-            page={pages[active]}
-            total={total}
-            limit={limit}
-            setLimit={setLimit}
-            noun={t("quotations")}
-            onPage={(page) => {
-              setPages((prev) => ({ ...prev, [active]: page }));
-              setActiveItem(0);
-            }}
-          />
+          {current?.hasNextPage && (
+            <div ref={loaderRef} className={s.loader}>
+              <InstaPayLoader />
+            </div>
+          )}
         </>
       ) : (
         <EmptyState Icon={FileText} title={t("No Quotations")} />

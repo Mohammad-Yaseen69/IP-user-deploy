@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import dayjs from "dayjs";
 import { Receipt } from "lucide-react";
@@ -9,53 +9,56 @@ import { DateGroup, EmptyState } from "../../Common/Ledger/Cells";
 import { ActiveFilters } from "../../Common/Ledger/Filters";
 import Ledger from "../../Common/Ledger/Ledger";
 import s from "../../Common/Ledger/ledger.module.scss";
-import Pagination from "../../Common/Ledger/Pagination";
 import { UserContext } from "../../Context/UserContext";
 import { formatCurrency } from "../../Helper/AmountFormat";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import InstaPayLoader from "../Loader";
 import PaymentRequestRow from "./PaymentRequestRow";
+import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
 
 const RECEIVED = "Received Requests";
 const SENT = "Sent Requests";
-const FIRST_PAGES = { [RECEIVED]: 1, [SENT]: 1 };
 
 const defaultRange = { startDate: new Date(), endDate: new Date(), key: "selection" };
 
 const byNewest = (a, b) => new Date(b.createdAt) - new Date(a.createdAt);
 
-const useRequests = (key, path, label, page, limit, search, apiDates) => {
+const useRequests = (key, path, label, search, apiDates) => {
   const { userDetails, authHeader } = useContext(UserContext);
-  return useQuery({
-    queryKey: [key, userDetails?._id, page, limit, search, apiDates],
-    queryFn: async () => {
+  return useInfiniteQuery({
+    queryKey: [key, userDetails?._id, search, apiDates],
+    initialPageParam: 1,
+    queryFn: async ({ pageParam = 1 }) => {
       try {
         const query = new URLSearchParams({
           ...(search && { search }),
           ...apiDates,
-          page,
-          limit,
+          skip: pageParam,
+          limit: 10,
         }).toString();
         const res = await axios.get(
-          `${import.meta.env.VITE_IP_DEV_API}/api/account/${path}/${userDetails?._id}${query ? `?${query}` : ""}`,
+          `${import.meta.env.VITE_IP_DEV_API}/api/account/${path}/${userDetails?._id}?${query}`,
           { headers: authHeader },
         );
         const decrypted = decryptData(res.data.data);
         return {
           list: decrypted?.paymentRequests ?? [],
           total: decrypted?.pagination?.total ?? 0,
+          hasMore: decrypted?.pagination?.hasMore ?? false,
         };
       } catch (err) {
         throw new Error(err.response?.data?.message || `Failed to fetch ${label} requests`);
       }
     },
+    getNextPageParam: (lastPage, allPages) => (lastPage.hasMore ? allPages.length + 1 : undefined),
     enabled: !!userDetails?._id,
     retry: false,
   });
 };
 
-const totalOf = (query) => query.data?.total || query.data?.list.length || 0;
+const listOf = (query) => query.data?.pages.flatMap((page) => page.list) ?? [];
+const totalOf = (query) => query.data?.pages[0]?.total || 0;
 
 const PaymentRequestsTable = () => {
   const { t } = useTranslation();
@@ -68,8 +71,6 @@ const PaymentRequestsTable = () => {
 
   const [active, setActive] = useState(RECEIVED);
   const [activeItem, setActiveItem] = useState(0);
-  const [pages, setPages] = useState(FIRST_PAGES);
-  const [limit, setLimit] = useState(10);
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [apiDates, setApiDates] = useState(null);
@@ -79,8 +80,6 @@ const PaymentRequestsTable = () => {
     "receivedPaymentRequests",
     "get-user-receive-payment-request",
     "received",
-    pages[RECEIVED],
-    limit,
     debouncedSearch,
     apiDates,
   );
@@ -88,43 +87,35 @@ const PaymentRequestsTable = () => {
     "sentPaymentRequests",
     "get-user-send-payment-request",
     "sent",
-    pages[SENT],
-    limit,
     debouncedSearch,
     apiDates,
   );
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearch(searchQuery);
-      setPages(FIRST_PAGES);
-    }, 1000);
+    const timer = setTimeout(() => setDebouncedSearch(searchQuery), 1000);
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  const receivedRequests = receivedQuery.data?.list ?? [];
-  const sentRequests = sentQuery.data?.list ?? [];
+  const received = useMemo(() => listOf(receivedQuery).sort(byNewest), [receivedQuery.data]);
+  const sent = useMemo(() => listOf(sentQuery).sort(byNewest), [sentQuery.data]);
 
   useEffect(() => {
     if (tab) setActive(tab.toLowerCase().includes("received") ? RECEIVED : SENT);
   }, [tab]);
 
   useEffect(() => {
-    if (tab === "sent" && sentRequests.length > 0) {
-      setActiveItem(currentIndex || sentRequests.findIndex((i) => i?._id === id) + 1);
+    if (tab === "sent" && sent.length > 0) {
+      setActiveItem(currentIndex || sent.findIndex((i) => i?._id === id) + 1);
     }
-    if (tab === "received" && receivedRequests.length > 0) {
-      setActiveItem(receivedRequests.findIndex((i) => i?._id === id) + 1);
+    if (tab === "received" && received.length > 0) {
+      setActiveItem(received.findIndex((i) => i?._id === id) + 1);
     }
-  }, [tab, id, sentQuery.data, receivedQuery.data, currentIndex]);
+  }, [tab, id, sent, received, currentIndex]);
 
-  const received = useMemo(() => [...receivedRequests].sort(byNewest), [receivedQuery.data]);
-  const sent = useMemo(() => [...sentRequests].sort(byNewest), [sentQuery.data]);
-
-  const isUnfilteredFirstPage = pages[RECEIVED] === 1 && !debouncedSearch && !apiDates;
+  const isUnfiltered = !debouncedSearch && !apiDates;
   useEffect(() => {
     const latest = received[0]?._id;
-    if (!latest || !isUnfilteredFirstPage) return;
+    if (!latest || !isUnfiltered) return;
     axios.put(
       `${import.meta.env.VITE_IP_DEV_API}/api/account/update-${userDetails?.account_type}/${userDetails?._id}`,
       {
@@ -140,7 +131,12 @@ const PaymentRequestsTable = () => {
   const isReceived = active === RECEIVED;
   const current = isReceived ? receivedQuery : sentQuery;
   const list = isReceived ? received : sent;
-  const total = totalOf(current);
+
+  const loaderRef = useInfiniteScroll({
+    hasNextPage: current.hasNextPage,
+    isFetching: current.isFetching,
+    fetchNextPage: current.fetchNextPage,
+  });
 
   const groups = useMemo(() => {
     const rows = list.map((item, index) => ({ item, index }));
@@ -169,13 +165,11 @@ const PaymentRequestsTable = () => {
       to: selection.endDate.toISOString().split("T")[0],
     });
     setDateRange(selection);
-    setPages(FIRST_PAGES);
   };
 
   const clearDates = () => {
     setApiDates(null);
     setDateRange(defaultRange);
-    setPages(FIRST_PAGES);
   };
 
   const dateLabel = apiDates
@@ -236,17 +230,11 @@ const PaymentRequestsTable = () => {
               ))}
             </div>
           ))}
-          <Pagination
-            page={pages[active]}
-            total={total}
-            limit={limit}
-            noun={t(isReceived ? "received requests" : "sent requests")}
-            onPage={(page) => {
-              setPages((prev) => ({ ...prev, [active]: page }));
-              setActiveItem(0);
-            }}
-            setLimit={setLimit}
-          />
+          {current?.hasNextPage && (
+            <div ref={loaderRef} className={s.loader}>
+              <InstaPayLoader />
+            </div>
+          )}
         </>
       ) : (
         <EmptyState Icon={Receipt} title={t("No Pending Items")} />
