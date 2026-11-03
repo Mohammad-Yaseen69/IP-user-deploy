@@ -101,6 +101,7 @@ import {
 import MobileStepProgress from "../../VirtualIbanModal/MobileStepProgress";
 import MobileFooter from "../../../../Common/Component/MobileFooter";
 import StepsDrawer from "../../../../Common/Component/StepsDrawer";
+import { t as translate } from "i18next";
 
 const DEFAULT_BENEFICIARY_FORM = {
   type: "individual",
@@ -124,7 +125,9 @@ const DEFAULT_BENEFICIARY_FORM = {
 
 const sidebarIcons = {
   [SIDEBAR_STEP_NAMES.PAYMENT_RAIL]: Globe,
-  [SIDEBAR_STEP_NAMES.AMOUNT]: () => <span className={styles.sidebarIconText}>EUR</span>,
+  [SIDEBAR_STEP_NAMES.AMOUNT]: () => (
+    <span className={styles.sidebarIconText}>{translate("EUR")}</span>
+  ),
   [SIDEBAR_STEP_NAMES.BENEFICIARY]: User,
   [SIDEBAR_STEP_NAMES.PURPOSE]: List,
   [SIDEBAR_STEP_NAMES.REVIEW]: FileText,
@@ -192,25 +195,28 @@ const TextField = ({
   optional = false,
   placeholder = "",
   maxLength,
-}) => (
-  <label className={styles.field}>
-    <span>
-      {label}
-      {optional && <span className={styles.optionalTag}>Optional</span>}
-    </span>
-    <input
-      type={type}
-      value={value}
-      disabled={disabled}
-      placeholder={placeholder}
-      maxLength={maxLength}
-      className={error ? styles.fieldError : ""}
-      onChange={(e) => onChange(e.target.value)}
-    />
-    {hint && !error && <small>{hint}</small>}
-    {error && <span className={styles.fieldErrorText}>{error}</span>}
-  </label>
-);
+}) => {
+  const { t } = useTranslation();
+  return (
+    <label className={styles.field}>
+      <span>
+        {label}
+        {optional && <span className={styles.optionalTag}>{t("Optional")}</span>}
+      </span>
+      <input
+        type={type}
+        value={value}
+        disabled={disabled}
+        placeholder={placeholder}
+        maxLength={maxLength}
+        className={error ? styles.fieldError : ""}
+        onChange={(e) => onChange(e.target.value)}
+      />
+      {hint && !error && <small>{hint}</small>}
+      {error && <span className={styles.fieldErrorText}>{error}</span>}
+    </label>
+  );
+};
 
 const SwiftAmountStep = ({ amount, setAmount, availableBalance, currencyCode, sourceIban }) => {
   const { t } = useTranslation();
@@ -254,7 +260,7 @@ const SwiftAmountStep = ({ amount, setAmount, availableBalance, currencyCode, so
       <div className={styles.fxBanner}>
         <Globe size={16} />
         <span>
-          {t("Your EUR balance will be converted to")} <strong>USD</strong>{" "}
+          {t("Your EUR balance will be converted to")} <strong>{t("USD")}</strong>{" "}
           {t(
             "at a live rate locked when you reach the Review step. The exact USD amount will be shown before you confirm.",
           )}
@@ -688,7 +694,11 @@ const ReviewStep = ({
               <>
                 <br />
                 <p style={{ marginTop: "4px" }}>{t("Rate")}&nbsp;</p>
-                <strong>1 EUR = {exchangeRate.value.toFixed(4)} USD</strong>
+                <strong>
+                  1&nbsp;{t("EUR")}&nbsp;=&nbsp;
+                  {exchangeRate.value.toFixed(4)}
+                  {t("USD")}
+                </strong>
               </>
             )}
           </div>
