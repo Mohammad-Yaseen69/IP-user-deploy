@@ -7,16 +7,16 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router";
 import { AmountCell, PartyCell, StatusCell, TxCell } from "../../Common/Ledger/Cells";
 import s from "../../Common/Ledger/ledger.module.scss";
-import { capitalizeStatus, isVoid } from "../../Common/Ledger/utils";
+import { capitalizeStatus } from "../../Common/Ledger/utils";
 import { UserContext } from "../../Context/UserContext";
 import { formatCurrency } from "../../Helper/AmountFormat";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import PaymentRequestSheet from "./Paymentrequestsheet";
-import RejectModal from "./RejectModal";
 import ReviewModal from "./ReviewModal";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import { toast } from "react-toastify";
+import RejectModal from "../../Common/Ledger/RejectModal";
 
 const partyName = ({ user, company, company_name } = {}) =>
   [user?.first_name || company?.company_name || company_name, user?.last_name]
@@ -98,6 +98,7 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
 
   const rejectRequest = async () => {
     setRejecting(true);
+    console.log("TEST");
     try {
       verifyToken();
       await axios.get(
@@ -114,6 +115,8 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
       );
     } catch (error) {
       console.log(error);
+      const decrypted = decryptData(error?.response?.data?.data);
+      toast.error(decrypted?.message ?? t("Unable to reject request please try again later!"));
     } finally {
       setRejecting(false);
     }
