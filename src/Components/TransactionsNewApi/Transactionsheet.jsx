@@ -259,6 +259,7 @@ const TransactionSheet = ({
             setSelectedCategories={setSelectedCategory}
             isEditMode={isEditMode}
             item={item}
+            listContainerStyle={{ maxWidth: "100%" }}
           />
         </Section>
       )}

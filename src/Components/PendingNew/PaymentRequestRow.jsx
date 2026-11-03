@@ -1,4 +1,4 @@
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import dayjs from "dayjs";
 import { ChevronRight, MessageSquare, Receipt } from "lucide-react";
@@ -7,14 +7,16 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router";
 import { AmountCell, PartyCell, StatusCell, TxCell } from "../../Common/Ledger/Cells";
 import s from "../../Common/Ledger/ledger.module.scss";
-import { capitalizeStatus, isVoid } from "../../Common/Ledger/utils";
+import { capitalizeStatus } from "../../Common/Ledger/utils";
 import { UserContext } from "../../Context/UserContext";
 import { formatCurrency } from "../../Helper/AmountFormat";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import PaymentRequestSheet from "./Paymentrequestsheet";
-import RejectModal from "./RejectModal";
 import ReviewModal from "./ReviewModal";
+import { apiWrapper } from "../../utils/Functions/apiWrapper";
+import { toast } from "react-toastify";
+import RejectModal from "../../Common/Ledger/RejectModal";
 
 const partyName = ({ user, company, company_name } = {}) =>
   [user?.first_name || company?.company_name || company_name, user?.last_name]
@@ -96,6 +98,7 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
 
   const rejectRequest = async () => {
     setRejecting(true);
+    console.log("TEST");
     try {
       verifyToken();
       await axios.get(
@@ -112,12 +115,29 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
       );
     } catch (error) {
       console.log(error);
+      const decrypted = decryptData(error?.response?.data?.data);
+      toast.error(decrypted?.message ?? t("Unable to reject request please try again later!"));
     } finally {
       setRejecting(false);
     }
   };
 
-  const due = item?.dueDate && `${t("Due")} ${dayjs(item.dueDate).format("D MMM")}`;
+  const { mutate: sendReminder, isPending } = useMutation({
+    mutationFn: async () => {
+      return await apiWrapper({
+        endpoint: `/api/account/send-payment-request-reminder/${item?._id}`,
+        method: "POST",
+        isDecrypted: true,
+      });
+    },
+    onSuccess: (res) => {
+      toast.success(res?.message ?? t("Reminder sent successfully"));
+    },
+    onError: (error) => {
+      const decrypted = decryptData(error?.response?.data?.data);
+      toast.error(decrypted?.message ?? t("Failed to send reminder!"));
+    },
+  });
 
   return (
     <>
@@ -133,7 +153,6 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
         />
         <PartyCell name={name} />
         <StatusCell status={status} label={label} />
-        <div className={s.time}>{due}</div>
         <AmountCell
           value={formatCurrency(item?.amount, true)}
           code={item?.currency?.code}
@@ -163,14 +182,14 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
             </>
           ) : pending ? (
             <>
-              <button type="button" className={s.textBtn} disabled onClick={stop(() => {})}>
+              {/* <button type="button" className={s.textBtn} disabled onClick={stop(() => {})}>
                 {t("Cancel")}
-              </button>
+              </button> */}
               <button
                 type="button"
                 className={`${s.btn} ${s.sm}`}
-                disabled
-                onClick={stop(() => {})}
+                disabled={isPending}
+                onClick={stop(sendReminder)}
               >
                 {t("Send reminder")}
               </button>
@@ -189,6 +208,8 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
           label={label}
           allRating={allRating}
           allReviews={allReviews}
+          reminderLoading={isPending}
+          onSendReminder={sendReminder}
           onClose={() => setActiveItem(0)}
           onReject={() => setShowReject(true)}
           onReview={() => setShowReview(true)}
