@@ -30,6 +30,7 @@ import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import useWindowWidth from "../../utils/useWindowWidth";
 import NextStepModal from "./NextStepModal";
 import { getPendingAdditionalFiles } from "../../utils/Functions/additionalFiles";
+import { getInitials } from "../../utils/Functions/getInitials";
 
 const TAB_PARAMS = [
   ["basic", "Basic Info"],
@@ -356,7 +357,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
 
       {width < 1000 && (
         <div className={styles.profileCard} onClick={() => setTab(tabsData[0]?.name)}>
-          <div className={styles.avatar}>MS</div>
+          <div className={styles.avatar}>{getInitials(displayName)}</div>
           <div className={styles.profileInfo}>
             <p className={styles.profileName}>{displayName}</p>
             <p className={styles.profileMeta}>

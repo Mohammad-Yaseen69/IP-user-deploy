@@ -43,6 +43,7 @@ import {
   WarningCircle,
 } from "./Icons";
 import dayjs from "dayjs";
+import { getInitials } from "../../utils/Functions/getInitials";
 
 export const currentDate = new Date();
 export const minDate = new Date(
@@ -747,13 +748,6 @@ const Basic = ({ setCurrentTab }) => {
   const displayName = isIndividualAccount
     ? `${userDetails?.user?.first_name ?? ""} ${userDetails?.user?.last_name ?? ""}`.trim()
     : (userDetails?.company?.company_name ?? "");
-  const initials = displayName
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((word) => word[0])
-    .join("")
-    .toUpperCase();
 
   const completion = Number(profileCompletedPercentage);
 
@@ -927,7 +921,7 @@ const Basic = ({ setCurrentTab }) => {
                     className={styles.avatarImg}
                   />
                 ) : (
-                  <div className={styles.avatar}>{initials}</div>
+                  <div className={styles.avatar}>{getInitials(displayName)}</div>
                 )}
 
                 {isEditingDp ? (
