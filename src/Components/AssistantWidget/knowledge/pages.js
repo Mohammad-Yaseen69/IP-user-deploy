@@ -586,8 +586,8 @@ export const PAGES = [
   },
   {
     id: "social_accounts",
-    title: "Social Network Accounts",
-    route: "/settings?tab=social",
+    title: "Pay via Social",
+    route: "/pay-via-social",
     permission: "settings.social-accounts.view",
     description:
       "Link WhatsApp, Telegram and Instagram so the user can transact through the InstaPay chatbot there. A security PIN must be set first, and linking uses a code entered in the chatbot.",
