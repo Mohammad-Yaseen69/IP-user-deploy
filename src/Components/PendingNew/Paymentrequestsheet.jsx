@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { Download, FileText } from "lucide-react";
 import { useContext, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import Rating from "react-rating";
+import { Rating } from "@mui/material";
 import { UserContext } from "../../Context/UserContext";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import {
@@ -31,7 +31,8 @@ const PaymentRequestSheet = ({
   onReject,
   onReview,
   onSendReminder,
-  reminderLoading,
+  loading,
+  onCancelRequest,
 }) => {
   const { t } = useTranslation();
   const { userWallets } = useContext(UserContext);
@@ -129,13 +130,18 @@ const PaymentRequestSheet = ({
       ) : (
         <>
           <div className={s.footRow}>
-            {/* <button type="button" className={s.btnSoftDanger} disabled>
+            <button
+              type="button"
+              className={s.btnSoftDanger}
+              onClick={onCancelRequest}
+              disabled={loading}
+            >
               {t("Cancel request")}
-            </button> */}
+            </button>
             <button
               type="button"
               className={s.btnPrimary}
-              disabled={reminderLoading}
+              disabled={loading}
               onClick={onSendReminder}
             >
               {t("Send reminder")}
@@ -227,10 +233,10 @@ const PaymentRequestSheet = ({
           <div className={s.heroRow}>
             <b>{allRating}/5</b>
             <Rating
-              initialRating={Number(allRating)}
-              emptySymbol="fa fa-star-o"
-              fullSymbol="fa fa-star"
-              readonly
+              name="half-rating-read"
+              defaultValue={Number(allRating)}
+              precision={0.5}
+              readOnly
             />
             <span className={s.sub}>
               {allReviews.length} {t("ratings")}
@@ -244,10 +250,10 @@ const PaymentRequestSheet = ({
                   {review?.buyer?.user?.last_name}
                 </b>
                 <Rating
-                  initialRating={review.rating}
-                  emptySymbol="fa fa-star-o"
-                  fullSymbol="fa fa-star"
-                  readonly
+                  name="half-rating-read"
+                  defaultValue={review.rating}
+                  precision={0.5}
+                  readOnly
                 />
                 <p>{review.comment}</p>
               </div>
