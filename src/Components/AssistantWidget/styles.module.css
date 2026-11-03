@@ -150,7 +150,6 @@
 }
 
 @keyframes orbBlink {
-
   0%,
   90%,
   100% {
@@ -169,7 +168,6 @@
 }
 
 @keyframes orbWink {
-
   0%,
   100% {
     transform: scaleY(1);
@@ -334,7 +332,6 @@
 }
 
 @keyframes pulse {
-
   0%,
   100% {
     box-shadow: 0 0 0 0 rgba(224, 67, 67, 0.5);
@@ -346,7 +343,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-
   .recording,
   .orbEye,
   .orb[data-wink="true"] .orbEye:first-child {
@@ -513,7 +509,6 @@
 }
 
 @keyframes blink {
-
   0%,
   80%,
   100% {

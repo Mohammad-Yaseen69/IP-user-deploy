@@ -138,12 +138,13 @@ const TransactionRow = ({ tx, selectedIban }) => {
         </td>
 
         <td
-          className={`${styles.amount} ${String(tx.transaction_type || "").toLowerCase() === "credit"
+          className={`${styles.amount} ${
+            String(tx.transaction_type || "").toLowerCase() === "credit"
               ? styles.amountCredit
               : String(tx.transaction_type || "").toLowerCase() === "debit"
                 ? styles.amountDebit
                 : ""
-            }`}
+          }`}
         >
           {formatSignedAmount(tx)}
         </td>
