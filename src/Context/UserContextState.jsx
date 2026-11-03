@@ -1,13 +1,13 @@
 import { getCroppedImg, UserContext } from "./UserContext";
 import axios from "axios";
 import { decryptData } from "../Helper/EssentilaMethods/Decryption";
-import { useEffect, useState } from "react";
+import { lazy, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { publicRoutes } from "../RouteNew/Routes";
 import { useNavigate } from "react-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import questionsData from "../Components/Settings/questions.json";
-import SessionExpireModal from "../Components/SessionExpireModal";
+const questionsData = lazy(() => import("../Components/Settings/questions.json"));
+const SessionExpireModal = lazy(() => import("../Components/SessionExpireModal"));
 import { useSearchParams } from "react-router-dom";
 import { apiWrapper } from "../utils/Functions/apiWrapper";
 import i18n from "../i18n";
