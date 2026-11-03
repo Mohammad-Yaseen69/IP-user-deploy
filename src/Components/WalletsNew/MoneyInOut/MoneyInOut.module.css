@@ -1,0 +1,142 @@
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px 22px;
+  box-sizing: border-box;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-family: inherit;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: #1a1a1f;
+}
+
+.subtitle {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #9a9aa6;
+}
+
+.toggle {
+  display: flex;
+  background: #f4f4f8;
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.toggleBtn {
+  border: none;
+  background: transparent;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b6b78;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.toggleActive {
+  background: #fff;
+  color: #1a1a1f;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.summary {
+  display: flex;
+  justify-content: space-around;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.summaryItem {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 6px;
+  row-gap: 4px;
+  align-items: center;
+  min-width: 25%;
+  font-size: 15px;
+}
+
+.summaryLabel {
+  font-size: 13px;
+  color: #6e7687;
+  font-weight: 700;
+  padding-bottom: 2px;
+}
+
+.summaryValue {
+  grid-column: 1 / -1;
+  font-size: 23px;
+  line-height: 18.85px;
+  font-weight: 700;
+  color: #1a1a1f;
+}
+
+.summaryValue small {
+  font-size: 13px;
+  font-weight: 500;
+  color: #9a9aa6;
+}
+
+.netPositive {
+  color: #047857;
+  font-size: 23px;
+}
+
+.netNegative {
+  color: #d93025;
+}
+
+.dotIn,
+.dotOut,
+.dotNet {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  margin-bottom: 0.2rem;
+}
+
+.dotIn {
+  background: #5926f0;
+}
+
+.dotOut {
+  background: #1f2029;
+}
+
+.dotNet {
+  background: #0f9d58;
+}
+
+.hint {
+  margin: 10px 0 0;
+  font-size: 11px;
+  color: #9a9aa6;
+}
+
+.tooltip {
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 11px;
+  color: #6b6b78;
+}
+
+.tooltip strong {
+  font-size: 13px;
+  color: #1a1a1f;
+}

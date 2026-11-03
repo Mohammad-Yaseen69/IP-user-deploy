@@ -1,7 +1,5 @@
 .card {
-  padding: 1rem;
   border-radius: 16px;
-  width: 100%;
   aspect-ratio: 16/9;
   cursor: grab;
   display: flex;
@@ -10,6 +8,7 @@
   position: relative;
   z-index: 10;
   box-shadow: 0px 13.2063px 39.6189px rgba(89, 38, 240, 0.13);
+  max-width: 400px;
 }
 
 .circle {
@@ -19,6 +18,12 @@
   border-radius: 100%;
   top: -20px;
   right: -18%;
+}
+
+.top img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
 }
 
 .top {
@@ -85,16 +90,24 @@
 }
 
 .wallet_details {
+  padding-top: 1.1rem;
   margin-bottom: 0;
   color: white;
   margin: 0.5rem 0 0.2rem 0;
   display: flex;
   flex-direction: column;
+  font-size: 10px;
 }
 
 .wallet_details > span {
   font-size: min(0.7vw, 14px);
   color: rgb(221, 221, 221);
+}
+
+.walletAmount {
+  padding-top: 0.5rem;
+  color: rgb(221, 221, 221);
+  font-size: 15px;
 }
 
 .wd_sub {
@@ -110,6 +123,7 @@
 
 .wd_sub {
   font-size: min(0.75vw, 15px);
+  font-size: 0.8rem;
 }
 
 @media screen and (max-width: 1500px) {
@@ -163,4 +177,49 @@
   .wd_sub span {
     font-size: 12px;
   }
+}
+
+.top_container {
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  margin: 0;
+  padding: 1rem;
+}
+
+.bb :global(.progress) {
+  background: #fff !important;
+  border-radius: 999px;
+}
+
+.bb :global(.progress-bar) {
+  background: linear-gradient(to right, #f2eeff, #5926f0) !important;
+  border-radius: 999px;
+}
+
+.set_default_btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  margin: 0;
+  padding: 8px 8px;
+  border: none;
+  border-radius: 999px;
+  background: #fff7ea;
+  color: #976600;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: default;
+  appearance: none;
+}
+
+.set_default_btn:hover {
+  filter: brightness(0.97);
+}
+
+set_default_btn:hover {
+  outline: none;
 }

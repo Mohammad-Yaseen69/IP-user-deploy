@@ -14,6 +14,9 @@ import { UserContext } from "../../Context/UserContext";
 import QrGenerate from "../Settings/QrGenerate";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import { formatCurrency } from "../../Helper/AmountFormat";
+import MoneyInOut from "./MoneyInOut/MoneyInOut";
+import Exchange from "./Exchange/Exchange";
+import { useMoneyInOut } from "./MoneyInOut/useMoneyInOut";
 // import { useLocation } from "react-router"
 
 export const getLimits = async (
@@ -137,6 +140,7 @@ const WalletsNew = () => {
   const [currentType, setCurrentType] = useState("");
   const [filtered, setFiltered] = useState([]);
   const can = usePermission();
+  const { data: moneyData, loading: moneyLoading } = useMoneyInOut(currentWallet);
 
   const [categories, setCategories] = useState([
     {
@@ -268,6 +272,23 @@ const WalletsNew = () => {
             }}
           >
             <Top currentWallet={currentWallet} setCurrentWallet={setCurrentWallet} data={data} />
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1.4fr 1fr",
+                gap: "24px",
+                alignItems: "stretch",
+              }}
+            >
+              <MoneyInOut
+                currency={currentWallet?.currency?.code}
+                data={moneyData}
+                loading={moneyLoading}
+              />
+              <Exchange />
+            </div>
+
             {can("wallet.limits.view") && (
               <AccountLimits
                 data={data}
@@ -276,7 +297,7 @@ const WalletsNew = () => {
                 currentWallet={currentWallet}
               />
             )}
-            {can("wallet.analytics.view") && (
+            {/* {can("wallet.analytics.view") && (
               <CenterContainer
                 categories={categories}
                 setCategories={setCategories}
@@ -284,7 +305,7 @@ const WalletsNew = () => {
                 setCurrentType={setCurrentType}
                 currentWallet={currentWallet}
               />
-            )}
+            )} */}
 
             {can("transactions.wallet.list") && (
               <TransactionsTable
@@ -333,7 +354,7 @@ const WalletsNew = () => {
               />
             )}
 
-            {can("wallet.analytics.view") && (
+            {/* {can("wallet.analytics.view") && (
               <CenterContainer
                 categories={categories}
                 setCategories={setCategories}
@@ -341,7 +362,7 @@ const WalletsNew = () => {
                 setCurrentType={setCurrentType}
                 currentWallet={currentWallet}
               />
-            )}
+            )} */}
             {can("transactions.wallet.list") && (
               <TransactionsTable
                 currentWallet={currentWallet}
