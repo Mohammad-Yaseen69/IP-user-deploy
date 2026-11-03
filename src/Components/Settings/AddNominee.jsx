@@ -2,10 +2,9 @@ import DateMomentUtils from "@date-io/moment";
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { Camera } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import { Button, Input, Label } from "reactstrap";
+import { Input, Label } from "reactstrap";
 import { UserContext } from "../../Context/UserContext";
 import africanCountries from "../../Data/AfricanCountries.json";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
@@ -15,7 +14,8 @@ import { BeneficiaryRelation, friendsAndFamily } from "../../utils/Data";
 import NestedDropdown from "../NestedDropdown";
 import PhoneInput from "../PhoneInput";
 import SuccessModal from "../User/UserSettings/SuccessModal";
-import styles from "./styles/AddNominee.module.css";
+import styles from "./styles/Nominee.module.scss";
+import { Camera, CaretDown, Warning } from "./Icons";
 
 const currentDate = new Date();
 const maxDate = currentDate;
@@ -24,6 +24,19 @@ const minDate = new Date(
   currentDate.getMonth(),
   currentDate.getDate(),
 );
+
+export const NoNomineeNote = () => {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.note}>
+      <Warning />
+      <p>
+        <strong>{t("No nominee yet.")}</strong>{" "}
+        {t("Without one, your balance may take months to release through legal channels.")}
+      </p>
+    </div>
+  );
+};
 
 const AddNominee = ({ setNominee, setAddNominee }) => {
   const { t } = useTranslation();
@@ -184,113 +197,135 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
     }
   };
 
+  const requiredMark = <span className={styles.required}>*</span>;
+
   return (
     <MuiPickersUtilsProvider utils={DateMomentUtils}>
-      <div>
-        <div className={styles.top}>
-          <div className={styles.img_container}>
-            {image ? (
-              <img src={image} alt="nominee photo" />
-            ) : (
-              <label htmlFor="file" className={styles.upload}>
-                <Camera size={30} />
-                <span>{t("Upload Photo")}</span>
-                <input
-                  type="file"
-                  name="file"
-                  id="file"
-                  accept="image/*"
-                  value={image}
-                  onChange={handleImageSelect}
-                  hidden
-                />
-              </label>
-            )}
+      <section className={styles.card}>
+        <div className={styles.cardBody}>
+          <NoNomineeNote />
+          <div className={styles.photoRow}>
+            <div className={styles.avatar}>
+              {image ? (
+                <img src={image} alt="nominee photo" />
+              ) : (
+                <Camera size={24} color="#5926F0" />
+              )}
+            </div>
+            <div className={styles.photoText}>
+              <span className={styles.label}>
+                {t("Photo")}
+                {requiredMark}
+              </span>
+              {!image && (
+                <label htmlFor="file" className={`${styles.button} ${styles.buttonSecondary}`}>
+                  <Camera size={16} color="#22106B" />
+                  {t("Upload Photo")}
+                  <input
+                    type="file"
+                    name="file"
+                    id="file"
+                    accept="image/*"
+                    value={image}
+                    onChange={handleImageSelect}
+                    hidden
+                  />
+                </label>
+              )}
+            </div>
           </div>
-          <div className={styles.top_right}>
-            <div className={styles.inp_con}>
-              <Label style={{ display: "flex", alignItems: "center" }}>
-                {t("Name")}{" "}
-                <span style={{ color: "red", fontSize: "13px", display: "inline" }}>*</span>
+
+          <div className={styles.grid}>
+            <div className={styles.field}>
+              <Label className={styles.label}>
+                {t("Full name")}
+                {requiredMark}
               </Label>
               <Input
                 onKeyDown={preventEdgeSpaces}
-
-                placeholder={t(`Nominee's Full Name`)}
+                placeholder={t("As shown on their ID")}
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
               />
             </div>
-            <div className={styles.mul_inp}>
-              <div className={styles.inp_con}>
-                <Label>
-                  {t("Date Of Birth")}{" "}
-                  <span
-                    style={{
-                      color: "red",
-                      fontSize: "13px",
-                      display: "inline",
-                    }}
-                  >
-                    *
-                  </span>
-                </Label>
-                <DatePicker
-                  format="YYYY/MM/DD"
-                  className="form-control custom-datepicker"
-                  style={{
-                    background: "#fff",
-                    border: "1px solid #eeeeee",
-                    borderRadius: "6px",
-                    boxShadow: "none",
-                    padding: "0px",
-                    display: "flex",
-                    justifyContent: "center",
-                    position: "static",
+            <div className={styles.field}>
+              <Label className={styles.label}>
+                {t("Relationship")}
+                {requiredMark}
+              </Label>
+              <div className={styles.external}>
+                <NestedDropdown
+                  child={friendsAndFamily}
+                  parent={BeneficiaryRelation}
+                  value={relationship}
+                  setter={(val) => {
+                    setRelationship(val);
                   }}
-                  value={dob || null}
-                  onChange={handleDateChange}
-                  placeholder="YYYY/MM/DD"
-                  maxDate={maxDate}
-                  minDate={minDate}
-
-                  InputProps={{
-                    disableUnderline: true,
-                    style: {
-                      background: "#fff",
-                      border: "none",
-                      boxShadow: "none",
-                      padding: "0 10px",
-                      minHeight: "40px",
-                      fontWeight: 500,
-                    },
-                  }}
-                  inputProps={{
-                    style: {
-                      background: "#fff",
-                      border: "none",
-                      boxShadow: "none",
-                      padding: "2px 0px",
-                      minHeight: "40px",
-                    },
-                  }}
-                  clearable
-                  autoOk
+                  defaultValue="Relationship with Nominee"
+                  subKey="Friends & Family"
+                  style={{ borderColor: "#eff1f6" }}
                 />
               </div>
-              <div className={styles.inp_con}>
-                <Label>
-                  {t("Gender")}{" "}
-                  <span
-                    style={{
-                      color: "red",
-                      fontSize: "13px",
-                      display: "inline",
-                    }}
-                  >
-                    *
-                  </span>
-                </Label>
+            </div>
+
+            <div className={styles.field}>
+              <Label className={styles.label}>
+                {t("Date of birth")}
+                {requiredMark}
+              </Label>
+              <DatePicker
+                format="YYYY/MM/DD"
+                className="form-control custom-datepicker"
+                style={{
+                  background: "#fff",
+                  border: "1px solid #eff1f6",
+                  borderRadius: "6px",
+                  boxShadow: "0px 1px 1.5px 0px rgba(27, 31, 42, 0.04)",
+                  padding: "0px",
+                  display: "flex",
+                  justifyContent: "center",
+                  position: "static",
+                }}
+                value={dob || null}
+                onChange={handleDateChange}
+                placeholder="YYYY/MM/DD"
+                maxDate={maxDate}
+                minDate={minDate}
+                InputProps={{
+                  disableUnderline: true,
+                  style: {
+                    background: "#fff",
+                    border: "none",
+                    borderRadius: "6px",
+                    boxShadow: "none",
+                    padding: "0 12px",
+                    fontFamily: "Inter, sans-serif",
+                    fontSize: "14px",
+                    fontWeight: 400,
+                    letterSpacing: "-0.42px",
+                    color: "#1b1f2a",
+                  },
+                }}
+                inputProps={{
+                  style: {
+                    background: "#fff",
+                    border: "none",
+                    boxShadow: "none",
+                    padding: "2px 0px",
+                    minHeight: "38px",
+                  },
+                }}
+                clearable
+                autoOk
+              />
+            </div>
+
+            <div className={styles.field}>
+              <Label className={styles.label}>
+                {t("Gender")}
+                {requiredMark}
+              </Label>
+              <div className={`${styles.control} ${styles.withTrailingIcon}`}>
                 <Input type="select" value={gender} onChange={(e) => setGender(e.target.value)}>
                   <option value="" disabled>
                     --{t("Select Gender")}--
@@ -299,121 +334,81 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
                   <option value="female">{t("Female")}</option>
                   <option value="other">{t("Other")}</option>
                 </Input>
+                <span className={styles.trailingIcon}>
+                  <CaretDown />
+                </span>
               </div>
             </div>
-          </div>
-        </div>
-        <div style={{ marginBottom: "15px" }} className={styles.mul_inp}>
-          <div className={styles.inp_con}>
-            <Label>
-              {t("Relationship with Nominee")}{" "}
-              <span style={{ color: "red", fontSize: "13px", display: "inline" }}>*</span>
-            </Label>
-            <NestedDropdown
-              child={friendsAndFamily}
-              parent={BeneficiaryRelation}
-              value={relationship}
-              setter={(val) => {
-                setRelationship(val);
-              }}
-              defaultValue="Relationship with Nominee"
-              subKey="Friends & Family"
-              style={{ borderColor: "#eeeeee" }}
-            />
-          </div>
-          <div className={styles.inp_con}>
-            <Label>
-              {t("Nominee Contact Number")}{" "}
-              <span style={{ color: "red", fontSize: "13px", display: "inline" }}>*</span>
-            </Label>
-            <PhoneInput
-              placeholder="Enter Phone number"
-              phone={contact}
-              setPhone={(e) => {
-                setContact(e);
-              }}
-              customStyles={{
-                boxShadow: "inline",
-                border: "1px solid #eeeeee",
-              }}
-              setCountry={(e) => {
-                setCountryIsoCode(e.alpha3);
-              }}
-              country={userDetails.country_iso_code}
-            />
-          </div>
-        </div>
-        <div style={{ position: "relative" }} className={styles.inp_con}>
-          <Label>
-            {t("Nominee Address")}{" "}
-            <span style={{ color: "red", fontSize: "13px", display: "inline" }}>*</span>
-          </Label>
-          <Input
-            type="textarea"
-            onKeyDown={preventEdgeSpaces}
-            placeholder={t("Nominee Permanent Address")}
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            onFocus={() => setAddressInFocus(true)}
-            onBlur={() => {
-              setTimeout(() => {
-                setAddressInFocus(false);
-              }, 100);
-            }}
-          />
-          {addressInFocus && addresses.length > 0 ? (
-            <div
-              style={{
-                top: "104%",
-                left: 0,
-                background: "white",
-                display: "flex",
-                flexDirection: "column",
-                borderRadius: ".5rem",
-                maxHeight: "40vh",
-                overflowY: "auto",
-                border: "1px solid #eee",
-                width: "100%",
-              }}
-            >
-              {addresses.map((item) => (
-                <div
-                  key={item}
-                  onMouseDown={(e) => {
-                    // Prevent blur event from firing before click
-                    e.preventDefault();
-                    setAddress(item);
-                    setAddressInFocus(false);
+
+            <div className={styles.field}>
+              <Label className={styles.label}>
+                {t("Phone number")}
+                {requiredMark}
+              </Label>
+              <div className={styles.external}>
+                <PhoneInput
+                  placeholder="Enter Phone number"
+                  phone={contact}
+                  newUI={true}
+                  setPhone={(e) => {
+                    setContact(e);
                   }}
-                  style={{
-                    padding: "1rem",
-                    cursor: "pointer",
-                    fontSize: ".8rem",
-                    fontWeight: 500,
+                  setCountry={(e) => {
+                    setCountryIsoCode(e.alpha3);
                   }}
-                >
-                  {item}
-                </div>
-              ))}
+                  country={userDetails.country_iso_code}
+                />
+              </div>
             </div>
-          ) : (
-            ""
-          )}
+
+            <div className={`${styles.field} ${styles.full}`}>
+              <Label className={styles.label}>
+                {t("Address")}
+                {requiredMark}
+              </Label>
+              <Input
+                type="textarea"
+                rows={2}
+                onKeyDown={preventEdgeSpaces}
+                placeholder={t("Nominee Permanent Address")}
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                onFocus={() => setAddressInFocus(true)}
+                onBlur={() => {
+                  setTimeout(() => {
+                    setAddressInFocus(false);
+                  }, 100);
+                }}
+              />
+              {addressInFocus && addresses.length > 0 ? (
+                <div className={styles.suggestions}>
+                  {addresses.map((item) => (
+                    <div
+                      key={item}
+                      className={styles.suggestion}
+                      onMouseDown={(e) => {
+                        // Prevent blur event from firing before click
+                        e.preventDefault();
+                        setAddress(item);
+                        setAddressInFocus(false);
+                      }}
+                    >
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+          </div>
         </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginTop: "1.5rem",
-          }}
-        >
-          <Button
-            style={{
-              background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-              border: "inline",
-              outline: "inline",
-              borderRadius: "10px",
-            }}
+
+        <div className={styles.cardFooter}>
+          <p className={styles.footerText}>{t("Saving online is binding. No signature needed.")}</p>
+          <button
+            type="button"
+            className={`${styles.button} ${styles.buttonPrimary}`}
             onClick={NumberValidation}
             disabled={
               !fullName ||
@@ -427,11 +422,11 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
               loading
             }
           >
-            {t("Save")}
-          </Button>
+            {t("Save nominee")}
+          </button>
         </div>
-        <SuccessModal isOpen={showSuccess} toggle={() => setShowSuccess(!showSuccess)} />
-      </div>
+      </section>
+      <SuccessModal isOpen={showSuccess} toggle={() => setShowSuccess(!showSuccess)} />
     </MuiPickersUtilsProvider>
   );
 };

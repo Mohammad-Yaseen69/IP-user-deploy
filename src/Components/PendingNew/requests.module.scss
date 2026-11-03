@@ -1,0 +1,54 @@
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+
+  .sm,
+  .ghost {
+    height: 32px;
+    padding: 0 12px;
+    font-size: 12px;
+    letter-spacing: -0.36px;
+    white-space: nowrap;
+  }
+
+  .ghost {
+    all: unset;
+    box-sizing: border-box;
+    height: 32px;
+    padding: 0 12px;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    color: #5926f0;
+    border-radius: 6px;
+
+    &:hover:not(:disabled) {
+      background: #f2eeff;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.foot {
+  margin: 0;
+  padding: 12px 20px;
+  border-top: 1px solid #eff1f6;
+  font-size: 12px;
+  letter-spacing: -0.36px;
+  color: #9aa3b2;
+}
+
+@media screen and (max-width: 1000px) {
+  .actions {
+    grid-column: 1 / -1;
+    margin-top: 10px;
+  }
+}

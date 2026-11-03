@@ -83,6 +83,7 @@ import {
 import { formatCurrency } from "../../../../Helper/AmountFormat";
 import { decryptData } from "../../../../Helper/EssentilaMethods/Decryption";
 import { Info } from "lucide-react";
+import img from "../../../../assets/images/logo/logo2.png";
 
 const DEFAULT_BENEFICIARY_FORM = {
   type: "individual",
@@ -535,43 +536,34 @@ const downloadSepaReceipt = ({
     ["Status", status],
   ];
 
-  doc.setFontSize(24);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(89, 38, 240);
-  doc.text("SEPA Transfer Receipt", margin, 48);
+  doc.addImage(img, "png", 14, 10, 46.5, 13);
+  doc.setFontSize(20);
+  doc.setFont("sans-serif", "normal", "normal");
+  doc.text("SEPA Transfer Receipt", 14, 35);
 
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(130, 130, 138);
-  doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 28);
+  doc.setFontSize(10);
+  doc.setFont("sans-serif", "normal", "normal");
+  doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 45);
 
   autoTable(doc, {
-    startY: 36,
+    startY: 50,
     head: [["Details", "Information"]],
     body: rows,
     theme: "grid",
     styles: {
-      fontSize: 9,
-      cellPadding: 4,
+      fontSize: 7,
     },
     headStyles: {
-      fontStyle: "bold",
-    },
-    columnStyles: {
-      0: {
-        cellWidth: 55,
-        fontStyle: "bold",
-      },
-      1: {
-        cellWidth: 125,
-      },
+      fontSize: 7,
+      fillColor: [89, 38, 240],
+      textColor: [255, 255, 255],
     },
   });
 
   const finalY = doc.lastAutoTable.finalY + 12;
 
+  doc.setFont("sans-serif", "normal", "normal");
   doc.setFontSize(9);
-  doc.setFont("helvetica", "normal");
 
   doc.text(
     "The recipient receives the full amount - no correspondent-bank deductions in SEPA.",
@@ -1438,8 +1430,10 @@ const SepaTransfer = ({
               }}
             >
               <span style={styles.stepIndicator}>
-                Step {currentStepNumber} of {totalSteps} &nbsp;{" "}
-                <span style={{ color: "gray" }}> {currentStepName} </span>
+                {t("Step")}
+                &nbsp;{currentStepNumber}&nbsp;
+                {t("of")}&nbsp;
+                {totalSteps} &nbsp; <span style={{ color: "gray" }}> {currentStepName} </span>
               </span>
             </div>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>

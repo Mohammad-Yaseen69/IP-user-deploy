@@ -1,13 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import styles from "./styles/NotifTable.module.css";
+import styles from "./styles/Notifications.module.scss";
 import Switch from "./Switch";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import axios from "axios";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
-import { Button } from "reactstrap";
-import { CheckCircle, Bell } from "react-feather";
+import { BellSmall, CheckCircle } from "./Icons";
 import { toast } from "react-toastify";
 import InstaPayLoader from "../Loader";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
@@ -157,6 +156,34 @@ const NotifTable = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
+  const shownToggles = [
+    rpEmail,
+    rpPush,
+    rpPhone,
+    rpTelegram,
+    prEmail,
+    prPush,
+    prPhone,
+    prTelegram,
+    afEmail,
+    afPush,
+    afPhone,
+    afTelegram,
+    rqEmail,
+    rqPush,
+    rqPhone,
+    rqTelegram,
+    refEmail,
+    refPush,
+    refPhone,
+    refTelegram,
+    sqEmail,
+    sqPush,
+    sqPhone,
+    sqTelegram,
+  ];
+  const alertsOn = shownToggles.filter(Boolean).length;
+
   const updateNotifications = async () => {
     setIsSaving(true);
 
@@ -237,19 +264,15 @@ const NotifTable = () => {
         </div>
       ) : (
         <>
-          <div className={styles.devices} style={{ marginBottom: "1.5rem" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <Bell size={18} color="#5926F0" />
-              <h4 style={{ margin: 0 }}>{t("Web Push Notifications")}</h4>
-            </div>
-            <div className={styles.device}>
-              <div>
-                <p>{t("Browser Push Alerts")}</p>
+          <section className={styles.card}>
+            <div className={styles.pushRow}>
+              <span className={styles.tile}>
+                <BellSmall />
+              </span>
+              <div className={styles.rowText}>
+                <p className={styles.rowTitle}>{t("Browser Push Alerts")}</p>
                 <span
-                  style={{
-                    fontSize: "12px",
-                    color: pushEnabled ? "#16a34a" : "#64748b",
-                  }}
+                  className={`${styles.rowSubtitle} ${pushEnabled ? styles.rowSubtitleOn : ""}`}
                 >
                   {getPushStatusText()}
                 </span>
@@ -260,53 +283,66 @@ const NotifTable = () => {
                 disabled={pushLoading || !isSupported}
               />
             </div>
-          </div>
+          </section>
 
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>{t("Activity")}</th>
-                <th>{t("Email")}</th>
-                <th>
-                  {window.innerWidth < 1000 && i18n.language === "en" ? "Insta" : t("Instagram")}
-                </th>
-                <th>{t("SMS")}</th>
-                <th>{t("Telegram")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td data-label="Activity">{t("Payments")}</td>
-                <td data-label={t("Email")}>
-                  <Switch
-                    checked={rpEmail}
-                    callback={() => setRpEmail(!rpEmail)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-                <td data-label={t("Instagram")}>
-                  <Switch
-                    checked={rpPush}
-                    callback={() => setRpPush(!rpPush)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-                <td data-label={t("SMS")}>
-                  <Switch
-                    checked={rpPhone}
-                    callback={() => setRpPhone(!rpPhone)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-                <td data-label={t("Telegram")}>
-                  <Switch
-                    checked={rpTelegram}
-                    callback={() => setRpTelegram(!rpTelegram)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-              </tr>
-              {/* <tr>
+          <section className={styles.card}>
+            <div className={styles.toolbar}>
+              <p className={styles.count}>
+                {alertsOn} {t("of")} {shownToggles.length} {t("alerts on")}
+              </p>
+            </div>
+
+            <div className={styles.tableScroll}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>{t("Activity")}</th>
+                    <th>{t("Email")}</th>
+                    <th>
+                      {window.innerWidth < 1000 && i18n.language === "en"
+                        ? "Insta"
+                        : t("Instagram")}
+                    </th>
+                    <th>{t("SMS")}</th>
+                    <th>{t("Telegram")}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td data-label="Activity">
+                      <span className={styles.activity}>{t("Payments")}</span>
+                      <span className={styles.activityHint}>{t("Money you send and receive")}</span>
+                    </td>
+                    <td data-label={t("Email")}>
+                      <Switch
+                        checked={rpEmail}
+                        callback={() => setRpEmail(!rpEmail)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                    <td data-label={t("Instagram")}>
+                      <Switch
+                        checked={rpPush}
+                        callback={() => setRpPush(!rpPush)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                    <td data-label={t("SMS")}>
+                      <Switch
+                        checked={rpPhone}
+                        callback={() => setRpPhone(!rpPhone)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                    <td data-label={t("Telegram")}>
+                      <Switch
+                        checked={rpTelegram}
+                        callback={() => setRpTelegram(!rpTelegram)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                  </tr>
+                  {/* <tr>
                         <td data-label="Activity">{t("Bulk Payments")}</td>
                         <td data-label={t("Email")}>
                             <Switch checked={bpEmail} callback={() => setBpEmail(!bpEmail)} disabled={!editMode || isSaving} />
@@ -321,215 +357,219 @@ const NotifTable = () => {
                             <Switch checked={bpPhone} callback={() => setBpPhone(!bpPhone)} disabled={!editMode || isSaving} />
                         </td>
                     </tr> */}
-              <tr>
-                <td data-label="Activity">{t("Payment Requests")}</td>
-                <td data-label={t("Email")}>
-                  <Switch
-                    checked={prEmail}
-                    callback={() => setPrEmail(!prEmail)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-                <td data-label={t("Instagram")}>
-                  <Switch
-                    checked={prPush}
-                    callback={() => setPrPush(!prPush)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-                <td data-label={t("SMS")}>
-                  <Switch
-                    checked={prPhone}
-                    callback={() => setPrPhone(!prPhone)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-                <td data-label={t("Telegram")}>
-                  <Switch
-                    checked={prTelegram}
-                    callback={() => setPrTelegram(!prTelegram)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td data-label="Activity">{t("Add Funds")}</td>
-                <td data-label={t("Email")}>
-                  <Switch
-                    checked={afEmail}
-                    callback={() => setAfEmail(!afEmail)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-                <td data-label={t("Instagram")}>
-                  <Switch
-                    checked={afPush}
-                    callback={() => setAfPush(!afPush)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-                <td data-label={t("SMS")}>
-                  <Switch
-                    checked={afPhone}
-                    callback={() => setAfPhone(!afPhone)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-                <td data-label={t("Telegram")}>
-                  <Switch
-                    checked={afTelegram}
-                    callback={() => setAfTelegram(!afTelegram)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td data-label="Activity">{t("Quotations")}</td>
-                <td data-label={t("Email")}>
-                  <Switch
-                    checked={rqEmail}
-                    callback={() => setRqEmail(!rqEmail)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-                <td data-label={t("Instagram")}>
-                  <Switch
-                    checked={rqPush}
-                    callback={() => setRqPush(!rqPush)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-                <td data-label={t("SMS")}>
-                  <Switch
-                    checked={rqPhone}
-                    callback={() => setRqPhone(!rqPhone)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-                <td data-label={t("Telegram")}>
-                  <Switch
-                    checked={rqTelegram}
-                    callback={() => setRqTelegram(!rqTelegram)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td data-label="Activity">{t("Referrals")}</td>
-                <td data-label={t("Email")}>
-                  <Switch
-                    checked={refEmail}
-                    callback={() => setRefEmail(!refEmail)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-                <td data-label={t("Instagram")}>
-                  <Switch
-                    checked={refPush}
-                    callback={() => setRefPush(!refPush)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-                <td data-label={t("SMS")}>
-                  <Switch
-                    checked={refPhone}
-                    callback={() => setRefPhone(!refPhone)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-                <td data-label={t("Telegram")}>
-                  <Switch
-                    checked={refTelegram}
-                    callback={() => setRefTelegram(!refTelegram)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td data-label="Activity">{t("Login")}</td>
-                <td data-label={t("Email")}>
-                  <Switch
-                    checked={sqEmail}
-                    callback={() => setSqEmail(!sqEmail)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-                <td data-label={t("Instagram")}>
-                  <Switch
-                    checked={sqPush}
-                    callback={() => setSqPush(!sqPush)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-                <td data-label={t("SMS")}>
-                  <Switch
-                    checked={sqPhone}
-                    callback={() => setSqPhone(!sqPhone)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-                <td data-label={t("Telegram")}>
-                  <Switch
-                    checked={sqTelegram}
-                    callback={() => setSqTelegram(!sqTelegram)}
-                    disabled={!editMode || isSaving}
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginTop: "2.5rem",
-            }}
-          >
-            {editMode ? (
-              <>
-                {saved ? (
-                  <Button
-                    style={{
-                      borderRadius: "10px",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: ".75rem",
-                    }}
-                    color="success"
-                  >
-                    <CheckCircle size={18} color="white" />
-                    {t("Updated Successfully!")}
-                  </Button>
-                ) : (
-                  <Button
-                    style={{
-                      background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                      border: "none",
-                      outline: "none",
-                      borderRadius: "10px",
-                    }}
-                    disabled={isSaving}
-                    onClick={updateNotifications}
-                  >
-                    {isSaving ? t("Updating") : t("Update")}
-                  </Button>
-                )}
-              </>
-            ) : (
-              <Button
-                style={{
-                  background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                  border: "none",
-                  outline: "none",
-                  borderRadius: "10px",
-                }}
-                disabled={!isEdit}
-                onClick={() => setEditMode(true)}
-              >
-                {t("Edit")}
-              </Button>
-            )}
-          </div>
+                  <tr>
+                    <td data-label="Activity">
+                      <span className={styles.activity}>{t("Payment Requests")}</span>
+                      <span className={styles.activityHint}>
+                        {t("Requests you send and receive")}
+                      </span>
+                    </td>
+                    <td data-label={t("Email")}>
+                      <Switch
+                        checked={prEmail}
+                        callback={() => setPrEmail(!prEmail)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                    <td data-label={t("Instagram")}>
+                      <Switch
+                        checked={prPush}
+                        callback={() => setPrPush(!prPush)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                    <td data-label={t("SMS")}>
+                      <Switch
+                        checked={prPhone}
+                        callback={() => setPrPhone(!prPhone)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                    <td data-label={t("Telegram")}>
+                      <Switch
+                        checked={prTelegram}
+                        callback={() => setPrTelegram(!prTelegram)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td data-label="Activity">
+                      <span className={styles.activity}>{t("Add Funds")}</span>
+                      <span className={styles.activityHint}>{t("Top-ups to your wallet")}</span>
+                    </td>
+                    <td data-label={t("Email")}>
+                      <Switch
+                        checked={afEmail}
+                        callback={() => setAfEmail(!afEmail)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                    <td data-label={t("Instagram")}>
+                      <Switch
+                        checked={afPush}
+                        callback={() => setAfPush(!afPush)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                    <td data-label={t("SMS")}>
+                      <Switch
+                        checked={afPhone}
+                        callback={() => setAfPhone(!afPhone)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                    <td data-label={t("Telegram")}>
+                      <Switch
+                        checked={afTelegram}
+                        callback={() => setAfTelegram(!afTelegram)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td data-label="Activity">
+                      <span className={styles.activity}>{t("Quotations")}</span>
+                      <span className={styles.activityHint}>
+                        {t("Quotes you send and receive")}
+                      </span>
+                    </td>
+                    <td data-label={t("Email")}>
+                      <Switch
+                        checked={rqEmail}
+                        callback={() => setRqEmail(!rqEmail)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                    <td data-label={t("Instagram")}>
+                      <Switch
+                        checked={rqPush}
+                        callback={() => setRqPush(!rqPush)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                    <td data-label={t("SMS")}>
+                      <Switch
+                        checked={rqPhone}
+                        callback={() => setRqPhone(!rqPhone)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                    <td data-label={t("Telegram")}>
+                      <Switch
+                        checked={rqTelegram}
+                        callback={() => setRqTelegram(!rqTelegram)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td data-label="Activity">
+                      <span className={styles.activity}>{t("Referrals")}</span>
+                      <span className={styles.activityHint}>
+                        {t("When someone joins with your link")}
+                      </span>
+                    </td>
+                    <td data-label={t("Email")}>
+                      <Switch
+                        checked={refEmail}
+                        callback={() => setRefEmail(!refEmail)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                    <td data-label={t("Instagram")}>
+                      <Switch
+                        checked={refPush}
+                        callback={() => setRefPush(!refPush)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                    <td data-label={t("SMS")}>
+                      <Switch
+                        checked={refPhone}
+                        callback={() => setRefPhone(!refPhone)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                    <td data-label={t("Telegram")}>
+                      <Switch
+                        checked={refTelegram}
+                        callback={() => setRefTelegram(!refTelegram)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td data-label="Activity">
+                      <span className={styles.activity}>{t("Login")}</span>
+                      <span className={styles.activityHint}>
+                        {t("New sign-ins to your account")}
+                      </span>
+                    </td>
+                    <td data-label={t("Email")}>
+                      <Switch
+                        checked={sqEmail}
+                        callback={() => setSqEmail(!sqEmail)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                    <td data-label={t("Instagram")}>
+                      <Switch
+                        checked={sqPush}
+                        callback={() => setSqPush(!sqPush)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                    <td data-label={t("SMS")}>
+                      <Switch
+                        checked={sqPhone}
+                        callback={() => setSqPhone(!sqPhone)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                    <td data-label={t("Telegram")}>
+                      <Switch
+                        checked={sqTelegram}
+                        callback={() => setSqTelegram(!sqTelegram)}
+                        disabled={!editMode || isSaving}
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div className={styles.cardFooter}>
+              {editMode ? (
+                <>
+                  {saved ? (
+                    <button type="button" className={`${styles.button} ${styles.buttonSuccess}`}>
+                      <CheckCircle color="#047857" />
+                      {t("Updated Successfully!")}
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className={`${styles.button} ${styles.buttonPrimary}`}
+                      disabled={isSaving}
+                      onClick={updateNotifications}
+                    >
+                      {isSaving ? t("Updating") : t("Update")}
+                    </button>
+                  )}
+                </>
+              ) : (
+                <button
+                  type="button"
+                  className={`${styles.button} ${styles.buttonPrimary}`}
+                  disabled={!isEdit}
+                  onClick={() => setEditMode(true)}
+                >
+                  {t("Edit")}
+                </button>
+              )}
+            </div>
+          </section>
         </>
       )}
     </>

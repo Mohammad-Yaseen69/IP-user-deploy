@@ -258,11 +258,7 @@ const CreatePin = () => {
               }}
             >
               <div
-                onClick={() =>
-                  redirect
-                    ? navigate("/settings?tab=social&redirect=true")
-                    : navigate("/settings?tab=social")
-                }
+                onClick={() => navigate("/pay-via-social")}
                 style={{
                   padding: "9px",
                   background: "#f7f7f7",
@@ -395,11 +391,7 @@ const CreatePin = () => {
                 outline: "none",
                 color: "black",
               }}
-              onClick={() =>
-                redirect
-                  ? navigate("/settings?tab=social&redirect=true")
-                  : navigate("/settings?tab=social")
-              }
+              onClick={() => navigate("/pay-via-social")}
             >
               {t("Back")}
             </button>
@@ -465,11 +457,7 @@ const CreatePin = () => {
         </div>
 
         <button
-          onClick={() =>
-            redirect
-              ? navigate("/settings?tab=social&redirect=true")
-              : navigate("/settings?tab=social")
-          }
+          onClick={() => navigate("/pay-via-social")}
           style={{
             width: "96%",
             borderRadius: "8px",

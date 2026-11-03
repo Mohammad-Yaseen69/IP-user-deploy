@@ -17,6 +17,7 @@ const CountryCode = ({
   phone = "",
   number,
   hideIcon,
+  newUI = false,
 }) => {
   const { t, i18n } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
@@ -120,7 +121,7 @@ const CountryCode = ({
       >
         <div className={styles.selected} onClick={disabledDropdown ? () => {} : toggleDropDown}>
           <img src={selectedCountry?.file_url} alt={selectedCountry?.code ?? ""} />
-          <span>{selectedCountry?.dial_code}</span>
+          <span style={newUI ? { fontWeight: 500 } : {}}>{selectedCountry?.dial_code}</span>
           {!hideIcon && <ChevronDown size={10} />}
         </div>
       </div>

@@ -1,21 +1,7 @@
 import React, { useContext, useEffect, useMemo } from "react";
 import { useState } from "react";
-import { Eye, EyeOff } from "react-feather";
 import { useTranslation } from "react-i18next";
-import {
-  Button,
-  CardBody,
-  CardHeader,
-  Col,
-  Form,
-  FormGroup,
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalHeader,
-  Row,
-} from "reactstrap";
+import { FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { UserContext } from "../../Context/UserContext";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import axios from "axios";
@@ -25,20 +11,36 @@ import OTPConfirmation from "../../Common/Component/OtpVerification";
 import SuccessModal from "../AddBeneficiary/SuccessModal";
 import { useNavigate } from "react-router";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
+import styles from "./styles/Password.module.scss";
+import { CheckCircle, EyeLarge, EyeSlashLarge, WarningCircle } from "./Icons";
 
 const capitalize = (value = "") => {
   return `${value[0].toUpperCase()}${value.slice(1)}`;
 };
 
-const iconStyles = {
-  position: "absolute",
-  top: "50%",
-  transform: "translateY(-50%)",
-  right: "1rem",
-  cursor: "pointer",
+const passwordPatterns = [/[^A-Za-z0-9]/, /[A-Z]/, /[a-z]/, /[0-9]/];
+
+const fieldLabels = {
+  current: "Current password",
+  new: "New password",
+  confirm: "Confirm new password",
 };
 
-const passwordPatterns = [/[^A-Za-z0-9]/, /[A-Z]/, /[a-z]/, /[0-9]/];
+const strengthLevels = [
+  null,
+  { label: "Weak", tone: styles.strengthWeak },
+  { label: "Weak", tone: styles.strengthWeak },
+  { label: "Fair", tone: styles.strengthFair },
+  { label: "Good", tone: styles.strengthGood },
+  { label: "Strong", tone: styles.strengthStrong },
+];
+
+const Hint = ({ children, error = false }) => (
+  <div className={`${styles.hint} ${error ? styles.hintError : ""}`}>
+    <WarningCircle color={error ? "#DC2626" : "#6E7687"} />
+    <span>{children}</span>
+  </div>
+);
 
 const Password = () => {
   const { userDetails, authHeader, setProfileLockTime, isAgentLogin, agentDetails } =
@@ -188,24 +190,50 @@ const Password = () => {
     );
   }, [isPasswordValid, state]);
   const canUpdatePassword = can("settings.password.update");
+
+  const passwordRules = useMemo(() => {
+    const value = state.new;
+    return [
+      { label: "At least 8 characters", met: value.length >= 8 },
+      {
+        label: "Upper and lowercase letters",
+        met: passwordPatterns[1].test(value) && passwordPatterns[2].test(value),
+      },
+      { label: "At least one number", met: passwordPatterns[3].test(value) },
+      { label: "At least one symbol", met: passwordPatterns[0].test(value) },
+      {
+        label: "Different from your current one",
+        met: value.length > 0 && value !== state.current,
+      },
+    ];
+  }, [state.new, state.current]);
+  const metCount = passwordRules.filter((rule) => rule.met).length;
+  const strength = strengthLevels[metCount];
+  const passwordsMismatch = state.confirm.length > 0 && state.new !== state.confirm;
+
   return (
-    <div className="card">
-      <CardHeader>
-        <h4>{t("Change Password")}</h4>
-      </CardHeader>
-      <CardBody>
-        <Row>
-          {Object.keys(state).map((item) => (
-            <Col md="12">
-              <FormGroup className="mb3">
-                <Label htmlFor={item} className="form-label">
-                  {t(`${capitalize(item)} Password`)}
+    <div className={styles.container}>
+      <div className={styles.sectionHeader}>
+        <div className={styles.sectionText}>
+          <h4 className={styles.sectionTitle}>{t("Password")}</h4>
+          <p className={styles.sectionSubtitle}>
+            {t("Use a password you don't use anywhere else.")}
+          </p>
+        </div>
+      </div>
+
+      <section className={styles.card}>
+        <div className={styles.cardBody}>
+          <div className={styles.grid}>
+            {Object.keys(state).map((item) => (
+              <FormGroup
+                key={item}
+                className={`${styles.field} ${item === "current" ? styles.full : ""}`}
+              >
+                <Label htmlFor={item} className={styles.label}>
+                  {t(fieldLabels[item])}
                 </Label>
-                <div
-                  style={{
-                    position: "relative",
-                  }}
-                >
+                <div className={`${styles.control} ${styles.withEye}`}>
                   <Input
                     type={show[item] ? "text" : "password"}
                     id={item}
@@ -215,87 +243,82 @@ const Password = () => {
                     onChange={changeHandler}
                     placeholder={t(`${capitalize(item)} Password`)}
                   />
-                  {show[item] ? (
-                    <EyeOff onClick={() => toggleShow(item, !show[item])} style={iconStyles} />
-                  ) : (
-                    <Eye onClick={() => toggleShow(item, !show[item])} style={iconStyles} />
-                  )}
+                  <button
+                    type="button"
+                    className={styles.eyeButton}
+                    onClick={() => toggleShow(item, !show[item])}
+                    aria-label={show[item] ? t("Hide password") : t("Show password")}
+                  >
+                    {show[item] ? <EyeSlashLarge /> : <EyeLarge />}
+                  </button>
                 </div>
+                {item === "confirm" && passwordsMismatch && (
+                  <Hint error>{t("Passwords don't match.")}</Hint>
+                )}
               </FormGroup>
-            </Col>
-          ))}
-        </Row>
-      </CardBody>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-end",
-          gap: "1rem",
-          flexWrap: "wrap",
-          padding: "1.5rem",
-        }}
-      >
-        <div>
-          <h2
-            style={{
-              fontSize: "1.3rem",
-            }}
-          >
-            {t("Password Requirements")}
-          </h2>
-          <p>{t("Please follow this guide for a strong password")}</p>
-          <ul
-            style={{
-              listStyleType: "disc",
-              fontSize: ".8rem",
-              paddingLeft: "1rem",
-            }}
-          >
-            <li>{t("The new password cannot be the same as the old one")}.</li>
-            <li>{t("Minimum of 8 characters.")}</li>
-            <li>{t("Include at least one uppercase and one lowercase letter.")}</li>
-            <li>{t("Include at least one number")}</li>
-            <li>{t("Include at least one special character.")}</li>
-            <li>{t("Change it often for enhanced security.")}</li>
+            ))}
+          </div>
+
+          <div className={`${styles.strength} ${strength?.tone ?? ""}`}>
+            <span>{t("Strength")}</span>
+            <div className={styles.strengthMeter}>
+              {passwordRules.map((rule, index) => (
+                <span
+                  key={rule.label}
+                  className={`${styles.strengthBar} ${index < metCount ? styles.strengthBarOn : ""}`}
+                />
+              ))}
+            </div>
+            {strength && <span className={styles.strengthValue}>{t(strength.label)}</span>}
+          </div>
+
+          <ul className={styles.requirements}>
+            {passwordRules.map((rule) => (
+              <li key={rule.label} className={`${styles.rule} ${rule.met ? styles.ruleMet : ""}`}>
+                <CheckCircle color={rule.met ? "#10B981" : "#9AA3B2"} />
+                <span>{t(rule.label)}</span>
+              </li>
+            ))}
           </ul>
         </div>
-        <Button
-          style={{
-            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-            border: "none",
-            outline: "none",
-            borderRadius: "10px",
-          }}
-          onClick={sendOtp}
-          disabled={!isFormValid || saving || !canUpdatePassword}
-        >
-          {t("Change Password")}
-        </Button>
+
+        <div className={`${styles.cardFooter} justify-content-end`}>
+          <button
+            type="button"
+            className={`${styles.button} ${styles.buttonPrimary}`}
+            onClick={sendOtp}
+            disabled={!isFormValid || saving || !canUpdatePassword}
+          >
+            {t("Update password")}
+          </button>
+        </div>
+      </section>
+
+      <div style={{ position: "absolute", width: 0, height: 0 }}>
+        <Modal isOpen={showOtp}>
+          <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
+          <ModalBody>
+            <OTPConfirmation
+              variant="card"
+              callback={updatePasswordHandler}
+              setter={setShowSuccess}
+              setterValue={true}
+              hideOtp={() => setShowOtp(false)}
+              processing={saving}
+              resendHandler={sendOtp}
+              authType={codeType}
+              setAuthType={setCodeType}
+              methods={otpMethods}
+            />
+          </ModalBody>
+        </Modal>
+        <SuccessModal
+          isOpen={showSuccess}
+          message={"Your password has been updated successfully!"}
+          subMessage={"Password Updated Successfully!"}
+          toggle={() => setShowSuccess(false)}
+        />
       </div>
-      <Modal isOpen={showOtp}>
-        <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
-        <ModalBody>
-          <OTPConfirmation
-            variant="card"
-            callback={updatePasswordHandler}
-            setter={setShowSuccess}
-            setterValue={true}
-            hideOtp={() => setShowOtp(false)}
-            processing={saving}
-            resendHandler={sendOtp}
-            authType={codeType}
-            setAuthType={setCodeType}
-            methods={otpMethods}
-          />
-        </ModalBody>
-      </Modal>
-      <SuccessModal
-        isOpen={showSuccess}
-        message={"Your password has been updated successfully!"}
-        subMessage={"Password Updated Successfully!"}
-        toggle={() => setShowSuccess(false)}
-      />
     </div>
   );
 };

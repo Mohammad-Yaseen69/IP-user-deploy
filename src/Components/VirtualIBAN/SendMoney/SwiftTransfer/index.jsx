@@ -101,6 +101,7 @@ import {
 import MobileStepProgress from "../../VirtualIbanModal/MobileStepProgress";
 import MobileFooter from "../../../../Common/Component/MobileFooter";
 import StepsDrawer from "../../../../Common/Component/StepsDrawer";
+import img from "../../../../assets/images/logo/logo2.png";
 
 const DEFAULT_BENEFICIARY_FORM = {
   type: "individual",
@@ -124,7 +125,7 @@ const DEFAULT_BENEFICIARY_FORM = {
 
 const sidebarIcons = {
   [SIDEBAR_STEP_NAMES.PAYMENT_RAIL]: Globe,
-  [SIDEBAR_STEP_NAMES.AMOUNT]: () => <span className={styles.sidebarIconText}>EUR</span>,
+  [SIDEBAR_STEP_NAMES.AMOUNT]: () => <span className={styles.sidebarIconText}>{"EUR"}</span>,
   [SIDEBAR_STEP_NAMES.BENEFICIARY]: User,
   [SIDEBAR_STEP_NAMES.PURPOSE]: List,
   [SIDEBAR_STEP_NAMES.REVIEW]: FileText,
@@ -192,25 +193,28 @@ const TextField = ({
   optional = false,
   placeholder = "",
   maxLength,
-}) => (
-  <label className={styles.field}>
-    <span>
-      {label}
-      {optional && <span className={styles.optionalTag}>Optional</span>}
-    </span>
-    <input
-      type={type}
-      value={value}
-      disabled={disabled}
-      placeholder={placeholder}
-      maxLength={maxLength}
-      className={error ? styles.fieldError : ""}
-      onChange={(e) => onChange(e.target.value)}
-    />
-    {hint && !error && <small>{hint}</small>}
-    {error && <span className={styles.fieldErrorText}>{error}</span>}
-  </label>
-);
+}) => {
+  const { t } = useTranslation();
+  return (
+    <label className={styles.field}>
+      <span>
+        {label}
+        {optional && <span className={styles.optionalTag}>{t("Optional")}</span>}
+      </span>
+      <input
+        type={type}
+        value={value}
+        disabled={disabled}
+        placeholder={placeholder}
+        maxLength={maxLength}
+        className={error ? styles.fieldError : ""}
+        onChange={(e) => onChange(e.target.value)}
+      />
+      {hint && !error && <small>{hint}</small>}
+      {error && <span className={styles.fieldErrorText}>{error}</span>}
+    </label>
+  );
+};
 
 const SwiftAmountStep = ({ amount, setAmount, availableBalance, currencyCode, sourceIban }) => {
   const { t } = useTranslation();
@@ -254,7 +258,7 @@ const SwiftAmountStep = ({ amount, setAmount, availableBalance, currencyCode, so
       <div className={styles.fxBanner}>
         <Globe size={16} />
         <span>
-          {t("Your EUR balance will be converted to")} <strong>USD</strong>{" "}
+          {t("Your EUR balance will be converted to")} <strong>{t("USD")}</strong>{" "}
           {t(
             "at a live rate locked when you reach the Review step. The exact USD amount will be shown before you confirm.",
           )}
@@ -688,7 +692,11 @@ const ReviewStep = ({
               <>
                 <br />
                 <p style={{ marginTop: "4px" }}>{t("Rate")}&nbsp;</p>
-                <strong>1 EUR = {exchangeRate.value.toFixed(4)} USD</strong>
+                <strong>
+                  1&nbsp;{t("EUR")}&nbsp;=&nbsp;
+                  {exchangeRate.value.toFixed(4)}
+                  {t("USD")}
+                </strong>
               </>
             )}
           </div>
@@ -838,34 +846,37 @@ const downloadSwiftReceipt = ({
     ["Status", status],
   ];
 
+  doc.addImage(img, "png", 14, 10, 46.5, 13);
   doc.setFontSize(20);
-  doc.setFont("helvetica", "bold");
-  doc.text("SWIFT Transfer Receipt", 14, 20);
+  doc.setFont("sans-serif", "normal", "normal");
+  doc.text("SWIFT Transfer Receipt", 14, 35);
 
   doc.setFontSize(10);
-  doc.setFont("helvetica", "normal");
-  doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 28);
+  doc.setFont("sans-serif", "normal", "normal");
+  doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 45);
 
   autoTable(doc, {
-    startY: 36,
+    startY: 50,
     head: [["Details", "Information"]],
     body: rows,
     theme: "grid",
-    styles: { fontSize: 9, cellPadding: 4 },
-    headStyles: { fontStyle: "bold" },
-    columnStyles: {
-      0: { cellWidth: 55, fontStyle: "bold" },
-      1: { cellWidth: 125 },
+    styles: { fontSize: 7 },
+    headStyles: {
+      fontSize: 7,
+      fillColor: [89, 38, 240],
+      textColor: [255, 255, 255],
     },
   });
 
   const finalY = doc.lastAutoTable.finalY + 12;
+  doc.setFont("sans-serif", "normal", "normal");
   doc.setFontSize(9);
   doc.text(
     "The recipient receives the exact previewed USD amount — rate was locked at the time of quote.",
     14,
     finalY,
   );
+  doc.setFont("sans-serif", "normal", "normal");
   doc.setFontSize(8);
   doc.text("This receipt is generated electronically.", 14, finalY + 8);
 
