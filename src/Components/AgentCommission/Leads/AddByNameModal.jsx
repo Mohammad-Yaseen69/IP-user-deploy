@@ -521,7 +521,7 @@ const AddByNameModal = ({ open, onClose }) => {
                               }}
                             >
                               {candidate.account_type}
-                              {t("Account")}
+                              &nbsp;{t("Account")}
                             </div>
                             <div style={{ fontSize: "11px", color: "#6B7280" }}>
                               @{candidate.username}

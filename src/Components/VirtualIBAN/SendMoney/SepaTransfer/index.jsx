@@ -1439,8 +1439,8 @@ const SepaTransfer = ({
             >
               <span style={styles.stepIndicator}>
                 {t("Step")}
-                {currentStepNumber}
-                {t("of")}
+                &nbsp;{currentStepNumber}&nbsp;
+                {t("of")}&nbsp;
                 {totalSteps} &nbsp; <span style={{ color: "gray" }}> {currentStepName} </span>
               </span>
             </div>
