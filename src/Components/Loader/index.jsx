@@ -1,5 +1,4 @@
 import { lazy, Suspense } from "react";
-import load from "../../assets/load.gif";
 import LottieFile from "./LoaderLottie.lottie";
 
 const DotLottieReact = lazy(() =>
@@ -50,7 +49,7 @@ const InstaPayLoader = ({ opacity = 1, fallback = false, transparent, fullHeight
       }}
     >
       <img
-        src={load}
+        src={"/load.gif"}
         alt="Loader"
         style={{
           height: "100%",

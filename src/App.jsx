@@ -1,34 +1,46 @@
-import React, { useLayoutEffect, useState } from "react";
+import "react-phone-input-2/lib/style.css";
+import React, { lazy, useLayoutEffect, useState } from "react";
 import Routers from "./RouteNew";
-import CustomizerProvider from "./Helper/Customizer/CustomizerProvider";
-import AnimationThemeProvider from "./Helper/AnimationTheme/AnimationThemeProvider";
+const CustomizerProvider = lazy(() => import("./Helper/Customizer/CustomizerProvider"));
+const AnimationThemeProvider = lazy(() => import("./Helper/AnimationTheme/AnimationThemeProvider"));
+const InactivityWrapper = lazy(() => import("./InactivityWrapper"));
+const BroadcastPage = lazy(() => import("./BroadcastPage"));
+const MaintenancePage = lazy(() => import("./Components/Maintenance/MaintenancePage"));
 import UserState from "./Context/UserContextState";
-import InactivityWrapper from "./InactivityWrapper";
 import { Suspense } from "react";
 import InstaPayLoader from "./Components/Loader";
 import { TimezonesProvider } from "./Context/TimezoneContext";
 import ErrorBoundary from "./ErrorBoundary";
-import BroadcastPage from "./BroadcastPage";
 import { ToastContainer } from "react-toastify";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateMomentUtils from "@date-io/moment";
 import AdBlockCheck from "./Components/AdBlockCheck/AdBlockCheck";
 import LanguageAttributeSync from "./Common/LanguageAttributeSync";
-import MaintenancePage from "./Components/Maintenance/MaintenancePage";
+
+import "react-date-range/dist/styles.css";
+import "react-date-range/dist/theme/default.css";
+import "swiper/swiper-bundle.css";
+import "./Components/PaymentsNewer/styles/i_transfer.css";
+import "./Components/PaymentsNewer/styles/ConfirmContainer.css";
+import "./Components/PaymentsNewer/styles/Timeline.css";
+import "./Components/AddFunds/styles/creditcard.css";
 
 const underMaintaince = false;
 
 const App = () => {
   const [showOtherTabError, setShowOtherTabError] = useState(false);
-  const client = new QueryClient({
-    defaultOptions: {
-      queries: {
-        refetchOnWindowFocus: false,
-        refetchOnMount: false,
-      },
-    },
-  });
+  const [client] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+            refetchOnMount: false,
+          },
+        },
+      }),
+  );
 
   useLayoutEffect(() => {
     const bc = new BroadcastChannel("dcode");
