@@ -636,7 +636,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
                       value={form.averageTransaction}
                       onChange={set("averageTransaction")}
                     />
-                    <span className={styles.currencyBadge}>EUR</span>
+                    <span className={styles.currencyBadge}>{t("EUR")}</span>
                   </div>
                 </div>
 
@@ -660,7 +660,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
                       value={form.maximumTransaction}
                       onChange={set("maximumTransaction")}
                     />
-                    <span className={styles.currencyBadge}>EUR</span>
+                    <span className={styles.currencyBadge}>{t("EUR")}</span>
                   </div>
                 </div>
               </div>
@@ -686,7 +686,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
                       value={form.averageBalance}
                       onChange={set("averageBalance")}
                     />
-                    <span className={styles.currencyBadge}>EUR</span>
+                    <span className={styles.currencyBadge}>{t("EUR")}</span>
                   </div>
                 </div>
                 {isMobile ? (
@@ -790,7 +790,7 @@ const PaymentsFields = ({ form, set, isMobile, err }) => {
             value={form.incomingPayments}
             onChange={set("incomingPayments")}
           />
-          <span className={styles.currencyBadge}>EUR</span>
+          <span className={styles.currencyBadge}>{t("EUR")}</span>
         </div>
       </div>
 
@@ -814,7 +814,7 @@ const PaymentsFields = ({ form, set, isMobile, err }) => {
             value={form.outgoingPayments}
             onChange={set("outgoingPayments")}
           />
-          <span className={styles.currencyBadge}>EUR</span>
+          <span className={styles.currencyBadge}>{t("EUR")}</span>
         </div>
       </div>
     </>

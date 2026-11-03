@@ -137,7 +137,8 @@ const DepositDetails = () => {
                 </button>
               </div>
               <p className={styles.remittanceExample}>
-                {t("Example")}: {reference} - ABC Trading Ltd
+                {t("Example")}: {reference}
+                &nbsp;{t("- ABC Trading Ltd")}
               </p>
             </div>
 

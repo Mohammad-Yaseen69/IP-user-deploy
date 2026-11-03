@@ -436,7 +436,7 @@
     "dial_code": "+230"
   },
   "MEX": {
-    "maxLength": 10,
+    "maxLength": 12,
     "dial_code": "+52"
   },
   "MDA": {
