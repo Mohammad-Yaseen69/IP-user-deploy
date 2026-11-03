@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Calendar, CreditCard, Home, Mail, Phone, User } from "react-feather";
-import { Button, Card, CardBody, CardHeader, Input, Label } from "reactstrap";
+import styles from "./styles/DownloadData.module.scss";
+import { Check, DownloadSimpleLarge } from "./Icons";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { UserContext } from "../../Context/UserContext";
@@ -31,7 +31,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
   const [cards, setCards] = useState(true);
   const [creditInfo, setCreditInfo] = useState(true);
   const [otherInfo, setOtherInfo] = useState(true);
-  const [type, setType] = useState("");
+  const [type, setType] = useState("pdf");
   const [downloading, setDownloading] = useState(false);
   const { t } = useTranslation();
   const [savedCards, setSavedCards] = useState([]);
@@ -81,47 +81,23 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
 
   const options = [
     {
+      value: "csv",
+      label: "CSV",
+      hint: "Opens in Excel, Numbers or Google Sheets.",
+    },
+    {
       value: "pdf",
       label: "PDF",
+      hint: "PDF file can be easily opened on any computer",
     },
     {
       value: "docx",
       label: "DOCX",
+      hint: "Opens in Word, Pages or Google Docs.",
     },
   ];
 
-  const generatePDF = () => {
-    setDownloading(true);
-    const tableStyles = {
-      fontSize: 7,
-    };
-    const tableHeaderStyles = {
-      fontSize: 7,
-      fillColor: [89, 38, 240],
-      textColor: [255, 255, 255],
-    };
-
-    const doc = new jsPDF();
-
-    doc.addImage(img, "png", 14, 10, 46.5, 13);
-    doc.setFont("sans-serif", "normal", "normal");
-    doc.setFontSize(10);
-    doc.text(
-      `Below are the requested details of ${userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`} includes their requested info available on InstaPay.`,
-      14,
-      32,
-      { maxWidth: 200 },
-    );
-    const currentDate = new Date();
-    const formattedDate = `As of ${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()}`;
-    doc.setFont("sans-serif", "normal", "bold");
-    doc.setFontSize(10);
-    doc.text(formattedDate, 148, 17.5);
-
-    doc.setFont("sans-serif", "normal", "bold");
-    doc.setFontSize(17);
-    doc.text("Personal Details: ", 14, 45);
-
+  const getPersonalRows = () => {
     const personalBody = [
       nameDob
         ? [
@@ -155,10 +131,58 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
         personalBody.push([`Credit Cards`, `N/A`]);
       }
     }
+    return personalBody.filter((item) => item !== null);
+  };
+
+  const generateCSV = () => {
+    setDownloading(true);
+    const cell = (value) => `"${String(value ?? "").replace(/"/g, '""')}"`;
+    const csv = [["Title", "Details"], ...getPersonalRows()]
+      .map((row) => row.map(cell).join(","))
+      .join("\r\n");
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+    FileSaver.saveAs(
+      blob,
+      `${userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name}_${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`}${new Date().toLocaleString()}.csv`,
+    );
+    setDownloading(false);
+  };
+
+  const generatePDF = () => {
+    setDownloading(true);
+    const tableStyles = {
+      fontSize: 7,
+    };
+    const tableHeaderStyles = {
+      fontSize: 7,
+      fillColor: [89, 38, 240],
+      textColor: [255, 255, 255],
+    };
+
+    const doc = new jsPDF();
+
+    doc.addImage(img, "png", 14, 10, 46.5, 13);
+    doc.setFont("sans-serif", "normal", "normal");
+    doc.setFontSize(10);
+    doc.text(
+      `Below are the requested details of ${userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`} includes their requested info available on InstaPay.`,
+      14,
+      32,
+      { maxWidth: 200 },
+    );
+    const currentDate = new Date();
+    const formattedDate = `As of ${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()}`;
+    doc.setFont("sans-serif", "normal", "bold");
+    doc.setFontSize(10);
+    doc.text(formattedDate, 148, 17.5);
+
+    doc.setFont("sans-serif", "normal", "bold");
+    doc.setFontSize(17);
+    doc.text("Personal Details: ", 14, 45);
 
     const personalTable = {
       head: [["Title", "Details"]],
-      body: personalBody.filter((item) => item !== null),
+      body: getPersonalRows(),
       startY: 50,
       styles: tableStyles,
       headStyles: tableHeaderStyles,
@@ -276,86 +300,86 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
           ],
         }),
       );
+    }
 
-      rows.push(
-        new TableRow({
-          children: [
-            new TableCell({
-              children: [new Paragraph("Account Type")],
-            }),
-            new TableCell({
-              children: [new Paragraph(`${userDetails?.account_type}`)],
-            }),
-          ],
-        }),
-      );
+    rows.push(
+      new TableRow({
+        children: [
+          new TableCell({
+            children: [new Paragraph("Account Type")],
+          }),
+          new TableCell({
+            children: [new Paragraph(`${userDetails?.account_type}`)],
+          }),
+        ],
+      }),
+    );
 
-      rows.push(
-        new TableRow({
-          children: [
-            new TableCell({
-              children: [new Paragraph("Connected Instagram Bot")],
-            }),
-            new TableCell({
-              children: [new Paragraph(`${userDetails?.insta_bot}`)],
-            }),
-          ],
-        }),
-      );
-      if (cards) {
-        if (savedCards.length > 0) {
-          savedCards?.forEach((item, i) => {
-            rows.push(
-              new TableRow({
-                children: [
-                  new TableCell({
-                    children: [new Paragraph(`Credit Card ${i + 1}`)],
-                  }),
-                  new TableCell({
-                    children: [new Paragraph(`XXXX XXXX XXXX ${item?.last4}`)],
-                  }),
-                ],
-              }),
-            );
-          });
-        } else {
+    rows.push(
+      new TableRow({
+        children: [
+          new TableCell({
+            children: [new Paragraph("Connected Instagram Bot")],
+          }),
+          new TableCell({
+            children: [new Paragraph(`${userDetails?.insta_bot ?? "N/A"}`)],
+          }),
+        ],
+      }),
+    );
+    if (cards) {
+      if (savedCards.length > 0) {
+        savedCards?.forEach((item, i) => {
           rows.push(
             new TableRow({
               children: [
                 new TableCell({
-                  children: [new Paragraph(`Credit Cards`)],
+                  children: [new Paragraph(`Credit Card ${i + 1}`)],
                 }),
                 new TableCell({
-                  children: [new Paragraph(`N/A`)],
+                  children: [new Paragraph(`XXXX XXXX XXXX ${item?.last4}`)],
                 }),
               ],
             }),
           );
-        }
+        });
+      } else {
+        rows.push(
+          new TableRow({
+            children: [
+              new TableCell({
+                children: [new Paragraph(`Credit Cards`)],
+              }),
+              new TableCell({
+                children: [new Paragraph(`N/A`)],
+              }),
+            ],
+          }),
+        );
       }
-
-      rows.push(
-        new TableRow({
-          children: [
-            new TableCell({
-              children: [new Paragraph("Member Since")],
-            }),
-            new TableCell({
-              children: [
-                new Paragraph(
-                  `${
-                    userDetails?.user?.createdAt?.split("T")[0]?.split("-")?.reverse()?.join("-") ??
-                    "N/A"
-                  }`,
-                ),
-              ],
-            }),
-          ],
-        }),
-      );
-
-      return rows;
     }
+
+    rows.push(
+      new TableRow({
+        children: [
+          new TableCell({
+            children: [new Paragraph("Member Since")],
+          }),
+          new TableCell({
+            children: [
+              new Paragraph(
+                `${
+                  userDetails?.user?.createdAt?.split("T")[0]?.split("-")?.reverse()?.join("-") ??
+                  "N/A"
+                }`,
+              ),
+            ],
+          }),
+        ],
+      }),
+    );
+
+    return rows;
   }
 
   const generateDOCX = () => {
@@ -437,285 +461,139 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
   const can = usePermission();
   const isEdit = can("settings.download-data.download");
 
+  const groups = [
+    {
+      key: "personal",
+      title: "Personal Information",
+      description: "Name, date of birth, address, email and phone number",
+      values: [nameDob, address, email, number],
+      setters: [setNameDob, setAddress, setEmail, setNumber],
+    },
+    {
+      key: "financial",
+      title: "Financial Information",
+      description: "Bank accounts and debit or credit cards",
+      values: [bankAccount, cards],
+      setters: [setBankAccount, setCards],
+    },
+    {
+      key: "other",
+      title: "Credit and other information",
+      description: "Credit applications and other data (not included in file)",
+      values: [creditInfo, otherInfo],
+      setters: [setCreditInfo, setOtherInfo],
+    },
+  ];
+  const isGroupOn = (group) => group.values.every(Boolean);
+  const toggleGroup = (group) => {
+    const next = !isGroupOn(group);
+    group.setters.forEach((set) => set(next));
+  };
+  const selectedCount = groups.filter(isGroupOn).length;
+  const allSelected =
+    nameDob && address && email && number && bankAccount && cards && creditInfo && otherInfo;
+  const currentOption = options.find((item) => item.value === type);
+
   return (
-    <Card>
-      <CardHeader style={{ padding: "30px 30px 0" }}>
-        <h4>{t("Download Your Data")}</h4>
-      </CardHeader>
-      <CardBody style={{ padding: "30px" }}>
-        <div className="mt-5">
-          <div className="mt-5">
-            <h4>{t("Request a Copy of Your Data")}</h4>
-            <p>{t("Submit a request to download a copy of your data")}</p>
+    <div className={styles.container}>
+      <div className={styles.sectionHeader}>
+        <div className={styles.sectionText}>
+          <h4 className={styles.sectionTitle}>{t("Export your data")}</h4>
+          <p className={styles.sectionSubtitle}>
+            {t("Get a copy of what InstaPay holds about you. Your file downloads straight away.")}
+          </p>
+        </div>
+      </div>
+
+      <section className={styles.card}>
+        <div className={styles.cardHeader}>
+          <div className={styles.cardHeaderText}>
+            <h4 className={styles.cardTitle}>{t("What to include")}</h4>
+            <p className={styles.cardSubtitle}>
+              {t("{{count}} of {{total}} selected", {
+                count: selectedCount,
+                total: groups.length,
+              })}
+            </p>
           </div>
-          <div
-            className="d-flex justify-content-between align-items-center mt-5"
-            style={{
-              flexWrap: "wrap",
-            }}
+          <button
+            type="button"
+            className={`${styles.button} ${styles.buttonTertiary}`}
+            onClick={checkAll}
           >
-            <h5>{t("Which Data Should Be Included in the Download?")}</h5>
-            <span
-              className="cursor-pointer font-weight-bold"
-              onClick={checkAll}
-              style={{ cursor: "pointer" }}
-            >
-              {t("Select all applicable options.")}
-            </span>
-          </div>
-          <hr className="mt-2 mb-5" />
-          <div>
-            <div>
-              <h6>{t("Personal Information")}</h6>
-              <span className="text-secondary">
-                {t(
-                  "This information is used to secure your account, tailor your experience, and contact you as necessary.",
-                )}
-              </span>
-            </div>
-            <div className="mt-3">
-              <ul className="list-unstyled">
-                <li className="d-flex justify-content-between align-items-center mb-3">
-                  <div
-                    className="d-flex align-items-center gap-3 flex-grow-1"
-                    onClick={() => setNameDob(!nameDob)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <div className="h1 text-primary" style={{ marginBottom: 0, flexShrink: 0 }}>
-                      <Calendar size={24} />
-                    </div>
-                    <div>
-                      <div className="text-secondary">{t("Name and Date Of Birth")}</div>
-                    </div>
-                  </div>
-                  <Input
-                    type="checkbox"
-                    checked={nameDob}
-                    onChange={(e) => setNameDob(e.target.checked)}
-                    style={{ flexShrink: 0, marginLeft: "1rem" }}
-                  />
-                </li>
+            {allSelected ? t("Clear all") : t("Select all")}
+          </button>
+        </div>
 
-                <li className="d-flex justify-content-between align-items-center mb-3">
-                  <div
-                    className="d-flex align-items-center gap-3 flex-grow-1"
-                    onClick={() => setAddress(!address)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <div className="h1 text-primary" style={{ marginBottom: 0, flexShrink: 0 }}>
-                      <Home size={24} />
-                    </div>
-                    <div>
-                      <div className="text-secondary">{t("Address")}</div>
-                    </div>
-                  </div>
-                  <Input
+        <div className={styles.cardBody}>
+          <div className={styles.options}>
+            {groups.map((group) => {
+              const on = isGroupOn(group);
+              return (
+                <label key={group.key} className={`${styles.option} ${on ? styles.optionOn : ""}`}>
+                  <input
                     type="checkbox"
-                    checked={address}
-                    onChange={(e) => setAddress(e.target.checked)}
-                    style={{ flexShrink: 0, marginLeft: "1rem" }}
+                    className={styles.hiddenInput}
+                    checked={on}
+                    onChange={() => toggleGroup(group)}
                   />
-                </li>
-                <li className="d-flex justify-content-between align-items-center mb-3">
-                  <div
-                    className="d-flex align-items-center gap-3 flex-grow-1"
-                    onClick={() => setEmail(!email)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <div className="h1 text-primary" style={{ marginBottom: 0, flexShrink: 0 }}>
-                      <Mail size={24} />
-                    </div>
-                    <div>
-                      <div className="text-secondary">{t("Email")}</div>
-                    </div>
-                  </div>
-                  <Input
-                    type="checkbox"
-                    checked={email}
-                    onChange={(e) => setEmail(e.target.checked)}
-                    style={{ flexShrink: 0, marginLeft: "1rem" }}
-                  />
-                </li>
-                <li className="d-flex justify-content-between align-items-center">
-                  <div
-                    className="d-flex align-items-center gap-3 flex-grow-1"
-                    onClick={() => setNumber(!number)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <div className="h1 text-primary" style={{ marginBottom: 0, flexShrink: 0 }}>
-                      <Phone size={24} />
-                    </div>
-                    <div>
-                      <div className="text-secondary">{t("Phone number")}</div>
-                    </div>
-                  </div>
-                  <Input
-                    type="checkbox"
-                    checked={number}
-                    onChange={(e) => setNumber(e.target.checked)}
-                    style={{ flexShrink: 0, marginLeft: "1rem" }}
-                  />
-                </li>
-              </ul>
-            </div>
-          </div>
-          <hr className="my-5" />
-          <div>
-            <h6>{t("Financial Information")}</h6>
-            <span className="text-secondary">
-              {t(
-                "We use this information to enable faster checkout and to send or receive money in just a few clicks.",
-              )}
-            </span>
-          </div>
-          <div className="mt-3">
-            <ul className="list-unstyled">
-              <li className="d-flex justify-content-between align-items-center mb-3">
-                <div
-                  className="d-flex align-items-center gap-3 flex-grow-1"
-                  onClick={() => setBankAccount(!bankAccount)}
-                  style={{ cursor: "pointer" }}
-                >
-                  <div className="h1 text-primary" style={{ marginBottom: 0, flexShrink: 0 }}>
-                    <User size={24} />
-                  </div>
-                  <div>
-                    <div className="text-secondary">{t("Bank accounts")}</div>
-                  </div>
-                </div>
-                <Input
-                  type="checkbox"
-                  checked={bankAccount}
-                  onChange={(e) => setBankAccount(e.target.checked)}
-                  style={{ flexShrink: 0, marginLeft: "1rem" }}
-                />
-              </li>
-
-              <li className="d-flex justify-content-between align-items-center">
-                <div
-                  className="d-flex align-items-center gap-3 flex-grow-1"
-                  onClick={() => setCards(!cards)}
-                  style={{ cursor: "pointer" }}
-                >
-                  <div className="h1 text-primary" style={{ marginBottom: 0, flexShrink: 0 }}>
-                    <CreditCard size={24} />
-                  </div>
-                  <div>
-                    <div className="text-secondary">{t("Debit or credit cards")}</div>
-                  </div>
-                </div>
-                <Input
-                  type="checkbox"
-                  checked={cards}
-                  onChange={(e) => setCards(e.target.checked)}
-                  style={{ flexShrink: 0, marginLeft: "1rem" }}
-                />
-              </li>
-            </ul>
-          </div>
-          <hr className="my-5" />
-          <div className="mt-3">
-            <ul className="list-unstyled">
-              <li className="mb-3">
-                <div className="d-flex justify-content-between align-items-start gap-3">
-                  <div
-                    className="flex-grow-1"
-                    onClick={() => setCreditInfo(!creditInfo)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <h6 style={{ marginBottom: "0.5rem" }}>{t("Credit Information")}</h6>
-                    <span className="text-secondary small d-block">
-                      {t("Includes your credit application information")}
-                    </span>
-                  </div>
-                  <Input
-                    type="checkbox"
-                    checked={creditInfo}
-                    onChange={(e) => setCreditInfo(e.target.checked)}
-                    style={{ flexShrink: 0, marginTop: "0.25rem" }}
-                  />
-                </div>
-              </li>
-              <li>
-                <div className="d-flex justify-content-between align-items-start gap-3">
-                  <div
-                    className="flex-grow-1"
-                    onClick={() => setOtherInfo(!otherInfo)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <h6 style={{ marginBottom: "0.5rem" }}>
-                      {t("Other Information (not included in file)")}
-                    </h6>
-                    <span className="text-secondary small d-block">
-                      {t(
-                        "Includes device info, technical usage data, geolocation information, marketing preferences, consent history, and data used for other services such as credit, identity verification, communications with PayPal, and third-party processors.",
-                      )}
-                    </span>
-                  </div>
-                  <Input
-                    type="checkbox"
-                    checked={otherInfo}
-                    onChange={(e) => setOtherInfo(e.target.checked)}
-                    style={{ flexShrink: 0, marginTop: "0.25rem" }}
-                  />
-                </div>
-              </li>
-            </ul>
-          </div>
-          <div className="border-bottom border-dashed border-secondary mt-5">
-            <h5>{t("Choose file type:")}</h5>
+                  <span className={styles.checkbox} aria-hidden="true">
+                    {on && <Check />}
+                  </span>
+                  <span className={styles.optionText}>
+                    <span className={styles.optionTitle}>{t(group.title)}</span>
+                    <span className={styles.optionDescription}>{t(group.description)}</span>
+                  </span>
+                </label>
+              );
+            })}
           </div>
 
-          <div className="mt-2">
-            <Label>{t("Select file type")}</Label>
-            <Input
-              type="select"
-              className="mb-1"
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-            >
-              <option value="" disabled>
-                {t("Select File Type")}
-              </option>
+          <div className={styles.format}>
+            <p className={styles.formatLabel}>{t("File format")}</p>
+            <div className={styles.segmented} role="radiogroup" aria-label={t("File format")}>
               {options.map((item) => (
-                <option value={item.value} key={item.value}>
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={type === item.value}
+                  key={item.value}
+                  className={`${styles.segment} ${type === item.value ? styles.segmentOn : ""}`}
+                  onClick={() => setType(item.value)}
+                >
                   {item.label}
-                </option>
+                </button>
               ))}
-            </Input>
-            <span className="text-secondary small">
-              {t("PDF file can be easily opened on any computer")}
-            </span>
-          </div>
-          <div className="mt-5 d-flex justify-content-end">
-            <Button
-              style={{
-                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                border: "none",
-                outline: "none",
-                borderRadius: "10px",
-              }}
-              disabled={
-                (!nameDob &&
-                  !address &&
-                  !email &&
-                  !number &&
-                  !bankAccount &&
-                  !cards &&
-                  !creditInfo &&
-                  !otherInfo) ||
-                !type ||
-                downloading ||
-                !isEdit
-              }
-              onClick={type === "pdf" ? generatePDF : generateDOCX}
-            >
-              {downloading ? t("Downloading") + "..." : t("Download Data")}
-            </Button>
+            </div>
+            {currentOption && <p className={styles.formatHint}>{t(currentOption.hint)}</p>}
           </div>
         </div>
-      </CardBody>
-    </Card>
+
+        <div className={styles.cardFooter}>
+          <button
+            type="button"
+            className={`${styles.button} ${styles.buttonPrimary}`}
+            disabled={
+              (!nameDob &&
+                !address &&
+                !email &&
+                !number &&
+                !bankAccount &&
+                !cards &&
+                !creditInfo &&
+                !otherInfo) ||
+              !type ||
+              downloading ||
+              !isEdit
+            }
+            onClick={type === "pdf" ? generatePDF : type === "csv" ? generateCSV : generateDOCX}
+          >
+            <DownloadSimpleLarge />
+            {downloading ? t("Downloading") + "..." : t("Download data")}
+          </button>
+        </div>
+      </section>
+    </div>
   );
 };
 export default DownloadData;

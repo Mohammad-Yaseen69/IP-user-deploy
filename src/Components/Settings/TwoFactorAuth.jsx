@@ -1,40 +1,58 @@
 import { startRegistration } from "@simplewebauthn/browser";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { ChevronDown } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router";
 import { toast } from "react-toastify";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-} from "reactstrap";
-import { H4 } from "../../AbstractElements";
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import OTPConfirmation from "../../Common/Component/OtpVerification";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { AuthenticatorDetails } from "../Auth/Login";
 import GoogleAuthenticatorModal from "../GoogleAuthenticatorModal";
+import CountryBasedPhone from "../PhoneInput/PhoneNumberBasedOnCountry.json";
 import Switch from "./Switch";
-import AuthIcon from "./a_items/auth.svg";
-import BioIcon from "./a_items/bio.svg";
-import Cancel from "./a_items/cancel.svg";
-import EmailIcon from "./a_items/email.svg";
 import Finger from "./a_items/finger/finger.svg";
 import FingerFailed from "./a_items/finger/finger_failed.svg";
 import FingerSuccess from "./a_items/finger/finger_success.svg";
-import PhoneIcon from "./a_items/phone.svg";
-import Plus from "./a_items/plus.svg";
 import sideImg from "./bio files/side-img.png";
 import styles from "./styles/NotifTable.module.css";
+import tfa from "./styles/TwoFactorAuth.module.scss";
 import "./styles/styles.css";
+import {
+  CaretDown,
+  ChatCircle,
+  DeviceMobile,
+  EnvelopeSimpleSmall,
+  Fingerprint,
+  Plus,
+  QrCode,
+  ShieldCheckLarge,
+  Trash,
+} from "./Icons";
+import { maskEmail, maskPhone } from "../../utils/Functions/maskContact";
+
+const protectionLevel = (count) => {
+  if (count === 0) return { label: "Not protected", tone: tfa.toneDanger, color: "#DC2626" };
+  if (count === 1) return { label: "Basic protection", tone: tfa.toneWarning, color: "#F97316" };
+  if (count <= 3) return { label: "Good protection", tone: tfa.toneSuccess, color: "#10B981" };
+  return { label: "Strong protection", tone: tfa.toneSuccess, color: "#10B981" };
+};
+
+const MethodRow = ({ icon, title, badge, subtitle, children }) => (
+  <div className={tfa.row}>
+    <div className={tfa.tile}>{icon}</div>
+    <div className={tfa.rowText}>
+      <div className={tfa.rowTitle}>
+        <span>{title}</span>
+        {badge}
+      </div>
+      <p className={tfa.rowSubtitle}>{subtitle}</p>
+    </div>
+    {children}
+  </div>
+);
 
 const TwoFactorAuth = () => {
   const { t } = useTranslation();
@@ -402,20 +420,27 @@ const TwoFactorAuth = () => {
     setRemainingChar(24);
     setShowFinger(false);
   }
+
+  const dialCode = CountryBasedPhone?.[userDetails?.country_iso_code]?.dial_code;
+  const activeMethods = [
+    emailActive,
+    smsActive,
+    wpActive,
+    authenticatorActive,
+    fingerBioActive,
+  ].filter(Boolean).length;
+  const protection = protectionLevel(activeMethods);
+
   return (
-    <Card style={{ height: "100%" }} id="two_factor">
-      <CardHeader
-        style={{
-          background: "#FAFAFA",
-          padding: window.innerWidth < 1000 && "0",
-        }}
-        className={`pb-0`}
-      >
-        <H4 attrH4={{ className: "card-title mb-0" }}>{t("Two Factor Authentication")}</H4>
-        <p style={{ fontSize: "16px", fontWeight: 600, color: "#8E8E8E" }}>
-          {t("Here, you can set up and manage your Two Factor Authentication.")}
-        </p>
-      </CardHeader>
+    <div className={tfa.container} id="two_factor">
+      <div className={tfa.sectionHeader}>
+        <div className={tfa.sectionText}>
+          <h4 className={tfa.sectionTitle}>{t("Sign-in & 2FA")}</h4>
+          <p className={tfa.sectionSubtitle}>
+            {t("Where we send codes when you sign in or approve a payment.")}
+          </p>
+        </div>
+      </div>
 
       {guideModal && (
         <Modal isOpen={guideModal} style={{ width: "96vw", maxWidth: "900px", margin: "0 auto" }}>
@@ -444,769 +469,503 @@ const TwoFactorAuth = () => {
           </ModalFooter>
         </Modal>
       )}
-      <CardBody
-        style={{
-          overflowX: "auto",
-          padding: window.innerWidth > 1000 ? "10px" : "0",
-          backgroundColor: window.innerWidth < 1000 && "#fbfbfb",
-        }}
-      >
-        <table className={styles.table}>
-          <tbody>
-            <tr>
-              <td style={{ width: "100%", fontWeight: 600 }} data-label="Email Address">
-                <img
-                  src={EmailIcon}
-                  style={{
-                    width: window.innerWidth > 1000 ? "22px" : "14px",
-                    height: "22px",
-                    aspectRadio: "1/1",
-                    marginRight: "7px",
-                  }}
-                  alt=""
-                />
-                {t("Email Address")}
-              </td>
-              {userDetails?.email ? (
-                <td data-label={t("Email Address")}>
-                  <Switch
-                    checked={emailActive}
-                    callback={() => {
-                      setShowAuth(true);
-                      setCurrent("Email");
-                    }}
-                    disabled={isSaving}
-                  />
-                </td>
-              ) : (
-                <p
-                  style={{
-                    marginBottom: "0px",
-                    fontWeight: 600,
-                    textAlign: "end",
-                    padding: "1rem",
-                  }}
-                >
-                  {t("Please add your email first.")}
-                </p>
-              )}
-            </tr>
-            <tr>
-              <td style={{ width: "100%", fontWeight: 600 }} data-label="Phone Number">
-                <img
-                  src={PhoneIcon}
-                  style={{
-                    width: window.innerWidth > 1000 ? "22px" : "14px",
-                    height: "22px",
-                    aspectRadio: "1/1",
-                    marginRight: "7px",
-                  }}
-                  alt=""
-                />
-                {t("Phone Number")}
-              </td>
-              {userDetails?.phone ? (
-                <td data-label={t("Phone Number")}>
-                  <Switch
-                    checked={smsActive}
-                    callback={() => {
-                      setShowAuth(true);
-                      setCurrent("SMS");
-                    }}
-                    disabled={isSaving}
-                  />
-                </td>
-              ) : (
-                <p
-                  style={{
-                    marginBottom: "0px",
-                    fontWeight: 600,
-                    textAlign: "end",
-                    padding: "1rem",
-                  }}
-                >
-                  {t("Please add your phone first.")}
-                </p>
-              )}
-            </tr>
-            <tr>
-              <td style={{ width: "100%", fontWeight: 600 }} data-label="Phone Number">
-                <img
-                  src={PhoneIcon}
-                  style={{
-                    width: window.innerWidth > 1000 ? "22px" : "14px",
-                    height: "22px",
-                    aspectRadio: "1/1",
-                    marginRight: "7px",
-                  }}
-                  alt=""
-                />
-                {t("Whatsapp")}
-              </td>
-              {userDetails?.phone ? (
-                <td data-label={t("Whatsapp")}>
-                  <Switch
-                    checked={wpActive}
-                    callback={() => {
-                      setShowAuth(true);
-                      setCurrent("WP");
-                    }}
-                    disabled={isSaving}
-                  />
-                </td>
-              ) : (
-                <p
-                  style={{
-                    marginBottom: "0px",
-                    fontWeight: 600,
-                    textAlign: "end",
-                    padding: "1rem",
-                  }}
-                >
-                  {t("Please add your phone first.")}
-                </p>
-              )}
-            </tr>
-            <tr>
-              <td style={{ width: "100%", fontWeight: 600 }} data-label="Phone Number">
-                <img
-                  src={AuthIcon}
-                  style={{
-                    width: window.innerWidth > 1000 ? "22px" : "14px",
-                    height: "22px",
-                    aspectRadio: "1/1",
-                    marginRight: "7px",
-                  }}
-                  alt=""
-                />
-                {t("Google Authenticator")}
-              </td>
-              <td data-label={t("Google Authenticator")}>
-                {enablingAuth ? (
-                  <div className="d-flex justify-content-center">
-                    <div className="spinner-border" color="primary" role="status">
-                      <span className="sr-only">{t("Loading...")}</span>
-                    </div>
-                  </div>
-                ) : (
-                  <Switch
-                    checked={authenticatorActive}
-                    callback={() => {
-                      setCurrent("Google");
-                      enableAuthenticator();
-                    }}
-                    disabled={isSaving}
-                  />
-                )}
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: "100%", fontWeight: 600 }} data-label="Finger Biometric">
-                <img
-                  src={BioIcon}
-                  style={{
-                    width: window.innerWidth > 1000 ? "22px" : "14px",
-                    height: "22px",
-                    aspectRadio: "1/1",
-                    marginRight: "7px",
-                  }}
-                  alt=""
-                />
-                {t("Finger Biometric")}
-              </td>
-              <td
-                style={{ minWidth: window.innerWidth > 1000 && "400px" }}
-                data-label={t("Finger Biometric")}
-              >
-                {devices.length !== 0 ? (
-                  <ChevronDown
-                    onClick={() => setShowDevices((prev) => !prev)}
-                    style={{
-                      marginRight: "1rem",
-                      transition: "all .4s",
-                      transform: showDevices && "rotate(180deg)",
-                      cursor: "pointer",
-                    }}
-                  />
-                ) : (
-                  <div
-                    className={styles.buttons}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
-                      margin: window.innerWidth < 600 && "0px",
-                    }}
-                  >
-                    <button
-                      style={{ minWidth: "200px" }}
-                      onClick={() => setShowBioModal(true)}
-                      className={styles.plus}
-                    >
-                      <img src={Plus} alt="" />
-                      <p style={{ marginBottom: "0", textAlign: "left" }}>
-                        {t("Register Biometric Passkey")}
-                      </p>
-                    </button>
-                  </div>
-                )}
-              </td>
-            </tr>
-          </tbody>
-        </table>
 
-        {showDevices && window.innerWidth > 1000 && fingerBioActive && (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "18px",
-              alignItems: "flex-end",
-            }}
-          >
-            <div className={styles.devices}>
-              <h4>{t("Manage Your Biometric Devices")}</h4>
-              {devices?.map((device, idx) => (
-                <div key={idx} className={styles.device}>
-                  <div>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "7px",
-                      }}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="14"
-                        height="18"
-                        viewBox="0 0 14 18"
-                        fill="none"
-                      >
-                        <path
-                          d="M11.6932 9.35859C11.7104 8.01801 12.4132 6.77974 13.5554 6.07759C12.8316 5.04393 11.6628 4.41206 10.4015 4.37257C9.07448 4.23329 7.78806 5.1666 7.11185 5.1666C6.42256 5.1666 5.38145 4.38641 4.26031 4.40947C2.78521 4.45713 1.44337 5.27546 0.725711 6.56505C-0.802529 9.21098 0.337391 13.0996 1.80137 15.2384C2.53381 16.2857 3.38984 17.4556 4.50996 17.4141C5.60606 17.3686 6.01542 16.7152 7.33847 16.7152C8.64926 16.7152 9.03331 17.4141 10.1762 17.3877C11.3523 17.3686 12.0933 16.3358 12.8001 15.2786C13.3264 14.5323 13.7314 13.7076 14 12.8348C12.6031 12.244 11.6948 10.8753 11.6932 9.35859Z"
-                          fill="black"
-                        />
-                        <path
-                          d="M9.534 2.96583C10.1753 2.196 10.4912 1.20653 10.4147 0.20752C9.43499 0.310429 8.52996 0.778662 7.88003 1.51896C7.23823 2.24934 6.9131 3.20489 6.97625 4.17517C7.96913 4.18539 8.91183 3.73964 9.534 2.96583Z"
-                          fill="black"
-                        />
-                      </svg>
-                      <p style={{ fontSize: "12px", color: "#333333" }}>{device?.deviceName}</p>
-                    </div>
-
-                    <img src={BioIcon} style={{ width: "14px", height: "14px" }} alt="" />
-                  </div>
-
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <svg
-                      style={{ cursor: "pointer" }}
-                      onClick={() => setDelete({ showModal: true, deviceToDelete: device })}
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="17"
-                      viewBox="0 0 16 17"
-                      fill="none"
-                    >
-                      <path
-                        d="M6 2.604H10M2 4.604H14M12.6667 4.604L12.1991 11.6169C12.129 12.669 12.0939 13.1951 11.8667 13.594C11.6666 13.9452 11.3648 14.2275 11.0011 14.4038C10.588 14.604 10.0607 14.604 9.00623 14.604H6.99377C5.93927 14.604 5.41202 14.604 4.99889 14.4038C4.63517 14.2275 4.33339 13.9452 4.13332 13.594C3.90607 13.1951 3.871 12.669 3.80086 11.6169L3.33333 4.604"
-                        stroke="#D00416"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-
-                    <Switch callback={() => deviceToggle(device)} checked={device?.enabled} />
-                  </div>
-                </div>
+      <section className={`${tfa.card} ${protection.tone}`}>
+        <div className={tfa.status}>
+          <div className={tfa.statusTile}>
+            <ShieldCheckLarge color={protection.color} />
+          </div>
+          <div className={tfa.statusText}>
+            <p className={tfa.statusTitle}>{t(protection.label)}</p>
+            <p className={tfa.statusSubtitle}>
+              {activeMethods} {t("of 5 methods on")}
+            </p>
+            <div className={tfa.meter}>
+              {[0, 1, 2, 3, 4].map((index) => (
+                <span
+                  key={index}
+                  className={`${tfa.meterBar} ${index < activeMethods ? tfa.meterBarOn : ""}`}
+                />
               ))}
             </div>
-
-            <div
-              className={styles.buttons}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                marginRight: "10px",
-              }}
-            >
-              <button onClick={() => setShowBioModal(true)} className={styles.plus}>
-                <img src={Plus} alt="" />
-                <p style={{ marginBottom: "0" }}>{t("Register Biometric Passkey")}</p>
-              </button>
-            </div>
           </div>
-        )}
-        {showDevices && window.innerWidth < 1000 && fingerBioActive && (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "18px",
-              alignItems: "flex-end",
-            }}
-          >
-            <div className={styles.devices} style={{ backgroundColor: "white", padding: "12px" }}>
-              <h4 style={{ fontSize: "12px" }}>{t("Manage Your Biometric Devices")}</h4>
-
-              {devices?.map((device, idx) => (
-                <div key={idx} className={styles.device}>
-                  <div>
-                    <div>
-                      <p style={{ fontSize: "12px", color: "#333333" }}>{device.deviceName} </p>
-                    </div>
-                  </div>
-
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <Switch callback={() => deviceToggle(device)} checked={device?.enabled} />
-
-                    <svg
-                      style={{ cursor: "pointer" }}
-                      onClick={() => setDelete({ showModal: true, deviceToDelete: device })}
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="17"
-                      viewBox="0 0 16 17"
-                      fill="none"
-                    >
-                      <path
-                        d="M6 2.604H10M2 4.604H14M12.6667 4.604L12.1991 11.6169C12.129 12.669 12.0939 13.1951 11.8667 13.594C11.6666 13.9452 11.3648 14.2275 11.0011 14.4038C10.588 14.604 10.0607 14.604 9.00623 14.604H6.99377C5.93927 14.604 5.41202 14.604 4.99889 14.4038C4.63517 14.2275 4.33339 13.9452 4.13332 13.594C3.90607 13.1951 3.871 12.669 3.80086 11.6169L3.33333 4.604"
-                        stroke="#D00416"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div
-              className={styles.buttons}
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "8px",
-                margin: "0",
-              }}
-            >
-              <button onClick={() => setShowDevices(false)} className={styles.close}>
-                <img src={Cancel} alt="" />
-                <p style={{ marginBottom: "0" }}>{t("Close")}</p>
-              </button>
-
-              <button onClick={() => setShowBioModal(true)} className={styles.plus}>
-                <img src={Plus} alt="" />
-                <p style={{ marginBottom: "0" }}>{t("Register Biometric")}</p>
-              </button>
-            </div>
-          </div>
-        )}
-
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginTop: "2.5rem",
-          }}
-        >
-          {/* {
-                        editMode
-                            ?
-                            <>
-                                {
-                                    saved
-                                        ?
-                                        <Button style={{
-                                            borderRadius: "10px",
-                                            display: "flex", alignItems: "center", gap: ".75rem"
-                                        }} color="success"><CheckCircle size={18} color='white' />{t("Updated Successfully!")}</Button>
-                                        :
-                                        <Button style={{
-                                            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                                            border: "none",
-                                            outline: "none",
-                                            borderRadius: "10px"
-                                        }} disabled={isSaving} onClick={updateHandler}>{isSaving ? t("Updating") : t("Update")}</Button>
-                                }
-                            </>
-                            :
-                            <Button style={{
-                                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                                border: "none",
-                                outline: "none",
-                                borderRadius: "10px"
-                            }} onClick={() => setEditMode(true)}>{t("Edit")}</Button>
-                    } */}
         </div>
-        {showAuth && (
-          <GoogleAuthenticatorModal
-            authenticatorDetails={authenticatorDetails}
-            isOpen={showAuth}
-            toggle={() => {
-              setShowAuth(false);
-            }}
-            emailActive={emailActive}
-            setAuthenticatorActive={setAuthenticatorActive}
-            smsActive={smsActive}
-            wpActive={wpActive}
-            passwordNext={(c) => {
-              const sms = current === "SMS" ? !smsActive : smsActive;
-              const email = current === "Email" ? !emailActive : emailActive;
-              const whatsapp = current === "WP" ? !wpActive : wpActive;
-              updateHandler(sms, email, whatsapp, c);
-            }}
-            successTitle={
-              current !== "Google"
-                ? "Two Factor Authentication Updated Succsessfully!"
-                : "Google Two Factor Authentication Is Now Linked To Your Instapay Account."
-            }
-            sideText={`${current} Authenticator`}
-          />
-        )}
+      </section>
 
-        <Modal isOpen={showFinger}>
-          <ModalHeader toggle={resetModal}>{t("Confirm")}</ModalHeader>
-          <ModalBody>
-            <OTPConfirmation
-              variant="card"
-              callback={createPasskey}
-              setter={setShowSuccess}
-              setterValue={true}
-              hideOtp={resetModal}
-              processing={isSaving}
-              resendHandler={sendOtp}
-              authType={codeType}
-              setAuthType={setCodeType}
-              methods={otpMethods}
-              // showAuthToggle={true}
-            />
-          </ModalBody>
-        </Modal>
-        <Modal
-          className={styles.modal}
-          isOpen={showBioModal}
-          style={{
-            maxWidth: "841px",
-            padding: "0",
-            overflow: "hidden",
-            margin: window.innerWidth < 1000 && "0 auto",
-          }}
-        >
-          <ModalBody style={{ padding: "0", display: "flex" }}>
-            {window.innerWidth > 1000 && (
-              <div style={{ background: `url(${sideImg})` }} className={styles.modalLeftSide}>
-                <div></div>
+      <section className={tfa.card}>
+        <div className={tfa.cardHeader}>
+          <h4 className={tfa.cardTitle}>{t("Verification methods")}</h4>
+          <p className={tfa.cardSubtitle}>
+            {t("Keep at least two on, so you can always get back in.")}
+          </p>
+        </div>
+
+        <div className={tfa.rows}>
+          <MethodRow
+            icon={<EnvelopeSimpleSmall />}
+            title={t("Email")}
+            subtitle={
+              userDetails?.email ? maskEmail(userDetails.email) : t("Please add your email first.")
+            }
+          >
+            {userDetails?.email && (
+              <Switch
+                checked={emailActive}
+                callback={() => {
+                  setShowAuth(true);
+                  setCurrent("Email");
+                }}
+                disabled={isSaving}
+              />
+            )}
+          </MethodRow>
+
+          <MethodRow
+            icon={<DeviceMobile />}
+            title={t("Text message")}
+            subtitle={
+              userDetails?.phone
+                ? maskPhone(userDetails.phone, dialCode)
+                : t("Please add your phone first.")
+            }
+          >
+            {userDetails?.phone && (
+              <Switch
+                checked={smsActive}
+                callback={() => {
+                  setShowAuth(true);
+                  setCurrent("SMS");
+                }}
+                disabled={isSaving}
+              />
+            )}
+          </MethodRow>
+
+          <MethodRow
+            icon={<ChatCircle />}
+            title={t("WhatsApp")}
+            subtitle={
+              userDetails?.phone
+                ? maskPhone(userDetails.phone, dialCode)
+                : t("Please add your phone first.")
+            }
+          >
+            {userDetails?.phone && (
+              <Switch
+                checked={wpActive}
+                callback={() => {
+                  setShowAuth(true);
+                  setCurrent("WP");
+                }}
+                disabled={isSaving}
+              />
+            )}
+          </MethodRow>
+
+          <MethodRow
+            icon={<QrCode />}
+            title={t("Authenticator app")}
+            badge={<span className={tfa.pill}>{t("Recommended")}</span>}
+            subtitle={t("Google Authenticator")}
+          >
+            {enablingAuth ? (
+              <div className={tfa.spinner}>
+                <div className="spinner-border spinner-border-sm" role="status">
+                  <span className="sr-only">{t("Loading...")}</span>
+                </div>
+              </div>
+            ) : (
+              <Switch
+                checked={authenticatorActive}
+                callback={() => {
+                  setCurrent("Google");
+                  enableAuthenticator();
+                }}
+                disabled={isSaving}
+              />
+            )}
+          </MethodRow>
+
+          <div className={tfa.passkeyBlock}>
+            <MethodRow
+              icon={<Fingerprint />}
+              title={t("Passkey")}
+              subtitle={
+                devices.length !== 0
+                  ? `${devices.length} ${devices.length === 1 ? t("device registered") : t("devices registered")}`
+                  : t("Sign in with your fingerprint or face. Nothing to type.")
+              }
+            >
+              {devices.length !== 0 ? (
+                <button
+                  type="button"
+                  className={`${tfa.button} ${tfa.buttonSecondary}`}
+                  onClick={() => setShowDevices((prev) => !prev)}
+                  aria-expanded={showDevices}
+                >
+                  {t("Manage")}
+                  <span className={`${tfa.caret} ${showDevices ? tfa.caretOpen : ""}`}>
+                    <CaretDown color="#22106B" />
+                  </span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className={`${tfa.button} ${tfa.buttonSecondary}`}
+                  onClick={() => setShowBioModal(true)}
+                >
+                  <Plus />
+                  {t("Set up")}
+                </button>
+              )}
+            </MethodRow>
+
+            {showDevices && fingerBioActive && (
+              <div className={tfa.devices}>
+                <ul className={tfa.deviceList}>
+                  {devices?.map((device, idx) => (
+                    <li key={idx} className={tfa.device}>
+                      <span className={tfa.deviceName}>
+                        {device?.deviceName || t("Unnamed device")}
+                      </span>
+                      <Switch callback={() => deviceToggle(device)} checked={device?.enabled} />
+                      <button
+                        type="button"
+                        className={tfa.deleteButton}
+                        onClick={() => setDelete({ showModal: true, deviceToDelete: device })}
+                        aria-label={t("Delete this Device")}
+                      >
+                        <Trash color="#DC2626" />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  type="button"
+                  className={`${tfa.button} ${tfa.buttonSecondary}`}
+                  onClick={() => setShowBioModal(true)}
+                >
+                  <Plus />
+                  {t("Add passkey")}
+                </button>
               </div>
             )}
+          </div>
+        </div>
+      </section>
 
-            <div className={styles.modalRightSide}>
-              <div className={styles.top}>
-                <div>
-                  <span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="22"
-                      height="22"
-                      viewBox="0 0 22 22"
-                      fill="none"
-                    >
-                      <path
-                        d="M5.32298 16.9862C5.33921 16.9588 5.35584 16.9316 5.37286 16.9046C6.61448 14.9308 7.33325 12.5966 7.33325 10.0833C7.33325 8.05829 8.97487 6.41667 10.9999 6.41667C13.025 6.41667 14.6666 8.05829 14.6666 10.0833C14.6666 11.0156 14.6031 11.9337 14.4802 12.8333M12.5393 19.1067C13.1 17.9874 13.5597 16.8088 13.9065 15.5833M17.4255 16.621C18.0168 14.5435 18.3333 12.3504 18.3333 10.0833C18.3333 6.03324 15.0501 2.75 11 2.75C9.66428 2.75 8.41197 3.10711 7.33333 3.73107M2.75 14.0838C3.33727 12.8749 3.66667 11.5176 3.66667 10.0833C3.66667 8.74761 4.02378 7.4953 4.64774 6.41667M10.9999 10.0833C10.9999 13.3074 10.0752 16.3156 8.47648 18.8569"
-                        stroke="white"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
-                  <h5
-                    style={{
-                      fontSize: "16px",
-                      fontWeight: 600,
-                      color: "#333333",
-                      marginBottom: "0",
-                    }}
+      {showAuth && (
+        <GoogleAuthenticatorModal
+          authenticatorDetails={authenticatorDetails}
+          isOpen={showAuth}
+          toggle={() => {
+            setShowAuth(false);
+          }}
+          emailActive={emailActive}
+          setAuthenticatorActive={setAuthenticatorActive}
+          smsActive={smsActive}
+          wpActive={wpActive}
+          passwordNext={(c) => {
+            const sms = current === "SMS" ? !smsActive : smsActive;
+            const email = current === "Email" ? !emailActive : emailActive;
+            const whatsapp = current === "WP" ? !wpActive : wpActive;
+            updateHandler(sms, email, whatsapp, c);
+          }}
+          successTitle={
+            current !== "Google"
+              ? "Two Factor Authentication Updated Succsessfully!"
+              : "Google Two Factor Authentication Is Now Linked To Your Instapay Account."
+          }
+          sideText={`${current} Authenticator`}
+        />
+      )}
+
+      <Modal isOpen={showFinger}>
+        <ModalHeader toggle={resetModal}>{t("Confirm")}</ModalHeader>
+        <ModalBody>
+          <OTPConfirmation
+            variant="card"
+            callback={createPasskey}
+            setter={setShowSuccess}
+            setterValue={true}
+            hideOtp={resetModal}
+            processing={isSaving}
+            resendHandler={sendOtp}
+            authType={codeType}
+            setAuthType={setCodeType}
+            methods={otpMethods}
+            // showAuthToggle={true}
+          />
+        </ModalBody>
+      </Modal>
+      <Modal
+        className={styles.modal}
+        isOpen={showBioModal}
+        style={{
+          maxWidth: "841px",
+          padding: "0",
+          overflow: "hidden",
+          margin: window.innerWidth < 1000 && "0 auto",
+        }}
+      >
+        <ModalBody style={{ padding: "0", display: "flex" }}>
+          {window.innerWidth > 1000 && (
+            <div style={{ background: `url(${sideImg})` }} className={styles.modalLeftSide}>
+              <div></div>
+            </div>
+          )}
+
+          <div className={styles.modalRightSide}>
+            <div className={styles.top}>
+              <div>
+                <span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="22"
+                    height="22"
+                    viewBox="0 0 22 22"
+                    fill="none"
                   >
-                    {t("Fingerprint / Biometrics")}
-                  </h5>
-                </div>
-
-                <h2
+                    <path
+                      d="M5.32298 16.9862C5.33921 16.9588 5.35584 16.9316 5.37286 16.9046C6.61448 14.9308 7.33325 12.5966 7.33325 10.0833C7.33325 8.05829 8.97487 6.41667 10.9999 6.41667C13.025 6.41667 14.6666 8.05829 14.6666 10.0833C14.6666 11.0156 14.6031 11.9337 14.4802 12.8333M12.5393 19.1067C13.1 17.9874 13.5597 16.8088 13.9065 15.5833M17.4255 16.621C18.0168 14.5435 18.3333 12.3504 18.3333 10.0833C18.3333 6.03324 15.0501 2.75 11 2.75C9.66428 2.75 8.41197 3.10711 7.33333 3.73107M2.75 14.0838C3.33727 12.8749 3.66667 11.5176 3.66667 10.0833C3.66667 8.74761 4.02378 7.4953 4.64774 6.41667M10.9999 10.0833C10.9999 13.3074 10.0752 16.3156 8.47648 18.8569"
+                      stroke="white"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+                <h5
                   style={{
-                    marginBottom: "0",
-                    fontSize: "24px",
-                    fontWeight: 700,
-                  }}
-                >
-                  {showSuccess
-                    ? t("Fingerprint Registered Successfully")
-                    : deviceAddError
-                      ? t("Fingerprint Not Recognized")
-                      : t("Add a new device")}
-                  .
-                </h2>
-                <p
-                  style={{
-                    marginBottom: "0",
                     fontSize: "16px",
                     fontWeight: 600,
-                    color: "#777777",
+                    color: "#333333",
+                    marginBottom: "0",
                   }}
                 >
-                  {showSuccess
-                    ? t(
-                        `You can now use your fingerprint to log in on this device. You can add 1 more devices as biometric authentication`,
-                      )
-                        .replace("1", devices.length === 0 ? "2" : devices.length === 1 ? "1" : "")
-                        .replace("can", devices.length < 1 ? "can" : "can't")
-                    : deviceAddError
-                      ? "We couldn't capture a valid fingerprint. Please try again."
-                      : t("Confirm with biometrics to register your new passkey.")}
-                </p>
+                  {t("Fingerprint / Biometrics")}
+                </h5>
               </div>
 
-              <img
-                src={showSuccess ? FingerSuccess : deviceAddError ? FingerFailed : Finger}
-                alt=""
-              />
-
-              <div
+              <h2
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "14px",
-                  alignItems: "flex-start",
-                  width: "100%",
+                  marginBottom: "0",
+                  fontSize: "24px",
+                  fontWeight: 700,
                 }}
               >
-                {!deviceAddError && (
-                  <div
-                    style={{
-                      width: "100%",
-                      display: showSuccess && "flex",
-                      alignItems: showSuccess && "center",
-                      gap: showSuccess && "10px",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: "14px",
-                        fontWeight: 600,
-                        color: "#777",
-                        marginBottom: !showSuccess && "15px",
-                        whiteSpace: showSuccess && "nowrap",
-                      }}
-                    >
-                      {t("Device Name")}:
-                    </span>
-                    <div style={{ position: "relative", width: "100%" }}>
-                      <input
-                        value={deviceName}
-                        onChange={(e) => {
-                          if (remainingChar !== 0) {
-                            setRemainingChar((prev) => prev - 1);
-                            setDeviceName(e.target.value);
-                          }
-                        }}
-                        readOnly={showSuccess}
-                        style={{
-                          border: "none",
-                          outline: "none",
-                          width: "100%",
-                          background: "#FAFAFA",
-                          borderRadius: "4px",
-                          padding: window.innerWidth > 1000 ? "8px 10px" : "15px",
-                          fontSize: "12px",
-                          fontWeight: 600,
-                        }}
-                      />
+                {showSuccess
+                  ? t("Fingerprint Registered Successfully")
+                  : deviceAddError
+                    ? t("Fingerprint Not Recognized")
+                    : t("Add a new device")}
+                .
+              </h2>
+              <p
+                style={{
+                  marginBottom: "0",
+                  fontSize: "16px",
+                  fontWeight: 600,
+                  color: "#777777",
+                }}
+              >
+                {showSuccess
+                  ? t(
+                      `You can now use your fingerprint to log in on this device. You can add 1 more devices as biometric authentication`,
+                    )
+                      .replace("1", devices.length === 0 ? "2" : devices.length === 1 ? "1" : "")
+                      .replace("can", devices.length < 1 ? "can" : "can't")
+                  : deviceAddError
+                    ? "We couldn't capture a valid fingerprint. Please try again."
+                    : t("Confirm with biometrics to register your new passkey.")}
+              </p>
+            </div>
 
-                      {!showSuccess && (
-                        <p
-                          style={{
-                            marginBottom: "0",
-                            position: "absolute",
-                            top: "35%",
-                            right: "8px",
-                            fontSize: "10px",
-                            color: "#BBBBB",
-                            fontWeight: 600,
-                          }}
-                        >
-                          {remainingChar}/24 {t("Characters Remaining")}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                )}
+            <img
+              src={showSuccess ? FingerSuccess : deviceAddError ? FingerFailed : Finger}
+              alt=""
+            />
 
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "14px",
+                alignItems: "flex-start",
+                width: "100%",
+              }}
+            >
+              {!deviceAddError && (
                 <div
-                  className={styles.modalBtns}
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
                     width: "100%",
+                    display: showSuccess && "flex",
+                    alignItems: showSuccess && "center",
+                    gap: showSuccess && "10px",
                   }}
                 >
-                  <button
+                  <span
                     style={{
-                      width: (window.innerWidth < 1000 || showSuccess) && "100%",
-                      background: showSuccess && "#5926F0",
-                      color: showSuccess && "white",
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      color: "#777",
+                      marginBottom: !showSuccess && "15px",
+                      whiteSpace: showSuccess && "nowrap",
                     }}
-                    onClick={() => {
-                      resetModal();
-                      setShowSuccess(false);
-                    }}
-                    className={styles.back}
                   >
-                    {t("Back")}
-                  </button>
-                  {!showSuccess && (
-                    <button
-                      onClick={() => {
-                        sendOtp(undefined, true);
-                      }}
-                      style={{
-                        opacity: !deviceName && 0.6,
-                        background: deviceAddError && "#D00416",
-                      }}
-                      disabled={!deviceName}
-                      className={styles.next}
-                    >
-                      {deviceAddError ? t("Retry") : t("Next")}
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-          </ModalBody>
-        </Modal>
-
-        <Modal isOpen={deleteState.showModal}>
-          <ModalBody>
-            <div className={styles.deleteModal}>
-              <div>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                  <span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="23"
-                      height="23"
-                      viewBox="0 0 23 23"
-                      fill="none"
-                    >
-                      <path
-                        d="M8.75 3.25H14.25M3.25 6H19.75M17.9167 6L17.2738 15.6427C17.1774 17.0894 17.1291 17.8128 16.8167 18.3613C16.5416 18.8441 16.1266 19.2323 15.6265 19.4747C15.0585 19.75 14.3335 19.75 12.8836 19.75H10.1164C8.6665 19.75 7.94153 19.75 7.37348 19.4747C6.87336 19.2323 6.45841 18.8441 6.18332 18.3613C5.87085 17.8128 5.82263 17.0894 5.72618 15.6427L5.08333 6"
-                        stroke="white"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
+                    {t("Device Name")}:
                   </span>
+                  <div style={{ position: "relative", width: "100%" }}>
+                    <input
+                      value={deviceName}
+                      onChange={(e) => {
+                        if (remainingChar !== 0) {
+                          setRemainingChar((prev) => prev - 1);
+                          setDeviceName(e.target.value);
+                        }
+                      }}
+                      readOnly={showSuccess}
+                      style={{
+                        border: "none",
+                        outline: "none",
+                        width: "100%",
+                        background: "#FAFAFA",
+                        borderRadius: "4px",
+                        padding: window.innerWidth > 1000 ? "8px 10px" : "15px",
+                        fontSize: "12px",
+                        fontWeight: 600,
+                      }}
+                    />
 
-                  <p style={{ fontSize: "16px" }}>{t("Delete this Device")}</p>
-                </div>
-
-                <div>
-                  <h3
-                    style={{
-                      fontSize: "20px",
-                      fontWeight: 700,
-                      marginBottom: "12px",
-                    }}
-                  >
-                    {t("Are you sure you want to delete this device")}?
-                  </h3>
-                  <p style={{ fontSize: "14px", color: "#777777" }}>
-                    {t(
-                      "This device will no longer be able to use biometric authentication. You will need to re-register it if you want to use it again.",
+                    {!showSuccess && (
+                      <p
+                        style={{
+                          marginBottom: "0",
+                          position: "absolute",
+                          top: "35%",
+                          right: "8px",
+                          fontSize: "10px",
+                          color: "#BBBBB",
+                          fontWeight: 600,
+                        }}
+                      >
+                        {remainingChar}/24 {t("Characters Remaining")}
+                      </p>
                     )}
-                  </p>
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div
+                className={styles.modalBtns}
                 style={{
                   display: "flex",
-                  gap: "10px",
                   alignItems: "center",
+                  gap: "8px",
                   width: "100%",
                 }}
               >
                 <button
-                  onClick={() => setDelete({ showModal: false, device: null })}
-                  className={styles.cancel}
+                  style={{
+                    width: (window.innerWidth < 1000 || showSuccess) && "100%",
+                    background: showSuccess && "#5926F0",
+                    color: showSuccess && "white",
+                  }}
+                  onClick={() => {
+                    resetModal();
+                    setShowSuccess(false);
+                  }}
+                  className={styles.back}
                 >
-                  {t("Cancel")}
+                  {t("Back")}
                 </button>
-                <button onClick={deleteDevice} className={styles.delete}>
-                  {t("Yes, Remove Device")}
-                </button>
+                {!showSuccess && (
+                  <button
+                    onClick={() => {
+                      sendOtp(undefined, true);
+                    }}
+                    style={{
+                      opacity: !deviceName && 0.6,
+                      background: deviceAddError && "#D00416",
+                    }}
+                    disabled={!deviceName}
+                    className={styles.next}
+                  >
+                    {deviceAddError ? t("Retry") : t("Next")}
+                  </button>
+                )}
               </div>
             </div>
-          </ModalBody>
-        </Modal>
+          </div>
+        </ModalBody>
+      </Modal>
 
-        {/* <Modal isOpen={authenticatorDetails}>
-                    <ModalHeader toggle={() => setAuthenticatorDetails(null)}>
-                        {t("Link Google Authenticator")}
-                    </ModalHeader>
-                    <ModalBody>
-                        <div style={{ display: "flex", flexDirection: "column", gap: "1rem", alignItems: "center", marginBottom: "1rem" }}>
-                            <h5 style={{ textAlign: "center", marginBottom: 0 }}>{t("Scan the QR Code from the Google Authenticator App.")}</h5>
-                            <img style={{ width: "200px", height: "200px" }} src={authenticatorDetails?.qrCodeUrl} alt="" />
-                        </div>
-                        <hr />
-                        <div style={{ textAlign: "center" }}>{t("OR")}</div>
-                        <hr />
-                        <div style={{ display: "flex", flexDirection: "column", gap: "1rem", alignItems: "center", marginTop: "1rem" }}>
-                            <h5 style={{ textAlign: "center", marginBottom: 0 }}>{t("Paste this key in the Google Authenticator App.")}</h5>
-                            <div style={{ display: "flex", alignItems: "center", gap: "1rem", background: "#5926f0", color: "white", padding: "10px 13px", borderRadius: "10px" }}>
-                                {authenticatorDetails?.secret}
-                                <button style={{
-                                    border: "none",
-                                    outline: "none",
-                                    background: "transparent",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center"
-                                }}
-                                    onClick={() => {
-                                        navigator.clipboard.writeText(authenticatorDetails?.secret)
-                                        toast.success(`"${authenticatorDetails?.secret}" copied to clipboard.`)
-                                    }}
-                                >
-                                    <Copy color='white' />
-                                </button>
-                            </div>
-                        </div>
+      <Modal isOpen={deleteState.showModal}>
+        <ModalBody>
+          <div className={styles.deleteModal}>
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="23"
+                    height="23"
+                    viewBox="0 0 23 23"
+                    fill="none"
+                  >
+                    <path
+                      d="M8.75 3.25H14.25M3.25 6H19.75M17.9167 6L17.2738 15.6427C17.1774 17.0894 17.1291 17.8128 16.8167 18.3613C16.5416 18.8441 16.1266 19.2323 15.6265 19.4747C15.0585 19.75 14.3335 19.75 12.8836 19.75H10.1164C8.6665 19.75 7.94153 19.75 7.37348 19.4747C6.87336 19.2323 6.45841 18.8441 6.18332 18.3613C5.87085 17.8128 5.82263 17.0894 5.72618 15.6427L5.08333 6"
+                      stroke="white"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
 
-                        <div style={{ marginTop: "2rem" }}>
-                            <h5 style={{ textAlign: "center", marginBottom: 0 }}>{t("Enter the code from Google Authenticator below:")}</h5>
-                            <div style={{ display: "flex", gap: "1rem", marginTop: ".75rem" }}>
-                                <Input value={authCode} onChange={(e) => setAuthCode(e.target.value)} type="number" placeholder='Enter the code from Google Authenticator' maxLength={6} />
-                                <Button
-                                    onClick={verifyAuthenticator}
-                                    disabled={authCode.length < 6 || enablingAuth || !authCode}
-                                    style={{
-                                        background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                                        border: "none",
-                                        outline: "none",
-                                        borderRadius: "10px"
-                                    }}>{t("Submit")}</Button>
-                            </div>
-                        </div>
-                    </ModalBody>
-                </Modal> */}
-      </CardBody>
-    </Card>
+                <p style={{ fontSize: "16px" }}>{t("Delete this Device")}</p>
+              </div>
+
+              <div>
+                <h3
+                  style={{
+                    fontSize: "20px",
+                    fontWeight: 700,
+                    marginBottom: "12px",
+                  }}
+                >
+                  {t("Are you sure you want to delete this device")}?
+                </h3>
+                <p style={{ fontSize: "14px", color: "#777777" }}>
+                  {t(
+                    "This device will no longer be able to use biometric authentication. You will need to re-register it if you want to use it again.",
+                  )}
+                </p>
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                gap: "10px",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <button
+                onClick={() => setDelete({ showModal: false, device: null })}
+                className={styles.cancel}
+              >
+                {t("Cancel")}
+              </button>
+              <button onClick={deleteDevice} className={styles.delete}>
+                {t("Yes, Remove Device")}
+              </button>
+            </div>
+          </div>
+        </ModalBody>
+      </Modal>
+    </div>
   );
 };
 

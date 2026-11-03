@@ -1,33 +1,20 @@
-import { Card, CardBody, CardHeader } from "reactstrap";
 import NotifTable from "./NotifTable";
 import { useTranslation } from "react-i18next";
+import styles from "./styles/Notifications.module.scss";
 
 const Notifications = () => {
   const { t } = useTranslation();
 
   return (
-    <Card>
-      <CardHeader>
-        <div>
-          <h4>{t("Notifications")}</h4>
-          <p style={{ color: "black", fontWeight: "300" }}>
-            {t(
-              "Customize how you receive notifications. These settings apply to the activities you are monitoring.",
-            )}
-          </p>
+    <div className={styles.container}>
+      <div className={styles.sectionHeader}>
+        <div className={styles.sectionText}>
+          <h4 className={styles.sectionTitle}>{t("Notifications")}</h4>
+          <p className={styles.sectionSubtitle}>{t("Choose what you hear about, and where.")}</p>
         </div>
-      </CardHeader>
-      <div>
-        <CardBody
-          style={{
-            overflowX: "auto",
-            padding: window.innerWidth < 500 ? "24px 0" : "24px",
-          }}
-        >
-          <NotifTable />
-        </CardBody>
       </div>
-    </Card>
+      <NotifTable />
+    </div>
   );
 };
 

@@ -1,9 +1,26 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import AssistantWidget from "../../Components/AssistantWidget";
+import {
+  BUBBLE_DELAY_MS,
+  INTRO_MS,
+  LABEL_HIDE_MS,
+  LABEL_SHOW_MS,
+  QUIET_AFTER_MODAL_MS,
+  QUIET_MS,
+  WINK_AT_MS,
+  WINK_MS,
+} from "../../Components/AssistantWidget/useLauncherChoreography";
 import { UserContext } from "../../Context/UserContext";
+
+// Exit animations need animation frames, which fake timers never run; the
+// tests care about what is on screen, not how it leaves.
+vi.mock("framer-motion", async (importOriginal) => ({
+  ...(await importOriginal()),
+  AnimatePresence: ({ children }) => children,
+}));
 
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({ t: (key) => key, i18n: { language: "en" } }),
@@ -349,6 +366,197 @@ describe("AssistantWidget", () => {
 
       await waitFor(() => expect(screen.queryByText("an answer")).not.toBeInTheDocument());
       expect(screen.getByText("Try one of these")).toBeInTheDocument();
+    });
+  });
+
+  describe("launcher choreography", () => {
+    const GREETING = "Hi! I'm your InstaPay assistant.";
+    // The beats come from the hook, so tuning them there cannot break these.
+    const MARGIN = 100;
+    const UNTIL_GREETING = QUIET_MS + BUBBLE_DELAY_MS + MARGIN;
+
+    /** A Bootstrap modal as reactstrap renders it, for covering the page. */
+    const fakeModal = () => {
+      const modal = document.createElement("div");
+      modal.className = "modal show";
+      return modal;
+    };
+
+    /**
+     * Advances fake time in small steps: React flushes the effects a timer
+     * triggers only when `act` exits, and those effects arm the next timer.
+     */
+    const advance = (ms) => {
+      for (let left = ms; left > 0; left -= 100) {
+        act(() => vi.advanceTimersByTime(Math.min(100, left)));
+      }
+    };
+
+    it("plays the intro on every page load", () => {
+      vi.useFakeTimers();
+      try {
+        const firstLoad = renderWidget();
+        advance(UNTIL_GREETING);
+        expect(screen.getByText(GREETING)).toBeInTheDocument();
+        firstLoad.unmount();
+
+        renderWidget();
+        advance(UNTIL_GREETING);
+        expect(screen.getByText(GREETING)).toBeInTheDocument();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it("greets during the intro, then docks with its label", () => {
+      vi.useFakeTimers();
+      try {
+        renderWidget();
+        expect(screen.queryByText("Ask InstaPay")).not.toBeInTheDocument();
+
+        advance(UNTIL_GREETING);
+        expect(screen.getByText(GREETING)).toBeInTheDocument();
+
+        advance(INTRO_MS - BUBBLE_DELAY_MS);
+        expect(screen.getByText("Ask InstaPay")).toBeInTheDocument();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it("winks one eye just before docking", () => {
+      vi.useFakeTimers();
+      try {
+        renderWidget();
+        advance(UNTIL_GREETING);
+        const orb = screen.getByTestId("assistant-orb");
+        expect(orb).not.toHaveAttribute("data-wink");
+
+        advance(WINK_AT_MS - BUBBLE_DELAY_MS);
+        expect(orb).toHaveAttribute("data-wink", "true");
+
+        advance(WINK_MS);
+        expect(orb).not.toHaveAttribute("data-wink");
+        expect(screen.queryByText("Ask InstaPay")).not.toBeInTheDocument();
+
+        advance(INTRO_MS - WINK_AT_MS - WINK_MS);
+        expect(screen.getByText("Ask InstaPay")).toBeInTheDocument();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it("shows the docked label briefly, then rests it", () => {
+      vi.useFakeTimers();
+      try {
+        renderWidget();
+        advance(UNTIL_GREETING + INTRO_MS);
+        expect(screen.getByText("Ask InstaPay")).toBeInTheDocument();
+
+        advance(LABEL_SHOW_MS + 1000);
+        expect(screen.queryByText("Ask InstaPay")).not.toBeInTheDocument();
+
+        advance(LABEL_HIDE_MS);
+        expect(screen.getByText("Ask InstaPay")).toBeInTheDocument();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it("waits for the page to finish loading, then a second more", () => {
+      vi.useFakeTimers();
+      Object.defineProperty(document, "readyState", { configurable: true, get: () => "loading" });
+      try {
+        renderWidget();
+        advance(5000);
+        expect(screen.queryByTestId("assistant-orb")).not.toBeInTheDocument();
+
+        delete document.readyState;
+        act(() => {
+          window.dispatchEvent(new Event("load"));
+        });
+        advance(QUIET_MS - MARGIN);
+        expect(screen.queryByTestId("assistant-orb")).not.toBeInTheDocument();
+
+        advance(2 * MARGIN);
+        expect(screen.getByTestId("assistant-orb")).toBeInTheDocument();
+      } finally {
+        delete document.readyState;
+        vi.useRealTimers();
+      }
+    });
+
+    it("waits until no modal covers the page, then starts sooner than on a clean load", async () => {
+      vi.useFakeTimers();
+      const modal = fakeModal();
+      document.body.appendChild(modal);
+      try {
+        renderWidget();
+        advance(5000);
+        expect(screen.queryByTestId("assistant-orb")).not.toBeInTheDocument();
+
+        await act(async () => modal.remove());
+        advance(QUIET_AFTER_MODAL_MS - MARGIN);
+        expect(screen.queryByTestId("assistant-orb")).not.toBeInTheDocument();
+
+        advance(2 * MARGIN);
+        expect(screen.getByTestId("assistant-orb")).toBeInTheDocument();
+
+        advance(BUBBLE_DELAY_MS);
+        expect(screen.getByText(GREETING)).toBeInTheDocument();
+      } finally {
+        modal.remove();
+        vi.useRealTimers();
+      }
+    });
+
+    it("retreats behind a modal that opens mid-intro and replays once it closes", async () => {
+      vi.useFakeTimers();
+      const modal = fakeModal();
+      try {
+        renderWidget();
+        advance(UNTIL_GREETING);
+        expect(screen.getByTestId("assistant-orb")).toBeInTheDocument();
+
+        await act(async () => document.body.appendChild(modal));
+        expect(screen.queryByTestId("assistant-orb")).not.toBeInTheDocument();
+
+        await act(async () => modal.remove());
+        advance(UNTIL_GREETING);
+        expect(screen.getByText(GREETING)).toBeInTheDocument();
+      } finally {
+        modal.remove();
+        vi.useRealTimers();
+      }
+    });
+
+    it("treats a body scroll lock as a covered page", async () => {
+      vi.useFakeTimers();
+      document.body.style.overflow = "hidden";
+      try {
+        renderWidget();
+        advance(5000);
+        expect(screen.queryByTestId("assistant-orb")).not.toBeInTheDocument();
+
+        await act(async () => {
+          document.body.style.overflow = "";
+        });
+        advance(UNTIL_GREETING);
+        expect(screen.getByTestId("assistant-orb")).toBeInTheDocument();
+      } finally {
+        document.body.style.overflow = "";
+        vi.useRealTimers();
+      }
+    });
+
+    it("still opens from the launcher while the intro is playing", async () => {
+      const user = userEvent.setup();
+      renderWidget();
+
+      await open(user);
+
+      expect(screen.getByRole("dialog")).toBeInTheDocument();
+      expect(screen.queryByText("Ask InstaPay")).not.toBeInTheDocument();
     });
   });
 });
