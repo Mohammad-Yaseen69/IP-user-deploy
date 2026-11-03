@@ -21,13 +21,14 @@ import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
 const defaultRange = { startDate: new Date(), endDate: new Date(), key: "selection" };
 
 const byNewest = (a, b) => new Date(b.createdAt) - new Date(a.createdAt);
+const START_PAGE = 0;
 
 const useQuotations = (key, path, search, apiDates) => {
   const { userDetails, authHeader } = useContext(UserContext);
   return useInfiniteQuery({
     queryKey: [key, userDetails?._id, search, apiDates],
-    initialPageParam: 1,
-    queryFn: async ({ pageParam = 1 }) => {
+    initialPageParam: START_PAGE,
+    queryFn: async ({ pageParam = START_PAGE }) => {
       const query = new URLSearchParams({
         ...(search && { search }),
         ...apiDates,
@@ -45,7 +46,8 @@ const useQuotations = (key, path, search, apiDates) => {
         hasMore: decrypted?.pagination?.hasMore ?? false,
       };
     },
-    getNextPageParam: (lastPage, allPages) => (lastPage.hasMore ? allPages.length + 1 : undefined),
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage.hasMore ? allPages.length + START_PAGE : undefined,
     enabled: !!userDetails?._id,
     retry: false,
   });

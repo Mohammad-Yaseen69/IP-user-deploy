@@ -24,12 +24,14 @@ const defaultRange = { startDate: new Date(), endDate: new Date(), key: "selecti
 
 const byNewest = (a, b) => new Date(b.createdAt) - new Date(a.createdAt);
 
+const START_PAGE = 0;
+
 const useRequests = (key, path, label, search, apiDates) => {
   const { userDetails, authHeader } = useContext(UserContext);
   return useInfiniteQuery({
     queryKey: [key, userDetails?._id, search, apiDates],
-    initialPageParam: 1,
-    queryFn: async ({ pageParam = 1 }) => {
+    initialPageParam: START_PAGE,
+    queryFn: async ({ pageParam = START_PAGE }) => {
       try {
         const query = new URLSearchParams({
           ...(search && { search }),
@@ -51,7 +53,8 @@ const useRequests = (key, path, label, search, apiDates) => {
         throw new Error(err.response?.data?.message || `Failed to fetch ${label} requests`);
       }
     },
-    getNextPageParam: (lastPage, allPages) => (lastPage.hasMore ? allPages.length + 1 : undefined),
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage.hasMore ? allPages.length + START_PAGE : undefined,
     enabled: !!userDetails?._id,
     retry: false,
   });
