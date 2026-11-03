@@ -139,8 +139,6 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
     },
   });
 
-  const due = item?.dueDate && `${t("Due")} ${dayjs(item.dueDate).format("D MMM")}`;
-
   return (
     <>
       <div
@@ -155,7 +153,6 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
         />
         <PartyCell name={name} />
         <StatusCell status={status} label={label} />
-        <div className={s.time}>{due}</div>
         <AmountCell
           value={formatCurrency(item?.amount, true)}
           code={item?.currency?.code}

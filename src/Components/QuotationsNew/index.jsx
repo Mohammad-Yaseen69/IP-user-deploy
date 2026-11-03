@@ -168,15 +168,8 @@ const Quotations = () => {
           onClearAll={clearDates}
         />
       }
-      columns={[
-        "Quotation",
-        isReceived ? "From" : "Sent to",
-        "Status",
-        "Valid until",
-        "Amount",
-        "",
-      ]}
-      template="2.2fr 1.6fr 112px 1fr 1fr 180px"
+      columns={["Quotation", isReceived ? "From" : "Sent to", "Status", "Amount", ""]}
+      template="2.2fr 1.6fr 112px 1fr 180px"
     >
       {current.isLoading ? (
         <div className={s.loader}>

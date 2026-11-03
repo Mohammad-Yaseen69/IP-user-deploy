@@ -195,10 +195,6 @@ $mobile: 1000px;
   border-top: 1px solid $border;
   border-bottom: 1px solid $border;
   @include type(12px, 500, $muted);
-
-  div:nth-child(5) {
-    text-align: right;
-  }
 }
 
 .group {
@@ -332,7 +328,6 @@ $mobile: 1000px;
   display: flex;
   align-items: baseline;
   gap: 4px;
-  justify-self: end;
 
   b {
     @include type(14px, 600, $text, -0.42px);

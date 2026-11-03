@@ -105,9 +105,6 @@ const QuotationRow = ({ item, type = "received", isActive, setActive }) => {
         />
         <PartyCell name={name} />
         <StatusCell status={dotKey} label={label} />
-        <div className={s.time}>
-          {item?.validUntil && `${t("Until")} ${dayjs(item.validUntil).format("D MMM")}`}
-        </div>
         <AmountCell
           value={formatCurrency(item?.amount, true)}
           code={code}
