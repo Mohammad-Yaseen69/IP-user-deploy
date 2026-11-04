@@ -201,7 +201,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
         });
     }
   };
-  const [savedWallet, setSavedWalelt] = useState({});
+  const [savedWallet, setSavedWallet] = useState({});
 
   const isCryptoWallet = useMemo(() => currentWallet?.wallet_type === "crypto", [currentWallet]);
 
@@ -272,8 +272,6 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
             <></>
           ) : null}
         </div>
-        {/*  */}
-        {/* start from here */}
         <div className={styles.cards}>
           {can("wallet.list.view") && (
             <Swiper
@@ -358,7 +356,6 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
             </button>
           </div>
         </div>
-        {/*  */}
       </div>
       <div className={styles.rightCol}>
         {can("wallet.currencies.add") && (
@@ -378,7 +375,6 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
         )}
         <div className={styles.right}>
           <div className={styles.actions}>
-            {/* Add Funds */}
             {can("wallet.payment.topup") ? (
               <button
                 type="button"
@@ -423,7 +419,6 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
               </Tooltip>
             )}
 
-            {/* Convert Funds */}
             {can("wallet.payment.conversion") ? (
               <button
                 type="button"
@@ -622,7 +617,6 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
           </div>
         </div>
       </div>
-      {/* there is a fucnction */}
       <DefaultWalletModal
         setShowConfirmationModal={setShowConfirmationModal}
         showConfirmationModal={showConfirmationModal}
@@ -632,7 +626,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
       <AddCurrencyModal
         isOpen={showAddCurrencyModal}
         toggle={() => setShowAddCurrencyModal(!showAddCurrencyModal)}
-        setSavedWalelt={setSavedWalelt}
+        setSavedWallet={setSavedWallet}
       />
       {userWithdrawals?.length > 0 ? (
         <Withdraw wallet={currentWallet} isOpen={showWithdrawalModal} toggle={handleClose} />

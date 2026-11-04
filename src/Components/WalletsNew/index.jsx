@@ -281,11 +281,13 @@ const WalletsNew = () => {
                 alignItems: "stretch",
               }}
             >
-              <MoneyInOut
-                currency={currentWallet?.currency?.code}
-                data={moneyData}
-                loading={moneyLoading}
-              />
+              {can("wallet.analytics.view") && (
+                <MoneyInOut
+                  currency={currentWallet?.currency?.code}
+                  data={moneyData}
+                  loading={moneyLoading}
+                />
+              )}
               <Exchange />
             </div>
 
@@ -297,15 +299,6 @@ const WalletsNew = () => {
                 currentWallet={currentWallet}
               />
             )}
-            {/* {can("wallet.analytics.view") && (
-              <CenterContainer
-                categories={categories}
-                setCategories={setCategories}
-                currentType={currentType}
-                setCurrentType={setCurrentType}
-                currentWallet={currentWallet}
-              />
-            )} */}
 
             {can("transactions.wallet.list") && (
               <TransactionsTable
@@ -353,16 +346,14 @@ const WalletsNew = () => {
                 currentWallet={currentWallet}
               />
             )}
-
-            {/* {can("wallet.analytics.view") && (
-              <CenterContainer
-                categories={categories}
-                setCategories={setCategories}
-                currentType={currentType}
-                setCurrentType={setCurrentType}
-                currentWallet={currentWallet}
+            {can("wallet.analytics.view") && (
+              <MoneyInOut
+                currency={currentWallet?.currency?.code}
+                data={moneyData}
+                loading={moneyLoading}
               />
-            )} */}
+            )}
+            <Exchange />
             {can("transactions.wallet.list") && (
               <TransactionsTable
                 currentWallet={currentWallet}
