@@ -252,8 +252,10 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
       )}
       <div className={styles.left} style={{ alignItems: "flex-start" }}>
         <div className={styles.top}>
-          {/* need to add Icon */}
-          <span className={styles.icon}>€</span>
+          <span className={styles.icon}>
+            {" "}
+            {currentWallet?.currency?.symbol || currentWallet?.currency?.code}
+          </span>
           <div>
             <h2>
               {currentWallet?.currency?.code} {t("Wallet")}
