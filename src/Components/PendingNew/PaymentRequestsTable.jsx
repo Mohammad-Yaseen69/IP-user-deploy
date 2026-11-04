@@ -209,8 +209,8 @@ const PaymentRequestsTable = () => {
           onClearAll={clearDates}
         />
       }
-      columns={["Request", isReceived ? "From" : "Sent to", "Status", "Due", "Amount", ""]}
-      template="minmax(0, 1fr) 196px 104px 110px 150px 172px"
+      columns={["Request", isReceived ? "From" : "Sent to", "Status", "Amount", ""]}
+      template="2.2fr 1.6fr 112px 1fr 180px"
     >
       {current.isLoading ? (
         <div className={s.loader}>

@@ -139,8 +139,25 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
     },
   });
 
-  const due = item?.dueDate && `${t("Due")} ${dayjs(item.dueDate).format("D MMM")}`;
+  const { mutate: cancelRequest, isPending: cancelLoading } = useMutation({
+    mutationFn: async () => {
+      return await apiWrapper({
+        endpoint: `/api/wallet/cancel-payment-request/${item?.reference_id}`,
+        method: "POST",
+        isDecrypted: true,
+      });
+    },
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({ queryKey: ["sentPaymentRequests", userDetails?._id] });
+      toast.success(res?.message ?? t("Request canceled successfully"));
+    },
+    onError: (error) => {
+      const decrypted = decryptData(error?.response?.data?.data);
+      toast.error(decrypted?.message ?? t("Failed to cancel request!"));
+    },
+  });
 
+  const isLoading = cancelLoading || isPending;
   return (
     <>
       <div
@@ -155,7 +172,6 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
         />
         <PartyCell name={name} />
         <StatusCell status={status} label={label} />
-        <div className={s.time}>{due}</div>
         <AmountCell
           value={formatCurrency(item?.amount, true)}
           code={item?.currency?.code}
@@ -185,13 +201,18 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
             </>
           ) : pending ? (
             <>
-              {/* <button type="button" className={s.textBtn} disabled onClick={stop(() => {})}>
+              <button
+                type="button"
+                className={s.textBtn}
+                disabled={isLoading}
+                onClick={stop(cancelRequest)}
+              >
                 {t("Cancel")}
-              </button> */}
+              </button>
               <button
                 type="button"
                 className={`${s.btn} ${s.sm}`}
-                disabled={isPending}
+                disabled={isLoading}
                 onClick={stop(sendReminder)}
               >
                 {t("Send reminder")}
@@ -211,8 +232,9 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
           label={label}
           allRating={allRating}
           allReviews={allReviews}
-          reminderLoading={isPending}
+          loading={isLoading}
           onSendReminder={sendReminder}
+          onCancelRequest={cancelRequest}
           onClose={() => setActiveItem(0)}
           onReject={() => setShowReject(true)}
           onReview={() => setShowReview(true)}

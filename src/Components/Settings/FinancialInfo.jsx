@@ -75,8 +75,6 @@ const questionsArray = [
     answers: null,
   },
 ];
-const LAST_REVIEWED = "Last reviewed 12 Mar 2026";
-const TIER_LABEL = "Tier 1 limits";
 
 const selectStyles = {
   container: (base) => ({ ...base, width: "100%", outline: "none" }),
@@ -328,9 +326,7 @@ const FinancialInfo = () => {
         <div className={styles.cardHeader}>
           <div className={styles.cardHeaderText}>
             <h4 className={styles.cardTitle}>{t("Your answers")}</h4>
-            <p className={styles.cardSubtitle}>{t(LAST_REVIEWED)}</p>
           </div>
-          <span className={styles.pill}>{t(TIER_LABEL)}</span>
         </div>
 
         {!editMode ? (

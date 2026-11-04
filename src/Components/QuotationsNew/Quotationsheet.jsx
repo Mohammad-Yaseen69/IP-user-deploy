@@ -106,20 +106,17 @@ const QuotationSheet = ({
       ) : (
         <>
           <Stack direction={"row"} gap={"8px"}>
-            <button type="button" className={`${s.btnSoftDanger} w-100`} disabled>
-              {t("Cancel")}
-            </button>
+            {can("quotations.bargain") && counterOffer && (
+              <button type="button" className={`${s.btn} w-100`} onClick={onRevise}>
+                {t("Revise")}
+              </button>
+            )}
             {can("quotations.accept") && counterOffer && (
               <button type="button" className={`${s.btnPrimary} w-100`} onClick={onAcceptBargained}>
                 {t("Accept")}
               </button>
             )}
           </Stack>
-          {can("quotations.bargain") && counterOffer && (
-            <button type="button" className={`${s.btn} w-100 mt-2`} onClick={onRevise}>
-              {t("Revise")}
-            </button>
-          )}
         </>
       )}
     </div>
