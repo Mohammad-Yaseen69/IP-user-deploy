@@ -19,7 +19,6 @@ const BankDeposit = ({
   guestDetails,
   toggle,
   client_reference,
-  invoiceId,
 }) => {
   const isGuestPayment = type !== "add_funds";
   const { userDetails } = useContext(UserContext);
@@ -190,9 +189,6 @@ const BankDeposit = ({
       formData.append("sendingAmount", data.exchange_rate?.sending?.amount);
       formData.append("sendingCurrency", selectedBank.Currency || selectedBank["Currency"] || "");
       formData.append("type", type);
-      if (invoiceId) {
-        formData.append("invoice_id", invoiceId);
-      }
       if (guestDetails) {
         formData.append("guest_details", JSON.stringify(guestDetails));
       }
