@@ -565,3 +565,16 @@
     padding: 8px 6px;
   }
 }
+
+.hashValue {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  word-break: break-all;
+}
+
+.copyIcon {
+  cursor: pointer;
+  color: #5926f0;
+  flex-shrink: 0;
+}
