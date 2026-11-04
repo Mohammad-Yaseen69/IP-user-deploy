@@ -7,7 +7,7 @@ import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import styled from "@emotion/styled";
 import axios from "axios";
 import { useParams, useLocation } from "react-router-dom";
-import CryptoJS from "crypto-js";
+import CryptoJS from "../../Helper/cryptoJs";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import RedirectButton from "../../CommonElements/RedirectButton";
 import i18next from "i18next";

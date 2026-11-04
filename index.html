@@ -50,6 +50,21 @@
     <!-- google analytics -->
     <title>InstaPay</title>
     <style>
+      #initial-loader {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        z-index: 99999;
+      }
+
+      #initial-loader img {
+        width: 500px;
+        height: 500px;
+        object-fit: contain;
+      }
       @font-face {
         font-family: "EmojiOne";
         src:
@@ -113,7 +128,11 @@
 
   <body translate="no">
     <!-- <noscript>You need to enable JavaScript to run this app.</noscript> -->
-    <div translate="no" id="root"></div>
+    <div translate="no" id="root">
+      <div id="initial-loader" role="status" aria-label="Loading InstaPay">
+        <img src="/load.gif" alt="" />
+      </div>
+    </div>
     <script type="module" src="/src/index.jsx"></script>
   </body>
 </html>

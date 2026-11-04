@@ -1,6 +1,6 @@
 import { stringToBase64 } from "./ConversionMethods";
 import { generateRandomIv } from "./GenerateRandomIV";
-import CryptoJS from "crypto-js";
+import CryptoJS from "../cryptoJs";
 import { KEY } from "./Key";
 
 export const encryptData = (obj) => {
