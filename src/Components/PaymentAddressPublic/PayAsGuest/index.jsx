@@ -878,6 +878,7 @@ const PayAsGuest = ({
                     ) : (
                       <BankDeposit
                         type={"payment_address"}
+                        invoiceId={invoiceId}
                         data={{ ...data, wallet }}
                         dataHandler={dataHandler}
                         guestDetails={{
@@ -1079,6 +1080,7 @@ const PayAsGuest = ({
                       ) : (
                         <BankDeposit
                           type={"payment_address"}
+                          invoiceId={invoiceId}
                           data={{ ...data, wallet }}
                           dataHandler={dataHandler}
                           guestDetails={{
