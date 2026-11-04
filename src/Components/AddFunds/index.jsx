@@ -7,7 +7,7 @@ import crypto from "./files/crypto.png";
 import CryptoFund from "./CryptoFund";
 import WalletFund from "./WalletFund";
 import { useLocation, useParams } from "react-router";
-import CryptoJS from "crypto-js";
+import CryptoJS from "../../Helper/cryptoJs";
 import Success from "./ResponseModals/Success";
 import Error from "./ResponseModals/Error";
 import Abort from "./ResponseModals/Abort";
@@ -165,6 +165,27 @@ const AddFunds = () => {
 
       if (pathname.includes("success")) {
         setCurrentModal("success");
+        // Paytently: reconcile the wallet credit on return in case the webhook is delayed.
+        if (pathname.includes("card")) {
+          try {
+            const pid = localStorage.getItem("paytently_payment_id");
+            if (pid) {
+              localStorage.removeItem("paytently_payment_id");
+              localStorage.removeItem("paytently_authorize_url");
+              axios
+                .post(
+                  `${import.meta.env.VITE_IP_DEV_API}/api/paytently/verify/${pid}`,
+                  {},
+                  { headers: authHeader },
+                )
+                .then((res) => {
+                  const dec = decryptData(res.data.data);
+                  if (dec?.result === "completed") setStatus("completed");
+                })
+                .catch(() => {});
+            }
+          } catch {}
+        }
       }
       if (pathname.includes("failed") || pathname.includes("error")) {
         setCurrentModal("error");
