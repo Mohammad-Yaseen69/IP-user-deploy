@@ -11,6 +11,7 @@ import LanguagePicker from "../LanguagePicker";
 import { UserContext } from "../../Context/UserContext";
 import axios from "axios";
 import { countries } from "country-list-json";
+import InstaPayLoader from "../Loader";
 // import LoginNew from "./LoginNew"
 
 const AuthNew = () => {
@@ -18,10 +19,10 @@ const AuthNew = () => {
     window?.location?.href?.includes("login") ? true : false,
   );
   const [isForgot, setIsForgot] = useState(false);
+  const [isRedirecting] = useState(() => Boolean(localStorage.getItem("token")));
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
+    if (isRedirecting) {
       window.location.href = "/dashboard/default";
     }
   }, []);
@@ -90,6 +91,9 @@ const AuthNew = () => {
       getCountryDetails();
     }
   }, [allowedCountries]);
+
+  if (isRedirecting) return <InstaPayLoader fallback />;
+
   return (
     <>
       {registrationCompleted && window.location.pathname.toLowerCase().includes("signup") ? (
