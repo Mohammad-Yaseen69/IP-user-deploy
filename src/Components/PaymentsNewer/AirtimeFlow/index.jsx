@@ -35,6 +35,7 @@ import ReceiptE from "../Esim/Receipt";
 import countries from "../../CitiesDropDown/CitiesData.json";
 import PrevModal from "./PrevModal";
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
+import PlaidBankTransfer from "../../AddFunds/WalletFundsFlow/PlaidBankTransfer";
 
 const initialState = {
   loading: false,
@@ -59,6 +60,7 @@ const initialState = {
   codeType: "sms",
   created_transaction: {},
   verified: false,
+  showPlaid: false,
   wallet: {},
   cardNumber: "",
   expiry: "",
@@ -277,31 +279,37 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
     }
   };
 
-  const createTransaction = async (codeType = "") => {
-    try {
-      const isOpenRange =
-        +String(data?.airtime_amount)?.replaceAll(",", "") > 0 &&
-        data.service_type?.name?.toLowerCase()?.includes("airtime");
+  const getTransactionData = () => {
+    const isOpenRange =
+      +String(data?.airtime_amount)?.replaceAll(",", "") > 0 &&
+      data.service_type?.name?.toLowerCase()?.includes("airtime");
 
+    return {
+      wallet_id: data?.payment_type?.value === "wallet" ? data.wallet?._id : data.localWallet?._id,
+      token: data.package_details?.data?.token,
+      number: data.recipient
+        ? `+${data.recipient}`
+        : data.eSimData.phone
+          ? `+${data.eSimData.phone}`
+          : `+${userDetails.phone}`,
+      type: data.flow === "e-sim" && "esim",
+      airtimeType: isOpenRange ? "ranged" : "fixed",
+      ...(data.eSimData.email ? { email: data.eSimData.email } : {}),
+    };
+  };
+
+  const createTransaction = async (codeType = "") => {
+    if (data.payment_type?.value === "bank_transfer") {
+      updateDataHandler("showPlaid", true);
+      return;
+    }
+
+    try {
       const payload = {
-        data: {
-          wallet_id:
-            data?.payment_type?.value === "wallet" ? data.wallet?._id : data.localWallet?._id,
-          token: data.package_details?.data?.token,
-          number: data.recipient
-            ? `+${data.recipient}`
-            : data.eSimData.phone
-              ? `+${data.eSimData.phone}`
-              : `+${userDetails.phone}`,
-          type: data.flow === "e-sim" && "esim",
-          airtimeType: isOpenRange ? "ranged" : "fixed",
-        },
+        data: getTransactionData(),
         type: codeType || data.codeType,
       };
 
-      if (data.eSimData.email) {
-        payload.data.email = data.eSimData.email;
-      }
       const encrypted = encryptData(payload);
       const res = await axios.post(
         `${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`,
@@ -588,6 +596,33 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
     }
   }, [transaction_status]);
 
+  const plaidJSX = () => {
+    const { sending, fee } = data.package_details?.data ?? {};
+
+    return (
+      data.showPlaid && (
+        <PlaidBankTransfer
+          data={{
+            ...data,
+            wallet: data.localWallet,
+            exchange_rate: {
+              sending: { amount: sending?.value, currency: sending?.currency },
+              receiver: { amount: sending?.value, currency: sending?.currency },
+              fee: { amount: fee?.value, currency: fee?.currency },
+            },
+          }}
+          dataHandler={updateDataHandler}
+          // TODO after backend: confirm the routes and the payload
+          endpoint={`/api/plaid/initiate-${data.flow === "e-sim" ? "esim" : "airtime"}-payment`}
+          type={data.flow}
+          handleBackClick={() => updateDataHandler("showPlaid", false)}
+          initiatePayload={getTransactionData}
+          successMessage="Payment authorized successfully, your purchase will be delivered once the transfer is complete, you can now close this window"
+        />
+      )
+    );
+  };
+
   const otpConfirmJSX = () =>
     data.show_otp && (
       <OtpConfirmation
@@ -849,7 +884,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                       updateDataHandler={updateDataHandler}
                     />
                   ))}
-                {data.step === 5 && (
+                {data.step === 5 && !data.showPlaid && (
                   <>
                     {data.flow === "airtime" ? (
                       <StepFive
@@ -873,7 +908,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                 ) : (
                   ""
                 )}
-                {data.step === 6 && (
+                {data.step === 6 && !data.showPlaid && (
                   <>
                     <ReceiptE
                       data={data}
@@ -884,6 +919,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                     {otpConfirmJSX()}
                   </>
                 )}
+                {plaidJSX()}
               </div>
             </div>
           )}
@@ -980,7 +1016,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                           updateDataHandler={updateDataHandler}
                         />
                       ))}
-                    {data.step === 5 && (
+                    {data.step === 5 && !data.showPlaid && (
                       <>
                         {data.flow === "airtime" ? (
                           <StepFive
@@ -998,7 +1034,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                         {otpConfirmJSX()}
                       </>
                     )}
-                    {data.step === 6 && (
+                    {data.step === 6 && !data.showPlaid && (
                       <>
                         <ReceiptE
                           data={data}
@@ -1009,6 +1045,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                         {otpConfirmJSX()}
                       </>
                     )}
+                    {plaidJSX()}
                   </>
                 }
               </div>
@@ -1030,7 +1067,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                     {t("Trouble Sending Money")}
                   </Link>
 
-                  {data.step !== 4 && (
+                  {data.step !== 4 && !data.showPlaid && (
                     <div className={styles?.buttons}>
                       <button
                         disabled={data.loading}

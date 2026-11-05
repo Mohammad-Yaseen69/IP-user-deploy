@@ -52,6 +52,7 @@ import {
   isThunesDocumentType,
 } from "./thunesDocuments";
 import { formatCurrency } from "../../../Helper/AmountFormat";
+import PlaidBankTransfer from "../../AddFunds/WalletFundsFlow/PlaidBankTransfer";
 
 const leftSideContent = [
   "Select Transaction Type",
@@ -1004,32 +1005,32 @@ const InternationFlow = ({
     }
   };
 
+  const getTransactionData = () => ({
+    additional_information: internationalData.comment,
+    purpose_of_remittance: internationalData.reason,
+    user_id:
+      userDetails?.account_type === "business" ? userDetails?.company?._id : userDetails?.user?._id,
+    ...(internationalData.beneficiary?.isNew
+      ? { beneficiaryDetails: internationalData.beneficiary.draftDetails }
+      : { beneficiary_id: internationalData.beneficiary?._id }),
+    ...(internationalData.senderType === "third-party" && internationalData.selectedSender?._id
+      ? {
+          sender_id: internationalData.selectedSender._id,
+        }
+      : {}),
+    service: { id: internationalData.payoutChannel?.id },
+    transaction_type: internationalData.flow,
+    wallet_id: internationalData.wallet?._id ?? internationalData.currency_wallet?._id,
+    token: internationalData.quotation_details?.token,
+    vendor: internationalData.payoutChannel?.vendor,
+  });
+
   const createTransaction = async (codeType = "", isResend = true) => {
     setLoading(true);
     try {
       let payload = {};
       const isNewBeneficiary = !!internationalData.beneficiary?.isNew;
-      const transaction_data = {
-        additional_information: internationalData.comment,
-        purpose_of_remittance: internationalData.reason,
-        user_id:
-          userDetails?.account_type === "business"
-            ? userDetails?.company?._id
-            : userDetails?.user?._id,
-        ...(isNewBeneficiary
-          ? { beneficiaryDetails: internationalData.beneficiary.draftDetails }
-          : { beneficiary_id: internationalData.beneficiary?._id }),
-        ...(internationalData.senderType === "third-party" && internationalData.selectedSender?._id
-          ? {
-              sender_id: internationalData.selectedSender._id,
-            }
-          : {}),
-        service: { id: internationalData.payoutChannel?.id },
-        transaction_type: internationalData.flow,
-        wallet_id: internationalData.wallet?._id ?? internationalData.currency_wallet?._id,
-        token: internationalData.quotation_details?.token,
-        vendor: internationalData.payoutChannel?.vendor,
-      };
+      const transaction_data = getTransactionData();
 
       if (internationalData.payoutChannel?.vendor === "thunes") {
         if (isResend) {
@@ -1985,7 +1986,17 @@ const InternationFlow = ({
                   )}
                   {subStep === 5 && (
                     <>
-                      {!internationalData.showCard ? (
+                      {internationalData?.payment_type?.value === "bank_transfer" ? (
+                        <PlaidBankTransfer
+                          data={{ ...internationalData, wallet: internationalData.currency_wallet }}
+                          dataHandler={updateInternationalData}
+                          // TODO after backend: confirm the route and the payload
+                          endpoint="/api/plaid/initiate-international-payment"
+                          type="international"
+                          handleBackClick={() => setSubStep(4)}
+                          initiatePayload={getTransactionData}
+                        />
+                      ) : !internationalData.showCard ? (
                         <StepFive data={internationalData} dataHandler={updateInternationalData} />
                       ) : (
                         <CreditCard
@@ -2068,84 +2079,89 @@ const InternationFlow = ({
                       )}
                     </div>
                   )}
-
-                  <div className={styles.bottom}>
-                    <Link
-                      to={"https://insta-pay.ch/faqs"}
-                      target="_blank"
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: ".7rem",
-                      }}
-                    >
-                      <HelpCircle size={16} />
-                      {t("Trouble Sending Money")}
-                    </Link>
-                    <div className={styles?.buttons}>
-                      {(internationalData.transactionTypeSelected ||
-                        (internationalData.isThirdPartyAllowed &&
-                          internationalData.isRecipientTypeSelected)) && (
-                        <button
-                          className={styles.transparent}
-                          disabled={loading}
-                          onClick={() => {
-                            reset();
-                            if (subStep === 4 && internationalData.payment_type?.value) {
-                              updateInternationalData("payment_type", {});
-                            } else if (
-                              subStep === 4 &&
-                              internationalData.payment_type?.value === "card"
-                            ) {
-                              updateInternationalData("payment_type", {});
-                              updateInternationalData("showCard", false);
-                              setSubStep((prev) => prev - 1);
-                            } else if (
-                              subStep === 5 &&
-                              internationalData.payment_type?.value === "card" &&
-                              !internationalData.showCard
-                            ) {
-                              updateInternationalData("showCard", true);
-                            } else if (internationalData.transactionTypeSelected && subStep === 1) {
-                              if (internationalData.isThirdPartyAllowed) {
-                                updateInternationalData("transactionTypeSelected", false);
-                                updateInternationalData("isSendingTypeSelected", false);
+                  {internationalData?.payment_type?.value === "bank_transfer" &&
+                  subStep === 5 ? null : (
+                    <div className={styles.bottom}>
+                      <Link
+                        to={"https://insta-pay.ch/faqs"}
+                        target="_blank"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: ".7rem",
+                        }}
+                      >
+                        <HelpCircle size={16} />
+                        {t("Trouble Sending Money")}
+                      </Link>
+                      <div className={styles?.buttons}>
+                        {(internationalData.transactionTypeSelected ||
+                          (internationalData.isThirdPartyAllowed &&
+                            internationalData.isRecipientTypeSelected)) && (
+                          <button
+                            className={styles.transparent}
+                            disabled={loading}
+                            onClick={() => {
+                              reset();
+                              if (subStep === 4 && internationalData.payment_type?.value) {
+                                updateInternationalData("payment_type", {});
+                              } else if (
+                                subStep === 4 &&
+                                internationalData.payment_type?.value === "card"
+                              ) {
+                                updateInternationalData("payment_type", {});
+                                updateInternationalData("showCard", false);
+                                setSubStep((prev) => prev - 1);
+                              } else if (
+                                subStep === 5 &&
+                                internationalData.payment_type?.value === "card" &&
+                                !internationalData.showCard
+                              ) {
+                                updateInternationalData("showCard", true);
+                              } else if (
+                                internationalData.transactionTypeSelected &&
+                                subStep === 1
+                              ) {
+                                if (internationalData.isThirdPartyAllowed) {
+                                  updateInternationalData("transactionTypeSelected", false);
+                                  updateInternationalData("isSendingTypeSelected", false);
+                                } else {
+                                  dispatch({ type: "RESET_FIRST_STEP_DATA" });
+                                }
+                              } else if (
+                                !internationalData.transactionTypeSelected &&
+                                internationalData.isThirdPartyAllowed &&
+                                internationalData.isRecipientTypeSelected
+                              ) {
+                                updateInternationalData("isRecipientTypeSelected", false);
+                              } else if (internationalData.showSenderSelection && subStep === 2) {
+                                updateInternationalData("showSenderSelection", false);
                               } else {
-                                dispatch({ type: "RESET_FIRST_STEP_DATA" });
+                                setSubStep((prev) => prev - 1);
                               }
-                            } else if (
-                              !internationalData.transactionTypeSelected &&
-                              internationalData.isThirdPartyAllowed &&
-                              internationalData.isRecipientTypeSelected
-                            ) {
-                              updateInternationalData("isRecipientTypeSelected", false);
-                            } else if (internationalData.showSenderSelection && subStep === 2) {
-                              updateInternationalData("showSenderSelection", false);
-                            } else {
-                              setSubStep((prev) => prev - 1);
-                            }
-                          }}
-                        >
-                          {t("Back")}
+                            }}
+                          >
+                            {t("Back")}
+                          </button>
+                        )}
+                        <button disabled={disabledButton || loading} onClick={handleClick}>
+                          {!internationalData.transactionTypeSelected ||
+                          (userDetails?.account_type === "individual"
+                            ? userDetails?.user?.kyc_status === "approved"
+                            : userDetails?.company?.kyb_status === "approved")
+                            ? subStep === 5
+                              ? t("Confirm")
+                              : subStep === 6
+                                ? t("Confirm and Proceed")
+                                : t("Next")
+                            : t(
+                                `${userDetails?.account_type === "individual" ? "Identity" : "Business"} verification required`,
+                              )}
+                          <ChevronRight size={18} />
                         </button>
-                      )}
-                      <button disabled={disabledButton || loading} onClick={handleClick}>
-                        {!internationalData.transactionTypeSelected ||
-                        (userDetails?.account_type === "individual"
-                          ? userDetails?.user?.kyc_status === "approved"
-                          : userDetails?.company?.kyb_status === "approved")
-                          ? subStep === 5
-                            ? t("Confirm")
-                            : subStep === 6
-                              ? t("Confirm and Proceed")
-                              : t("Next")
-                          : t(
-                              `${userDetails?.account_type === "individual" ? "Identity" : "Business"} verification required`,
-                            )}
-                        <ChevronRight size={18} />
-                      </button>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
                 {subStep === 4 && internationalData.payment_type?.value === "wallet" ? (
                   <WalletsComponent
@@ -2279,7 +2295,20 @@ const InternationFlow = ({
                           )}
                           {subStep === 5 && (
                             <>
-                              {!internationalData.showCard ? (
+                              {internationalData?.payment_type?.value === "bank_transfer" ? (
+                                <PlaidBankTransfer
+                                  data={{
+                                    ...internationalData,
+                                    wallet: internationalData.currency_wallet,
+                                  }}
+                                  handleBackClick={() => setSubStep(4)}
+                                  dataHandler={updateInternationalData}
+                                  // TODO after backend: confirm the route and the payload
+                                  endpoint="/api/plaid/initiate-international-payment"
+                                  type="international"
+                                  initiatePayload={getTransactionData}
+                                />
+                              ) : !internationalData.showCard ? (
                                 <StepFive
                                   data={internationalData}
                                   dataHandler={updateInternationalData}
@@ -2369,90 +2398,93 @@ const InternationFlow = ({
                         </>
                       )}
                     </div>
-                    <div className={styles.bottom}>
-                      <Link
-                        to={"https://insta-pay.ch/faqs"}
-                        target="_blank"
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: ".7rem",
-                        }}
-                      >
-                        <HelpCircle size={16} />
-                        {t("Trouble Sending Money")}
-                      </Link>
-                      <div className={styles?.buttons}>
-                        {(internationalData.transactionTypeSelected ||
-                          (internationalData.isThirdPartyAllowed &&
-                            internationalData.isRecipientTypeSelected)) && (
-                          <button
-                            className={styles.transparent}
-                            disabled={loading}
-                            onClick={() => {
-                              reset();
-                              if (subStep === 4 && internationalData.payment_type?.value) {
-                                updateInternationalData("payment_type", {});
-                              } else if (
-                                subStep === 4 &&
-                                internationalData.payment_type?.value === "card"
-                              ) {
-                                updateInternationalData("payment_type", {});
-                                updateInternationalData("showCard", false);
-                                setSubStep((prev) => prev - 1);
-                              } else if (
-                                subStep === 5 &&
-                                internationalData.payment_type?.value === "card" &&
-                                !internationalData.showCard
-                              ) {
-                                updateInternationalData("showCard", true);
-                              } else if (
-                                internationalData.transactionTypeSelected &&
-                                subStep === 1
-                              ) {
-                                if (internationalData.isThirdPartyAllowed) {
-                                  updateInternationalData("isSendingTypeSelected", false);
-                                  updateInternationalData("transactionTypeSelected", false);
-                                } else {
-                                  dispatch({ type: "RESET_FIRST_STEP_DATA" });
-                                  updateInternationalData("transactionTypeSelected", false);
-                                }
-                              } else if (
-                                !internationalData.transactionTypeSelected &&
-                                internationalData.isThirdPartyAllowed &&
-                                internationalData.isRecipientTypeSelected
-                              ) {
-                                updateInternationalData("isRecipientTypeSelected", false);
-                              } else if (internationalData.showSenderSelection && subStep === 2) {
-                                updateInternationalData("showSenderSelection", false);
-                              } else {
-                                setSubStep((prev) => prev - 1);
-                              }
-                            }}
-                          >
-                            <ChevronLeft />
-                          </button>
-                        )}
-                        <button
-                          disabled={disabledButton || loading}
-                          className={styles.full}
-                          onClick={handleClick}
+                    {internationalData?.payment_type?.value === "bank_transfer" &&
+                    subStep === 5 ? null : (
+                      <div className={styles.bottom}>
+                        <Link
+                          to={"https://insta-pay.ch/faqs"}
+                          target="_blank"
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: ".7rem",
+                          }}
                         >
-                          {!internationalData.transactionTypeSelected ||
-                          (userDetails?.account_type === "individual"
-                            ? userDetails?.user?.kyc_status === "approved"
-                            : userDetails?.company?.kyb_status === "approved")
-                            ? subStep === 5
-                              ? t("Confirm")
-                              : subStep === 6
-                                ? t("Confirm and Proceed")
-                                : t("Continue")
-                            : t(
-                                `${userDetails?.account_type === "individual" ? "Identity" : "Business"} verification required`,
-                              )}
-                        </button>
+                          <HelpCircle size={16} />
+                          {t("Trouble Sending Money")}
+                        </Link>
+                        <div className={styles?.buttons}>
+                          {(internationalData.transactionTypeSelected ||
+                            (internationalData.isThirdPartyAllowed &&
+                              internationalData.isRecipientTypeSelected)) && (
+                            <button
+                              className={styles.transparent}
+                              disabled={loading}
+                              onClick={() => {
+                                reset();
+                                if (subStep === 4 && internationalData.payment_type?.value) {
+                                  updateInternationalData("payment_type", {});
+                                } else if (
+                                  subStep === 4 &&
+                                  internationalData.payment_type?.value === "card"
+                                ) {
+                                  updateInternationalData("payment_type", {});
+                                  updateInternationalData("showCard", false);
+                                  setSubStep((prev) => prev - 1);
+                                } else if (
+                                  subStep === 5 &&
+                                  internationalData.payment_type?.value === "card" &&
+                                  !internationalData.showCard
+                                ) {
+                                  updateInternationalData("showCard", true);
+                                } else if (
+                                  internationalData.transactionTypeSelected &&
+                                  subStep === 1
+                                ) {
+                                  if (internationalData.isThirdPartyAllowed) {
+                                    updateInternationalData("isSendingTypeSelected", false);
+                                    updateInternationalData("transactionTypeSelected", false);
+                                  } else {
+                                    dispatch({ type: "RESET_FIRST_STEP_DATA" });
+                                    updateInternationalData("transactionTypeSelected", false);
+                                  }
+                                } else if (
+                                  !internationalData.transactionTypeSelected &&
+                                  internationalData.isThirdPartyAllowed &&
+                                  internationalData.isRecipientTypeSelected
+                                ) {
+                                  updateInternationalData("isRecipientTypeSelected", false);
+                                } else if (internationalData.showSenderSelection && subStep === 2) {
+                                  updateInternationalData("showSenderSelection", false);
+                                } else {
+                                  setSubStep((prev) => prev - 1);
+                                }
+                              }}
+                            >
+                              <ChevronLeft />
+                            </button>
+                          )}
+                          <button
+                            disabled={disabledButton || loading}
+                            className={styles.full}
+                            onClick={handleClick}
+                          >
+                            {!internationalData.transactionTypeSelected ||
+                            (userDetails?.account_type === "individual"
+                              ? userDetails?.user?.kyc_status === "approved"
+                              : userDetails?.company?.kyb_status === "approved")
+                              ? subStep === 5
+                                ? t("Confirm")
+                                : subStep === 6
+                                  ? t("Confirm and Proceed")
+                                  : t("Continue")
+                              : t(
+                                  `${userDetails?.account_type === "individual" ? "Identity" : "Business"} verification required`,
+                                )}
+                          </button>
+                        </div>
                       </div>
-                    </div>
+                    )}
                     {sendPaymentType === "international" ? (
                       // internationalData.payer?.id
                       // &&
