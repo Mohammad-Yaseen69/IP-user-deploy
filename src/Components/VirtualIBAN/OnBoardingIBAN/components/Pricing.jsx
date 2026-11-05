@@ -7,9 +7,7 @@ import {
   ArrowLeft,
   ArrowUpCircle,
   DollarSign,
-  RefreshCw,
   Repeat,
-  TrendingUp,
 } from "react-feather";
 import styles from "../style/Pricing.module.css";
 import AlertBox from "./AlertBox";
@@ -25,8 +23,8 @@ const ICON_MAP = {
   sepa_outward: ArrowUpCircle,
   swift_inward: ArrowDownCircle,
   swift_outward: ArrowUpCircle,
-  crypto_ramp: RefreshCw,
-  fx_margin: TrendingUp,
+  crypto_inward: ArrowDownCircle,
+  crypto_outward: ArrowUpCircle,
 };
 
 const PlanListIcon = () => (
