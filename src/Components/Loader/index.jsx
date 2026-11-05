@@ -1,9 +1,4 @@
-import { lazy, Suspense } from "react";
-import LottieFile from "./LoaderLottie.lottie";
-
-const DotLottieReact = lazy(() =>
-  import("@lottiefiles/dotlottie-react").then((m) => ({ default: m.DotLottieReact })),
-);
+import LoaderMark from "./LoaderMark";
 
 const InstaPayLoader = ({ opacity = 1, fallback = false, transparent, fullHeight = false }) => {
   if (fallback) {
@@ -21,17 +16,7 @@ const InstaPayLoader = ({ opacity = 1, fallback = false, transparent, fullHeight
         }}
         aria-hidden="true"
       >
-        <Suspense fallback={null}>
-          <DotLottieReact
-            src={LottieFile}
-            backgroundColor="transparent"
-            speed="1"
-            style={{ width: "100%", height: "100%" }}
-            playMode="normal"
-            loop={true}
-            autoplay={true}
-          />
-        </Suspense>
+        <LoaderMark page />
       </div>
     );
   }
@@ -48,16 +33,11 @@ const InstaPayLoader = ({ opacity = 1, fallback = false, transparent, fullHeight
         background: "transparent",
       }}
     >
-      <img
-        src={"/load.gif"}
-        alt="Loader"
-        style={{
-          height: "100%",
-          width: "100%",
-          objectFit: "cover",
-          mixBlendMode: "darken",
-          opacity,
-        }}
+      <LoaderMark
+        cover
+        role="img"
+        aria-label="Loader"
+        style={{ height: "100%", width: "100%", opacity }}
       />
     </div>
   );
