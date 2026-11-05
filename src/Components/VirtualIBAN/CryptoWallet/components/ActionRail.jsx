@@ -33,16 +33,16 @@ const ActionRail = () => {
 
       <div className={styles.railAmount}>
         <div className={styles.railAmountLabel}>{t("Enter amount")}</div>
-        <div className={styles.railAmountValue}>12.00 EUR</div>
+        <div className={styles.railAmountValue}>{t("12.00 EUR")}</div>
       </div>
 
       <div className={styles.railBody}>
         <div>
           <span className={styles.railLabel}>{t("Pay from wallet")}</span>
           <div className={styles.railSelect}>
-            <span className={styles.railAvatar}>BB</span>
-            <span className={styles.railSelectMain}>BBVA SPSM</span>
-            <span className={styles.railSelectValue}>5,820.44 EUR</span>
+            <span className={styles.railAvatar}>{t("BB")}</span>
+            <span className={styles.railSelectMain}>{t("BBVA SPSM")}</span>
+            <span className={styles.railSelectValue}>{t("5,820.44 EUR")}</span>
             <ChevronDown size={18} className={styles.railChevron} />
           </div>
         </div>
@@ -80,7 +80,7 @@ const ActionRail = () => {
         <div>
           <span className={styles.railLabel}>{t("Beneficiary")}</span>
           <div className={`${styles.railSelect} ${styles.railSelectSm}`}>
-            <span className={styles.railSelectMain}>Arnold Mbuku</span>
+            <span className={styles.railSelectMain}>{t("Arnold Mbuku")}</span>
             <ChevronDown size={18} className={styles.railChevron} />
           </div>
         </div>
@@ -88,7 +88,7 @@ const ActionRail = () => {
         <div>
           <span className={styles.railLabel}>{t("Crypto channel")}</span>
           <div className={`${styles.railSelect} ${styles.railSelectSm}`}>
-            <span className={styles.railSelectMain}>USDT • Tron — TQ5n8pJm2V...ONs2Lp</span>
+            <span className={styles.railSelectMain}>{t("USDT • Tron — TQ5n8pJm2V...ONs2Lp")}</span>
             <ChevronDown size={18} className={styles.railChevron} />
           </div>
         </div>

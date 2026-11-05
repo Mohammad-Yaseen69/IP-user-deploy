@@ -1,19 +1,17 @@
 import { useContext, useEffect, useMemo, useState } from "react";
-import { Plus } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { UserContext } from "../../../Context/UserContext";
 import { usePermission } from "../../../hooks/GeneralUse/usePermission";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 import allCountries from "../../PaymentsNewer/CountriesData.json";
-import abf from "../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/AddBeneficiaryFlowV2.module.css";
-import { Icon } from "../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/components";
+import { Info, Plus, Warning } from "../Icons";
 import AddAccountFlow from "./AddAccountFlow";
 import AccountGroup from "./components/AccountGroup";
 import CountryMeter from "./components/CountryMeter";
 import EmptyState from "./components/EmptyState";
 import RemoveAccountModal from "./components/RemoveAccountModal";
-import styles from "./styles/WithdrawalsNew.module.css";
+import styles from "./styles/Withdrawals.module.scss";
 import useWithdrawalActions from "./useWithdrawalActions";
 import { buildCountryGroups, buildCryptoRows } from "./withdrawalAccounts";
 import { MAX_COUNTRIES, MAX_CRYPTO_WALLETS, TRANSFER_METHODS } from "./withdrawalPayload";
@@ -75,22 +73,22 @@ const WithdrawalsNew = () => {
   };
 
   return (
-    <div className={`${abf.root} ${styles.page}`}>
-      <div className={styles.header}>
-        <div>
-          <h2 className={styles.title}>{t("Withdrawal accounts")}</h2>
-          <p className={styles.subtitle}>
+    <div className={styles.container}>
+      <div className={styles.sectionHeader}>
+        <div className={styles.sectionText}>
+          <h4 className={styles.sectionTitle}>{t("Withdrawal accounts")}</h4>
+          <p className={styles.sectionSubtitle}>
             {t("Where InstaPay sends money when you withdraw. Accounts must be in your own name.")}
           </p>
         </div>
         {hasAccounts && (
           <button
             type="button"
-            className={styles.primaryBtn}
+            className={`${styles.button} ${styles.buttonPrimary}`}
             onClick={() => setFlow({ mode: "create" })}
             disabled={!canAdd || (limitReached && cryptoFull)}
           >
-            <Plus size={18} />
+            <Plus color="#FFFFFF" />
             {t("Add account")}
           </button>
         )}
@@ -144,8 +142,8 @@ const WithdrawalsNew = () => {
           )}
 
           {limitReached ? (
-            <div className={`${styles.footNote} ${styles.footNoteWarning}`}>
-              <Icon name="warning" size={18} color="#B5A300" />
+            <div className={`${styles.note} ${styles.noteWarning}`}>
+              <Warning color="#976600" />
               <p>
                 {t(
                   "You've reached {{max}} countries. To withdraw to another country, remove one of your accounts there first.",
@@ -154,8 +152,8 @@ const WithdrawalsNew = () => {
               </p>
             </div>
           ) : (
-            <div className={styles.footNote}>
-              <Icon name="info" size={18} color="var(--abf-primary)" />
+            <div className={styles.note}>
+              <Info />
               <p>
                 {t(
                   "Withdrawals can only go to accounts in your own name. To pay someone else, use",
