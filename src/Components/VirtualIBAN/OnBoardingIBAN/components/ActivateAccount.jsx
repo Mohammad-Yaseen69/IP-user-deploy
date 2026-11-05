@@ -8,7 +8,7 @@ import { UserContext } from "../../../../Context/UserContext";
 import { decryptData } from "../../../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../../../Helper/EssentilaMethods/Encryption";
 import { CircularProgress, useMediaQuery } from "@mui/material";
-import { BankIcon, CryptoIcon, OpenBanking } from "./SvgIcons";
+import { BankIcon, OpenBanking } from "./SvgIcons";
 
 const paymentMethods = [
   {
@@ -19,24 +19,23 @@ const paymentMethods = [
     Icon: OpenBanking,
   },
   {
+    id: "paypal",
+    title: "PayPal",
+    subtitle: "PayPal account",
+    active: true,
+  },
+  {
     id: "bank",
     title: "Bank transfer",
-    subtitle: "SEPA | SWIFT",
-    active: false,
+    subtitle: "Plaid",
+    active: true,
     Icon: BankIcon,
   },
   {
-    id: "card",
-    title: "Card",
-    subtitle: "Visa | Mastercard",
-    active: false,
-  },
-  {
-    id: "crypto",
-    title: "Crypto",
-    subtitle: "USDC / USDT",
-    active: false,
-    Icon: CryptoIcon,
+    id: "mobile_wallet",
+    title: "Mobile wallet",
+    subtitle: "Mobile money",
+    active: true,
   },
 ];
 
@@ -52,6 +51,7 @@ const ActivateAccount = ({
 }) => {
   const { userWallets, getUserWallets, authHeader } = useContext(UserContext);
   const [loadingRates, setLoadingRates] = useState(false);
+  const [selectedMethod, setSelectedMethod] = useState("wallet");
   const isMobile = useMediaQuery("(max-width:600px)");
 
   useEffect(() => {
@@ -133,10 +133,10 @@ const ActivateAccount = ({
       : `€${feeDetails.baseAmount ?? feeDetails.convertedAmount}.00`;
 
   const isInsufficient = useMemo(() => {
-    if (!selectedWallet || !isFeeReady) return false;
+    if (selectedMethod !== "wallet" || !selectedWallet || !isFeeReady) return false;
     const available = selectedWallet.balance?.available || 0;
     return available < feeDetails.convertedAmount;
-  }, [selectedWallet, feeDetails, isFeeReady]);
+  }, [selectedMethod, selectedWallet, feeDetails, isFeeReady]);
 
   const handleWalletSelect = (wallet) => {
     setSelectedWallet(wallet);
@@ -194,7 +194,8 @@ const ActivateAccount = ({
                   key={item.id}
                   type="button"
                   disabled={!item.active}
-                  className={`${styles.paymentCard} ${item.id === "wallet" ? styles.activePayment : ""}`}
+                  onClick={() => setSelectedMethod(item.id)}
+                  className={`${styles.paymentCard} ${item.id === selectedMethod ? styles.activePayment : ""}`}
                   style={{
                     opacity: item.active ? 1 : 0.45,
                     cursor: item.active ? "pointer" : "not-allowed",
@@ -227,7 +228,13 @@ const ActivateAccount = ({
               gap: isMobile && 20,
             }}
           >
-            <div style={{ marginTop: "10px", width: isMobile ? "100%" : "auto" }}>
+            <div
+              style={{
+                marginTop: "10px",
+                width: isMobile ? "100%" : "auto",
+                display: selectedMethod === "wallet" ? "block" : "none",
+              }}
+            >
               <label
                 style={{
                   fontWeight: 700,
@@ -486,7 +493,14 @@ const ActivateAccount = ({
         </button>
 
         <button
-          onClick={onSubmitPayment}
+          onClick={() => {
+            if (selectedMethod === "wallet") {
+              onSubmitPayment();
+            } else {
+              // TODO after backend: add the IBAN PayPal, Plaid and mobile wallet payment
+              toast.error(t("This payment method is not available yet"));
+            }
+          }}
           disabled={!selectedWallet?._id || !isFeeReady}
           className={styles.continueButton}
           style={{
