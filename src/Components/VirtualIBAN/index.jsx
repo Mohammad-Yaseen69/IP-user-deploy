@@ -12,6 +12,7 @@ import TopRight from "../topRight";
 import Compliance from "./Compliance";
 import AccountsSidebar from "./components/AccountsSidebar";
 import BalanceHeader from "./components/BalanceHeader";
+import IbanCreationFailed from "./components/IbanCreationFailed";
 import InactiveIban from "./components/InactiveIban";
 import MonthlyExpenses from "./components/MonthlyExpenses";
 import QuickActions from "./components/QuickActions";
@@ -44,7 +45,9 @@ const VirtualBank = () => {
   const [onboardingStep, setOnboardingStep] = useState("landing");
 
   const ibans = useMemo(() => asVirtualIbanArray(rawIbans), [rawIbans]);
-  const creationInProgress = ibanCreationStatus === true;
+  const creationInProgress = ibanCreationStatus?.inProgress === true;
+  // shortcut: only shown when the user has no IBAN yet; a failed second account still lands on the dashboard
+  const creationFailed = ibanCreationStatus?.failed === true;
   const isInitialLoading = ibansLoading || ibanCreationStatusLoading;
   const canCreateIban = can("virtual-iban.account.create");
   const canViewDetails = can("virtual-iban.details.view");
@@ -242,6 +245,13 @@ const VirtualBank = () => {
         </div>
       ) : creationInProgress ? (
         <div style={{ minHeight: "520px", width: "100%" }} />
+      ) : creationFailed && !showGetIBAN && ibans.length === 0 && canCreateIban ? (
+        <div className={styles.main}>
+          <IbanCreationFailed
+            feeRefunded={ibanCreationStatus?.feeRefunded}
+            onRetry={handleOpenIBAN}
+          />
+        </div>
       ) : showGetIBAN || (ibans.length === 0 && canCreateIban) ? (
         userDetails?.account_type === "business" ? (
           <OnboardingIBAN ref={onboardingRef} onStepChange={setOnboardingStep} />
@@ -370,7 +380,7 @@ const VirtualBank = () => {
           isOpen={creationInProgress}
           toggle={() => {}}
           onCreated={handleBackToDashboard}
-          resumeProcessingData={ibanCreationStatus}
+          resumeProcessingData={creationInProgress}
           resumeProcessingLoading={ibanCreationStatusLoading}
         />
       )}
