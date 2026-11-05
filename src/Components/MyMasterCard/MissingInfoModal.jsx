@@ -149,7 +149,7 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess }) => {
       return (
         <PhoneInput
           phone={info}
-          disableDropdown={true}
+          disableDropdown={userDetails?.account_type !== "business"}
           country={
             countriesData.find((item) => item.alpha3 === userDetails?.country_iso_code)?.alpha3
           }
