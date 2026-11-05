@@ -65,10 +65,17 @@ if (!import.meta.env.DEV) {
 const container = document.getElementById("root");
 const root = createRoot(container);
 
+const preloadAuthPage = () => {
+  const isAuthPage = /^\/(login|signup)(\/|$)/i.test(window.location.pathname);
+  if (isAuthPage && !localStorage.getItem("token")) {
+    import("./Components/Auth").catch(() => {});
+  }
+};
+
 async function bootstrap() {
   try {
-    await i18nReady;
-    const { default: App } = await import("./App");
+    preloadAuthPage();
+    const [{ default: App }] = await Promise.all([import("./App"), i18nReady]);
 
     root.render(
       <BrowserRouter>
