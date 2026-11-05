@@ -1436,7 +1436,7 @@ const Basic = ({ setCurrentTab }) => {
               <Input
                 disabled={true}
                 readOnly={true}
-                value={countriesData.find((item) => item.alpha3 === country).name}
+                value={countriesData.find((item) => item.alpha3 === country)?.name}
                 onChange={(e) => setCountry(e.target.value)}
               />
             </div>
