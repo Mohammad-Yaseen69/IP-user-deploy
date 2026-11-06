@@ -5,6 +5,7 @@ import {
   asVirtualIbanArray,
   unwrapVirtualIbanResponse,
 } from "../Components/VirtualIBAN/utils/virtualIban";
+import { normalizeIbanPaymentModel } from "../Components/VirtualIBAN/utils/ibanPaymentModel";
 import { useContext } from "react";
 import { UserContext } from "../Context/UserContext";
 import { useIdempotency } from "./Payments/useIdempotency";
@@ -60,6 +61,26 @@ export const useIbanFee = () => {
   });
 };
 
+export const useIbanPaymentModel = (enabled = true) => {
+  const { userDetails } = useContext(UserContext);
+
+  return useQuery({
+    queryKey: [...virtualIbanQueryKeys.all, "payment-model", userDetails?._id],
+    queryFn: async () => {
+      const res = await apiWrapper({
+        endpoint: "/api/iban-fees/get-payment-model",
+        method: "GET",
+        isDecrypted: true,
+      });
+
+      return normalizeIbanPaymentModel(res);
+    },
+    enabled: enabled && !!userDetails?._id,
+    staleTime: 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+};
+
 export const usePendingStatus = (enabled = true) =>
   useQuery({
     queryKey: virtualIbanQueryKeys.processingStatus(),
@@ -70,7 +91,12 @@ export const usePendingStatus = (enabled = true) =>
         isDecrypted: true,
       });
 
-      return res?.data?.inProgress || res?.data?.data?.inProgress || false;
+      const status = res?.data?.data ?? res?.data ?? {};
+      return {
+        inProgress: status.inProgress === true,
+        failed: status.failed === true,
+        feeRefunded: status.feeRefunded === true,
+      };
     },
     enabled,
     gcTime: 0,
