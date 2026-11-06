@@ -27,14 +27,7 @@ if (import.meta.env.NODE_ENV === "development") {
 Sentry.init({
   dsn: "https://448eafaae4776c67a2f5831cf64a23e5@o4509485673349120.ingest.us.sentry.io/4509485675118592",
   sendDefaultPii: true,
-  integrations: [
-    Sentry.browserTracingIntegration(),
-    Sentry.replayIntegration({
-      maskAllText: false,
-      blockAllMedia: false,
-    }),
-    Sentry.browserProfilingIntegration(),
-  ],
+  integrations: [Sentry.browserTracingIntegration(), Sentry.browserProfilingIntegration()],
   tracesSampleRate: 1.0,
   tracePropagationTargets: [
     "localhost",
@@ -72,6 +65,27 @@ const preloadAuthPage = () => {
   }
 };
 
+const loadSentryReplay = () => {
+  import("./Helper/sentryReplay")
+    .then(({ replayIntegration }) => {
+      Sentry.addIntegration(
+        replayIntegration({
+          maskAllText: false,
+          blockAllMedia: false,
+        }),
+      );
+    })
+    .catch(() => {});
+};
+
+const scheduleSentryReplay = () => {
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(loadSentryReplay, { timeout: 3000 });
+  } else {
+    setTimeout(loadSentryReplay, 1000);
+  }
+};
+
 async function bootstrap() {
   try {
     preloadAuthPage();
@@ -84,6 +98,8 @@ async function bootstrap() {
     );
   } catch (error) {
     console.error("Application initialization failed:", error);
+  } finally {
+    scheduleSentryReplay();
   }
 }
 
