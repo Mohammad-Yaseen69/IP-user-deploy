@@ -53,6 +53,7 @@ import {
 } from "./thunesDocuments";
 import { formatCurrency } from "../../../Helper/AmountFormat";
 import PlaidBankTransfer from "../../AddFunds/WalletFundsFlow/PlaidBankTransfer";
+import PlaidLinkHandler from "./PlaidLinkHandler";
 
 const leftSideContent = [
   "Select Transaction Type",
@@ -165,6 +166,7 @@ const initialState = {
   showSenderSelection: false,
   selectedSender: null,
   senderType: "account", //"account" || "third-party"
+  plaidLink: null,
 };
 
 const beneficiaryRequiredFields = [
@@ -246,6 +248,7 @@ const InternationFlow = ({
   const [loading, setLoading] = useState(false);
   const { getKey, reset } = useIdempotency();
   const can = usePermission();
+  const isBankTransfer = internationalData?.payment_type?.value === "bank_transfer";
 
   const [requiredMissingFields, setRequiredMissingFields] = useState({
     beneficiary: {
@@ -464,6 +467,8 @@ const InternationFlow = ({
           );
         }
         return false;
+      case 6:
+        return !!internationalData.plaidLink;
       default:
         return false;
     }
@@ -1018,6 +1023,17 @@ const InternationFlow = ({
           sender_id: internationalData.selectedSender._id,
         }
       : {}),
+    ...(internationalData?.recipient_iban
+      ? {
+          recipient_iban: internationalData.recipient_iban,
+        }
+      : {}),
+    ...(internationalData?.recipient_bank_id
+      ? {
+          savedBankId: internationalData.recipient_bank_id,
+          isSaveBank: true,
+        }
+      : {}),
     service: { id: internationalData.payoutChannel?.id },
     transaction_type: internationalData.flow,
     wallet_id: internationalData.wallet?._id ?? internationalData.currency_wallet?._id,
@@ -1567,7 +1583,16 @@ const InternationFlow = ({
 
       let res;
 
-      if (internationalData.payoutChannel?.vendor === "thunes") {
+      if (isBankTransfer) {
+        res = await axios.post(
+          `${import.meta.env.VITE_IP_DEV_API}/api/plaid/initiate-international-payment`,
+          data,
+          {
+            headers: { ...authHeader, "idempotency-key": getKey() },
+            timeout: 50000,
+          },
+        );
+      } else if (internationalData.payoutChannel?.vendor === "thunes") {
         res = await axios.post(`${import.meta.env.VITE_THUNES_API}/confirmTransaction`, data, {
           headers: { ...authHeader, "idempotency-key": getKey() },
           timeout: 50000,
@@ -1584,7 +1609,14 @@ const InternationFlow = ({
       }
       const decrypted = decryptData(res.data.data);
       console.log(decrypted);
-      updateInternationalData("transaction_details", decrypted?.data ?? decrypted);
+      const details = decrypted?.data ?? decrypted;
+      if (isBankTransfer && details?.linkToken) {
+        updateInternationalData("plaidLink", details);
+        updateInternationalData("otpError", "");
+        updateInternationalData("showOtpModal", false);
+        return;
+      }
+      updateInternationalData("transaction_details", details);
       updateInternationalData("transactionStatus", true);
       updateInternationalData("otpError", "");
       setSubStep((prev) => prev + 1);
@@ -1613,6 +1645,22 @@ const InternationFlow = ({
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePlaidAuthorized = () => {
+    updateInternationalData("transaction_details", internationalData.plaidLink);
+    updateInternationalData("transactionStatus", true);
+    updateInternationalData("plaidLink", null);
+    setLoading(false);
+    setSubStep((prev) => prev + 1);
+  };
+
+  const handlePlaidCancelled = () => {
+    reset();
+    updateInternationalData("plaidLink", null);
+    updateInternationalData("showSummary", false);
+    setLoading(false);
+    setSubStep(5);
   };
 
   const location = useLocation();
@@ -1692,6 +1740,15 @@ const InternationFlow = ({
   // console.log("international.otpError",internationalData)
   return (
     <>
+      {internationalData.plaidLink?.linkToken && (
+        <PlaidLinkHandler
+          link={internationalData.plaidLink}
+          data={{ ...internationalData, wallet: internationalData.currency_wallet }}
+          onProcessing={() => setLoading(true)}
+          onAuthorized={handlePlaidAuthorized}
+          onCancelled={handlePlaidCancelled}
+        />
+      )}
       {showCardModal && (
         <NotFoundModal
           isOpen={showCardModal}
@@ -1986,15 +2043,12 @@ const InternationFlow = ({
                   )}
                   {subStep === 5 && (
                     <>
-                      {internationalData?.payment_type?.value === "bank_transfer" ? (
+                      {isBankTransfer && !internationalData?.showSummary ? (
                         <PlaidBankTransfer
-                          data={{ ...internationalData, wallet: internationalData.currency_wallet }}
+                          data={{}}
                           dataHandler={updateInternationalData}
-                          // TODO after backend: confirm the route and the payload
-                          endpoint="/api/plaid/initiate-international-payment"
                           type="international"
                           handleBackClick={() => setSubStep(4)}
-                          initiatePayload={getTransactionData}
                         />
                       ) : !internationalData.showCard ? (
                         <StepFive data={internationalData} dataHandler={updateInternationalData} />
@@ -2079,8 +2133,7 @@ const InternationFlow = ({
                       )}
                     </div>
                   )}
-                  {internationalData?.payment_type?.value === "bank_transfer" &&
-                  subStep === 5 ? null : (
+                  {isBankTransfer && subStep === 5 && !internationalData?.showSummary ? null : (
                     <div className={styles.bottom}>
                       <Link
                         to={"https://insta-pay.ch/faqs"}
@@ -2136,6 +2189,8 @@ const InternationFlow = ({
                                 updateInternationalData("isRecipientTypeSelected", false);
                               } else if (internationalData.showSenderSelection && subStep === 2) {
                                 updateInternationalData("showSenderSelection", false);
+                              } else if (internationalData.showSummary && subStep === 5) {
+                                updateInternationalData("showSummary", false);
                               } else {
                                 setSubStep((prev) => prev - 1);
                               }
@@ -2295,18 +2350,12 @@ const InternationFlow = ({
                           )}
                           {subStep === 5 && (
                             <>
-                              {internationalData?.payment_type?.value === "bank_transfer" ? (
+                              {isBankTransfer && !internationalData?.showSummary ? (
                                 <PlaidBankTransfer
-                                  data={{
-                                    ...internationalData,
-                                    wallet: internationalData.currency_wallet,
-                                  }}
+                                  data={{}}
                                   handleBackClick={() => setSubStep(4)}
                                   dataHandler={updateInternationalData}
-                                  // TODO after backend: confirm the route and the payload
-                                  endpoint="/api/plaid/initiate-international-payment"
                                   type="international"
-                                  initiatePayload={getTransactionData}
                                 />
                               ) : !internationalData.showCard ? (
                                 <StepFive
@@ -2398,8 +2447,7 @@ const InternationFlow = ({
                         </>
                       )}
                     </div>
-                    {internationalData?.payment_type?.value === "bank_transfer" &&
-                    subStep === 5 ? null : (
+                    {isBankTransfer && subStep === 5 && !internationalData?.showSummary ? null : (
                       <div className={styles.bottom}>
                         <Link
                           to={"https://insta-pay.ch/faqs"}
@@ -2456,6 +2504,8 @@ const InternationFlow = ({
                                   updateInternationalData("isRecipientTypeSelected", false);
                                 } else if (internationalData.showSenderSelection && subStep === 2) {
                                   updateInternationalData("showSenderSelection", false);
+                                } else if (internationalData.showSummary && subStep === 5) {
+                                  updateInternationalData("showSummary", false);
                                 } else {
                                   setSubStep((prev) => prev - 1);
                                 }
