@@ -276,13 +276,16 @@ const VerificationPayment = ({
     setSaving(true);
     try {
       const res = await axios.post(
-        // TODO after backend: confirm the PayPal KYB and partner KYC routes
         `${import.meta.env.VITE_IP_DEV_API}/api/paypal/initiate-${feeRoute}-payment`,
         { data: encryptData(partnerPayload) },
         { headers: authHeader },
       );
       const dec = decryptData(res.data.data);
-      window.location.href = dec?.url;
+      if (dec?.url) {
+        window.location.href = dec?.url;
+      } else if (dec?.message) {
+        toast.info(dec?.message);
+      }
     } catch (err) {
       const decrypted = decryptData(err.response.data.data);
       toast.error(decrypted?.message);
@@ -629,7 +632,6 @@ const VerificationPayment = ({
                 closeBtnText={t("Close Modal")}
                 type="verification_payment"
                 initiatePayload={() => partnerPayload}
-                // TODO after backend: confirm the Plaid partner KYC route
                 endpoint={`/api/plaid/${feeRoute}`}
                 dataHandler={(type, data) => {
                   if (type === "error") {
