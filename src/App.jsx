@@ -1,9 +1,9 @@
 import "react-phone-input-2/lib/style.css";
 import React, { lazy, useLayoutEffect, useState } from "react";
 import Routers from "./RouteNew";
-const CustomizerProvider = lazy(() => import("./Helper/Customizer/CustomizerProvider"));
-const AnimationThemeProvider = lazy(() => import("./Helper/AnimationTheme/AnimationThemeProvider"));
-const InactivityWrapper = lazy(() => import("./InactivityWrapper"));
+import CustomizerProvider from "./Helper/Customizer/CustomizerProvider";
+import AnimationThemeProvider from "./Helper/AnimationTheme/AnimationThemeProvider";
+import InactivityWrapper from "./InactivityWrapper";
 const BroadcastPage = lazy(() => import("./BroadcastPage"));
 const MaintenancePage = lazy(() => import("./Components/Maintenance/MaintenancePage"));
 import UserState from "./Context/UserContextState";
