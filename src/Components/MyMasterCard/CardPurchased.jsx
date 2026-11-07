@@ -57,7 +57,7 @@ import {
 } from "docx";
 import * as FileSaver from "file-saver";
 import img from "../../assets/images/logo/logo2.webp";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import { localCurrency } from "../../utils/Functions";
 import { formatCurrency } from "../../Helper/AmountFormat";
@@ -188,10 +188,7 @@ const CardPurchased = ({
   const width = useWindowWidth();
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [flippedCards, setFlippedCards] = useState({});
-  const [revealedDetails, setRevealedDetails] = useState(null);
-  const [revealLoading, setRevealLoading] = useState(false);
   const revealTimerRef = useRef();
-  const revealRequestRef = useRef(0);
   const { t } = useTranslation();
   const [tooltipOpen, setTooltipOpen] = useState({
     onlinePurchases: false,
@@ -216,39 +213,38 @@ const CardPurchased = ({
     staleTime: 100000,
   });
 
+  const revealMutation = useMutation({
+    mutationFn: (cardId) =>
+      apiWrapper({ endpoint: `/api/mastercard/get-card-sensitive-info/${cardId}` }),
+  });
+  const revealedDetails = revealMutation.data?.data;
+
   const hideCardDetails = () => {
-    revealRequestRef.current += 1;
     clearTimeout(revealTimerRef.current);
-    setRevealedDetails(null);
-    setRevealLoading(false);
+    revealMutation.reset();
     setFlippedCards({});
   };
 
-  const handleCardFlip = async (cardId) => {
-    if (flippedCards[cardId]) return hideCardDetails();
-    if (revealLoading) return;
-
-    const requestId = revealRequestRef.current;
-    setRevealLoading(true);
-
-    try {
-      const dec = await apiWrapper({
-        endpoint: `/api/mastercard/get-card-sensitive-info/${cardId}`,
-      });
-      if (requestId !== revealRequestRef.current) return;
-      if (!dec?.status) return toast.error(t(dec?.message || CARD_DETAILS_ERROR));
-
-      setRevealedDetails(dec.data);
-      setFlippedCards({ [cardId]: true });
-      revealTimerRef.current = setTimeout(hideCardDetails, 60000);
-    } catch (error) {
-      if (requestId !== revealRequestRef.current) return;
-      const encrypted = error?.response?.data?.data;
-      const dec = encrypted && error.response.status < 500 ? decryptData(encrypted) : null;
-      toast.error(t(dec?.message || CARD_DETAILS_ERROR));
-    } finally {
-      if (requestId === revealRequestRef.current) setRevealLoading(false);
+  const handleCardFlip = (cardId) => {
+    if (flippedCards[cardId]) return setFlippedCards({});
+    if (revealedDetails && revealMutation.variables === cardId) {
+      return setFlippedCards({ [cardId]: true });
     }
+    if (revealMutation.isPending) return;
+
+    revealMutation.mutate(cardId, {
+      onSuccess: (dec) => {
+        if (!dec?.status) return toast.error(t(dec?.message || CARD_DETAILS_ERROR));
+
+        setFlippedCards({ [cardId]: true });
+        revealTimerRef.current = setTimeout(hideCardDetails, 60000);
+      },
+      onError: (error) => {
+        const encrypted = error?.response?.data?.data;
+        const dec = encrypted && error.response.status < 500 ? decryptData(encrypted) : null;
+        toast.error(t(dec?.message || CARD_DETAILS_ERROR));
+      },
+    });
   };
 
   const formatCardNumber = (number) => {
@@ -1034,7 +1030,7 @@ const CardPurchased = ({
                 }}
                 className={styles.tap}
               >
-                {revealLoading ? t("Processing") + "..." : t("Tap to see details")}
+                {revealMutation.isPending ? t("Processing") + "..." : t("Tap to see details")}
               </span>
             )}
 

@@ -67,6 +67,14 @@
       align-items: flex-start;
       gap: var(--SPACING-spacing-4, 20px);
 
+      :global(.swiper-wrapper) {
+        pointer-events: none;
+      }
+
+      :global(.swiper-slide) {
+        pointer-events: auto;
+      }
+
       .card {
         max-width: 250px;
         width: 100%;
