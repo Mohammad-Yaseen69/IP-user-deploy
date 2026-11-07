@@ -81,9 +81,9 @@ const usePlaidLinkPayment = ({
     onError: (error) => {
       console.error("Failed to exchange Plaid token:", error);
       toast.error(
-        "we are unable to process your request at the moment, please try again later!" ||
-          error?.response?.data?.message ||
-          error.message,
+        error?.response?.data?.message ||
+          error.message ||
+          "we are unable to process your request at the moment, please try again later!",
       );
       onCancelled?.();
     },

@@ -36,6 +36,7 @@ import countries from "../../CitiesDropDown/CitiesData.json";
 import PrevModal from "./PrevModal";
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
 import PlaidBankTransfer from "../../AddFunds/WalletFundsFlow/PlaidBankTransfer";
+import PlaidLinkHandler from "../InternationalFlow/PlaidLinkHandler";
 
 const initialState = {
   loading: false,
@@ -61,6 +62,7 @@ const initialState = {
   created_transaction: {},
   verified: false,
   showPlaid: false,
+  plaidLink: null,
   wallet: {},
   cardNumber: "",
   expiry: "",
@@ -109,6 +111,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
   const { t } = useTranslation();
   const [data, dispatch] = useReducer(reducer, initialState);
   const { getKey, reset } = useIdempotency();
+  const isBankTransfer = data.payment_type?.value === "bank_transfer";
 
   const updateDataHandler = (field, value) => {
     dispatch({ type: "UPDATE_FIELD", field, value });
@@ -243,6 +246,10 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         sub_service_id: data.flow === "e-sim" ? 14 : data.service_type?.id || 12,
         local_wallet_id: data?.localWallet?._id,
         type: data.flow === "e-sim" && "esim",
+        ...(isBankTransfer && data.recipient_iban ? { recipient_iban: data.recipient_iban } : {}),
+        ...(isBankTransfer && data.recipient_bank_id
+          ? { savedBankId: data.recipient_bank_id }
+          : {}),
       };
       if (isOpenRange) {
         dataa.amount = +String(data?.airtime_amount)?.replaceAll(",", "");
@@ -265,6 +272,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
       const decrypted = decryptData(res.data.data);
       console.log("package_details", decrypted);
       updateDataHandler("package_details", decrypted);
+      updateDataHandler("showPlaid", false);
       updateDataHandler("step", data.step + 1);
     } catch (err) {
       const decrypted = decryptData(err.response.data.data);
@@ -299,10 +307,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
   };
 
   const createTransaction = async (codeType = "") => {
-    if (data.payment_type?.value === "bank_transfer") {
-      updateDataHandler("showPlaid", true);
-      return;
-    }
+    if (data.plaidLink) return;
 
     try {
       const payload = {
@@ -360,7 +365,9 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         data.service_type?.name?.toLowerCase()?.includes("airtime");
       let url;
 
-      if (data.flow === "airtime") {
+      if (isBankTransfer) {
+        url = `${import.meta.env.VITE_IP_DEV_API}/api/plaid/initiate-${data.flow === "e-sim" ? "esim" : "airtime"}-payment`;
+      } else if (data.flow === "airtime") {
         if (data.payment_type.value === "paypal") {
           url = `${import.meta.env.VITE_IP_DEV_API}${isOpenRange ? "/api/paypal/initiate-airtime-ranged-payment" : "/api/paypal/initiate-airtime-fixed-payment"}`;
         } else if (data?.payment_type?.value === "mobile_wallet") {
@@ -383,6 +390,13 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
 
       const dec = decryptData(res.data.data);
       console.log(dec);
+      const details = dec?.data ?? dec;
+      if (isBankTransfer && details?.linkToken) {
+        updateDataHandler("plaidLink", details);
+        updateDataHandler("otpError", "");
+        updateDataHandler("show_otp", false);
+        return;
+      }
       if (data.payment_type.value === "paypal") {
         window.location.href = dec.url;
       }
@@ -596,32 +610,45 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
     }
   }, [transaction_status]);
 
-  const plaidJSX = () => {
+  const getPlaidData = () => {
     const { sending, fee } = data.package_details?.data ?? {};
 
-    return (
-      data.showPlaid && (
-        <PlaidBankTransfer
-          data={{
-            ...data,
-            wallet: data.localWallet,
-            exchange_rate: {
-              sending: { amount: sending?.value, currency: sending?.currency },
-              receiver: { amount: sending?.value, currency: sending?.currency },
-              fee: { amount: fee?.value, currency: fee?.currency },
-            },
-          }}
-          dataHandler={updateDataHandler}
-          // TODO after backend: confirm the routes and the payload
-          endpoint={`/api/plaid/initiate-${data.flow === "e-sim" ? "esim" : "airtime"}-payment`}
-          type={data.flow}
-          handleBackClick={() => updateDataHandler("showPlaid", false)}
-          initiatePayload={getTransactionData}
-          successMessage="Payment authorized successfully, your purchase will be delivered once the transfer is complete, you can now close this window"
-        />
-      )
-    );
+    return {
+      ...data,
+      wallet: data.localWallet,
+      exchange_rate: {
+        sending: { amount: sending?.value, currency: sending?.currency },
+        receiver: { amount: sending?.value, currency: sending?.currency },
+        fee: { amount: fee?.value, currency: fee?.currency },
+      },
+    };
   };
+
+  const handlePlaidAuthorized = () => {
+    updateDataHandler("transaction_details", data.plaidLink);
+    updateDataHandler("verified", true);
+    updateDataHandler("plaidLink", null);
+    updateDataHandler("loading", false);
+  };
+
+  const handlePlaidCancelled = () => {
+    reset();
+    updateDataHandler("plaidLink", null);
+    updateDataHandler("loading", false);
+    updateDataHandler("step", 4);
+    updateDataHandler("showPlaid", true);
+  };
+
+  const plaidJSX = () =>
+    data.showPlaid && (
+      <PlaidBankTransfer
+        data={data}
+        dataHandler={updateDataHandler}
+        type={data.flow}
+        handleBackClick={() => updateDataHandler("showPlaid", false)}
+        onBankSelected={getPackageDetails}
+      />
+    );
 
   const otpConfirmJSX = () =>
     data.show_otp && (
@@ -646,6 +673,15 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
 
   return (
     <>
+      {data.plaidLink?.linkToken && (
+        <PlaidLinkHandler
+          link={data.plaidLink}
+          data={getPlaidData()}
+          onProcessing={() => updateDataHandler("loading", true)}
+          onAuthorized={handlePlaidAuthorized}
+          onCancelled={handlePlaidCancelled}
+        />
+      )}
       {data.cardTransactionDetails?.transaction_id ? (
         <TrustpaymentPage
           amount={+String(data.amount)?.replaceAll(",", "")}
@@ -830,6 +866,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                     />
                   ))}
                 {data.step === 4 &&
+                  !data.showPlaid &&
                   (data.showCard ? (
                     <div className={styles.card}>
                       <CreditCard
@@ -993,6 +1030,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                         />
                       ))}
                     {data.step === 4 &&
+                      !data.showPlaid &&
                       (data.showCard ? (
                         <div className={styles.card}>
                           <CreditCard

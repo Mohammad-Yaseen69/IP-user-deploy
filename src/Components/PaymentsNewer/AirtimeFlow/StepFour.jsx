@@ -53,6 +53,8 @@ const StepFour = ({ data, updateDataHandler, getPackageDetails }) => {
             onClick={() => {
               if (data.payment_type?.value === "card" && !data.showCard) {
                 updateDataHandler("showCard", true);
+              } else if (data.payment_type?.value === "bank_transfer") {
+                updateDataHandler("showPlaid", true);
               } else {
                 getPackageDetails();
               }

@@ -31,6 +31,7 @@ const PlaidBankTransfer = ({
   handleBackClick,
   successMessage,
   closeBtnText,
+  onBankSelected,
 }) => {
   const { userDetails, authHeader, setProfileLockTime } = useContext(UserContext);
   const { t } = useTranslation();
@@ -50,6 +51,7 @@ const PlaidBankTransfer = ({
   const [codeType, setCodeType] = useState("sms");
   const [redirectTimer, setRedirectTimer] = useState(10);
   const isInternational = type === "international";
+  const isBankSelectionOnly = isInternational || !!onBankSelected;
   const { sendOtp, isSendingOtp } = useSendOtp({
     onSuccess: (token, data) => {
       console.log(token, data);
@@ -70,11 +72,11 @@ const PlaidBankTransfer = ({
   });
 
   useEffect(() => {
-    if (isInternational) {
+    if (isBankSelectionOnly) {
       dataHandler("recipient_bank_id", selectedBankId);
       dataHandler("recipient_iban", recipientData.iban);
     }
-  }, [selectedBankId, isInternational, recipientData]);
+  }, [selectedBankId, isBankSelectionOnly, recipientData]);
 
   useEffect(() => {
     if (userDetails?._id) {
@@ -438,13 +440,16 @@ const PlaidBankTransfer = ({
                 isInitiatingPlaid ||
                 isUsingSavedBank ||
                 (!selectedBankId && !recipientData.iban?.trim()) ||
-                isSendingOtp
+                isSendingOtp ||
+                (onBankSelected && data?.loading)
               }
               onClick={async () => {
                 console.log("clicked");
                 try {
                   if (isInternational) {
                     dataHandler("showSummary", true);
+                  } else if (onBankSelected) {
+                    await onBankSelected();
                   } else if (selectedBankId) {
                     console.log("Using saved bank:", selectedBankId);
                     const result = await performSavedBankPayment();
@@ -464,7 +469,7 @@ const PlaidBankTransfer = ({
             >
               {isInitiatingPlaid || isUsingSavedBank || isSendingOtp
                 ? t("Processing...")
-                : selectedBankId && !isInternational
+                : selectedBankId && !isBankSelectionOnly
                   ? t("Pay Now")
                   : t("Next")}
               {window.innerWidth > 1000 && <ChevronRight size={18} />}
