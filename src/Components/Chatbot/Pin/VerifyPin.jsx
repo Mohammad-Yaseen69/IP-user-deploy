@@ -126,31 +126,45 @@ const CreatePin = () => {
 
     setLoading(true);
     try {
+      // The AI Instagram bot keeps its own session and owns every message
+      // it sends. Routing it to the legacy endpoints would log the wrong
+      // document in and make the old bot reply on top of the new one.
+      const isAiBot = platformType === "instagram_ai";
+
       const data = {
         pin: pin,
         account_id: accountId,
         platform: platformType,
       };
 
-      if (flow === "connect") {
+      // The AI bot always needs the chat id: both its connect and its
+      // re-login flows look the session up by it.
+      if (flow === "connect" || isAiBot) {
         data.chatId = chatId;
       }
 
-      console.log(data);
-      const enc = encryptData(data);
+      const endpoint = isAiBot
+        ? "/api/bot/instagram-bot/verify-pin"
+        : `/api/instagram/${flow === "connect" ? "connect-account" : "verify-pin"}`;
 
       const response = await axios.post(
-        `${import.meta.env.VITE_IP_DEV_API}/api/instagram/${flow === "connect" ? "connect-account" : "verify-pin"}`,
-        { data: enc },
+        `${import.meta.env.VITE_IP_DEV_API}${endpoint}`,
+        isAiBot ? data : { data: encryptData(data) },
       );
 
-      const dec = decryptData(response.data.data);
+      const dec = isAiBot ? response.data : decryptData(response.data.data);
 
       if (dec.status) {
         setShowSuccess(true);
       }
     } catch (error) {
-      const dec = decryptData(error?.response?.data?.data);
+      const isAi = platformType === "instagram_ai";
+      let dec;
+      try {
+        dec = isAi ? error?.response?.data : decryptData(error?.response?.data?.data);
+      } catch {
+        dec = { message: error?.message };
+      }
       setPinFields((prev) => ({
         ...prev,
         data: ["", "", "", ""],
@@ -356,7 +370,7 @@ const CreatePin = () => {
             </button>
           </div>
         ) : (
-          <RedirectButton platform={platformType} />
+          <RedirectButton platform={platformType === "instagram_ai" ? "instagram" : platformType} />
         )}
       </div>
     </div>

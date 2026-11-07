@@ -843,12 +843,6 @@
     }
   }
 
-  .kanban-board {
-    .kanban-drag {
-      padding: 16px;
-    }
-  }
-
   .blog-box {
     .blog-details-second {
       padding: 16px;
@@ -3309,26 +3303,6 @@
     .row {
       > div {
         margin-bottom: 0;
-      }
-    }
-  }
-
-  .jkanban-container {
-    .kanban-container {
-      .kanban-drag {
-        > div {
-          width: 400px;
-          flex-wrap: wrap;
-
-          > div {
-            flex-wrap: wrap;
-
-            .react-kanban-column {
-              display: block !important;
-              margin-bottom: 16px;
-            }
-          }
-        }
       }
     }
   }
@@ -7803,23 +7777,6 @@
     height: 280px;
   }
 
-  // kanban board
-  .jkanban-container {
-    .kanban-container {
-      .kanban-drag {
-        > div {
-          > div {
-            margin-bottom: -5px;
-          }
-        }
-      }
-
-      .kanban-board {
-        width: 100%;
-      }
-    }
-  }
-
   .fc {
     .fc-scrollgrid-sync-inner {
       a {
@@ -8031,18 +7988,6 @@
         &:nth-child(n + 2) {
           padding-top: 18px;
           margin-top: 18px;
-        }
-      }
-    }
-  }
-
-  .kanban-box {
-    .customers {
-      ul {
-        li {
-          img {
-            width: 20px !important;
-          }
         }
       }
     }
