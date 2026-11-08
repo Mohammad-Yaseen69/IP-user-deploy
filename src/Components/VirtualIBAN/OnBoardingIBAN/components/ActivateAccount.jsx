@@ -9,6 +9,8 @@ import { decryptData } from "../../../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../../../Helper/EssentilaMethods/Encryption";
 import { CircularProgress, useMediaQuery } from "@mui/material";
 import { BankIcon, OpenBanking } from "./SvgIcons";
+import PlaidBankPicker from "../../../AddFunds/WalletFundsFlow/PlaidBankPicker";
+import { isPlaidBankSelected } from "../../../AddFunds/WalletFundsFlow/plaidBank";
 
 const paymentMethods = [
   {
@@ -52,6 +54,7 @@ const ActivateAccount = ({
   const { userWallets, getUserWallets, authHeader } = useContext(UserContext);
   const [loadingRates, setLoadingRates] = useState(false);
   const [selectedMethod, setSelectedMethod] = useState("wallet");
+  const [plaidBank, setPlaidBank] = useState({ savedBankId: null, recipient_iban: "" });
   const isMobile = useMediaQuery("(max-width:600px)");
 
   useEffect(() => {
@@ -142,6 +145,11 @@ const ActivateAccount = ({
     setSelectedWallet(wallet);
   };
 
+  const isPayDisabled =
+    !selectedWallet?._id ||
+    !isFeeReady ||
+    (selectedMethod === "bank" && !isPlaidBankSelected(plaidBank));
+
   return (
     <div className={styles.onboardingLayout}>
       <div
@@ -228,6 +236,11 @@ const ActivateAccount = ({
               gap: isMobile && 20,
             }}
           >
+            {selectedMethod === "bank" && (
+              <div style={{ marginTop: "10px", width: isMobile ? "100%" : "auto" }}>
+                <PlaidBankPicker value={plaidBank} onChange={setPlaidBank} />
+              </div>
+            )}
             <div
               style={{
                 marginTop: "10px",
@@ -493,19 +506,12 @@ const ActivateAccount = ({
         </button>
 
         <button
-          onClick={() => {
-            if (selectedMethod === "wallet") {
-              onSubmitPayment();
-            } else {
-              // TODO after backend: add the IBAN PayPal, Plaid and mobile wallet payment
-              toast.error(t("This payment method is not available yet"));
-            }
-          }}
-          disabled={!selectedWallet?._id || !isFeeReady}
+          onClick={() => onSubmitPayment({ method: selectedMethod, plaidBank })}
+          disabled={isPayDisabled}
           className={styles.continueButton}
           style={{
-            opacity: !selectedWallet?._id || !isFeeReady ? 0.5 : 1,
-            cursor: !selectedWallet?._id || !isFeeReady ? "not-allowed" : "pointer",
+            opacity: isPayDisabled ? 0.5 : 1,
+            cursor: isPayDisabled ? "not-allowed" : "pointer",
           }}
         >
           {!isFeeReady

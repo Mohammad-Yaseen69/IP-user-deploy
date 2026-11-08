@@ -9,7 +9,8 @@ export const STEPS = {
   DONE: "DONE",
 };
 
-export const SKIP_DETAILS_METHODS = ["paypal", "mobile", "bank"];
+export const SKIP_DETAILS_METHODS = ["paypal", "mobile"];
+export const EXTERNAL_PAYMENT_METHODS = ["paypal", "bank"];
 
 export const VIRTUAL_IBAN_ACTIVATION_FEE = 4;
 export const VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY = "USD";
@@ -143,6 +144,9 @@ export const getDisabledState = (stepName, data) => {
     case STEPS.PAYMENT_DETAILS:
       if (data.paymentType === "wallet") {
         return !data.walletState?.wallet_id;
+      }
+      if (data.paymentType === "bank") {
+        return !data.plaidBank?.savedBankId && !data.plaidBank?.recipient_iban?.trim();
       }
       if (data.paymentType === "card") {
         if (data.selectedSaveCard?._id) return false;
