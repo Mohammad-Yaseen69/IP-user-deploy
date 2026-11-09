@@ -5,26 +5,31 @@ import { UserContext } from "../../../Context/UserContext";
 import cardStyles from "../../PaymentsNewer/InternationalFlow/styles/creditcard.module.css";
 import BankIbanSelection from "./BankIbanSelection";
 import styles from "./BankDeposit.module.scss";
+import { useQuery } from "@tanstack/react-query";
+import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 
 const PlaidBankPicker = ({ value, onChange }) => {
   const { t } = useTranslation();
-  const { userDetails, authHeader } = useContext(UserContext);
-  const [savedBanks, setSavedBanks] = useState([]);
+  const { userDetails } = useContext(UserContext);
 
-  useEffect(() => {
-    if (!userDetails?._id) return;
+  const { data: bankList = [], isLoading } = useQuery({
+    queryKey: ["saved-banks", userDetails?._id],
+    queryFn: async () => {
+      const dec = await apiWrapper({
+        endpoint: `/api/plaid/saved-banks/${userDetails._id}`,
+        method: "GET",
+        isDecrypted: false,
+      });
+      console.log("TEST", dec?.data);
 
-    axios
-      .get(`${import.meta.env.VITE_IP_DEV_API}/api/plaid/saved-banks/${userDetails._id}`, {
-        headers: authHeader,
-      })
-      .then((res) => setSavedBanks(res.data?.data || []))
-      .catch(() => setSavedBanks([]));
-  }, [userDetails?._id]);
+      return dec?.data;
+    },
+  });
 
   return (
     <BankIbanSelection
-      savedBanks={savedBanks}
+      savedBanks={bankList}
+      banksLoading={isLoading}
       selectedBankId={value.savedBankId}
       setSelectedBankId={(id) => onChange((prev) => ({ ...prev, savedBankId: id }))}
       recipientData={{ iban: value.recipient_iban }}

@@ -17,6 +17,14 @@ import ConfirmationStep from "./ConfirmationStep";
 import PaymentSelect from "./PaymentSelectStep";
 import PaymentStep from "./PaymentStep";
 import SuccessStep from "./SuccessStep";
+import PlaidBankPicker from "../../AddFunds/WalletFundsFlow/PlaidBankPicker";
+import {
+  getPlaidBankPayload,
+  isPlaidBankSelected,
+  isSavedBankPaymentStarted,
+} from "../../AddFunds/WalletFundsFlow/plaidBank";
+import PlaidLinkHandler from "../../PaymentsNewer/InternationalFlow/PlaidLinkHandler";
+import PaymentProgressOverlay from "../../VirtualIBAN/PaymentProgressOverlay";
 
 const PLACEHOLDER_CARD_TYPE = {
   type: "placeholder",
@@ -25,6 +33,16 @@ const PLACEHOLDER_CARD_TYPE = {
   maxCardNumberLength: 16,
   cvcLength: 3,
 };
+
+const FEE_METHODS = {
+  card: "card",
+  wallet: "wallet",
+  paypal: "paypal",
+  mobile: "mobile_wallet",
+  bank: "bank",
+};
+
+const EMPTY_PLAID_BANK = { savedBankId: null, recipient_iban: "" };
 
 const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay, googlePay }) => {
   const [step, setStep] = useState(1);
@@ -41,6 +59,8 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
   const [cards, setCards] = useState([]);
   const [selectedSaveCard, setSelectedSaveCard] = useState({});
   const [cardTransactionDetails, setCardTransactionDetails] = useState({});
+  const [plaidBank, setPlaidBank] = useState(EMPTY_PLAID_BANK);
+  const [plaidLink, setPlaidLink] = useState(null);
   const navigate = useNavigate();
   const [cardDetail, setCardDetails] = useState({
     cardNumber: "",
@@ -69,6 +89,8 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
     setSaveCard(false);
     setSelectedSaveCard({});
     setCardTransactionDetails({});
+    setPlaidBank(EMPTY_PLAID_BANK);
+    setPlaidLink(null);
     setCardDetails({
       cardNumber: "",
       cardExpiry: "",
@@ -202,8 +224,12 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
         type: otpMethod,
       };
 
-      if (paymentType === "paypal") {
+      if (["paypal", "mobile", "bank"].includes(paymentType)) {
         data.data.token = feeDetails?.token;
+      }
+
+      if (paymentType === "bank") {
+        Object.assign(data.data, getPlaidBankData());
       }
 
       if (applePay === true || googlePay === true) {
@@ -247,7 +273,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
 
   useEffect(() => {
     if (window.innerWidth > 1000) {
-      if (paymentType === "paypal") {
+      if (["paypal", "mobile"].includes(paymentType)) {
         if (feeDetails.token) {
           sendOtp();
         }
@@ -358,7 +384,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
               : vvcCardType === "premium"
                 ? "vcc_premium_virtual"
                 : "vcc_standard_virtual"
-          }/${method}`,
+          }/${method === "bank" ? "plaid" : method}`,
           { headers: authHeader },
         );
 
@@ -372,9 +398,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
     const walletId = walletState?.wallet_id || defaultWallet?.wallet_id;
 
     if (walletId && paymentType) {
-      if (paymentType === "card") getFee("card");
-      else if (paymentType === "wallet") getFee("wallet");
-      else if (paymentType === "paypal") getFee("paypal");
+      if (FEE_METHODS[paymentType]) getFee(FEE_METHODS[paymentType]);
     }
   }, [paymentType, walletState?.wallet_id, defaultWallet?.wallet_id]);
   useEffect(() => {
@@ -382,6 +406,8 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
       switch (paymentType) {
         case "wallet":
           return !walletState?.wallet_id;
+        case "bank":
+          return !isPlaidBankSelected(plaidBank);
         case "card":
           if (selectedSaveCard._id) {
             return false;
@@ -399,7 +425,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
     };
 
     setDisabledBtn(disabledBtn());
-  }, [walletState, paymentType, cardDetail, cardNumberError, selectedSaveCard]);
+  }, [walletState, paymentType, cardDetail, cardNumberError, selectedSaveCard, plaidBank]);
 
   const initiateCardVVC = async (setter, type, otp, setError) => {
     const twoYearsAhead = new Date();
@@ -493,6 +519,119 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
     }
   };
 
+  const getVccCardData = () => {
+    const twoYearsAhead = new Date();
+    twoYearsAhead.setFullYear(twoYearsAhead.getFullYear() + 2);
+    twoYearsAhead.setDate(twoYearsAhead.getDate() - 1);
+
+    const isPremiumPlus = applePay === true || googlePay === true;
+
+    return {
+      currency: "USD",
+      expdate: `${twoYearsAhead.getFullYear()}-${String(twoYearsAhead.getMonth() + 1).padStart(2, "0")}-${String(twoYearsAhead.getDate()).padStart(2, "0")}`,
+      cardType: isPremiumPlus
+        ? "vcc_premium_plus_virtual"
+        : vvcCardType === "premium"
+          ? "vcc_premium_virtual"
+          : "vcc_standard_virtual",
+      apple_pay: !!applePay,
+      google_pay: !!googlePay,
+    };
+  };
+
+  const getPlaidBankData = () => ({
+    ...getPlaidBankPayload(plaidBank),
+    isSaveBank: !!plaidBank?.savedBankId,
+  });
+
+  const initiateExternalVCC = async (setter, type, otp, setError) => {
+    setLoading(true);
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_IP_DEV_API}/api/mastercard/initiate-vcc-${paymentType === "bank" ? "plaid" : "mobile-wallet"}`,
+        {
+          data: encryptData({
+            ...getVccCardData(),
+            ...(paymentType === "bank" ? getPlaidBankData() : {}),
+            token,
+            type: codeType,
+            otp,
+          }),
+        },
+        { headers: authHeader },
+      );
+
+      const dec = decryptData(res.data?.data);
+      const details = dec?.data ?? dec;
+
+      if (paymentType === "bank") {
+        if (isSavedBankPaymentStarted(dec)) {
+          toast.success(t("Payment Initiated"));
+          handlePlaidAuthorized();
+          return;
+        }
+        if (!details?.linkToken) {
+          setError(dec?.message || t("Verification failed"));
+          return;
+        }
+        setToken(null);
+        setshowOtpModal(false);
+        setPlaidLink(details);
+        return;
+      }
+
+      if (dec?.status === false || dec?.status === "false") {
+        setError(dec?.message || t("Verification failed"));
+        return;
+      }
+
+      toast.info(
+        t(
+          "Please open your mobile money app and approve the payment notification you have received to complete and validate this transaction.",
+        ),
+      );
+      checkAuth();
+      handleClose();
+    } catch (err) {
+      const decrypted = decryptData(err?.response?.data?.data);
+      const error2 = apiErrorMessage(decrypted?.message);
+      if (error2) {
+        setError(error2);
+      } else {
+        errorHandler(err, setError);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePlaidAuthorized = () => {
+    checkAuth();
+    handleClose();
+  };
+
+  const renderBankStep = () => (
+    <div>
+      <PlaidBankPicker value={plaidBank} onChange={setPlaidBank} />
+      {window.innerWidth > 1000 && (
+        <div className={styles.btns}>
+          <button onClick={() => setStep(1)}>{t("Back")}</button>
+          <button
+            style={{
+              color: "white",
+              backgroundColor: "#5926F0",
+              opacity: disabledBtnS && 0.4,
+            }}
+            disabled={disabledBtnS}
+            onClick={() => setStep(3)}
+          >
+            {t("Continue")}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+
   const renderData = () => (
     <div className={styles.paymentContent} style={{ display: "flex", alignItems: "center" }}>
       <div
@@ -555,7 +694,9 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
           />
         )}
 
-        {step === 2 && (
+        {step === 2 && paymentType === "bank" && renderBankStep()}
+
+        {step === 2 && paymentType !== "bank" && (
           <PaymentStep
             cardDetail={cardDetail}
             cardNumberError={cardNumberError}
@@ -710,10 +851,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
                 } else if (step === 2) {
                   setStep(3);
                 } else if (step === 1) {
-                  if (["mobile", "bank"].includes(paymentType)) {
-                    // TODO after backend: add the VCC mobile wallet and Plaid payment
-                    toast.error(t("This payment method is not available yet"));
-                  } else if (paymentType !== "paypal") {
+                  if (!["paypal", "mobile"].includes(paymentType)) {
                     setStep(2);
                   } else {
                     sendOtp();
@@ -756,7 +894,9 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
                 ? createWallet
                 : paymentType === "paypal"
                   ? initiatePaypalPayment
-                  : initiateCardVVC
+                  : ["mobile", "bank"].includes(paymentType)
+                    ? initiateExternalVCC
+                    : initiateCardVVC
             }
             setterValue={true}
             hideOtp={() => setshowOtpModal(false)}
@@ -769,6 +909,23 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
           />
         </ModalBody>
       </Modal>
+
+      <PaymentProgressOverlay show={!!plaidLink} />
+      {plaidLink?.linkToken && (
+        <PlaidLinkHandler
+          link={plaidLink}
+          data={{
+            recipient_iban: plaidBank?.recipient_iban,
+            wallet: defaultWallet,
+            exchange_rate: {
+              sending: { amount: feeDetails?.totalFee, currency: "USD" },
+              fee: { amount: 0 },
+            },
+          }}
+          onAuthorized={handlePlaidAuthorized}
+          onCancelled={() => setPlaidLink(null)}
+        />
+      )}
 
       {cardTransactionDetails?.transaction_id ? (
         <TrustpaymentPage

@@ -42,7 +42,10 @@ import {
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
 import { useRiskPreview } from "../../../hooks/useRiskPreview";
 import { RiskPreviewContext } from "./riskPreviewContext";
-import { getPlaidBankPayload } from "../../AddFunds/WalletFundsFlow/plaidBank";
+import {
+  getPlaidBankPayload,
+  isSavedBankPaymentStarted,
+} from "../../AddFunds/WalletFundsFlow/plaidBank";
 import PlaidLinkHandler from "../../PaymentsNewer/InternationalFlow/PlaidLinkHandler";
 import MobileWalletStatus from "../../PaymentAddressPublic/PayAsGuest/MobileWalletStatus";
 import PaymentProgressOverlay from "../PaymentProgressOverlay";
@@ -527,6 +530,13 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         setVerified(true);
         setShowOtpModal(false);
         setPlaidLink(details);
+        return;
+      }
+
+      if (feePayment.method === "bank" && isSavedBankPaymentStarted(dec)) {
+        setVerified(true);
+        setShowOtpModal(false);
+        await completeActivation();
         return;
       }
 

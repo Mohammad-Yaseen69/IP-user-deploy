@@ -76,7 +76,7 @@ const PaymentSelect = ({
               if (!option.comingSoon) {
                 setPaymentType(option.type);
                 if (
-                  ["wallet", "card"].includes(option.type) &&
+                  ["wallet", "card", "bank"].includes(option.type) &&
                   window.innerWidth > 1000 &&
                   setStep
                 ) {

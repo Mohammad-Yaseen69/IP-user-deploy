@@ -5,3 +5,12 @@ export const getPlaidBankPayload = (value) =>
   value?.savedBankId
     ? { savedBankId: value.savedBankId }
     : { recipient_iban: value?.recipient_iban };
+
+export const isSavedBankPaymentStarted = (res) => {
+  const details = res?.data ?? res;
+  return (
+    [true, "true"].includes(res?.success ?? res?.status) &&
+    !details?.linkToken &&
+    !!(details?.transactionId || details?.transaction_id)
+  );
+};

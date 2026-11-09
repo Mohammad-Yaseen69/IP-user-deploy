@@ -15,7 +15,10 @@ import PaymentSelect from "../../MyMasterCard/PaymentModal/PaymentSelectStep";
 import PaymentStep from "../../MyMasterCard/PaymentModal/PaymentStep";
 import addFundsStyles from "../WithdrawBalanceModal/withdrawBalance.module.scss";
 import PlaidBankPicker from "../../AddFunds/WalletFundsFlow/PlaidBankPicker";
-import { getPlaidBankPayload } from "../../AddFunds/WalletFundsFlow/plaidBank";
+import {
+  getPlaidBankPayload,
+  isSavedBankPaymentStarted,
+} from "../../AddFunds/WalletFundsFlow/plaidBank";
 import PlaidLinkHandler from "../../PaymentsNewer/InternationalFlow/PlaidLinkHandler";
 import PaymentProgressOverlay from "../PaymentProgressOverlay";
 import Coins from "./icons/coins.svg";
@@ -776,6 +779,16 @@ const VirtualIbanModal = ({
             "Please open your mobile money app and approve the payment notification you have received to complete and validate this transaction.",
           ),
         );
+        return;
+      }
+
+      if (paymentType === "bank" && isSavedBankPaymentStarted(res)) {
+        setPendingTransactionId(details?.transactionId || details?.transaction_id || "");
+        setPendingTransactionRef(details?.referenceId || details?.transaction_ref || "");
+        setCreatedIban(null);
+        setter?.(true);
+        setShowOtp(false);
+        setCurrentStep(STEPS.PENDING);
         return;
       }
 
