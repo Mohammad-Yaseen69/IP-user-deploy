@@ -45,6 +45,7 @@ import { RiskPreviewContext } from "./riskPreviewContext";
 import { getPlaidBankPayload } from "../../AddFunds/WalletFundsFlow/plaidBank";
 import PlaidLinkHandler from "../../PaymentsNewer/InternationalFlow/PlaidLinkHandler";
 import MobileWalletStatus from "../../PaymentAddressPublic/PayAsGuest/MobileWalletStatus";
+import PaymentProgressOverlay from "../PaymentProgressOverlay";
 
 const FEE_PAYMENT_ROUTES = {
   wallet: "confirm-activation",
@@ -200,6 +201,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
   const [otpMethods, setOtpMethods] = useState(null);
   const [feePayment, setFeePayment] = useState({ method: "wallet", plaidBank: null });
   const [plaidLink, setPlaidLink] = useState(null);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const [mobileWalletTransactionId, setMobileWalletTransactionId] = useState(null);
   const [loadingStatus, setLoadingStatus] = useState(true);
   const [statusCheckedFor, setStatusCheckedFor] = useState(null);
@@ -250,6 +252,15 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
   useEffect(() => {
     checkRequestStatus();
   }, [userDetails?._id]);
+
+  useEffect(() => {
+    const handlePageShow = (event) => {
+      if (event.persisted) setIsRedirecting(false);
+    };
+
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
 
   useEffect(() => {
     if (!draftEnabled || hydratedForRef.current === userDetails._id) return;
@@ -506,6 +517,8 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
 
       const paypalUrl = details?.approvalUrl || details?.url;
       if (feePayment.method === "paypal" && paypalUrl) {
+        setIsRedirecting(true);
+        setShowOtpModal(false);
         window.location.href = paypalUrl;
         return;
       }
@@ -870,6 +883,8 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         />
       )}
 
+      <PaymentProgressOverlay show={isRedirecting || !!plaidLink} />
+
       {plaidLink?.linkToken && (
         <PlaidLinkHandler
           link={plaidLink}
@@ -885,8 +900,8 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
             },
           }}
           onAuthorized={async () => {
-            setPlaidLink(null);
             await completeActivation();
+            setPlaidLink(null);
           }}
           onCancelled={() => {
             reset();

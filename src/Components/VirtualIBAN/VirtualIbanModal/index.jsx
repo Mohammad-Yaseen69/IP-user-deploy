@@ -17,6 +17,7 @@ import addFundsStyles from "../WithdrawBalanceModal/withdrawBalance.module.scss"
 import PlaidBankPicker from "../../AddFunds/WalletFundsFlow/PlaidBankPicker";
 import { getPlaidBankPayload } from "../../AddFunds/WalletFundsFlow/plaidBank";
 import PlaidLinkHandler from "../../PaymentsNewer/InternationalFlow/PlaidLinkHandler";
+import PaymentProgressOverlay from "../PaymentProgressOverlay";
 import Coins from "./icons/coins.svg";
 import JurisIcon from "./icons/gpsFix.svg";
 import SealCheck from "./icons/SealCheck.svg";
@@ -132,6 +133,7 @@ const VirtualIbanModal = ({
   const [plaidBank, setPlaidBank] = useState({ savedBankId: null, recipient_iban: "" });
   const [plaidLink, setPlaidLink] = useState(null);
   const [isInitiatingExternal, setIsInitiatingExternal] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
   const [otpToken, setOtpToken] = useState("");
   const [codeType, setCodeType] = useState("sms");
@@ -285,6 +287,15 @@ const VirtualIbanModal = ({
 
   useEffect(() => {
     getUserWallets();
+  }, []);
+
+  useEffect(() => {
+    const handlePageShow = (event) => {
+      if (event.persisted) setIsRedirecting(false);
+    };
+
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
   }, []);
 
   useEffect(() => {
@@ -747,6 +758,8 @@ const VirtualIbanModal = ({
 
       const paypalUrl = details?.approvalUrl || details?.url;
       if (paymentType === "paypal" && paypalUrl) {
+        setIsRedirecting(true);
+        setShowOtp(false);
         window.location.href = paypalUrl;
         return;
       }
@@ -1147,6 +1160,7 @@ const VirtualIbanModal = ({
 
   return (
     <>
+      <PaymentProgressOverlay show={isRedirecting || !!plaidLink} />
       {plaidLink?.linkToken && (
         <PlaidLinkHandler
           link={plaidLink}
