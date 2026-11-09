@@ -18,6 +18,10 @@ import styles from "../styles/leadModal.module.css";
 import { UserContext } from "../../../Context/UserContext";
 import citiesData from "../../CitiesDropDown/CitiesData.json";
 
+// same text (and translation key) as UpdateFeePackModal
+const NO_APPROVED_PACKS_MESSAGE =
+  "No approved fee packs available. Request a custom fee model from the Fee Requests tab first.";
+
 const LeadModal = ({ open, onClose, onSubmit, initialEntityType = "corporate" }) => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -60,6 +64,7 @@ const LeadModal = ({ open, onClose, onSubmit, initialEntityType = "corporate" })
     },
     enabled: open,
   });
+  const noApprovedPacks = !loadingPacks && feePacks.length === 0;
 
   useEffect(() => {
     if (open) {
@@ -148,7 +153,9 @@ const LeadModal = ({ open, onClose, onSubmit, initialEntityType = "corporate" })
     }
 
     if (!formData.fee_pack) {
-      setErrorMsg(t("Please select a fee pack for this lead."));
+      setErrorMsg(
+        t(noApprovedPacks ? NO_APPROVED_PACKS_MESSAGE : "Please select a fee pack for this lead."),
+      );
       return;
     }
 
@@ -339,12 +346,24 @@ const LeadModal = ({ open, onClose, onSubmit, initialEntityType = "corporate" })
                 renderValue: (selected) => {
                   const match = feePacks.find((p) => p._id === selected);
                   if (!match)
-                    return <span className={styles.placeholderText}>{t("Select Fee Pack")}</span>;
+                    return (
+                      <span className={styles.placeholderText}>
+                        {t(noApprovedPacks ? NO_APPROVED_PACKS_MESSAGE : "Select Fee Pack")}
+                      </span>
+                    );
                   return `${match.name} (${match.pricing_summary || match.pack_type})`;
                 },
                 IconComponent: ChevronDown,
               }}
             >
+              {noApprovedPacks && (
+                <MenuItem
+                  disabled
+                  sx={{ fontFamily: "Inter", fontSize: "14px", whiteSpace: "normal" }}
+                >
+                  {t(NO_APPROVED_PACKS_MESSAGE)}
+                </MenuItem>
+              )}
               {feePacks.map((pack) => (
                 <MenuItem
                   key={pack._id}
