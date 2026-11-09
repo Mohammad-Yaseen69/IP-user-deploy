@@ -745,14 +745,15 @@ const VirtualIbanModal = ({
       });
       const details = res?.data ?? res;
 
-      if (paymentType === "paypal" && details?.url) {
-        window.location.href = details.url;
+      const paypalUrl = details?.approvalUrl || details?.url;
+      if (paymentType === "paypal" && paypalUrl) {
+        window.location.href = paypalUrl;
         return;
       }
 
       if (paymentType === "mobile" && res?.status !== false) {
         setPendingTransactionId(details?.transactionId || details?.transaction_id || "");
-        setPendingTransactionRef(details?.transaction_ref || "");
+        setPendingTransactionRef(details?.referenceId || details?.transaction_ref || "");
         setCreatedIban(null);
         setter?.(true);
         setShowOtp(false);
@@ -792,7 +793,7 @@ const VirtualIbanModal = ({
 
   const handlePlaidAuthorized = () => {
     setPendingTransactionId(plaidLink?.transactionId || plaidLink?.transaction_id || "");
-    setPendingTransactionRef(plaidLink?.transaction_ref || "");
+    setPendingTransactionRef(plaidLink?.referenceId || plaidLink?.transaction_ref || "");
     setCreatedIban(null);
     setPlaidLink(null);
     setCurrentStep(STEPS.PENDING);

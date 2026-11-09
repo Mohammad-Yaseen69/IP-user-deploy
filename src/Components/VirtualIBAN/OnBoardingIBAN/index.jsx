@@ -504,8 +504,9 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
       const dec = decryptData(response.data?.data);
       const details = dec?.data ?? dec;
 
-      if (feePayment.method === "paypal" && details?.url) {
-        window.location.href = details.url;
+      const paypalUrl = details?.approvalUrl || details?.url;
+      if (feePayment.method === "paypal" && paypalUrl) {
+        window.location.href = paypalUrl;
         return;
       }
 
