@@ -55,6 +55,8 @@ const StepFour = ({ data, updateDataHandler, getPackageDetails }) => {
               // Paytently collects the card on its own hosted form, so our card step is skipped.
               if (data.payment_type?.value === "card" && !data.showCard && !usePaytently) {
                 updateDataHandler("showCard", true);
+              } else if (data.payment_type?.value === "bank_transfer") {
+                updateDataHandler("showPlaid", true);
               } else {
                 getPackageDetails();
               }

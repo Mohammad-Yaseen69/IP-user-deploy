@@ -583,6 +583,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
             paymentType={paymentType}
             setPaymentType={setPaymentType}
             setStep={setStep}
+            enabledMethods={["mobile", "bank"]}
           />
         )}
 

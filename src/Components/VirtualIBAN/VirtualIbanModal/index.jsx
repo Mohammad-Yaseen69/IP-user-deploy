@@ -32,6 +32,7 @@ import {
   isSidebarStepCompleted,
   JURISDICTIONS,
   MOCK_WALLET_STATE,
+  SKIP_DETAILS_METHODS,
   STEPS,
 } from "../../../stateMachines/virtualIbanPayment";
 import DoneStep from "./DoneStep";
@@ -667,6 +668,12 @@ const VirtualIbanModal = ({
     },
   });
   const handleSendOtp = async (otpCodeType = codeType) => {
+    if (SKIP_DETAILS_METHODS.includes(paymentType)) {
+      // TODO after backend: add the IBAN PayPal, mobile wallet and Plaid payment
+      toast.error(t("This payment method is not available yet"));
+      return;
+    }
+
     const selectedWallet =
       walletState?.wallet_id || walletState?._id ? walletState : preselectedWalletState;
 
@@ -825,6 +832,7 @@ const VirtualIbanModal = ({
             paymentType={paymentType}
             setPaymentType={setPaymentType}
             isInIban
+            enabledMethods={SKIP_DETAILS_METHODS}
           />
         );
       case STEPS.PAYMENT_DETAILS:
@@ -874,8 +882,11 @@ const VirtualIbanModal = ({
                 ? walletState?.wallet_id || walletState?._id
                   ? walletState
                   : preselectedWalletState
-                : paymentType === "paypal"
-                  ? { name: "Paypal", wallet_id: "" }
+                : SKIP_DETAILS_METHODS.includes(paymentType)
+                  ? {
+                      name: { mobile: "Mobile money", bank: "Bank transfer" }?.[paymentType],
+                      wallet_id: "",
+                    }
                   : selectedSaveCard?._id
                     ? {
                         name: `${selectedSaveCard.brand?.toUpperCase()} Card`,

@@ -70,7 +70,7 @@ const StepFour = ({
   filteringValue = "dummy",
   customStyles = {},
   isAirtime,
-  bankComingSoon = false, // international transfer has no Plaid backend yet (Phase 4)
+  bankComingSoon = false,
 }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);

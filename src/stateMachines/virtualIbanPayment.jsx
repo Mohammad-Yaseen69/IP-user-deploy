@@ -10,6 +10,8 @@ export const STEPS = {
   DONE: "DONE",
 };
 
+export const SKIP_DETAILS_METHODS = ["paypal", "mobile", "bank"];
+
 export const VIRTUAL_IBAN_ACTIVATION_FEE = 4;
 export const VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY = "USD";
 
@@ -108,7 +110,8 @@ export const transitions = {
     back: () => STEPS.FEES,
   },
   [STEPS.PAYMENT_METHOD]: {
-    next: (data) => (data?.paymentType === "paypal" ? STEPS.PRICING : STEPS.PAYMENT_DETAILS),
+    next: (data) =>
+      SKIP_DETAILS_METHODS.includes(data?.paymentType) ? STEPS.SUMMARY : STEPS.PAYMENT_DETAILS,
     back: (data) => (data?.kycApproved ? STEPS.FEES : STEPS.VERIFICATION),
   },
   [STEPS.PAYMENT_DETAILS]: {
@@ -122,7 +125,7 @@ export const transitions = {
         ? data?.kycApproved
           ? STEPS.FEES
           : STEPS.VERIFICATION
-        : data?.paymentType === "paypal"
+        : SKIP_DETAILS_METHODS.includes(data?.paymentType)
           ? STEPS.PAYMENT_METHOD
           : STEPS.PAYMENT_DETAILS,
   },
