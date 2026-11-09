@@ -10,7 +10,7 @@ export const STEPS = {
 };
 
 export const SKIP_DETAILS_METHODS = ["paypal", "mobile"];
-export const EXTERNAL_PAYMENT_METHODS = ["paypal", "bank"];
+export const EXTERNAL_PAYMENT_METHODS = ["paypal", "bank", "mobile"];
 
 export const VIRTUAL_IBAN_ACTIVATION_FEE = 4;
 export const VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY = "USD";

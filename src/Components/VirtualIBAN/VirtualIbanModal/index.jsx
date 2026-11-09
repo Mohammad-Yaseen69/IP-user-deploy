@@ -69,6 +69,12 @@ import {
   parseAmount,
 } from "../utils/virtualIbanPreflight";
 
+const EXTERNAL_PAYMENT_ROUTES = {
+  paypal: "paypal",
+  bank: "plaid",
+  mobile: "mobile-wallet",
+};
+
 const SIDEBAR_ICONS = {
   [STEPS.JURISDICTION]: JurisIcon,
   [STEPS.FEES]: Coins,
@@ -663,7 +669,10 @@ const VirtualIbanModal = ({
   });
   const isExternalPayment = EXTERNAL_PAYMENT_METHODS.includes(paymentType);
 
+  const defaultWallet = filteredWallets?.find((wallet) => wallet?.default) || filteredWallets?.[0];
+
   const getExternalPayload = () => ({
+    wallet_id: defaultWallet?.wallet_id || defaultWallet?._id,
     currencyCode: jurisdictionInfo.currencyCode,
     name: userDetails?.full_name || userDetails?.name || userDetails?.username || "Virtual IBAN",
     ...(paymentType === "bank" ? getPlaidBankPayload(plaidBank) : {}),
@@ -671,6 +680,11 @@ const VirtualIbanModal = ({
 
   const handleSendOtp = async (otpCodeType = codeType) => {
     if (isExternalPayment) {
+      if (!(defaultWallet?.wallet_id || defaultWallet?._id)) {
+        toast.error(t("Please select an InstaPay wallet to pay the activation fee"));
+        return;
+      }
+
       try {
         setCodeType(otpCodeType || codeType);
         await sendOtp(getExternalPayload(), otpCodeType || codeType);
@@ -723,7 +737,7 @@ const VirtualIbanModal = ({
     setIsInitiatingExternal(true);
     try {
       const res = await apiWrapper({
-        endpoint: `/api/virtual-iban/initiate-${paymentType === "paypal" ? "paypal" : "plaid"}`,
+        endpoint: `/api/virtual-iban/initiate-${EXTERNAL_PAYMENT_ROUTES[paymentType]}`,
         method: "POST",
         payload: { ...getExternalPayload(), token: otpToken, otp, type: type || codeType },
         isEncrypted: true,
@@ -736,7 +750,22 @@ const VirtualIbanModal = ({
         return;
       }
 
-      if (paymentType === "paypal" || !details?.linkToken) {
+      if (paymentType === "mobile" && res?.status !== false) {
+        setPendingTransactionId(details?.transactionId || details?.transaction_id || "");
+        setPendingTransactionRef(details?.transaction_ref || "");
+        setCreatedIban(null);
+        setter?.(true);
+        setShowOtp(false);
+        setCurrentStep(STEPS.PENDING);
+        toast.info(
+          t(
+            "Please open your mobile money app and approve the payment notification you have received to complete and validate this transaction.",
+          ),
+        );
+        return;
+      }
+
+      if (paymentType !== "bank" || !details?.linkToken) {
         const message = res?.message || details?.message || t("Verification failed");
         setOtpError?.(message);
         toast.error(message);
