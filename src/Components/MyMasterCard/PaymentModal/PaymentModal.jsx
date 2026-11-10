@@ -26,6 +26,9 @@ import {
 import PlaidLinkHandler from "../../PaymentsNewer/InternationalFlow/PlaidLinkHandler";
 import PaymentProgressOverlay from "../../VirtualIBAN/PaymentProgressOverlay";
 import MobileWalletStatus from "../../PaymentAddressPublic/PayAsGuest/MobileWalletStatus";
+import PaytentlyHostedModal from "../../AddFunds/PaytentlyHostedModal";
+import { initiatePaytentlyPayment, usePaytently } from "../../../utils/Functions/paytently";
+import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
 
 const PLACEHOLDER_CARD_TYPE = {
   type: "placeholder",
@@ -63,6 +66,8 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
   const [plaidBank, setPlaidBank] = useState(EMPTY_PLAID_BANK);
   const [plaidLink, setPlaidLink] = useState(null);
   const [mobileWalletTransactionId, setMobileWalletTransactionId] = useState(null);
+  const [paytentlyHosted, setPaytentlyHosted] = useState(null);
+  const { getKey } = useIdempotency();
   const navigate = useNavigate();
   const [cardDetail, setCardDetails] = useState({
     cardNumber: "",
@@ -470,6 +475,32 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
     }
 
     try {
+      // Paytently collects the card on its own hosted form.
+      if (usePaytently) {
+        const feeWallet = walletState?._id ? walletState : defaultWallet;
+        if (!feeWallet?._id) {
+          setError(t("Please choose a wallet before paying by card."));
+          return;
+        }
+        const dec = await initiatePaytentlyPayment({
+          walletId: feeWallet._id,
+          flow: "vcc_purchase",
+          otp: { token, otp, type: codeType },
+          idempotencyKey: getKey(),
+        });
+        if (!dec?.hosted_forms_url) {
+          setError(
+            dec?.message ??
+              t("We couldn't process your request at the moment! please try again later."),
+          );
+          return;
+        }
+        setToken(null);
+        setshowOtpModal(false);
+        setPaytentlyHosted({ hostedUrl: dec.hosted_forms_url, authorizeUrl: dec.authorize_url });
+        return;
+      }
+
       const res = await axios.post(
         `${import.meta.env.VITE_IP_DEV_API}/api/mastercard/initiate-vcc${selectedSaveCard._id ? "-pan" : ""}-card`,
         { data: encryptData(data) },
@@ -482,7 +513,8 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
       const dec = decryptData(res.data.data);
       setCardTransactionDetails(dec);
     } catch (err) {
-      const decrypted = decryptData(err.response.data.data);
+      // A Paytently timeout has no response body.
+      const decrypted = err?.response?.data?.data ? decryptData(err.response.data.data) : {};
       const error2 = apiErrorMessage(decrypted?.message);
       if (error2) {
         setError(error2);
@@ -848,6 +880,8 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
                 onClick={() => {
                   if (step === 1) {
                     handleClose();
+                  } else if (step === 3 && usePaytently && paymentType === "card") {
+                    setStep(1);
                   } else {
                     setStep((prev) => prev - 1);
                     if (step === 2) {
@@ -876,10 +910,13 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
                 } else if (step === 2) {
                   setStep(3);
                 } else if (step === 1) {
-                  if (!["paypal", "mobile"].includes(paymentType)) {
-                    setStep(2);
-                  } else {
+                  if (["paypal", "mobile"].includes(paymentType)) {
                     sendOtp();
+                  } else if (usePaytently && paymentType === "card") {
+                    // Paytently collects the card, so the card form is skipped.
+                    setStep(3);
+                  } else {
+                    setStep(2);
                   }
                 }
               }}
@@ -962,6 +999,13 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
           onCancelled={() => setPlaidLink(null)}
         />
       )}
+
+      <PaytentlyHostedModal
+        isOpen={!!paytentlyHosted?.hostedUrl}
+        hostedUrl={paytentlyHosted?.hostedUrl}
+        authorizeUrl={paytentlyHosted?.authorizeUrl}
+        onClose={() => setPaytentlyHosted(null)}
+      />
 
       {cardTransactionDetails?.transaction_id ? (
         <TrustpaymentPage

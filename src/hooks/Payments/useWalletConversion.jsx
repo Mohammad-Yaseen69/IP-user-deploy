@@ -148,7 +148,7 @@ export const useWalletConversion = (initialWallet) => {
       if (requestId !== requestRef.current) return;
       const dec = decryptData(err?.response?.data?.data);
       setError(
-        LimitsErrorMessage(dec?.code ?? dec?.message) ||
+        LimitsErrorMessage(dec?.code ?? dec?.message, dec?.message) ||
           dec?.message ||
           "We are unable to process your request at the moment, please try again later!",
       );

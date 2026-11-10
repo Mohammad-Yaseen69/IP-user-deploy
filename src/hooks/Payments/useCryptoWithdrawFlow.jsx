@@ -7,6 +7,7 @@ import { useDebounce } from "../useDebounce/useDebounce";
 import useSendOtp from "../GeneralUse/useSendOtp";
 import { useIdempotency } from "./useIdempotency";
 import {
+  toPayoutResult,
   useCryptoWithdrawal,
   useCryptoWithdrawalFee,
   useValidateCryptoAddress,
@@ -331,7 +332,7 @@ export const useCryptoWithdrawFlow = (wallet, { active = true } = {}) => {
         idempotencyKey: getKey(),
       });
 
-      setPayoutResult(res?.data || res || null);
+      setPayoutResult(toPayoutResult(res));
       setVerified(true);
     } catch (error) {
       resetIdempotencyKey();

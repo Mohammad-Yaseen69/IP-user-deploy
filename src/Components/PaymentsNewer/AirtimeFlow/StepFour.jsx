@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from "react-feather";
 import { useTranslation } from "react-i18next";
 import useWindowWidth from "../../../utils/useWindowWidth";
 import WalletsComponent from "../InternationalFlow/WalletsComponent";
+import { usePaytently } from "../../../utils/Functions/paytently";
 
 const StepFour = ({ data, updateDataHandler, getPackageDetails }) => {
   const { t } = useTranslation();
@@ -51,7 +52,8 @@ const StepFour = ({ data, updateDataHandler, getPackageDetails }) => {
               (data.payment_type?.value === "wallet" ? !data.wallet?._id : false)
             }
             onClick={() => {
-              if (data.payment_type?.value === "card" && !data.showCard) {
+              // Paytently collects the card on its own hosted form, so our card step is skipped.
+              if (data.payment_type?.value === "card" && !data.showCard && !usePaytently) {
                 updateDataHandler("showCard", true);
               } else if (data.payment_type?.value === "bank_transfer") {
                 updateDataHandler("showPlaid", true);

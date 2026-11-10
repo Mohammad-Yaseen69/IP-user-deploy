@@ -17,6 +17,7 @@ import TypingSpan from "../../TypingSpan";
 import { UserContext } from "../../../Context/UserContext";
 import { useQuery } from "@tanstack/react-query";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
+import { usePaytently } from "../../../utils/Functions/paytently";
 
 export const typesData = [
   {
@@ -69,7 +70,7 @@ const StepFour = ({
   filteringValue = "dummy",
   customStyles = {},
   isAirtime,
-  plaidDisabled = false,
+  bankComingSoon = false,
 }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
@@ -85,15 +86,15 @@ const StepFour = ({
 
   console.log(data?.mobile_wallet_services);
   const types = useMemo(() => {
-    const flowTypes = plaidDisabled
+    const baseTypes = bankComingSoon
       ? typesData.map((item) =>
           item.value === "bank_transfer" ? { ...item, status: "Coming Soon" } : item,
         )
       : typesData;
-
     if (data?.mobile_wallet_services?.length > 0) {
-      const others = flowTypes.filter((item) => !item?.sub_name);
-      const thunes = flowTypes
+      console.log(typesData, data.mobile_wallet_services);
+      const others = baseTypes.filter((item) => !item?.sub_name);
+      const thunes = baseTypes
         .filter((item) => item?.sub_name)
         .map((item) =>
           data.mobile_wallet_services.some((it) => it?.id == item?.id)
@@ -106,9 +107,9 @@ const StepFour = ({
         return 0;
       });
     } else {
-      return flowTypes;
+      return baseTypes;
     }
-  }, [typesData, plaidDisabled, data.mobile_wallet_services]);
+  }, [typesData, data.mobile_wallet_services, bankComingSoon]);
 
   // console.log(types, 'dsafsadffsad')
   useEffect(() => {
@@ -309,7 +310,7 @@ const StepFour = ({
                 className={`${styles.item} ${item.status !== "Active" ? styles.disabled : ""}`}
                 key={item.name}
                 onClick={() => {
-                  if (item.value === "card" && userDetails?.username !== "ahmed") {
+                  if (item.value === "card" && !usePaytently) {
                     setShowCardMaintenanceModal(true);
                     return;
                   }
