@@ -25,6 +25,7 @@ import {
 } from "../../AddFunds/WalletFundsFlow/plaidBank";
 import PlaidLinkHandler from "../../PaymentsNewer/InternationalFlow/PlaidLinkHandler";
 import PaymentProgressOverlay from "../../VirtualIBAN/PaymentProgressOverlay";
+import MobileWalletStatus from "../../PaymentAddressPublic/PayAsGuest/MobileWalletStatus";
 
 const PLACEHOLDER_CARD_TYPE = {
   type: "placeholder",
@@ -61,6 +62,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
   const [cardTransactionDetails, setCardTransactionDetails] = useState({});
   const [plaidBank, setPlaidBank] = useState(EMPTY_PLAID_BANK);
   const [plaidLink, setPlaidLink] = useState(null);
+  const [mobileWalletTransactionId, setMobileWalletTransactionId] = useState(null);
   const navigate = useNavigate();
   const [cardDetail, setCardDetails] = useState({
     cardNumber: "",
@@ -91,6 +93,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
     setCardTransactionDetails({});
     setPlaidBank(EMPTY_PLAID_BANK);
     setPlaidLink(null);
+    setMobileWalletTransactionId(null);
     setCardDetails({
       cardNumber: "",
       cardExpiry: "",
@@ -272,7 +275,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
   };
 
   useEffect(() => {
-    if (window.innerWidth > 1000) {
+    if (window.innerWidth > 1000 && !mobileWalletTransactionId) {
       if (["paypal", "mobile"].includes(paymentType)) {
         if (feeDetails.token) {
           sendOtp();
@@ -585,6 +588,18 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
         return;
       }
 
+      const transactionId =
+        details?.transactionId ||
+        details?.transaction_id ||
+        dec?.transactionId ||
+        dec?.transaction_id;
+      if (transactionId) {
+        setToken(null);
+        setshowOtpModal(false);
+        setMobileWalletTransactionId(transactionId);
+        return;
+      }
+
       toast.info(
         t(
           "Please open your mobile money app and approve the payment notification you have received to complete and validate this transaction.",
@@ -606,6 +621,11 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
   };
 
   const handlePlaidAuthorized = () => {
+    checkAuth();
+    handleClose();
+  };
+
+  const closeMobileWalletStatus = () => {
     checkAuth();
     handleClose();
   };
@@ -688,7 +708,10 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
         {step === 1 && (
           <PaymentSelect
             paymentType={paymentType}
-            setPaymentType={setPaymentType}
+            setPaymentType={(type) => {
+              setPaymentType(type);
+              setFeeDetails({});
+            }}
             setStep={setStep}
             enabledMethods={["mobile", "bank"]}
           />
@@ -749,7 +772,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
     <div className="vvc-modal">
       {window.innerWidth > 1000 && (
         <Modal
-          isOpen={isOpen && !showOtpModal}
+          isOpen={isOpen && !showOtpModal && !mobileWalletTransactionId}
           style={{
             borderRadius: "16px",
             overflow: "hidden",
@@ -910,6 +933,17 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
         </ModalBody>
       </Modal>
 
+      <Modal isOpen={!!mobileWalletTransactionId} toggle={closeMobileWalletStatus} centered>
+        <ModalBody>
+          <MobileWalletStatus
+            inGuestPay={false}
+            transactionId={mobileWalletTransactionId}
+            toggle={closeMobileWalletStatus}
+            containerStyle={{ padding: "0", minHeight: "auto" }}
+          />
+        </ModalBody>
+      </Modal>
+
       <PaymentProgressOverlay show={!!plaidLink} />
       {plaidLink?.linkToken && (
         <PlaidLinkHandler
@@ -918,7 +952,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
             recipient_iban: plaidBank?.recipient_iban,
             wallet: defaultWallet,
             exchange_rate: {
-              sending: { amount: feeDetails?.totalFee, currency: "USD" },
+              sending: { amount: feeDetails?.actual_fee, currency: "USD" },
               fee: { amount: 0 },
             },
           }}

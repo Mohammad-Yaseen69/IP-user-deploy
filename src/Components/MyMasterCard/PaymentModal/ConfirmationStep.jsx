@@ -16,7 +16,7 @@ export const paymentInfoJSX = (feeDetails, addFunds, title, t) => (
         }}
       >
         {!addFunds
-          ? (feeDetails?.totalFee ?? feeDetails?.fee)
+          ? (feeDetails?.totalFee ?? feeDetails?.actual_fee ?? feeDetails?.fee)
           : (feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount)}{" "}
         {!addFunds ? feeDetails.currency : feeDetails?.feeDetails?.currency}
       </h1>
@@ -77,8 +77,8 @@ const ConfirmationStep = ({
                     ? t("Payment Card")
                     : paymentType === "paypal"
                       ? t("Paypal")
-                      : ["mobile", "bank"].includes(paymentType)
-                        ? ""
+                      : paymentType === "bank"
+                        ? t("Plaid")
                         : t("Wallet")}
                 </span>
                 <p>{walletState?.wallet_id}</p>
@@ -124,7 +124,7 @@ const ConfirmationStep = ({
             <div className={styles.feeInfo}>
               <h3>{t(feeLabel || "Card activation fee")}</h3>
               <h3>
-                {feeDetails.fee} {feeDetails.currency}
+                {feeDetails.fee ?? feeDetails?.card_creation_fee} {feeDetails.currency}
               </h3>
             </div>
           )}
