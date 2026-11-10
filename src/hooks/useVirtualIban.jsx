@@ -91,7 +91,12 @@ export const usePendingStatus = (enabled = true) =>
         isDecrypted: true,
       });
 
-      return res?.data?.inProgress || res?.data?.data?.inProgress || false;
+      const status = res?.data?.data ?? res?.data ?? {};
+      return {
+        inProgress: status.inProgress === true,
+        failed: status.failed === true,
+        feeRefunded: status.feeRefunded === true,
+      };
     },
     enabled,
     gcTime: 0,

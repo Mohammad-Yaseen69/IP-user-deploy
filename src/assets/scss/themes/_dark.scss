@@ -1275,64 +1275,6 @@ body {
         }
       }
     }
-    .jkanban-container {
-      .card-header {
-        p {
-          color: $dark-small-font-color;
-        }
-      }
-    }
-    .react-kanban-column {
-      background-color: $dark-body-background;
-      .react-kanban-card {
-        background-color: $dark-card-background;
-        .react-kanban-card__title {
-          border-bottom: 1px solid $dark-card-border;
-        }
-      }
-    }
-    .kanban-board-header {
-      background-color: $dark-body-background !important;
-      border-bottom: 1px solid $dark-card-background !important;
-    }
-    .kanban-container {
-      .kanban-item {
-        .kanban-box {
-          border: 1px solid rgba($primary-color, 0.15);
-          background-color: $dark-body-background;
-        }
-      }
-    }
-    .jkanban-container {
-      .kanban-container {
-        .kanban-item {
-          .kanban-box {
-            background-color: $dark-card-background !important;
-            color: $dark-all-font-color;
-          }
-        }
-      }
-    }
-    .jkanban-container {
-      .kanban-container {
-        .kanban-drag {
-          > div {
-            > div {
-              .react-kanban-column {
-                background-color: $dark-body-background;
-              }
-            }
-          }
-        }
-      }
-    }
-    .react-kanban-card-adder-button {
-      border: 1px solid $dark-card-border;
-      color: $dark-all-font-color;
-      &:hover {
-        background-color: $dark-card-background;
-      }
-    }
     .product-page-main {
       .border-tab.nav-tabs {
         border-bottom: 0 !important;
@@ -1977,39 +1919,6 @@ body {
           svg {
             stroke: rgba($white, 0.7);
           }
-        }
-      }
-    }
-    .kanban-board-header {
-      background-color: $dark-body-background !important;
-      border-bottom: 1px solid $dark-card-border !important;
-    }
-    .kanban-board-header.bg-info {
-      background-color: $info-color !important;
-      ~ .kanban-drag {
-        background-color: rgba($info-color, 0.3) !important;
-      }
-    }
-    .kanban-board-header.bg-warning {
-      background-color: $warning-color !important;
-      ~ .kanban-drag {
-        background-color: rgba($warning-color, 0.3) !important;
-      }
-    }
-    .kanban-board-header.bg-success {
-      background-color: $success-color !important;
-      ~ .kanban-drag {
-        background-color: rgba($success-color, 0.3) !important;
-      }
-    }
-    .kanban-board .kanban-drag {
-      background: $dark-body-background !important;
-    }
-    .kanban-container {
-      .kanban-item {
-        .kanban-box {
-          border-color: $dark-card-border;
-          background-color: $dark-body-background;
         }
       }
     }

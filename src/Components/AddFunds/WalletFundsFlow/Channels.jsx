@@ -54,7 +54,7 @@ const Channels = ({ setChannel, channel, thunesServices, thunesProviders = [] })
           name: "Bank Deposit",
           id: 2,
           icon: bd,
-          value: "bank",
+          value: "bank_deposit",
           coming_soon: userDetails?.level?.topup_channel?.bank_deposit === "coming_soon",
         }
       : {},

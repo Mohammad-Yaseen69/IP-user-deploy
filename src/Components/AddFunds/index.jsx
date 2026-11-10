@@ -7,7 +7,7 @@ import crypto from "./files/crypto.png";
 import CryptoFund from "./CryptoFund";
 import WalletFund from "./WalletFund";
 import { useLocation, useParams } from "react-router";
-import CryptoJS from "crypto-js";
+import CryptoJS from "../../Helper/cryptoJs";
 import Success from "./ResponseModals/Success";
 import Error from "./ResponseModals/Error";
 import Abort from "./ResponseModals/Abort";

@@ -6534,5 +6534,6 @@
   "client": "client",
   "Client Referral Code": "Client Referral Code",
   "Sub-agents": "Sub-agents",
-  "All Statuses": "All Statuses"
+  "All Statuses": "All Statuses",
+  "This payment method is not available for this purchase.": "This payment method is not available for this purchase."
 }

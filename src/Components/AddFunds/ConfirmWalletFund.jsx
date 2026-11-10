@@ -23,6 +23,8 @@ import MobileWalletStatus from "../PaymentAddressPublic/PayAsGuest/MobileWalletS
 import { useIdempotency } from "../../hooks/Payments/useIdempotency";
 import { LimitsErrorMessage } from "../../utils/Functions/paymentLimits";
 import { initiatePaytentlyVerificationPayment } from "../../utils/Functions/paytently";
+import PaytentlyModal from "./PaytentlyModal";
+import useWindowWidth from "../../utils/useWindowWidth";
 
 const sdk = new WidgetSDK({
   integrationId: import.meta.env.VITE_KEABANK_INTEGRATION_ID,
@@ -60,9 +62,11 @@ const ConfirmWalletFund = ({
   sriPayMethod = null,
   onSriPayInitiated = () => {},
   cardQuote = null,
+  toggleConfirmation,
 }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const width = useWindowWidth();
   const [complete, setComplete] = useState(false);
   const [mobileSuccess, setMobileSuccess] = useState(false);
   const [mobileWalletTrxId, setMobileWalletTrxId] = useState("");
@@ -622,21 +626,31 @@ const ConfirmWalletFund = ({
 
             {isPaytentlyCard ? (
               paytentlyHosted?.hostedUrl ? (
-                <iframe
-                  title={t("Card payment")}
-                  src={paytentlyHosted.hostedUrl}
-                  allow="payment"
-                  style={{
-                    width: isBig ? "calc(100% + 72px)" : "100%",
-                    marginLeft: isBig ? "-36px" : 0,
-                    marginRight: isBig ? "-36px" : 0,
-                    height: "clamp(620px, 85vh, 720px)",
-                    border: 0,
-                    borderRadius: isBig ? 0 : "16px",
-                    marginTop: "1rem",
-                    display: "block",
-                  }}
-                />
+                width > 1310 ? (
+                  <iframe
+                    title={t("Card payment")}
+                    src={paytentlyHosted.hostedUrl}
+                    allow="payment"
+                    style={{
+                      width: isBig ? "calc(100% + 72px)" : "100%",
+                      marginLeft: isBig ? "-36px" : 0,
+                      marginRight: isBig ? "-36px" : 0,
+                      height: "clamp(620px, 85vh, 720px)",
+                      border: 0,
+                      borderRadius: isBig ? 0 : "16px",
+                      marginTop: "1rem",
+                      display: "block",
+                    }}
+                  />
+                ) : (
+                  <PaytentlyModal
+                    onClose={() => {
+                      setPaytentlyHosted(null);
+                      setComplete(false);
+                    }}
+                    hostedUrl={paytentlyHosted?.hostedUrl}
+                  />
+                )
               ) : (
                 <button
                   type="button"

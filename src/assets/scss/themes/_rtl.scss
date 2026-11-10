@@ -1962,32 +1962,6 @@ html[dir="rtl"] {
       left: 15px;
     }
   }
-  // kanban board css
-  .kanban-board {
-    float: right;
-  }
-  .kanban-item {
-    .kanban-box {
-      .customers {
-        ul {
-          li {
-            + li {
-              margin-left: unset;
-              margin-right: -10px;
-            }
-          }
-        }
-      }
-    }
-    .list {
-      li {
-        i {
-          margin-right: unset;
-          margin-left: 10px;
-        }
-      }
-    }
-  }
   .right-header {
     .input-group {
       .input-group-prepend {
@@ -6730,12 +6704,6 @@ html[dir="rtl"] {
         border-radius: 10px 10px 0 0;
       }
     }
-    .jkanban-container {
-      .btn {
-        margin-left: unset;
-        margin-right: 20px;
-      }
-    }
     .link-section {
       > div {
         > h6 {
@@ -7267,14 +7235,6 @@ html[dir="rtl"] {
     }
   }
   @media only screen and (max-width: 767px) {
-    .jkanban-container {
-      .card-body {
-        #demo1 {
-          margin-right: 0;
-          margin-left: unset;
-        }
-      }
-    }
     .comment-box {
       ul {
         ul {

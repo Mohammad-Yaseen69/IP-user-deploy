@@ -1,6 +1,6 @@
 import { base64ToString } from "./ConversionMethods";
 import { KEY } from "./Key";
-import CryptoJS from "crypto-js";
+import CryptoJS from "../cryptoJs";
 
 export const decryptData = (obj) => {
   let res = base64ToString(obj);
