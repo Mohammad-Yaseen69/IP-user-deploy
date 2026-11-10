@@ -104,11 +104,7 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess }) => {
       if (onSuccess) {
         onSuccess(updatedUser);
       }
-      toast.success(
-        t("{{missingType}} updated successfully", {
-          missingType: t(missingType),
-        }),
-      );
+      toast.success(t("{{missingType}} updated successfully", { missingType: t(missingType) }));
     } catch (err) {
       const dec = decryptData(err.response?.data?.data);
       toast.error(dec?.message || t("Failed to update profile"));
@@ -149,7 +145,7 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess }) => {
       return (
         <PhoneInput
           phone={info}
-          disableDropdown={true}
+          disableDropdown={userDetails?.account_type !== "business"}
           country={
             countriesData.find((item) => item.alpha3 === userDetails?.country_iso_code)?.alpha3
           }
@@ -169,9 +165,7 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess }) => {
     return (
       <Input
         type={missingType === "email" ? "email" : "text"}
-        placeholder={t("Enter your {{missingType}}", {
-          missingType: t(missingType),
-        })}
+        placeholder={t("Enter your {{missingType}}", { missingType: t(missingType) })}
         value={info}
         onChange={(e) => setInfo(e.target.value)}
         style={{ height: "45px" }}
