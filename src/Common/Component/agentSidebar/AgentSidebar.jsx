@@ -7,7 +7,6 @@ import {
   Globe,
   Grid,
   LogOut,
-  MessageSquare,
   Target,
   User,
   UserCheck,
@@ -125,21 +124,13 @@ export const AgentSidebar = () => {
 
       <div className={classes.accountPanel}>
         <div className={classes.accountContent}>
-          <div className={classes.notificationsRow}>
-            <button
-              type="button"
-              className={classes.notificationsButton}
-              onClick={() => navigate("/notifications")}
-            >
-              <MessageSquare className={classes.icon18} />
-              {isSidebarOpen && <div className={classes.bodySmall}>Notifications</div>}
-            </button>
-            {isSidebarOpen && (
+          {/* {isSidebarOpen && (
+            <div className={classes.languageRow}>
               <button type="button" className={classes.languageButton}>
                 <Globe className={classes.icon18} />
               </button>
-            )}
-          </div>
+            </div>
+          )} */}
 
           <div className={classes.profileWrapper}>
             <button
