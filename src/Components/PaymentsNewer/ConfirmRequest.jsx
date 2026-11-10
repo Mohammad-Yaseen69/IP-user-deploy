@@ -8,7 +8,6 @@ import SelectedAmountAndCurrency from "./SelectedAmountAndCurrency";
 import SelectedPaymentType from "./SelectedPaymentType";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import { useDispatch } from "react-redux";
 import faded_lines from "./files/faded_lines.png";
 import { UserContext } from "../../Context/UserContext";
 import { useNavigate } from "react-router";

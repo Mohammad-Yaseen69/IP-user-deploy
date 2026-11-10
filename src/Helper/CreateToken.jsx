@@ -1,4 +1,4 @@
-import CryptoJS from "crypto-js";
+import CryptoJS from "./cryptoJs";
 
 export const createJwtToken = (payload) => {
   const headerString = JSON.stringify({ alg: "HS256", typ: "JWT" });

@@ -22,6 +22,9 @@ import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import MobileWalletStatus from "../PaymentAddressPublic/PayAsGuest/MobileWalletStatus";
 import { useIdempotency } from "../../hooks/Payments/useIdempotency";
 import { LimitsErrorMessage } from "../../utils/Functions/paymentLimits";
+import { initiatePaytentlyVerificationPayment } from "../../utils/Functions/paytently";
+import PaytentlyModal from "./PaytentlyModal";
+import useWindowWidth from "../../utils/useWindowWidth";
 
 const sdk = new WidgetSDK({
   integrationId: import.meta.env.VITE_KEABANK_INTEGRATION_ID,
@@ -30,6 +33,8 @@ const sdk = new WidgetSDK({
 
 const isBig = window.innerWidth > 1000;
 const base_url = window.location.origin || "https://my.insta-pay.ch";
+// Paytently is the card provider (hosted-forms iframe).
+const usePaytently = true;
 
 const ConfirmWalletFund = ({
   setSubStep,
@@ -54,9 +59,14 @@ const ConfirmWalletFund = ({
   kybFeeDets,
   partnerId,
   exchangeRate,
+  sriPayMethod = null,
+  onSriPayInitiated = () => {},
+  cardQuote = null,
+  toggleConfirmation,
 }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const width = useWindowWidth();
   const [complete, setComplete] = useState(false);
   const [mobileSuccess, setMobileSuccess] = useState(false);
   const [mobileWalletTrxId, setMobileWalletTrxId] = useState("");
@@ -88,10 +98,69 @@ const ConfirmWalletFund = ({
   };
 
   const [showCardModal, setShowCardModal] = useState(false);
+  const [paytentlyHosted, setPaytentlyHosted] = useState(null);
+  const isVerificationFee = type === "kyc_fee" || type === "kyb";
+  const isPaytentlyCard =
+    usePaytently && payoutChannel?.value === "card" && (type === "add_fund" || isVerificationFee);
   useEffect(() => {
     const createTransaction = async () => {
       if (payoutChannel?.value === "card") {
         try {
+          if (usePaytently && isVerificationFee) {
+            if (!wallet?._id) {
+              setError(t("An active wallet is required to pay this fee by card."));
+              return;
+            }
+            const dec = await initiatePaytentlyVerificationPayment({
+              kind: partnerId ? "partner_kyc" : type === "kyc_fee" ? "kyc" : "kyb",
+              partnerId,
+              walletId: wallet._id,
+              idempotencyKey: getKey(),
+            });
+            if (dec?.hosted_forms_url) {
+              setPaytentlyHosted({
+                hostedUrl: dec.hosted_forms_url,
+                authorizeUrl: dec.authorize_url,
+              });
+              return;
+            }
+            setError(
+              dec?.message ??
+                "We cannot process your request at the moment, please try again later.",
+            );
+            return;
+          }
+
+          // Paytently collects the card in its hosted-forms iframe, so run before building card data.
+          if (usePaytently && type === "add_fund") {
+            const hostedEnc = encryptData({ wallet_id: wallet?._id, amount: +amount * 100 });
+            const res = await axios.post(
+              `${import.meta.env.VITE_IP_DEV_API}/api/paytently/initiate-topup`,
+              {
+                data: hostedEnc,
+              },
+              { headers: { ...authHeader, "idempotency-key": getKey() } },
+            );
+            const dec = decryptData(res.data.data);
+            if (dec?.hosted_forms_url) {
+              // Saved for the success page to continue to 3DS and to reconcile the wallet credit.
+              try {
+                localStorage.setItem("paytently_authorize_url", dec.authorize_url || "");
+                localStorage.setItem("paytently_payment_id", dec.payment_id || "");
+              } catch {}
+              setPaytentlyHosted({
+                hostedUrl: dec.hosted_forms_url,
+                authorizeUrl: dec.authorize_url,
+              });
+              return;
+            }
+            setError(
+              dec?.message ??
+                "We cannot process your request at the moment, please try again later.",
+            );
+            return;
+          }
+
           let data = paymentWithSavedCard
             ? {
                 wallet_id: wallet?._id,
@@ -267,6 +336,7 @@ const ConfirmWalletFund = ({
           wallet_id: wallet?.wallet_id,
           token: exchangeRate?.token,
           payment_type: "topup_mobile_wallet",
+          ...(sriPayMethod ? { payment_method_type: sriPayMethod.payment_method_type } : {}),
         };
 
         try {
@@ -280,8 +350,16 @@ const ConfirmWalletFund = ({
 
           console.log(response, "response from api");
 
-          setMobileWalletTrxId(response?.transaction_id);
-          setMobileSuccess(true);
+          if (response?.vendor === "sripay" && response?.redirect_url) {
+            // SriPay: the user pays on SriPay's page; the parent watches the status.
+            onSriPayInitiated({
+              transactionId: response.transaction_id,
+              redirectUrl: response.redirect_url,
+            });
+          } else {
+            setMobileWalletTrxId(response?.transaction_id);
+            setMobileSuccess(true);
+          }
         } catch (error) {
           const dec = decryptData(error?.response?.data?.data);
 
@@ -386,13 +464,7 @@ const ConfirmWalletFund = ({
         />
       )}
       <Modal isOpen={error}>
-        <ModalBody
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
+        <ModalBody style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           <XCircle size={70} color="red" />
           <p
             color="red"
@@ -413,11 +485,7 @@ const ConfirmWalletFund = ({
                 setSubStep(1);
                 setError("");
               }}
-              style={{
-                textDecoration: "underline",
-                color: "#5926f0",
-                cursor: "pointer",
-              }}
+              style={{ textDecoration: "underline", color: "#5926f0", cursor: "pointer" }}
             >
               {t("Try Again")}
             </span>
@@ -446,153 +514,267 @@ const ConfirmWalletFund = ({
               flexDirection: "column",
               justifyContent: "space-between",
               borderRadius: "20px",
-              padding: isBig ? (window.innerWidth < 1500 ? "20px" : "20px 40px") : "5px",
+              padding:
+                isPaytentlyCard && paytentlyHosted?.hostedUrl
+                  ? "0"
+                  : isBig
+                    ? window.innerWidth < 1500
+                      ? "20px"
+                      : "20px 40px"
+                    : "5px",
               paddingBottom: 0,
               boxShadow: "0px 2px 20px -5.704601287841797px rgba(89, 38, 240, 0.07)",
             }}
             className="conf_cont"
           >
-            <div>
-              <button onClick={() => setSubStep(3)} className="btn btn-link">
-                &larr; {t("Back")}
-              </button>
-              <h4
-                style={{
-                  fontSize: "1.25rem",
-                  fontWeight: 700,
-                  textAlign: "center",
-                }}
-              >
-                {t("Your Details")}
-              </h4>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1rem",
-                }}
-              >
-                {type === "add_fund" && <SelectedWallet setSubStep={setSubStep} wallet={wallet} />}
-                <SelectedAmountAndCurrency
-                  amount={
-                    payoutChannel?.value === "crypto" ? exchangeRate?.sending?.amount : amount
-                  }
-                  currency={
-                    kybFeeDets
-                      ? "USD"
-                      : payoutChannel?.value === "crypto"
-                        ? exchangeRate?.sending?.currency
-                        : wallet?.currency?.code
-                  }
-                  setSubStep={setSubStep}
-                  step={2}
-                />
-                {payoutChannel?.icon && (
-                  <SelectedPayoutChannel
-                    payoutChannel={payoutChannel}
+            {!(isPaytentlyCard && paytentlyHosted?.hostedUrl) && (
+              <div>
+                <button onClick={() => setSubStep(3)} className="btn btn-link">
+                  &larr; {t("Back")}
+                </button>
+                <h4 style={{ fontSize: "1.25rem", fontWeight: 700, textAlign: "center" }}>
+                  {t("Your Details")}
+                </h4>
+                <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                  {type === "add_fund" && (
+                    <SelectedWallet setSubStep={setSubStep} wallet={wallet} />
+                  )}
+                  {/* The card is charged the fee plus the topup fee, so the headline is the total. */}
+                  <SelectedAmountAndCurrency
+                    amount={
+                      cardQuote?.total > 0
+                        ? cardQuote.total
+                        : payoutChannel?.value === "crypto"
+                          ? exchangeRate?.sending?.amount
+                          : amount
+                    }
+                    currency={
+                      cardQuote?.currency?.code ??
+                      (kybFeeDets || isVerificationFee
+                        ? "USD"
+                        : payoutChannel?.value === "crypto"
+                          ? exchangeRate?.sending?.currency
+                          : wallet?.currency?.code)
+                    }
                     setSubStep={setSubStep}
-                    step={3}
+                    step={2}
                   />
-                )}
-              </div>
-            </div>
-
-            <div
-              ref={divRef}
-              style={{
-                textAlign: "center",
-                position: "relative",
-                background:
-                  "linear-gradient(0deg, rgba(11, 13, 65, 0.16), rgba(11, 13, 65, 0.16)), radial-gradient(182.3% 794.57% at 91.57% -107.9%, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
-                backgroundBlendMode: "color-burn,normal",
-                boxShadow: "0px 6px 13px -5.4094px rgba(89, 38, 240, 0.17)",
-                borderRadius: "16px",
-                padding: "1rem",
-                overflow: "hidden",
-                marginTop: "1rem",
-                pointerEvents: loading ? "none" : "all",
-                opacity: loading ? 0.9 : 1,
-              }}
-            >
-              {loading && (
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    zIndex: 10000,
-                  }}
-                >
-                  <div className="d-flex justify-content-center">
-                    <div className="spinner-border" color="primary" role="status">
-                      <span className="sr-only">{t("Loading...")}</span>
+                  {isVerificationFee && cardQuote?.total > 0 && (
+                    <div
+                      style={{
+                        background: "rgba(89, 38, 240, 0.08)",
+                        borderRadius: "16px",
+                        padding: "14px",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: ".4rem",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          fontSize: ".75rem",
+                          color: "black",
+                        }}
+                      >
+                        <span>{t("Verification fee")}</span>
+                        <span>
+                          {Number(cardQuote.amount).toFixed(2)} {cardQuote.currency?.code}
+                        </span>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          fontSize: ".75rem",
+                          color: "black",
+                        }}
+                      >
+                        <span>{t("Card top-up fee")}</span>
+                        <span>
+                          {Number(cardQuote.fee).toFixed(2)} {cardQuote.currency?.code}
+                        </span>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          fontSize: ".85rem",
+                          fontWeight: 700,
+                          borderTop: "1px solid rgba(89, 38, 240, 0.2)",
+                          paddingTop: ".4rem",
+                        }}
+                      >
+                        <span>{t("Total charged to card")}</span>
+                        <span>
+                          {Number(cardQuote.total).toFixed(2)} {cardQuote.currency?.code}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              )}
-              <img
-                src={faded_lines}
-                alt="faded"
-                width="130px"
-                loading="lazy"
-                style={{
-                  position: "absolute",
-                  left: "-130px",
-                  display: complete ? "none" : "inherit",
-                }}
-                ref={svgRef}
-              />
-              <Draggable axis="x" bounds="parent" onDrag={handleDrag}>
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "10px",
-                    left: "10px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    border: "3px solid white",
-                    height: "40px",
-                    width: "40px",
-                    borderRadius: "16px",
-                    cursor: "pointer",
-                    zIndex: 1,
-                  }}
-                  ref={chevRef}
-                >
-                  {complete ? (
-                    <Check color="white" size={30} />
-                  ) : (
-                    <ChevronRight color="white" size={30} />
+                  )}
+                  {payoutChannel?.icon && (
+                    <SelectedPayoutChannel
+                      payoutChannel={payoutChannel}
+                      setSubStep={setSubStep}
+                      step={3}
+                    />
                   )}
                 </div>
-              </Draggable>
-              <p
+              </div>
+            )}
+
+            {isPaytentlyCard ? (
+              paytentlyHosted?.hostedUrl ? (
+                width > 1310 ? (
+                  <iframe
+                    title={t("Card payment")}
+                    src={paytentlyHosted.hostedUrl}
+                    allow="payment"
+                    style={{
+                      width: isBig ? "calc(100% + 72px)" : "100%",
+                      marginLeft: isBig ? "-36px" : 0,
+                      marginRight: isBig ? "-36px" : 0,
+                      height: "clamp(620px, 85vh, 720px)",
+                      border: 0,
+                      borderRadius: isBig ? 0 : "16px",
+                      marginTop: "1rem",
+                      display: "block",
+                    }}
+                  />
+                ) : (
+                  <PaytentlyModal
+                    onClose={() => {
+                      setPaytentlyHosted(null);
+                      setComplete(false);
+                    }}
+                    hostedUrl={paytentlyHosted?.hostedUrl}
+                  />
+                )
+              ) : (
+                <button
+                  type="button"
+                  disabled={loading}
+                  onClick={() => {
+                    setLoading(true);
+                    setComplete(true);
+                  }}
+                  style={{
+                    marginTop: "1rem",
+                    width: "100%",
+                    border: "none",
+                    borderRadius: "16px",
+                    padding: "1rem",
+                    color: "white",
+                    fontSize: "1.1rem",
+                    fontWeight: 500,
+                    cursor: loading ? "not-allowed" : "pointer",
+                    background:
+                      "radial-gradient(182.3% 794.57% at 91.57% -107.9%, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
+                    boxShadow: "0px 6px 13px -5.4094px rgba(89, 38, 240, 0.17)",
+                  }}
+                >
+                  {loading ? t("Loading...") : t("Enter Card Details")}
+                </button>
+              )
+            ) : (
+              <div
+                ref={divRef}
                 style={{
-                  marginBottom: "0",
-                  fontSize: "1.1rem",
-                  fontWeight: 500,
-                  color: "white",
-                  display: complete ? "none" : "inherit",
+                  textAlign: "center",
+                  position: "relative",
+                  background:
+                    "linear-gradient(0deg, rgba(11, 13, 65, 0.16), rgba(11, 13, 65, 0.16)), radial-gradient(182.3% 794.57% at 91.57% -107.9%, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
+                  backgroundBlendMode: "color-burn,normal",
+                  boxShadow: "0px 6px 13px -5.4094px rgba(89, 38, 240, 0.17)",
+                  borderRadius: "16px",
+                  padding: "1rem",
+                  overflow: "hidden",
+                  marginTop: "1rem",
+                  pointerEvents: loading ? "none" : "all",
+                  opacity: loading ? 0.9 : 1,
                 }}
-                ref={pRef}
               >
-                {t("Slide To Confirm")}
-              </p>
-              {complete && (
+                {loading && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      zIndex: 10000,
+                    }}
+                  >
+                    <div className="d-flex justify-content-center">
+                      <div className="spinner-border" color="primary" role="status">
+                        <span className="sr-only">{t("Loading...")}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                <img
+                  src={faded_lines}
+                  alt="faded"
+                  width="130px"
+                  loading="lazy"
+                  style={{
+                    position: "absolute",
+                    left: "-130px",
+                    display: complete ? "none" : "inherit",
+                  }}
+                  ref={svgRef}
+                />
+                <Draggable axis="x" bounds="parent" onDrag={handleDrag}>
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "10px",
+                      left: "10px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      border: "3px solid white",
+                      height: "40px",
+                      width: "40px",
+                      borderRadius: "16px",
+                      cursor: "pointer",
+                      zIndex: 1,
+                    }}
+                    ref={chevRef}
+                  >
+                    {complete ? (
+                      <Check color="white" size={30} />
+                    ) : (
+                      <ChevronRight color="white" size={30} />
+                    )}
+                  </div>
+                </Draggable>
                 <p
                   style={{
                     marginBottom: "0",
                     fontSize: "1.1rem",
                     fontWeight: 500,
                     color: "white",
+                    display: complete ? "none" : "inherit",
                   }}
+                  ref={pRef}
                 >
-                  {t("Detailed Confirmed")}
+                  {t("Slide To Confirm")}
                 </p>
-              )}
-            </div>
+                {complete && (
+                  <p
+                    style={{
+                      marginBottom: "0",
+                      fontSize: "1.1rem",
+                      fontWeight: 500,
+                      color: "white",
+                    }}
+                  >
+                    {t("Detailed Confirmed")}
+                  </p>
+                )}
+              </div>
+            )}
           </CardBody>
         </Card>
       )}

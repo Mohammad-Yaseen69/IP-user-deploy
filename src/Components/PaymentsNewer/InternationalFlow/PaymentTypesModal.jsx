@@ -4,8 +4,13 @@ import x from "./files/x.svg";
 import { typesData } from "./StepFour";
 import { useTranslation } from "react-i18next";
 
-const PaymentTypesModal = ({ isOpen, toggle }) => {
+const PaymentTypesModal = ({ isOpen, toggle, bankComingSoon = false }) => {
   const { t } = useTranslation();
+  const items = bankComingSoon
+    ? typesData.map((item) =>
+        item.value === "bank_transfer" ? { ...item, status: "Coming Soon" } : item,
+      )
+    : typesData;
   return (
     <Modal isOpen={isOpen} style={{ borderRadius: "0px", width: "96vw", maxWidth: "1300px" }}>
       <ModalBody className={styles.body}>
@@ -19,7 +24,7 @@ const PaymentTypesModal = ({ isOpen, toggle }) => {
           </div>
         </div>
         <div className={styles.payment_method}>
-          {typesData.map((item) => (
+          {items.map((item) => (
             <div
               className={`${styles.pm_item} ${item.status === "Active" ? "" : styles.disabled}`}
               key={item.value}
