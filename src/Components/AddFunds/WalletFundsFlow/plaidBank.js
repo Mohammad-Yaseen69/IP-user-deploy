@@ -3,7 +3,7 @@ export const isPlaidBankSelected = (value) =>
 
 export const getPlaidBankPayload = (value) =>
   value?.savedBankId
-    ? { savedBankId: value.savedBankId }
+    ? { savedBankId: value.savedBankId, isSaveBank: true }
     : { recipient_iban: value?.recipient_iban };
 
 export const isSavedBankPaymentStarted = (res) => {

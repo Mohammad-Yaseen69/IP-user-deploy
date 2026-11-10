@@ -544,7 +544,6 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
 
   const getPlaidBankData = () => ({
     ...getPlaidBankPayload(plaidBank),
-    isSaveBank: !!plaidBank?.savedBankId,
   });
 
   const initiateExternalVCC = async (setter, type, otp, setError) => {
@@ -750,7 +749,10 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
             sendOtp={sendOtp}
             setStep={setStep}
             paymentType={paymentType}
-            walletState={walletState}
+            walletState={{
+              ...walletState,
+              name: paymentType === "bank" ? "Bank transfer" : walletState?.name,
+            }}
           />
         )}
 
