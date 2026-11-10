@@ -7,8 +7,11 @@ import styles from "../style/ActivateAccount.module.css";
 import { UserContext } from "../../../../Context/UserContext";
 import { decryptData } from "../../../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../../../Helper/EssentilaMethods/Encryption";
-import { CircularProgress, useMediaQuery } from "@mui/material";
+import { CircularProgress, Skeleton, useMediaQuery } from "@mui/material";
 import { BankIcon, OpenBanking } from "./SvgIcons";
+import PlaidBankPicker from "../../../AddFunds/WalletFundsFlow/PlaidBankPicker";
+import { isPlaidBankSelected } from "../../../AddFunds/WalletFundsFlow/plaidBank";
+import useAvailableMethods from "../../../../hooks/Payments/useAvailableMethods";
 
 const paymentMethods = [
   {
@@ -52,7 +55,9 @@ const ActivateAccount = ({
   const { userWallets, getUserWallets, authHeader } = useContext(UserContext);
   const [loadingRates, setLoadingRates] = useState(false);
   const [selectedMethod, setSelectedMethod] = useState("wallet");
+  const [plaidBank, setPlaidBank] = useState({ savedBankId: null, recipient_iban: "" });
   const isMobile = useMediaQuery("(max-width:600px)");
+  const { methods, isLoading } = useAvailableMethods();
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
@@ -142,6 +147,11 @@ const ActivateAccount = ({
     setSelectedWallet(wallet);
   };
 
+  const isPayDisabled =
+    !selectedWallet?._id ||
+    !isFeeReady ||
+    (selectedMethod === "bank" && !isPlaidBankSelected(plaidBank));
+
   return (
     <div className={styles.onboardingLayout}>
       <div
@@ -189,33 +199,39 @@ const ActivateAccount = ({
               </label>
             )}
             <div className={styles.paymentMethods}>
-              {paymentMethods.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  disabled={!item.active}
-                  onClick={() => setSelectedMethod(item.id)}
-                  className={`${styles.paymentCard} ${item.id === selectedMethod ? styles.activePayment : ""}`}
-                  style={{
-                    opacity: item.active ? 1 : 0.45,
-                    cursor: item.active ? "pointer" : "not-allowed",
-                  }}
-                >
-                  <div className={styles.paymentIcon}>
-                    {item?.Icon && isMobile ? (
-                      <item.Icon color={item.active ? "#FFFFFF" : "#6E7687"} />
-                    ) : (
-                      <CreditCard size={16} />
-                    )}
-                  </div>
-                  <div style={{ textAlign: "start" }}>
-                    <h5>
-                      {t(item.title)} {!item.active && <small>({t("Disabled")})</small>}
-                    </h5>
-                    <span>{t(item.subtitle)}</span>
-                  </div>
-                </button>
-              ))}
+              {isLoading
+                ? [...new Array(4)].map((_, index) => (
+                    <Skeleton key={`skeleton-${index}`} height={100} />
+                  ))
+                : paymentMethods
+                    .filter((i) => methods?.includes(i.id) || i.id === "wallet")
+                    .map((item) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        disabled={!item.active}
+                        onClick={() => setSelectedMethod(item.id)}
+                        className={`${styles.paymentCard} ${item.id === selectedMethod ? styles.activePayment : ""}`}
+                        style={{
+                          opacity: item.active ? 1 : 0.45,
+                          cursor: item.active ? "pointer" : "not-allowed",
+                        }}
+                      >
+                        <div className={styles.paymentIcon}>
+                          {item?.Icon && isMobile ? (
+                            <item.Icon color={item.active ? "#FFFFFF" : "#6E7687"} />
+                          ) : (
+                            <CreditCard size={16} />
+                          )}
+                        </div>
+                        <div style={{ textAlign: "start" }}>
+                          <h5>
+                            {t(item.title)} {!item.active && <small>({t("Disabled")})</small>}
+                          </h5>
+                          <span>{t(item.subtitle)}</span>
+                        </div>
+                      </button>
+                    ))}
             </div>
           </div>
 
@@ -228,6 +244,11 @@ const ActivateAccount = ({
               gap: isMobile && 20,
             }}
           >
+            {selectedMethod === "bank" && (
+              <div style={{ marginTop: "10px", width: isMobile ? "100%" : "auto" }}>
+                <PlaidBankPicker value={plaidBank} onChange={setPlaidBank} />
+              </div>
+            )}
             <div
               style={{
                 marginTop: "10px",
@@ -507,19 +528,12 @@ const ActivateAccount = ({
         </button>
 
         <button
-          onClick={() => {
-            if (selectedMethod === "wallet") {
-              onSubmitPayment();
-            } else {
-              // TODO after backend: add the IBAN PayPal, Plaid and mobile wallet payment
-              toast.error(t("This payment method is not available yet"));
-            }
-          }}
-          disabled={!selectedWallet?._id || !isFeeReady}
+          onClick={() => onSubmitPayment({ method: selectedMethod, plaidBank })}
+          disabled={isPayDisabled}
           className={styles.continueButton}
           style={{
-            opacity: !selectedWallet?._id || !isFeeReady ? 0.5 : 1,
-            cursor: !selectedWallet?._id || !isFeeReady ? "not-allowed" : "pointer",
+            opacity: isPayDisabled ? 0.5 : 1,
+            cursor: isPayDisabled ? "not-allowed" : "pointer",
           }}
         >
           {!isFeeReady

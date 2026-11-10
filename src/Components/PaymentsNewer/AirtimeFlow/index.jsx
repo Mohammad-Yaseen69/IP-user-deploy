@@ -382,8 +382,16 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
           url = `${import.meta.env.VITE_IP_DEV_API}/api/dt/confirm-esim-transaction`;
         } else if (data.payment_type.value === "paypal") {
           url = `${import.meta.env.VITE_IP_DEV_API}/api/paypal/initiate-esim`;
+        } else if (data?.payment_type?.value === "mobile_wallet") {
+          url = `${import.meta.env.VITE_IP_DEV_API}/api/collection/esim`;
         }
       }
+
+      if (!url) {
+        updateDataHandler("otpError", t("This payment method is not available for this purchase."));
+        return;
+      }
+
       const res = await axios.post(
         url,
         { data: enc },
