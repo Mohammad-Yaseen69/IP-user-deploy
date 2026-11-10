@@ -1,6 +1,6 @@
 import { Button, Divider, ListItemText, Menu, MenuItem } from "@mui/material";
 import { useContext, useEffect, useRef, useState } from "react";
-import { ChevronDown, Download, Filter, Search } from "react-feather";
+import { ChevronDown, Copy, Download, Filter, Search } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import Paginations from "../../../Common/Component/Paginations";
@@ -52,6 +52,9 @@ const formatPaymentRail = (method) => {
     return "SEPA Credit Transfer (SEPA_CT)";
   return String(method).replace(/_/g, " ");
 };
+
+const truncateHash = (hash = "") =>
+  hash.length > 40 ? `${hash.slice(0, 25)}.....${hash.slice(-30)}` : hash;
 
 const normalizeStatus = (raw) => {
   if (!raw) return "PENDING";
@@ -107,6 +110,15 @@ const TransactionRow = ({ tx, selectedIban }) => {
   const paymentRail = formatPaymentRail(
     tx.bvnk_method || tx.payment_method || tx.rail || tx.network || tx.method,
   );
+
+  const txHash = tx.tx_hash || tx.metadata?.tx_hash;
+  const paidAmount = tx.paid_amount ?? tx.metadata?.paid_amount;
+  const paidCurrency = tx.paid_currency || tx.metadata?.paid_currency;
+
+  const handleCopyHash = () => {
+    navigator.clipboard.writeText(txHash);
+    toast.success(t("Copied to clipboard"));
+  };
 
   return (
     <>
@@ -199,6 +211,25 @@ const TransactionRow = ({ tx, selectedIban }) => {
                   label={t("Reference")}
                   value={tx?.remittance_information ?? tx?.reference_id}
                 />
+                {paidAmount != null && paidCurrency && (
+                  <DetailItem label={t("Paid Amount")} value={`${paidAmount} ${paidCurrency}`} />
+                )}
+                {txHash && (
+                  <DetailItem
+                    label={t("Transaction Hash")}
+                    value={
+                      <span className={styles.hashValue} title={txHash}>
+                        {truncateHash(txHash)}
+                        <Copy
+                          size={13}
+                          className={styles.copyIcon}
+                          onClick={handleCopyHash}
+                          aria-label={t("Copy transaction hash")}
+                        />
+                      </span>
+                    }
+                  />
+                )}
               </div>
 
               {isOutgoing && (
@@ -259,7 +290,7 @@ const RecentTransactions = ({
     }, 400);
     return () => clearTimeout(searchDebounce.current);
   }, [search, setQ, setPage]);
-
+  // console.log("transactions", transactions)
   if (loading) return <InstaPayLoader />;
   return (
     <>

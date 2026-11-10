@@ -36,8 +36,14 @@ export const DEFAULT_FEE_ITEMS = [
     percentAmount: 0.2,
   },
   {
-    id: "crypto_ramp",
-    name: "Crypto On/Off Ramp",
+    id: "crypto_inward",
+    name: "Crypto Top-up (Inward)",
+    flatEuro: 0,
+    percentAmount: 1.0,
+  },
+  {
+    id: "crypto_outward",
+    name: "Crypto Payout (Outward)",
     flatEuro: 0,
     percentAmount: 1.0,
   },

@@ -238,7 +238,9 @@ const QuickAddBeneficiary = ({
 
       {fieldsLoading && (
         <p className={styles.optionSubtitle}>
-          Loading the details {methodLabel.toLowerCase()} requires...
+          {t("Loading the details")}&nbsp;
+          {methodLabel.toLowerCase()}&nbsp;
+          {t("requires...")}
         </p>
       )}
 

@@ -1,5 +1,5 @@
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import dayjs from "dayjs";
 import { FileText, Plus } from "lucide-react";
@@ -9,31 +9,52 @@ import { useLocation, useNavigate } from "react-router";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { DateGroup, EmptyState } from "../../Common/Ledger/Cells";
+import { ActiveFilters } from "../../Common/Ledger/Filters";
 import Ledger from "../../Common/Ledger/Ledger";
 import s from "../../Common/Ledger/ledger.module.scss";
-import { partyName } from "../../Common/Ledger/utils";
 import InstaPayLoader from "../Loader";
 import styles from "../TransactionsNewApi/styles/index.module.scss";
 import TopRight from "../topRight";
 import QuotationRow, { isOpenQuotation } from "./QuotationRow";
+import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
+
+const defaultRange = { startDate: new Date(), endDate: new Date(), key: "selection" };
 
 const byNewest = (a, b) => new Date(b.createdAt) - new Date(a.createdAt);
+const START_PAGE = 0;
 
-const useQuotations = (key, path) => {
+const useQuotations = (key, path, search, apiDates) => {
   const { userDetails, authHeader } = useContext(UserContext);
-  return useQuery({
-    queryKey: [key, userDetails?._id],
-    queryFn: async () => {
+  return useInfiniteQuery({
+    queryKey: [key, userDetails?._id, search, apiDates],
+    initialPageParam: START_PAGE,
+    queryFn: async ({ pageParam = START_PAGE }) => {
+      const query = new URLSearchParams({
+        ...(search && { search }),
+        ...apiDates,
+        skip: pageParam,
+        limit: 10,
+      }).toString();
       const response = await axios.get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/quotation/${path}/${userDetails?._id}`,
+        `${import.meta.env.VITE_IP_DEV_API}/api/quotation/${path}/${userDetails?._id}?${query}`,
         { headers: authHeader },
       );
       const decrypted = await decryptData(response?.data?.data);
-      return decrypted?.quotation ?? [];
+      return {
+        list: decrypted?.quotation ?? [],
+        total: decrypted?.pagination?.total ?? 0,
+        hasMore: decrypted?.pagination?.hasMore ?? false,
+      };
     },
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage.hasMore ? allPages.length + START_PAGE : undefined,
     enabled: !!userDetails?._id,
+    retry: false,
   });
 };
+
+const listOf = (query) => query.data?.pages.flatMap((page) => page.list) ?? [];
+const totalOf = (query) => query.data?.pages[0]?.total || 0;
 
 const Quotations = () => {
   const navigate = useNavigate();
@@ -47,43 +68,47 @@ const Quotations = () => {
   const [active, setActive] = useState("received");
   const [activeItem, setActiveItem] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [apiDates, setApiDates] = useState(null);
-  const [dateRange, setDateRange] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
-    key: "selection",
-  });
+  const [dateRange, setDateRange] = useState(defaultRange);
 
-  const { data: receivedQuotations = [], isLoading: loadingReceived } = useQuotations(
+  const receivedQuery = useQuotations(
     "receivedQuotations",
     "get-quotation-by-reciever",
+    debouncedSearch,
+    apiDates,
   );
-  const { data: sentQuotations = [], isLoading: loadingSent } = useQuotations(
+  const sentQuery = useQuotations(
     "sentQuotations",
     "get-quotation-by-sender",
+    debouncedSearch,
+    apiDates,
   );
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchQuery), 1000);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   useEffect(() => {
     if (tab) setActive(tab === "received" ? "received" : "sent");
   }, [tab]);
 
   useEffect(() => {
-    const list = tab === "sent" ? sentQuotations : tab === "received" ? receivedQuotations : [];
+    const list =
+      tab === "sent" ? listOf(sentQuery) : tab === "received" ? listOf(receivedQuery) : [];
     if (id && list.some((i) => i?._id === id)) setActiveItem(id);
-  }, [tab, id, sentQuotations, receivedQuotations]);
-
-  const visible = (list, party) =>
-    [...list]
-      .sort(byNewest)
-      .filter((item) => partyName(item?.[party]).toLowerCase().includes(searchQuery.toLowerCase()));
-  const received = useMemo(
-    () => visible(receivedQuotations, "sender"),
-    [receivedQuotations, searchQuery],
-  );
-  const sent = useMemo(() => visible(sentQuotations, "reciever"), [sentQuotations, searchQuery]);
+  }, [tab, id, sentQuery.data, receivedQuery.data]);
 
   const isReceived = active === "received";
-  const list = isReceived ? received : sent;
+  const current = isReceived ? receivedQuery : sentQuery;
+  const list = useMemo(() => listOf(current).sort(byNewest), [current.data]);
+
+  const loaderRef = useInfiniteScroll({
+    hasNextPage: current.hasNextPage,
+    isFetching: current.isFetching,
+    fetchNextPage: current.fetchNextPage,
+  });
 
   const groups = useMemo(() => {
     const open = list.filter(isOpenQuotation);
@@ -102,6 +127,11 @@ const Quotations = () => {
     setDateRange(selection);
   };
 
+  const clearDates = () => {
+    setApiDates(null);
+    setDateRange(defaultRange);
+  };
+
   const dateLabel = apiDates
     ? `${dayjs(dateRange.startDate).format("MMM D")} - ${dayjs(dateRange.endDate).format("MMM D, YYYY")}`
     : t("All dates");
@@ -111,8 +141,8 @@ const Quotations = () => {
   const ledger = (
     <Ledger
       tabs={[
-        { key: "received", label: "Received", count: receivedQuotations.length },
-        { key: "sent", label: "Sent", count: sentQuotations.length },
+        { key: "received", label: "Received", count: totalOf(receivedQuery) },
+        { key: "sent", label: "Sent", count: totalOf(sentQuery) },
       ]}
       active={active}
       onTab={(key) => {
@@ -124,20 +154,24 @@ const Quotations = () => {
         onChange: setSearchQuery,
         placeholder: t("Search name, amount or quotation ID"),
       }}
+      hideFilters={true}
+      hideDownload={true}
       dateRange={dateRange}
       onDateChange={handleChange}
       dateLabel={dateLabel}
-      columns={[
-        "Quotation",
-        isReceived ? "From" : "Sent to",
-        "Status",
-        "Valid until",
-        "Amount",
-        "",
-      ]}
-      template="2.2fr 1.6fr 112px 1fr 1fr 180px"
+      activeFilters={
+        <ActiveFilters
+          groups={[]}
+          filters={{}}
+          dateLabel={apiDates && dateLabel}
+          onClearDate={clearDates}
+          onClearAll={clearDates}
+        />
+      }
+      columns={["Quotation", isReceived ? "From" : "Sent to", "Status", "Amount", ""]}
+      template="2.2fr 1.6fr 112px 1fr 180px"
     >
-      {loadingReceived || loadingSent ? (
+      {current.isLoading ? (
         <div className={s.loader}>
           <InstaPayLoader />
         </div>
@@ -157,9 +191,11 @@ const Quotations = () => {
               ))}
             </div>
           ))}
-          <p className={s.count}>
-            {t("Showing")} {list.length} {t(isReceived ? "received quotations" : "sent quotations")}
-          </p>
+          {current?.hasNextPage && (
+            <div ref={loaderRef} className={s.loader}>
+              <InstaPayLoader />
+            </div>
+          )}
         </>
       ) : (
         <EmptyState Icon={FileText} title={t("No Quotations")} />

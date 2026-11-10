@@ -420,7 +420,7 @@ const SecurityQuestions = () => {
           toggle={() => {
             setShowSuccess(false);
             if (profileCompletedPercentage != 100) {
-              navigate("/settings?tab=social&ft=true");
+              navigate("/pay-via-social");
             }
           }}
         />

@@ -91,6 +91,8 @@ const TransactionRow = ({ item, activeItem, setActiveItem, index, fromReferral =
     if (item?.service_type === "airtime") return { name: item?.airtime_number ?? "" };
     if (item?.payment_type === "conversion") return { name: item?.wallet_id ?? "" };
 
+    const acc = item?.account;
+
     if ((item?.transaction_type ?? "").toLowerCase() === "debit") {
       if (item?.service_type === "withdraw_by_admin") return { name: "Admin" };
       if (item?.service_type === "kyc_verification") return { name: "InstaPay" };
@@ -102,11 +104,10 @@ const TransactionRow = ({ item, activeItem, setActiveItem, index, fromReferral =
           user?._id ?? company?._id,
         );
       }
-      if (item?.receiver?.user) {
+      if (item?.receiver?.user || item?.receiver?.company) {
         const { user, company } = item.receiver;
-        return who(user.first_name ?? company?.company_name, user.last_name, user._id);
+        return who(user?.first_name ?? company?.company_name, user?.last_name, user?._id);
       }
-      const acc = item?.account;
       return who(
         internationalReceiver?.first_name ??
           acc?.user?.first_name ??
@@ -118,11 +119,11 @@ const TransactionRow = ({ item, activeItem, setActiveItem, index, fromReferral =
     }
 
     if (item?.service_type === "topup") {
-      const user = item?.receiver?.user;
-      return who(user?.first_name, user?.last_name, user?._id);
+      const user = item?.receiver?.user ?? acc?.user ?? acc?.company;
+      return who(user?.first_name ?? user?.company_name, user?.last_name, user?._id);
     }
 
-    const { user, company } = item?.sender ?? {};
+    const { user, company } = item?.sender ?? item?.receiver ?? item?.account ?? {};
     const card = item?.mastercard?.account;
     return who(
       user?.first_name ?? card?.first_name ?? company?.company_name,
@@ -163,7 +164,7 @@ const TransactionRow = ({ item, activeItem, setActiveItem, index, fromReferral =
     .filter(Boolean)
     .join(" ");
   const method = displayAsText && t(displayAsText);
-  const time = dayjs(item?.createdAt).format("HH:mm");
+  const time = dayjs(item?.createdAt).format("HH:mm A");
 
   const loggedInUserId = userDetails?.user?._id ?? userDetails?.company?._id;
 

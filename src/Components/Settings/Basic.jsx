@@ -44,6 +44,7 @@ import {
 } from "./Icons";
 import dayjs from "dayjs";
 import CountryBasedPhone from "../PhoneInput/PhoneNumberBasedOnCountry.json";
+import { getInitials } from "../../utils/Functions/getInitials";
 
 export const currentDate = new Date();
 export const minDate = new Date(
@@ -746,13 +747,6 @@ const Basic = ({ setCurrentTab }) => {
   const displayName = isIndividualAccount
     ? `${userDetails?.user?.first_name ?? ""} ${userDetails?.user?.last_name ?? ""}`.trim()
     : (userDetails?.company?.company_name ?? "");
-  const initials = displayName
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((word) => word[0])
-    .join("")
-    .toUpperCase();
 
   const completion = Number(profileCompletedPercentage);
 
@@ -926,7 +920,7 @@ const Basic = ({ setCurrentTab }) => {
                     className={styles.avatarImg}
                   />
                 ) : (
-                  <div className={styles.avatar}>{initials}</div>
+                  <div className={styles.avatar}>{getInitials(displayName)}</div>
                 )}
 
                 {isEditingDp ? (
@@ -1264,8 +1258,8 @@ const Basic = ({ setCurrentTab }) => {
                 <EnvelopeSimple />
               </span>
               <Input
-                disabled={!isEditMode || isKybApproved}
-                readOnly={!isEditMode || isKybApproved}
+                disabled={!isEditMode || !isIndividualAccount}
+                readOnly={!isEditMode || !isIndividualAccount}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -1290,11 +1284,11 @@ const Basic = ({ setCurrentTab }) => {
                 }
                 disableDropdown={!isBusiness}
                 setPhone={setPhone}
-                disabled={!isEditMode || isKycApproved}
+                disabled={!isEditMode || isIndividualAccount}
                 newUI={true}
                 customStyles={{
                   padding: "10px 12px",
-                  background: isEditMode && isKycApproved ? "#f8f9fc" : "white",
+                  background: isEditMode && isIndividualAccount ? "#f8f9fc" : "white",
                 }}
               />
             </div>
@@ -1447,7 +1441,7 @@ const Basic = ({ setCurrentTab }) => {
               <Input
                 disabled={true}
                 readOnly={true}
-                value={countriesData.find((item) => item.alpha3 === country).name}
+                value={countriesData.find((item) => item.alpha3 === country)?.name}
                 onChange={(e) => setCountry(e.target.value)}
               />
             </div>
@@ -1468,7 +1462,9 @@ const Basic = ({ setCurrentTab }) => {
               >
                 <option value="">{t("--Select-Your-Timezone--")}</option>
                 {availableTimezones.map((i) => (
-                  <option value={i?.split(" GMT")?.[0]}>{i}</option>
+                  <option key={i} value={i?.split(" GMT")?.[0]}>
+                    {i}
+                  </option>
                 ))}
               </Input>
               <span className={styles.trailingIcon}>
@@ -1504,6 +1500,7 @@ const Basic = ({ setCurrentTab }) => {
                 (!isVerified &&
                   (usernameError ||
                     !usernameValid ||
+                    !address ||
                     !city ||
                     !username ||
                     (country === "USA" && !state?.trim()) ||

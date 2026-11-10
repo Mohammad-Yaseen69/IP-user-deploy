@@ -1430,8 +1430,10 @@ const SepaTransfer = ({
               }}
             >
               <span style={styles.stepIndicator}>
-                Step {currentStepNumber} of {totalSteps} &nbsp;{" "}
-                <span style={{ color: "gray" }}> {currentStepName} </span>
+                {t("Step")}
+                &nbsp;{currentStepNumber}&nbsp;
+                {t("of")}&nbsp;
+                {totalSteps} &nbsp; <span style={{ color: "gray" }}> {currentStepName} </span>
               </span>
             </div>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
