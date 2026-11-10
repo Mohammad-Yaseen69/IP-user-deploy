@@ -2,6 +2,7 @@ import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
 import en from "./translations/en.json";
+import { loadCountriesForLanguage } from "./Data/CountriesWithTranslations/countries";
 
 const languageLoaders = {
   fr: () => import("./translations/fr.json"),
@@ -44,11 +45,11 @@ const lazyTranslationsBackend = {
   read(language, namespace, callback) {
     const loader = languageLoaders[language];
     if (!loader) {
-      callback(null, {});
+      loadCountriesForLanguage(language).then(() => callback(null, {}));
       return;
     }
-    loader()
-      .then((module) => callback(null, module.default))
+    Promise.all([loader(), loadCountriesForLanguage(language)])
+      .then(([module]) => callback(null, module.default))
       .catch((error) => callback(error, null));
   },
 };

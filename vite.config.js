@@ -82,8 +82,6 @@ export default defineConfig({
             )
           )
             return "vendor";
-          if (/[\\/]node_modules[\\/]@mui[\\/](material|x-date-pickers)[\\/]/.test(id))
-            return "mui";
           if (/[\\/]node_modules[\\/](react-)?apexcharts[\\/]/.test(id)) return "charts";
           if (/[\\/]node_modules[\\/]jspdf(-autotable)?[\\/]/.test(id)) return "pdf";
           if (/[\\/]node_modules[\\/]xlsx[\\/]/.test(id)) return "excel";
