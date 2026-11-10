@@ -30,7 +30,6 @@ import MobileWalletStatus from "../PaymentAddressPublic/PayAsGuest/MobileWalletS
 import PlaidBankTransfer from "../AddFunds/WalletFundsFlow/PlaidBankTransfer";
 import ErrorModal from "../PaymentsNewer/InternationalFlow/ErrorModal";
 import { useIdempotency } from "../../hooks/Payments/useIdempotency";
-import { quotePaytentlyVerification, usePaytently } from "../../utils/Functions/paytently";
 
 const paymentChannels = [
   {
@@ -176,37 +175,6 @@ const VerificationPayment = ({
 
   const wallets = useMemo(() => filteredWallets, [filteredWallets]);
 
-  // Card pays by topping a wallet up first, so this one is picked to receive the
-  // credit regardless of balance. USD avoids converting the USD fee twice.
-  // The card is charged the fee plus a topup fee, so the confirm screen has to
-  // show what Paytently will actually take.
-  const [cardQuote, setCardQuote] = useState(null);
-
-  const loadCardQuote = async () => {
-    if (!topupWallet?._id) return null;
-    try {
-      return await quotePaytentlyVerification({
-        kind: partnerId ? "partner_kyc" : isKYB ? "kyb" : "kyc",
-        partnerId,
-        walletId: topupWallet._id,
-      });
-    } catch {
-      return null;
-    }
-  };
-
-  const topupWallet = useMemo(() => {
-    const active =
-      userWallets?.filter(
-        (item) =>
-          item?.wallet_type === "insta" &&
-          !item?.blocked &&
-          !item?.admin_blocked &&
-          item?.status === "active",
-      ) ?? [];
-    return active.find((item) => item?.currency?.code === "USD") ?? active[0] ?? null;
-  }, [userWallets]);
-
   const sendOtp = async (method) => {
     setSaving(true);
     try {
@@ -301,16 +269,23 @@ const VerificationPayment = ({
     }
   };
 
+  const feeRoute = partnerId ? "partner-kyc" : isKYB ? "kyb" : "kyc";
+  const partnerPayload = partnerId ? { partner_id: partnerId } : {};
+
   const initiatePaypal = async () => {
     setSaving(true);
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_IP_DEV_API}/api/paypal/initiate-kyc-payment`,
-        { data: encryptData({}) },
+        `${import.meta.env.VITE_IP_DEV_API}/api/paypal/initiate-${feeRoute}-payment`,
+        { data: encryptData(partnerPayload) },
         { headers: authHeader },
       );
       const dec = decryptData(res.data.data);
-      window.location.href = dec?.url;
+      if (dec?.url) {
+        window.location.href = dec?.url;
+      } else if (dec?.message) {
+        toast.info(dec?.message);
+      }
     } catch (err) {
       const decrypted = decryptData(err.response.data.data);
       toast.error(decrypted?.message);
@@ -322,14 +297,7 @@ const VerificationPayment = ({
   const handleClick = async () => {
     if (step === 1) {
       const skipStepMethods = ["paypal", "mobile_wallet"];
-      // Paytently collects the card itself, so skip the card form and go to confirm.
-      if (usePaytently && payoutChannel?.value === "card") {
-        if (isKYB && !partnerId) {
-          setFeeDetails(await getFeeDetails({ payment_type: "card" }));
-        }
-        setCardQuote(await loadCardQuote());
-        setStep(3);
-      } else if (skipStepMethods?.includes(payoutChannel?.value)) {
+      if (skipStepMethods?.includes(payoutChannel?.value)) {
         if (payoutChannel?.value === "paypal") {
           initiatePaypal();
         } else if (payoutChannel?.value === "mobile_wallet") {
@@ -395,9 +363,7 @@ const VerificationPayment = ({
                         : methods?.includes(item?.value),
                     )
                     .map((item) => {
-                      const isPaypalDisabled =
-                        (isKYB && item?.value === "paypal") ||
-                        (item.value === "card" && !usePaytently);
+                      const isPaypalDisabled = item.value === "card";
                       return (
                         <Card
                           key={item.name}
@@ -658,16 +624,15 @@ const VerificationPayment = ({
                 sendKybWalletOTP={sendOtp}
                 kybFeeDets={feeDetails}
                 partnerId={partnerId}
-                wallet={topupWallet}
-                cardQuote={cardQuote}
+                // wallet={userWallets?.find(item => item?.currency?.code === "USD")}
               />
             )}
             {step === 2 && payoutChannel?.value === "bank" && (
               <PlaidBankTransfer
                 closeBtnText={t("Close Modal")}
                 type="verification_payment"
-                initiatePayload={() => ({})}
-                endpoint="/api/plaid/kyc"
+                initiatePayload={() => partnerPayload}
+                endpoint={`/api/plaid/${feeRoute}`}
                 dataHandler={(type, data) => {
                   if (type === "error") {
                     setError(data);
