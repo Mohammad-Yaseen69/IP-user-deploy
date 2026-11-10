@@ -30,7 +30,7 @@ const UnderProgress = ({ requests = [] }) => {
   return (
     <div className={styles.section}>
       <h3 className={styles.sectionHeading}>
-        {t("compliance.inProgressSection", "In review")} ({inProgressList.length})
+        {t("In review")} ({inProgressList.length})
       </h3>
       <div className={styles.cardsGrid}>
         {inProgressList.map((item) => {
@@ -39,15 +39,12 @@ const UnderProgress = ({ requests = [] }) => {
             <div key={item._id || item.id} className={styles.card}>
               <div className={styles.cardHeader}>
                 <h4 className={styles.cardTitle}>{item.title}</h4>
-                <span className={styles.badgeInProgress}>
-                  {t("compliance.inReviewBadge", "In review")}
-                </span>
+                <span className={styles.badgeInProgress}>{t("In review")}</span>
               </div>
               <p className={styles.cardDesc}>{item.description}</p>
               {dueDate && (
                 <p className={styles.deadline}>
-                  {t("compliance.dueLabel", "Due")}{" "}
-                  <span className={styles.dateValYellow}>{dueDate}</span>
+                  {t("Due")} <span className={styles.dateValYellow}>{dueDate}</span>
                 </p>
               )}
             </div>
