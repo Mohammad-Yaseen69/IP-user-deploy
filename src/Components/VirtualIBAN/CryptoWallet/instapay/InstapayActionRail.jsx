@@ -15,12 +15,14 @@ const InstapayActionRail = ({ wallets = [], wallet, onSelectWallet }) => {
   const [tab, setTab] = useState("Send");
   const hasPermission = useEffectivePermission();
   const canWithdrawCrypto = hasPermission(PERMISSIONS.CRYPTO_WITHDRAWAL);
+  const canConvert = hasPermission(PERMISSIONS.WALLET_TO_CRYPTO_CONVERSION);
 
   return (
     <aside className={styles.rail}>
       <div className={styles.railTabs}>
         {TABS.map((item) => {
           if (!canWithdrawCrypto && item === "Withdraw") return;
+          if (!canConvert && item === "Convert") return;
           return (
             <button
               key={item}
