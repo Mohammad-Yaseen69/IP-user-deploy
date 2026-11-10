@@ -586,8 +586,8 @@ export const PAGES = [
   },
   {
     id: "social_accounts",
-    title: "Social Network Accounts",
-    route: "/settings?tab=social",
+    title: "Pay via Social",
+    route: "/pay-via-social",
     permission: "settings.social-accounts.view",
     description:
       "Link WhatsApp, Telegram and Instagram so the user can transact through the InstaPay chatbot there. A security PIN must be set first, and linking uses a code entered in the chatbot.",
@@ -767,7 +767,7 @@ export const PAGES = [
     route: "/fee-model-requests",
     agentOnly: true,
     description:
-      "Request and track pricing for a client — IBAN activation and monthly fee, SEPA and SWIFT transfers, crypto on/off ramp, FX margin. Once approved, the client referral code and signup link are here to copy.",
+      "Request and track pricing for a client — IBAN activation and monthly fee, SEPA and SWIFT transfers, crypto top-up and payout, FX margin. Once approved, the client referral code and signup link are here to copy.",
   },
 ];
 

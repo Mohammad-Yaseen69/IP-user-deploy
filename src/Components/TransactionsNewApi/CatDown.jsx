@@ -10,7 +10,13 @@ import EditModal from "./EditModal";
 import DeleteModal from "./DeleteModal";
 import { useTranslation } from "react-i18next";
 
-const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }) => {
+const CatDown = ({
+  selectedCategories,
+  setSelectedCategories,
+  isEditMode,
+  item,
+  listContainerStyle = {},
+}) => {
   const dropdownRef = useRef(null);
   const { t } = useTranslation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -199,6 +205,7 @@ const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }
                     borderRadius: "14px",
                     padding: ".5rem",
                     maxWidth: window.innerWidth < 650 ? "71vw" : "inherit",
+                    ...listContainerStyle,
                   }}
                 >
                   <div

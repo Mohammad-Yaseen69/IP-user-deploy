@@ -18,12 +18,13 @@ const PhoneInput = ({
   customStyles = {},
   error,
   setError,
-  inputStyles,
+  inputStyles = {},
   disableDropdown,
   inThirdParty = false,
   onBlur,
   onKeyDown,
   onFocus,
+  newUI = false,
 }) => {
   const [selectedCountry, setSelectedCountry] = useState({});
   const [number, setNumber] = useState("");
@@ -51,6 +52,21 @@ const PhoneInput = ({
           opacity: disabled ? 0.8 : 1,
           pointerEvents: disabled ? "none" : "all",
           background: disabled && "#e9ecef",
+          ...(newUI
+            ? {
+                display: "flex",
+                height: "100%",
+                padding: "12px",
+                alignItems: "center",
+                gap: "12px",
+                alignSelf: "stretch",
+                borderRadius: "6px",
+                border: "1px solid #E1E5EE",
+                background: "#FFF",
+                boxShadow: "0 1px 1.5px 0 rgba(44, 54, 53, 0.03)",
+                width: "100%",
+              }
+            : {}),
           ...customStyles,
         }}
       >
@@ -64,13 +80,14 @@ const PhoneInput = ({
           setNumber={setNumber}
           inThirdParty={inThirdParty}
           phone={phone}
+          newUI={newUI}
           hideIcon={disableDropdown}
         />
         <PhoneNumber
           number={number}
           setNumber={setNumber}
           setError={setError}
-          styles={inputStyles}
+          styles={{ ...(newUI ? { fontWeight: 400 } : {}), ...inputStyles }}
           selectedCountry={selectedCountry}
           onBlur={onBlur}
           onKeyDown={onKeyDown}

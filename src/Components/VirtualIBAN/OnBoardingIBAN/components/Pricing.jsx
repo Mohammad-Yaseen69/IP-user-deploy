@@ -7,9 +7,7 @@ import {
   ArrowLeft,
   ArrowUpCircle,
   DollarSign,
-  RefreshCw,
   Repeat,
-  TrendingUp,
 } from "react-feather";
 import axios from "axios";
 import styles from "../style/Pricing.module.css";
@@ -26,8 +24,8 @@ const ICON_MAP = {
   sepa_outward: ArrowUpCircle,
   swift_inward: ArrowDownCircle,
   swift_outward: ArrowUpCircle,
-  crypto_ramp: RefreshCw,
-  fx_margin: TrendingUp,
+  crypto_inward: ArrowDownCircle,
+  crypto_outward: ArrowUpCircle,
 };
 
 const Pricing = ({ onBack, t, onNext }) => {
@@ -53,10 +51,11 @@ const Pricing = ({ onBack, t, onNext }) => {
         );
         const dec = decryptData(res.data?.data);
         if (dec?.data) {
-          setFeeSchedule(dec.data.fee_schedule || []);
+          setFeeSchedule((dec.data.fee_schedule || []).filter((f) => f.id !== "fx_margin"));
           setPackName(dec.data.name || "");
         }
       } catch {
+        //
       } finally {
         setLoading(false);
       }
