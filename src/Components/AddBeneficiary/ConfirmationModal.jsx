@@ -1,14 +1,22 @@
 import { useTranslation } from "react-i18next";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 
-const ConfirmationModal = ({ isOpen, toggle, onConfirm, onCancel }) => {
+const ConfirmationModal = ({
+  isOpen,
+  toggle,
+  onConfirm,
+  onCancel,
+  bodyText,
+  isConfirmDisabled,
+}) => {
   const { t } = useTranslation();
   return (
     <Modal isOpen={isOpen} toggle={toggle}>
       <ModalHeader toggle={toggle}>{t("Confirm")}</ModalHeader>
       <ModalBody>
         {t(
-          "Beneficiary country and Bank country doesn't match, Updating the bank details will also update the beneficiary's details, (i.e: country, city, phone number, card details, mobile wallet details, cash pickup details, etc.).",
+          bodyText ??
+            "Beneficiary country and Bank country doesn't match, Updating the bank details will also update the beneficiary's details, (i.e: country, city, phone number, card details, mobile wallet details, cash pickup details, etc.).",
         )}{" "}
       </ModalBody>
       <ModalFooter>
@@ -47,6 +55,7 @@ const ConfirmationModal = ({ isOpen, toggle, onConfirm, onCancel }) => {
           }}
           className="i_t_button"
           onClick={onConfirm}
+          disabled={isConfirmDisabled}
         >
           {t("Proceed")}
         </Button>

@@ -4,7 +4,7 @@ import TopRight from "../topRight";
 import { useTranslation } from "react-i18next";
 import { Search, Filter, Sliders } from "react-feather";
 import { Button, Input } from "reactstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import BeneficiaryCard from "./BeneficiaryCard";
 import { UserContext } from "../../Context/UserContext";
 import add_ben from "./add_ben.svg";
@@ -54,6 +54,12 @@ const Beneficiaries = () => {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [activeBeneficiary, setActiveBeneficiary] = useState(null);
   const [beneficiaryMode, setBeneficiaryMode] = useState("edit");
+
+  const location = useLocation();
+  useEffect(() => {
+    const wantsAdd = new URLSearchParams(location.search).get("action") === "add";
+    if (wantsAdd && USE_NEW_BENEFICIARY_FLOW && can("beneficiaries.add")) setIsAddOpen(true);
+  }, [location.search]);
 
   const openBeneficiary = (beneficiary, mode) => {
     verifyToken();
@@ -245,7 +251,7 @@ const Beneficiaries = () => {
         </div>
         <div className={styles.bottom}>
           <div className={styles.table_header}>
-            <div style={{ width: "100%" }} className={styles.search_field}>
+            <div style={{ flex: 1 }} className={styles.search_field}>
               <Search />
               <Input
                 type="search"
@@ -265,7 +271,13 @@ const Beneficiaries = () => {
                 }}
                 onClick={() => setIsAddOpen(true)}
               >
-                <img src={add_ben} loading="lazy" alt={t("Add Beneficiary")} />
+                <img
+                  src={add_ben}
+                  width={42}
+                  height={42}
+                  loading="lazy"
+                  alt={t("Add Beneficiary")}
+                />
               </button>
             ) : (
               <Link to={"/beneficiaries/add"}>
@@ -273,7 +285,7 @@ const Beneficiaries = () => {
               </Link>
             )}
           </div>
-          {renderToolbar()}
+          <div className="mt-3">{renderToolbar()}</div>
           <div className={styles.table_body}>
             {filtered.length > 0
               ? filtered.map((item) => (

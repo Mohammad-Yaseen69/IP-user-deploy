@@ -188,9 +188,13 @@ const MoveMoney = () => {
                           )}
                         </p>
                         <div className={styles.badgeRow}>
-                          <span className={`${styles.tag} ${styles.tagBlue}`}>USD, EUR, GBP</span>
-                          <span className={`${styles.tag} ${styles.tagGray}`}>1-5 Days</span>
-                          <span className={`${styles.tag} ${styles.tagGray}`}>Worldwide</span>
+                          <span className={`${styles.tag} ${styles.tagBlue}`}>
+                            {t("USD, EUR, GBP")}
+                          </span>
+                          <span className={`${styles.tag} ${styles.tagGray}`}>{t("1-5 Days")}</span>
+                          <span className={`${styles.tag} ${styles.tagGray}`}>
+                            {t("Worldwide")}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -208,9 +212,15 @@ const MoveMoney = () => {
                           )}
                         </p>
                         <div className={styles.badgeRow}>
-                          <span className={`${styles.tag}`}>{t("Worldwide")}</span>
-                          <span className={`${styles.tag}`}>{t("Fast lookup")}</span>
-                          <span className={`${styles.tag}`}>{t("Country-adaptive")}</span>
+                          <span className={`${styles.tag} ${styles.tagBlue}`}>
+                            {t("Worldwide")}
+                          </span>
+                          <span className={`${styles.tag} ${styles.tagGray}`}>
+                            {t("Fast lookup")}
+                          </span>
+                          <span className={`${styles.tag} ${styles.tagGray}`}>
+                            {t("Country-adaptive")}
+                          </span>
                         </div>
                       </div>
                     </div>

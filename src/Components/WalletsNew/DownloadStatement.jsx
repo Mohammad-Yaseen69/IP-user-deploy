@@ -8,11 +8,12 @@ import { UserContext } from "../../Context/UserContext";
 import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import jsPDF from "jspdf";
-import img from "../../assets/images/logo/logo2.webp";
+import img from "../../assets/images/logo/logo2.png";
 import { toast } from "react-toastify";
 import "jspdf-autotable";
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 import { exportToExcel } from "../../utils/Functions/csvExport";
+import { formatCurrency } from "../../Helper/AmountFormat";
 
 const DownloadStatement = ({ showModal, setShowModal, wallet, isTransection }) => {
   const { userDetails, authHeader, beneficiaries } = useContext(UserContext);
@@ -186,7 +187,7 @@ const DownloadStatement = ({ showModal, setShowModal, wallet, isTransection }) =
     // Set landscape orientation by passing parameters to jsPDF
     const doc = new jsPDF({ orientation: "landscape" });
 
-    doc.addImage(img, "png", 14, 10, 46.5, 13);
+    doc.addImage(img, "png", 14, 10, 40, 11);
     // doc.setFont("montserrat", "normal", "bolder");
     // doc.setFontSize(20);
     // doc.text("InstaPay", 14, 25);
@@ -210,7 +211,7 @@ const DownloadStatement = ({ showModal, setShowModal, wallet, isTransection }) =
           [
             `INSTA - ${wallet?.wallet_id}`,
             wallet?.currency?.code,
-            `${Number(wallet?.balance?.available)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${wallet?.currency?.code}`,
+            `${formatCurrency(wallet?.balance?.available, true)} ${wallet?.currency?.code}`,
             wallet?.status?.toUpperCase(),
           ],
         ],
@@ -256,7 +257,7 @@ const DownloadStatement = ({ showModal, setShowModal, wallet, isTransection }) =
             item?.guest_details?.email || item?.sender?.email || "--",
             item?.guest_details?.phone || item?.sender?.phone || "--",
             service_name_formatter(item?.service_type),
-            `${item?.transaction_type?.toLowerCase() === "debit" ? "-" : "+"}${item?.total ? Number(item?.total)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ""} ${item?.currency?.code} `,
+            `${item?.transaction_type?.toLowerCase() === "debit" ? "-" : "+"}${item?.total ? formatCurrency(item?.total, true) : ""} ${item?.currency?.code} `,
             item?.client_reference || "--",
             item?.status,
           ];

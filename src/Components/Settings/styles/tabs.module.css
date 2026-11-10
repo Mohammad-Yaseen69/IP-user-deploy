@@ -6,33 +6,163 @@
   top: 1rem;
   z-index: 1;
   width: 16vw;
-  padding: 1rem;
-  border-radius: 24px;
+  padding: 16px 12px;
+  border-radius: 14px;
+  border: 1px solid #eff1f6;
   background: #fff;
-  box-shadow:
-    0px -17px 58px 0px rgba(0, 0, 0, 0.02),
-    15.146px 4.328px 242.341px 0px rgba(0, 0, 0, 0.07);
-  gap: 12px;
+  box-shadow: 0px 1px 1px 0px rgba(27, 31, 42, 0.04);
+  gap: 16px;
+  font-family: Inter, sans-serif;
 }
 
-.customDropdownWrapper {
-  position: relative;
-  width: 100%;
-  margin-bottom: 16px;
-}
-
-.customDropdownSelected {
+.search {
   display: flex;
   align-items: center;
-  padding: 10px 12px;
-  background: #fff;
-  border: 1px solid #ccc;
+  gap: 12px;
+  height: 40px;
+  padding: 8px 12px;
+  flex-shrink: 0;
   border-radius: 6px;
-  cursor: pointer;
-  min-height: 44px;
-  user-select: none;
+  border: 1px solid #eff1f6;
+  background: #fff;
+  box-shadow: 0px 1px 1.5px 0px rgba(27, 31, 42, 0.04);
 }
 
+.searchIcon {
+  flex-shrink: 0;
+  color: #1b1f2a;
+}
+
+.search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0;
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.42px;
+  color: #1b1f2a;
+}
+
+.search input::placeholder {
+  color: #6e7687;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.groupLabel {
+  margin: 0;
+  padding: 0 0 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.36px;
+  color: #9aa3b2;
+  white-space: nowrap;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 40px;
+  padding: 10px 8px 10px 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.42px;
+  color: #1b1f2a;
+  cursor: pointer;
+  position: relative;
+}
+
+.icon {
+  flex-shrink: 0;
+}
+
+.label {
+  flex: 1;
+  min-width: 0;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: 100px;
+  background: #fffbdf;
+  color: #976600;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.33px;
+  white-space: nowrap;
+}
+
+.tab:hover {
+  background-color: #f5f6fa;
+}
+
+.active {
+  background: #f2eeff;
+  color: #5926f0;
+  font-weight: 600;
+}
+
+.active:hover {
+  background-color: #ebe5ff;
+}
+
+.tab.disabled {
+  cursor: not-allowed;
+  background-color: #f5f6fa;
+  color: #9aa3b2;
+  position: relative;
+}
+
+.tab.disabled::before {
+  content: 'Please complete your "Basic Info" first.';
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px 10px;
+  right: 0;
+  bottom: 0;
+  border-radius: 10px;
+  background-color: #5926f0;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: 250ms all;
+}
+
+.tab.disabled.kyc::before {
+  content: "Please Verify Your Identity Before Using Instapay";
+}
+
+.tab.disabled.required::before {
+  content: "Please provide the required information in Verification first.";
+}
+
+.tab.disabled:hover::before {
+  opacity: 1;
+}
+
+/* ---------- Missing steps (unchanged) ---------- */
 .missingDiv {
   display: flex;
   padding: 16px;
@@ -43,7 +173,6 @@
   border-radius: 12px;
   background: #fff4e5;
   border: 1px solid #ffe3c2;
-  margin-bottom: 16px;
 }
 
 .missingContent {
@@ -95,58 +224,6 @@
   background: #4828a0;
 }
 
-.tabIcon {
-  width: 22px;
-  height: 22px;
-  margin-right: 10px;
-}
-
-.dropdownArrow {
-  margin-left: auto;
-  font-size: 18px;
-}
-
-.customDropdownList {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  margin-top: 8px;
-  background: #fff;
-  border: 1px solid #eee;
-  border-radius: 12px;
-  /* z-index: 100; */
-  max-height: 300px;
-  overflow-y: auto;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-}
-
-.customDropdownOption {
-  display: flex;
-  align-items: center;
-  padding: 10px 12px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.customDropdownOption.disabled {
-  color: #aaa;
-  cursor: not-allowed;
-  background: #f9f9f9;
-}
-
-.tab {
-  padding: 10px 22px 10px 16px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  border-radius: 10px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  position: relative;
-}
-
 .missingTabs {
   border-radius: var(--Corner-Radius-Small-Roundness, 8px);
   border: 1px solid rgba(89, 38, 240, 0.3);
@@ -169,73 +246,148 @@
   letter-spacing: -0.14px;
 }
 
-.tab img {
-  height: 35px;
-  width: 35px;
-  object-fit: contain;
-  margin-bottom: -5px;
+.missingTabs .label {
+  font-family: Inter, sans-serif;
+  font-weight: inherit;
+  line-height: 1.5;
+  letter-spacing: -0.42px;
+  color: inherit;
 }
 
-.tab:hover {
-  background-color: #e9e9e9;
+.profileCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid #eff1f6;
+  background: #fff;
+  box-shadow: 0px 1px 2px 0px rgba(27, 31, 42, 0.04);
 }
 
-.active {
-  background: linear-gradient(296deg, #5926f0 2.47%, #4828a0 99.3%);
-  color: white;
-}
-
-.active:hover {
-  background-color: #5021da;
-}
-
-.tab.disabled {
-  cursor: not-allowed;
-  background-color: #e0e0e0;
-  position: relative;
-}
-
-.tab.disabled::before {
-  content: 'Please complete your "Basic Info" first.';
-  position: absolute;
-  top: 0;
-  left: 0;
-  padding: 10px 10px;
-  right: 0;
-  bottom: 0;
-  border-radius: 10px;
-  background-color: #5926f0;
-  color: white;
-  font-size: 0.8rem;
-  font-weight: 500;
+.avatar {
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0;
-  transition: 250ms all;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 15px;
+  background: #f2eeff;
+  color: #5926f0;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.2;
 }
 
-.tab.disabled.kyc::before {
-  content: "Please Verify Your Identity Before Using Instapay";
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  letter-spacing: -0.42px;
 }
 
-.tab.disabled:hover::before {
-  opacity: 1;
+.profileName {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #1b1f2a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profileMeta {
+  margin: 0;
+  font-weight: 400;
+  color: #6e7687;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mobileGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobileGroupLabel {
+  margin: 0;
+  padding-left: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.36px;
+  color: #6e7687;
+}
+
+.mobileList {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid #eff1f6;
+  background: #fff;
+  box-shadow: 0px 1px 2px 0px rgba(27, 31, 42, 0.04);
+}
+
+.mobileRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 12px 14px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.42px;
+  color: #1b1f2a;
+  cursor: pointer;
+}
+
+.mobileRow + .mobileRow {
+  border-top: 1px solid #eff1f6;
+}
+
+.mobileRow.active {
+  background: #f2eeff;
+  color: #5926f0;
+  font-weight: 600;
+}
+
+.mobileRow.disabled {
+  color: #aaa;
+  cursor: not-allowed;
+  background: #f9f9f9;
+}
+
+.rowValue {
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.42px;
+  color: #9aa3b2;
+  white-space: nowrap;
+}
+
+.caret {
+  flex-shrink: 0;
+  color: #9aa3b2;
 }
 
 @media screen and (max-width: 1000px) {
   .container {
+    position: static;
     flex-direction: column;
     margin-bottom: 2rem;
-    top: 0;
-    padding-top: 1rem;
-    background-color: #ffffffd8;
-    backdrop-filter: blur(10px);
-    padding-bottom: 0.5rem;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
     width: 100%;
-  }
-
-  .tab {
-    white-space: nowrap;
   }
 }

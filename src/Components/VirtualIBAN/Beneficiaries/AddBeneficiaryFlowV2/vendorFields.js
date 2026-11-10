@@ -99,7 +99,7 @@ export const THUNES_IDENTIFIER_FIELDS = {
   bik_code: { label: "BIK code", type: "text", alphanumeric: true },
   ifs_code: {
     label: "IFSC code",
-    type: "text",
+    type: "ifsc",
     alphanumeric: true,
     uppercase: true,
   },
@@ -110,7 +110,7 @@ export const THUNES_IDENTIFIER_FIELDS = {
     alphanumeric: true,
   },
   routing_code: { label: "Routing code", type: "text", alphanumeric: true },
-  bsb_number: { label: "BSB number", type: "text", alphanumeric: true },
+  bsb_number: { label: "BSB number", type: "bsb_number" },
   branch_number: { label: "Branch number", type: "text", alphanumeric: true },
   entity_tt_id: { label: "Entity ID", type: "text" },
   account_type: {
@@ -232,6 +232,13 @@ export const BVNK_FIELD_DEFS = {
     placeholder: "0x8f3A...c21E",
     hint: "Sending on the wrong network loses the funds.",
   },
+  registration_number: {
+    label: "Registration number",
+    type: "text",
+    required: true,
+    placeholder: "e.g. 12345678",
+    hint: "Required by the payout provider for crypto payouts.",
+  },
 };
 
 const BVNK_ADDRESS_FIELDS = ["address", "address_line_2", "city", "province_state", "postal_code"];
@@ -268,8 +275,10 @@ const BVNK_SWIFT = {
   ],
 };
 
+/* Unmapped beneficiary fields travel in extras, which is where the provider reads it. */
 const BVNK_CRYPTO = {
-  beneficiary: [],
+  beneficiary: ["registration_number"],
+  requiredBeneficiary: ["registration_number"],
   channel: ["crypto_asset", "crypto_network", "wallet_address"],
   requiredChannel: ["crypto_asset", "crypto_network", "wallet_address"],
 };

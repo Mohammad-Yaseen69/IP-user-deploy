@@ -3,7 +3,8 @@ import { Col, Modal, ModalBody, ModalHeader, Row } from "reactstrap";
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../Context/UserContext";
-import { FileText, Info, ChevronRight } from "react-feather";
+import { FileText, Info, ChevronRight, Type } from "react-feather";
+import { getPendingAdditionalFiles, MASTERCARD_PURPOSE } from "../utils/Functions/additionalFiles";
 
 const AdditionalDocumentModal = ({ isOpen, toggle, accounType }) => {
   const navigate = useNavigate();
@@ -11,22 +12,12 @@ const AdditionalDocumentModal = ({ isOpen, toggle, accounType }) => {
   const { userDetails } = useContext(UserContext);
 
   const accountType = userDetails?.account_type || accounType;
-  const allFiles =
-    accountType === "individual"
-      ? userDetails?.user?.kyc_additional_file
-      : userDetails?.company?.kyb_additional_file;
+  // Required items are handled by the blocking ForcedAdditionalFilesModal;
+  // this reminder only lists the optional (non-required) pending ones.
+  const { optional } = getPendingAdditionalFiles({ ...userDetails, account_type: accountType });
 
-  const mastercardFiles = (allFiles || []).filter(
-    (item) =>
-      item?.purpose === "mastercard_kyc" &&
-      (item?.status === "requested" || item?.status === "decline" || item?.status === "declined"),
-  );
-
-  const otherFiles = (allFiles || []).filter(
-    (item) =>
-      item?.purpose !== "mastercard_kyc" &&
-      (item?.status === "requested" || item?.status === "decline" || item?.status === "declined"),
-  );
+  const mastercardFiles = optional.filter((item) => item?.purpose === MASTERCARD_PURPOSE);
+  const otherFiles = optional.filter((item) => item?.purpose !== MASTERCARD_PURPOSE);
 
   const showMastercardOnly = mastercardFiles.length > 0;
   const requestedFiles = showMastercardOnly ? mastercardFiles : otherFiles;
@@ -44,7 +35,7 @@ const AdditionalDocumentModal = ({ isOpen, toggle, accounType }) => {
     <Modal centered isOpen={isOpen} toggle={toggle}>
       <ModalHeader toggle={toggle} className="border-bottom-0 pb-0">
         <span style={{ fontWeight: "700", fontSize: "18px", color: "#0f172a" }}>
-          {t("Additional Documents Requested")}
+          {t("Additional Information Requested")}
         </span>
       </ModalHeader>
       <ModalBody style={{ padding: "20px" }}>
@@ -74,8 +65,8 @@ const AdditionalDocumentModal = ({ isOpen, toggle, accounType }) => {
                   }}
                 >
                   {accountType === "individual"
-                    ? t("KYC Additional Documents Needed")
-                    : t("KYB Additional Documents Needed")}
+                    ? t("Additional Information Needed")
+                    : t("Additional Information Needed")}
                 </h6>
                 <p
                   style={{
@@ -86,7 +77,7 @@ const AdditionalDocumentModal = ({ isOpen, toggle, accounType }) => {
                   }}
                 >
                   {t(
-                    "The administrator has requested files to complete your verification process. Please upload the requested files as soon as possible.",
+                    "The administrator has requested some additional information in order to keep your account active. Please provide the requested details and documents as soon as possible.",
                   )}
                 </p>
               </div>
@@ -104,7 +95,7 @@ const AdditionalDocumentModal = ({ isOpen, toggle, accounType }) => {
                 marginBottom: "10px",
               }}
             >
-              {t("Requested Files List")} ({requestedFiles.length})
+              {t("Requested Information List")} ({requestedFiles.length})
             </div>
 
             {requestedFiles.length > 0 ? (
@@ -150,7 +141,7 @@ const AdditionalDocumentModal = ({ isOpen, toggle, accounType }) => {
                           flexShrink: 0,
                         }}
                       >
-                        <FileText size={16} />
+                        {file.input_type === "text" ? <Type size={16} /> : <FileText size={16} />}
                       </div>
                       <div style={{ minWidth: 0, flex: 1 }}>
                         <div
@@ -163,7 +154,7 @@ const AdditionalDocumentModal = ({ isOpen, toggle, accounType }) => {
                             whiteSpace: "nowrap",
                           }}
                         >
-                          {file.document_type || t("Additional Document")}
+                          {file.document_type || t("Additional Information")}
                         </div>
                         {file.desc && (
                           <div
@@ -191,23 +182,6 @@ const AdditionalDocumentModal = ({ isOpen, toggle, accounType }) => {
                         marginLeft: "10px",
                       }}
                     >
-                      {file.isRequired && (
-                        <span
-                          style={{
-                            backgroundColor: "#fee2e2",
-                            color: "#ef4444",
-                            fontWeight: "600",
-                            fontSize: "10px",
-                            padding: "3px 6px",
-                            borderRadius: "4px",
-                            border: "1px solid #fecaca",
-                            textTransform: "uppercase",
-                            letterSpacing: "0.02em",
-                          }}
-                        >
-                          {t("Urgent")}
-                        </span>
-                      )}
                       {file.status === "requested" ? (
                         <span
                           style={{
@@ -257,7 +231,7 @@ const AdditionalDocumentModal = ({ isOpen, toggle, accounType }) => {
                   fontSize: "12px",
                 }}
               >
-                {t("No requested files found.")}
+                {t("No requested information found.")}
               </div>
             )}
           </Col>
@@ -293,7 +267,7 @@ const AdditionalDocumentModal = ({ isOpen, toggle, accounType }) => {
                 e.currentTarget.style.boxShadow = "0 4px 12px rgba(89, 38, 240, 0.2)";
               }}
             >
-              {t("Upload Documents")}
+              {t("View Requested Information")}
               <ChevronRight size={16} />
             </button>
           </Col>

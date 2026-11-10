@@ -293,9 +293,9 @@ const UserState = ({ children }) => {
           if (isKycMissing) {
             setMissingTabsData((prev) => (prev.includes("kyc") ? prev : [...prev, "kyc"]));
           }
-          if (!decrypted?.insta_username && !decrypted?.telegram_bot) {
-            setMissingTabsData((prev) => (prev.includes("social") ? prev : [...prev, "social"]));
-          }
+          // if (!decrypted?.insta_username && !decrypted?.telegram_bot) {
+          //   setMissingTabsData((prev) => (prev.includes("social") ? prev : [...prev, "social"]));
+          // }
 
           return decrypted;
         })
@@ -432,6 +432,7 @@ const UserState = ({ children }) => {
   };
 
   const getUserWallets = (dontSort) => {
+    if (!userDetails?._id) return;
     axios
       .get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-user-wallet/${userDetails?._id}`, {
         headers: authHeader,
@@ -482,6 +483,7 @@ const UserState = ({ children }) => {
     }
   };
   useEffect(() => {
+    if (!userDetails?._id) return;
     if (userDetails?._id /*&& userWallets.length === 0*/) {
       getUserWallets();
       getPAddressDets();

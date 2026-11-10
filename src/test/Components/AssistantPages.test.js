@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { PAGES, getPageById } from "../../Components/AssistantWidget/knowledge/pages";
+import { PAGES, canOpenPage, getPageById } from "../../Components/AssistantWidget/knowledge/pages";
 
 describe("assistant page registry", () => {
   it("has a unique id for every page", () => {
@@ -41,5 +41,30 @@ describe("assistant page registry", () => {
   it("keeps deep-link query strings intact", () => {
     expect(getPageById("send_money")?.route).toBe("/payments?payment_action=send_money");
     expect(getPageById("verification")?.route).toBe("/settings?tab=verification");
+  });
+});
+
+describe("canOpenPage", () => {
+  const allow = () => true;
+  const individual = { account_type: "individual" };
+  const business = { account_type: "business" };
+
+  it("keeps account-type pages to their account type", () => {
+    expect(canOpenPage(getPageById("delegate_access"), individual, allow)).toBe(false);
+    expect(canOpenPage(getPageById("delegate_access"), business, allow)).toBe(true);
+    expect(canOpenPage(getPageById("verification"), business, allow)).toBe(false);
+    expect(canOpenPage(getPageById("business_verification"), individual, allow)).toBe(false);
+  });
+
+  it("needs the third-party flag for third-party senders", () => {
+    const page = getPageById("third_party_senders");
+    expect(canOpenPage(page, individual, allow)).toBe(false);
+    expect(canOpenPage(page, { ...individual, isThirdPartyAllowed: true }, allow)).toBe(true);
+  });
+
+  it("treats a permission array as any-of", () => {
+    const page = getPageById("send_money");
+    expect(canOpenPage(page, business, (key) => key === "payments.qr.send")).toBe(true);
+    expect(canOpenPage(page, business, () => false)).toBe(false);
   });
 });

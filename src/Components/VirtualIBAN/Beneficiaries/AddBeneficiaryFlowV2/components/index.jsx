@@ -214,7 +214,10 @@ export const ContextCard = ({ initial, icon, name, meta, actionLabel, onAction }
 );
 
 export const FieldLabel = ({ children, htmlFor }) => (
-  <label className={styles.fieldLabel} htmlFor={htmlFor}>
+  <label
+    className={`${styles.fieldLabel} d-flex align-items-center justify-content-between`}
+    htmlFor={htmlFor}
+  >
     {children}
   </label>
 );
@@ -250,7 +253,16 @@ export const TextField = ({
   maxLength,
 }) => (
   <div className={`${styles.field} ${flex ? styles.fieldFlex : ""}`}>
-    {label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
+    {label && (
+      <FieldLabel htmlFor={id}>
+        {label}{" "}
+        {maxLength && (
+          <span className="text-secondary">
+            {value?.length}/{maxLength}
+          </span>
+        )}
+      </FieldLabel>
+    )}
     <div className={`${styles.inputShell} ${error ? styles.inputShellError : ""}`}>
       <input
         id={id}
@@ -293,12 +305,14 @@ export const SelectField = ({
         disabled={disabled}
         onChange={(event) => onChange && onChange(event.target.value)}
       >
-        <option value="">{placeholder}</option>
+        <option className={styles.options} value="">
+          {placeholder}
+        </option>
         {options.map((option) => {
           const optionValue = typeof option === "string" ? option : option.value;
           const optionLabel = typeof option === "string" ? option : option.label;
           return (
-            <option key={optionValue} value={optionValue}>
+            <option key={optionValue} className={styles.options} value={optionValue}>
               {optionLabel}
             </option>
           );

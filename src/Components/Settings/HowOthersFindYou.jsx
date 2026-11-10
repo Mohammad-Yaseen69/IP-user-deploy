@@ -1,17 +1,24 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Button, Card, CardBody, CardHeader } from "reactstrap";
-import { H4, H5 } from "../../AbstractElements";
-import { CheckCircle } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../Context/UserContext";
 import axios from "axios";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
-import styles from "./styles/NotifTable.module.css";
+import styles from "./styles/HowOthersFindYou.module.scss";
 import { toast } from "react-toastify";
 import Switch from "./Switch";
-import { Toggle } from "../MyMasterCard/CardPurchased";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
+import CountryBasedPhone from "../PhoneInput/PhoneNumberBasedOnCountry.json";
+import {
+  AtSmall,
+  CheckCircle,
+  EnvelopeSimpleSmall,
+  EyeSmall,
+  Info,
+  PhoneSmall,
+  UserSmall,
+} from "./Icons";
+import { maskEmail, maskPhone } from "../../utils/Functions/maskContact";
 
 const HowOthersFindYou = () => {
   const { t } = useTranslation();
@@ -22,42 +29,10 @@ const HowOthersFindYou = () => {
   const [usernameActive, setUsernameActive] = useState(true);
   const can = usePermission();
   const isEdit = can("settings.how-others-find-you.update");
-  // const switchStyle = {
-  //     display: 'inline-block',
-  //     width: '80px',
-  //     height: '36px',
-  //     backgroundColor: "#ededed",
-  //     borderRadius: '100px',
-  //     position: 'relative',
-  //     cursor: 'pointer',
-  // };
-
-  // const emailThumbStyle = {
-  //     width: '20px',
-  //     height: '20px',
-  //     backgroundColor: emailActive ? "#1fd531" : "#fd0d1b",
-  //     borderRadius: '50%',
-  //     position: 'absolute',
-  //     top: '8px',
-  //     left: emailActive ? '53px' : '7px',
-  //     transition: 'left 0.2s'
-  // };
-
-  // const smsThumbStyle = {
-  //     width: '20px',
-  //     height: '20px',
-  //     backgroundColor: phoneActive ? "#1fd531" : "#fd0d1b",
-  //     borderRadius: '50%',
-  //     position: 'absolute',
-  //     top: '8px',
-  //     left: phoneActive ? '53px' : '7px',
-  //     transition: 'left 0.2s'
-  // };
 
   const [editMode, setEditMode] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-  // const [firstTime, setFirstTime] = useState(true)
 
   // will be used later to get info
   useEffect(() => {
@@ -66,11 +41,6 @@ const HowOthersFindYou = () => {
       setEmailActive(userDetails?.isEmailSearch ?? false);
       setNameActive(userDetails?.isNameSearch ?? true);
       setUsernameActive(userDetails?.isUsernameSearch ?? true);
-      // if (typeof userDetails?.sms_verification == "undefined" || typeof userDetails?.email_verification == "undefined") {
-      //     setFirstTime(true)
-      // } else {
-      //     setFirstTime(false)
-      // }
     }
   }, [userDetails]);
 
@@ -112,153 +82,161 @@ const HowOthersFindYou = () => {
       setIsSaving(false);
     }
   };
+
+  const isIndividualAccount = userDetails?.account_type?.toLowerCase() === "individual";
+  const displayName = isIndividualAccount
+    ? `${userDetails?.user?.first_name ?? ""} ${userDetails?.user?.last_name ?? ""}`.trim()
+    : (userDetails?.company?.company_name ?? "");
+  const initials = displayName
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word[0])
+    .join("")
+    .toUpperCase();
+  const photo = userDetails?.profileImage?.url;
+  const dialCode = CountryBasedPhone?.[userDetails?.country_iso_code]?.dial_code;
+  const username = userDetails?.username ? `@${userDetails.username}` : "";
+
+  const searchableBy = [
+    emailActive && t("Email"),
+    phoneActive && t("Phone"),
+    nameActive && t("Name"),
+    usernameActive && t("Username"),
+  ].filter(Boolean);
+
+  const rows = [
+    userDetails?.email
+      ? {
+          key: "email",
+          icon: <EnvelopeSimpleSmall />,
+          title: t("Email address"),
+          detail: maskEmail(userDetails.email),
+          toggle: (
+            <Switch
+              checked={emailActive}
+              callback={(e) => setEmailActive(!emailActive)}
+              disabled={!editMode || isSaving}
+            />
+          ),
+        }
+      : null,
+    userDetails?.phone
+      ? {
+          key: "phone",
+          icon: <PhoneSmall />,
+          title: t("Phone number"),
+          detail: maskPhone(userDetails.phone, dialCode),
+          toggle: (
+            <Switch
+              checked={phoneActive}
+              callback={(e) => setPhoneActive(e.target.checked)}
+              disabled={!editMode || isSaving}
+            />
+          ),
+        }
+      : null,
+    {
+      key: "name",
+      icon: <UserSmall />,
+      title: t("Full name"),
+      detail: displayName,
+      toggle: <Switch checked={nameActive} disabled />,
+    },
+    {
+      key: "username",
+      icon: <AtSmall />,
+      title: t("Username"),
+      detail: username,
+      toggle: <Switch checked={usernameActive} disabled />,
+    },
+  ].filter(Boolean);
+
   return (
-    <Card id="two_factor">
-      <CardHeader className={`pb-0`}>
-        <H4 attrH4={{ className: "card-title mb-0" }}>{t("How Others Can Find You")}</H4>
-      </CardHeader>
-      <CardBody style={{ overflowX: "auto" }}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th style={{ width: "100%" }}>{t("Source")}</th>
-              <th>{t("Status")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style={{ width: "100%" }} data-label="Email Address">
-                {t("Email Address")}
-              </td>
-              <td data-label={t("Email Address")}>
-                <Toggle
-                  checked={emailActive}
-                  onChange={(e) => setEmailActive(!emailActive)}
-                  disabled={!editMode || isSaving}
-                />{" "}
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: "100%" }} data-label="Phone Number">
-                {t("Phone Number")}
-              </td>
-              <td data-label={t("Phone Number")}>
-                <Toggle
-                  checked={phoneActive}
-                  onChange={(e) => setPhoneActive(e.target.checked)}
-                  disabled={!editMode || isSaving}
-                />{" "}
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: "100%" }} data-label="Name">
-                {t("Name")}
-              </td>
-              <td data-label={t("Name")}>
-                <Toggle checked={nameActive} />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: "100%" }} data-label="Username">
-                {t("Username")}
-              </td>
-              <td data-label={t("Username")}>
-                <Toggle checked={usernameActive} />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        {/* <div style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    gap: "1rem",
-                    flexWrap: "wrap",
-                    marginBottom: "1.5rem"
-                }}>
-                    <div>
-                        <H5>{t("Email Address")}</H5>
-                    </div>
-                    <div style={switchStyle} onClick={() => {
-                        if (!phoneActive || !editMode || firstTime) return;
+    <div className={styles.container} id="two_factor">
+      <div className={styles.sectionHeader}>
+        <div className={styles.sectionText}>
+          <h4 className={styles.sectionTitle}>{t("How people find you")}</h4>
+          <p className={styles.sectionSubtitle}>
+            {t("Choose what people can search to find and pay you.")}
+          </p>
+        </div>
+      </div>
 
-                        setEmailActive(!emailActive)
-                    }}>
-                        <div style={emailThumbStyle}></div>
-                    </div>
+      <section className={styles.card}>
+        <div className={styles.preview}>
+          <p className={styles.previewLabel}>
+            <EyeSmall />
+            {t("What others see in search")}
+          </p>
+          <div className={styles.result}>
+            <span className={styles.avatar}>{photo ? <img src={photo} alt="" /> : initials}</span>
+            <div className={styles.resultText}>
+              <p className={styles.resultName}>{displayName}</p>
+              {username && <p className={styles.resultUsername}>{username}</p>}
+              {searchableBy.length > 0 && (
+                <div className={styles.pills}>
+                  {searchableBy.map((label) => (
+                    <span key={label} className={styles.pill}>
+                      {label}
+                    </span>
+                  ))}
                 </div>
-                <div style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    gap: "1rem",
-                    flexWrap: "wrap",
-                }}>
-                    <div>
-                        <H5>{t("Phone Number")}</H5>
-                    </div>
-                    <div style={switchStyle} onClick={() => {
-                        if (!emailActive || !editMode || firstTime) return;
+              )}
+            </div>
+          </div>
+        </div>
 
-                        setPhoneActive(!phoneActive)
-                    }}>
-                        <div style={smsThumbStyle}></div>
-                    </div>
-                </div> */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginTop: "2.5rem",
-          }}
-        >
+        <div className={styles.rows}>
+          {rows.map((row) => (
+            <div key={row.key} className={styles.row}>
+              <span className={styles.tile}>{row.icon}</span>
+              <div className={styles.rowText}>
+                <p className={styles.rowTitle}>{row.title}</p>
+                {row.detail && <p className={styles.rowSubtitle}>{row.detail}</p>}
+              </div>
+              {row.toggle}
+            </div>
+          ))}
+        </div>
+
+        <div className={styles.cardFooter}>
           {editMode ? (
             <>
               {saved ? (
-                <Button
-                  style={{
-                    borderRadius: "10px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: ".75rem",
-                  }}
-                  color="success"
-                >
-                  <CheckCircle size={18} color="white" />
+                <button type="button" className={`${styles.button} ${styles.buttonSuccess}`}>
+                  <CheckCircle color="#047857" />
                   {t("Updated Successfully!")}
-                </Button>
+                </button>
               ) : (
-                <Button
-                  style={{
-                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                    border: "none",
-                    outline: "none",
-                    borderRadius: "10px",
-                  }}
+                <button
+                  type="button"
+                  className={`${styles.button} ${styles.buttonPrimary}`}
                   disabled={isSaving}
                   onClick={updateHandler}
                 >
                   {isSaving ? t("Updating") : t("Update")}
-                </Button>
+                </button>
               )}
             </>
           ) : (
-            <Button
+            <button
+              type="button"
+              className={`${styles.button} ${styles.buttonPrimary}`}
               disabled={!isEdit}
-              style={{
-                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                border: "none",
-                outline: "none",
-                borderRadius: "10px",
-              }}
               onClick={() => setEditMode(true)}
             >
               {t("Edit")}
-            </Button>
+            </button>
           )}
         </div>
-      </CardBody>
-    </Card>
+      </section>
+
+      <div className={styles.note}>
+        <Info />
+        <p>{t("Email or phone must stay on. People can still pay you with your payment link.")}</p>
+      </div>
+    </div>
   );
 };
 

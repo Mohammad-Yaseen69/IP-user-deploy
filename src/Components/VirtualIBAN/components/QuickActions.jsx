@@ -92,6 +92,12 @@ const QuickActions = ({ selectedIban }) => {
   const location = useLocation();
   useEffect(() => {
     const action = new URLSearchParams(location.search).get("action");
+    // Unsubscribe stays usable on a paused or unsubscribed IBAN, unlike the others.
+    if (action === "unsubscribe") {
+      if (can("virtual-iban.status.update") && !getActionRestriction(UNSUBSCRIBE_ACTION_ID))
+        openModal("unsubscribe");
+      return;
+    }
     if (!action || isBlocked || isFrozen || isUserBlocked) return;
     if (action === "deposit" && can("virtual-iban.details.view")) openModal("deposit");
     else if (action === "convert" && can("virtual-iban.funds.convert")) openModal("convertFunds");

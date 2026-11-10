@@ -29,6 +29,7 @@ const PhoneNumber = ({
         all: "unset",
         fontWeight: 700,
         paddingRight: "1rem",
+        width: "100%",
         ...styles,
         // padding: "12px",
         // borderRadius: "0.375rem"

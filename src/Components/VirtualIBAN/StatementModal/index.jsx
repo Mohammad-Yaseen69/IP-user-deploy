@@ -7,14 +7,21 @@ import "jspdf-autotable";
 import { toast } from "react-toastify";
 import styles from "./statementModal.module.scss";
 import logoImg from "../../../assets/images/logo/logo2.webp";
-import { exportToExcel } from "../../../utils/Functions/csvExport";
-import { service_name_formatter } from "../../TransactionsNewApi/TransactionItem";
+import {
+  downloadIbanStatementCsv,
+  formatMoney,
+  getTxDate,
+  toStatementRecord,
+} from "./ibanStatementExport";
 import { UserContext } from "../../../Context/UserContext";
 import { useVirtualIbans } from "../../../hooks/useVirtualIban";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 import { normalizeVirtualIban } from "../utils/virtualIban";
 
-const PERIODS = ["This month", "Last month", "Last 90 days", "Custom"];
+const PERIODS = ["This month", "Last month", "Last 90 days", "All", "Custom"];
+
+// Backend caps `limit` at 100 per page (parsePagination in Virtual-IBAN.controller.js).
+const PAGE_LIMIT = 100;
 
 const FORMATS = [
   {
@@ -51,51 +58,90 @@ const toBase64 = (src) =>
     image.src = src;
   });
 
-const renderRecipientName = (tx) => {
-  if (tx?.virtual_iban?.account_holder_name) return tx.virtual_iban.account_holder_name;
-  if (tx?.guest_details?.name) return tx.guest_details.name;
-  if (tx?.recipient_name) return tx.recipient_name;
-  if (tx?.account?.user?.first_name || tx?.account?.user?.last_name) {
-    return `${tx.account.user.first_name || ""} ${tx.account.user.last_name || ""}`.trim();
-  }
-  if (tx?.sender?.user?.first_name || tx?.sender?.user?.last_name) {
-    return `${tx.sender.user.first_name || ""} ${tx.sender.user.last_name || ""}`.trim();
-  }
-  return tx?.description || tx?.client_reference || "N/A";
+// YYYY-MM-DD in the user's local timezone (toISOString would shift the day for non-UTC users).
+const toLocalIsoDate = (date) =>
+  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+
+const startOfDay = (date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+const endOfDay = (date) =>
+  new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
+
+// <input type="date"> gives "YYYY-MM-DD"; parse it as a LOCAL date, not UTC midnight.
+const parseLocalDate = (value) => {
+  if (!value) return null;
+  const [y, m, d] = value.split("-").map(Number);
+  if (!y || !m || !d) return null;
+  return new Date(y, m - 1, d);
 };
 
-const renderPaymentType = (item) => {
-  if (item?.payment_type) {
-    return service_name_formatter ? service_name_formatter(item.payment_type) : item.payment_type;
-  }
-  if (item?.type) {
-    return item.type
-      .split("_")
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(" ");
-  }
-  return "SEPA Transfer";
-};
-
+// Returns null dates for "All" (no filtering).
 const getDateRange = (periodKey, customFrom, customTo) => {
   const now = new Date();
-  let startDate = new Date();
-  let endDate = new Date();
 
-  if (periodKey === "This month") {
-    startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-    endDate = new Date();
-  } else if (periodKey === "Last month") {
-    startDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    endDate = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
-  } else if (periodKey === "Last 90 days") {
-    startDate = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
-    endDate = new Date();
-  } else if (periodKey === "Custom") {
-    startDate = customFrom ? new Date(customFrom) : new Date(now.getFullYear(), now.getMonth(), 1);
-    endDate = customTo ? new Date(customTo + "T23:59:59") : new Date();
+  if (periodKey === "All") return { startDate: null, endDate: null };
+
+  if (periodKey === "Last month") {
+    return {
+      startDate: new Date(now.getFullYear(), now.getMonth() - 1, 1),
+      endDate: new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999),
+    };
   }
-  return { startDate, endDate };
+  if (periodKey === "Last 90 days") {
+    return {
+      startDate: startOfDay(new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000)),
+      endDate: now,
+    };
+  }
+  if (periodKey === "Custom") {
+    const from = parseLocalDate(customFrom);
+    const to = parseLocalDate(customTo);
+    return {
+      startDate: from ? startOfDay(from) : new Date(now.getFullYear(), now.getMonth(), 1),
+      endDate: to ? endOfDay(to) : now,
+    };
+  }
+  // "This month"
+  return { startDate: new Date(now.getFullYear(), now.getMonth(), 1), endDate: now };
+};
+
+const extractItems = (res) => {
+  if (Array.isArray(res)) return res;
+  if (Array.isArray(res?.data)) return res.data;
+  if (Array.isArray(res?.items)) return res.items;
+  return [];
+};
+
+// The API is paginated (default 20, max 100) and has no date filter, so walk every page.
+// Results come newest-first, so we can stop once a page's oldest row is before `startDate`.
+const fetchAllIbanTransactions = async (ibanId, startDate) => {
+  const all = [];
+  let page = 1;
+  let totalPages = 1;
+
+  while (page <= totalPages) {
+    const params = new URLSearchParams({
+      iban_id: ibanId,
+      page: String(page),
+      limit: String(PAGE_LIMIT),
+      order: "desc",
+    });
+    const res = await apiWrapper({
+      endpoint: `/api/virtual-iban/transactions?${params.toString()}`,
+      method: "GET",
+    });
+    const items = extractItems(res);
+    if (!items.length) break;
+
+    all.push(...items);
+    totalPages = Number(res?.pagination?.totalPages) || 1;
+
+    const oldest = getTxDate(items[items.length - 1]);
+    if (startDate && !Number.isNaN(oldest.getTime()) && oldest < startDate) break;
+
+    page += 1;
+  }
+
+  return all;
 };
 
 const StatementModal = ({ isOpen, toggle, selectedIban }) => {
@@ -130,31 +176,24 @@ const StatementModal = ({ isOpen, toggle, selectedIban }) => {
     setIsDownloading(true);
 
     try {
-      const res = await apiWrapper({
-        endpoint: `/api/virtual-iban/transactions?iban_id=${ibanId}`,
-        method: "GET",
-      });
-      console.log(res, "res");
-      let rawList = [];
-      if (Array.isArray(res)) rawList = res;
-      else if (res && res.data && Array.isArray(res.data)) rawList = res.data;
-      else if (res && Array.isArray(res.items)) rawList = res.items;
-      const filteredTransactions = rawList.filter((tx) => {
-        const rawDate = tx?.createdAt || tx?.date;
-        const txDate = new Date(rawDate);
+      const rawList = await fetchAllIbanTransactions(ibanId, startDate);
+      const isAll = !startDate && !endDate;
 
-        console.log("CHECKING TRANSACTION:", {
-          id: tx?._id,
-          rawDate,
-          txDate,
-          startDate,
-          endDate,
-          isValidDate: !isNaN(txDate.getTime()),
-          isInRange: txDate >= startDate && txDate <= endDate,
-        });
+      const filteredTransactions = isAll
+        ? rawList
+        : rawList.filter((tx) => {
+            const txDate = getTxDate(tx);
+            return !isNaN(txDate.getTime()) && txDate >= startDate && txDate <= endDate;
+          });
 
-        return !isNaN(txDate.getTime()) && txDate >= startDate && txDate <= endDate;
-      });
+      // For "All", print/label the statement with the real span of the transactions.
+      const validDates = filteredTransactions
+        .map(getTxDate)
+        .filter((d) => !isNaN(d.getTime()))
+        .map((d) => d.getTime());
+      const periodStart =
+        startDate || (validDates.length ? new Date(Math.min(...validDates)) : new Date());
+      const periodEnd = endDate || new Date();
 
       if (filteredTransactions.length === 0) {
         setDownloadError(t("No transactions found within the selected period!"));
@@ -162,6 +201,9 @@ const StatementModal = ({ isOpen, toggle, selectedIban }) => {
         setIsDownloading(false);
         return;
       }
+
+      const cleanIban = (activeIban?.iban || "document").replace(/\s/g, "_");
+      const fileBase = `IBAN_Statement_${cleanIban}_${toLocalIsoDate(periodStart)}_to_${toLocalIsoDate(periodEnd)}`;
 
       if (format === "pdf") {
         const tableStyles = { fontSize: 7 };
@@ -199,7 +241,7 @@ const StatementModal = ({ isOpen, toggle, selectedIban }) => {
         doc.text(`Name: ${userName}`, 14, 40);
         doc.text(`Address: ${userAddr}`, 14, 45);
         doc.text(
-          `Statement Duration: ${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}`,
+          `Statement Duration: ${periodStart.toLocaleDateString()} to ${periodEnd.toLocaleDateString()}`,
           14,
           50,
         );
@@ -238,31 +280,18 @@ const StatementModal = ({ isOpen, toggle, selectedIban }) => {
             ],
           ],
           body: filteredTransactions.map((item) => {
-            const isDebit = (item?.transaction_type ?? "")?.toLowerCase() === "debit";
-            const currency = item?.currency || "EUR";
-
-            const amtStr = `${isDebit ? "-" : "+"}${item?.amount ? Number(item.amount).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"} ${currency}`;
-
-            const feeStr = `${Number(item?.fee ?? 0).toLocaleString("en-US", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })} ${currency}`;
-
-            const totalStr = `${Number(item?.total ?? 0).toLocaleString("en-US", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })} ${currency}`;
-
+            const r = toStatementRecord(item);
+            const sign = r.signedAmount < 0 ? "-" : "+";
             return [
-              new Date(item?.createdAt || item?.date)?.toLocaleString(),
-              item?.reference_id || item?.external_reference || item?._id || "N/A",
-              renderPaymentType(item),
-              item?.beneficiary?.name || renderRecipientName(item),
-              (item?.transaction_type || "TRANSFER").toUpperCase(),
-              amtStr,
-              feeStr,
-              totalStr,
-              (item?.status || "COMPLETED").toUpperCase(),
+              r.dateTime,
+              r.id,
+              r.paymentType,
+              r.recipient,
+              r.type,
+              `${sign}${formatMoney(Math.abs(r.signedAmount))} ${r.currency}`,
+              `${formatMoney(r.fee)} ${r.currency}`,
+              `${formatMoney(r.total)} ${r.currency}`,
+              r.status,
             ];
           }),
           startY: startY,
@@ -274,13 +303,10 @@ const StatementModal = ({ isOpen, toggle, selectedIban }) => {
           doc.autoTable(transactionsTable);
         }
 
-        const cleanIban = (ibanNum || "document").replace(/\s/g, "_");
-        doc.save(
-          `IBAN_Statement_${cleanIban}_${startDate.toISOString().split("T")[0]}_to_${endDate.toISOString().split("T")[0]}.pdf`,
-        );
+        doc.save(`${fileBase}.pdf`);
         toast.success(t("Statement downloaded successfully!"));
       } else {
-        await exportToExcel(filteredTransactions, userDetails, () => {}, false);
+        downloadIbanStatementCsv(filteredTransactions, `${fileBase}.csv`);
         toast.success(t("CSV Statement exported successfully!"));
       }
 

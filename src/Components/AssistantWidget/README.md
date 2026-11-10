@@ -83,19 +83,58 @@ users code-switch.
 Microphone access needs HTTPS or localhost. Where `isVoiceInputSupported()` is
 false the button simply is not rendered.
 
+## Launcher choreography
+
+The launcher is a gradient orb with a face, animated with framer-motion in
+four acts (`useLauncherChoreography`):
+
+1. **Waiting** — the orb stays hidden while anything modal covers the page:
+   Bootstrap/reactstrap modals, MUI modals and drawers, any
+   `[role=dialog][aria-modal=true]`, or a scroll lock on `body` (which the
+   custom forced-files modal sets). The layout opens several of these at sign-in,
+   and an intro played under a backdrop is an intro nobody sees. Two
+   `MutationObserver`s watch for them. The intro starts once the page has
+   finished loading (`window` `load`) and nothing has covered it for a quiet
+   period: `QUIET_MS` (2.5 s) on a clean load, because the browser is still
+   painting the dashboard and an earlier drop-in loses its frames; only
+   `QUIET_AFTER_MODAL_MS` (0.6 s) once something has covered the page, because
+   by the time a modal is dismissed the page has long settled. A modal opening
+   mid-intro sends the orb back here so the intro replays once it closes. The
+   beats (`QUIET_MS`, `QUIET_AFTER_MODAL_MS`, `BUBBLE_DELAY_MS`, `WINK_AT_MS`,
+   `WINK_MS`, `INTRO_MS`) are exported from the hook and the tests read them, so
+   retuning them does not break the tests.
+2. **Intro** — on every page load, the orb drops in from above and floats
+   mid-screen with a greeting bubble for about three seconds, winks one eye,
+   then docks into the corner. Clicking it opens the chat and ends the intro
+   early. Route changes do not replay it: the widget stays mounted in the
+   layout.
+3. **Docked** — the orb rests over the launcher button, which is a transparent
+   hit area, with an "Ask InstaPay" label beside it. Modals opened later cover
+   it like any other page content.
+4. **Open** — the panel fades and slides in from the right as an overlay; the
+   page behind it never shifts. The orb flies into the header slot, and back
+   again on close.
+
+Flight targets are measured from layout offsets (`offsetLeft`/`offsetTop`),
+not bounding rects, so the panel's entrance transform cannot skew where the
+orb lands, and RTL layouts need no special case. `prefers-reduced-motion`
+skips the intro and the idle bob and swaps the springs for short fades.
+
 ## Files
 
-| File                     | Role                                                    |
-| ------------------------ | ------------------------------------------------------- |
-| `index.jsx`              | Launcher, panel, composer, signed-in gate               |
-| `useAssistantSession.js` | Token handshake, refresh-and-retry on 401               |
-| `useAssistant.js`        | Conversation state, the call to ip-bot, history         |
-| `MessageList.jsx`        | Message rendering and starter prompts                   |
-| `useNavigationTool.js`   | Allowlist + permission check, then navigate             |
-| `useVoiceInput.js`       | Recording, container negotiation, transcription         |
-| `knowledge/pages.js`     | Page registry — the allowlist and the agent's page list |
-| `Icons.jsx`              | Inline icons                                            |
-| `styles.module.css`      | Styles                                                  |
+| File                         | Role                                                    |
+| ---------------------------- | ------------------------------------------------------- |
+| `index.jsx`                  | Launcher, panel, composer, signed-in gate               |
+| `Orb.jsx`                    | The orb: gradient sphere, eyes, idle float              |
+| `useLauncherChoreography.js` | Intro, dock and header flight — state and measurement   |
+| `useAssistantSession.js`     | Token handshake, refresh-and-retry on 401               |
+| `useAssistant.js`            | Conversation state, the call to ip-bot, history         |
+| `MessageList.jsx`            | Message rendering and starter prompts                   |
+| `useNavigationTool.js`       | Allowlist + permission check, then navigate             |
+| `useVoiceInput.js`           | Recording, container negotiation, transcription         |
+| `knowledge/pages.js`         | Page registry — the allowlist and the agent's page list |
+| `Icons.jsx`                  | Inline icons                                            |
+| `styles.module.css`          | Styles                                                  |
 
 Tests: `src/test/Components/` — registry integrity, navigation guards, voice
 input, and the chat flow.
@@ -127,10 +166,14 @@ Append to `PAGES` in `knowledge/pages.js`:
     id: "snake_case_id",
     title: "Human Readable",
     route: "/some-page?tab=x",   // stays in the browser
-    permission: "some.view",     // optional; omit if everyone may open it
+    permission: "some.view",     // optional; an array means any of them
     description: "What the page does, in prose — the agent reads this to decide when to offer it.",
 }
 ```
+
+Optional account flags: `agentOnly`, `businessOnly`, `individualOnly`, `thirdPartyOnly`.
+`canOpenPage` in `pages.js` applies all gates, for both the list and navigation.
+Keep descriptions to what and where; step-by-step how-to belongs in the user manual the bot searches.
 
 Nothing to redeploy on the bot side: the list is sent with each request. The
 registry tests fail on a duplicate id, a non-snake_case id, a relative route or

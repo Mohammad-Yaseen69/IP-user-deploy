@@ -51,7 +51,7 @@ export const prefillBeneficiaryBag = (beneficiary) => {
   return bag;
 };
 
-const EXTRAS_ALIASES = {
+export const EXTRAS_ALIASES = {
   firstname: ["firstname", "firstName"],
   lastname: ["lastname", "lastName"],
   legalName: ["legalName", "company_name"],
@@ -98,6 +98,7 @@ export const prefillEditBag = (beneficiary) => {
     state_name: firstValue(extras.state_name),
     postal_code: firstValue(beneficiary.zip_code, extras.postal_code, extras.beneficiaryPostal),
     date_of_birth: firstValue(beneficiary.date_of_birth, extras.date_of_birth),
+    registration_number: firstValue(extras.registration_number),
   };
 
   Object.keys(bag).forEach((key) => {

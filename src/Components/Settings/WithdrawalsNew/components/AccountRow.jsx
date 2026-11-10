@@ -1,8 +1,23 @@
 import { useEffect, useRef, useState } from "react";
-import { Edit2, MoreVertical, Star, Trash2 } from "react-feather";
 import { useTranslation } from "react-i18next";
-import { Icon } from "../../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/components";
-import styles from "../styles/WithdrawalsNew.module.css";
+import {
+  BankSmall,
+  Coins,
+  DeviceMobile,
+  DotsThreeVertical,
+  Money,
+  PencilSimple,
+  Star,
+  TrashSmall,
+} from "../../Icons";
+import styles from "../styles/Withdrawals.module.scss";
+
+const ROW_ICONS = {
+  bank: BankSmall,
+  "device-mobile": DeviceMobile,
+  money: Money,
+  coins: Coins,
+};
 
 const AccountRow = ({ row, canEdit, canDelete, onSetDefault, onEdit, onRemove }) => {
   const { t } = useTranslation();
@@ -28,11 +43,11 @@ const AccountRow = ({ row, canEdit, canDelete, onSetDefault, onEdit, onRemove })
     action(row);
   };
 
+  const RowIcon = ROW_ICONS[row.icon];
+
   return (
     <div className={styles.row}>
-      <span className={styles.rowIcon}>
-        <Icon name={row.icon} size={20} color="var(--abf-primary)" />
-      </span>
+      <span className={styles.tile}>{RowIcon && <RowIcon color="#6E7687" />}</span>
 
       <div className={styles.rowText}>
         <div className={styles.rowTitle}>
@@ -51,20 +66,20 @@ const AccountRow = ({ row, canEdit, canDelete, onSetDefault, onEdit, onRemove })
             aria-expanded={open}
             onClick={() => setOpen((prev) => !prev)}
           >
-            <MoreVertical size={18} />
+            <DotsThreeVertical />
           </button>
 
           {open && (
             <div className={styles.menu} role="menu">
               {canDefault && (
                 <button type="button" role="menuitem" onClick={pick(onSetDefault)}>
-                  <Star size={16} />
+                  <Star />
                   {t("Set as default")}
                 </button>
               )}
               {editable && (
                 <button type="button" role="menuitem" onClick={pick(onEdit)}>
-                  <Edit2 size={16} />
+                  <PencilSimple color="#6E7687" />
                   {t("Edit details")}
                 </button>
               )}
@@ -77,7 +92,7 @@ const AccountRow = ({ row, canEdit, canDelete, onSetDefault, onEdit, onRemove })
                     className={styles.menuDanger}
                     onClick={pick(onRemove)}
                   >
-                    <Trash2 size={16} />
+                    <TrashSmall color="#DC2626" size={16} />
                     {t("Remove account")}
                   </button>
                 </>

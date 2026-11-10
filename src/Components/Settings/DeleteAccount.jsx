@@ -1,20 +1,39 @@
 import React, { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { HelpCircle } from "react-feather";
-import { Button, Card, CardBody, CardHeader, Input } from "reactstrap";
-import { H4 } from "../../AbstractElements";
+import { Input, Label } from "reactstrap";
 import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
+import styles from "./styles/DeleteAccount.module.scss";
+import { CaretDown, CheckCircleMedium } from "./Icons";
+
+const PRE_CHECKS = [
+  { label: "Wallet balance is zero", value: "EGP 0.00" },
+  { label: "No open invoices", value: "0 open" },
+  { label: "No scheduled payments", value: "0 scheduled" },
+];
+
+const LEAVE_REASONS = [
+  "I no longer use InstaPay",
+  "I have another InstaPay account",
+  "Fees are too high",
+  "I'm worried about privacy or security",
+  "Something else",
+];
+
+const CONFIRM_WORD = "CLOSE";
 
 const DeleteAccount = () => {
-  const [check, setCheck] = useState(false);
+  const [reason, setReason] = useState("");
+  const [confirmText, setConfirmText] = useState("");
   const { t } = useTranslation();
   const navigate = useNavigate("");
 
   const { userDetails, authHeader } = useContext(UserContext);
+
+  const check = confirmText.trim() === CONFIRM_WORD;
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -40,80 +59,103 @@ const DeleteAccount = () => {
   const isEdit = can("settings.delete-account.delete");
 
   return (
-    <Card style={{ flexDirection: "column" }}>
-      <CardHeader style={{ padding: "30px 30px 0" }}>
-        <h4>{t("Delete Your Account")}</h4>
-      </CardHeader>
-      <CardBody style={{ padding: "0 30px 30px" }}>
-        <div style={{ flexDirection: "column" }} className="container p-sm-5 p-0">
-          <div className="mt-4">
-            <h4>{t("Ask us to delete your data and close this account")}</h4>
-            <p className="text-secondary">
-              {t(
-                "We use your data to provide services, so if we delete your data, we also need to close your account.",
-              )}
-            </p>
+    <div className={styles.container}>
+      <div className={styles.sectionHeader}>
+        <div className={styles.sectionText}>
+          <h4 className={styles.sectionTitle}>{t("Close account")}</h4>
+          <p className={styles.sectionSubtitle}>
+            {t("This permanently deletes your profile and stops all payments. It can't be undone.")}
+          </p>
+        </div>
+      </div>
+
+      <section className={styles.card}>
+        <div className={styles.cardHeader}>
+          <div className={styles.cardHeaderText}>
+            <h4 className={styles.cardTitle}>{t("Before you close")}</h4>
+            <p className={styles.cardSubtitle}>{t("All checks need to pass.")}</p>
           </div>
-          <div className="mt-4 mb-4">
-            {/* <h6>{t("Before you continue:")}</h6> */}
-            <ul
-              className="list-unstyled p-3 d-flex flex-column text-sm"
-              style={{ listStyleType: "disk" }}
-            >
-              <li style={{ textAlign: "left" }}>
-                {t(
-                  "If your account is limited, go to the Resolution Center, select 'Go to Account Limitations', then click 'Resolve'.",
-                )}
-              </li>
-              <li style={{ textAlign: "left" }}>
-                {t(
-                  "Make sure any outstanding payments have cleared. We won't be able to close your account until they do.",
-                )}
-              </li>
-              <li style={{ textAlign: "left" }}>
-                {t("If you have a negative balance, click the Resolve link next to your balance.")}
-              </li>
-            </ul>
+          <span className={styles.pill}>{t("Ready")}</span>
+        </div>
+        <div className={styles.checks}>
+          {PRE_CHECKS.map((item) => (
+            <div key={item.label} className={styles.checkRow}>
+              <CheckCircleMedium />
+              <p className={styles.checkLabel}>{t(item.label)}</p>
+              <p className={styles.checkValue}>{t(item.value)}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className={`${styles.card} ${styles.cardDanger}`}>
+        <div className={styles.cardHeader}>
+          <h4 className={styles.cardTitle}>{t("What happens next")}</h4>
+        </div>
+        <div className={styles.dangerBody}>
+          <ul className={styles.bullets}>
+            <li>{t("You'll be signed out everywhere and can't sign back in.")}</li>
+            <li>
+              {t("Your username @{{username}} is released after 90 days.", {
+                username: userDetails?.username ?? "",
+              })}
+            </li>
+            <li>{t("We keep transaction records for 10 years, as Swiss law requires.")}</li>
+          </ul>
+
+          <div className={styles.field}>
+            <Label className={styles.label} for="close-reason">
+              {t("Why are you leaving? (optional)")}
+            </Label>
+            <div className={`${styles.control} ${styles.withTrailingIcon}`}>
+              <Input
+                id="close-reason"
+                type="select"
+                className={reason ? "" : styles.placeholder}
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+              >
+                <option value="" disabled>
+                  {t("Choose a reason")}
+                </option>
+                {LEAVE_REASONS.map((item) => (
+                  <option key={item} value={item}>
+                    {t(item)}
+                  </option>
+                ))}
+              </Input>
+              <span className={styles.trailingIcon}>
+                <CaretDown />
+              </span>
+            </div>
           </div>
-          <div className="p-3 bg-light rounded-lg text-secondary mb-4">
-            {t(
-              "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need \nto retain some of your data for legal and regulatory reasons. To learn more, see our",
-            )}
-            &nbsp;
-            <span className="text-primary cursor-pointer">{t("privacy statement")}</span>
-            <br />
-            {t(
-              "We'll email you to let you know the status, and if there are any other steps you need to take.",
-            )}
-          </div>
-          <div className="d-flex align-items-center mt-2 gap-1">
-            {/* <span className="h2 inline-flex h-12 w-12 align-items-center justify-content-center"> */}
-            <HelpCircle size={16} />
-            {/* </span> */}
-            <span className="text-secondary">
-              {t("Have more questions about data deletion?")} &nbsp;
-              <Link to="/faq">
-                <span className="text-primary font-weight-bold cursor-pointer">
-                  {t("Contact us")}
-                </span>
-              </Link>
-            </span>
-          </div>
-          <div className="d-flex mt-3 gap-1">
-            <Input type="checkbox" checked={check} onChange={(e) => setCheck(e.target.checked)} />
-            <span className="text-secondary" onClick={() => setCheck(!check)}>
-              {t("I understand that account deletion is permanent and can't be reversed.")}
-            </span>
-          </div>
-          <div className="d-flex justify-content-center flex-column align-items-center gap-2 mt-4">
-            <span>{t("Are you sure you want to close your account?")}</span>
-            <Button color="danger" disabled={!check || !isEdit} onClick={deleteAccountHandler}>
-              {t("Yes, Continue")}
-            </Button>
+
+          <div className={`${styles.field} ${styles.fieldConfirm}`}>
+            <Label className={styles.label} for="close-confirm">
+              {t("Type CLOSE to confirm")}
+            </Label>
+            <Input
+              id="close-confirm"
+              placeholder={CONFIRM_WORD}
+              autoComplete="off"
+              value={confirmText}
+              onChange={(e) => setConfirmText(e.target.value)}
+            />
           </div>
         </div>
-      </CardBody>
-    </Card>
+
+        <div className={styles.cardFooter}>
+          <button
+            type="button"
+            className={styles.buttonDestructive}
+            disabled={!check || !isEdit}
+            onClick={deleteAccountHandler}
+          >
+            {t("Close my account")}
+          </button>
+        </div>
+      </section>
+    </div>
   );
 };
 

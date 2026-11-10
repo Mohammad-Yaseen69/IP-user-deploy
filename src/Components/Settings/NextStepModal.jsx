@@ -4,11 +4,13 @@ import { auth, bank, passport, social } from "./Modal_Icons";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 
 const NextStepModal = ({ isOpen, toggle, setCurrentTab }) => {
   const { missingTabsData, userDetails } = useContext(UserContext);
   const [data, setData] = useState([]);
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const steps = [
     {
@@ -27,6 +29,7 @@ const NextStepModal = ({ isOpen, toggle, setCurrentTab }) => {
       text: "Connect chatbot (Instagram/Telegram)",
       link: "My Social Network Accounts",
       icon: social,
+      route: "/pay-via-social",
       type: "social",
     },
     {
@@ -78,6 +81,10 @@ const NextStepModal = ({ isOpen, toggle, setCurrentTab }) => {
                 key={index}
                 className={styles.step}
                 onClick={() => {
+                  if (step?.route) {
+                    navigate(step?.route);
+                    return;
+                  }
                   toggle();
                   setCurrentTab(step.link);
                 }}

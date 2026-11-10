@@ -120,7 +120,7 @@ const CryptoFiat = () => {
             showDesc={true}
             active={true}
             sendPaymentType={true}
-            right="-2%"
+            imageStyle={{ right: "-2%" }}
           />
           <Card style={{ width: "100%", marginBottom: 0, paddingBottom: "1rem" }}>
             <CardBody

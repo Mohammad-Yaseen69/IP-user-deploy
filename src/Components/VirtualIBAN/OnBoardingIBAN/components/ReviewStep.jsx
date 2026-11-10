@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import styles from "../style/onboardingSteps.module.css";
 import StepProgress from "./StepProgress";
 import AlertBox from "./AlertBox";
+import RiskProfileCard from "./RiskProfileCard";
 import { useMediaQuery } from "@mui/material";
 
 const DOC_TITLE_MAP = {
@@ -267,35 +268,50 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType, currentS
               {activity.averageTransaction && (
                 <div className={styles.item}>
                   <label>{t("Average transaction")}</label>
-                  <span>{formatVal(activity.averageTransaction)} EUR</span>
+                  <span>
+                    {formatVal(activity.averageTransaction)}
+                    &nbsp;{t("EUR")}
+                  </span>
                 </div>
               )}
 
               {activity.maximumTransaction && (
                 <div className={styles.item}>
                   <label>{t("Maximum transaction")}</label>
-                  <span>{formatVal(activity.maximumTransaction)} EUR</span>
+                  <span>
+                    {formatVal(activity.maximumTransaction)}
+                    &nbsp;{t("EUR")}
+                  </span>
                 </div>
               )}
 
               {activity.averageBalance && (
                 <div className={styles.item}>
                   <label>{t("Average balance")}</label>
-                  <span>{formatVal(activity.averageBalance)} EUR</span>
+                  <span>
+                    {formatVal(activity.averageBalance)}
+                    &nbsp;{t("EUR")}
+                  </span>
                 </div>
               )}
 
               {activity.incomingPayments && (
                 <div className={styles.item}>
                   <label>{t("Incoming payments / month")}</label>
-                  <span>{formatVal(activity.incomingPayments)} EUR</span>
+                  <span>
+                    {formatVal(activity.incomingPayments)}
+                    &nbsp;{t("EUR")}
+                  </span>
                 </div>
               )}
 
               {activity.outgoingPayments && (
                 <div className={styles.item}>
                   <label>{t("Outgoing payments / month")}</label>
-                  <span>{formatVal(activity.outgoingPayments)} EUR</span>
+                  <span>
+                    {formatVal(activity.outgoingPayments)}
+                    &nbsp;{t("EUR")}
+                  </span>
                 </div>
               )}
 
@@ -324,13 +340,7 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType, currentS
             </div>
 
             {owners && owners.length > 0 ? (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "12px",
-                }}
-              >
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                 {owners.map((o, idx) => (
                   <div
                     key={o.id || idx}
@@ -432,21 +442,9 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType, currentS
                           border: "1px solid #F3F4F6",
                         }}
                       >
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "8px",
-                          }}
-                        >
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                           <FileText size={14} color="#6D4EFF" />
-                          <span
-                            style={{
-                              fontSize: "12px",
-                              color: "#374151",
-                              fontWeight: 500,
-                            }}
-                          >
+                          <span style={{ fontSize: "12px", color: "#374151", fontWeight: 500 }}>
                             {title}
                           </span>
                         </div>
@@ -495,6 +493,7 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType, currentS
               </p>
             </div>
           )}
+          <RiskProfileCard variant="inline" />
           <div className={styles.confirmRow} onClick={() => setAgreed(!agreed)}>
             <input
               type="checkbox"

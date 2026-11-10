@@ -57,7 +57,7 @@ import {
 } from "docx";
 import * as FileSaver from "file-saver";
 import img from "../../assets/images/logo/logo2.webp";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import { localCurrency } from "../../utils/Functions";
 import { formatCurrency } from "../../Helper/AmountFormat";
@@ -149,6 +149,9 @@ const DisabledOverlay = ({ message, t }) => (
   </div>
 );
 
+const CARD_DETAILS_ERROR =
+  "We are unable to process your request at the moment. Please try again later.";
+
 const CardPurchased = ({
   cards,
   setCardPurchased,
@@ -185,6 +188,7 @@ const CardPurchased = ({
   const width = useWindowWidth();
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [flippedCards, setFlippedCards] = useState({});
+  const revealTimerRef = useRef();
   const { t } = useTranslation();
   const [tooltipOpen, setTooltipOpen] = useState({
     onlinePurchases: false,
@@ -209,11 +213,38 @@ const CardPurchased = ({
     staleTime: 100000,
   });
 
+  const revealMutation = useMutation({
+    mutationFn: (cardId) =>
+      apiWrapper({ endpoint: `/api/mastercard/get-card-sensitive-info/${cardId}` }),
+  });
+  const revealedDetails = revealMutation.data?.data;
+
+  const hideCardDetails = () => {
+    clearTimeout(revealTimerRef.current);
+    revealMutation.reset();
+    setFlippedCards({});
+  };
+
   const handleCardFlip = (cardId) => {
-    setFlippedCards((prev) => ({
-      ...prev,
-      [cardId]: !prev[cardId],
-    }));
+    if (flippedCards[cardId]) return setFlippedCards({});
+    if (revealedDetails && revealMutation.variables === cardId) {
+      return setFlippedCards({ [cardId]: true });
+    }
+    if (revealMutation.isPending) return;
+
+    revealMutation.mutate(cardId, {
+      onSuccess: (dec) => {
+        if (!dec?.status) return toast.error(t(dec?.message || CARD_DETAILS_ERROR));
+
+        setFlippedCards({ [cardId]: true });
+        revealTimerRef.current = setTimeout(hideCardDetails, 60000);
+      },
+      onError: (error) => {
+        const encrypted = error?.response?.data?.data;
+        const dec = encrypted && error.response.status < 500 ? decryptData(encrypted) : null;
+        toast.error(t(dec?.message || CARD_DETAILS_ERROR));
+      },
+    });
   };
 
   const formatCardNumber = (number) => {
@@ -223,7 +254,7 @@ const CardPurchased = ({
 
   const handleCopy = async (text) => {
     try {
-      await navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(text.replace(/\s/g, ""));
       setIsCopied(true);
       clearTimeout(timerRef.current);
       timerRef.current = setTimeout(() => setIsCopied(false), 3000);
@@ -260,6 +291,7 @@ const CardPurchased = ({
   }, [current]);
 
   useEffect(() => () => clearTimeout(timerRef.current), []);
+  useEffect(() => hideCardDetails, []);
 
   const freezeToggle = async () => {
     // Permission: mastercard.card.activate / mastercard.card.freeze
@@ -478,7 +510,7 @@ const CardPurchased = ({
     doc.text("Card Information:", 14, 45);
     doc.setFont("sans-serif", "normal", "normal");
     doc.setFontSize(10);
-    doc.text(`Card Number: •••• •••• •••• ${currentCardDetails?.card_number?.slice(-4)}`, 14, 55);
+    doc.text(`Card Number: •••• •••• •••• ${cards?.[current]?.last4?.slice(-4)}`, 14, 55);
     doc.text(`Card Type: ${cards[current]?.type === "standard" ? "Standard" : "Premium"}`, 14, 62);
 
     // Add date range if selected
@@ -667,7 +699,7 @@ const CardPurchased = ({
             new Paragraph({
               children: [
                 new TextRun({
-                  text: `Card Number: •••• •••• •••• ${currentCardDetails?.card_number?.slice(-4)}`,
+                  text: `Card Number: •••• •••• •••• ${cards[current]?.last4?.slice(-4)}`,
                   size: 16,
                   spacing: {
                     before: 120,
@@ -806,7 +838,7 @@ const CardPurchased = ({
                 modules={[EffectCoverflow]}
                 onSlideChange={(e) => {
                   setCurrent(e.activeIndex);
-                  setFlippedCards({});
+                  hideCardDetails();
                 }}
                 ref={swiperRef}
                 style={{
@@ -930,20 +962,20 @@ const CardPurchased = ({
                         </div>
 
                         {/* Permission: mastercard.details.view */}
-                        {can("mastercard.details.view") && (
-                          <div className={styles.cardDets}>
+                        {can("mastercard.details.view") && flippedCards?.[card._id] && (
+                          <div className={styles.cardDets} data-sentry-block>
                             <div className={styles.num}>
                               <h3
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   // Permission: mastercard.details.copy
                                   if (!can("mastercard.details.copy")) return;
-                                  handleCopy(currentCardDetails?.card_number);
+                                  handleCopy(revealedDetails?.card_number);
                                 }}
                                 className={styles.vals}
                                 style={{ cursor: "pointer" }}
                               >
-                                {formatCardNumber(currentCardDetails?.card_number)}
+                                {formatCardNumber(revealedDetails?.card_number)}
                               </h3>
                               {isCopied ? (
                                 <Check size={14} color="white" style={{ transform: "none" }} />
@@ -956,7 +988,7 @@ const CardPurchased = ({
                                     e.stopPropagation();
                                     // Permission: mastercard.details.copy
                                     if (!can("mastercard.details.copy")) return;
-                                    handleCopy(currentCardDetails?.card_number);
+                                    handleCopy(revealedDetails?.card_number);
                                   }}
                                 />
                               )}
@@ -965,11 +997,11 @@ const CardPurchased = ({
                             <div className={styles.row}>
                               <div className={styles.dets}>
                                 <span className={styles.lab}>{t("VALID THRU")}</span>
-                                <h3 className={styles.vals}>{currentCardDetails?.exp_date}</h3>
+                                <h3 className={styles.vals}>{revealedDetails?.exp_date}</h3>
                               </div>
                               <div className={styles.dets}>
                                 <span className={styles.lab}>{t("CVV")}</span>
-                                <h3 className={styles.vals}>{currentCardDetails?.cvv}</h3>
+                                <h3 className={styles.vals}>{revealedDetails?.cvv}</h3>
                               </div>
                             </div>
                           </div>
@@ -998,7 +1030,7 @@ const CardPurchased = ({
                 }}
                 className={styles.tap}
               >
-                {t("Tap to see details")}
+                {revealMutation.isPending ? t("Processing") + "..." : t("Tap to see details")}
               </span>
             )}
 
@@ -1042,7 +1074,7 @@ const CardPurchased = ({
                 <p>{t("Card Balance")}</p>
                 <span>
                   {t("••")}
-                  {currentCardDetails?.card_number?.slice(-4)}
+                  {cards[current]?.last4?.slice(-4)}
                 </span>
               </div>
 
@@ -1495,7 +1527,7 @@ const CardPurchased = ({
                     <img src={Gpay} alt="" />
                     <h3>{t("Add to Google Pay")}</h3>
                   </div>
-                  <div
+                  {/* <div
                     onClick={() =>
                       window.open(
                         "https://www.samsung.com/us/support/answer/ANS10002609",
@@ -1507,7 +1539,7 @@ const CardPurchased = ({
                   >
                     <img src={Samsung} alt="" />
                     <h3>{t("Add to Samsung Wallet")}</h3>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
