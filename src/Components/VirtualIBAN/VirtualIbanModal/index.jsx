@@ -21,6 +21,7 @@ import {
 } from "../../AddFunds/WalletFundsFlow/plaidBank";
 import PlaidLinkHandler from "../../PaymentsNewer/InternationalFlow/PlaidLinkHandler";
 import PaymentProgressOverlay from "../PaymentProgressOverlay";
+import MobileWalletStatus from "../../PaymentAddressPublic/PayAsGuest/MobileWalletStatus";
 import Coins from "./icons/coins.svg";
 import JurisIcon from "./icons/gpsFix.svg";
 import SealCheck from "./icons/SealCheck.svg";
@@ -768,17 +769,13 @@ const VirtualIbanModal = ({
       }
 
       if (paymentType === "mobile" && res?.status !== false) {
-        setPendingTransactionId(details?.transactionId || details?.transaction_id || "");
+        const mobileTransactionId = details?.transactionId || details?.transaction_id || "";
+        setPendingTransactionId(mobileTransactionId);
         setPendingTransactionRef(details?.referenceId || details?.transaction_ref || "");
         setCreatedIban(null);
         setter?.(true);
         setShowOtp(false);
         setCurrentStep(STEPS.PENDING);
-        toast.info(
-          t(
-            "Please open your mobile money app and approve the payment notification you have received to complete and validate this transaction.",
-          ),
-        );
         return;
       }
 
@@ -1035,6 +1032,17 @@ const VirtualIbanModal = ({
           />
         );
       case STEPS.PENDING:
+        if (paymentType === "mobile" && pendingTransactionId && !isResumedPending) {
+          return (
+            <MobileWalletStatus
+              inGuestPay={false}
+              transactionId={pendingTransactionId}
+              toggle={() => navigate("/dashboard/default")}
+              buttonLabel={t("Go To Dashboard")}
+              containerStyle={{ padding: "0", minHeight: "auto" }}
+            />
+          );
+        }
         return <PendingStep transactionRef={pendingTransactionRef} />;
       case STEPS.DONE:
         return (
