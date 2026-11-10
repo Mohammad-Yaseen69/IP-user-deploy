@@ -154,13 +154,13 @@ const TransactionSheet = ({
     commission
       ? [
           t("Exchange Rate"),
-          `1.00 ${item?.currency?.code} = ${formatCurrency(item?.replacement_currency?.rate, true, undefined, undefined, undefined, 7)} ${item?.replacement_currency?.code}`,
+          `1.00 ${item?.currency?.code} = ${item?.replacement_currency?.rate ? formatCurrency(item?.replacement_currency?.rate, true, undefined, undefined, undefined, 7) : ""} ${item?.replacement_currency?.code}`,
         ]
       : isDebit &&
         item?.exchange_rate_markup &&
         item?.currency?.code !== item?.recipient_received_currency && [
           t("Exchange Rate"),
-          `1.00 ${item?.currency?.code} = ${item?.exchange_rate_markup} ${item?.recipient_received_currency}`,
+          `1.00 ${item?.currency?.code} = ${item?.exchange_rate_markup ? formatCurrency(item?.exchange_rate_markup) : ""} ${item?.recipient_received_currency ?? item?.markup_currency}`,
         ],
     item?.recipient_received_amount && [
       t("Destination Amount"),
@@ -231,7 +231,7 @@ const TransactionSheet = ({
             {t(capitalizeStatus(item?.status))}
           </span>
           <span style={{ color: "#9aa3b2", fontWeight: 400 }}>
-            {dayjs(item?.createdAt).format("D MMM YYYY, HH:mm")}
+            {dayjs(item?.createdAt).format("D MMM YYYY, HH:mm A")}
           </span>
         </div>
       </div>
