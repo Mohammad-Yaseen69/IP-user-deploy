@@ -248,7 +248,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         type: data.flow === "e-sim" && "esim",
         ...(isBankTransfer && data.recipient_iban ? { recipient_iban: data.recipient_iban } : {}),
         ...(isBankTransfer && data.recipient_bank_id
-          ? { savedBankId: data.recipient_bank_id }
+          ? { savedBankId: data.recipient_bank_id, isSaveBank: true }
           : {}),
       };
       if (isOpenRange) {
