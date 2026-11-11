@@ -35,9 +35,11 @@
   align-items: center;
   gap: 10px;
   direction: ltr;
+  pointer-events: none;
 }
 
 .launcherLabel {
+  pointer-events: auto;
   padding: 8px 13px;
   border-radius: 999px;
   background: #1d1b28;
@@ -53,6 +55,7 @@
 
 /* Transparent hit area: the orb (below) is drawn over it while docked. */
 .bubble {
+  pointer-events: auto;
   width: 56px;
   height: 56px;
   padding: 0;
