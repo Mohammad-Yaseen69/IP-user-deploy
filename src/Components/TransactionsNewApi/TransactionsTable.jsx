@@ -330,7 +330,7 @@ const TransactionsTable = () => {
         }
         hideDownload={!can("transactions.main.export")}
         onDownload={() => setShowStatementModal(!showStatementModal)}
-        columns={["Transaction", "Sent to / from", "Status", "Time", "Amount", ""]}
+        columns={["Transaction", "Recipient", "Status", "Time", "Amount", ""]}
         template="2.2fr 1.6fr 112px 90px 1.3fr 16px"
       >
         {isLoading ? (

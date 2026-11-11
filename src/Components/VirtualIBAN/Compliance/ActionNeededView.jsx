@@ -37,11 +37,11 @@ const ActionNeededView = ({ bannerMessage, requests = [], refetch }) => {
         <div className={styles.warningBanner}>
           <span className={styles.redDot}></span>
           <p className={styles.bannerText}>
-            {t("compliance.bannerClear", "We keep compliance clear and reassuring.")}{" "}
+            {t("We keep compliance clear and reassuring.")}{" "}
             <span className={styles.bannerHighlight}>
-              {t("compliance.bannerActionPrompt", "Responding promptly keeps payments flowing")}
+              {t("Responding promptly keeps payments flowing")}
             </span>{" "}
-            {t("compliance.bannerWarning", "- failure to respond may restrict account activity.")}
+            {t("- failure to respond may restrict account activity.")}
           </p>
         </div>
       )}
@@ -49,8 +49,7 @@ const ActionNeededView = ({ bannerMessage, requests = [], refetch }) => {
       {actionNeededList.length > 0 && (
         <div className={styles.section}>
           <h3 className={styles.sectionHeading}>
-            {t("compliance.actionNeededSection", "Action needed")} - {actionNeededList.length}{" "}
-            {t("compliance.requestsCount", "requests")}
+            {t("Action needed")} - {actionNeededList.length} {t("requests")}
           </h3>
           <div className={styles.cardsGrid}>
             {actionNeededList.map((item) => {
@@ -61,15 +60,12 @@ const ActionNeededView = ({ bannerMessage, requests = [], refetch }) => {
                 <div key={item._id || item.id} className={styles.card}>
                   <div className={styles.cardHeader}>
                     <h4 className={styles.cardTitle}>{item.title}</h4>
-                    <span className={styles.badgeActionNeeded}>
-                      {t("compliance.actionNeededBadge", "Action needed")}
-                    </span>
+                    <span className={styles.badgeActionNeeded}>{t("Action needed")}</span>
                   </div>
                   <p className={styles.cardDesc}>{item.description}</p>
                   {deadlineStr && (
                     <p className={styles.deadline}>
-                      {t("compliance.deadlineLabel", "Deadline")}{" "}
-                      <span className={styles.dateVal}>{deadlineStr}</span>
+                      {t("Deadline")} <span className={styles.dateVal}>{deadlineStr}</span>
                     </p>
                   )}
                   <div className={styles.buttonGroup}>
@@ -78,17 +74,18 @@ const ActionNeededView = ({ bannerMessage, requests = [], refetch }) => {
                       className={styles.primaryBtn}
                       onClick={() => setUploadInquiry(item)}
                     >
-                      {isQuestionOnly
-                        ? t("compliance.answerQuestionBtn", "Answer question")
-                        : t("compliance.uploadDocumentsBtn", "Upload documents")}
+                      {isQuestionOnly ? t("Answer question") : t("Upload documents")}
                     </button>
-                    <button
-                      type="button"
-                      className={styles.secondaryBtn}
-                      onClick={() => setMessageInquiry(item)}
-                    >
-                      {t("compliance.messageComplianceBtn", "Message compliance")}
-                    </button>
+                    {/* Messaging is an inquiry-only endpoint; KYC/KYB requests have no thread. */}
+                    {item.source !== "kyc_kyb" && (
+                      <button
+                        type="button"
+                        className={styles.secondaryBtn}
+                        onClick={() => setMessageInquiry(item)}
+                      >
+                        {t("Message compliance")}
+                      </button>
+                    )}
                   </div>
                 </div>
               );
