@@ -303,7 +303,7 @@ export const useCryptoWithdrawFlow = (wallet, { active = true } = {}) => {
       handleQuoteError(error, {
         onDetails: (message) => {
           setDestinationError(message);
-          toast.error(message);
+          // toast.error(message);
         },
       });
     }

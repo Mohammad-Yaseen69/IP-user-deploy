@@ -29,7 +29,7 @@ import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
 import AdditionalDocumentModal from "./AdditionalDocumentModal";
 import ForcedAdditionalFilesModal from "../Components/ForcedAdditionalFilesModal";
-import { getPendingAdditionalFiles } from "../utils/Functions/additionalFiles";
+import { getPendingAdditionalFiles, MASTERCARD_PURPOSE } from "../utils/Functions/additionalFiles";
 import NewMenu from "../Common/NewMenu";
 import AssistantWidget from "../Components/AssistantWidget";
 import { useVirtualIbans } from "../hooks/useVirtualIban";
@@ -148,9 +148,17 @@ const Layout = ({ children, classNames, ...rest }) => {
   const requiredFilesTarget = requiredFilesOnSettings
     ? "/settings?tab=verification&scroll=additional-files"
     : "/my-mastercard";
-  const onRequiredFilesPage = location.pathname
-    .toLowerCase()
-    .includes(requiredFilesOnSettings ? "settings" : "my-mastercard");
+  // KYC/KYB requests are answered from the Virtual IBAN Compliance tab, so don't prompt there;
+  // Mastercard requests still do.
+  const onVirtualIbanPage = location.pathname.toLowerCase().includes("virtual-iban");
+  const hideOptionalFilesModalHere =
+    onVirtualIbanPage &&
+    !pendingAdditionalFiles.optional.some((item) => item?.purpose === MASTERCARD_PURPOSE);
+  const onRequiredFilesPage =
+    location.pathname
+      .toLowerCase()
+      .includes(requiredFilesOnSettings ? "settings" : "my-mastercard") ||
+    (requiredFilesOnSettings && onVirtualIbanPage);
   const showForcedFilesModal =
     profileCompleted === true && !showModal && hasRequiredAdditionalFiles && !onRequiredFilesPage;
 
@@ -376,7 +384,8 @@ const Layout = ({ children, classNames, ...rest }) => {
         {showAdditionalFilesModal &&
           !location.pathname.toLowerCase().includes("settings") &&
           !location.pathname.toLowerCase().includes("my-mastercard") &&
-          !location.pathname.toLowerCase().includes("payments") && (
+          !location.pathname.toLowerCase().includes("payments") &&
+          !hideOptionalFilesModalHere && (
             <AdditionalDocumentModal
               isOpen={showAdditionalFilesModal}
               toggle={() => setShowAdditionalModal(false)}
