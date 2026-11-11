@@ -49,6 +49,7 @@ import {
 import PlaidLinkHandler from "../../PaymentsNewer/InternationalFlow/PlaidLinkHandler";
 import MobileWalletStatus from "../../PaymentAddressPublic/PayAsGuest/MobileWalletStatus";
 import PaymentProgressOverlay from "../PaymentProgressOverlay";
+import { useNavigate } from "react-router";
 
 const FEE_PAYMENT_ROUTES = {
   wallet: "confirm-activation",
@@ -193,7 +194,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
   const can = usePermission();
   const isMobile = useMediaQuery("(max-width:600px)");
   const { getKey, reset } = useIdempotency();
-
+  const navigate = useNavigate();
   const canCreateIban = can("virtual-iban.account.create");
   const { userDetails, authHeader } = useContext(UserContext);
 
@@ -361,6 +362,22 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
       toast.error(err?.message || t("Unable to send verification OTP"));
     },
   });
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      back() {
+        return goBack();
+      },
+    }),
+    [state.step],
+  );
+
+  useEffect(() => {
+    onStepChange?.(state.step);
+  }, [state.step, onStepChange]);
+
+  if (userDetails?.account_type === "individual") navigate("/virtual-IBAN");
 
   const stepOrder = state.userType === "individual" ? STEPS_INDIVIDUAL : STEPS_BUSINESS;
 
@@ -607,20 +624,6 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     owners: state.ownership.owners,
     documents: state.documents.files,
   };
-
-  useImperativeHandle(
-    ref,
-    () => ({
-      back() {
-        return goBack();
-      },
-    }),
-    [state.step],
-  );
-
-  useEffect(() => {
-    onStepChange?.(state.step);
-  }, [state.step, onStepChange]);
 
   const riskPayload = useMemo(
     () => ({
