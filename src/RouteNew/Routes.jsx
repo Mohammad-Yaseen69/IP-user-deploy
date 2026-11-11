@@ -42,8 +42,6 @@ const ReferralsNew = lazy(() => import("../Components/ReferralsNew"));
 const TransactionsNewApi = lazy(() => import("../Components/TransactionsNewApi"));
 const UserProfile = lazy(() => import("../Components/UserProfile"));
 const UserProfilePublic = lazy(() => import("../Components/UserProfilePublic"));
-const UserSettingsNew = lazy(() => import("../Components/UserSettings"));
-const UserSettingsUpdated = lazy(() => import("../Components/UserSettingsNew"));
 const DownloadQrPage = lazy(() => import("../Components/DownloadQrPage"));
 const Settings = lazy(() => import("../Components/Settings"));
 const WalletsNew = lazy(() => import("../Components/WalletsNew"));
@@ -78,7 +76,6 @@ const InvoicePaymentQr = lazy(() => import("../Components/ReceiptInvoices/Invoic
 const PlansSubscription = lazy(() => import("../Components/PlansSubscriptions"));
 const PlanPaymentLink = lazy(() => import("../Components/PlanPaymentLink"));
 const StoreCreate = lazy(() => import("../Components/StoreCreate"));
-const GuestLogin = lazy(() => import("../Components/guestDashboard/auth"));
 const DelegateAccess = lazy(() => import("../Components/DelegateAccess"));
 const CreateAgentPassword = lazy(() => import("../Components/CreateAgentPassword"));
 const AgentLogin = lazy(() => import("../Components/Auth/agentAuth/index"));
@@ -347,8 +344,6 @@ export const routes = [
       </PermissionRoute>
     ),
   },
-  { path: "/users/settings", component: <UserSettingsNew /> },
-  { path: "/users/settings-new", component: <UserSettingsUpdated /> },
   { path: "/profile/:user_name", component: <UserProfilePublic /> },
   { path: "/add-funds", component: <AddFunds /> },
   { path: "/add-funds/card/:type", component: <AddFunds /> },
@@ -586,10 +581,7 @@ export const authRoutes = [
   { path: `/signup/:code`, component: <Auth /> },
   { path: "*", component: <NotFound type="Page" /> },
 ];
-export const guestRoutes = [
-  { path: `/guestSession/Guestlogin`, component: <GuestLogin /> },
-  { path: "*", component: <NotFound type="Page" /> },
-];
+export const guestRoutes = [{ path: "*", component: <NotFound type="Page" /> }];
 export const AgentCommissionRoutes = [
   {
     path: "/agent-commission",

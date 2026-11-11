@@ -1045,8 +1045,6 @@ const WalletFundsFlow = ({ setAction }) => {
               ) : data.show_confirmation ? (
                 <ConfirmWalletFund
                   setExternalLink={(e) => dataHandler("externalLink", e)}
-                  merchant={data.mobile_wallet_merchant}
-                  payer={data.mobile_wallet_service}
                   currentCard={data.selectedSavedCard}
                   paymentWithSavedCard={data.selectedSavedCard?._id}
                   toggleConfirmation={() => dataHandler("show_confirmation", false)}
@@ -1428,8 +1426,6 @@ const WalletFundsFlow = ({ setAction }) => {
               ) : data.show_confirmation ? (
                 <ConfirmWalletFund
                   setExternalLink={(e) => dataHandler("externalLink", e)}
-                  merchant={data.mobile_wallet_merchant}
-                  payer={data.mobile_wallet_service}
                   currentCard={data.selectedSavedCard}
                   paymentWithSavedCard={data.selectedSavedCard?._id}
                   setSubStep={(e) => {
