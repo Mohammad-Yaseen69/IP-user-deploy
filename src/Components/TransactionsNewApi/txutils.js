@@ -238,7 +238,7 @@ export const downloadTransactionPdf = ({
     });
   }
 
-  doc.save(`${reference || "transaction"}_confirmation.pdf`);
+  doc.save(`${reference || "transaction"}_statement.pdf`);
 };
 
 const digits = (v) => String(v ?? "").replace(/\D/g, "");
