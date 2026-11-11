@@ -278,8 +278,7 @@ export const getPayoutRows = (item, beneficiary, recipientName = "") => {
       ) || beneficiary?.bank_details?.[0];
     const iban = channel.iban || (!accountNo && bank?.iban);
     return [
-      // ["Bank name", bank?.name || channel.payer_name],
-      // Only when it differs from the recipient name already shown above.
+      ["Bank name", channel.payer_name || bank?.name],
       bank?.account_holder_name?.trim().toLowerCase() !== recipientName.trim().toLowerCase() && [
         "Account holder",
         bank?.account_holder_name,
