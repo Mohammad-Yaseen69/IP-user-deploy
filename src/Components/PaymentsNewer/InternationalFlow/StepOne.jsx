@@ -121,7 +121,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
         const cont = CitiesData.find(
           (item) => item.iso3?.toUpperCase() === userDetails?.country_iso_code?.toUpperCase(),
         );
-        return cont.currency;
+        return cont?.currency;
       };
       const getWallet = () => {
         const wallet =

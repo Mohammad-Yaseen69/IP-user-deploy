@@ -1436,7 +1436,7 @@ const Basic = ({ setCurrentTab }) => {
               <Input
                 disabled={true}
                 readOnly={true}
-                value={countriesData.find((item) => item.alpha3 === country).name}
+                value={countriesData.find((item) => item.alpha3 === country)?.name}
                 onChange={(e) => setCountry(e.target.value)}
               />
             </div>
@@ -1457,7 +1457,9 @@ const Basic = ({ setCurrentTab }) => {
               >
                 <option value="">{t("--Select-Your-Timezone--")}</option>
                 {availableTimezones.map((i) => (
-                  <option value={i?.split(" GMT")?.[0]}>{i}</option>
+                  <option key={i} value={i?.split(" GMT")?.[0]}>
+                    {i}
+                  </option>
                 ))}
               </Input>
               <span className={styles.trailingIcon}>
@@ -1493,6 +1495,7 @@ const Basic = ({ setCurrentTab }) => {
                 (!isVerified &&
                   (usernameError ||
                     !usernameValid ||
+                    !address ||
                     !city ||
                     !username ||
                     (country === "USA" && !state?.trim()) ||
