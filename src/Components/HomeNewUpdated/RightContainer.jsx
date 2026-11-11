@@ -4,7 +4,7 @@ import { ChevronDown } from "react-feather";
 import cardsStyle from "./styles/CardsContainer.module.css";
 import opt1 from "./files/opt1.svg";
 import opt2 from "./files/opt2.svg";
-import opt3 from "../UserSettingsNew/files/mwc_active.svg";
+import opt3 from "./files/mwc_active.svg";
 import opt4 from "./files/opt4.svg";
 import CurConversion from "./CurConversion";
 import "swiper/css";

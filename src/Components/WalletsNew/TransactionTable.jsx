@@ -53,6 +53,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
     if (page === 1) {
       setIsLoading(true);
     }
+
     // axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/get-all-transactions-by-wallet/${currentWallet?.wallet_id}/${(page - 1) * 15}/15`, {
     axios
       .get(
@@ -86,6 +87,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
     if (page === 1) {
       setIsLoading(true);
     }
+
     // axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-wallet-transactions/${currentWallet?.wallet_id}/${(page - 1) * 15}/15/${debouncedSearchQuery}`, {
     axios
       .get(

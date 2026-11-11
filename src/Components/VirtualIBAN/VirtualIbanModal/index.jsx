@@ -14,6 +14,14 @@ import ContactBox from "../../MyMasterCard/PaymentModal/ContactBox";
 import PaymentSelect from "../../MyMasterCard/PaymentModal/PaymentSelectStep";
 import PaymentStep from "../../MyMasterCard/PaymentModal/PaymentStep";
 import addFundsStyles from "../WithdrawBalanceModal/withdrawBalance.module.scss";
+import PlaidBankPicker from "../../AddFunds/WalletFundsFlow/PlaidBankPicker";
+import {
+  getPlaidBankPayload,
+  isSavedBankPaymentStarted,
+} from "../../AddFunds/WalletFundsFlow/plaidBank";
+import PlaidLinkHandler from "../../PaymentsNewer/InternationalFlow/PlaidLinkHandler";
+import PaymentProgressOverlay from "../PaymentProgressOverlay";
+import MobileWalletStatus from "../../PaymentAddressPublic/PayAsGuest/MobileWalletStatus";
 import Coins from "./icons/coins.svg";
 import JurisIcon from "./icons/gpsFix.svg";
 import SealCheck from "./icons/SealCheck.svg";
@@ -22,6 +30,7 @@ import Verification from "./icons/verification.svg";
 import useSendOtp from "../../../hooks/GeneralUse/useSendOtp";
 import {
   buildMockFeeDetails,
+  EXTERNAL_PAYMENT_METHODS,
   getContinueLabel,
   getDisabledState,
   getJurisdiction,
@@ -32,6 +41,7 @@ import {
   isSidebarStepCompleted,
   JURISDICTIONS,
   MOCK_WALLET_STATE,
+  SKIP_DETAILS_METHODS,
   STEPS,
 } from "../../../stateMachines/virtualIbanPayment";
 import DoneStep from "./DoneStep";
@@ -47,11 +57,15 @@ import OTPConfirmation from "../../../Common/Component/OtpVerification";
 import usePlainFx from "../../../hooks/Payments/usePlainFx";
 import {
   useCreateVirtualIban,
+  useIbanPaymentModel,
   useVirtualIbans,
   virtualIbanQueryKeys,
 } from "../../../hooks/useVirtualIban";
+import Pricing from "../OnBoardingIBAN/components/Pricing";
+import { FileText } from "react-feather";
 import SocketsService from "../../../Services/Socket";
 import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError";
+import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 import InstaPayLoader from "../../Loader";
 import { getVirtualIbanCountry, normalizeVirtualIban } from "../utils/virtualIban";
 import {
@@ -63,11 +77,18 @@ import {
   parseAmount,
 } from "../utils/virtualIbanPreflight";
 
+const EXTERNAL_PAYMENT_ROUTES = {
+  paypal: "paypal",
+  bank: "plaid",
+  mobile: "mobile-wallet",
+};
+
 const SIDEBAR_ICONS = {
   [STEPS.JURISDICTION]: JurisIcon,
   [STEPS.FEES]: Coins,
   [STEPS.VERIFICATION]: Verification,
   [STEPS.PAYMENT_METHOD]: Payment,
+  [STEPS.PRICING]: FileText,
   [STEPS.DONE]: SealCheck,
 };
 
@@ -115,8 +136,13 @@ const VirtualIbanModal = ({
   const [currentStep, setCurrentStep] = useState(STEPS.JURISDICTION);
   const [jurisdiction, setJurisdiction] = useState("");
   const [feesAccepted, setFeesAccepted] = useState(false);
+  const [pricingAccepted, setPricingAccepted] = useState(false);
   const [paymentType, setPaymentType] = useState("");
   const [walletState, setWalletState] = useState({});
+  const [plaidBank, setPlaidBank] = useState({ savedBankId: null, recipient_iban: "" });
+  const [plaidLink, setPlaidLink] = useState(null);
+  const [isInitiatingExternal, setIsInitiatingExternal] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
   const [otpToken, setOtpToken] = useState("");
   const [codeType, setCodeType] = useState("sms");
@@ -147,6 +173,7 @@ const VirtualIbanModal = ({
 
   const createVirtualIban = useCreateVirtualIban();
   const { data: existingIbans = [], isLoading: existingIbansLoading } = useVirtualIbans();
+  const { data: paymentModel, isLoading: paymentModelLoading } = useIbanPaymentModel(isOpen);
   const activationFee = useMemo(
     () => getActivationFeeConfig(activationFeeConfig),
     [activationFeeConfig],
@@ -270,6 +297,15 @@ const VirtualIbanModal = ({
 
   useEffect(() => {
     getUserWallets();
+  }, []);
+
+  useEffect(() => {
+    const handlePageShow = (event) => {
+      if (event.persisted) setIsRedirecting(false);
+    };
+
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
   }, []);
 
   useEffect(() => {
@@ -476,8 +512,10 @@ const VirtualIbanModal = ({
     () => ({
       jurisdiction,
       feesAccepted,
+      pricingAccepted,
       paymentType,
       walletState,
+      plaidBank,
       selectedSaveCard,
       cardDetail,
       cardNumberError,
@@ -487,8 +525,10 @@ const VirtualIbanModal = ({
     [
       jurisdiction,
       feesAccepted,
+      pricingAccepted,
       paymentType,
       walletState,
+      plaidBank,
       selectedSaveCard,
       cardDetail,
       cardNumberError,
@@ -547,7 +587,8 @@ const VirtualIbanModal = ({
   ]);
   const sidebarSteps = useMemo(() => getSidebarSteps(machineData), [machineData]);
 
-  const isCreating = isSendingOtp || createVirtualIban.isPending;
+  const isCreating =
+    isSendingOtp || createVirtualIban.isPending || isInitiatingExternal || !!plaidLink;
   const isActivationFxBlocked =
     !shouldSkipPaymentStep &&
     paymentType === "wallet" &&
@@ -576,12 +617,25 @@ const VirtualIbanModal = ({
       ? t("Continue")
       : getContinueLabel(currentStep, t);
 
+  const ensureWalletSelected = (nextStep) => {
+    if (
+      nextStep === STEPS.PRICING &&
+      paymentType === "wallet" &&
+      Object.keys(walletState).length === 0
+    ) {
+      setWalletState(filteredWallets?.[0] || MOCK_WALLET_STATE);
+    }
+  };
+
   const resetState = () => {
     setCurrentStep(STEPS.JURISDICTION);
     setJurisdiction("");
     setFeesAccepted(false);
+    setPricingAccepted(false);
     setPaymentType("");
     setWalletState({});
+    setPlaidBank({ savedBankId: null, recipient_iban: "" });
+    setPlaidLink(null);
     setShowOtp(false);
     setOtpToken("");
     setCodeType("sms");
@@ -647,7 +701,38 @@ const VirtualIbanModal = ({
       exchange_rate: activationFeeFx.exchangeRate,
     },
   });
+  const isExternalPayment = EXTERNAL_PAYMENT_METHODS.includes(paymentType);
+
+  const defaultWallet = filteredWallets?.find((wallet) => wallet?.default) || filteredWallets?.[0];
+
+  const getExternalPayload = () => ({
+    wallet_id: defaultWallet?.wallet_id || defaultWallet?._id,
+    currencyCode: jurisdictionInfo.currencyCode,
+    name: userDetails?.full_name || userDetails?.name || userDetails?.username || "Virtual IBAN",
+    ...(paymentType === "bank" ? getPlaidBankPayload(plaidBank) : {}),
+  });
+
   const handleSendOtp = async (otpCodeType = codeType) => {
+    if (isExternalPayment) {
+      if (!(defaultWallet?.wallet_id || defaultWallet?._id)) {
+        toast.error(t("Please select an InstaPay wallet to pay the activation fee"));
+        return;
+      }
+
+      try {
+        setCodeType(otpCodeType || codeType);
+        await sendOtp(getExternalPayload(), otpCodeType || codeType);
+      } catch (error) {
+        handlePaymentApiError({
+          error,
+          navigate,
+          setError: (e) => toast.error(e),
+          setProfileLockTime: setProfileLockTime,
+        });
+      }
+      return;
+    }
+
     const selectedWallet =
       walletState?.wallet_id || walletState?._id ? walletState : preselectedWalletState;
 
@@ -682,7 +767,86 @@ const VirtualIbanModal = ({
       });
     }
   };
+  const initiateExternalPayment = async (setter, type, otp, setOtpError) => {
+    setIsInitiatingExternal(true);
+    try {
+      const res = await apiWrapper({
+        endpoint: `/api/virtual-iban/initiate-${EXTERNAL_PAYMENT_ROUTES[paymentType]}`,
+        method: "POST",
+        payload: { ...getExternalPayload(), token: otpToken, otp, type: type || codeType },
+        isEncrypted: true,
+        isDecrypted: true,
+      });
+      const details = res?.data ?? res;
+
+      const paypalUrl = details?.approvalUrl || details?.url;
+      if (paymentType === "paypal" && paypalUrl) {
+        setIsRedirecting(true);
+        setShowOtp(false);
+        window.location.href = paypalUrl;
+        return;
+      }
+
+      if (paymentType === "mobile" && res?.status !== false) {
+        const mobileTransactionId = details?.transactionId || details?.transaction_id || "";
+        setPendingTransactionId(mobileTransactionId);
+        setPendingTransactionRef(details?.referenceId || details?.transaction_ref || "");
+        setCreatedIban(null);
+        setter?.(true);
+        setShowOtp(false);
+        setCurrentStep(STEPS.PENDING);
+        return;
+      }
+
+      if (paymentType === "bank" && isSavedBankPaymentStarted(res)) {
+        setPendingTransactionId(details?.transactionId || details?.transaction_id || "");
+        setPendingTransactionRef(details?.referenceId || details?.transaction_ref || "");
+        setCreatedIban(null);
+        setter?.(true);
+        setShowOtp(false);
+        setCurrentStep(STEPS.PENDING);
+        return;
+      }
+
+      if (paymentType !== "bank" || !details?.linkToken) {
+        const message = res?.message || details?.message || t("Verification failed");
+        setOtpError?.(message);
+        toast.error(message);
+        return;
+      }
+
+      setter?.(true);
+      setShowOtp(false);
+      setPlaidLink(details);
+    } catch (error) {
+      handlePaymentApiError({
+        error,
+        navigate,
+        setError: (e) => {
+          setOtpError?.(e);
+          toast.error(e);
+        },
+        setProfileLockTime,
+      });
+    } finally {
+      setIsInitiatingExternal(false);
+    }
+  };
+
+  const handlePlaidAuthorized = () => {
+    setPendingTransactionId(plaidLink?.transactionId || plaidLink?.transaction_id || "");
+    setPendingTransactionRef(plaidLink?.referenceId || plaidLink?.transaction_ref || "");
+    setCreatedIban(null);
+    setPlaidLink(null);
+    setCurrentStep(STEPS.PENDING);
+  };
+
   const verifyOtp = async (setter, type = "", otp, setOtpError) => {
+    if (isExternalPayment) {
+      await initiateExternalPayment(setter, type, otp, setOtpError);
+      return;
+    }
+
     try {
       const res = await createVirtualIban.mutateAsync({
         token: otpToken,
@@ -736,13 +900,7 @@ const VirtualIbanModal = ({
 
     const { nextStep } = goNext(currentStep, machineData);
     if (nextStep) {
-      if (
-        nextStep === STEPS.SUMMARY &&
-        paymentType === "wallet" &&
-        Object.keys(walletState).length === 0
-      ) {
-        setWalletState(filteredWallets?.[0] || MOCK_WALLET_STATE);
-      }
+      ensureWalletSelected(nextStep);
       setCurrentStep(nextStep);
     } else if (currentStep === STEPS.DONE) {
       handleClose();
@@ -751,6 +909,7 @@ const VirtualIbanModal = ({
 
   const handleBack = () => {
     if (currentStep === STEPS.FEES) setFeesAccepted(false);
+    if (currentStep === STEPS.PRICING) setPricingAccepted(false);
     if (currentStep === STEPS.PAYMENT_METHOD) setPaymentType("");
     if (currentStep === STEPS.PAYMENT_DETAILS) {
       setWalletState({});
@@ -787,10 +946,19 @@ const VirtualIbanModal = ({
           <FeesStep
             jurisdiction={jurisdiction}
             feesAccepted={feesAccepted}
-            monthlyFeeCurr={"USD"}
             setFeesAccepted={setFeesAccepted}
-            activationFeeAmount={activationFee.amount}
-            activationFeeCurrency={activationFee.currency}
+            activationFee={paymentModel?.activationFee ?? null}
+            monthlyFee={paymentModel?.monthlyFee ?? null}
+            feesLoading={paymentModelLoading}
+          />
+        );
+      case STEPS.PRICING:
+        return (
+          <Pricing
+            t={t}
+            variant="embedded"
+            accepted={pricingAccepted}
+            onAcceptedChange={setPricingAccepted}
           />
         );
       case STEPS.VERIFICATION:
@@ -802,9 +970,17 @@ const VirtualIbanModal = ({
             paymentType={paymentType}
             setPaymentType={setPaymentType}
             isInIban
+            enabledMethods={EXTERNAL_PAYMENT_METHODS}
           />
         );
       case STEPS.PAYMENT_DETAILS:
+        if (paymentType === "bank") {
+          return (
+            <div style={{ marginTop: "1rem" }}>
+              <PlaidBankPicker value={plaidBank} onChange={setPlaidBank} />
+            </div>
+          );
+        }
         return (
           <PaymentStep
             cardDetail={cardDetail}
@@ -851,8 +1027,11 @@ const VirtualIbanModal = ({
                 ? walletState?.wallet_id || walletState?._id
                   ? walletState
                   : preselectedWalletState
-                : paymentType === "paypal"
-                  ? { name: "Paypal", wallet_id: "" }
+                : [...SKIP_DETAILS_METHODS, ...EXTERNAL_PAYMENT_METHODS].includes(paymentType)
+                  ? {
+                      name: { mobile: "Mobile money", bank: "Bank transfer" }?.[paymentType],
+                      wallet_id: "",
+                    }
                   : selectedSaveCard?._id
                     ? {
                         name: `${selectedSaveCard.brand?.toUpperCase()} Card`,
@@ -876,6 +1055,17 @@ const VirtualIbanModal = ({
           />
         );
       case STEPS.PENDING:
+        if (paymentType === "mobile" && pendingTransactionId && !isResumedPending) {
+          return (
+            <MobileWalletStatus
+              inGuestPay={false}
+              transactionId={pendingTransactionId}
+              toggle={() => navigate("/dashboard/default")}
+              buttonLabel={t("Go To Dashboard")}
+              containerStyle={{ padding: "0", minHeight: "auto" }}
+            />
+          );
+        }
         return <PendingStep transactionRef={pendingTransactionRef} />;
       case STEPS.DONE:
         return (
@@ -1014,6 +1204,22 @@ const VirtualIbanModal = ({
 
   return (
     <>
+      <PaymentProgressOverlay show={isRedirecting || !!plaidLink} />
+      {plaidLink?.linkToken && (
+        <PlaidLinkHandler
+          link={plaidLink}
+          data={{
+            recipient_iban: plaidBank.recipient_iban,
+            wallet: {},
+            exchange_rate: {
+              sending: { amount: activationFee.amount, currency: activationFee.currency },
+              fee: { amount: 0 },
+            },
+          }}
+          onAuthorized={handlePlaidAuthorized}
+          onCancelled={() => setPlaidLink(null)}
+        />
+      )}
       <Modal
         isOpen={isOpen}
         style={{
@@ -1034,7 +1240,7 @@ const VirtualIbanModal = ({
             setterValue={true}
             hideOtp={() => setShowOtp(false)}
             callback={verifyOtp}
-            processing={createVirtualIban.isPending}
+            processing={createVirtualIban.isPending || isInitiatingExternal}
             resendHandler={handleSendOtp}
             authType={codeType}
             setAuthType={setCodeType}

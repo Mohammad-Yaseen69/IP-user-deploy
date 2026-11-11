@@ -83,7 +83,6 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
   });
 
   const { err, validate } = useStepValidation(form, ACTIVITY_RULES);
-
   useEffect(() => {
     onChange?.(form);
   }, [form]);
@@ -259,11 +258,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
 
                 <select
                   className={styles.textInput}
-                  style={{
-                    height: "auto",
-                    padding: "12px",
-                    ...err("industry"),
-                  }}
+                  style={{ height: "auto", padding: "12px", ...err("industry") }}
                   value={selectedIndustryValue}
                   onChange={handleIndustryChange}
                 >
@@ -372,13 +367,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
                 </div>
 
                 {showCountryDropdown && (
-                  <div
-                    style={{
-                      marginTop: "12px",
-                      maxWidth: "420px",
-                      width: "100%",
-                    }}
-                  >
+                  <div style={{ marginTop: "12px", maxWidth: "420px", width: "100%" }}>
                     <CountryDropDown
                       onSelect={handleCountrySelect}
                       country={""}
@@ -391,9 +380,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
               <div className={styles.inputGroup}>
                 <label
                   className={styles.inputLabel}
-                  style={{
-                    color: err("monthlyVolume", true) ? "red" : "#6e7687",
-                  }}
+                  style={{ color: err("monthlyVolume", true) ? "red" : "#6e7687" }}
                 >
                   {t("EXPECTED MONTHLY INFLOW")} <RequiredFieldIndicator />
                 </label>
@@ -515,10 +502,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
                   </label>
 
                   <input
-                    style={{
-                      padding: "14.5px 14px 14.5px 12.5px",
-                      ...err("purpose"),
-                    }}
+                    style={{ padding: "14.5px 14px 14.5px 12.5px", ...err("purpose") }}
                     className={styles.textInput}
                     value={form.purpose}
                     onChange={set("purpose")}
@@ -532,10 +516,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
                   </label>
 
                   <input
-                    style={{
-                      padding: "14.5px 14px 14.5px 12.5px",
-                      ...err("paymentNature"),
-                    }}
+                    style={{ padding: "14.5px 14px 14.5px 12.5px", ...err("paymentNature") }}
                     type="text"
                     placeholder={t("e.g. Invoices, consulting fees, supplier settlements")}
                     className={styles.textInput}
@@ -558,10 +539,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
                     }}
                     country=""
                     background="#fff"
-                    containerStyle={{
-                      ...countrySelectStyle,
-                      ...err("originCountries"),
-                    }}
+                    containerStyle={{ ...countrySelectStyle, ...err("originCountries") }}
                   />
 
                   <div className={styles.chips}>
@@ -593,10 +571,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
                     }}
                     country=""
                     background="#fff"
-                    containerStyle={{
-                      ...countrySelectStyle,
-                      ...err("destinationCountries"),
-                    }}
+                    containerStyle={{ ...countrySelectStyle, ...err("destinationCountries") }}
                   />
 
                   <div className={styles.chips}>
@@ -624,10 +599,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
 
                   <div className={styles.inputWrapper}>
                     <input
-                      style={{
-                        padding: "14.5px 52px 14.5px 14px",
-                        ...err("averageTransaction"),
-                      }}
+                      style={{ padding: "14.5px 52px 14.5px 14px", ...err("averageTransaction") }}
                       type="text"
                       inputMode="numeric"
                       min="0"
@@ -652,10 +624,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
                       inputMode="numeric"
                       min="0"
                       placeholder="25000"
-                      style={{
-                        padding: "14.5px 52px 14.5px 14px",
-                        ...err("maximumTransaction"),
-                      }}
+                      style={{ padding: "14.5px 52px 14.5px 14px", ...err("maximumTransaction") }}
                       className={styles.textInput}
                       value={form.maximumTransaction}
                       onChange={set("maximumTransaction")}
@@ -674,10 +643,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
 
                   <div className={styles.inputWrapper}>
                     <input
-                      style={{
-                        padding: "14.5px 52px 14.5px 14px",
-                        ...err("averageBalance"),
-                      }}
+                      style={{ padding: "14.5px 52px 14.5px 14px", ...err("averageBalance") }}
                       type="text"
                       inputMode="numeric"
                       min="0"
@@ -778,10 +744,7 @@ const PaymentsFields = ({ form, set, isMobile, err }) => {
 
         <div className={styles.inputWrapper}>
           <input
-            style={{
-              padding: "14.5px 52px 14.5px 14px",
-              ...err("incomingPayments"),
-            }}
+            style={{ padding: "14.5px 52px 14.5px 14px", ...err("incomingPayments") }}
             type="text"
             inputMode="numeric"
             min="0"
@@ -802,10 +765,7 @@ const PaymentsFields = ({ form, set, isMobile, err }) => {
 
         <div className={styles.inputWrapper}>
           <input
-            style={{
-              padding: "14.5px 52px 14.5px 14px",
-              ...err("outgoingPayments"),
-            }}
+            style={{ padding: "14.5px 52px 14.5px 14px", ...err("outgoingPayments") }}
             type="text"
             inputMode="numeric"
             min="0"

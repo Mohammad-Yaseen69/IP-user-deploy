@@ -1503,7 +1503,6 @@
       }
     }
 
-    .jkanban-container,
     .email-wrap {
       .note {
         width: 100%;
@@ -2159,11 +2158,6 @@
           margin-right: 8px;
         }
       }
-    }
-
-    // kanban board
-    .kanban-board {
-      width: calc(100% / 2 - 30px) !important;
     }
 
     // ecommerce

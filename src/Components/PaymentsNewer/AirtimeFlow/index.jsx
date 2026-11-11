@@ -35,6 +35,10 @@ import ReceiptE from "../Esim/Receipt";
 import countries from "../../CitiesDropDown/CitiesData.json";
 import PrevModal from "./PrevModal";
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
+import PlaidBankTransfer from "../../AddFunds/WalletFundsFlow/PlaidBankTransfer";
+import PlaidLinkHandler from "../InternationalFlow/PlaidLinkHandler";
+import { initiatePaytentlyPayment, usePaytently } from "../../../utils/Functions/paytently";
+import PaytentlyHostedModal from "../../AddFunds/PaytentlyHostedModal";
 
 const initialState = {
   loading: false,
@@ -59,6 +63,8 @@ const initialState = {
   codeType: "sms",
   created_transaction: {},
   verified: false,
+  showPlaid: false,
+  plaidLink: null,
   wallet: {},
   cardNumber: "",
   expiry: "",
@@ -107,6 +113,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
   const { t } = useTranslation();
   const [data, dispatch] = useReducer(reducer, initialState);
   const { getKey, reset } = useIdempotency();
+  const isBankTransfer = data.payment_type?.value === "bank_transfer";
 
   const updateDataHandler = (field, value) => {
     dispatch({ type: "UPDATE_FIELD", field, value });
@@ -241,6 +248,10 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         sub_service_id: data.flow === "e-sim" ? 14 : data.service_type?.id || 12,
         local_wallet_id: data?.localWallet?._id,
         type: data.flow === "e-sim" && "esim",
+        ...(isBankTransfer && data.recipient_iban ? { recipient_iban: data.recipient_iban } : {}),
+        ...(isBankTransfer && data.recipient_bank_id
+          ? { savedBankId: data.recipient_bank_id, isSaveBank: true }
+          : {}),
       };
       if (isOpenRange) {
         dataa.amount = +String(data?.airtime_amount)?.replaceAll(",", "");
@@ -263,6 +274,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
       const decrypted = decryptData(res.data.data);
       console.log("package_details", decrypted);
       updateDataHandler("package_details", decrypted);
+      updateDataHandler("showPlaid", false);
       updateDataHandler("step", data.step + 1);
     } catch (err) {
       const decrypted = decryptData(err.response.data.data);
@@ -277,31 +289,34 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
     }
   };
 
-  const createTransaction = async (codeType = "") => {
-    try {
-      const isOpenRange =
-        +String(data?.airtime_amount)?.replaceAll(",", "") > 0 &&
-        data.service_type?.name?.toLowerCase()?.includes("airtime");
+  const getTransactionData = () => {
+    const isOpenRange =
+      +String(data?.airtime_amount)?.replaceAll(",", "") > 0 &&
+      data.service_type?.name?.toLowerCase()?.includes("airtime");
 
+    return {
+      wallet_id: data?.payment_type?.value === "wallet" ? data.wallet?._id : data.localWallet?._id,
+      token: data.package_details?.data?.token,
+      number: data.recipient
+        ? `+${data.recipient}`
+        : data.eSimData.phone
+          ? `+${data.eSimData.phone}`
+          : `+${userDetails.phone}`,
+      type: data.flow === "e-sim" && "esim",
+      airtimeType: isOpenRange ? "ranged" : "fixed",
+      ...(data.eSimData.email ? { email: data.eSimData.email } : {}),
+    };
+  };
+
+  const createTransaction = async (codeType = "") => {
+    if (data.plaidLink) return;
+
+    try {
       const payload = {
-        data: {
-          wallet_id:
-            data?.payment_type?.value === "wallet" ? data.wallet?._id : data.localWallet?._id,
-          token: data.package_details?.data?.token,
-          number: data.recipient
-            ? `+${data.recipient}`
-            : data.eSimData.phone
-              ? `+${data.eSimData.phone}`
-              : `+${userDetails.phone}`,
-          type: data.flow === "e-sim" && "esim",
-          airtimeType: isOpenRange ? "ranged" : "fixed",
-        },
+        data: getTransactionData(),
         type: codeType || data.codeType,
       };
 
-      if (data.eSimData.email) {
-        payload.data.email = data.eSimData.email;
-      }
       const encrypted = encryptData(payload);
       const res = await axios.post(
         `${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`,
@@ -352,7 +367,9 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         data.service_type?.name?.toLowerCase()?.includes("airtime");
       let url;
 
-      if (data.flow === "airtime") {
+      if (isBankTransfer) {
+        url = `${import.meta.env.VITE_IP_DEV_API}/api/plaid/initiate-${data.flow === "e-sim" ? "esim" : "airtime"}-payment`;
+      } else if (data.flow === "airtime") {
         if (data.payment_type.value === "paypal") {
           url = `${import.meta.env.VITE_IP_DEV_API}${isOpenRange ? "/api/paypal/initiate-airtime-ranged-payment" : "/api/paypal/initiate-airtime-fixed-payment"}`;
         } else if (data?.payment_type?.value === "mobile_wallet") {
@@ -365,8 +382,16 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
           url = `${import.meta.env.VITE_IP_DEV_API}/api/dt/confirm-esim-transaction`;
         } else if (data.payment_type.value === "paypal") {
           url = `${import.meta.env.VITE_IP_DEV_API}/api/paypal/initiate-esim`;
+        } else if (data?.payment_type?.value === "mobile_wallet") {
+          url = `${import.meta.env.VITE_IP_DEV_API}/api/collection/esim`;
         }
       }
+
+      if (!url) {
+        updateDataHandler("otpError", t("This payment method is not available for this purchase."));
+        return;
+      }
+
       const res = await axios.post(
         url,
         { data: enc },
@@ -375,6 +400,13 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
 
       const dec = decryptData(res.data.data);
       console.log(dec);
+      const details = dec?.data ?? dec;
+      if (isBankTransfer && details?.linkToken) {
+        updateDataHandler("plaidLink", details);
+        updateDataHandler("otpError", "");
+        updateDataHandler("show_otp", false);
+        return;
+      }
       if (data.payment_type.value === "paypal") {
         window.location.href = dec.url;
       }
@@ -409,7 +441,8 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
     const array = [1, 2, 4];
     if (array.includes(data.step)) {
       if (data.step === 4) {
-        if (!data.showCard) {
+        // Paytently collects the card on its own hosted form, so our card step is skipped.
+        if (!data.showCard && !(usePaytently && data.payment_type?.value === "card")) {
           updateDataHandler("showCard", true);
         } else {
           getPackageDetails();
@@ -468,6 +501,9 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         if (data.payment_type?.value === "wallet") {
           return !data.wallet?._id;
         } else if (data.payment_type?.value === "card") {
+          // Paytently validates the card on its own hosted form; nothing to check here.
+          if (usePaytently) return false;
+
           const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
           const currentDate = new Date();
           const currentMonth = currentDate.getMonth() + 1;
@@ -495,10 +531,41 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
   // toast.success(data.wallet?._id)
 
   const [showCardModal, setShowCardModal] = useState(false);
+  const [paytentlyHosted, setPaytentlyHosted] = useState(null);
 
   const initiateCardPayment = async (otp) => {
     updateDataHandler("loading", true);
     try {
+      // Paytently collects the card on its own hosted form, so no card data is built
+      // here. The quote and recipient ride inside the OTP token; only the wallet and
+      // the flow name are sent alongside it.
+      if (usePaytently) {
+        const dec = await initiatePaytentlyPayment({
+          walletId: data.localWallet?._id,
+          flow: data.flow === "e-sim" ? "esim" : "airtime",
+          otp: {
+            token: data.created_transaction?.token,
+            otp: otp,
+            type: data.codeType,
+          },
+          idempotencyKey: getKey(),
+        });
+
+        if (!dec?.hosted_forms_url) {
+          updateDataHandler(
+            "otpError",
+            LimitsErrorMessage(dec?.code ?? dec?.message) ??
+              dec?.message ??
+              "We cannot process your request at the moment, please try again later.",
+          );
+          return;
+        }
+
+        setPaytentlyHosted({ hostedUrl: dec.hosted_forms_url, authorizeUrl: dec.authorize_url });
+        updateDataHandler("show_otp", false);
+        return;
+      }
+
       const payload = {
         token: data.created_transaction?.token,
         otp: otp,
@@ -537,7 +604,8 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
       console.log(dec);
       updateDataHandler("cardTransactionDetails", dec);
     } catch (err) {
-      const decrypted = decryptData(err.response.data.data);
+      // A Paytently timeout has no response body, so this must survive err.response being absent.
+      const decrypted = err?.response?.data?.data ? decryptData(err.response.data.data) : {};
       console.log(decrypted);
       if (decrypted?.message === "invalid_card_details") {
         setShowCardModal(true);
@@ -588,6 +656,46 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
     }
   }, [transaction_status]);
 
+  const getPlaidData = () => {
+    const { sending, fee } = data.package_details?.data ?? {};
+
+    return {
+      ...data,
+      wallet: data.localWallet,
+      exchange_rate: {
+        sending: { amount: sending?.value, currency: sending?.currency },
+        receiver: { amount: sending?.value, currency: sending?.currency },
+        fee: { amount: fee?.value, currency: fee?.currency },
+      },
+    };
+  };
+
+  const handlePlaidAuthorized = () => {
+    updateDataHandler("transaction_details", data.plaidLink);
+    updateDataHandler("verified", true);
+    updateDataHandler("plaidLink", null);
+    updateDataHandler("loading", false);
+  };
+
+  const handlePlaidCancelled = () => {
+    reset();
+    updateDataHandler("plaidLink", null);
+    updateDataHandler("loading", false);
+    updateDataHandler("step", 4);
+    updateDataHandler("showPlaid", true);
+  };
+
+  const plaidJSX = () =>
+    data.showPlaid && (
+      <PlaidBankTransfer
+        data={data}
+        dataHandler={updateDataHandler}
+        type={data.flow}
+        handleBackClick={() => updateDataHandler("showPlaid", false)}
+        onBankSelected={getPackageDetails}
+      />
+    );
+
   const otpConfirmJSX = () =>
     data.show_otp && (
       <OtpConfirmation
@@ -611,6 +719,21 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
 
   return (
     <>
+      {data.plaidLink?.linkToken && (
+        <PlaidLinkHandler
+          link={data.plaidLink}
+          data={getPlaidData()}
+          onProcessing={() => updateDataHandler("loading", true)}
+          onAuthorized={handlePlaidAuthorized}
+          onCancelled={handlePlaidCancelled}
+        />
+      )}
+      <PaytentlyHostedModal
+        isOpen={!!paytentlyHosted?.hostedUrl}
+        hostedUrl={paytentlyHosted?.hostedUrl}
+        authorizeUrl={paytentlyHosted?.authorizeUrl}
+        onClose={() => setPaytentlyHosted(null)}
+      />
       {data.cardTransactionDetails?.transaction_id ? (
         <TrustpaymentPage
           amount={+String(data.amount)?.replaceAll(",", "")}
@@ -795,6 +918,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                     />
                   ))}
                 {data.step === 4 &&
+                  !data.showPlaid &&
                   (data.showCard ? (
                     <div className={styles.card}>
                       <CreditCard
@@ -849,7 +973,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                       updateDataHandler={updateDataHandler}
                     />
                   ))}
-                {data.step === 5 && (
+                {data.step === 5 && !data.showPlaid && (
                   <>
                     {data.flow === "airtime" ? (
                       <StepFive
@@ -873,7 +997,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                 ) : (
                   ""
                 )}
-                {data.step === 6 && (
+                {data.step === 6 && !data.showPlaid && (
                   <>
                     <ReceiptE
                       data={data}
@@ -884,6 +1008,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                     {otpConfirmJSX()}
                   </>
                 )}
+                {plaidJSX()}
               </div>
             </div>
           )}
@@ -957,6 +1082,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                         />
                       ))}
                     {data.step === 4 &&
+                      !data.showPlaid &&
                       (data.showCard ? (
                         <div className={styles.card}>
                           <CreditCard
@@ -980,7 +1106,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                           updateDataHandler={updateDataHandler}
                         />
                       ))}
-                    {data.step === 5 && (
+                    {data.step === 5 && !data.showPlaid && (
                       <>
                         {data.flow === "airtime" ? (
                           <StepFive
@@ -998,7 +1124,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                         {otpConfirmJSX()}
                       </>
                     )}
-                    {data.step === 6 && (
+                    {data.step === 6 && !data.showPlaid && (
                       <>
                         <ReceiptE
                           data={data}
@@ -1009,6 +1135,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                         {otpConfirmJSX()}
                       </>
                     )}
+                    {plaidJSX()}
                   </>
                 }
               </div>
@@ -1030,7 +1157,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                     {t("Trouble Sending Money")}
                   </Link>
 
-                  {data.step !== 4 && (
+                  {data.step !== 4 && !data.showPlaid && (
                     <div className={styles?.buttons}>
                       <button
                         disabled={data.loading}

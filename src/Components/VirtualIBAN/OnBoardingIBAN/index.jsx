@@ -42,6 +42,21 @@ import {
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
 import { useRiskPreview } from "../../../hooks/useRiskPreview";
 import { RiskPreviewContext } from "./riskPreviewContext";
+import {
+  getPlaidBankPayload,
+  isSavedBankPaymentStarted,
+} from "../../AddFunds/WalletFundsFlow/plaidBank";
+import PlaidLinkHandler from "../../PaymentsNewer/InternationalFlow/PlaidLinkHandler";
+import MobileWalletStatus from "../../PaymentAddressPublic/PayAsGuest/MobileWalletStatus";
+import PaymentProgressOverlay from "../PaymentProgressOverlay";
+import { useNavigate } from "react-router";
+
+const FEE_PAYMENT_ROUTES = {
+  wallet: "confirm-activation",
+  paypal: "initiate-paypal",
+  bank: "initiate-plaid",
+  mobile_wallet: "initiate-mobile-wallet",
+};
 
 const STEPS_BUSINESS = [
   "landing",
@@ -179,7 +194,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
   const can = usePermission();
   const isMobile = useMediaQuery("(max-width:600px)");
   const { getKey, reset } = useIdempotency();
-
+  const navigate = useNavigate();
   const canCreateIban = can("virtual-iban.account.create");
   const { userDetails, authHeader } = useContext(UserContext);
 
@@ -188,6 +203,10 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
   const [otpToken, setOtpToken] = useState("");
   const [codeType, setCodeType] = useState("sms");
   const [otpMethods, setOtpMethods] = useState(null);
+  const [feePayment, setFeePayment] = useState({ method: "wallet", plaidBank: null });
+  const [plaidLink, setPlaidLink] = useState(null);
+  const [isRedirecting, setIsRedirecting] = useState(false);
+  const [mobileWalletTransactionId, setMobileWalletTransactionId] = useState(null);
   const [loadingStatus, setLoadingStatus] = useState(true);
   const [statusCheckedFor, setStatusCheckedFor] = useState(null);
   const [draftHydrated, setDraftHydrated] = useState(false);
@@ -237,6 +256,15 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
   useEffect(() => {
     checkRequestStatus();
   }, [userDetails?._id]);
+
+  useEffect(() => {
+    const handlePageShow = (event) => {
+      if (event.persisted) setIsRedirecting(false);
+    };
+
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
 
   useEffect(() => {
     if (!draftEnabled || hydratedForRef.current === userDetails._id) return;
@@ -335,6 +363,22 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     },
   });
 
+  useImperativeHandle(
+    ref,
+    () => ({
+      back() {
+        return goBack();
+      },
+    }),
+    [state.step],
+  );
+
+  useEffect(() => {
+    onStepChange?.(state.step);
+  }, [state.step, onStepChange]);
+
+  if (userDetails?.account_type === "individual") navigate("/virtual-IBAN");
+
   const stepOrder = state.userType === "individual" ? STEPS_INDIVIDUAL : STEPS_BUSINESS;
 
   const getNextStep = (currentStep) => {
@@ -399,7 +443,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     dispatch({ type: "SET_STEP", payload: type === "individual" ? "review" : "company" });
   };
 
-  const handleInitiatePayment = async () => {
+  const handleInitiatePayment = async (paymentOptions = {}) => {
     if (!state.selectedWallet?._id) {
       toast.error(t("Please select an Instapay wallet to continue."));
       return;
@@ -419,10 +463,14 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     reset();
     setCodeType(selectedType);
 
+    const method = paymentOptions.method || "wallet";
+    setFeePayment({ method, plaidBank: paymentOptions.plaidBank || null });
+
     const payload = {
       wallet_id: state.selectedWallet._id,
       amount: state.feeDetails.convertedAmount,
       currency: state.feeDetails.currency,
+      ...(method === "bank" ? getPlaidBankPayload(paymentOptions.plaidBank) : {}),
     };
 
     try {
@@ -444,6 +492,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         ...state.activity,
         ubos: state.ownership?.owners || state.ownership?.ubos || state.ownership || [],
         email: state.account.email,
+        ...(feePayment.method === "bank" ? getPlaidBankPayload(feePayment.plaidBank) : {}),
       };
 
       const draftFiles = [];
@@ -472,7 +521,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
       ibanDraft.cancelPending();
 
       const response = await axios.post(
-        `${import.meta.env.VITE_IP_DEV_API}/api/iban-fees/confirm-activation`,
+        `${import.meta.env.VITE_IP_DEV_API}/api/iban-fees/${FEE_PAYMENT_ROUTES[feePayment.method] || FEE_PAYMENT_ROUTES.wallet}`,
         formData,
         {
           headers: {
@@ -484,13 +533,47 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
       );
 
       const dec = decryptData(response.data?.data);
-      if (dec?.status) {
+      const details = dec?.data ?? dec;
+
+      const paypalUrl = details?.approvalUrl || details?.url;
+      if (feePayment.method === "paypal" && paypalUrl) {
+        setIsRedirecting(true);
+        setShowOtpModal(false);
+        window.location.href = paypalUrl;
+        return;
+      }
+
+      if (feePayment.method === "bank" && details?.linkToken) {
         setVerified(true);
         setShowOtpModal(false);
-        await checkRequestStatus();
-        dispatch({ type: "SET_STATUS", payload: "submitted" });
-        dispatch({ type: "SET_STEP", payload: "status" });
-        toast.success(t("IBAN Activation request and payment completed successfully!"));
+        setPlaidLink(details);
+        return;
+      }
+
+      if (feePayment.method === "bank" && isSavedBankPaymentStarted(dec)) {
+        setVerified(true);
+        setShowOtpModal(false);
+        await completeActivation();
+        return;
+      }
+
+      if (feePayment.method === "mobile_wallet" && dec?.status) {
+        setVerified(true);
+        setShowOtpModal(false);
+        const transactionId = details?.transactionId || details?.transaction_id;
+        if (transactionId) {
+          setMobileWalletTransactionId(transactionId);
+        } else {
+          toast.info(dec?.message || t("Payment Initiated"));
+          await checkRequestStatus();
+        }
+        return;
+      }
+
+      if (feePayment.method === "wallet" && dec?.status) {
+        setVerified(true);
+        setShowOtpModal(false);
+        await completeActivation();
       } else {
         setOtpError?.(dec?.message || t("Verification failed"));
       }
@@ -498,6 +581,18 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
       const decErr = decryptData(err?.response?.data?.data);
       setOtpError?.(decErr?.message || t("Verification failed or insufficient balance"));
     }
+  };
+
+  const completeActivation = async () => {
+    await checkRequestStatus();
+    dispatch({ type: "SET_STATUS", payload: "submitted" });
+    dispatch({ type: "SET_STEP", payload: "status" });
+    toast.success(t("IBAN Activation request and payment completed successfully!"));
+  };
+
+  const closeMobileWalletStatus = async () => {
+    setMobileWalletTransactionId(null);
+    await checkRequestStatus();
   };
 
   const closeOtpModal = () => {
@@ -529,20 +624,6 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     owners: state.ownership.owners,
     documents: state.documents.files,
   };
-
-  useImperativeHandle(
-    ref,
-    () => ({
-      back() {
-        return goBack();
-      },
-    }),
-    [state.step],
-  );
-
-  useEffect(() => {
-    onStepChange?.(state.step);
-  }, [state.step, onStepChange]);
 
   const riskPayload = useMemo(
     () => ({
@@ -814,6 +895,44 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
           }
         />
       )}
+
+      <PaymentProgressOverlay show={isRedirecting || !!plaidLink} />
+
+      {plaidLink?.linkToken && (
+        <PlaidLinkHandler
+          link={plaidLink}
+          data={{
+            recipient_iban: feePayment.plaidBank?.recipient_iban,
+            wallet: state.selectedWallet,
+            exchange_rate: {
+              sending: {
+                amount: state.feeDetails?.convertedAmount,
+                currency: state.feeDetails?.currency,
+              },
+              fee: { amount: 0 },
+            },
+          }}
+          onAuthorized={async () => {
+            await completeActivation();
+            setPlaidLink(null);
+          }}
+          onCancelled={() => {
+            reset();
+            setPlaidLink(null);
+          }}
+        />
+      )}
+
+      <Modal isOpen={!!mobileWalletTransactionId} toggle={closeMobileWalletStatus} centered>
+        <ModalBody>
+          <MobileWalletStatus
+            inGuestPay={false}
+            transactionId={mobileWalletTransactionId}
+            toggle={closeMobileWalletStatus}
+            containerStyle={{ padding: "0", minHeight: "auto" }}
+          />
+        </ModalBody>
+      </Modal>
 
       <Modal
         style={{ maxWidth: isMobile ? "90%" : "auto" }}
