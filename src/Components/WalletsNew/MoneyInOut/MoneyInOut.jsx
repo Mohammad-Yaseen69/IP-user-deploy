@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Chart from "react-apexcharts";
 import styles from "./MoneyInOut.module.css";
 
@@ -13,8 +13,20 @@ const IN_ACTIVE = "#5926f0";
 const OUT_COLOR = "#e5e7eb";
 const OUT_ACTIVE = "#1B1F2A";
 
-const MoneyInOut = ({ currency = "EUR", data = [], loading = false }) => {
+const MoneyInOut = ({ currency, data = [], loading = false }) => {
   const [range, setRange] = useState("12M");
+  const MOBILE_QUERY = "(max-width: 1000px)";
+
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== "undefined" && window.matchMedia(MOBILE_QUERY).matches,
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia(MOBILE_QUERY);
+    const onChange = (e) => setIsMobile(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
 
   const sliced = useMemo(() => (range === "6M" ? data.slice(-6) : data), [range, data]);
 
@@ -61,12 +73,14 @@ const MoneyInOut = ({ currency = "EUR", data = [], loading = false }) => {
     legend: { show: false },
     stroke: { show: false },
     grid: {
+      show: !isMobile,
       borderColor: "#f0f0f3",
       strokeDashArray: 0,
       padding: { left: 4, right: 4 },
     },
     xaxis: {
       labels: {
+        show: !isMobile,
         rotate: 0,
         hideOverlappingLabels: false,
         trim: false,
@@ -75,6 +89,7 @@ const MoneyInOut = ({ currency = "EUR", data = [], loading = false }) => {
     },
     yaxis: {
       labels: {
+        show: !isMobile,
         minWidth: 40,
         style: { colors: "#9a9aa6", fontSize: "11px" },
         formatter: (v) => `${Math.round(Math.abs(v) / 1000)}k`,
@@ -146,7 +161,7 @@ const MoneyInOut = ({ currency = "EUR", data = [], loading = false }) => {
         </div>
       </div>
       <p className={styles.hint}>{sliced[lastIndex]?.month} · Hover a month to compare</p>
-      <Chart type="bar" series={series} options={options} height={280} />
+      <Chart type="bar" series={series} options={options} height={isMobile ? 120 : 280} />
     </div>
   );
 };

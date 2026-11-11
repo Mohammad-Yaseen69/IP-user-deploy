@@ -57,7 +57,6 @@ export const useMoneyInOut = (currentWallet) => {
     const now = new Date();
     const from = new Date(now.getFullYear(), now.getMonth() - 11, 1);
 
-    // Backend ke working example jaisa payload: from, to, query
     const payload = encryptData({
       from: formatDate(from),
       to: formatDate(now),

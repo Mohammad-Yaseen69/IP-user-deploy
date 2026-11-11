@@ -1,17 +1,10 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import styles from "./styles/Top.module.css";
-import cardsStyle from "../HomeNewUpdated/styles/CardsContainer.module.css";
 import { EffectCards } from "swiper";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { UserContext } from "../../Context/UserContext";
 import { useTranslation } from "react-i18next";
-import add_funds from "./files/top_up.svg";
-import convert from "./files/conv.svg";
-import withdraw from "./files/withdraw.svg";
-import download from "./files/down_load.svg";
-import block from "./files/block.svg";
-import plus from "./files/plus.svg";
 import Card from "./Card";
 import DefaultWalletModal from "./DefaultWalletModal";
 import AddCurrencyModal from "./AddCurrencyModal";
@@ -251,75 +244,67 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
         ""
       )}
       <div className={styles.left} style={{ alignItems: "flex-start" }}>
-        <div className={styles.top}>
-          <span className={styles.icon}>
-            {" "}
+        <div className={styles.balanceHeader}>
+          <span className={styles.balanceIcon}>
             {currentWallet?.currency?.symbol || currentWallet?.currency?.code}
           </span>
-          <div>
+          <div className={styles.balanceText}>
             <h2>
               {currentWallet?.currency?.code} {t("Wallet")}
             </h2>
             <p>{t("Last 30 days")}</p>
           </div>
-          {can("wallet.status.update") &&
-          currentWallet?.wallet_type !== "crypto" &&
-          !(
-            currentWallet?.blocked ||
-            currentWallet?.admin_blocked ||
-            currentWallet?.status !== "active"
-          ) ? (
-            <></>
-          ) : null}
         </div>
         <div className={styles.cards}>
           {can("wallet.list.view") && (
-            <Swiper
-              effect={"cards"}
-              grabCursor={true}
-              modules={[EffectCards]}
-              cardsEffect={{
-                rotate: false,
-                slideShadows: false,
-              }}
-              style={{
-                minWidth: userWallets?.length === 1 ? "22vw" : "250px",
-                width: userWallets?.length === 1 ? "100%" : "auto",
-                cursor: "none",
-              }}
-              className={`mySwiper ${styles.swiper}`}
-              onSwiper={(swiper) => {
-                if (activeDot > 0) {
-                  swiper.slideTo(activeDot);
-                }
-              }}
-              onSlideChange={(e) => {
-                setActiveDot(e.activeIndex);
-              }}
-              ref={swiperRef}
-            >
-              {userWallets?.length > 0
-                ? userWallets.map((item, index) => (
-                    <SwiperSlide
-                      key={index}
-                      style={{
-                        cursor: "none",
-                        borderRadius: "10px",
-                      }}
-                    >
-                      <Card
-                        data={data}
-                        current={activeDot}
-                        index={index}
+            <div className={styles.swiper_wrap}>
+              <Swiper
+                effect={"cards"}
+                grabCursor={true}
+                modules={[EffectCards]}
+                cardsEffect={{
+                  rotate: false,
+                  slideShadows: false,
+                }}
+                style={{
+                  minWidth: userWallets?.length === 1 ? "22vw" : "250px",
+                  width: userWallets?.length === 1 ? "100%" : "auto",
+                  cursor: "none",
+                }}
+                className={`mySwiper ${styles.swiper}`}
+                onSwiper={(swiper) => {
+                  if (activeDot > 0) {
+                    swiper.slideTo(activeDot);
+                  }
+                }}
+                onSlideChange={(e) => {
+                  setActiveDot(e.activeIndex);
+                }}
+                ref={swiperRef}
+              >
+                {userWallets?.length > 0
+                  ? userWallets.map((item, index) => (
+                      <SwiperSlide
                         key={index}
-                        wallet={item}
-                        canSetDefault={can("wallet.status.update")}
-                        onSetDefault={() => setShowConfirmationModal(true)}
-                      />
-                    </SwiperSlide>
-                  ))
-                : ""}
-            </Swiper>
+                        style={{
+                          cursor: "none",
+                          borderRadius: "10px",
+                        }}
+                      >
+                        <Card
+                          data={data}
+                          current={activeDot}
+                          index={index}
+                          key={index}
+                          wallet={item}
+                          canSetDefault={can("wallet.status.update")}
+                          onSetDefault={() => setShowConfirmationModal(true)}
+                        />
+                      </SwiperSlide>
+                    ))
+                  : ""}
+              </Swiper>
+            </div>
           )}
           <div className={styles.carouselNav}>
             <button
@@ -560,30 +545,14 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
 
             {/* Auto Transfer Changes Required */}
             {can("wallet.status.update") && (
-              <Tooltip
-                title={t(
-                  "This currency wallet is currently set as your default and cannot be blocked. To proceed, please set a different currency wallet as your default first.",
-                )}
-                arrow
-                disableHoverListener={!currentDefault}
-              >
-                <button
-                  type="button"
-                  className={styles.action}
-                  // onClick={() => {
-                  //   currentDefault ? console.log("") : handleBlockWallet();
-                  // }}
-                  disabled={blockedWallet}
-                  id={"block_the_wallet"}
-                >
-                  <span className={styles.actionIcon}>{ICONS.autoTransfer}</span>
-                  <span className={styles.actionText}>
-                    <strong>{adminBlocked ? t("Blocked By Admin") : t("Auto Transfer")}</strong>
-                    <small>{t("Automatically transfer to...")}</small>
-                  </span>
-                  <span className={styles.setupBtn}>{t("Set up")}</span>
-                </button>
-              </Tooltip>
+              <div className={`${styles.action} ${styles.disabledAction}`} aria-disabled="true">
+                <span className={styles.actionIcon}>{ICONS.autoTransfer}</span>
+                <span className={styles.actionText}>
+                  <strong>{t("Auto Transfer")}</strong>
+                  <small>{t("Automatically transfer to...")}</small>
+                </span>
+                <span className={styles.comingSoon}>{t("Coming soon")}</span>
+              </div>
             )}
 
             {/* Wallet Status (toggle) */}

@@ -28,16 +28,29 @@ const calcPercent = (used, total) => {
 const getLimit = (data, key) => data?.others?.find((o) => o?.limits?.[key])?.limits?.[key] || {};
 
 const PERIODS = [
+  { key: "all", label: "All" },
   { key: "daily", label: "Daily", title: "Daily Limit" },
   { key: "monthly", label: "Monthly", title: "Monthly Limit" },
   { key: "yearly", label: "Yearly", title: "Yearly Limit" },
 ];
 
+const ALL_PERIODS = PERIODS.filter((p) => p.key !== "all");
+
 const AccountLimits = ({ currentWallet, data, loading, error }) => {
   const { t } = useTranslation();
-  const [period, setPeriod] = useState(null);
+  const [period, setPeriod] = useState("all");
 
-  console.log(data);
+  const handleTabClick = (key) => {
+    if (key === "all") {
+      setPeriod("all");
+      return;
+    }
+    setPeriod(key);
+  };
+
+  const visiblePeriods =
+    period === "all" ? ALL_PERIODS : ALL_PERIODS.filter((p) => p.key === period);
+
   return loading ? (
     <div
       style={{
@@ -76,8 +89,9 @@ const AccountLimits = ({ currentWallet, data, loading, error }) => {
                 <button
                   key={p.key}
                   type="button"
+                  aria-selected={period === p.key}
                   className={`${styles.lim_tab} ${period === p.key ? styles.lim_tab_active : ""}`}
-                  onClick={() => setPeriod(period === p.key ? null : p.key)}
+                  onClick={() => handleTabClick(p.key)}
                 >
                   {t(p.label)}
                 </button>
@@ -86,7 +100,7 @@ const AccountLimits = ({ currentWallet, data, loading, error }) => {
           </div>
           <div></div>
           <div className={styles.limit_section}>
-            {PERIODS.filter((p) => !period || p.key === period).map((p) => (
+            {visiblePeriods.map((p) => (
               <LimitRow key={p.key} title={t(p.title)} limit={getLimit(data, p.key)} />
             ))}
 

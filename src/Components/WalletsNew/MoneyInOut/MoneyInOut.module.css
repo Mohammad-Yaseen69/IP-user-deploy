@@ -140,3 +140,57 @@
   font-size: 13px;
   color: #1a1a1f;
 }
+
+@media (max-width: 1000px) {
+  .card {
+    padding: 16px;
+  }
+
+  .header {
+    margin-bottom: 12px;
+  }
+
+  .title {
+    font-size: 16px;
+  }
+
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .summaryItem {
+    min-width: 0;
+  }
+
+  .summaryLabel {
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .summaryValue,
+  .netPositive,
+  .netNegative {
+    font-size: 13px;
+    line-height: 18px;
+  }
+
+  .summaryValue small {
+    font-size: 10px;
+  }
+
+  .hint {
+    display: none;
+  }
+}
+
+@media (max-width: 374px) {
+  .summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .summaryItem:last-child {
+    grid-column: 1 / -1;
+  }
+}
