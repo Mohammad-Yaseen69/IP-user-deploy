@@ -19,12 +19,12 @@ const ICON_MAP = {
   activation_fee: DollarSign,
   iban_activation: DollarSign,
   monthly_iban_fee: Repeat,
-  sepa_inward: ArrowDownCircle,
-  sepa_outward: ArrowUpCircle,
-  swift_inward: ArrowDownCircle,
-  swift_outward: ArrowUpCircle,
-  crypto_inward: ArrowDownCircle,
-  crypto_outward: ArrowUpCircle,
+  iban_SEPA_in: ArrowDownCircle,
+  iban_SEPA_out: ArrowUpCircle,
+  iban_SWIFT_in: ArrowDownCircle,
+  iban_SWIFT_out: ArrowUpCircle,
+  iban_crypto_in: ArrowDownCircle,
+  crypto_payout_via_iban: ArrowUpCircle,
 };
 
 const PlanListIcon = () => (
