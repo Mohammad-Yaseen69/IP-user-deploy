@@ -1,21 +1,11 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import "./index.scss";
-import App from "./App";
-// import reportWebVitals from './reportWebVitals';
-import "./i18n";
+import { i18nReady } from "./i18n";
 
 // import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 // libs css
-import "swiper/swiper-bundle.css";
-import "react-date-range/dist/styles.css";
-import "react-date-range/dist/theme/default.css";
-import "react-phone-input-2/lib/style.css";
-import "./Components/PaymentsNewer/styles/i_transfer.css";
-import "./Components/PaymentsNewer/styles/ConfirmContainer.css";
-import "./Components/PaymentsNewer/styles/Timeline.css";
-import "./Components/AddFunds/styles/creditcard.css";
 import { BrowserRouter } from "react-router-dom";
 import * as Sentry from "@sentry/react";
 
@@ -37,14 +27,7 @@ if (import.meta.env.NODE_ENV === "development") {
 Sentry.init({
   dsn: "https://448eafaae4776c67a2f5831cf64a23e5@o4509485673349120.ingest.us.sentry.io/4509485675118592",
   sendDefaultPii: true,
-  integrations: [
-    Sentry.browserTracingIntegration(),
-    Sentry.replayIntegration({
-      maskAllText: false,
-      blockAllMedia: false,
-    }),
-    Sentry.browserProfilingIntegration(),
-  ],
+  integrations: [Sentry.browserTracingIntegration(), Sentry.browserProfilingIntegration()],
   tracesSampleRate: 1.0,
   tracePropagationTargets: [
     "localhost",
@@ -75,13 +58,52 @@ if (!import.meta.env.DEV) {
 const container = document.getElementById("root");
 const root = createRoot(container);
 
-root.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
-  document.getElementById("root"),
-);
+const preloadAuthPage = () => {
+  const isAuthPage = /^\/(login|signup)(\/|$)/i.test(window.location.pathname);
+  if (isAuthPage && !localStorage.getItem("token")) {
+    import("./Components/Auth").catch(() => {});
+  }
+};
 
+const loadSentryReplay = () => {
+  import("./Helper/sentryReplay")
+    .then(({ replayIntegration }) => {
+      Sentry.addIntegration(
+        replayIntegration({
+          maskAllText: false,
+          blockAllMedia: false,
+        }),
+      );
+    })
+    .catch(() => {});
+};
+
+const scheduleSentryReplay = () => {
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(loadSentryReplay, { timeout: 3000 });
+  } else {
+    setTimeout(loadSentryReplay, 1000);
+  }
+};
+
+async function bootstrap() {
+  try {
+    preloadAuthPage();
+    const [{ default: App }] = await Promise.all([import("./App"), i18nReady]);
+
+    root.render(
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>,
+    );
+  } catch (error) {
+    console.error("Application initialization failed:", error);
+  } finally {
+    scheduleSentryReplay();
+  }
+}
+
+bootstrap();
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://cra.link/PWA

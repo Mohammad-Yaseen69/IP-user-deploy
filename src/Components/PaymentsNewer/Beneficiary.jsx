@@ -1,6 +1,5 @@
 import { Check, ChevronLeft, ChevronRight, HelpCircle, Search, X, XCircle } from "react-feather";
 import { Badge, Button, Card, CardBody, Input } from "reactstrap";
-import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import BeneficiaryCard from "./BeneficiaryCard";

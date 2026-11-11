@@ -4,26 +4,36 @@ import styles from "../cryptoPage.module.scss";
 import SendCryptoPanel from "./SendCryptoPanel";
 import WithdrawCryptoPanel from "./WithdrawCryptoPanel";
 import ConvertCryptoPanel from "./ConvertCryptoPanel";
+import useEffectivePermission, {
+  PERMISSIONS,
+} from "../../../../hooks/GeneralUse/useEffectivePermission";
 
-const TABS = ["Send", "Convert"];
+const TABS = ["Send", "Convert", "Withdraw"];
 
 const InstapayActionRail = ({ wallets = [], wallet, onSelectWallet }) => {
   const { t } = useTranslation();
   const [tab, setTab] = useState("Send");
+  const hasPermission = useEffectivePermission();
+  const canWithdrawCrypto = hasPermission(PERMISSIONS.CRYPTO_WITHDRAWAL);
+  const canConvert = hasPermission(PERMISSIONS.WALLET_TO_CRYPTO_CONVERSION);
 
   return (
     <aside className={styles.rail}>
       <div className={styles.railTabs}>
-        {TABS.map((item) => (
-          <button
-            key={item}
-            type="button"
-            className={`${styles.railTab} ${tab === item ? styles.railTabActive : ""}`}
-            onClick={() => setTab(item)}
-          >
-            {t(item)}
-          </button>
-        ))}
+        {TABS.map((item) => {
+          if (!canWithdrawCrypto && item === "Withdraw") return;
+          if (!canConvert && item === "Convert") return;
+          return (
+            <button
+              key={item}
+              type="button"
+              className={`${styles.railTab} ${tab === item ? styles.railTabActive : ""}`}
+              onClick={() => setTab(item)}
+            >
+              {t(item)}
+            </button>
+          );
+        })}
       </div>
 
       {tab === "Send" ? (

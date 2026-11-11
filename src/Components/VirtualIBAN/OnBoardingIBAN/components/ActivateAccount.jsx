@@ -419,6 +419,20 @@ const ActivateAccount = ({
                     </strong>
                   </div>
                 )}
+
+                <div className={styles.summaryRow} style={{ marginTop: "8px" }}>
+                  <span>{t("Total")}</span>
+                  <strong>€{feeDetails?.baseAmount || 500}.00</strong>
+                </div>
+
+                {feeDetails?.currency !== "EUR" && (
+                  <div className={styles.summaryRow} style={{ marginTop: "8px" }}>
+                    <span>{t("Converted payable amount")}</span>
+                    <strong style={{ color: "#4A32E3" }}>
+                      {feeDetails?.convertedAmount} {feeDetails?.currency}
+                    </strong>
+                  </div>
+                )}
               </div>
 
               <div

@@ -19,6 +19,7 @@ const BankDeposit = ({
   guestDetails,
   toggle,
   client_reference,
+  invoiceId,
 }) => {
   const isGuestPayment = type !== "add_funds";
   const { userDetails } = useContext(UserContext);
@@ -188,13 +189,14 @@ const BankDeposit = ({
       formData.append("exchange_rate", data.exchange_rate?.exchange_rate?.exchange_rate || 1);
       formData.append("sendingAmount", data.exchange_rate?.sending?.amount);
       formData.append("sendingCurrency", selectedBank.Currency || selectedBank["Currency"] || "");
-      formData.append("type", type);
       if (guestDetails) {
         formData.append("guest_details", JSON.stringify(guestDetails));
       }
       if (client_reference) {
         formData.append("client_reference", client_reference);
       }
+      formData.append("type", invoiceId ? "invoice" : type);
+      if (invoiceId) formData.append("invoice_id", invoiceId);
       formData.append("file", file);
 
       createDepositMutation.mutate(formData);
