@@ -1,17 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
-import { useContext, useMemo } from "react";
-import { AlertCircle, BarChart, CheckCircle, Clock } from "react-feather";
+import { useContext, useMemo, useState } from "react";
+import { AlertCircle, BarChart, CheckCircle, Clock, Eye } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../../Context/UserContext";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 import useWindowWidth from "../../../utils/useWindowWidth";
 import TopRight from "../../topRight";
 import styles from "../styles/commissions.module.css";
+import CommissionDetailsModal from "./CommissionDetailsModal";
 
 const Commissions = () => {
   const { t } = useTranslation();
   const width = useWindowWidth();
   const { userDetails } = useContext(UserContext);
+  const [selectedCommission, setSelectedCommission] = useState(null);
 
   const { data: responseData, isLoading: loading } = useQuery({
     queryKey: ["agent-commissions"],
@@ -238,6 +240,7 @@ const Commissions = () => {
               <div>{t("Status")}</div>
               <div>{t("Amount")}</div>
               <div>{t("Date")}</div>
+              <div>{t("Actions")}</div>
             </div>
 
             {commissionsList.length > 0 ? (
@@ -289,8 +292,25 @@ const Commissions = () => {
                       <strong style={{ color: "#16a34a" }}>€{row.commission || 0}</strong>
                     </div>
 
-                    <div style={{ color: "#666", fontSize: "13px" }}>
+                    <div
+                      style={{
+                        color: "#666",
+                        fontSize: "13px",
+                      }}
+                    >
                       {row.createdAt ? new Date(row.createdAt).toLocaleDateString() : "-"}
+                    </div>
+
+                    <div className={styles.actionsCell}>
+                      <button
+                        type="button"
+                        className={styles.viewButton}
+                        onClick={() => setSelectedCommission(row)}
+                        aria-label={t("View commission details")}
+                      >
+                        <Eye size={14} />
+                        {t("View")}
+                      </button>
                     </div>
                   </div>
                 );
@@ -303,6 +323,13 @@ const Commissions = () => {
           </div>
         </div>
       </div>
+
+      <CommissionDetailsModal
+        isOpen={Boolean(selectedCommission)}
+        commission={selectedCommission}
+        onClose={() => setSelectedCommission(null)}
+        t={t}
+      />
     </div>
   );
 };

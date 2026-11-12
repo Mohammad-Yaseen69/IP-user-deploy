@@ -295,9 +295,30 @@
   background: #e7f8ed;
 }
 
-/* =========================
-   STATUS BADGES
-========================= */
+.actionsCell {
+  display: flex;
+  justify-content: flex-start;
+  padding-top: 6px;
+}
+
+.viewButton {
+  display: inline-flex;
+  justify-content: fle;
+  gap: 5px;
+  padding: 5px 9px;
+  color: #2f2d33;
+  background: #f5f2ff;
+  border: 1px solid #e8e1ff;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.viewButton:hover {
+  background: #ece6ff;
+}
 
 .badgePaid,
 .badgePending {
@@ -321,10 +342,6 @@
   background: #fff6df;
   color: #c58b18;
 }
-
-/* =========================
-   RESPONSIVE
-========================= */
 
 @media (max-width: 1000px) {
   .statsGrid {
