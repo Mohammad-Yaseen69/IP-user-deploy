@@ -320,7 +320,12 @@ export const buildCryptoPayload = (channel, existingCrypto = {}) => ({
   wallet_address: channel.wallet_address.trim(),
 });
 
-export const buildCryptoWithdrawalPayload = ({ userDetails, cryptoList, record = null }) => {
+export const buildCryptoWithdrawalPayload = ({
+  userDetails,
+  cryptoList,
+  record = null,
+  country = null,
+}) => {
   const existingAccountTypes = Array.isArray(record?.account_type) ? record.account_type : [];
   const accountTypes =
     cryptoList.length > 0
@@ -336,12 +341,14 @@ export const buildCryptoWithdrawalPayload = ({ userDetails, cryptoList, record =
     address: userDetails?.address ?? record?.address ?? "",
     city: userDetails?.city ?? record?.city ?? "",
     country:
+      country?.id ??
       record?.country ??
       userDetails?.country?._id ??
       userDetails?.country?.id ??
       userDetails?.country_name ??
       "",
     iso_code:
+      country?.alpha3 ??
       record?.iso_code ??
       userDetails?.country?.country_iso_code ??
       userDetails?.country_iso_code ??
