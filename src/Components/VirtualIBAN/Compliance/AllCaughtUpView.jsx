@@ -10,18 +10,15 @@ const AllCaughtUpView = ({ lastReviewed }) => {
       <div className={styles.successIconBox}>
         <span className={styles.checkIcon}>✓</span>
       </div>
-      <h2 className={styles.caughtUpTitle}>
-        {t("compliance.allCaughtUpTitle", "You're all caught up")}
-      </h2>
+      <h2 className={styles.caughtUpTitle}>{t("You're all caught up")}</h2>
       <p className={styles.caughtUpSubtitle}>
         {t(
-          "compliance.allCaughtUpSubtitle",
           "No open compliance requests right now. We'll reach out here if we need anything else from you.",
         )}
       </p>
       {lastReviewed && (
         <div className={styles.lastReviewedBadge}>
-          {t("compliance.lastReviewed", "Last reviewed")} {lastReviewed}
+          {t("Last reviewed")} {lastReviewed}
         </div>
       )}
     </div>

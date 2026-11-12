@@ -164,7 +164,7 @@ const TransactionRow = ({ item, activeItem, setActiveItem, index, fromReferral =
     .filter(Boolean)
     .join(" ");
   const method = displayAsText && t(displayAsText);
-  const time = dayjs(item?.createdAt).format("HH:mm");
+  const time = dayjs(item?.createdAt).format("HH:mm A");
 
   const loggedInUserId = userDetails?.user?._id ?? userDetails?.company?._id;
 
