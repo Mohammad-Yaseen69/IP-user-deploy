@@ -831,7 +831,12 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
                 </div>
                 <div className={styles.right} style={{ minWidth: "550px" }}>
                   {data.step === 1 && (
-                    <StepFour data={data} dataHandler={dataHandler} loading={data.loading} />
+                    <StepFour
+                      data={data}
+                      dataHandler={dataHandler}
+                      loading={data.loading}
+                      plaidDisabled={true}
+                    />
                   )}
                   {data.step === 2 && data.show_cards ? (
                     <CreditCard
@@ -994,7 +999,12 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
                 ) : (
                   <>
                     {data.step === 1 && (
-                      <StepFour data={data} dataHandler={dataHandler} loading={data.loading} />
+                      <StepFour
+                        data={data}
+                        dataHandler={dataHandler}
+                        loading={data.loading}
+                        plaidDisabled={true}
+                      />
                     )}
                     {data.step === 2 && data.show_cards ? (
                       <CreditCard
