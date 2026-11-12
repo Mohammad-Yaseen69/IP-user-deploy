@@ -33,6 +33,7 @@ import {
 } from "../../../WalletsNew/SendCryptoModal/cryptoProtocols";
 import ReviewStep from "../../../WalletsNew/SendCryptoModal/ReviewStep";
 import DoneStep from "../../../WalletsNew/SendCryptoModal/DoneStep";
+import PayoutDetailsFields from "../../../WalletsNew/SendCryptoModal/PayoutDetailsFields";
 import AddBeneficiaryFlowV2 from "../../Beneficiaries/AddBeneficiaryFlowV2";
 import OtpVerification from "../../../../Common/Component/OtpVerification";
 
@@ -189,6 +190,14 @@ const SendCryptoPanel = ({ wallets = [], wallet, onSelectWallet }) => {
           isQuoteExpired={flow.isQuoteExpired}
           onRefreshQuote={flow.refreshQuote}
           isRefreshing={flow.isFetchingQuote}
+          details={
+            <PayoutDetailsFields
+              purpose={flow.purpose}
+              setPurpose={flow.setPurpose}
+              documentReference={flow.documentReference}
+              setDocumentReference={flow.setDocumentReference}
+            />
+          }
         />
         <div className={styles.railBtnRow}>
           <button

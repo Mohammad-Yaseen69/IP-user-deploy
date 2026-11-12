@@ -1,3 +1,5 @@
+import thunesReasons from "../Components/PaymentsNewer/InternationalFlow/thunesReasons.json";
+
 export const STEPS = {
   AMOUNT: "AMOUNT",
   BENEFICIARY: "BENEFICIARY",
@@ -99,6 +101,53 @@ export const getContinueLabel = (stepName, t) => {
     default:
       return t("Next");
   }
+};
+
+/*
+ * Backend messages shown word for word: the minimum after fees ("Minimum payout is 6 USDT
+ * after fees.") and the list of beneficiary fields a crypto payout is missing.
+ */
+export const isVerbatimPayoutError = (message) =>
+  /minimum payout|missing details required for crypto payouts/i.test(String(message || ""));
+
+/* Same 34 remittance purpose codes the international transfer screens offer. */
+export const PAYOUT_PURPOSE_CODES = Object.keys(thunesReasons);
+export const DEFAULT_PAYOUT_PURPOSE = "OTHER";
+export const DOCUMENT_REFERENCE_MAX_LENGTH = 64;
+
+export const getPurposeOptions = () =>
+  PAYOUT_PURPOSE_CODES.map((code) => ({ value: code, label: thunesReasons[code] }));
+
+/*
+ * Body of the confirm request to /api/crypto/payout. The wallet details are the ones the
+ * quote was priced for, taken from the beneficiary's saved crypto entry. Purpose and the
+ * document reference go only here, never on the fee request; an empty reference is left
+ * out so the backend falls back to its own transaction reference.
+ */
+export const buildPayoutConfirmPayload = ({
+  token,
+  otp,
+  type,
+  cryptoCurrency,
+  protocol,
+  address,
+  purpose,
+  documentReference,
+}) => {
+  const reference = String(documentReference ?? "")
+    .trim()
+    .slice(0, DOCUMENT_REFERENCE_MAX_LENGTH);
+
+  return {
+    token,
+    otp,
+    type,
+    crypto_currency: cryptoCurrency,
+    protocol,
+    address,
+    purpose: PAYOUT_PURPOSE_CODES.includes(purpose) ? purpose : DEFAULT_PAYOUT_PURPOSE,
+    ...(reference ? { document_reference: reference } : {}),
+  };
 };
 
 export const isSidebarStepActive = (sidebarItem, currentStep) =>

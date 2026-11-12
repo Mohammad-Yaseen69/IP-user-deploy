@@ -2,6 +2,7 @@ import { useContext, useMemo } from "react";
 import { ContextCard, SummaryCard, SummaryRow } from "../components";
 import ChannelsSummary from "../components/ChannelsSummary";
 import { UserContext } from "../../../../../Context/UserContext";
+import { getRelationLabel } from "../vendorFields";
 
 const formatDate = (value) => {
   if (!value) return "";
@@ -33,7 +34,11 @@ const StepView = ({ beneficiary, recipientName }) => {
     ["Country", countryLabel],
     ["Date of birth", formatDate(beneficiary?.date_of_birth || extras.date_of_birth)],
     ["Nationality", extras.nationality_country_iso_code],
-    ["Relationship", extras.beneficiary_relationship],
+    [
+      "Relationship",
+      extras.beneficiary_relationship ||
+        (beneficiary?.relation ? getRelationLabel(beneficiary.relation) : ""),
+    ],
     ["Occupation", extras.occupation],
     ["Registration number", extras.registration_number],
   ]);
