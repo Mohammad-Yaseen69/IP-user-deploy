@@ -801,6 +801,16 @@ const WalletFundsFlow = ({ setAction }) => {
     }
   }, [data]);
 
+  const getPlaidInitiatePayload = () => ({
+    userId: userDetails?._id,
+    amount: data.exchange_rate?.sending?.amount,
+    walletId: data.wallet?._id,
+    walletCurrency: data.wallet?.currency?.code,
+    fee: data.exchange_rate?.fee?.amount ?? 0,
+    plaidAmount: data.exchange_rate?.plaid_amount ?? data.exchange_rate?.sending?.amount,
+    plaidCurrency: data.exchange_rate?.plaid_currency ?? data.wallet?.currency?.code,
+  });
+
   return (
     <>
       {data.error && (
@@ -1127,17 +1137,7 @@ const WalletFundsFlow = ({ setAction }) => {
                       <PlaidBankTransfer
                         data={data}
                         dataHandler={dataHandler}
-                        initiatePayload={() => ({
-                          userId: userDetails?._id,
-                          amount: data.exchange_rate?.sending?.amount,
-                          walletId: data.wallet?._id,
-                          walletCurrency: data.wallet?.currency?.code,
-                          fee: data.exchange_rate?.fee?.amount ?? 0,
-                          plaidAmount:
-                            data.exchange_rate?.plaid_amount ?? data.exchange_rate?.sending?.amount,
-                          plaidCurrency:
-                            data.exchange_rate?.plaid_currency ?? data.wallet?.currency?.code,
-                        })}
+                        initiatePayload={getPlaidInitiatePayload}
                       />
                     ) : null
                   ) : (
@@ -1504,7 +1504,11 @@ const WalletFundsFlow = ({ setAction }) => {
                     ) : data.channel.value === "bank_deposit" ? (
                       <BankDeposit data={data} dataHandler={dataHandler} />
                     ) : data.channel.value === "bank_transfer" ? (
-                      <PlaidBankTransfer data={data} dataHandler={dataHandler} />
+                      <PlaidBankTransfer
+                        data={data}
+                        dataHandler={dataHandler}
+                        initiatePayload={getPlaidInitiatePayload}
+                      />
                     ) : null
                   ) : (
                     ""

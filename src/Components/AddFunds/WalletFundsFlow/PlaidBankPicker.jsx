@@ -1,5 +1,4 @@
-import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../../Context/UserContext";
 import cardStyles from "../../PaymentsNewer/InternationalFlow/styles/creditcard.module.css";
@@ -11,19 +10,20 @@ import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 const PlaidBankPicker = ({ value, onChange }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
+  const userId = userDetails?._id;
 
   const { data: bankList = [], isLoading } = useQuery({
-    queryKey: ["saved-banks", userDetails?._id],
+    queryKey: ["saved-banks", userId],
     queryFn: async () => {
       const dec = await apiWrapper({
-        endpoint: `/api/plaid/saved-banks/${userDetails._id}`,
+        endpoint: `/api/plaid/saved-banks/${userId}`,
         method: "GET",
         isDecrypted: false,
       });
-      console.log("TEST", dec?.data);
 
-      return dec?.data;
+      return dec?.data ?? [];
     },
+    enabled: !!userId,
   });
 
   return (
