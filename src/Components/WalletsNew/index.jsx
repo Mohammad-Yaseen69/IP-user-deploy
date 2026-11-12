@@ -407,8 +407,9 @@ const WalletsNew = () => {
 
             {can("transactions.wallet.list") && (
               <TransactionsTable
-                title="Wallet transactions   "
-                description="Every payment in and out of this wallet, all currencies"
+                currentWallet={currentWallet}
+                filtered={filtered}
+                setFiltered={setFiltered}
               />
             )}
           </div>
@@ -477,8 +478,9 @@ const WalletsNew = () => {
             <CurConversion />
             {can("transactions.wallet.list") && (
               <TransactionsTable
-                title="Wallet transactions   "
-                description="Every payment in and out of this wallet, all currencies"
+                currentWallet={currentWallet}
+                filtered={filtered}
+                setFiltered={setFiltered}
               />
             )}
           </div>

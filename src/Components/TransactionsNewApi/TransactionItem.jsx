@@ -13,6 +13,7 @@ import TransactionItemDetails from "./TransactionItemDetails.jsx";
 import CitiesData from "../CitiesDropDown/CitiesData.json";
 import { formatCurrency } from "../../Helper/AmountFormat.js";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
+import s from "../../Common/Ledger/ledger.module.scss";
 
 export const service_name_formatter = (itemName) => {
   if (itemName) {
@@ -34,6 +35,7 @@ const TransactionItem = ({
   fromReferral = false,
   vvc = false,
   cardNo,
+  ledger = false,
 }) => {
   const { t, i18n } = useTranslation();
   const can = usePermission();
@@ -236,6 +238,30 @@ const TransactionItem = ({
     return [first, last].filter(Boolean).join(" ");
   }, [item, internationalReceiver]);
 
+  const amountContent = (
+    <>
+      {item?.transaction_type?.toLowerCase() === "debit" ? "-" : "+"}
+      {item?.payment_type?.toLowerCase() === "commission" && fromReferral
+        ? "$"
+        : item.service_type === "topup" && item.payment_type === "bank"
+          ? item.recipient_received_currency
+          : item?.currency?.code}{" "}
+      {item?.payment_type?.toLowerCase() === "commission" && fromReferral
+        ? item?.replacement_currency?.value?.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        : (item.service_type === "topup" && item.payment_type === "bank"
+            ? item.recipient_received_amount
+            : item?.total
+          )?.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}
+    </>
+  );
+  const statusLabel = t(capitalizeStatus(item?.status));
+
   return (
     <div
       style={
@@ -247,7 +273,7 @@ const TransactionItem = ({
       }
     >
       <div
-        className={styles.body_item}
+        className={ledger ? `${s.cols} ${s.row}` : styles.body_item}
         onClick={() => {
           // if(vvc) return
           if (!can("transactions.main.details.view")) return;
@@ -258,86 +284,113 @@ const TransactionItem = ({
           }
         }}
       >
-        <div style={{ minWidth: "155px", whiteSpace: "nowrap" }}>
+        <div
+          className={ledger ? s.time : undefined}
+          style={ledger ? undefined : { minWidth: "155px", whiteSpace: "nowrap" }}
+        >
           {new Date(item?.createdAt)?.toLocaleString()}
         </div>
-        {vvc && <div>{item?.transactionId}</div>}
+        {vvc && <div className={ledger ? s.sub : undefined}>{item?.transactionId}</div>}
         {vvc && (
-          <div>
+          <div className={ledger ? s.sub : undefined}>
             {t("••")}
             {cardNo?.slice(-4)}
           </div>
         )}
-        {vvc && <div>{item?.type}</div>}
+        {vvc && <div className={ledger ? s.title : undefined}>{item?.type}</div>}
         {vvc && (
-          <div>
+          <div className={ledger ? s.sub : undefined}>
             {service_name_formatter(item?.transaction_type)?.replace("Mastercard", "") ?? "--"}{" "}
           </div>
         )}
 
         {!vvc && (
           <>
-            <div>
+            <div className={ledger ? s.title : undefined}>
               {item?.service_type === "topup" && "Wallet"}{" "}
               {service_name_formatter(t(item?.service_type))}
             </div>
-            <div>{item?.reference_id}</div>
-            <div>{t(displayAsText)}</div>
-            <div>{displayName?.slice(0, 20)}</div>
+            <div className={ledger ? s.sub : undefined}>{item?.reference_id}</div>
+            <div className={ledger ? s.title : undefined}>{t(displayAsText)}</div>
+            <div className={ledger ? s.title : undefined}>{displayName?.slice(0, 20)}</div>
             <div
-              style={{
-                color: item?.transaction_type?.toLowerCase() === "debit" ? "#FF7293" : "#1CB234",
-              }}
+              className={ledger ? s.amount : undefined}
+              style={
+                ledger
+                  ? undefined
+                  : {
+                      color:
+                        item?.transaction_type?.toLowerCase() === "debit" ? "#FF7293" : "#1CB234",
+                    }
+              }
             >
-              {item?.transaction_type?.toLowerCase() === "debit" ? "-" : "+"}
-              {item?.payment_type?.toLowerCase() === "commission" && fromReferral
-                ? "$"
-                : item.service_type === "topup" && item.payment_type === "bank"
-                  ? item.recipient_received_currency
-                  : item?.currency?.code}{" "}
-              {item?.payment_type?.toLowerCase() === "commission" && fromReferral
-                ? item?.replacement_currency?.value?.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })
-                : (item.service_type === "topup" && item.payment_type === "bank"
-                    ? item.recipient_received_amount
-                    : item?.total
-                  )?.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
+              {ledger ? (
+                <b
+                  style={{
+                    color:
+                      item?.transaction_type?.toLowerCase() === "debit" ? "#FF7293" : "#1CB234",
+                  }}
+                >
+                  {amountContent}
+                </b>
+              ) : (
+                amountContent
+              )}
             </div>
           </>
         )}
 
         {vvc && (
-          <div style={{ color: item?.type === "credit" ? "green" : "red" }}>
-            {item?.billCurrency
-              ? `${item?.billCurrency} ${formatCurrency(item?.billAmount)}`
-              : `${item?.currency} ${formatCurrency(item?.txAmount)}`}
-            {item?.type === "credit" ? "+" : "-"}
+          <div
+            className={ledger ? s.amount : undefined}
+            style={{ color: item?.type === "credit" ? "green" : "red" }}
+          >
+            {ledger ? (
+              <b style={{ color: item?.type === "credit" ? "green" : "red" }}>
+                {item?.billCurrency
+                  ? `${item?.billCurrency} ${formatCurrency(item?.billAmount)}`
+                  : `${item?.currency} ${formatCurrency(item?.txAmount)}`}
+                {item?.type === "credit" ? "+" : "-"}
+              </b>
+            ) : (
+              <>
+                {item?.billCurrency
+                  ? `${item?.billCurrency} ${formatCurrency(item?.billAmount)}`
+                  : `${item?.currency} ${formatCurrency(item?.txAmount)}`}
+                {item?.type === "credit" ? "+" : "-"}
+              </>
+            )}
           </div>
         )}
 
-        <div>
-          <div
-            style={{
-              background: badgeColor,
-              fontSize: "12px",
-              color: "white",
-              width: "100px",
-              margin: "0 auto",
-              padding: "5px",
-              borderRadius: "30px",
-              textAlign: "center",
-            }}
-          >
-            {t(capitalizeStatus(item?.status))}
+        {ledger ? (
+          <div className={s.status}>
+            <span className={s.dot} style={{ background: badgeColor }} />
+            {statusLabel}
           </div>
-        </div>
+        ) : (
+          <div>
+            <div
+              style={{
+                background: badgeColor,
+                fontSize: "12px",
+                color: "white",
+                width: "100px",
+                margin: "0 auto",
+                padding: "5px",
+                borderRadius: "30px",
+                textAlign: "center",
+              }}
+            >
+              {statusLabel}
+            </div>
+          </div>
+        )}
 
-        <div style={{ maxWidth: "15px" }}>
+        <div
+          className={ledger ? s.chev : undefined}
+          style={ledger ? undefined : { maxWidth: "15px" }}
+        >
           {activeItem === index + 1 ? <ChevronDown /> : <ChevronRight />}
         </div>
       </div>

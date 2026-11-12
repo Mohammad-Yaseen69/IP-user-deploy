@@ -9,6 +9,7 @@ import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import InstaPayLoader from "../Loader";
 import TransactionItemMobile from "../TransactionsNewApi/Mobile/TransactionItemMobile";
 import Ledger from "../../Common/Ledger/Ledger";
+import s from "../../Common/Ledger/ledger.module.scss";
 
 const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
   const { t } = useTranslation();
@@ -309,7 +310,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
     [transactions],
   );
   return (
-    <div className={styles.ledgerCompact}>
+    <div className={`${styles.ledgerCompact} ${s.ledger}`}>
       <Ledger
         title={t("Wallet transactions")}
         description={t("Every payment in and out of this wallet, all currencies")}
@@ -332,6 +333,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
         }}
         dateRange={dateRange}
         onDateChange={handleChange}
+        dateLabel={apiDates ? `${apiDates.from} - ${apiDates.to}` : t("All dates")}
         columns={[
           t("Date & Time"),
           t("Type"),
@@ -342,127 +344,112 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
           t("Status"),
           "",
         ]}
-        template="repeat(7, minmax(0, 1fr)) 15px"
+        template="1.2fr 1fr 1.2fr 1fr 1.2fr 1.1fr 110px 15px"
         hideDownload
         hideFilters
       >
-        <div className={styles.table}>
-          <div className={styles.tableWrapper}>
-            <div className={styles.table_body} ref={tableWrapperRef}>
-              {isLoading ? (
-                <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
-                  <InstaPayLoader />
-                </div>
-              ) : (
-                <>
-                  {filtered.length > 0 ? (
-                    filtered
-                      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                      .map((item, index) => {
-                        let color;
-                        if (item?.status?.toLowerCase() === "completed") {
-                          color = "#15bd43";
-                        }
-                        if (item?.status?.toLowerCase() === "pending") {
-                          color = "rgba(89, 38, 240, 0.55)";
-                        }
-                        if (item?.status?.toLowerCase() === "cancelled") {
-                          color = "#ed1d1d";
-                        }
-
-                        return (
-                          <TransactionItem
-                            color={color}
-                            item={item}
-                            key={item._id}
-                            activeItem={activeItem}
-                            setActiveItem={setActiveItem}
-                            index={index}
-                          />
-                        );
-                      })
-                  ) : (
-                    <span style={{ textAlign: "center", marginTop: "2rem" }}>
-                      {t("No Transactions")}
-                    </span>
-                  )}
-                </>
-              )}
-              {!isLoading && !stopLoader && (
-                <div
-                  ref={loaderRef}
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    width: "100%",
-                  }}
-                >
-                  <div style={{ width: "200px" }}>
-                    <InstaPayLoader />
-                  </div>
-                </div>
-              )}
+        <div className={styles.ledgerDesktopRows} ref={tableWrapperRef}>
+          {isLoading ? (
+            <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
+              <InstaPayLoader />
             </div>
+          ) : filtered.length > 0 ? (
+            filtered
+              .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+              .map((item, index) => {
+                let color;
+                if (item?.status?.toLowerCase() === "completed") {
+                  color = "#15bd43";
+                }
+                if (item?.status?.toLowerCase() === "pending") {
+                  color = "rgba(89, 38, 240, 0.55)";
+                }
+                if (item?.status?.toLowerCase() === "cancelled") {
+                  color = "#ed1d1d";
+                }
+
+                return (
+                  <TransactionItem
+                    color={color}
+                    item={item}
+                    key={item._id}
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                    index={index}
+                    ledger
+                  />
+                );
+              })
+          ) : (
+            <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No Transactions")}</span>
+          )}
+          {!isLoading && !stopLoader && (
             <div
-              className={styles.table_body_mobile}
-              ref={tableWrapperRefMobile}
-              style={{ minHeight: "300px" }}
+              ref={loaderRef}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                width: "100%",
+              }}
             >
-              {isLoading ? (
-                <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
-                  <InstaPayLoader />
-                </div>
-              ) : (
-                <>
-                  {filtered.length > 0 ? (
-                    filtered
-                      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                      .map((item, index) => {
-                        let color;
-                        if (item?.status?.toLowerCase() === "completed") {
-                          color = "#15bd43";
-                        }
-                        if (item?.status?.toLowerCase() === "pending") {
-                          color = "rgba(89, 38, 240, 0.55)";
-                        }
-                        if (item?.status?.toLowerCase() === "cancelled") {
-                          color = "#ed1d1d";
-                        }
-
-                        return (
-                          <TransactionItemMobile
-                            color={color}
-                            item={item}
-                            key={item._id}
-                            activeItem={activeItem}
-                            setActiveItem={setActiveItem}
-                            index={index}
-                          />
-                        );
-                      })
-                  ) : (
-                    <span style={{ textAlign: "center", marginTop: "2rem" }}>
-                      {t("No Transactions")}
-                    </span>
-                  )}
-                </>
-              )}
-              {!isLoading && !stopLoader && (
-                <div
-                  ref={mobileLoaderRef}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    width: "100%",
-                  }}
-                >
-                  <div style={{ width: "200px" }}>
-                    <InstaPayLoader />
-                  </div>
-                </div>
-              )}
+              <div style={{ width: "200px" }}>
+                <InstaPayLoader />
+              </div>
             </div>
-          </div>
+          )}
+        </div>
+        <div
+          className={`${styles.ledgerMobileRows} ${styles.table_body_mobile}`}
+          ref={tableWrapperRefMobile}
+          style={{ minHeight: "300px" }}
+        >
+          {isLoading ? (
+            <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
+              <InstaPayLoader />
+            </div>
+          ) : filtered.length > 0 ? (
+            filtered
+              .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+              .map((item, index) => {
+                let color;
+                if (item?.status?.toLowerCase() === "completed") {
+                  color = "#15bd43";
+                }
+                if (item?.status?.toLowerCase() === "pending") {
+                  color = "rgba(89, 38, 240, 0.55)";
+                }
+                if (item?.status?.toLowerCase() === "cancelled") {
+                  color = "#ed1d1d";
+                }
+
+                return (
+                  <TransactionItemMobile
+                    color={color}
+                    item={item}
+                    key={item._id}
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                    index={index}
+                  />
+                );
+              })
+          ) : (
+            <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No Transactions")}</span>
+          )}
+          {!isLoading && !stopLoader && (
+            <div
+              ref={mobileLoaderRef}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <div style={{ width: "200px" }}>
+                <InstaPayLoader />
+              </div>
+            </div>
+          )}
         </div>
       </Ledger>
     </div>
