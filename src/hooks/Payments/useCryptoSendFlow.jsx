@@ -388,7 +388,7 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
     (isMissingBeneficiaryDetailsError(beneficiaryError) || addressStatus === "invalid");
 
   const canGetQuote =
-    getAmountNumber(amount) >= 0 &&
+    getAmountNumber(amount) > 0 &&
     !amountError &&
     !!selectedBeneficiary &&
     !!address &&
