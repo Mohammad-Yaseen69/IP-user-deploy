@@ -49,7 +49,7 @@ export const typesData = [
     value: "bank_transfer",
     icon: bank,
     api_val: "bank",
-    status: "Coming Soon",
+    status: "Active",
     id: 2,
   },
   {
@@ -69,6 +69,7 @@ const StepFour = ({
   filteringValue = "dummy",
   customStyles = {},
   isAirtime,
+  plaidDisabled = false,
 }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
@@ -84,10 +85,15 @@ const StepFour = ({
 
   console.log(data?.mobile_wallet_services);
   const types = useMemo(() => {
+    const flowTypes = plaidDisabled
+      ? typesData.map((item) =>
+          item.value === "bank_transfer" ? { ...item, status: "Coming Soon" } : item,
+        )
+      : typesData;
+
     if (data?.mobile_wallet_services?.length > 0) {
-      console.log(typesData, data.mobile_wallet_services);
-      const others = typesData.filter((item) => !item?.sub_name);
-      const thunes = typesData
+      const others = flowTypes.filter((item) => !item?.sub_name);
+      const thunes = flowTypes
         .filter((item) => item?.sub_name)
         .map((item) =>
           data.mobile_wallet_services.some((it) => it?.id == item?.id)
@@ -100,9 +106,9 @@ const StepFour = ({
         return 0;
       });
     } else {
-      return typesData;
+      return flowTypes;
     }
-  }, [typesData, data.mobile_wallet_services]);
+  }, [typesData, plaidDisabled, data.mobile_wallet_services]);
 
   // console.log(types, 'dsafsadffsad')
   useEffect(() => {
