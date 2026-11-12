@@ -1187,7 +1187,7 @@ const VirtualIbanModal = ({
           link={plaidLink}
           data={{
             recipient_iban: plaidBank.recipient_iban,
-            wallet: {},
+            wallet: defaultWallet,
             exchange_rate: {
               sending: { amount: activationFee.amount, currency: activationFee.currency },
               fee: { amount: 0 },
