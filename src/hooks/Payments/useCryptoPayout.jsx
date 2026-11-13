@@ -8,6 +8,12 @@ export const cryptoPayoutQueryKeys = {
   validateAddress: (payload) => [...cryptoPayoutQueryKeys.all, "validate-address", payload],
 };
 
+/* A compliance hold is still a success: funds are held and the row shows INITIATED. */
+export const toPayoutResult = (res) =>
+  res?.under_review
+    ? { ...res.data, under_review: true, review_message: res.message }
+    : res?.data || res || null;
+
 export const useCryptoPayoutFee = () =>
   useMutation({
     mutationFn: (payload) =>

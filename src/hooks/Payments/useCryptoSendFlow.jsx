@@ -6,7 +6,12 @@ import { UserContext } from "../../Context/UserContext";
 import { useDebounce } from "../useDebounce/useDebounce";
 import useSendOtp from "../GeneralUse/useSendOtp";
 import { useIdempotency } from "./useIdempotency";
-import { useCryptoPayout, useCryptoPayoutFee, useValidateCryptoAddress } from "./useCryptoPayout";
+import {
+  toPayoutResult,
+  useCryptoPayout,
+  useCryptoPayoutFee,
+  useValidateCryptoAddress,
+} from "./useCryptoPayout";
 import { handlePaymentApiError } from "../../utils/Functions/handlePaymentApiError";
 import {
   buildPayoutConfirmPayload,
@@ -334,7 +339,7 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
       handleQuoteError(error, {
         onDetails: (message) => {
           setBeneficiaryError(message);
-          toast.error(message);
+          // toast.error(message);
         },
       });
     }
@@ -370,7 +375,7 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
         idempotencyKey: getKey(),
       });
 
-      setPayoutResult(res?.data || res || null);
+      setPayoutResult(toPayoutResult(res));
       setVerified(true);
     } catch (error) {
       resetIdempotencyKey();

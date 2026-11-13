@@ -8,6 +8,7 @@ import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import InstaPayLoader from "../Loader";
 import RecentTransItem from "./RecentTransItem";
+import { ChevronRight } from "react-feather";
 
 const RecentTrans = ({ currentWallet }) => {
   const { t } = useTranslation();
@@ -58,11 +59,11 @@ const RecentTrans = ({ currentWallet }) => {
             let headerText;
 
             if (diffInDays === 0) {
-              headerText = "Today";
+              // headerText = "Today";
             } else if (diffInDays > 0 && diffInDays <= 7) {
-              headerText = "Last Week";
+              // headerText = "Last Week";
             } else if (diffInDays > 7) {
-              headerText = "Older Transaction";
+              // headerText = "Older Transaction";
             } else {
               headerText = "Today";
             }
@@ -82,22 +83,69 @@ const RecentTrans = ({ currentWallet }) => {
     };
 
     fetchData();
-  }, [currentWallet]);
+  }, [currentWallet?.wallet_id]);
   return (
     <Card
       style={{
         marginBottom: 0,
         flex: 1,
         scrollbarWidth: "none",
-        borderRadius: "30px",
+        borderRadius: "10px",
         minWidth: "265px",
       }}
     >
-      <CardHeader className="d-flex justify-content-between align-items-center c_h_pb">
-        <h4 style={{ marginBottom: "0" }}>{t("Recent Transactions ")}</h4>
-        {/* <MoreHorizontal /> */}
-      </CardHeader>
-      <div style={{ padding: "1rem" }} className={styles.body}>
+      <div
+        className="d-flex justify-content-between align-items-start "
+        style={{ padding: "1rem" }}
+      >
+        <div>
+          <h4
+            style={{
+              margin: 0,
+              fontSize: "15px",
+              fontWeight: 700,
+              lineHeight: "20px",
+              color: "#111827",
+            }}
+          >
+            {t("Recent activity")}
+          </h4>
+          <p
+            style={{
+              margin: "4px 0 0",
+              fontSize: "13px",
+              fontWeight: "400",
+              lineHeight: "20px",
+              color: "#9AA3B2",
+            }}
+          >
+            All currencies
+          </p>
+        </div>
+
+        <a
+          href="/transactions"
+          className="d-flex align-items-center"
+          style={{
+            gap: "2px",
+            fontSize: "14px",
+            fontWeight: 600,
+            lineHeight: "20px",
+            color: "#5926F0",
+            textDecoration: "none",
+            whiteSpace: "nowrap",
+          }}
+        >
+          See all
+          <ChevronRight size={16} />
+        </a>
+      </div>
+      <div
+        style={{
+          padding: "0.5rem",
+        }}
+        className={styles.body}
+      >
         {/* {
                     transactions.length > 0 &&
                     <CardText className="text-muted">{t("Today")}:</CardText>

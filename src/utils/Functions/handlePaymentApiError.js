@@ -19,7 +19,10 @@ export const handlePaymentApiError = ({
       return decrypted.message;
     }
 
-    const limitError = LimitsErrorMessage(decrypted?.code ?? decrypted?.message);
+    const limitError = LimitsErrorMessage(
+      decrypted?.code ?? decrypted?.message,
+      decrypted?.message,
+    );
     const apiError = apiErrorMessage(decrypted?.message);
 
     if (apiError) {

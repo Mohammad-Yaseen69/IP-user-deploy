@@ -32,6 +32,7 @@ import { useMutation } from "@tanstack/react-query";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import AdditionalFilesSection from "./AdditionalFilesSection";
 import { useIdempotency } from "../../hooks/Payments/useIdempotency";
+import { verifyPaytentlyReturn } from "../../utils/Functions/paytently";
 
 const industries = [
   "Arts & Entertainment",
@@ -54,6 +55,14 @@ const industries = [
 ];
 
 export const sourceOfFunds = ["Cash", "Business", "Gift", "Salary", "Lottery", "Savings", "Other"];
+
+const getApiErrorMessage = (error) => {
+  try {
+    return decryptData(error?.response?.data?.data)?.message;
+  } catch {
+    return undefined;
+  }
+};
 
 const Verification = () => {
   const { t } = useTranslation();
@@ -124,9 +133,10 @@ const Verification = () => {
 
       // console.log("try ran in handlesend");
     } catch (error) {
-      toast.error("We cannot process your request at the moment, please try again later.");
-      // console.log("try ran in error", error);
-      // console.log(decryptData(error?.response?.data?.data));
+      toast.error(
+        getApiErrorMessage(error) ||
+          t("We cannot process your request at the moment, please try again later."),
+      );
     } finally {
       setLoading(false);
     }
@@ -154,10 +164,9 @@ const Verification = () => {
 
       await verifyToken(true);
     } catch (error) {
-      const dec = decryptData(error?.response?.data?.data);
       toast.error(
-        dec?.message ||
-          "We are unable to process your request at the moment, please try again later.",
+        getApiErrorMessage(error) ||
+          t("We are unable to process your request at the moment. Please try again later."),
       );
       return;
     }
@@ -233,6 +242,14 @@ const Verification = () => {
       }
     }
   }, [status, userDetails]);
+
+  // Settles a Paytently card fee now in case the webhook is late; no-op for other providers.
+  useEffect(() => {
+    if (!status) return;
+    verifyPaytentlyReturn().then((result) => {
+      if (result) verifyToken(true);
+    });
+  }, [status]);
 
   const clearStatus = () => {
     setStatusModal("");

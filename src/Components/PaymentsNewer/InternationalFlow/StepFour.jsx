@@ -17,6 +17,7 @@ import TypingSpan from "../../TypingSpan";
 import { UserContext } from "../../../Context/UserContext";
 import { useQuery } from "@tanstack/react-query";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
+import { usePaytently } from "../../../utils/Functions/paytently";
 
 export const typesData = [
   {
@@ -49,7 +50,7 @@ export const typesData = [
     value: "bank_transfer",
     icon: bank,
     api_val: "bank",
-    status: "Coming Soon",
+    status: "Active",
     id: 2,
   },
   {
@@ -69,6 +70,7 @@ const StepFour = ({
   filteringValue = "dummy",
   customStyles = {},
   isAirtime,
+  bankComingSoon = false,
 }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
@@ -84,10 +86,15 @@ const StepFour = ({
 
   console.log(data?.mobile_wallet_services);
   const types = useMemo(() => {
+    const baseTypes = bankComingSoon
+      ? typesData.map((item) =>
+          item.value === "bank_transfer" ? { ...item, status: "Coming Soon" } : item,
+        )
+      : typesData;
     if (data?.mobile_wallet_services?.length > 0) {
       console.log(typesData, data.mobile_wallet_services);
-      const others = typesData.filter((item) => !item?.sub_name);
-      const thunes = typesData
+      const others = baseTypes.filter((item) => !item?.sub_name);
+      const thunes = baseTypes
         .filter((item) => item?.sub_name)
         .map((item) =>
           data.mobile_wallet_services.some((it) => it?.id == item?.id)
@@ -100,9 +107,9 @@ const StepFour = ({
         return 0;
       });
     } else {
-      return typesData;
+      return baseTypes;
     }
-  }, [typesData, data.mobile_wallet_services]);
+  }, [typesData, data.mobile_wallet_services, bankComingSoon]);
 
   // console.log(types, 'dsafsadffsad')
   useEffect(() => {
@@ -303,7 +310,7 @@ const StepFour = ({
                 className={`${styles.item} ${item.status !== "Active" ? styles.disabled : ""}`}
                 key={item.name}
                 onClick={() => {
-                  if (item.value === "card" && userDetails?.username !== "ahmed") {
+                  if (item.value === "card" && !usePaytently) {
                     setShowCardMaintenanceModal(true);
                     return;
                   }

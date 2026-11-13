@@ -634,10 +634,7 @@ const OwnershipStep = ({
                   max="100"
                   value={formData.ownershipPercent}
                   onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      ownershipPercent: e.target.value,
-                    }))
+                    setFormData((prev) => ({ ...prev, ownershipPercent: e.target.value }))
                   }
                   placeholder="25"
                 />
@@ -657,12 +654,7 @@ const OwnershipStep = ({
                 <input
                   type="checkbox"
                   checked={formData.isPep}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      isPep: e.target.checked,
-                    }))
-                  }
+                  onChange={(e) => setFormData((prev) => ({ ...prev, isPep: e.target.checked }))}
                 />
                 {t("Politically Exposed Person (PEP)")}
               </label>

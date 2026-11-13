@@ -324,15 +324,15 @@ const ReferralsNew = () => {
             </ModalBody>
           </Modal>
           <div className={styles.banner_con}>
-            <EarnMoneyBanner
-              height="100%"
-              showLink={false}
-              headSize={"4cqi"}
-              textSize={"2cqi"}
-              radius={"30px"}
-              minWidth="40vw"
-            />
-            <div style={{ display: "flex", gap: "1.5rem", flex: 1 }}>
+            <div className={styles.banner_wrap}>
+              <EarnMoneyBanner
+                showLink={true}
+                code={userDetails?.username}
+                rewardsEarned={totalReferralAmount}
+                friendsJoined={referrals?.length}
+              />
+            </div>
+            <div className={styles.stats_wrap}>
               <div className={styles.total_refs}>
                 <div>
                   <h5>{t("Total Referrals")}</h5>

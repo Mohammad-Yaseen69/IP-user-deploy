@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import CryptoJS from "crypto-js";
+//import CryptoJS from "../../../Helper/cryptoJs";
 
 const TrustpaymentPage = ({
   transaction,

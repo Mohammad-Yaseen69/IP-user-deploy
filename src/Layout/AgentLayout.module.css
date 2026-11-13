@@ -4,19 +4,30 @@
   min-height: 100vh;
   background-color: #f8f9fa;
   overflow-x: hidden;
+  overflow-x: clip;
   position: relative;
 }
 
 .sidebar {
   flex: 0 0 260px;
   width: 100%;
-  min-height: 100vh;
+  /* viewport-tall +  scroll so the profile button (bottom) stays reachable while the sidebar is sticky */
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  /* hide the scrollbar but keep scrolling */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   background-color: #ffffff;
   border-right: 1px solid #e5e7eb;
   position: sticky;
   top: 0;
   align-self: flex-start;
   z-index: 100;
+}
+
+.sidebar::-webkit-scrollbar {
+  display: none;
 }
 
 .sidebarCollpased {
@@ -26,7 +37,7 @@
 .agentSidebarContainer {
   position: sticky;
   top: 0;
-  margin-left: 50px;
+  margin-left: 43px;
 }
 
 .main {

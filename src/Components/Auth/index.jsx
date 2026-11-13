@@ -14,6 +14,7 @@ import ShortLogo from "../../assets/images/logo/logo_white.png";
 import useWindowWidth from "../../utils/useWindowWidth";
 import { StuckCircle } from "../PaymentAddressPublic/PayAsGuest/Svgs";
 import { Link } from "react-router-dom";
+import InstaPayLoader from "../Loader";
 
 const swissFlag = coun.find((item) => item.alpha3 === "CHE")?.file_url;
 
@@ -31,10 +32,10 @@ const Auth = () => {
   const redirect = new URLSearchParams(location.search).get("redirect");
   const width = useWindowWidth();
   const [registerStep, setRegisterStep] = useState(1);
+  const [isRedirecting] = useState(() => Boolean(localStorage.getItem("token")));
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
+    if (isRedirecting) {
       const path =
         sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined"
           ? sessionStorage.getItem("path")
@@ -64,6 +65,8 @@ const Auth = () => {
 
   const [registrationCompleted] = useState(false);
   const [hideLogo, setHideLogo] = useState(false);
+
+  if (isRedirecting) return <InstaPayLoader fallback />;
 
   const showText = width > 1100 || width <= 810;
   return (
