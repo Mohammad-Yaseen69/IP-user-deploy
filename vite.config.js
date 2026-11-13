@@ -6,6 +6,16 @@ import { sentryVitePlugin } from "@sentry/vite-plugin";
 export default defineConfig({
   plugins: [
     react(),
+    {
+      name: "drop-identity-en-translations",
+      apply: "build",
+      enforce: "pre",
+      transform(code, id) {
+        if (!/[\\/]src[\\/]translations[\\/]en\.json(\?.*)?$/.test(id)) return null;
+        const entries = Object.entries(JSON.parse(code)).filter(([key, value]) => key !== value);
+        return { code: JSON.stringify(Object.fromEntries(entries)), map: null };
+      },
+    },
     visualizer({
       open: true,
       gzipSize: true,
