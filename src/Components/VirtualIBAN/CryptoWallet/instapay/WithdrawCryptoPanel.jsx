@@ -34,6 +34,7 @@ import {
 } from "../../../Settings/WithdrawalsNew/withdrawalAccounts";
 import { MAX_CRYPTO_WALLETS } from "../../../Settings/WithdrawalsNew/withdrawalPayload";
 import { UserContext } from "../../../../Context/UserContext";
+import { usePayoutCountries } from "../../../../hooks/Payments/usePayoutCountries";
 
 const QUICK_PERCENTAGES = [25, 50, 75, 100];
 
@@ -41,6 +42,7 @@ const WithdrawCryptoPanel = ({ wallets = [], wallet, onSelectWallet }) => {
   const { t } = useTranslation();
   const { userWithdrawals, cryptoWithdrawals } = useContext(UserContext);
   const flow = useCryptoWithdrawFlow(wallet);
+  const { countries: payoutCountries } = usePayoutCountries();
   const [isAddWalletOpen, setIsAddWalletOpen] = useState(false);
 
   const {
@@ -383,7 +385,7 @@ const WithdrawCryptoPanel = ({ wallets = [], wallet, onSelectWallet }) => {
         open={isAddWalletOpen}
         onClose={() => setIsAddWalletOpen(false)}
         mode="crypto"
-        countries={[]}
+        countries={payoutCountries}
         groups={groups}
         cryptoRows={cryptoRows}
       />

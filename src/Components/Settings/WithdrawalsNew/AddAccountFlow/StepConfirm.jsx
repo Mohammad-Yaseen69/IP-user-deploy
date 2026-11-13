@@ -38,7 +38,7 @@ const StepConfirm = ({ method, country, channel, payers, holderName, address }) 
   return (
     <>
       <div className={abf.summary}>
-        {!isCrypto && <SummaryRow label={t("Country")} value={country?.name} />}
+        <SummaryRow label={t("Country")} value={country?.name} />
         <SummaryRow
           label={t("Method")}
           value={
