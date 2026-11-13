@@ -15,6 +15,7 @@ const BENEFICIARY_COLUMN_MAP = {
   beneficiaryAddress: "address",
   postal_code: "zip_code",
   beneficiaryPostal: "zip_code",
+  relation: "relation",
 };
 
 const clean = (value) => (typeof value === "string" ? value.trim() : value);
@@ -44,6 +45,7 @@ export const prefillBeneficiaryBag = (beneficiary) => {
   seed("country_iso_code", beneficiary.country_iso_code);
   seed("beneficiaryCountry", beneficiary.country_iso_code);
   seed("date_of_birth", beneficiary.date_of_birth);
+  seed("relation", beneficiary.relation);
 
   delete bag.vendor;
   delete bag.payer_id;
@@ -99,6 +101,7 @@ export const prefillEditBag = (beneficiary) => {
     postal_code: firstValue(beneficiary.zip_code, extras.postal_code, extras.beneficiaryPostal),
     date_of_birth: firstValue(beneficiary.date_of_birth, extras.date_of_birth),
     registration_number: firstValue(extras.registration_number),
+    relation: firstValue(beneficiary.relation, extras.relation),
   };
 
   Object.keys(bag).forEach((key) => {
