@@ -62,6 +62,7 @@ const preloadAuthPage = () => {
   const isAuthPage = /^\/(login|signup)(\/|$)/i.test(window.location.pathname);
   if (isAuthPage && !localStorage.getItem("token")) {
     import("./Components/Auth").catch(() => {});
+    if (!window.location.href.includes("login")) import("./Components/Auth/Signup").catch(() => {});
   }
 };
 
