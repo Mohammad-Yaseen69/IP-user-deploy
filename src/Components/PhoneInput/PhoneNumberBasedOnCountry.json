@@ -844,7 +844,7 @@
     "dial_code": "+691"
   },
   "MCO": {
-    "maxLength": 8,
+    "maxLength": 9,
     "dial_code": "+377"
   },
   "REU": {
