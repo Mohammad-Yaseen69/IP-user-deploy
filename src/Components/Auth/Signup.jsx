@@ -275,7 +275,15 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
 
     setIsSubmitting(true);
     dataHandler("loading", true);
-    const coun = allowedCountries.find((item) => item.country_iso_code === data.country);
+
+    const countryIso =
+      typeof data?.country === "string"
+        ? data?.country
+        : data?.country?.alpha3 || data?.country?.country_iso_code || data?.country?.iso3;
+
+    const coun = allowedCountries?.find(
+      (item) => item.country_iso_code?.toLowerCase() === countryIso?.toLowerCase(),
+    );
 
     try {
       const payload = {
@@ -283,9 +291,9 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
         first_name: data.first_name,
         last_name: data.last_name,
         password: data.password,
-        country_iso_code: data.country,
-        country_name: coun?.country_name,
-        country: coun?._id,
+        country_iso_code: coun?.country_iso_code ?? countryIso,
+        country_name: coun?.country_name ?? data.country?.country_name,
+        country: coun?._id ?? data.country?._id,
         platform: platform || "whatsapp",
       };
 
@@ -303,9 +311,6 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
         delete payload.phone;
         payload.category_id = data.category_id;
         payload.company_name = data.company_name;
-        payload.country_iso_code = data.country?.alpha3 || data.country?.country_iso_code;
-        payload.country = data.country?._id;
-        payload.country_name = data.country?.country_name;
       }
 
       // Using apiWrapper with single capcheRequired param
