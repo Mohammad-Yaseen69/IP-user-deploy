@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 import { publicRoutes } from "../RouteNew/Routes";
 import { useNavigate } from "react-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
-const questionsData = lazy(() => import("../Components/Settings/questions.json"));
 const SessionExpireModal = lazy(() => import("../Components/SessionExpireModal"));
 import { useSearchParams } from "react-router-dom";
 import { apiWrapper } from "../utils/Functions/apiWrapper";
@@ -531,7 +530,8 @@ const UserState = ({ children }) => {
       .get(`${import.meta.env.VITE_IP_DEV_API}/api/user/get-security-question`, {
         headers: authHeader,
       })
-      .then((res) => {
+      .then(async (res) => {
+        const { default: questionsData } = await import("../Components/Settings/questions.json");
         const decrypted = decryptData(res.data.data);
         const questions = decrypted.questionsList?.map((item) => {
           const question = questionsData.find(

@@ -4,7 +4,7 @@ import Routers from "./RouteNew";
 import CustomizerProvider from "./Helper/Customizer/CustomizerProvider";
 import AnimationThemeProvider from "./Helper/AnimationTheme/AnimationThemeProvider";
 import InactivityWrapper from "./InactivityWrapper";
-const BroadcastPage = lazy(() => import("./BroadcastPage"));
+import BroadcastPage from "./BroadcastPage";
 const MaintenancePage = lazy(() => import("./Components/Maintenance/MaintenancePage"));
 import UserState from "./Context/UserContextState";
 import { Suspense } from "react";
