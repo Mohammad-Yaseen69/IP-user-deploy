@@ -203,7 +203,7 @@
 .panel {
   width: 400px;
   height: 600px;
-  max-height: calc(100vh - 140px);
+  max-height: calc(100dvh - 140px);
   background: var(--assistant-surface);
   border: 1px solid var(--assistant-border);
   border-radius: 18px;
@@ -220,7 +220,7 @@
 @media (max-width: 480px) {
   .panel {
     width: calc(100vw - 32px);
-    height: calc(100vh - 190px);
+    height: min(560px, calc(100dvh - 190px));
   }
 }
 
