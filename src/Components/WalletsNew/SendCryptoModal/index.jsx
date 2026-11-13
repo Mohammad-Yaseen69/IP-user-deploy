@@ -262,7 +262,6 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
 
   const address = getChannelAddress(selectedChannel);
 
-  /* The asset saved on the beneficiary's crypto entry; the wallet's own when none is saved. */
   const payoutAsset = getChannelAsset(selectedChannel) || cryptoCurrency;
 
   const savedProtocol = useMemo(() => getChannelProtocol(selectedChannel), [selectedChannel]);

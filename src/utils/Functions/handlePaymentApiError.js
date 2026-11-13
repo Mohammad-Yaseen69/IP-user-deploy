@@ -9,7 +9,6 @@ export const handlePaymentApiError = ({
   setProfileLockTime = () => {},
   navigate = () => {},
   fallback = "We are unable to process your request at the moment, please try again later.",
-  /* Messages the caller wants shown exactly as the backend wrote them. */
   keepVerbatim = () => false,
 }) => {
   try {
