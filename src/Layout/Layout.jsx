@@ -16,7 +16,7 @@ import MobileSidebar from "./MobileSidebar";
 import InactivityLogoutModal from "../Components/InactivityLogoutModal";
 import ThreeDaysModal from "../Components/SecurityQuestionsModals/ThreeDaysModal";
 import ThirtyDaysModal from "../Components/SecurityQuestionsModals/ThirtyDaysModal";
-import { InactivityContext } from "../InactivityWrapper";
+import { InactivityCountdownContext } from "../InactivityWrapper";
 import InactivityCountDownTimer from "../Components/InactivityCounter";
 import SourceOfFunds from "../Components/SourceOfFundsModal";
 import AddBeneficiaryAddressModal from "../Components/AddBeneficiaryAddressModal";
@@ -35,6 +35,7 @@ import AssistantWidget from "../Components/AssistantWidget";
 import { useVirtualIbans } from "../hooks/useVirtualIban";
 import PushConsentModal from "../Components/PushConsentModal";
 import { isPushSupported, getPushPermissionState } from "../Services/PushNotificationService";
+import useWindowWidth from "../utils/useWindowWidth";
 
 export const MobileSbContext = createContext(null);
 
@@ -193,6 +194,8 @@ const Layout = ({ children, classNames, ...rest }) => {
       return [];
     }
   }, [beneficiaries, location]);
+  const [dismissedBeneficiaries, setDismissedBeneficiaries] = useState(null);
+  const windowWidth = useWindowWidth();
 
   useEffect(() => {
     setShowModal(!profileCompleted);
@@ -306,7 +309,7 @@ const Layout = ({ children, classNames, ...rest }) => {
     }
   }, [location]);
 
-  const { showTimerCountdown } = useContext(InactivityContext);
+  const showTimerCountdown = useContext(InactivityCountdownContext);
 
   useEffect(() => {
     verifyToken();
@@ -336,14 +339,18 @@ const Layout = ({ children, classNames, ...rest }) => {
 
   return (
     <Fragment>
-      {beneficiaryWithoutAddresses.length > 0 && (
-        <AddBeneficiaryAddressModal
-          isOpen={beneficiaryWithoutAddresses.length > 0}
-          toggle={getUserBeneficiaries}
-          close={() => (beneficiaryWithoutAddresses.length = 0)}
-          beneficiaries={beneficiaryWithoutAddresses}
-        />
-      )}
+      {beneficiaryWithoutAddresses.length > 0 &&
+        dismissedBeneficiaries !== beneficiaryWithoutAddresses && (
+          <AddBeneficiaryAddressModal
+            isOpen={beneficiaryWithoutAddresses.length > 0}
+            toggle={getUserBeneficiaries}
+            close={() => {
+              beneficiaryWithoutAddresses.length = 0;
+              setDismissedBeneficiaries(beneficiaryWithoutAddresses);
+            }}
+            beneficiaries={beneficiaryWithoutAddresses}
+          />
+        )}
       <Modal isOpen={showOfflineModal}>
         <ModalHeader>
           <span style={{ fontSize: "22px", fontWeight: 600, color: "red" }}>
@@ -438,7 +445,7 @@ const Layout = ({ children, classNames, ...rest }) => {
             </div>
           </ModalBody>
         </Modal>
-        {window.innerWidth > 1000 ? (
+        {windowWidth > 1000 ? (
           <div className={styles.pc_layout}>
             {((showModal === true && typeof profileCompleted === "boolean") ||
               (showModal &&

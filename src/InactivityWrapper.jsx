@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState, useCallback } fr
 import { UserContext } from "./Context/UserContext";
 
 export const InactivityContext = createContext({});
+export const InactivityCountdownContext = createContext(false);
 
 function InactivityWrapper({ children }) {
   const { setShowInactivityModal, userDetails } = useContext(UserContext);
@@ -59,7 +60,9 @@ function InactivityWrapper({ children }) {
         showTimerCountdown,
       }}
     >
-      {children}
+      <InactivityCountdownContext.Provider value={showTimerCountdown}>
+        {children}
+      </InactivityCountdownContext.Provider>
     </InactivityContext.Provider>
   );
 }
