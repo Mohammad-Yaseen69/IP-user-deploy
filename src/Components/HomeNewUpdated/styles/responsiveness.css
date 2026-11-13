@@ -1,96 +1,118 @@
-.p_g_link.card-body {
+.ql_grid {
+  width: 100%;
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  border-radius: 1rem;
   padding: 1rem;
-  gap: 1rem;
+  box-sizing: border-box;
+  align-content: start;
 }
 
-.b_card.card-body {
-  padding: 1rem;
+.ql_item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.75rem 0.9rem;
+  min-width: 0;
+  border-radius: 12px;
+  background: #faf8fe;
+  border: 1px solid #ece7f7;
+  text-decoration: none;
+  cursor: pointer;
 }
 
-.c_h_pb.card-header {
-  padding: 1rem 1rem 1rem;
+.ql_icon {
+  height: 38px;
+  width: 38px;
+  min-width: 38px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background:
+    radial-gradient(
+      124.63% 259.09% at 48.48% 152.15%,
+      rgba(230, 64, 103, 0.1) 0%,
+      rgba(89, 38, 240, 0.1) 55.65%,
+      rgba(72, 40, 160, 0.1) 100%
+    ),
+    #fff;
 }
 
-.d_r_mt3 {
-  margin-top: 3rem;
+.ql_text {
+  color: black;
+  padding: 0;
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.d_r_head {
-  margin-bottom: 1.5rem;
-}
-
-.d_r_act_dot {
-  margin: 1.5rem 0;
-}
-
-.d_r_c_opt {
-  height: 50px;
-  width: 50px;
-}
-
-.d_r_c_opt > img {
-  height: 30px;
-  width: 30px;
-}
-
-.d_r_c_opt_con {
-  margin-top: 1.5rem;
-}
-
-.d_r_m_con.card-body {
-  padding: 30px;
-}
-
-.c_c_p_b {
-  margin-top: 1rem;
-}
-
-@media screen and (max-width: 1500px) {
-  .p_g_link.card-body {
-    padding: 0.5rem;
-    gap: 0.5rem;
+@media (hover: hover) and (min-width: 1001px) {
+  .ql_item:hover {
+    background: rgba(89, 38, 240, 1);
+    border-color: rgba(89, 38, 240, 1);
   }
 
-  .b_card.card-body {
-    padding: 0.7rem;
+  .ql_item:hover .ql_text {
+    color: #fff;
   }
 
-  .c_h_pb.card-header {
-    padding: 1rem 1rem 0rem;
+  .ql_item:hover .ql_icon {
+    background: rgba(255, 255, 255, 0.2);
   }
 
-  .d_r_mt3 {
-    margin-top: 1.5rem;
+  .ql_item:hover .ql_icon svg,
+  .ql_item:hover .ql_icon svg path {
+    color: #fff;
+    stroke: #fff;
+  }
+}
+
+@media (max-width: 1000px) {
+  .ql_grid {
+    display: flex;
+    gap: 10px;
+    padding: 0;
+    border-radius: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
   }
 
-  .d_r_head {
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
+  .ql_grid::-webkit-scrollbar {
+    display: none;
   }
 
-  .d_r_act_dot {
-    margin: 1rem 0;
+  .ql_item {
+    flex: 0 0 calc((100% - 36px) / 4);
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 0;
+    border: none;
+    background: none;
   }
 
-  .d_r_c_opt {
-    height: 35px;
-    width: 35px;
+  .ql_icon {
+    height: 48px;
+    width: 48px;
+    min-width: 48px;
+    border-radius: 12px;
   }
 
-  .d_r_c_opt > img {
-    height: 20px;
-    width: 20px;
-  }
-
-  .d_r_c_opt_con {
-    margin-top: 0.5rem;
-  }
-
-  .d_r_m_con.card-body {
-    padding: 12px 24px;
-  }
-
-  .c_c_p_b {
-    margin-top: 0.2rem;
+  .ql_text {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: center;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    width: 100%;
   }
 }
