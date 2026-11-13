@@ -14,11 +14,12 @@ const StepCountry = ({
   country,
   onSelect,
   usedIsos,
+  isCrypto = false,
   holderName,
   onOpenBeneficiaries,
 }) => {
   const { t } = useTranslation();
-  const limitReached = usedIsos.length >= MAX_COUNTRIES;
+  const limitReached = !isCrypto && usedIsos.length >= MAX_COUNTRIES;
 
   /* At the limit, only countries that already have a slot can take another method. */
   const filteringList = countries
@@ -26,8 +27,9 @@ const StepCountry = ({
     .map((item) => ({ country_iso_code: item.alpha3 }));
 
   const isNewCountry = country && !usedIsos.includes(country.alpha3);
-  const slotHint =
-    isNewCountry && usedIsos.length === MAX_COUNTRIES - 1
+  const slotHint = isCrypto
+    ? ""
+    : isNewCountry && usedIsos.length === MAX_COUNTRIES - 1
       ? t("This uses your last country slot, so you'll be at {{max}} of {{max}}.", {
           max: MAX_COUNTRIES,
         })
@@ -42,7 +44,9 @@ const StepCountry = ({
   return (
     <>
       <div className={abf.field}>
-        <FieldLabel>{t("Country of the account")}</FieldLabel>
+        <FieldLabel>
+          {isCrypto ? t("Country of the wallet") : t("Country of the account")}
+        </FieldLabel>
         {filteringList.length > 0 && (
           <CountryDropDown
             key={filteringList.length}

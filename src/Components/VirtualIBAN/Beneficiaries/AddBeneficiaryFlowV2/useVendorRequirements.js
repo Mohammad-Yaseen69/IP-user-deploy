@@ -118,15 +118,22 @@ export const useRequiredFields = ({
 };
 
 export const useRequirements = ({ method, vendor, fields, recipientType, channel }) => {
+  const { userDetails } = useContext(UserContext);
+  const senderType = userDetails?.account_type;
   const cryptoAsset = channel?.crypto_asset;
 
   return useMemo(() => {
     if (BVNK_METHODS.some((m) => m.value === method)) {
-      return getBvnkRequirements(method, recipientType, {
-        crypto_asset: cryptoAsset,
-      });
+      return getBvnkRequirements(
+        method,
+        recipientType,
+        {
+          crypto_asset: cryptoAsset,
+        },
+        senderType,
+      );
     }
     if (!fields) return null;
     return getThunesRequirements(fields, recipientType, method);
-  }, [method, vendor, fields, recipientType, cryptoAsset]);
+  }, [method, vendor, fields, recipientType, cryptoAsset, senderType]);
 };

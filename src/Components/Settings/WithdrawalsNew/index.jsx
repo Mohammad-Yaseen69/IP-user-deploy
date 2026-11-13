@@ -3,8 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { UserContext } from "../../../Context/UserContext";
 import { usePermission } from "../../../hooks/GeneralUse/usePermission";
-import { apiWrapper } from "../../../utils/Functions/apiWrapper";
-import allCountries from "../../PaymentsNewer/CountriesData.json";
+import { usePayoutCountries } from "../../../hooks/Payments/usePayoutCountries";
 import { Info, Plus, Warning } from "../Icons";
 import AddAccountFlow from "./AddAccountFlow";
 import AccountGroup from "./components/AccountGroup";
@@ -19,42 +18,20 @@ import { MAX_COUNTRIES, MAX_CRYPTO_WALLETS, TRANSFER_METHODS } from "./withdrawa
 const WithdrawalsNew = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { allowedCountries, userWithdrawals, cryptoWithdrawals, getWithdrawals, userDetails } =
+  const { userWithdrawals, cryptoWithdrawals, getWithdrawals, userDetails } =
     useContext(UserContext);
   const can = usePermission();
   const canAdd = can("settings.receiving-accounts.add");
   const canDelete = can("settings.receiving-accounts.delete");
   const { removeAccount, setDefault } = useWithdrawalActions();
 
-  const [countries, setCountries] = useState([]);
+  const { countries } = usePayoutCountries();
   const [flow, setFlow] = useState(null);
   const [removing, setRemoving] = useState(null);
 
   useEffect(() => {
     if (userDetails?._id) getWithdrawals();
   }, [userDetails?._id]);
-
-  /* Countries the user can pay out to, keyed by the allowed-country id the record stores. */
-  useEffect(() => {
-    const senderIso = userDetails?.country?.country_iso_code;
-    if (!senderIso || !allowedCountries?.length) return;
-
-    apiWrapper({ endpoint: `/api/payment/countries/${senderIso}` })
-      .then((payoutCountries) => {
-        const supported = allCountries.filter((item) =>
-          (payoutCountries || []).some((apiCountry) => apiCountry.countryIso3 === item?.alpha3),
-        );
-        setCountries(
-          allowedCountries
-            .map((allowed) => {
-              const country = supported.find((item) => item?.alpha3 === allowed?.country_iso_code);
-              return country ? { ...country, id: allowed?._id } : null;
-            })
-            .filter(Boolean),
-        );
-      })
-      .catch(() => setCountries([]));
-  }, [userDetails?.country?.country_iso_code, allowedCountries]);
 
   const groups = useMemo(() => buildCountryGroups(userWithdrawals), [userWithdrawals]);
   const cryptoRows = useMemo(() => buildCryptoRows(cryptoWithdrawals), [cryptoWithdrawals]);

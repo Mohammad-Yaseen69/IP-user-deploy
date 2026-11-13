@@ -5,7 +5,7 @@ import SendCryptoPanel from "./SendCryptoPanel";
 import WithdrawCryptoPanel from "./WithdrawCryptoPanel";
 import ConvertCryptoPanel from "./ConvertCryptoPanel";
 
-const TABS = ["Send", "Convert"];
+const TABS = ["Send", "Convert", "Withdraw"];
 
 const InstapayActionRail = ({ wallets = [], wallet, onSelectWallet }) => {
   const { t } = useTranslation();
