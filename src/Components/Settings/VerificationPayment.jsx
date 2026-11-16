@@ -743,6 +743,9 @@ const VerificationPayment = ({
         toggle={() => {
           verifyToken(true);
           setShowSuccess(false);
+          if (payoutChannel?.value === "mobile_wallet") {
+            toggle();
+          }
         }}
       >
         <ModalHeader

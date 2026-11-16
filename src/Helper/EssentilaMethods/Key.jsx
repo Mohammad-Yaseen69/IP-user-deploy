@@ -1,4 +1,4 @@
-import CryptoJS from "crypto-js";
+import CryptoJS from "../cryptoJs";
 
 // chatgpt
 // const KEY = CryptoJS.enc.Hex.parse(import.meta.env.VITE_CRYPTO_KEY);

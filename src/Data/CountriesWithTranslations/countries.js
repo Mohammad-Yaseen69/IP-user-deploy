@@ -1,41 +1,44 @@
-import ar from "./ar.json";
-import de from "./de.json";
 import en from "./en.json";
-import es from "./es.json";
-import fr from "./fr.json";
-import ha from "./ha.json";
-import hi from "./hi.json";
-import id from "./id.json";
-import it from "./it.json";
-import nl from "./nl.json";
-import pl from "./pl.json";
-import pt from "./pt.json";
-import ru from "./ru.json";
-import sw from "./sw.json";
-import tr from "./tr.json";
-import uk from "./uk.json";
-import ur from "./ur.json";
-import yo from "./yo.json";
-import cn from "./zh.json";
 
 export const countriesInDiffLangs = {
-  ar,
-  de,
   en,
-  es,
-  fr,
-  ha,
-  hi,
-  id,
-  it,
-  nl,
-  pl,
-  pt,
-  ru,
-  sw,
-  tr,
-  uk,
-  ur,
-  yo,
-  cn,
+};
+
+const countryLoaders = {
+  ar: () => import("./ar.json"),
+  de: () => import("./de.json"),
+  es: () => import("./es.json"),
+  fr: () => import("./fr.json"),
+  ha: () => import("./ha.json"),
+  hi: () => import("./hi.json"),
+  id: () => import("./id.json"),
+  it: () => import("./it.json"),
+  nl: () => import("./nl.json"),
+  pl: () => import("./pl.json"),
+  pt: () => import("./pt.json"),
+  ru: () => import("./ru.json"),
+  sw: () => import("./sw.json"),
+  tr: () => import("./tr.json"),
+  uk: () => import("./uk.json"),
+  ur: () => import("./ur.json"),
+  yo: () => import("./yo.json"),
+  cn: () => import("./zh.json"),
+};
+
+export const loadCountriesForLanguage = (language) => {
+  const code = language?.split("-")[0];
+  const loader = countryLoaders[code];
+  const loaded = countriesInDiffLangs[code];
+  if (!loader || (loaded && loaded !== countriesInDiffLangs.en)) {
+    return Promise.resolve();
+  }
+  return loader()
+    .then((module) => {
+      countriesInDiffLangs[code] = module.default;
+    })
+    .catch(() => {
+      if (!countriesInDiffLangs[code]) {
+        countriesInDiffLangs[code] = countriesInDiffLangs.en;
+      }
+    });
 };
