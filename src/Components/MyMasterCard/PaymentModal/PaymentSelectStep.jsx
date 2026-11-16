@@ -21,9 +21,13 @@ const PaymentSelect = ({
   styling,
   isInIban = false,
   isIban = false,
+  enabledMethods = [],
 }) => {
   const { t } = useTranslation();
   const activeIban = isIban || isInIban;
+  const paypalComingSoon = activeIban && !enabledMethods.includes("paypal");
+  const mobileComingSoon = !enabledMethods.includes("mobile");
+  const bankComingSoon = !enabledMethods.includes("bank");
 
   const options = [
     {
@@ -42,24 +46,24 @@ const PaymentSelect = ({
     },
     {
       type: "paypal",
-      text: activeIban ? "Paypal (coming soon)" : "Paypal",
+      text: paypalComingSoon ? "Paypal (coming soon)" : "Paypal",
       icon: Paypal,
       hoverIcon: Paypal_h,
-      comingSoon: activeIban,
+      comingSoon: paypalComingSoon,
     },
     {
       type: "mobile",
-      text: "Mobile money (coming soon)",
+      text: mobileComingSoon ? "Mobile money (coming soon)" : "Mobile money",
       icon: Mobile,
       hoverIcon: Mobile_h,
-      comingSoon: true,
+      comingSoon: mobileComingSoon,
     },
     {
       type: "bank",
-      text: "Bank transfer (coming soon)",
+      text: bankComingSoon ? "Bank transfer (coming soon)" : "Bank transfer",
       icon: Bank,
       hoverIcon: Bank_h,
-      comingSoon: true,
+      comingSoon: bankComingSoon,
     },
   ];
 
@@ -71,7 +75,11 @@ const PaymentSelect = ({
             onClick={() => {
               if (!option.comingSoon) {
                 setPaymentType(option.type);
-                if (option.type !== "paypal" && window.innerWidth > 1000 && setStep) {
+                if (
+                  ["wallet", "card"].includes(option.type) &&
+                  window.innerWidth > 1000 &&
+                  setStep
+                ) {
                   setStep(2);
                 }
               }

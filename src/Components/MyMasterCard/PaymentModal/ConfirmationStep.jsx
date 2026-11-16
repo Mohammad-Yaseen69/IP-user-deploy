@@ -77,7 +77,9 @@ const ConfirmationStep = ({
                     ? t("Payment Card")
                     : paymentType === "paypal"
                       ? t("Paypal")
-                      : t("Wallet")}
+                      : ["mobile", "bank"].includes(paymentType)
+                        ? ""
+                        : t("Wallet")}
                 </span>
                 <p>{walletState?.wallet_id}</p>
               </div>

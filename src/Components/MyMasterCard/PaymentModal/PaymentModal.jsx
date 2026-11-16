@@ -551,6 +551,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
             paymentType={paymentType}
             setPaymentType={setPaymentType}
             setStep={setStep}
+            enabledMethods={["mobile", "bank"]}
           />
         )}
 
@@ -709,7 +710,10 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
                 } else if (step === 2) {
                   setStep(3);
                 } else if (step === 1) {
-                  if (paymentType !== "paypal") {
+                  if (["mobile", "bank"].includes(paymentType)) {
+                    // TODO after backend: add the VCC mobile wallet and Plaid payment
+                    toast.error(t("This payment method is not available yet"));
+                  } else if (paymentType !== "paypal") {
                     setStep(2);
                   } else {
                     sendOtp();

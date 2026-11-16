@@ -372,10 +372,10 @@ const WalletFundsFlow = ({ setAction }) => {
     const getFees = async () => {
       dataHandler("exchange_rate_error", null);
       dataHandler("loading", true);
-      if (data.channel?.value === "card" || data.channel?.value === "bank") {
+      if (data.channel?.value === "card" || data.channel?.value === "bank_deposit") {
         try {
           const res = await axios.get(
-            `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/get-tbc-fee/${data.wallet?._id}/${parseFloat(data.amount)}?isBankFee=${data.channel?.value === "bank" ? true : false}`,
+            `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/get-tbc-fee/${data.wallet?._id}/${parseFloat(data.amount)}?isBankFee=${data.channel?.value === "bank_deposit" ? true : false}`,
             {
               headers: authHeader,
             },
@@ -659,7 +659,7 @@ const WalletFundsFlow = ({ setAction }) => {
         }
         break;
       case 4:
-        if (data.channel?.value === "bank") {
+        if (data.channel?.value === "bank_deposit") {
           dataHandler("bankStep", data.bankStep + 1);
           dataHandler("exchange_rate_backup", data.exchange_rate);
           //
@@ -1017,7 +1017,7 @@ const WalletFundsFlow = ({ setAction }) => {
                         url={""}
                         showCards={true}
                       />
-                    ) : data.channel.value === "bank" ? (
+                    ) : data.channel.value === "bank_deposit" ? (
                       <BankDeposit data={data} dataHandler={dataHandler} />
                     ) : data.channel.value === "bank_transfer" ? (
                       <PlaidBankTransfer
@@ -1040,7 +1040,8 @@ const WalletFundsFlow = ({ setAction }) => {
                     ""
                   )}
 
-                  {((data.channel?.value !== "bank" && data.channel?.value !== "bank_transfer") ||
+                  {((data.channel?.value !== "bank_deposit" &&
+                    data.channel?.value !== "bank_transfer") ||
                     data.step < 4) && (
                     <div className={styles.bottom}>
                       <Link
@@ -1344,7 +1345,7 @@ const WalletFundsFlow = ({ setAction }) => {
                         url={""}
                         showCards={true}
                       />
-                    ) : data.channel.value === "bank" ? (
+                    ) : data.channel.value === "bank_deposit" ? (
                       <BankDeposit data={data} dataHandler={dataHandler} />
                     ) : data.channel.value === "bank_transfer" ? (
                       <PlaidBankTransfer data={data} dataHandler={dataHandler} />
@@ -1356,7 +1357,7 @@ const WalletFundsFlow = ({ setAction }) => {
               )}
             </div>
 
-            {((data.channel?.value !== "bank" && data.channel?.value !== "bank_transfer") ||
+            {((data.channel?.value !== "bank_deposit" && data.channel?.value !== "bank_transfer") ||
               data.step < 4) &&
               !data.show_confirmation && (
                 <div className={styles.bottom}>
