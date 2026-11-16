@@ -19,10 +19,16 @@ const StepMethod = ({
   error,
   usedMethods,
   cryptoCount,
+  cryptoInCountry = false,
   onSelect,
 }) => {
   const { t } = useTranslation();
   const cryptoFull = cryptoCount >= MAX_CRYPTO_WALLETS;
+  const cryptoNote = cryptoInCountry
+    ? t("Already added")
+    : cryptoFull
+      ? t("Limit reached")
+      : undefined;
 
   const renderTransfer = (value) => {
     const meta = METHOD_META[value];
@@ -88,8 +94,8 @@ const StepMethod = ({
             title={t(METHOD_META.crypto_wallet.title)}
             subtitle={t("USDT on TRON, Ethereum or BNB Smart Chain")}
             timing={t(METHOD_META.crypto_wallet.timing)}
-            note={cryptoFull ? t("Limit reached") : undefined}
-            disabled={cryptoFull}
+            note={cryptoNote}
+            disabled={!!cryptoNote}
             selected={method === "crypto_wallet"}
             onSelect={() => onSelect("crypto_wallet", null)}
           />

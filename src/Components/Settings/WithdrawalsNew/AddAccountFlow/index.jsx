@@ -116,12 +116,24 @@ const AddAccountFlow = ({
   const isCrypto = method === "crypto_wallet";
   const isEdit = mode === "edit";
 
+  const cryptoIsos = useMemo(
+    () => new Set(cryptoRows.map((row) => row.record?.iso_code).filter(Boolean)),
+    [cryptoRows],
+  );
+  const filteredCountries = useMemo(
+    () =>
+      mode === "crypto"
+        ? countries.filter((country) => !cryptoIsos.has(country.alpha3))
+        : countries,
+    [countries, cryptoIsos, mode],
+  );
+
   const resolveCountry = useCallback(
     (iso3) => {
       if (!iso3) return null;
-      return countries.find((item) => item.alpha3 === iso3) ?? findCountry(iso3) ?? null;
+      return filteredCountries.find((item) => item.alpha3 === iso3) ?? findCountry(iso3) ?? null;
     },
-    [countries],
+    [filteredCountries],
   );
 
   /* Fresh state every time the dialog opens, seeded from what it was opened on. */
@@ -398,7 +410,7 @@ const AddAccountFlow = ({
       case "country":
         return (
           <StepCountry
-            countries={countries}
+            countries={filteredCountries}
             country={country}
             onSelect={selectCountry}
             usedIsos={usedIsos}
@@ -439,6 +451,9 @@ const AddAccountFlow = ({
               error={methodsError}
               usedMethods={usedMethods}
               cryptoCount={cryptoRows.length}
+              cryptoInCountry={cryptoRows.some(
+                (row) => row.record?.iso_code && row.record.iso_code === country?.alpha3,
+              )}
               onSelect={selectMethod}
             />
           </>
