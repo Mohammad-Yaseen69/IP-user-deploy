@@ -1,13 +1,12 @@
 import { getCroppedImg, UserContext } from "./UserContext";
 import axios from "axios";
 import { decryptData } from "../Helper/EssentilaMethods/Decryption";
-import { useEffect, useState } from "react";
+import { lazy, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { publicRoutes } from "../RouteNew/Routes";
 import { useNavigate } from "react-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import questionsData from "../Components/Settings/questions.json";
-import SessionExpireModal from "../Components/SessionExpireModal";
+const SessionExpireModal = lazy(() => import("../Components/SessionExpireModal"));
 import { useSearchParams } from "react-router-dom";
 import { apiWrapper } from "../utils/Functions/apiWrapper";
 import i18n from "../i18n";
@@ -531,7 +530,8 @@ const UserState = ({ children }) => {
       .get(`${import.meta.env.VITE_IP_DEV_API}/api/user/get-security-question`, {
         headers: authHeader,
       })
-      .then((res) => {
+      .then(async (res) => {
+        const { default: questionsData } = await import("../Components/Settings/questions.json");
         const decrypted = decryptData(res.data.data);
         const questions = decrypted.questionsList?.map((item) => {
           const question = questionsData.find(

@@ -8,6 +8,7 @@ import logo from "../../assets/images/logo/logo.webp";
 import { formatCurrency } from "../../Helper/AmountFormat";
 import { isInIframe, flagCheck } from "../../utils/Functions";
 import { useEffect, useState } from "react";
+import useEffectivePermission, { PERMISSIONS } from "../../hooks/GeneralUse/useEffectivePermission";
 
 const AmountContainer = ({
   state,
@@ -23,6 +24,8 @@ const AmountContainer = ({
 }) => {
   const width = useWindowWidth();
   const { t } = useTranslation();
+  const hasPermission = useEffectivePermission();
+  const canGuestPayWithCrypto = hasPermission(PERMISSIONS.CRYPTO_GUEST_PAY);
   const [localAmount, setLocalAmount] = useState(state.formattedAmount || "");
   const openInNewTab = (url) => {
     const newWindow = window.open(url, "_blank", "noopener,noreferrer");
@@ -180,33 +183,34 @@ const AmountContainer = ({
                       </div>
                     )}
 
-                    {flagCheck("payments.allowCrypto", userDetails, "paymentAddress") && (
-                      <div
-                        title={
-                          !flagCheck("payments.allowCrypto", userDetails, "paymentAddress")
-                            ? t("This method is disabled for this payment address by admin.")
-                            : ""
-                        }
-                        style={{ position: "relative" }}
-                      >
-                        <Link
-                          to={"#"}
-                          onClick={toggleCryptoModal}
-                          className={`${vpa_styles.button} ${vpa_styles.guestBtn}`}
-                          style={{
-                            opacity: state.amount <= 0 ? 0.7 : 1,
-                            pointerEvents: state.amount <= 0 ? "none" : "all",
-                            position: "relative",
-                            cursor: state.amount <= 0 ? "not-allowed" : "pointer",
-                          }}
+                    {canGuestPayWithCrypto &&
+                      flagCheck("payments.allowCrypto", userDetails, "paymentAddress") && (
+                        <div
+                          title={
+                            !flagCheck("payments.allowCrypto", userDetails, "paymentAddress")
+                              ? t("This method is disabled for this payment address by admin.")
+                              : ""
+                          }
+                          style={{ position: "relative" }}
                         >
-                          <div>
-                            <img src={CryptoPay} alt="A" />
-                          </div>
-                          <span>{t("Pay with Crypto")}</span>
-                        </Link>
-                      </div>
-                    )}
+                          <Link
+                            to={"#"}
+                            onClick={toggleCryptoModal}
+                            className={`${vpa_styles.button} ${vpa_styles.guestBtn}`}
+                            style={{
+                              opacity: state.amount <= 0 ? 0.7 : 1,
+                              pointerEvents: state.amount <= 0 ? "none" : "all",
+                              position: "relative",
+                              cursor: state.amount <= 0 ? "not-allowed" : "pointer",
+                            }}
+                          >
+                            <div>
+                              <img src={CryptoPay} alt="A" />
+                            </div>
+                            <span>{t("Pay with Crypto")}</span>
+                          </Link>
+                        </div>
+                      )}
 
                     {flagCheck("payments.allowInstapay", userDetails, "paymentAddress") && (
                       <div

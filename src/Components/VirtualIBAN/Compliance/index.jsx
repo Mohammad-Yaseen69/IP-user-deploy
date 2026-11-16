@@ -45,7 +45,6 @@ const Compliance = ({ inquiries = [], refetch, isLoading }) => {
       return (
         <ActionNeededView
           bannerMessage={t(
-            "compliance.bannerDefault",
             "We keep compliance clear and reassuring. Responding promptly keeps payments flowing - failure to respond may restrict account activity.",
           )}
           requests={inquiries}
@@ -56,15 +55,14 @@ const Compliance = ({ inquiries = [], refetch, isLoading }) => {
 
     if (overdueItems.length > 0) {
       const restrictedData = {
-        title: t("compliance.accountRestrictedTitle", "Your account is temporarily restricted"),
+        title: t("Your account is temporarily restricted"),
         subtitle: t(
-          "compliance.accountRestrictedSubtitle",
           "A deadline passed on compliance requests without a response. Resolve the items below to restore full account access.",
         ),
         items: overdueItems.map((item, idx) => ({
           id: item._id || idx,
           title: item.title,
-          status: t("compliance.statusOverdue", "Overdue"),
+          status: t("Overdue"),
         })),
       };
 
@@ -80,7 +78,6 @@ const Compliance = ({ inquiries = [], refetch, isLoading }) => {
       return (
         <ActionNeededView
           bannerMessage={t(
-            "compliance.bannerDefault",
             "We keep compliance clear and reassuring. Responding promptly keeps payments flowing - failure to respond may restrict account activity.",
           )}
           requests={inquiries}
