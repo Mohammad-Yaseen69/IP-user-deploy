@@ -10,6 +10,7 @@ import {
   DialogTitle,
   Grid,
   IconButton,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import axios from "axios";
@@ -373,16 +374,29 @@ const FeeModelRequests = () => {
                           >
                             {t("Edit")}
                           </Button>
-                          <Button
-                            size="small"
-                            variant="outlined"
-                            color="error"
-                            startIcon={<Trash size={12} />}
-                            sx={{ textTransform: "none", p: "2px 10px", minWidth: 0 }}
-                            onClick={() => setDeleteTarget(req)}
+                          <Tooltip
+                            arrow
+                            title={
+                              req.status === "approved"
+                                ? t("Approved packs cannot be deleted.")
+                                : ""
+                            }
                           >
-                            {t("Delete")}
-                          </Button>
+                            {/* span: disabled buttons don't fire hover events for the tooltip */}
+                            <span>
+                              <Button
+                                size="small"
+                                variant="outlined"
+                                color="error"
+                                startIcon={<Trash size={12} />}
+                                sx={{ textTransform: "none", p: "2px 10px", minWidth: 0 }}
+                                onClick={() => setDeleteTarget(req)}
+                                disabled={req.status === "approved"}
+                              >
+                                {t("Delete")}
+                              </Button>
+                            </span>
+                          </Tooltip>
                           {req.status === "pending" && (
                             <Chip
                               size="small"
