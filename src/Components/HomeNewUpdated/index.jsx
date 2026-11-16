@@ -278,7 +278,7 @@ const HomeNewUpdated = () => {
         >
           <div className={styles.top}>
             <div className={styles.top_section}>
-              <h4>{t("Dashbaord")}</h4>
+              <h4>{t("Dashboard")}</h4>
               <p>Manage and monitor your InstaPay Wallet</p>
             </div>
             <TopRight />
@@ -344,7 +344,7 @@ const HomeNewUpdated = () => {
               </a>
             </div>
             {userWallets.some((item) => item?.balance?.reserved) ? (
-              <div className={styles.crypto_track} style={{ maxWidth: "33vw" }}>
+              <div className={styles.crypto_track}>
                 {currenciesData.map((item) => (
                   <CryptoCard key={item.name} item={item} />
                 ))}

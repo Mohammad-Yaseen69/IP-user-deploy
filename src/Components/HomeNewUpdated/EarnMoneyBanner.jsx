@@ -89,6 +89,7 @@ const DesktopBanner = ({
 
 const MobileBanner = ({ code = "", rewardsEarned = 0, friendsJoined = 0 }) => {
   const { t } = useTranslation();
+  const handlelink = () => window.open(LEARN_MORE_URL, "_blank", "noopener,noreferrer");
 
   const formattedRewards = Number(rewardsEarned).toLocaleString("en-US", {
     minimumFractionDigits: 2,
@@ -96,24 +97,28 @@ const MobileBanner = ({ code = "", rewardsEarned = 0, friendsJoined = 0 }) => {
   });
 
   return (
-    <div className={styles.mobileBanner}>
-      <a href={LEARN_MORE_URL} target="_blank" rel="noreferrer" className={styles.mobileBanner}>
-        <div className={styles.mobileIcon}>
-          <Gift size={20} />
-        </div>
-        <div className={styles.mobileText}>
-          <h3>{t("Earn with the Partner Program")}</h3>
-          <p>
-            {code
-              ? t("Share {{code}}. {{friends}} friends joined, {{rewards}} USD earned.", {
-                  code,
-                  friends: friendsJoined,
-                  rewards: formattedRewards,
-                })
-              : t("Share your code and earn a share of every fee your friends pay.")}
-          </p>
-        </div>
-      </a>
+    <div
+      className={styles.mobileBanner}
+      onClick={handlelink}
+      role="link"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === "Enter" && handlelink()}
+    >
+      <div className={styles.mobileIcon}>
+        <Gift size={20} />
+      </div>
+      <div className={styles.mobileText}>
+        <h3>{t("Earn with the Partner Program")}</h3>
+        <p>
+          {code
+            ? t("Share {{code}}. {{friends}} friends joined, {{rewards}} USD earned.", {
+                code,
+                friends: friendsJoined,
+                rewards: formattedRewards,
+              })
+            : t("Share your code and earn a share of every fee your friends pay.")}
+        </p>
+      </div>
     </div>
   );
 };

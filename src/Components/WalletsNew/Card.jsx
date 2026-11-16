@@ -44,7 +44,7 @@ const Card = ({
   return (
     <div className={`${styles.card} ${isCompact ? styles.compact : ""} ${className}`} style={style}>
       {wallet?.balance?.reserved ? (
-        <div className={r_styles.reserved}>
+        <div className={`${r_styles.reserved} ${isCompact ? r_styles.compacts : ""}`}>
           <div className={r_styles.r_total}>
             <span>{t("Total Balance")}:</span>
             <h5>
@@ -93,9 +93,8 @@ const Card = ({
                 </span>
               </div>
             ) : (
-              <span className={r_styles.load}>{t("Loading...")}</span>
+              <span className={r_styles.load}>{/* {t("Loading...")} */}</span>
             )}
-
             <div className={r_styles.bb}>
               <Progress
                 value={
@@ -112,7 +111,17 @@ const Card = ({
                     : 0
                 }
                 barStyle={{
+                  height: "100%",
                   background: "linear-gradient(90deg, #F2EEFF 0%, #5926F0 100%)",
+                  borderRadius: "999px",
+                }}
+                style={{
+                  height: "8px",
+                  width: "100%",
+                  background: "#fff",
+                  borderRadius: "999px",
+                  overflow: "hidden",
+                  padding: 0,
                 }}
               />
             </div>
@@ -161,53 +170,55 @@ const Card = ({
               )}
             </div>
           </div>
-          {data?.balance_limits ? (
-            <div className={styles.limit_row}>
-              <p>{t("Monthly limit")}</p>
-              <span>
-                {data.balance_limits.used} / {data.balance_limits.total}
+          <div className={styles.limitBlock}>
+            {data?.balance_limits ? (
+              <div className={styles.limit_row}>
+                <p>{t("Monthly limit")}</p>
+                <span>
+                  {data.balance_limits.used} / {data.balance_limits.total}
+                </span>
+              </div>
+            ) : (
+              <span
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  color: "#fff",
+                }}
+              >
+                {/* {t("Loading...")} */}
               </span>
+            )}
+            <div className={styles.bb}>
+              <Progress
+                value={
+                  data?.balance_limits?.total
+                    ? Math.min(
+                        Math.max(
+                          (removeCommasAndCurrency(data?.balance_limits?.used) /
+                            removeCommasAndCurrency(data?.balance_limits?.total)) *
+                            100,
+                          0,
+                        ),
+                        100,
+                      )
+                    : 0
+                }
+                barStyle={{
+                  height: "100%",
+                  background: "linear-gradient(90deg, #F2EEFF 0%, #5926F0 100%)",
+                  borderRadius: "999px",
+                }}
+                style={{
+                  height: "8px",
+                  width: "100%",
+                  background: "#fff",
+                  borderRadius: "999px",
+                  overflow: "hidden",
+                  padding: 0,
+                }}
+              />
             </div>
-          ) : (
-            <span
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                color: "#fff",
-              }}
-            >
-              {t("Loading...")}
-            </span>
-          )}
-          <div className={styles.bb}>
-            <Progress
-              value={
-                data?.balance_limits?.total
-                  ? Math.min(
-                      Math.max(
-                        (removeCommasAndCurrency(data?.balance_limits?.used) /
-                          removeCommasAndCurrency(data?.balance_limits?.total)) *
-                          100,
-                        0,
-                      ),
-                      100,
-                    )
-                  : 0
-              }
-              barStyle={{
-                height: "100%",
-                background: "linear-gradient(90deg, #F2EEFF 0%, #5926F0 100%)",
-                borderRadius: "999px",
-              }}
-              style={{
-                height: "8px",
-                width: "100%",
-                background: "#fff",
-                borderRadius: "999px",
-                overflow: "hidden",
-                padding: 0,
-              }}
-            />
           </div>
         </div>
       )}

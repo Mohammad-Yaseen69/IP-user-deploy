@@ -13,7 +13,12 @@
   width: 90%;
   font-family: Inter;
 }
-
+.limitBlock {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 3rem;
+}
 .circle {
   height: 120%;
   aspect-ratio: 1;
@@ -150,6 +155,7 @@
   flex-direction: column;
   margin: 0;
   padding: 0.5rem;
+  min-height: 220px;
 }
 
 .bb {
@@ -230,6 +236,7 @@ set_default_btn:hover {
 
 .compact .top_container {
   flex: 1;
+  min-height: 0;
   height: 100%;
   padding: 0;
 }
@@ -445,5 +452,26 @@ set_default_btn:hover {
 
   .compact .top_container > .walletAmount h3 {
     font-size: 20px;
+  }
+}
+
+/* Reserved card: aspect-ratio, min-width, width, compact sab override */
+.card.reservedCard {
+  aspect-ratio: auto;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  min-height: 0;
+  height: auto;
+  padding: 16px 18px;
+  overflow: visible;
+  border-radius: 16px;
+  gap: 0;
+}
+
+@media screen and (max-width: 480px) {
+  .card.reservedCard {
+    padding: 14px 16px;
+    overflow: hidden;
   }
 }

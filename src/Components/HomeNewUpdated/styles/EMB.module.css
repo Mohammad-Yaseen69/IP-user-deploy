@@ -170,9 +170,18 @@
     width: 100%;
     padding: 16px;
     border-radius: 20px;
-    background: linear-gradient(135deg, #f3efff 0%, #faf9ff 100%);
+    background:
+      radial-gradient(
+        circle at 0% 60%,
+        rgba(139, 92, 246, 0.14) 0%,
+        rgba(167, 139, 250, 0.06) 35%,
+        rgba(255, 255, 255, 0) 60%
+      ),
+      #ffffff;
     box-shadow: 0 10px 30px rgba(89, 38, 240, 0.08);
-    font-family: "Manrope", sans-serif;
+    font-family: Inter;
+    border: 1px solid #eff1f6;
+    cursor: pointer;
   }
 
   .mobileIcon {

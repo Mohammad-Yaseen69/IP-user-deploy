@@ -27,10 +27,8 @@ const buildMonthlyData = (transactions = [], walletId, months = 12) => {
   }
 
   transactions.forEach((tx) => {
-    // Sirf completed transactions
     if (tx?.status?.toLowerCase() !== "completed") return;
 
-    // Sirf selected wallet ki transactions
     if (walletId && tx?.wallet_id !== walletId) return;
 
     const d = new Date(tx.createdAt);

@@ -264,16 +264,23 @@ const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true 
   //     }
   // }
 
+  const isFiatWallet = (item) =>
+    item?.wallet_type !== "crypto" &&
+    !["btc", "eth", "usdt"].includes(item?.currency?.code?.toLowerCase());
+
   const filteredWallets = useMemo(() => {
-    return userWallets
-      ?.filter((item) => !item?.blocked && !item?.admin_blocked && item?.status === "active")
-      ?.filter(
-        (item) =>
-          item?.currency?.code?.toLowerCase() !== "btc" &&
-          item?.currency?.code?.toLowerCase() !== "eth",
-      )
-      ?.sort((a, b) => (b?.default === true ? 1 : -1))
-      ?.map((item) => ({ name: item?.currency?.code, ...item }));
+    const seen = new Set();
+    return (userWallets ?? [])
+      .filter((item) => item?.status === "active" && !item?.blocked && !item?.admin_blocked)
+      .filter(isFiatWallet)
+      .filter((item) => {
+        const code = item?.currency?.code;
+        if (!code || seen.has(code)) return false;
+        seen.add(code);
+        return true;
+      })
+      .sort((a, b) => (b?.default === true ? 1 : -1))
+      .map((item) => ({ name: item?.currency?.code, ...item }));
   }, [userWallets]);
 
   const [formattedAmount, setFormattedAmount] = useState("1.00");
