@@ -15,6 +15,8 @@ import { useTranslation } from "react-i18next";
 import useAvailableMethods from "../../../hooks/Payments/useAvailableMethods";
 import { Skeleton } from "@mui/material";
 
+const API_METHOD = { mobile: "mobile_wallet" };
+
 const PaymentSelect = ({
   setPaymentType,
   setStep,
@@ -81,10 +83,7 @@ const PaymentSelect = ({
               .filter(
                 (x) =>
                   x.type === "wallet" ||
-                  (Array.isArray(methods) &&
-                    methods.some(
-                      (method) => typeof method === "string" && method.startsWith(x.type),
-                    )),
+                  (Array.isArray(methods) && methods.includes(API_METHOD[x.type] ?? x.type)),
               )
               .map((option) => (
                 <div

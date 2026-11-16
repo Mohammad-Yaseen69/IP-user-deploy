@@ -189,7 +189,8 @@ const BankDeposit = ({
       formData.append("exchange_rate", data.exchange_rate?.exchange_rate?.exchange_rate || 1);
       formData.append("sendingAmount", data.exchange_rate?.sending?.amount);
       formData.append("sendingCurrency", selectedBank.Currency || selectedBank["Currency"] || "");
-      formData.append("type", type);
+      formData.append("type", invoiceId ? "invoice" : type);
+      if (invoiceId) formData.append("invoice_id", invoiceId);
       if (guestDetails) {
         formData.append("guest_details", JSON.stringify(guestDetails));
       }

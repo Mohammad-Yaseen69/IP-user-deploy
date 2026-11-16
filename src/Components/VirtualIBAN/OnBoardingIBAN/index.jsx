@@ -377,7 +377,9 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     onStepChange?.(state.step);
   }, [state.step, onStepChange]);
 
-  if (userDetails?.account_type === "individual") navigate("/virtual-IBAN");
+  useEffect(() => {
+    if (userDetails?.account_type === "individual") navigate("/virtual-IBAN");
+  }, [userDetails?.account_type, navigate]);
 
   const stepOrder = state.userType === "individual" ? STEPS_INDIVIDUAL : STEPS_BUSINESS;
 

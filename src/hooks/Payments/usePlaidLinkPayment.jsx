@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { PLAID_EXIT_MAP } from "../../Components/AddFunds/WalletFundsFlow/PlaidExistMap";
 import { UserContext } from "../../Context/UserContext";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
+import { handlePaymentApiError } from "../../utils/Functions/handlePaymentApiError";
 
 const getExitPayload = (err) => {
   if (err) {
@@ -39,7 +40,7 @@ const usePlaidLinkPayment = ({
   onAuthorized,
   onCancelled,
 }) => {
-  const { userDetails, authHeader } = useContext(UserContext);
+  const { userDetails, authHeader, setProfileLockTime } = useContext(UserContext);
   const navigate = useNavigate();
   const autoOpenedTokenRef = useRef(null);
   const completedTokenRef = useRef(null);
@@ -60,7 +61,6 @@ const usePlaidLinkPayment = ({
         fee: data.exchange_rate?.fee?.amount ?? 0,
         transaction_id: transactionId || null,
       };
-      console.log("Exchanging Plaid token with payload:", payload);
       const response = await apiWrapper({
         endpoint:
           type === "payment_address"
@@ -71,7 +71,6 @@ const usePlaidLinkPayment = ({
         isEncrypted: type === "payment_address" ? true : false,
         isDecrypted: type === "payment_address" ? true : false,
       });
-      console.log("Token exchange response:", response.data);
       return response.data;
     },
     onSuccess: () => {
@@ -79,12 +78,15 @@ const usePlaidLinkPayment = ({
       onAuthorized?.();
     },
     onError: (error) => {
-      console.error("Failed to exchange Plaid token:", error);
-      toast.error(
-        error?.response?.data?.message ||
-          error.message ||
-          "we are unable to process your request at the moment, please try again later!",
-      );
+      handlePaymentApiError({
+        error,
+        setError: (message) => toast.error(message),
+        setProfileLockTime,
+        navigate,
+        fallback:
+          error?.response?.data?.message ||
+          "We are unable to process your request at the moment, please try again later.",
+      });
       onCancelled?.();
     },
   });
@@ -92,7 +94,6 @@ const usePlaidLinkPayment = ({
   const { open, ready } = usePlaidLink({
     token: linkToken,
     onSuccess: async (publicToken, metadata) => {
-      console.log("Plaid success:", { publicToken, metadata });
       completedTokenRef.current = linkToken;
 
       if (type !== "verification_payment") {
@@ -102,8 +103,7 @@ const usePlaidLinkPayment = ({
         onAuthorized?.();
       }
     },
-    onExit: (err, metadata) => {
-      console.log("Plaid Exit:", { err, metadata });
+    onExit: (err) => {
       if (completedTokenRef.current === linkToken) return;
       const exitPayload = getExitPayload(err);
       try {
@@ -136,9 +136,6 @@ const usePlaidLinkPayment = ({
         }
       })();
       onCancelled?.();
-    },
-    onEvent: (eventName, metadata) => {
-      console.log("Plaid event:", eventName, metadata);
     },
   });
 
