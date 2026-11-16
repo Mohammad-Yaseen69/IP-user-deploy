@@ -1,4 +1,4 @@
-import CryptoJS from "crypto-js";
+import CryptoJS from "../cryptoJs";
 
 export const stringToBase64 = (str) => {
   return CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(str));

@@ -69,7 +69,7 @@ const StepFour = ({
   filteringValue = "dummy",
   customStyles = {},
   isAirtime,
-  plaidDisabled = false,
+  bankComingSoon = false, // international transfer has no Plaid backend yet (Phase 4)
 }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
@@ -85,15 +85,15 @@ const StepFour = ({
 
   console.log(data?.mobile_wallet_services);
   const types = useMemo(() => {
-    const flowTypes = plaidDisabled
+    const baseTypes = bankComingSoon
       ? typesData.map((item) =>
           item.value === "bank_transfer" ? { ...item, status: "Coming Soon" } : item,
         )
       : typesData;
-
     if (data?.mobile_wallet_services?.length > 0) {
-      const others = flowTypes.filter((item) => !item?.sub_name);
-      const thunes = flowTypes
+      console.log(typesData, data.mobile_wallet_services);
+      const others = baseTypes.filter((item) => !item?.sub_name);
+      const thunes = baseTypes
         .filter((item) => item?.sub_name)
         .map((item) =>
           data.mobile_wallet_services.some((it) => it?.id == item?.id)
@@ -106,9 +106,9 @@ const StepFour = ({
         return 0;
       });
     } else {
-      return flowTypes;
+      return baseTypes;
     }
-  }, [typesData, plaidDisabled, data.mobile_wallet_services]);
+  }, [typesData, data.mobile_wallet_services, bankComingSoon]);
 
   // console.log(types, 'dsafsadffsad')
   useEffect(() => {

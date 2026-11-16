@@ -19,6 +19,7 @@ const BankDeposit = ({
   guestDetails,
   toggle,
   client_reference,
+  invoiceId,
 }) => {
   const isGuestPayment = type !== "add_funds";
   const { userDetails } = useContext(UserContext);

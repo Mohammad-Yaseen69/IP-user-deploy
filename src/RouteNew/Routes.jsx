@@ -1,10 +1,10 @@
 import { lazy } from "react";
 import { Navigate } from "react-router";
-import BusinessAccount from "../Components/AddBeneficiary/BusinessAccount";
 import { usePermission } from "../hooks/GeneralUse/usePermission";
 import { MENU } from "../Layout/SidebarNew/SbNMenu";
 import { BusinessRoute } from "../hooks/GeneralUse/useBusiness";
 import { AgentRoute } from "../hooks/GeneralUse/useAgent";
+const BusinessAccount = lazy(() => import("../Components/AddBeneficiary/BusinessAccount"));
 const QrCode = lazy(() => import("../Components/QrCode"));
 const QRScan = lazy(() => import("../Components/QrScan"));
 const ChatbotQrCode = lazy(() => import("../Components/ChatbotQrCode"));
@@ -42,8 +42,6 @@ const ReferralsNew = lazy(() => import("../Components/ReferralsNew"));
 const TransactionsNewApi = lazy(() => import("../Components/TransactionsNewApi"));
 const UserProfile = lazy(() => import("../Components/UserProfile"));
 const UserProfilePublic = lazy(() => import("../Components/UserProfilePublic"));
-const UserSettingsNew = lazy(() => import("../Components/UserSettings"));
-const UserSettingsUpdated = lazy(() => import("../Components/UserSettingsNew"));
 const DownloadQrPage = lazy(() => import("../Components/DownloadQrPage"));
 const Settings = lazy(() => import("../Components/Settings"));
 const WalletsNew = lazy(() => import("../Components/WalletsNew"));
@@ -78,7 +76,6 @@ const InvoicePaymentQr = lazy(() => import("../Components/ReceiptInvoices/Invoic
 const PlansSubscription = lazy(() => import("../Components/PlansSubscriptions"));
 const PlanPaymentLink = lazy(() => import("../Components/PlanPaymentLink"));
 const StoreCreate = lazy(() => import("../Components/StoreCreate"));
-const GuestLogin = lazy(() => import("../Components/guestDashboard/auth"));
 const DelegateAccess = lazy(() => import("../Components/DelegateAccess"));
 const CreateAgentPassword = lazy(() => import("../Components/CreateAgentPassword"));
 const AgentLogin = lazy(() => import("../Components/Auth/agentAuth/index"));
@@ -345,8 +342,6 @@ export const routes = [
       </PermissionRoute>
     ),
   },
-  { path: "/users/settings", component: <UserSettingsNew /> },
-  { path: "/users/settings-new", component: <UserSettingsUpdated /> },
   { path: "/profile/:user_name", component: <UserProfilePublic /> },
   { path: "/add-funds", component: <AddFunds /> },
   { path: "/add-funds/card/:type", component: <AddFunds /> },
@@ -581,10 +576,7 @@ export const authRoutes = [
   { path: `/signup/:code`, component: <Auth /> },
   { path: "*", component: <NotFound type="Page" /> },
 ];
-export const guestRoutes = [
-  { path: `/guestSession/Guestlogin`, component: <GuestLogin /> },
-  { path: "*", component: <NotFound type="Page" /> },
-];
+export const guestRoutes = [{ path: "*", component: <NotFound type="Page" /> }];
 export const AgentCommissionRoutes = [
   {
     path: "/agent-commission",

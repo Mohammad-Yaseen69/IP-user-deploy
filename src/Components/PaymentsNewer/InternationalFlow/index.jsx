@@ -54,6 +54,9 @@ import {
 import { formatCurrency } from "../../../Helper/AmountFormat";
 import PlaidBankTransfer from "../../AddFunds/WalletFundsFlow/PlaidBankTransfer";
 import PlaidLinkHandler from "./PlaidLinkHandler";
+import useEffectivePermission, {
+  PERMISSIONS,
+} from "../../../hooks/GeneralUse/useEffectivePermission";
 
 const leftSideContent = [
   "Select Transaction Type",
@@ -249,6 +252,8 @@ const InternationFlow = ({
   const { getKey, reset } = useIdempotency();
   const can = usePermission();
   const isBankTransfer = internationalData?.payment_type?.value === "bank_transfer";
+  const hasPermission = useEffectivePermission();
+  const canInternationTransfer = hasPermission(PERMISSIONS.INTERNATIONAL_TRANSFER);
 
   const [requiredMissingFields, setRequiredMissingFields] = useState({
     beneficiary: {
@@ -1844,20 +1849,22 @@ const InternationFlow = ({
               heading="Unsupported Transaction"
             />
           )}
-          <SendActionCard
-            bg={international}
-            title={t("International Transfer")}
-            icon={int}
-            desc={t(
-              "Send money across borders with ease. Transfer funds internationally \nto friends, family, or businesses in just a few clicks. Choose from \na wide range of payment channels including bank account, \nmobile money/mobile wallet, cash pick-up location, or payment card \nfor convenient and secure transactions.",
-            )}
-            setter={setSendPaymentType}
-            setterValue="international"
-            setStep={setStep}
-            showDesc={sendPaymentType === "international"}
-            active={sendPaymentType === "international"}
-            sendPaymentType={sendPaymentType}
-          />
+          {canInternationTransfer && (
+            <SendActionCard
+              bg={international}
+              title={t("International Transfer")}
+              icon={int}
+              desc={t(
+                "Send money across borders with ease. Transfer funds internationally \nto friends, family, or businesses in just a few clicks. Choose from \na wide range of payment channels including bank account, \nmobile money/mobile wallet, cash pick-up location, or payment card \nfor convenient and secure transactions.",
+              )}
+              setter={setSendPaymentType}
+              setterValue="international"
+              setStep={setStep}
+              showDesc={sendPaymentType === "international"}
+              active={sendPaymentType === "international"}
+              sendPaymentType={sendPaymentType}
+            />
+          )}
           {sendPaymentType === "international" &&
             (internationalData?.transaction_details?.beneficiary ||
             transaction_status ||
@@ -2347,6 +2354,7 @@ const InternationFlow = ({
                               loading={loading}
                               data={internationalData}
                               dataHandler={updateInternationalData}
+                              bankComingSoon={true}
                             />
                           )}
                           {subStep === 5 && (

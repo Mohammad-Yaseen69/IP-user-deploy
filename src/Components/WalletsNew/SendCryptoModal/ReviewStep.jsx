@@ -44,7 +44,7 @@ const formatMoney = (value, currency) => {
   return `${Number.isFinite(amount) ? amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 8 }) : value} ${currency}`;
 };
 
-const boundaryAddress = (address) => {
+export const boundaryAddress = (address) => {
   const value = String(address || "");
   if (value.length <= 12) return value;
   return `${value.slice(0, 6)}......${value.slice(-6)}`;

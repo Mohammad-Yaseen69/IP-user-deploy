@@ -349,6 +349,7 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
       const dec = decryptData(res.data.data);
       dataHandler("mobile_wallet_services", dec?.data?.payers ?? []);
     } catch {
+      //
     } finally {
       dataHandler("loading", false);
     }
@@ -835,7 +836,7 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
                       data={data}
                       dataHandler={dataHandler}
                       loading={data.loading}
-                      plaidDisabled={true}
+                      bankComingSoon={true}
                     />
                   )}
                   {data.step === 2 && data.show_cards ? (
@@ -1003,7 +1004,7 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
                         data={data}
                         dataHandler={dataHandler}
                         loading={data.loading}
-                        plaidDisabled={true}
+                        bankComingSoon={true}
                       />
                     )}
                     {data.step === 2 && data.show_cards ? (
