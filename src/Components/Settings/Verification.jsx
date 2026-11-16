@@ -55,6 +55,14 @@ const industries = [
 
 export const sourceOfFunds = ["Cash", "Business", "Gift", "Salary", "Lottery", "Savings", "Other"];
 
+const getApiErrorMessage = (error) => {
+  try {
+    return decryptData(error?.response?.data?.data)?.message;
+  } catch {
+    return undefined;
+  }
+};
+
 const Verification = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -124,9 +132,10 @@ const Verification = () => {
 
       // console.log("try ran in handlesend");
     } catch (error) {
-      toast.error("We cannot process your request at the moment, please try again later.");
-      // console.log("try ran in error", error);
-      // console.log(decryptData(error?.response?.data?.data));
+      toast.error(
+        getApiErrorMessage(error) ||
+          t("We cannot process your request at the moment, please try again later."),
+      );
     } finally {
       setLoading(false);
     }
@@ -154,10 +163,9 @@ const Verification = () => {
 
       await verifyToken(true);
     } catch (error) {
-      const dec = decryptData(error?.response?.data?.data);
       toast.error(
-        dec?.message ||
-          "We are unable to process your request at the moment, please try again later.",
+        getApiErrorMessage(error) ||
+          t("We are unable to process your request at the moment. Please try again later."),
       );
       return;
     }
