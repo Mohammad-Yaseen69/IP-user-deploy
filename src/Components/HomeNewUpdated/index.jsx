@@ -140,12 +140,10 @@ const HomeNewUpdated = () => {
   }, []);
 
   const getTodayDate = () => {
-    return new Date().toLocaleDateString(undefined, {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    });
+    const now = new Date();
+    const weekday = now.toLocaleDateString("en-GB", { weekday: "long" });
+    const month = now.toLocaleDateString("en-GB", { month: "long" });
+    return `${weekday} ${now.getDate()} ${month}`;
   };
 
   const getGreeting = () => {
@@ -304,8 +302,8 @@ const HomeNewUpdated = () => {
               <div className={styles.card}>
                 <div className={styles.balance_currencies}>
                   {can("dashboard.balance.view") && <BalanceComponent />}
-                  {can("dashboard.balance.view") &&
-                    userWallets.some((item) => item?.balance?.reserved) && <OtherBalance />}
+                  {/* {can("dashboard.balance.view") &&
+                    userWallets.some((item) => item?.balance?.reserved) && <OtherBalance />} */}
                 </div>
                 <QuickLinksNew />
               </div>
@@ -428,7 +426,6 @@ const HomeNewUpdated = () => {
         >
           {/* <BusinessModal isOpen={showBusinessModal} toggle={() => setShowBusinessModal(false)} /> */}
           <TopBar />
-          {/* <EarnMoneyBanner /> */}
           <div className={styles.greeting}>
             <h1>
               {getGreeting()}, {firstName}
@@ -475,7 +472,13 @@ const HomeNewUpdated = () => {
               ))}
             </div>
           </div>
-          <CurConversion />
+          {/* <CurConversion /> */}
+          <EarnMoneyBanner
+            showLink={false}
+            code={userDetails?.username}
+            rewardsEarned={totalReferralAmount}
+            friendsJoined={friendsJoined}
+          />
         </div>
       )}
     </>

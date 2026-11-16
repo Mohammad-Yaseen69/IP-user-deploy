@@ -110,7 +110,7 @@ const RecentTrans = ({ currentWallet }) => {
           >
             {t("Recent activity")}
           </h4>
-          <p
+          {/* <p
             style={{
               margin: "4px 0 0",
               fontSize: "13px",
@@ -120,7 +120,7 @@ const RecentTrans = ({ currentWallet }) => {
             }}
           >
             All currencies
-          </p>
+          </p> */}
         </div>
 
         <a

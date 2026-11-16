@@ -1,3 +1,17 @@
+.reserved {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  min-height: 240px;
+  padding: 5px 3px;
+  margin: 0;
+  box-sizing: border-box;
+  color: #fff;
+  gap: 7px;
+}
+
 .flex {
   display: flex;
   align-items: center;
@@ -8,45 +22,50 @@
 }
 
 .r_total {
-  gap: 0.9rem;
-  border-radius: 3.544px;
-  background: rgba(255, 255, 255, 0.08);
-  padding: 0.5rem;
-  margin-bottom: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  background: transparent;
 }
 
 .r_total span {
-  color: rgba(255, 255, 255, 0.8);
+  color: #fff;
   font-family: "Red Hat Display";
-  font-size: 8.86px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
 }
 
 .r_total h5 {
   color: #fff;
   font-family: "Clash Display";
   font-size: 1rem;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  letter-spacing: -0.177px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.2px;
+}
+
+.r_balance_details {
+  display: flex;
+  align-items: center;
+  gap: 24px;
 }
 
 .r_blocked {
-  border-radius: 3.544px;
-  background: rgba(255, 255, 255, 0.1);
-  justify-content: space-between;
-  padding: 0.5rem;
-  margin-bottom: 0.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border-radius: 0;
 }
 
 .r_blocked span {
-  color: rgba(255, 255, 255, 0.8);
+  color: #fff;
   font-family: "Red Hat Display";
-  font-size: 7.336px;
-  font-style: normal;
+  font-size: 16px;
   font-weight: 400;
   line-height: normal;
 }
@@ -54,86 +73,98 @@
 .r_blocked h5 {
   color: #fff;
   font-family: "Clash Display";
-  font-size: 8.86px;
-  font-style: normal;
-  font-weight: 400;
+  font-size: 14px;
+  font-weight: 500;
   line-height: normal;
 }
 
-.r_wallet {
-  gap: 0.5rem;
-  margin-top: 0.4rem;
-  margin-bottom: 0.4rem;
+.walletId {
+  display: flex;
+  flex-direction: column;
+  /* gap: 4px; */
+  margin-top: 2px;
 }
 
-.r_wallet span {
-  color: rgba(255, 255, 255, 0.8);
+.r_wallet span,
+.walletId > span {
+  color: #fff;
   font-family: "Red Hat Display";
-  font-size: 8.86px;
-  font-style: normal;
+  font-size: 12px;
   font-weight: 400;
-  line-height: normal;
 }
 
 .r_wallet h5 {
-  padding: 0.4rem;
-  border-radius: 6.699px;
-  background: rgba(217, 217, 217, 0.08);
-  box-shadow: 0px 2.679px 8.708px 0px rgba(0, 0, 0, 0.06);
-  backdrop-filter: blur(1.3397164344787598px);
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  color: #fff;
-  leading-trim: both;
-  text-edge: cap;
-  font-family: "Clash Display";
-  font-size: 12.404px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  letter-spacing: -0.248px;
-}
-
-.r_bal {
-  gap: 0.6rem;
-  margin-bottom: auto;
-}
-
-.r_bal span {
-  color: rgba(255, 255, 255, 0.8);
-  font-family: "Red Hat Display";
-  font-size: 7.088px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-}
-
-.r_bal h5 {
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
   color: #fff;
   font-family: "Clash Display";
-  font-size: 10.189px;
-  font-style: normal;
+  font-size: 14px;
   font-weight: 400;
   line-height: normal;
-  letter-spacing: 0.204px;
+  letter-spacing: 0;
+}
+
+.wallet_id {
+  display: flex;
+  align-items: center;
+  /* gap: 5px; */
+}
+
+.copy_btn {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.limit_Row {
+  /* border: 2px solid red; */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0;
+}
+
+.limit_Row p {
+  margin: 0;
+  color: #fff;
+  font-family: "Clash Display";
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.limit_Row span {
+  color: #fff;
+  font-family: "Clash Display";
+  font-size: 10px;
+  font-weight: 400;
+}
+
+.load {
+  color: #fff;
+  font-size: 10px;
 }
 
 .bb {
   position: relative;
-  margin-top: 0.5rem;
+  width: 100%;
+  margin-top: 0;
 }
 
-.bb span {
-  color: #fff;
-  text-align: right;
-  leading-trim: both;
-  text-edge: cap;
-  font-family: "Clash Display";
-  font-size: 7.336px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  position: absolute;
-  bottom: 0px;
+.bb :global(.progress) {
+  height: 6px !important;
+  width: 100%;
+  background: #fff;
+  border-radius: 999px;
+  overflow: hidden;
+  padding: 0;
+}
+
+.bb :global(.progress-bar) {
+  border-radius: 999px;
 }

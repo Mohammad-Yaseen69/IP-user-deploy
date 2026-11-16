@@ -57,6 +57,7 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
   const iconTheme = getIconTheme(transaction?.transaction_type);
 
   const getAmountColor = (type) => (type?.toLowerCase() === "credit" ? "#1CB234" : "#1D1535");
+  const capitalize = (str = "") => str.charAt(0).toUpperCase() + str.slice(1);
 
   const badgeColor = useMemo(() => {
     switch (transaction?.status?.toLowerCase()) {
@@ -124,31 +125,48 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
             }}
           >
             {/* <h4 className={styles.head} style={{ marginBottom: 0 }}>{transaction?.receiver?.user?.first_name} {transaction?.receiver?.user?.last_name}</h4> */}
-            <h4 className={styles.head} style={{ marginBottom: 0 }}>
+            <h3
+              className={styles.head}
+              style={{
+                marginBottom: 0,
+              }}
+            >
               {renderAccountName(transaction, internationalReceiver)?.slice(0, 20)}
-            </h4>
+            </h3>
+
             <p
               className="text-muted"
               style={{
                 marginBottom: 0,
-                color: "rgba(128,128,128,.7)",
-                fontSize: ".5rem",
+                color: "#9AA3B2",
+                fontSize: ".7rem",
+                fontWeight: 500,
                 display: "flex",
-                gap: ".3rem",
                 alignItems: "center",
+                gap: 6,
                 whiteSpace: "nowrap",
-                fontWeight: 600,
               }}
             >
-              {/* {formatTime(transaction?.createdAt)} */}
-              {new Date(transaction?.createdAt).toLocaleString("en-US", {
-                month: "2-digit",
-                day: "2-digit",
-                year: "2-digit",
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: badgeColor || "#9AA3B2",
+                  display: "inline-block",
+                  flexShrink: 0,
+                }}
+              />
+              {capitalize(transaction.payment_type?.split("_")[0])},{" "}
+              {formatTime(transaction.createdAt)}
+              {/* {new Date(transaction?.createdAt).toLocaleString("en-US", {
+                // month: "2-digit",
+                // day: "2-digit",
+                // year: "2-digit",
                 hour: "2-digit",
                 minute: "2-digit",
                 hour12: true,
-              })}
+              })} */}
             </p>
           </div>
         </div>
@@ -162,7 +180,6 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
           <div
             className={`ml-auto ${styles.head}`}
             style={{
-              fontWeight: "700",
               color: getAmountColor(transaction?.transaction_type),
               whiteSpace: "nowrap",
             }}
@@ -174,9 +191,18 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
                   maximumFractionDigits: 2,
                 })
               : ""}
-            {transaction?.currency?.code}{" "}
+            <span
+              style={{
+                fontSize: "12px",
+                color: "#9AA3B2",
+                display: "inline-block",
+                padding: "0 5px",
+              }}
+            >
+              {transaction?.currency?.code}{" "}
+            </span>
           </div>
-          <div
+          {/* <div
             style={{
               marginBottom: 0,
               color: "rgba(128,128,128,.7)",
@@ -207,7 +233,7 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
               />
               {t(transaction?.status?.toUpperCase())}
             </span>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

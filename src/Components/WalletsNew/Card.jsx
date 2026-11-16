@@ -44,50 +44,34 @@ const Card = ({
   return (
     <div className={`${styles.card} ${isCompact ? styles.compact : ""} ${className}`} style={style}>
       {wallet?.balance?.reserved ? (
-        <>
-          <div
-            style={{ padding: "0px", background: "none" }}
-            className={`${r_styles.flex} ${r_styles.r_total}`}
-          >
-            <span style={{ fontSize: "10px", fontWeight: 600 }}>{t("Total Balance")}:</span>
+        <div className={r_styles.reserved}>
+          <div className={r_styles.r_total}>
+            <span>{t("Total Balance")}:</span>
             <h5>
               {wallet.currency?.code}{" "}
               {formatCurrency(wallet.balance.available + wallet.balance.reserved, true)}
             </h5>
           </div>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <div
-              style={{
-                padding: "0px",
-                background: "none",
-                flex: 1,
-                justifyContent: "flex-start",
-                gap: "4px",
-              }}
-              className={`${r_styles.flex} ${r_styles.r_blocked}`}
-            >
-              <span style={{ fontSize: "9px", fontWeight: 600 }}>{t("Available balance")}:</span>
+
+          <div className={r_styles.r_balance_details}>
+            <div className={r_styles.r_blocked}>
+              <span>{t("Available balance")}:</span>
               <h5>
-                {wallet.currency?.code}&nbsp;{formatCurrency(wallet.balance.available, true)}
+                {wallet.currency?.code}&nbsp;
+                {formatCurrency(wallet.balance.available, true)}
               </h5>
             </div>
-            <div
-              style={{
-                padding: "0px",
-                background: "none",
-                flex: 1,
-                justifyContent: "flex-start",
-                gap: "4px",
-              }}
-              className={`${r_styles.flex} ${r_styles.r_blocked}`}
-            >
-              <span style={{ fontSize: "9px", fontWeight: 600 }}>{t("Blocked balance")}:</span>
+
+            <div className={r_styles.r_blocked}>
+              <span>{t("Blocked balance")}:</span>
               <h5>
-                {wallet.currency?.code}&nbsp;{formatCurrency(wallet.balance.reserved, true)}
+                {wallet.currency?.code}&nbsp;
+                {formatCurrency(wallet.balance.reserved, true)}
               </h5>
             </div>
           </div>
-          <div className={`${r_styles.flex} ${r_styles.r_wallet}`}>
+
+          <div className={`${r_styles.walletId} ${r_styles.r_wallet}`}>
             <span>{t("Wallet ID")}:</span>
             <h5 className={r_styles.wallet_id}>
               {wallet?.wallet_id}
@@ -100,43 +84,40 @@ const Card = ({
               )}
             </h5>
           </div>
-          {data?.balance_limits ? (
-            <div className={r_styles.limit_Row}>
-              <p>{t("Monthly limit")}</p>
-              <span>
-                {data.balance_limits.used} / {data.balance_limits.total}
-              </span>
-            </div>
-          ) : (
-            <span
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                color: "#fff",
-              }}
-            >
-              {" "}
-              {t("Loading...")}
-            </span>
-          )}
+          <div className={r_styles.limitBlock}>
+            {data?.balance_limits ? (
+              <div className={r_styles.limit_Row}>
+                <p>{t("Monthly limit")}</p>
+                <span>
+                  {data.balance_limits.used} / {data.balance_limits.total}
+                </span>
+              </div>
+            ) : (
+              <span className={r_styles.load}>{t("Loading...")}</span>
+            )}
 
-          <Progress
-            value={
-              (removeCommasAndCurrency(data?.balance_limits?.used) /
-                removeCommasAndCurrency(data?.balance_limits?.total)) *
-              100
-            }
-            barStyle={{
-              background: "linear-gradient(to right, #f2eeff, #5926f0)",
-              borderRadius: "999px",
-            }}
-            style={{
-              height: "6px",
-              background: "#fff",
-              borderRadius: "999px",
-            }}
-          />
-        </>
+            <div className={r_styles.bb}>
+              <Progress
+                value={
+                  data?.balance_limits?.total
+                    ? Math.min(
+                        Math.max(
+                          (removeCommasAndCurrency(data?.balance_limits?.used) /
+                            removeCommasAndCurrency(data?.balance_limits?.total)) *
+                            100,
+                          0,
+                        ),
+                        100,
+                      )
+                    : 0
+                }
+                barStyle={{
+                  background: "linear-gradient(90deg, #F2EEFF 0%, #5926F0 100%)",
+                }}
+              />
+            </div>
+          </div>
+        </div>
       ) : (
         <div className={styles.top_container}>
           <div className={styles.top}>
@@ -184,7 +165,7 @@ const Card = ({
             <div className={styles.limit_row}>
               <p>{t("Monthly limit")}</p>
               <span>
-                {data.balance_limits.total} / {data.balance_limits.remaining}
+                {data.balance_limits.used} / {data.balance_limits.total}
               </span>
             </div>
           ) : (
@@ -195,25 +176,36 @@ const Card = ({
                 color: "#fff",
               }}
             >
-              {" "}
               {t("Loading...")}
             </span>
           )}
           <div className={styles.bb}>
             <Progress
               value={
-                (removeCommasAndCurrency(data?.balance_limits?.used) /
-                  removeCommasAndCurrency(data?.balance_limits?.total)) *
-                100
+                data?.balance_limits?.total
+                  ? Math.min(
+                      Math.max(
+                        (removeCommasAndCurrency(data?.balance_limits?.used) /
+                          removeCommasAndCurrency(data?.balance_limits?.total)) *
+                          100,
+                        0,
+                      ),
+                      100,
+                    )
+                  : 0
               }
               barStyle={{
-                background: "linear-gradient(to right, #F2EEFF, #5926F0)",
-                borderRadius: "50px",
-                margin: "2px",
+                height: "100%",
+                background: "linear-gradient(90deg, #F2EEFF 0%, #5926F0 100%)",
+                borderRadius: "999px",
               }}
               style={{
-                height: window.innerWidth > 1500 ? "12px" : "9px",
+                height: "8px",
+                width: "100%",
                 background: "#fff",
+                borderRadius: "999px",
+                overflow: "hidden",
+                padding: 0,
               }}
             />
           </div>

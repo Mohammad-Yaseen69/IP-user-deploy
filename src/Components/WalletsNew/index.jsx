@@ -404,14 +404,19 @@ const WalletsNew = () => {
                 currentWallet={currentWallet}
               />
             )}
-
-            {can("transactions.wallet.list") && (
-              <TransactionsTable
-                currentWallet={currentWallet}
-                filtered={filtered}
-                setFiltered={setFiltered}
-              />
-            )}
+            <div
+              style={{
+                maxHeight: "80vh",
+                overflowX: "auto",
+              }}
+            >
+              {can("transactions.wallet.list") && (
+                <TransactionsTable
+                  title={t("Wallet transactions")}
+                  description={t("Every payment in and out of this wallet, all currencies")}
+                />
+              )}
+            </div>
           </div>
         </div>
       ) : (
@@ -459,28 +464,11 @@ const WalletsNew = () => {
                 ))}
               </div>
             </div>
-
-            {/* {can("wallet.limits.view") && (
-              <AccountLimits
-                data={data}
-                error={error}
-                loading={loading}
-                currentWallet={currentWallet}
-              />
-            )} */}
-            {can("wallet.analytics.view") && (
-              <MoneyInOut
-                currency={currentWallet?.currency?.code}
-                data={moneyData}
-                loading={moneyLoading}
-              />
-            )}
             <CurConversion />
             {can("transactions.wallet.list") && (
               <TransactionsTable
-                currentWallet={currentWallet}
-                filtered={filtered}
-                setFiltered={setFiltered}
+                title={t("Wallet transactions")}
+                description={t("Every payment in and out of this wallet, all currencies")}
               />
             )}
           </div>

@@ -11,6 +11,7 @@
   min-width: 400px;
   box-shadow: none;
   width: 90%;
+  font-family: Inter;
 }
 
 .circle {
@@ -50,7 +51,7 @@
 .left h3 {
   font-size: min(1.1vw, 20px);
   font-weight: 600;
-  color: white;
+  color: #fff;
   margin-bottom: 0;
 }
 
@@ -74,27 +75,14 @@
 .bottom h3 {
   font-size: min(1.1vw, 20px);
   font-weight: 600;
+
   color: white;
-}
-
-.bb {
-  position: relative;
-}
-
-.bb span {
-  margin: 0;
-  padding: 0;
-  color: rgb(255, 255, 255);
-  font-size: 0.56rem;
-  text-align: right;
-  position: absolute;
-  bottom: 0px;
 }
 
 .wallet_details {
   padding-top: 1.1rem;
   margin-bottom: 0;
-  color: white;
+  color: #fff;
   margin: 0.5rem 0 0.2rem 0;
   display: flex;
   flex-direction: column;
@@ -108,7 +96,7 @@
 
 .walletAmount {
   padding-top: 0.5rem;
-  color: rgb(221, 221, 221);
+  color: #fff;
   font-size: 15px;
 }
 
@@ -130,9 +118,10 @@
 .heading {
   font-size: 20px;
   margin-bottom: 12px;
+  color: #fff;
 }
 
-@media screen and (max-width: 1500px) {
+@media screen and (max-width: 1600px) {
   .card {
     padding: 0.65rem;
   }
@@ -163,14 +152,25 @@
   padding: 0.5rem;
 }
 
+.bb {
+  position: relative;
+  width: 100%;
+}
+
 .bb :global(.progress) {
-  background: #fff !important;
-  border-radius: 999px;
+  width: 100%;
+  height: 8px !important;
+  background: #ffffff !important;
+  border-radius: 999px !important;
+  overflow: hidden;
+  padding: 0;
 }
 
 .bb :global(.progress-bar) {
-  background: linear-gradient(to right, #f2eeff, #5926f0) !important;
-  border-radius: 999px;
+  height: 100%;
+  background: linear-gradient(90deg, #f2eeff 0%, #5926f0 100%) !important;
+  border-radius: 999px !important;
+  transition: width 0.3s ease;
 }
 
 .set_default_btn {
@@ -285,7 +285,7 @@ set_default_btn:hover {
 }
 
 .compact .bb :global(.progress) {
-  height: 6px !important;
+  height: 8px !important;
 }
 
 @media screen and (max-width: 1000px) {

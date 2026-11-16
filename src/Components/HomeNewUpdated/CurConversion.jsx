@@ -318,7 +318,7 @@ const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true 
             onAmountChange={setFormattedAmount}
             onAmountKeyUp={handleKeyUp}
             onAmountBlur={handleBlur}
-            fromBalance={`${Number(balance).toFixed(2)} ${userCurrency}`}
+            fromBalance={`${Number(balance).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${userCurrency}`}
             toCode={exchangedCurrency}
             toOptions={filteredWallets
               .filter((w) => w.currency.code !== userCurrency)
@@ -363,7 +363,7 @@ const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true 
                 ? t("Insufficient Balance")
                 : loading
                   ? t("Fetching Rates...")
-                  : t("Convert")
+                  : `${t("Exchange")} ${userCurrency} to ${exchangedCurrency}`
             }
             submitDisabled={
               !enteredCurrency ||
