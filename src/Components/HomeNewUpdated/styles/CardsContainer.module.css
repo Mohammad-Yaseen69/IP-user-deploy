@@ -188,7 +188,10 @@
   gap: 4px;
   font-size: 14px;
   font-weight: 500;
-  color: #5b3df5;
+  color: #5926f0;
   text-decoration: none;
   white-space: nowrap;
+  font-family: Inter;
+  line-height: 18.85px;
+  letter-spacing: -0.15px;
 }
