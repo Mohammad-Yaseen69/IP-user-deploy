@@ -24,7 +24,7 @@
     "dial_code": "+1-268"
   },
   "ARG": {
-    "maxLength": 10,
+    "maxLength": 11,
     "dial_code": "+54"
   },
   "ARM": {
@@ -36,7 +36,7 @@
     "dial_code": "+61"
   },
   "AUT": {
-    "maxLength": 10,
+    "maxLength": 13,
     "dial_code": "+43"
   },
   "AZE": {
@@ -84,7 +84,7 @@
     "dial_code": "+591"
   },
   "BIH": {
-    "maxLength": 8,
+    "maxLength": 9,
     "dial_code": "+387"
   },
   "BWA": {
@@ -184,7 +184,7 @@
     "dial_code": "+45"
   },
   "DJI": {
-    "maxLength": 6,
+    "maxLength": 8,
     "dial_code": "+253"
   },
   "DMA": {
@@ -296,7 +296,7 @@
     "dial_code": "+36"
   },
   "ISL": {
-    "maxLength": 7,
+    "maxLength": 9,
     "dial_code": "+354"
   },
   "IND": {
@@ -304,7 +304,7 @@
     "dial_code": "+91"
   },
   "IDN": {
-    "maxLength": 11,
+    "maxLength": 12,
     "dial_code": "+62"
   },
   "IRN": {
@@ -384,7 +384,7 @@
     "dial_code": "+266"
   },
   "LBR": {
-    "maxLength": 8,
+    "maxLength": 9,
     "dial_code": "+231"
   },
   "LBY": {
@@ -460,7 +460,7 @@
     "dial_code": "+258"
   },
   "MMR": {
-    "maxLength": 9,
+    "maxLength": 10,
     "dial_code": "+95"
   },
   "NAM": {
@@ -472,7 +472,7 @@
     "dial_code": "+977"
   },
   "NLD": {
-    "maxLength": 9,
+    "maxLength": 11,
     "dial_code": "+31"
   },
   "NZL": {
@@ -504,7 +504,7 @@
     "dial_code": "+92"
   },
   "PAN": {
-    "maxLength": 7,
+    "maxLength": 8,
     "dial_code": "+507"
   },
   "PNG": {
@@ -560,7 +560,7 @@
     "dial_code": "+1-784"
   },
   "WSM": {
-    "maxLength": 7,
+    "maxLength": 10,
     "dial_code": "+685"
   },
   "SMR": {
@@ -580,7 +580,7 @@
     "dial_code": "+221"
   },
   "SRB": {
-    "maxLength": 9,
+    "maxLength": 10,
     "dial_code": "+381"
   },
   "SYC": {
@@ -608,7 +608,7 @@
     "dial_code": "+677"
   },
   "SOM": {
-    "maxLength": 7,
+    "maxLength": 9,
     "dial_code": "+252"
   },
   "ZAF": {
@@ -628,7 +628,7 @@
     "dial_code": "+249"
   },
   "SUR": {
-    "maxLength": 6,
+    "maxLength": 7,
     "dial_code": "+597"
   },
   "SWE": {
@@ -668,7 +668,7 @@
     "dial_code": "+228"
   },
   "TON": {
-    "maxLength": 5,
+    "maxLength": 7,
     "dial_code": "+676"
   },
   "TTO": {
@@ -740,8 +740,8 @@
     "dial_code": "+263"
   },
   "ALA": {
-    "maxLength": 9,
-    "dial_code": "+358-18"
+    "maxLength": 10,
+    "dial_code": "+358"
   },
   "ASM": {
     "maxLength": 10,
@@ -772,11 +772,11 @@
     "dial_code": "+1-345"
   },
   "CXR": {
-    "maxLength": 6,
+    "maxLength": 9,
     "dial_code": "+61"
   },
   "CCK": {
-    "maxLength": 6,
+    "maxLength": 9,
     "dial_code": "+61"
   },
   "CUW": {
@@ -808,8 +808,8 @@
     "dial_code": "+1-671"
   },
   "GGY": {
-    "maxLength": 6,
-    "dial_code": "+44-1481"
+    "maxLength": 10,
+    "dial_code": "+44"
   },
   "HMD": {
     "maxLength": 6,
@@ -817,19 +817,19 @@
   },
   "VAT": {
     "maxLength": 11,
-    "dial_code": "+379"
+    "dial_code": "+39"
   },
   "HKG": {
     "maxLength": 8,
     "dial_code": "+852"
   },
   "IMN": {
-    "maxLength": 6,
-    "dial_code": "+44-1624"
+    "maxLength": 10,
+    "dial_code": "+44"
   },
   "JEY": {
-    "maxLength": 6,
-    "dial_code": "+44-1534"
+    "maxLength": 10,
+    "dial_code": "+44"
   },
   "MAC": {
     "maxLength": 8,
@@ -844,7 +844,7 @@
     "dial_code": "+691"
   },
   "MCO": {
-    "maxLength": 8,
+    "maxLength": 9,
     "dial_code": "+377"
   },
   "REU": {
@@ -868,7 +868,7 @@
     "dial_code": "+594"
   },
   "SPM": {
-    "maxLength": 7,
+    "maxLength": 9,
     "dial_code": "+508"
   },
   "MSR": {
@@ -884,7 +884,7 @@
     "dial_code": "+687"
   },
   "NIU": {
-    "maxLength": 4,
+    "maxLength": 7,
     "dial_code": "+683"
   },
   "NFK": {
@@ -912,7 +912,7 @@
     "dial_code": "+1-787"
   },
   "BLM": {
-    "maxLength": 6,
+    "maxLength": 9,
     "dial_code": "+590"
   },
   "SHN": {
@@ -920,7 +920,7 @@
     "dial_code": "+290"
   },
   "MAF": {
-    "maxLength": 6,
+    "maxLength": 9,
     "dial_code": "+590"
   },
   "SXM": {
@@ -940,7 +940,7 @@
     "dial_code": "+47"
   },
   "TKL": {
-    "maxLength": 5,
+    "maxLength": 7,
     "dial_code": "+690"
   },
   "TCA": {
@@ -948,7 +948,7 @@
     "dial_code": "+1-649"
   },
   "TUV": {
-    "maxLength": 5,
+    "maxLength": 7,
     "dial_code": "+688"
   },
   "UMI": {

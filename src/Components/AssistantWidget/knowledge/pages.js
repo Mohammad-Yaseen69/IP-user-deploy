@@ -767,7 +767,7 @@ export const PAGES = [
     route: "/fee-model-requests",
     agentOnly: true,
     description:
-      "Request and track pricing for a client — IBAN activation and monthly fee, SEPA and SWIFT transfers, crypto on/off ramp, FX margin. Once approved, the client referral code and signup link are here to copy.",
+      "Request and track pricing for a client — IBAN activation and monthly fee, SEPA and SWIFT transfers, crypto top-up and payout, FX margin. Once approved, the client referral code and signup link are here to copy.",
   },
 ];
 

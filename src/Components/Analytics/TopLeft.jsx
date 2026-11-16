@@ -222,6 +222,10 @@ const TopLeft = ({
         toolbar: {
           show: false,
         },
+        // Safari leaves the stacked bars stuck in their initial animation frame (credit drawn below 0) until a resize
+        animations: {
+          enabled: false,
+        },
       },
       plotOptions: {
         bar: {

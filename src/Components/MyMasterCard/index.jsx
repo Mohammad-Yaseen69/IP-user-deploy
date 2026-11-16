@@ -166,7 +166,7 @@ const MyMasterCard = () => {
                 {((!addFundsMobile && !ctcMobile && !ctwMobile) || width > 1000) && (
                   <TransactionsTable
                     ref={ref}
-                    cardNo={currentCardDetails?.card_number}
+                    cardNo={cards[current]?.last4}
                     transactions={transactions}
                     isLoading={loading}
                     searchQuery={searchQuery}

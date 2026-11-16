@@ -19,53 +19,7 @@ import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 
-const DEFAULT_FEE_ITEMS = [
-  {
-    id: "iban_activation",
-    name: "IBAN Activation Fee (One-Time)",
-    flatEuro: 500,
-    percentAmount: 0,
-  },
-  {
-    id: "monthly_iban_fee",
-    name: "Monthly IBAN Fee",
-    flatEuro: 50,
-    percentAmount: 0,
-  },
-  {
-    id: "sepa_inward",
-    name: "SEPA Inward Transfer",
-    flatEuro: 1,
-    percentAmount: 0,
-  },
-  {
-    id: "sepa_outward",
-    name: "SEPA Outward Transfer",
-    flatEuro: 2,
-    percentAmount: 0,
-  },
-  {
-    id: "swift_inward",
-    name: "SWIFT Inward Transfer",
-    flatEuro: 10,
-    percentAmount: 0.1,
-  },
-  {
-    id: "swift_outward",
-    name: "SWIFT Outward Transfer",
-    flatEuro: 15,
-    percentAmount: 0.2,
-  },
-  {
-    id: "crypto_ramp",
-    name: "Crypto On/Off Ramp",
-    flatEuro: 0,
-    percentAmount: 1.0,
-  },
-  { id: "fx_margin", name: "FX Margin", flatEuro: 0, percentAmount: 0.5 },
-];
-
-const NO_PERCENT_FEE_IDS = ["iban_activation", "monthly_iban_fee"];
+import { DEFAULT_FEE_ITEMS, NO_PERCENT_FEE_IDS } from "./FeeRequests/feeSchedule";
 
 const FeeModelRequestModal = ({ isOpen, toggle }) => {
   const { t } = useTranslation();

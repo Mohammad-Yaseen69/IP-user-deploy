@@ -410,6 +410,8 @@
 
   .currencyTabs {
     align-self: stretch;
+    flex-wrap: wrap;
+    width: 100%;
   }
 
   .currencyTab {

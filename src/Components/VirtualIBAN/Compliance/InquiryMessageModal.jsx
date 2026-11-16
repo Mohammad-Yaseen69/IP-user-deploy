@@ -17,7 +17,7 @@ const InquiryMessageModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
     e?.preventDefault();
 
     if (!userMessage.trim()) {
-      toast.error(t("compliance.messageRequired", "Please write a message before sending."));
+      toast.error(t("Please write a message before sending."));
       return;
     }
 
@@ -31,15 +31,13 @@ const InquiryMessageModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
         isDecrypted: true,
       });
 
-      toast.success(
-        res?.message || t("compliance.messageSent", "Message sent to compliance team."),
-      );
+      toast.success(res?.message || t("Message sent to compliance team."));
       if (onSuccess) onSuccess();
       toggle();
     } catch (error) {
       handlePaymentApiError({
         error,
-        fallback: t("compliance.messageError", "Failed to send message."),
+        fallback: t("Failed to send message."),
         setError: (message) => toast.error(message),
       });
     } finally {
@@ -49,7 +47,14 @@ const InquiryMessageModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
 
   return (
     <Modal isOpen={isOpen} toggle={toggle} centered size="md">
-      <ModalBody style={{ padding: "24px", background: "#ffffff", borderRadius: "16px" }}>
+      <ModalBody
+        style={{
+          padding: "24px",
+          background: "#ffffff",
+          borderRadius: "16px",
+          overflowWrap: "anywhere",
+        }}
+      >
         <div
           style={{
             display: "flex",
@@ -67,10 +72,10 @@ const InquiryMessageModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
                 color: "#111827",
               }}
             >
-              {t("compliance.messageComplianceTitle", "Message Compliance Team")}
+              {t("Message Compliance Team")}
             </h4>
             <span style={{ fontSize: "12px", color: "#6b7280" }}>
-              {t("compliance.regarding", "Regarding")}: {inquiry.title}
+              {t("Regarding")}: {inquiry.title}
             </span>
           </div>
           <button
@@ -94,16 +99,12 @@ const InquiryMessageModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
         >
           <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
             <label style={{ fontSize: "13px", fontWeight: "600", color: "#374151" }}>
-              {t("compliance.yourMessage", "Your Message")}{" "}
-              <span style={{ color: "#dc2626" }}>*</span>
+              {t("Your Message")} <span style={{ color: "#dc2626" }}>*</span>
             </label>
             <textarea
               value={userMessage}
               onChange={(e) => setUserMessage(e.target.value)}
-              placeholder={t(
-                "compliance.messagePlaceholder",
-                "Provide context, question, or updates to the compliance team...",
-              )}
+              placeholder={t("Provide context, question, or updates to the compliance team...")}
               rows={4}
               style={{
                 width: "100%",
@@ -141,7 +142,7 @@ const InquiryMessageModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
                 cursor: "pointer",
               }}
             >
-              {t("compliance.cancel", "Cancel")}
+              {t("Cancel")}
             </button>
             <button
               type="submit"
@@ -162,9 +163,7 @@ const InquiryMessageModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
               }}
             >
               <Send size={14} />
-              {loading
-                ? t("compliance.sending", "Sending...")
-                : t("compliance.sendMessage", "Send Message")}
+              {loading ? t("Sending...") : t("Send Message")}
             </button>
           </div>
         </form>
