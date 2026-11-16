@@ -25,9 +25,91 @@
   display: flex;
   flex: 1;
   overflow-x: auto;
-  padding-left: 0.5rem;
   scrollbar-width: none;
   align-items: center;
+}
+
+.qt_head {
+  flex-shrink: 0;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: #fff;
+  padding-right: 0.75rem;
+  padding: 14px;
+}
+
+.qt_head h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  color: #202432;
+  white-space: nowrap;
+}
+
+.qt_head p {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
+  color: #97a1b3;
+  white-space: nowrap;
+}
+
+.qt_link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #5926f0;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.qt_link span {
+  font-size: 16px;
+  line-height: 1;
+}
+/* Quick transfer avatars (mobile): plain circle, name below */
+.bf_item {
+  gap: 6px;
+}
+
+.bf_ring {
+  padding: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 50% !important;
+}
+
+.bf_avatar {
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 50% !important;
+  background: #ece7fb !important;
+  color: #5926f0 !important;
+  font-size: 1.25rem !important;
+}
+
+.bf_name {
+  display: block;
+  max-width: 72px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  color: #1d1535;
+}
+
+.mob_row {
+  gap: 12px;
 }
 
 @media screen and (max-width: 1000px) {
@@ -38,5 +120,37 @@
   .mob {
     display: flex;
     flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .mob_head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .mob_head h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 20px;
+    color: #202432;
+    white-space: nowrap;
+  }
+
+  .mob_head .qt_link {
+    margin-top: 0;
+  }
+
+  .mob_row {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .mob_row::-webkit-scrollbar {
+    display: none;
   }
 }

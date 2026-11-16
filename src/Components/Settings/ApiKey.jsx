@@ -56,8 +56,9 @@ const ApiKey = () => {
   const [features, setFeatures] = useState(defaultFeatures);
   const [adminFeatures, setAdminFeatures] = useState(defaultFeatures);
   const [confirmModal, setConfirmModal] = useState(false);
-  const [isCopied, setIsCopied] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [isCopied, setIsCopied] = useState("");
+
   const timerRef = useRef();
 
   const accountId = userDetails?._id;

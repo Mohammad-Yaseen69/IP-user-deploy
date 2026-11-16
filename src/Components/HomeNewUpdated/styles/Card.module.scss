@@ -1,112 +1,154 @@
 .card {
-  padding: 1rem;
-  border-radius: 16px;
+  position: relative;
   width: 100%;
-  aspect-ratio: 16/8;
-  cursor: grab;
+  aspect-ratio: 8 / 5;
+  min-height: 200px;
+  padding: 1.5rem 1.6rem;
+  border-radius: 16px;
+  color: #fff;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  position: relative;
+  cursor: grab;
   z-index: 10;
-  box-shadow: 0px 13.2063px 39.6189px rgba(89, 38, 240, 0.13);
 
-  .circle {
-    height: 120%;
-    aspect-ratio: 1;
+  background:
+    radial-gradient(60% 90% at 85% 0%, rgba(150, 40, 230, 0.95) 0%, rgba(150, 40, 230, 0) 70%),
+    radial-gradient(55% 80% at 100% 100%, rgba(90, 60, 240, 0.8) 0%, rgba(90, 60, 240, 0) 70%),
+    linear-gradient(135deg, #1e1e22 0%, #2a2a2e 60%, #1c1c20 100%);
+
+  /* Stacked cards peeking out on the right, plus a soft shadow */
+  box-shadow:
+    18px 12px 0 -6px #9f86d6,
+    36px 24px 0 -12px #c9b8ef,
+    0 20px 40px rgba(0, 0, 0, 0.25);
+
+  /* Grain texture */
+  &::after {
+    content: "";
     position: absolute;
-    border-radius: 100%;
-    top: -20px;
-    right: -18%;
+    inset: 0;
+    border-radius: inherit;
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.5'/></svg>");
+  }
+
+  & > * {
+    position: relative;
+    z-index: 1;
   }
 
   .top {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin: 0;
+    align-items: flex-start;
+    gap: 1rem;
+  }
 
-    .left {
-      span {
-        padding: 0;
-        margin: 0;
-        color: rgb(221, 221, 221);
-        font-weight: 400;
-        font-size: min(0.7vw, 14px);
-      }
-
-      h3 {
-        font-size: min(1.1vw, 20px);
-        font-weight: 600;
-        color: white;
-        margin-bottom: 0;
-      }
+  .left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    min-width: 0;
+    span {
+      font-size: clamp(14px, 1.1vw, 18px);
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .right {
-      width: fit-content;
+    h3 {
+      margin: 0;
+      font-size: clamp(26px, 2.4vw, 38px);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+      color: #fff;
+      white-space: nowrap;
+    }
+  }
 
-      img {
-        width: 40px;
-        height: 40px;
-        object-fit: contain;
+  .right {
+    flex-shrink: 0;
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      background: #fff3c4;
+      color: #8a5a00;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+    }
+  }
+
+  .wallet_details {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+
+    & > span {
+      font-size: clamp(11px, 0.9vw, 14px);
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .wd_sub {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: flex-start;
+      align-items: center;
+      width: fit-content;
+      padding: 0;
+      background: none;
+      min-height: auto;
+      font-weight: 300;
+      color: #fff;
+
+      span {
+        font-size: inherit;
       }
     }
   }
 
   .bottom {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+
     p {
       margin: 0;
       padding: 0;
-      font-size: min(0.7vw, 14px);
-      color: rgb(221, 221, 221);
+      font-size: clamp(11px, 0.9vw, 14px);
+      color: rgba(255, 255, 255, 0.75);
     }
 
     h3 {
-      font-size: min(1.1vw, 20px);
+      margin: 0;
+      font-size: clamp(11px, 0.9vw, 14px);
       font-weight: 600;
-      color: white;
+      color: #fff;
+      text-align: right;
+      white-space: nowrap;
     }
 
     .bb {
+      grid-column: 1 / -1;
       position: relative;
 
       span {
-        margin: 0;
-        padding: 0;
-        color: rgb(255, 255, 255);
-        font-size: 0.56rem;
-        text-align: right;
-        position: absolute;
-        bottom: 0px;
-      }
-    }
-  }
-
-  .wallet_details {
-    margin-bottom: 0;
-    color: white;
-    margin: 0.5rem 0 0.2rem 0;
-    display: flex;
-    flex-direction: column;
-
-    & > span {
-      font-size: min(0.7vw, 14px);
-      color: rgb(221, 221, 221);
-    }
-
-    .wd_sub {
-      background: rgba(217, 217, 217, 0.08);
-      padding: 0.2rem;
-      border-radius: 6px;
-      width: fit-content;
-      font-size: min(1vw, 18px);
-      display: flex;
-      align-items: center;
-      min-height: 27px;
-
-      span {
-        font-size: min(0.75vw, 15px);
+        display: none;
       }
     }
   }
@@ -114,73 +156,29 @@
 
 @media screen and (max-width: 1500px) {
   .card {
-    padding: 0.65rem;
-
-    .top {
-      .left {
-        h3 {
-          font-size: min(0.9vw, 17px);
-        }
-      }
-
-      .right {
-        img {
-          width: 30px;
-          height: 30px;
-        }
-      }
-    }
-
-    .bottom {
-      h3 {
-        font-size: min(0.9vw, 17px);
-      }
-
-      .bb {
-        span {
-          font-size: 0.4rem;
-        }
-      }
-    }
+    padding: 1.2rem 1.3rem;
   }
 }
 
 @media screen and (max-width: 1000px) {
   .card {
-    .top {
-      .left {
-        span {
-          font-size: 10px;
-        }
+    aspect-ratio: auto;
+    min-height: 180px;
+    padding: 1rem;
 
-        h3 {
-          font-size: 1rem;
-        }
-      }
+    .left h3 {
+      font-size: 1.5rem;
     }
 
-    .bottom {
-      p {
-        font-size: 10px;
-      }
-
-      h3 {
-        font-size: 1rem;
-      }
+    .left span,
+    .bottom p,
+    .bottom h3,
+    .wallet_details > span {
+      font-size: 7px;
     }
 
-    .wallet_details {
-      & > span {
-        font-size: 10px;
-      }
-
-      .wd_sub {
-        font-size: 1rem;
-
-        span {
-          font-size: 12px;
-        }
-      }
+    .wd_sub {
+      font-size: 1rem;
     }
   }
 }
