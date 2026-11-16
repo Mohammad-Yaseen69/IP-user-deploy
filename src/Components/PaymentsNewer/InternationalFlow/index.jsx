@@ -2282,6 +2282,7 @@ const InternationFlow = ({
                               loading={loading}
                               data={internationalData}
                               dataHandler={updateInternationalData}
+                              bankComingSoon={true}
                             />
                           )}
                           {subStep === 5 && (
