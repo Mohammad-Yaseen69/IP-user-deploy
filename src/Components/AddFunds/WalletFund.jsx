@@ -637,8 +637,6 @@ const WalletFund = ({ setAction }) => {
                       ) : (
                         <ConfirmWalletFund
                           setExternalLink={setExternalLink}
-                          merchant={merchant}
-                          payer={thunesProvider}
                           currentCard={currentCard}
                           paymentWithSavedCard={currentCard !== null}
                           setSubStep={setSubStep}
@@ -660,8 +658,6 @@ const WalletFund = ({ setAction }) => {
                       (channel?.value?.toLowerCase() === "card" ? (
                         <ConfirmWalletFund
                           setExternalLink={setExternalLink}
-                          merchant={merchant}
-                          payer={thunesProvider}
                           currentCard={currentCard}
                           paymentWithSavedCard={currentCard !== null}
                           setSubStep={setSubStep}
@@ -968,8 +964,6 @@ const WalletFund = ({ setAction }) => {
                   ) : (
                     <ConfirmWalletFund
                       setExternalLink={setExternalLink}
-                      merchant={merchant}
-                      payer={thunesProvider}
                       currentCard={currentCard}
                       paymentWithSavedCard={currentCard !== null}
                       setSubStep={setSubStep}
