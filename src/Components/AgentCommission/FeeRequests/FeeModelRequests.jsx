@@ -5,6 +5,7 @@ import {
   Chip,
   CircularProgress,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
   Grid,
@@ -28,6 +29,7 @@ import { useEditFeeRequest, useFeeRequestEditHistory } from "./hooks/useFeeReque
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
 import { useMutation } from "@tanstack/react-query";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
+import { getErrorMessage } from "../../../Helper/getErrorMessage";
 import {
   DEFAULT_FEE_ITEMS,
   NO_PERCENT_FEE_IDS,
@@ -61,6 +63,7 @@ const FeeModelRequests = () => {
   const [editTitle, setEditTitle] = useState("");
   const [editFeeSchedule, setEditFeeSchedule] = useState(DEFAULT_FEE_ITEMS);
   const { getKey: getEditKey, reset: resetEditKey } = useIdempotency();
+  const [deleteTarget, setDeleteTarget] = useState(null);
 
   const { data: editHistory = [], isLoading: loadingEditHistory } = useFeeRequestEditHistory();
 
@@ -122,9 +125,9 @@ const FeeModelRequests = () => {
       toast.success(res?.message ?? t("Request deleted successfully."));
     },
     onError: (error) => {
-      const message = error?.message || error?.data?.message;
-      toast.error(message ?? t("Failed to delete request."));
+      toast.error(getErrorMessage(error, t("Failed to delete request.")));
     },
+    onSettled: () => setDeleteTarget(null),
   });
 
   const handleFeeChange = (index, field, value) => {
@@ -370,18 +373,16 @@ const FeeModelRequests = () => {
                           >
                             {t("Edit")}
                           </Button>
-                          <IconButton
+                          <Button
                             size="small"
-                            sx={{
-                              bgcolor: "#e64067",
-                              color: "white",
-                              "&:hover": { bgcolor: "#c9365a" },
-                            }}
-                            onClick={() => deleteRequest(req._id)}
-                            disabled={deleting}
+                            variant="outlined"
+                            color="error"
+                            startIcon={<Trash size={12} />}
+                            sx={{ textTransform: "none", p: "2px 10px", minWidth: 0 }}
+                            onClick={() => setDeleteTarget(req)}
                           >
-                            <Trash size={14} />
-                          </IconButton>
+                            {t("Delete")}
+                          </Button>
                           {req.status === "pending" && (
                             <Chip
                               size="small"
@@ -767,6 +768,42 @@ const FeeModelRequests = () => {
           </Card>
         )}
       </div>
+
+      <Dialog
+        open={!!deleteTarget}
+        onClose={() => !deleting && setDeleteTarget(null)}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle sx={{ fontWeight: 700 }}>{t("Delete request")}</DialogTitle>
+        <DialogContent>
+          <Typography sx={{ fontSize: "14px", color: "#4B5563" }}>
+            {t("Are you sure you want to delete")} <strong>{deleteTarget?.title}</strong>?{" "}
+            {t("This action cannot be undone.")}
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ p: "0 24px 20px" }}>
+          <Button
+            sx={{ textTransform: "none" }}
+            onClick={() => setDeleteTarget(null)}
+            disabled={deleting}
+          >
+            {t("Cancel")}
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            sx={{ textTransform: "none" }}
+            startIcon={
+              deleting ? <CircularProgress size={14} color="inherit" /> : <Trash size={14} />
+            }
+            onClick={() => deleteRequest(deleteTarget._id)}
+            disabled={deleting}
+          >
+            {deleting ? t("Deleting...") : t("Delete")}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Dialog open={!!editingRequest} onClose={closeEditModal} maxWidth="md" fullWidth>
         <DialogTitle
