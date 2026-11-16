@@ -76,7 +76,7 @@ export const useCryptoWithdrawFlow = (wallet, { active = true } = {}) => {
   });
 
   const countries = useMemo(() => {
-    const records = [...(userWithdrawals || []), ...(cryptoWithdrawals || [])];
+    const records = [...(cryptoWithdrawals || [])];
     const seen = new Set();
 
     return records.reduce((list, record) => {
@@ -86,7 +86,7 @@ export const useCryptoWithdrawFlow = (wallet, { active = true } = {}) => {
       list.push({ iso, name: findCountry(iso)?.name || iso });
       return list;
     }, []);
-  }, [userWithdrawals, cryptoWithdrawals]);
+  }, [cryptoWithdrawals]);
 
   const destinations = useMemo(
     () =>
