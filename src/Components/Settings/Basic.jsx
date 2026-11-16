@@ -820,6 +820,7 @@ const Basic = ({ setCurrentTab }) => {
 
   const handleDiscard = () => {
     setIsEditMode(false);
+    setPhone(userDetails?.phone ?? "");
     setUserNameError("");
     setUsernameValid(true);
   };
@@ -1282,6 +1283,8 @@ const Basic = ({ setCurrentTab }) => {
                     : countriesData.find((item) => item.alpha3 === country)?.alpha3
                 }
                 disableDropdown={!isBusiness}
+                setPhone={setPhone}
+                disabled={!isEditMode || isIndividualAccount}
                 newUI={true}
                 customStyles={{
                   padding: "10px 12px",
