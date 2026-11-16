@@ -5,7 +5,7 @@ import axios from "axios";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { toast } from "react-toastify";
 import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter } from "reactstrap";
-import { sourceOfFunds } from "../Settings/Verification";
+import { sourceOfFunds } from "../Settings/sourceOfFunds";
 import { t } from "i18next";
 
 const SourceOfFunds = ({ isOpen, toggle }) => {

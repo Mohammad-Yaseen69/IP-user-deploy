@@ -32,6 +32,7 @@ import { useMutation } from "@tanstack/react-query";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import AdditionalFilesSection from "./AdditionalFilesSection";
 import { useIdempotency } from "../../hooks/Payments/useIdempotency";
+import { sourceOfFunds } from "./sourceOfFunds";
 
 const industries = [
   "Arts & Entertainment",
@@ -53,7 +54,7 @@ const industries = [
   "Other",
 ];
 
-export const sourceOfFunds = ["Cash", "Business", "Gift", "Salary", "Lottery", "Savings", "Other"];
+export { sourceOfFunds };
 
 const Verification = () => {
   const { t } = useTranslation();
