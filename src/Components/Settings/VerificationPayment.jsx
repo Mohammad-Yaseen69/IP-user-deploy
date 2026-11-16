@@ -269,16 +269,23 @@ const VerificationPayment = ({
     }
   };
 
+  const feeRoute = partnerId ? "partner-kyc" : isKYB ? "kyb" : "kyc";
+  const partnerPayload = partnerId ? { partner_id: partnerId } : {};
+
   const initiatePaypal = async () => {
     setSaving(true);
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_IP_DEV_API}/api/paypal/initiate-kyc-payment`,
-        { data: encryptData({}) },
+        `${import.meta.env.VITE_IP_DEV_API}/api/paypal/initiate-${feeRoute}-payment`,
+        { data: encryptData(partnerPayload) },
         { headers: authHeader },
       );
       const dec = decryptData(res.data.data);
-      window.location.href = dec?.url;
+      if (dec?.url) {
+        window.location.href = dec?.url;
+      } else if (dec?.message) {
+        toast.info(dec?.message);
+      }
     } catch (err) {
       const decrypted = decryptData(err.response.data.data);
       toast.error(decrypted?.message);
@@ -356,8 +363,7 @@ const VerificationPayment = ({
                         : methods?.includes(item?.value),
                     )
                     .map((item) => {
-                      const isPaypalDisabled =
-                        (isKYB && item?.value === "paypal") || item.value === "card";
+                      const isPaypalDisabled = item.value === "card";
                       return (
                         <Card
                           key={item.name}
@@ -625,8 +631,8 @@ const VerificationPayment = ({
               <PlaidBankTransfer
                 closeBtnText={t("Close Modal")}
                 type="verification_payment"
-                initiatePayload={() => ({})}
-                endpoint="/api/plaid/kyc"
+                initiatePayload={() => partnerPayload}
+                endpoint={`/api/plaid/${feeRoute}`}
                 dataHandler={(type, data) => {
                   if (type === "error") {
                     setError(data);
@@ -743,6 +749,9 @@ const VerificationPayment = ({
         toggle={() => {
           verifyToken(true);
           setShowSuccess(false);
+          if (payoutChannel?.value === "mobile_wallet") {
+            toggle();
+          }
         }}
       >
         <ModalHeader

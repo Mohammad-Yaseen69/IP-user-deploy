@@ -34,6 +34,12 @@ import {
 } from "../../../utils/Functions/validations";
 import allCountries from "../../PaymentsNewer/CountriesData.json";
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
+import {
+  initiatePaytentlyGuestPayment,
+  precheckPaytentlyGuestPayment,
+  usePaytently,
+} from "../../../utils/Functions/paytently";
+import PaytentlyHostedModal from "../../AddFunds/PaytentlyHostedModal";
 import { UserContext } from "../../../Context/UserContext";
 import { verifyPhoneNumber } from "../../../utils/Functions/phoneVerification";
 import MobileWalletExternalAmount from "../../PaymentsNewer/InternationalFlow/MobileWalletExternalAmount";
@@ -240,6 +246,10 @@ const PayAsGuest = ({
     }
   };
   const [showCardModal, setShowCardModal] = useState(false);
+  const [paytentlyHosted, setPaytentlyHosted] = useState(null);
+  // Subscription renewals still go through Trust.
+  const paytentlyGuest = usePaytently && !subscriptionId;
+  const isPaytentlyCard = paytentlyGuest && data.payment_type?.value === "card";
 
   const generateInitiatePayload = (isBankTransfer) => {
     let formattedDob = data.dob;
@@ -294,7 +304,8 @@ const PayAsGuest = ({
 
     try {
       const payload = {
-        se_shambey: createShambeToken(data),
+        // Paytently collects the card on its own hosted form, so no card token is built.
+        ...(!paytentlyGuest && { se_shambey: createShambeToken(data) }),
         token: data.exchange_rate?.token,
         name: data.fullName,
         email: data.email,
@@ -327,6 +338,20 @@ const PayAsGuest = ({
         payload.subscription_id = subscriptionId;
       }
 
+      if (paytentlyGuest) {
+        const dec = await initiatePaytentlyGuestPayment(payload, getKey());
+        if (!dec?.hosted_forms_url) {
+          dataHandler(
+            "error",
+            dec?.message ?? "We cannot process your request at the moment, please try again later.",
+          );
+        } else {
+          setPaytentlyHosted({ hostedUrl: dec.hosted_forms_url, paymentId: dec.payment_id });
+        }
+        dataHandler("loading", false);
+        return;
+      }
+
       const enc = encryptData(payload);
 
       const res = await axios.post(
@@ -345,24 +370,42 @@ const PayAsGuest = ({
       console.log(dec);
       dataHandler("cardTransactionDetails", dec);
     } catch (error) {
-      const dec = decryptData(error?.response?.data?.data);
-      const err1 = LimitsErrorMessage(dec.code);
-      const err2 = apiErrorMessage(dec.message);
-
-      if (dec?.message === "invalid_card_details") {
-        setShowCardModal(true);
-      } else if (err1) {
-        dataHandler("error", err1);
-      } else if (err2) {
-        dataHandler("error", err2);
-      } else {
-        dataHandler(
-          "error",
-          dec?.message ?? "We cannot process your request at the moment, please try again later.",
-        );
-      }
-      dataHandler("loading", false);
+      showCardPaymentError(error);
     }
+  };
+
+  // Paytently has collected the card: run the card checks, and only go on to 3DS if they pass.
+  const onPaytentlyCardCollected = async () => {
+    const paymentId = paytentlyHosted?.paymentId;
+    setPaytentlyHosted(null);
+    dataHandler("loading", true);
+    try {
+      window.location.href = await precheckPaytentlyGuestPayment(paymentId);
+    } catch (error) {
+      reset();
+      showCardPaymentError(error);
+    }
+  };
+
+  const showCardPaymentError = (error) => {
+    // A Paytently timeout has no response body to decrypt.
+    const dec = error?.response?.data?.data ? decryptData(error.response.data.data) : {};
+    const err1 = LimitsErrorMessage(dec.code);
+    const err2 = apiErrorMessage(dec.message);
+
+    if (dec?.message === "invalid_card_details") {
+      setShowCardModal(true);
+    } else if (err1) {
+      dataHandler("error", err1);
+    } else if (err2) {
+      dataHandler("error", err2);
+    } else {
+      dataHandler(
+        "error",
+        dec?.message ?? "We cannot process your request at the moment, please try again later.",
+      );
+    }
+    dataHandler("loading", false);
   };
 
   const initiateMobileWalletPayment = async () => {
@@ -435,7 +478,8 @@ const PayAsGuest = ({
         dataHandler("step", 2);
         break;
       case 2:
-        dataHandler("step", 3);
+        // Paytently collects the card on its own hosted form, so our card step is skipped.
+        dataHandler("step", isPaytentlyCard ? 4 : 3);
         break;
       case 3:
         if (data.payment_type?.value === "card") {
@@ -486,11 +530,11 @@ const PayAsGuest = ({
         dataHandler("step", 2);
         break;
       case 4:
-        dataHandler("step", 3);
+        dataHandler("step", isPaytentlyCard ? 2 : 3);
         break;
       case 5:
         if (data.payment_type?.value === "card") {
-          dataHandler("step", 3);
+          dataHandler("step", isPaytentlyCard ? 4 : 3);
         } else {
           dataHandler("step", 4);
         }
@@ -700,6 +744,13 @@ const PayAsGuest = ({
 
   return (
     <>
+      <PaytentlyHostedModal
+        isOpen={!!paytentlyHosted?.hostedUrl}
+        hostedUrl={paytentlyHosted?.hostedUrl}
+        authorizeUrl={paytentlyHosted?.authorizeUrl}
+        onClose={() => setPaytentlyHosted(null)}
+        onCardCollected={onPaytentlyCardCollected}
+      />
       {showCardModal && (
         <NotFoundModal
           isOpen={showCardModal}
@@ -711,7 +762,8 @@ const PayAsGuest = ({
             `Thank you for your understanding!`,
           ]}
           title="Payment Failed"
-          reEnter={() => dataHandler("step", 3)}
+          // With Paytently the blocked payment was voided; send the guest back to pay again.
+          reEnter={() => dataHandler("step", isPaytentlyCard ? 4 : 3)}
         />
       )}
 
@@ -819,6 +871,7 @@ const PayAsGuest = ({
                       dataHandler={dataHandler}
                       allowed={allowed}
                       wallet={wallet}
+                      cardEnabled={paytentlyGuest}
                     />
                   )}
                   {data.step === 3 &&
@@ -878,6 +931,7 @@ const PayAsGuest = ({
                     ) : (
                       <BankDeposit
                         type={"payment_address"}
+                        invoiceId={invoiceId}
                         data={{ ...data, wallet }}
                         dataHandler={dataHandler}
                         guestDetails={{
@@ -1007,6 +1061,7 @@ const PayAsGuest = ({
                         dataHandler={dataHandler}
                         allowed={allowed}
                         wallet={wallet}
+                        cardEnabled={paytentlyGuest}
                       />
                     )}
                     {data.step === 3 &&
@@ -1079,6 +1134,7 @@ const PayAsGuest = ({
                       ) : (
                         <BankDeposit
                           type={"payment_address"}
+                          invoiceId={invoiceId}
                           data={{ ...data, wallet }}
                           dataHandler={dataHandler}
                           guestDetails={{

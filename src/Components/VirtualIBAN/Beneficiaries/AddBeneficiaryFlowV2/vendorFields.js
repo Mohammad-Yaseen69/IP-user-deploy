@@ -1,4 +1,12 @@
-import { gendersData, idTypeData, occupations } from "../../../../utils/Data";
+import {
+  BUSINESS_RELATIONSHIPS,
+  BeneficiaryRelation,
+  C2B_RELATIONSHIPS,
+  friendsAndFamily,
+  gendersData,
+  idTypeData,
+  occupations,
+} from "../../../../utils/Data";
 import {
   CRYPTO_PAYOUT_ASSETS,
   getAssetProtocolOptions,
@@ -10,6 +18,22 @@ export const GENDER_OPTIONS = toOptions(gendersData);
 export const ID_TYPE_OPTIONS = toOptions(idTypeData);
 export const OCCUPATION_OPTIONS = toOptions(occupations);
 
+const PERSONAL_RELATIONSHIPS = Object.entries(BeneficiaryRelation).flatMap(([value, label]) =>
+  value === "FRIENDS_AND_FAMILY" ? toOptions(friendsAndFamily) : [{ value, label }],
+);
+
+export const getRelationOptions = (senderType, recipientType) => {
+  if (senderType && senderType !== "individual") return toOptions(BUSINESS_RELATIONSHIPS);
+  if (recipientType === "business") return toOptions(C2B_RELATIONSHIPS);
+  return PERSONAL_RELATIONSHIPS;
+};
+
+export const getRelationLabel = (code) =>
+  [
+    ...PERSONAL_RELATIONSHIPS,
+    ...toOptions(BUSINESS_RELATIONSHIPS),
+    ...toOptions(C2B_RELATIONSHIPS),
+  ].find((option) => option.value === code)?.label || code;
 export const THUNES_ENTITY_FIELDS = {
   firstname: { label: "First name", type: "text", placeholder: "Jane" },
   lastname: { label: "Last name", type: "text", placeholder: "Doe" },
@@ -239,6 +263,13 @@ export const BVNK_FIELD_DEFS = {
     placeholder: "e.g. 12345678",
     hint: "Required by the payout provider for crypto payouts.",
   },
+  relation: {
+    label: "Relationship to you",
+    type: "select",
+    required: true,
+    placeholder: "Select relationship",
+    options: PERSONAL_RELATIONSHIPS,
+  },
 };
 
 const BVNK_ADDRESS_FIELDS = ["address", "address_line_2", "city", "province_state", "postal_code"];
@@ -277,8 +308,8 @@ const BVNK_SWIFT = {
 
 /* Unmapped beneficiary fields travel in extras, which is where the provider reads it. */
 const BVNK_CRYPTO = {
-  beneficiary: ["registration_number"],
-  requiredBeneficiary: ["registration_number"],
+  beneficiary: ["registration_number", "relation"],
+  requiredBeneficiary: ["registration_number", "relation"],
   channel: ["crypto_asset", "crypto_network", "wallet_address"],
   requiredChannel: ["crypto_asset", "crypto_network", "wallet_address"],
 };
@@ -333,7 +364,7 @@ export const getEditRequirements = (recipientType) => {
   };
 };
 
-export const getBvnkRequirements = (method, recipientType, channel = {}) => {
+export const getBvnkRequirements = (method, recipientType, channel = {}, senderType = "") => {
   const rail = BVNK_RAILS[method];
   if (!rail) return null;
 
@@ -351,6 +382,10 @@ export const getBvnkRequirements = (method, recipientType, channel = {}) => {
           crypto_network: {
             ...BVNK_FIELD_DEFS.crypto_network,
             options: getAssetProtocolOptions(channel?.crypto_asset),
+          },
+          relation: {
+            ...BVNK_FIELD_DEFS.relation,
+            options: getRelationOptions(senderType, recipientType),
           },
         }
       : BVNK_FIELD_DEFS;

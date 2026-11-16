@@ -19,14 +19,16 @@ const BankDeposit = ({
   guestDetails,
   toggle,
   client_reference,
+  invoiceId,
 }) => {
+  const isGuestPayment = type !== "add_funds";
   const { userDetails } = useContext(UserContext);
   const [selectedBank, setSelectedBank] = useState({});
   const { data: bankList, isLoading } = useQuery({
     queryKey: ["bankListForUser", userDetails?._id],
     queryFn: () =>
       apiWrapper({
-        endpoint: `/api/bank-deposit/get-user-banks/${userDetails?._id}/${type}?guest_iso=${guestDetails.iso_code}`,
+        endpoint: `/api/bank-deposit/get-user-banks/${userDetails?._id}/${type}${guestDetails?.iso_code ? `?guest_iso=${guestDetails.iso_code}` : ""}`,
       }).then((res) => res?.data),
   });
   const { isPending, mutateAsync } = useMutation({
@@ -50,7 +52,7 @@ const BankDeposit = ({
           amount: data.exchange_rate?.receiver?.amount,
         },
         total: parseFloat(
-          type === "payment_address"
+          isGuestPayment
             ? data.exchange_rate_backup?.total * dec?.exchangeRate?.result
             : data.exchange_rate?.receiver?.amount,
         ),
@@ -152,13 +154,13 @@ const BankDeposit = ({
         "Reference (Mandatory)": `AddFunds-${Date.now().toString().slice(3)}-${Math.floor(Math.random() * 100)}`,
       }));
 
-      if (type === "payment_address") {
+      if (isGuestPayment) {
         setShowPaymentDets(true);
       } else {
         dataHandler("bankStep", data.bankStep + 1);
       }
     } else if (data.bankStep === 4) {
-      if (type === "payment_address") {
+      if (isGuestPayment) {
         toggle();
       } else {
         navigate(`/wallets`);
@@ -174,9 +176,7 @@ const BankDeposit = ({
 
       formData.append(
         "amount",
-        type === "payment_address"
-          ? data.exchange_rate?.receiver?.amount
-          : data.exchange_rate?.total,
+        isGuestPayment ? data.exchange_rate?.receiver?.amount : data.exchange_rate?.total,
       );
       formData.append("receiving_wallet", data.wallet?.wallet_id);
       formData.append("account", userDetails?._id || "");
@@ -189,9 +189,14 @@ const BankDeposit = ({
       formData.append("exchange_rate", data.exchange_rate?.exchange_rate?.exchange_rate || 1);
       formData.append("sendingAmount", data.exchange_rate?.sending?.amount);
       formData.append("sendingCurrency", selectedBank.Currency || selectedBank["Currency"] || "");
-      formData.append("type", type);
-      formData.append("guest_details", JSON.stringify(guestDetails));
-      formData.append("client_reference", client_reference);
+      if (guestDetails) {
+        formData.append("guest_details", JSON.stringify(guestDetails));
+      }
+      if (client_reference) {
+        formData.append("client_reference", client_reference);
+      }
+      formData.append("type", invoiceId ? "invoice" : type);
+      if (invoiceId) formData.append("invoice_id", invoiceId);
       formData.append("file", file);
 
       createDepositMutation.mutate(formData);
@@ -203,7 +208,7 @@ const BankDeposit = ({
   return (
     <div
       style={{
-        minHeight: window.innerWidth < 1000 && type === "payment_address" && "70vh",
+        minHeight: window.innerWidth < 1000 && isGuestPayment && "70vh",
       }}
       className={styles.container}
     >
@@ -410,7 +415,7 @@ const BankDeposit = ({
       <div className={styles.bottom}>
         <div></div>
         <div
-          className={`${styles?.buttons} ${type === "payment_address" && window.innerWidth < 1000 && styles.mobileButtons}`}
+          className={`${styles?.buttons} ${isGuestPayment && window.innerWidth < 1000 && styles.mobileButtons}`}
         >
           {data.bankStep < 4 && (
             <button
@@ -431,7 +436,7 @@ const BankDeposit = ({
             onClick={onClickHandler}
           >
             {data.bankStep === 4
-              ? type === "payment_address"
+              ? isGuestPayment
                 ? t("Close")
                 : t("Go back to wallets")
               : data.bankStep === 3

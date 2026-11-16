@@ -48,7 +48,7 @@ const STAGE_LABELS = {
 const MODE_STAGES = {
   create: ["country", "method", "details", "confirm"],
   channel: ["method", "details", "confirm"],
-  crypto: ["details", "confirm"],
+  crypto: ["country", "details", "confirm"],
   edit: ["details", "confirm"],
 };
 
@@ -134,7 +134,7 @@ const AddAccountFlow = ({
 
     if (isEdit && target) {
       setMethod(target.method);
-      setCountry(target.isCrypto ? null : resolveCountry(target.record?.iso_code));
+      setCountry(resolveCountry(target.record?.iso_code));
       setChannel(
         target.isCrypto
           ? {
@@ -313,6 +313,7 @@ const AddAccountFlow = ({
 
   const selectCountry = (next) => {
     setCountry(next);
+    if (mode === "crypto") return;
     setMethod("");
     setChannel({});
   };
@@ -325,7 +326,11 @@ const AddAccountFlow = ({
   const save = async () => {
     setBusy(true);
     const ok = isCrypto
-      ? await saveCryptoAccount({ channel, editing: isEdit ? target : null })
+      ? await saveCryptoAccount({
+          channel,
+          country: isEdit ? null : country,
+          editing: isEdit ? target : null,
+        })
       : await saveFiatAccount({
           record,
           country,
@@ -397,6 +402,7 @@ const AddAccountFlow = ({
             country={country}
             onSelect={selectCountry}
             usedIsos={usedIsos}
+            isCrypto={isCrypto}
             holderName={holderName}
             onOpenBeneficiaries={() => {
               onClose();
@@ -455,7 +461,13 @@ const AddAccountFlow = ({
             takenAddresses={takenAddresses}
             walletError={walletError}
             onValidChange={onValidChange}
-            onChange={stages.includes("method") ? () => setStage("method") : null}
+            onChange={
+              stages.includes("method")
+                ? () => setStage("method")
+                : stages.includes("country")
+                  ? () => setStage("country")
+                  : null
+            }
             addressFields={addressFields}
             optionalAddress={optionalAddress}
             address={address}
