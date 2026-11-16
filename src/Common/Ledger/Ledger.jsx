@@ -5,6 +5,8 @@ import { useTranslation } from "react-i18next";
 import s from "./ledger.module.scss";
 
 const Ledger = ({
+  title,
+  description,
   tabs,
   active,
   onTab,
@@ -34,6 +36,12 @@ const Ledger = ({
 
   return (
     <div className={s.ledger} style={{ "--cols": template }}>
+      {(title || description) && (
+        <div className={s.header}>
+          {title && <h3 className={s.title}>{t(title)}</h3>}
+          {description && <p className={s.description}>{t(description)}</p>}
+        </div>
+      )}
       <div className={s.tabs}>
         {tabs?.map(({ key, label, count }) => (
           <button

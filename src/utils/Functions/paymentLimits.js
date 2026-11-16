@@ -12,9 +12,10 @@ export const possibleErrors = {
   rbl400: "Receiver's Balance Limit Reached.",
   "Feature not available!": "Feature not available!",
   tpl400: "Topup Amount Limit exceeded",
+  cnc400: "Crypto limits are not configured for your account.",
 };
 
-export const LimitsErrorMessage = (message = "") => {
+export const LimitsErrorMessage = (message = "", serverMessage) => {
   let error;
 
   for (const key in possibleErrors) {
@@ -24,5 +25,7 @@ export const LimitsErrorMessage = (message = "") => {
     }
   }
 
-  return error ?? false;
+  if (!error) return false;
+  /* Older replies send the code itself as the message; keep the mapped text for those. */
+  return serverMessage && serverMessage !== message ? serverMessage : error;
 };

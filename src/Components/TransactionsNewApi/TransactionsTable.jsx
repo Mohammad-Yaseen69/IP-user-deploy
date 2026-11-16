@@ -45,7 +45,7 @@ const defaultRange = {
   key: "selection",
 };
 
-const TransactionsTable = () => {
+const TransactionsTable = ({ title, description }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
@@ -299,6 +299,8 @@ const TransactionsTable = () => {
   return (
     <>
       <Ledger
+        title={title}
+        description={description}
         tabs={TABS}
         active={active}
         onTab={setActive}

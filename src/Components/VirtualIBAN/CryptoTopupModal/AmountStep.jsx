@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   formatAmountValue,
@@ -20,8 +20,14 @@ const AmountStep = ({ amount, setAmount, selectedIban }) => {
   const { t } = useTranslation();
   const { getExchangeRate } = usePlainFx();
   const [exchangeRate, setExchangeRate] = useState(null);
+  const amountInputRef = useRef(null);
   const numericAmount = getAmountNumber(amount);
   const hasAmount = !!String(amount ?? "").trim();
+
+  useEffect(() => {
+    amountInputRef.current?.focus();
+  }, []);
+
   useEffect(() => {
     let isMounted = true;
 
@@ -75,6 +81,7 @@ const AmountStep = ({ amount, setAmount, selectedIban }) => {
           <span className={styles.currencySymbol}>$</span>
 
           <input
+            ref={amountInputRef}
             className={styles.amountInput}
             type="text"
             value={amount}
