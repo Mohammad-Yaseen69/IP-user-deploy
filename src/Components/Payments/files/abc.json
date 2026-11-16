@@ -1,17 +1,5 @@
 {
-    "ID": [
-        "User 1",
-        "User 2",
-        "User 3"
-    ],
-    "Amount": [
-        340,
-        350,
-        360
-    ],
-    "Currency": [
-        "GBP",
-        "EUR",
-        "USD"
-    ]
+  "ID": ["User 1", "User 2", "User 3"],
+  "Amount": [340, 350, 360],
+  "Currency": ["GBP", "EUR", "USD"]
 }

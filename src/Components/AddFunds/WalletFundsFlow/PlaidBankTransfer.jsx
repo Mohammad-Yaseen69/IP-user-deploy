@@ -31,7 +31,7 @@ const PlaidBankTransfer = ({
   endpoint = "",
   handleBackClick,
   successMessage,
-  closeBtnText
+  closeBtnText,
 }) => {
   const { userDetails, authHeader, setProfileLockTime } = useContext(UserContext);
   const { t } = useTranslation();
@@ -49,22 +49,26 @@ const PlaidBankTransfer = ({
   const [otpToken, setOtpToken] = useState(null);
   const [otpMethods, setOtpMethods] = useState(null);
   const [showOtp, setShowOtp] = useState(false);
-  const [codeType, setCodeType] = useState("sms")
+  const [codeType, setCodeType] = useState("sms");
   const [redirectTimer, setRedirectTimer] = useState(10);
   const { sendOtp, isSendingOtp } = useSendOtp({
     onSuccess: (token, data) => {
-      console.log(token, data)
-      setShowOtp(true)
-      setOtpToken(token)
-      setOtpMethods(data)
+      console.log(token, data);
+      setShowOtp(true);
+      setOtpToken(token);
+      setOtpMethods(data);
       if (!showOtp) {
-        setCodeType(data?.otp_sent_on || 'sms')
+        setCodeType(data?.otp_sent_on || "sms");
       }
     },
     onError: (err) => {
-      dataHandler("error", err?.message || "We are unable to process your request at the moment, please try again later!")
-    }
-  })
+      dataHandler(
+        "error",
+        err?.message ||
+          "We are unable to process your request at the moment, please try again later!",
+      );
+    },
+  });
 
   useEffect(() => {
     if (userDetails?._id) {
@@ -72,11 +76,14 @@ const PlaidBankTransfer = ({
         fetchSavedBanks();
       }
       setCodeType(
-        userDetails?.tfa ? "authenticator"
-          : userDetails?.email_verification ? "email"
-            : userDetails?.whatsapp_verification ? "whatsapp"
-              : "sms"
-      )
+        userDetails?.tfa
+          ? "authenticator"
+          : userDetails?.email_verification
+            ? "email"
+            : userDetails?.whatsapp_verification
+              ? "whatsapp"
+              : "sms",
+      );
     }
   }, [userDetails?._id, type]);
   useEffect(() => {
@@ -131,41 +138,44 @@ const PlaidBankTransfer = ({
         ...initiatePayload(true),
         recipient_iban: recipientData.iban,
         saveForFutureUse: recipientData.saveForFutureUse,
-      }
+      };
 
       if (type === "add_funds") {
-        initiatePayloadResponse.recipientIban = recipientData.iban
+        initiatePayloadResponse.recipientIban = recipientData.iban;
       }
 
-      console.log(otp, otpToken)
+      console.log(otp, otpToken);
       if (otp && otpToken) {
-        initiatePayloadResponse.otp = otp
-        initiatePayloadResponse.token = otpToken
-        initiatePayloadResponse.type = codeType
+        initiatePayloadResponse.otp = otp;
+        initiatePayloadResponse.token = otpToken;
+        initiatePayloadResponse.type = codeType;
       }
 
       console.log("Initiating Plaid Payment with payload:", initiatePayloadResponse);
 
       const response = await apiWrapper({
-        endpoint: type === "payment_address" ? "/api/guest-pay/initiate-bank-payment" : endpoint || "/api/plaid/initiate-payment",
+        endpoint:
+          type === "payment_address"
+            ? "/api/guest-pay/initiate-bank-payment"
+            : endpoint || "/api/plaid/initiate-payment",
         method: "POST",
         payload: initiatePayloadResponse,
         isEncrypted: type === "add_funds" || type === "wallet_to_wallet" ? false : true,
         isDecrypted: type === "add_funds" ? false : true,
-      })
+      });
 
       console.log("Plaid initiation response:", response);
-
-
 
       return response;
     },
     onSuccess: (res) => {
-      console.log(res)
+      console.log(res);
       setLinkToken(res?.linkToken || res?.data?.linkToken);
-      setShowOtp(false)
-      setOtpToken(null)
-      setPendingTransactionId(res?.transaction_id || res?.data?.transactionId || res?.data?.data?.transactionId || null);
+      setShowOtp(false);
+      setOtpToken(null);
+      setPendingTransactionId(
+        res?.transaction_id || res?.data?.transactionId || res?.data?.data?.transactionId || null,
+      );
       if (type === "verification_payment") {
         setAutoOpen(true);
       } else {
@@ -189,115 +199,117 @@ const PlaidBankTransfer = ({
       ...initiatePayload(true),
       recipient_iban: recipientData.iban,
       saveForFutureUse: recipientData.saveForFutureUse,
-    }
+    };
 
     if (otpCodeType === "add_funds") {
-      initiatePayloadResponse.recipientIban = recipientData.iban
+      initiatePayloadResponse.recipientIban = recipientData.iban;
     }
 
-    await sendOtp(initiatePayloadResponse, otpCodeType || codeType)
-  }
+    await sendOtp(initiatePayloadResponse, otpCodeType || codeType);
+  };
 
   const initiateCallback = (setter, _, otp) => {
-    initiatePlaidPayment({ otp })
-  }
+    initiatePlaidPayment({ otp });
+  };
 
-  const { mutateAsync: exchangePlaidToken, isPending: isExchangingToken } =
-    useMutation({
-      mutationFn: async ({ publicToken, metadata }) => {
-        const bankName = metadata?.institution?.name || null;
-        const payload = {
-          public_token: publicToken,
-          userId: userDetails?._id,
-          amount: data.exchange_rate?.sending?.amount,
-          walletId: data.wallet?._id,
-          walletCurrency: data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code,
-          recipientIban: recipientData.iban,
-          saveForFutureUse: recipientData.saveForFutureUse,
-          transactionId: pendingTransactionId || null,
-          bankName,
-          fee: data.exchange_rate?.fee?.amount ?? 0,
-          transaction_id: pendingTransactionId || null
-        };
-        console.log("Exchanging Plaid token with payload:", payload);
-        // 
-        const response = await apiWrapper({
-          endpoint: type === "payment_address" ? "/api/guest-pay/exchange-bank-token" : "/api/plaid/exchange-token",
-          method: "POST",
-          payload: payload,
-          isEncrypted: type === "payment_address" ? true : false,
-          isDecrypted: type === "payment_address" ? true : false,
-        })
-        console.log("Token exchange response:", response.data);
-        return response.data;
-      },
-      onSuccess: () => {
-        setPlaidStep(4);
-        toast.success("Payment authorized successfully");
-      },
-      onError: (error) => {
-        console.error("Failed to exchange Plaid token:", error);
-        toast.error(
-          "we are unable to process your request at the moment, please try again later!" | error?.response?.data?.message || error.message
-        );
-        setPlaidStep(1);
-      },
-    });
+  const { mutateAsync: exchangePlaidToken, isPending: isExchangingToken } = useMutation({
+    mutationFn: async ({ publicToken, metadata }) => {
+      const bankName = metadata?.institution?.name || null;
+      const payload = {
+        public_token: publicToken,
+        userId: userDetails?._id,
+        amount: data.exchange_rate?.sending?.amount,
+        walletId: data.wallet?._id,
+        walletCurrency: data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code,
+        recipientIban: recipientData.iban,
+        saveForFutureUse: recipientData.saveForFutureUse,
+        transactionId: pendingTransactionId || null,
+        bankName,
+        fee: data.exchange_rate?.fee?.amount ?? 0,
+        transaction_id: pendingTransactionId || null,
+      };
+      console.log("Exchanging Plaid token with payload:", payload);
+      //
+      const response = await apiWrapper({
+        endpoint:
+          type === "payment_address"
+            ? "/api/guest-pay/exchange-bank-token"
+            : "/api/plaid/exchange-token",
+        method: "POST",
+        payload: payload,
+        isEncrypted: type === "payment_address" ? true : false,
+        isDecrypted: type === "payment_address" ? true : false,
+      });
+      console.log("Token exchange response:", response.data);
+      return response.data;
+    },
+    onSuccess: () => {
+      setPlaidStep(4);
+      toast.success("Payment authorized successfully");
+    },
+    onError: (error) => {
+      console.error("Failed to exchange Plaid token:", error);
+      toast.error(
+        "we are unable to process your request at the moment, please try again later!" |
+          error?.response?.data?.message || error.message,
+      );
+      setPlaidStep(1);
+    },
+  });
 
-  const { mutateAsync: performSavedBankPayment, isPending: isUsingSavedBank } =
-    useMutation({
-      mutationFn: async () => {
-        if (!selectedBankId) {
-          throw new Error("No bank selected");
+  const { mutateAsync: performSavedBankPayment, isPending: isUsingSavedBank } = useMutation({
+    mutationFn: async () => {
+      if (!selectedBankId) {
+        throw new Error("No bank selected");
+      }
+      const topupPayload = {
+        userId: userDetails?._id,
+        amount: data.exchange_rate?.sending?.amount,
+        walletId: data.wallet?._id,
+        savedBankId: selectedBankId,
+      };
+
+      const payload = {
+        ...initiatePayload(true),
+        recipient_iban: recipientData.iban,
+        saveForFutureUse: recipientData.saveForFutureUse,
+      };
+
+      console.log("Using saved bank with payload:", payload);
+
+      const response = await apiWrapper({
+        endpoint: endpoint || "/api/plaid/use-saved-bank",
+        payload: type === "add_funds" ? topupPayload : payload,
+        isEncrypted: type === "add_funds" || type === "wallet_to_wallet" ? false : true,
+        isDecrypted: type === "add_funds" ? false : true,
+        method: "POST",
+      });
+
+      console.log("Saved bank payment response:", response);
+      return response;
+    },
+    onSuccess: () => {
+      setPlaidStep(4);
+      toast.success("Payment initiated successfully!");
+    },
+    onError: (error) => {
+      console.error("Failed to use saved bank:", error);
+      if (error.response?.data?.action === "RECONNECT_REQUIRED") {
+        dataHandler("error ", "This bank needs to be reconnected. Please add it again.");
+        if (userDetails?._id) {
+          fetchSavedBanks();
         }
-        const topupPayload = {
-          userId: userDetails?._id,
-          amount: data.exchange_rate?.sending?.amount,
-          walletId: data.wallet?._id,
-          savedBankId: selectedBankId,
-        };
-
-        const payload = {
-          ...initiatePayload(true),
-          recipient_iban: recipientData.iban,
-          saveForFutureUse: recipientData.saveForFutureUse,
-        }
-
-        console.log("Using saved bank with payload:", payload);
-
-        const response = await apiWrapper({
-          endpoint: endpoint || "/api/plaid/use-saved-bank",
-          payload: type === "add_funds" ? topupPayload : payload,
-          isEncrypted: type === "add_funds" || type === "wallet_to_wallet" ? false : true,
-          isDecrypted: type === "add_funds" ? false : true,
-          method: "POST",
-        })
-
-        console.log("Saved bank payment response:", response);
-        return response;
-      },
-      onSuccess: () => {
-        setPlaidStep(4);
-        toast.success("Payment initiated successfully!");
-      },
-      onError: (error) => {
-        console.error("Failed to use saved bank:", error);
-        if (error.response?.data?.action === "RECONNECT_REQUIRED") {
-          dataHandler("error ", "This bank needs to be reconnected. Please add it again.",);
-          if (userDetails?._id) {
-            fetchSavedBanks();
-          }
-        } else {
-          handlePaymentApiError({
-            error,
-            setError: (m) => dataHandler("error", m),
-            setProfileLockTime,
-            navigate,
-            fallback: "We are unable to process your request at the moment, please try again later.",
-          });
-        }
-      },
-    });
+      } else {
+        handlePaymentApiError({
+          error,
+          setError: (m) => dataHandler("error", m),
+          setProfileLockTime,
+          navigate,
+          fallback: "We are unable to process your request at the moment, please try again later.",
+        });
+      }
+    },
+  });
 
   const { open, ready } = usePlaidLink({
     token: linkToken,
@@ -334,10 +346,7 @@ const PlaidBankTransfer = ({
             );
           }
         } catch (err2) {
-          console.warn(
-            "Failed to record transaction-exit:",
-            err2?.message || err2,
-          );
+          console.warn("Failed to record transaction-exit:", err2?.message || err2);
         }
 
         if (type === "add_funds") {
@@ -360,14 +369,18 @@ const PlaidBankTransfer = ({
     }
   }, [autoOpen, ready, linkToken, open]);
 
-
   const getExitPayload = (err) => {
     if (err) {
       const errCode = (err?.error_code || err?.errorCode || err?.code || "").toString();
 
       if (errCode && PLAID_EXIT_MAP[errCode]) return PLAID_EXIT_MAP[errCode];
 
-      const rawMsg = (err?.display_message || err?.error_message || err?.message || "").toLowerCase();
+      const rawMsg = (
+        err?.display_message ||
+        err?.error_message ||
+        err?.message ||
+        ""
+      ).toLowerCase();
 
       if (rawMsg.includes("insufficient")) return PLAID_EXIT_MAP.PAYMENT_INSUFFICIENT_FUNDS;
       if (rawMsg.includes("expired")) return PLAID_EXIT_MAP.PAYMENT_EXPIRED;
@@ -392,13 +405,13 @@ const PlaidBankTransfer = ({
     if (plaidStep === 1) {
       if (type === "wallet_to_wallet") {
         if (handleBackClick) {
-          handleBackClick()
+          handleBackClick();
         } else {
           dataHandler("step", 4);
         }
       } else {
         if (handleBackClick) {
-          handleBackClick()
+          handleBackClick();
         } else {
           dataHandler("step", 3);
           dataHandler("exchange_rate", data.exchange_rate_backup);
@@ -424,11 +437,14 @@ const PlaidBankTransfer = ({
     }
   };
 
-  console.log(ready)
+  console.log(ready);
   return (
     <div
       style={{
-        minHeight: type === "verification_payment" ? "300px" : window.innerWidth < 1000 && type === "payment_address" && "80vh",
+        minHeight:
+          type === "verification_payment"
+            ? "300px"
+            : window.innerWidth < 1000 && type === "payment_address" && "80vh",
       }}
       className={styles.container}
     >
@@ -492,16 +508,17 @@ const PlaidBankTransfer = ({
               />
             </svg>
           </div>
-          <h4
-            style={{ color: "black", textAlign: "center", marginBottom: "0px" }}
-          >
+          <h4 style={{ color: "black", textAlign: "center", marginBottom: "0px" }}>
             {t(
-              successMessage ? successMessage : type !== "add_funds" ? "Payment authorized successfully, the recipient will receive the amount once the transfer is complete, you can now close this window" : "Payment authorized successfully! Your wallet will be credited once the transfer is complete.",
+              successMessage
+                ? successMessage
+                : type !== "add_funds"
+                  ? "Payment authorized successfully, the recipient will receive the amount once the transfer is complete, you can now close this window"
+                  : "Payment authorized successfully! Your wallet will be credited once the transfer is complete.",
             )}
           </h4>
         </div>
       )}
-
 
       <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
         <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
@@ -520,7 +537,6 @@ const PlaidBankTransfer = ({
           />
         </ModalBody>
       </Modal>
-
 
       <div className={styles.bottom}>
         <div></div>
@@ -541,10 +557,11 @@ const PlaidBankTransfer = ({
               disabled={
                 isInitiatingPlaid ||
                 isUsingSavedBank ||
-                (!selectedBankId && !recipientData.iban?.trim()) || isSendingOtp
+                (!selectedBankId && !recipientData.iban?.trim()) ||
+                isSendingOtp
               }
               onClick={async () => {
-                console.log("clicked")
+                console.log("clicked");
                 try {
                   if (selectedBankId) {
                     console.log("Using saved bank:", selectedBankId);
@@ -553,7 +570,7 @@ const PlaidBankTransfer = ({
                   } else {
                     console.log("Adding new bank");
                     if (type === "verification_payment") {
-                      await sendOtpHandler()
+                      await sendOtpHandler();
                     } else {
                       await initiatePlaidPayment({});
                     }
@@ -572,24 +589,21 @@ const PlaidBankTransfer = ({
             </button>
           )}
           {plaidStep === 2 && (
-            <button
-              disabled={isExchangingToken || !ready}
-              onClick={handleConfirmPayment}
-            >
+            <button disabled={isExchangingToken || !ready} onClick={handleConfirmPayment}>
               {isExchangingToken ? t("Processing...") : t("Connect Bank")}
               {window.innerWidth > 1000 && <ChevronRight size={18} />}
             </button>
           )}
           {plaidStep === 4 && (
             <button onClick={onBackClickHandler}>
-              {
-                closeBtnText
-                  ? t(closeBtnText)
-                  : type === "payment_address"
-                    ? t("Close")
-                    :
-                    t("Redirecting to transactions in {{timer}} seconds", { timer: redirectTimer })
-              }          {window.innerWidth > 1000 && <ChevronRight size={18} />}
+              {closeBtnText
+                ? t(closeBtnText)
+                : type === "payment_address"
+                  ? t("Close")
+                  : t("Redirecting to transactions in {{timer}} seconds", {
+                      timer: redirectTimer,
+                    })}{" "}
+              {window.innerWidth > 1000 && <ChevronRight size={18} />}
             </button>
           )}
         </div>

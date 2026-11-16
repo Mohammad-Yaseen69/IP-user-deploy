@@ -1,16 +1,15 @@
 .payment__btn {
-    background: linear-gradient(to right bottom, #e64067, #5926f0, #4828a0);
-    border: none;
-    outline: none;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    padding: .5rem 1rem;
-    gap: 1rem;
-    transition: background 0.3;
-
+  background: linear-gradient(to right bottom, #e64067, #5926f0, #4828a0);
+  border: none;
+  outline: none;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  gap: 1rem;
+  transition: background 0.3;
 }
 
 .payment__btn:hover {
-    background: linear-gradient(to right bottom, #d1365a, #5021db, #381d83);
+  background: linear-gradient(to right bottom, #d1365a, #5021db, #381d83);
 }

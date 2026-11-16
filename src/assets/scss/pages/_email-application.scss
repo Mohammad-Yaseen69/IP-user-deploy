@@ -8,11 +8,11 @@
 }
 .email-wrap {
   .email-app-sidebar {
-    &.left-bookmark{
-      .main-menu{
-        > li{
-          a{
-            &.nav-link{
+    &.left-bookmark {
+      .main-menu {
+        > li {
+          a {
+            &.nav-link {
               padding: 0;
               padding-left: 20px;
             }
@@ -76,8 +76,8 @@
   .email-left-aside {
     .card-body {
       padding: 20px;
-      .email-app-sidebar{
-        .d-flex{
+      .email-app-sidebar {
+        .d-flex {
           align-items: center;
         }
       }
@@ -143,7 +143,7 @@
             img {
               width: 90px;
               height: 90px;
-              &.media{
+              &.media {
                 margin-right: 0;
               }
             }

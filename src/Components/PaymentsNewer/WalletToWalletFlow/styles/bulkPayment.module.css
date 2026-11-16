@@ -1,363 +1,363 @@
 /* ── Overlay ──────────────────────────────────────────────────── */
 .overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    z-index: 1050;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    backdrop-filter: blur(2px);
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  backdrop-filter: blur(2px);
 }
 
 /* ── Modal shell ──────────────────────────────────────────────── */
 .modal {
-    background: #ffffff;
-    border-radius: 16px;
-    width: 100%;
-    max-width: 680px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0px 24px 80px 0px rgba(89, 38, 240, 0.18);
-    display: flex;
-    flex-direction: column;
-    font-family: Manrope, sans-serif;
-    font-weight: 600;
+  background: #ffffff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0px 24px 80px 0px rgba(89, 38, 240, 0.18);
+  display: flex;
+  flex-direction: column;
+  font-family: Manrope, sans-serif;
+  font-weight: 600;
 }
 
 /* ── Header ───────────────────────────────────────────────────── */
 .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.25rem 1.5rem 1rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
-    position: sticky;
-    top: 0;
-    background: #fff;
-    z-index: 2;
-    border-radius: 16px 16px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 2;
+  border-radius: 16px 16px 0 0;
 }
 
 .header h4 {
-    margin: 0;
-    font-family: Manrope, sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #1a1a1a;
+  margin: 0;
+  font-family: Manrope, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a1a;
 }
 
 .closeBtn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #7d7d7d;
-    padding: 0.25rem;
-    border-radius: 50%;
-    transition: background 150ms;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7d7d7d;
+  padding: 0.25rem;
+  border-radius: 50%;
+  transition: background 150ms;
 }
 
 .closeBtn:hover {
-    background: #f0f0f0;
+  background: #f0f0f0;
 }
 
 /* ── Body ─────────────────────────────────────────────────────── */
 .body {
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 /* ── Instructions card ────────────────────────────────────────── */
 .instructions {
-    background: #f9f8ff;
-    border: 1px solid rgba(69, 58, 193, 0.12);
-    border-radius: 10px;
-    padding: 1.25rem 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    font-family: Manrope, sans-serif;
+  background: #f9f8ff;
+  border: 1px solid rgba(69, 58, 193, 0.12);
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-family: Manrope, sans-serif;
 }
 
 .instructions h5 {
-    margin: 0;
-    font-family: Manrope, sans-serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #1a1a1a;
+  margin: 0;
+  font-family: Manrope, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a1a1a;
 }
 
 .instructions h6 {
-    margin: 0 0 0.35rem;
-    font-family: Manrope, sans-serif;
-    font-size: 0.82rem;
-    font-weight: 700;
-    color: #453AC1;
+  margin: 0 0 0.35rem;
+  font-family: Manrope, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #453ac1;
 }
 
 .instructions p,
 .instructions li {
-    margin: 0;
-    font-family: Manrope, sans-serif;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #4a4a4a;
-    line-height: 1.6;
+  margin: 0;
+  font-family: Manrope, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #4a4a4a;
+  line-height: 1.6;
 }
 
 .instructions ul {
-    margin: 0;
-    padding-left: 1.2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+  margin: 0;
+  padding-left: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .colBlock {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
 }
 
 .noteList {
-    list-style: disc;
-    padding-left: 1.2rem;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
+  list-style: disc;
+  padding-left: 1.2rem;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
 }
 
 .noteList li {
-    font-family: Manrope, sans-serif;
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: #7d7d7d;
+  font-family: Manrope, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #7d7d7d;
 }
 
 .divider {
-    height: 1px;
-    background: rgba(69, 58, 193, 0.1);
-    margin: 0;
+  height: 1px;
+  background: rgba(69, 58, 193, 0.1);
+  margin: 0;
 }
 
 /* ── Actions row ──────────────────────────────────────────────── */
 .actions {
-    display: flex;
-    gap: 1rem;
-    align-items: stretch;
-    flex-wrap: wrap;
+  display: flex;
+  gap: 1rem;
+  align-items: stretch;
+  flex-wrap: wrap;
 }
 
 .downloadBtn {
-    border-radius: 12px !important;
-    background: linear-gradient(296deg, #D1245F 0%, #453AC1 50.9%, #400FE8 100%);
-    box-shadow: 0px 3.3px 5.8px 0px rgba(172, 53, 159, 0.31);
-    height: 40px;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    flex: 1;
-    min-width: 160px;
-    display: flex;
+  border-radius: 12px !important;
+  background: linear-gradient(296deg, #d1245f 0%, #453ac1 50.9%, #400fe8 100%);
+  box-shadow: 0px 3.3px 5.8px 0px rgba(172, 53, 159, 0.31);
+  height: 40px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  flex: 1;
+  min-width: 160px;
+  display: flex;
 }
 
 .downloadBtn div {
-    background-color: white;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    color: #000;
-    font-family: Manrope, sans-serif;
-    font-size: 0.82rem;
-    font-weight: 600;
-    white-space: nowrap;
-    width: 100%;
+  background-color: white;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #000;
+  font-family: Manrope, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  width: 100%;
 }
 
 .uploadLabel {
-    border-radius: 5px;
-    background: linear-gradient(296deg, #D1245F 0%, #453AC1 50.9%, #400FE8 100%);
-    box-shadow: 0px 3.3px 5.8px 0px rgba(172, 53, 159, 0.31);
-    padding: 1px;
-    cursor: pointer;
-    flex: 1;
-    min-width: 160px;
-    display: flex;
+  border-radius: 5px;
+  background: linear-gradient(296deg, #d1245f 0%, #453ac1 50.9%, #400fe8 100%);
+  box-shadow: 0px 3.3px 5.8px 0px rgba(172, 53, 159, 0.31);
+  padding: 1px;
+  cursor: pointer;
+  flex: 1;
+  min-width: 160px;
+  display: flex;
 }
 
 .uploadLabel div {
-    padding: 0.6rem 1.1rem;
-    background-color: white;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    color: #000;
-    font-family: Manrope, sans-serif;
-    font-size: 0.82rem;
-    font-weight: 600;
-    white-space: nowrap;
-    width: 100%;
+  padding: 0.6rem 1.1rem;
+  background-color: white;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #000;
+  font-family: Manrope, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  width: 100%;
 }
 
 .uploadLabel input {
-    display: none;
+  display: none;
 }
 
 /* ── Table section ────────────────────────────────────────────── */
 .tableSection {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .tableSection h6 {
-    margin: 0;
-    font-family: Manrope, sans-serif;
-    font-size: 0.88rem;
-    font-weight: 700;
-    color: #1a1a1a;
+  margin: 0;
+  font-family: Manrope, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #1a1a1a;
 }
 
 .tableWrapper {
-    overflow-x: auto;
-    border-radius: 8px;
-    border: 1px solid rgba(0, 0, 0, 0.07);
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.07);
 }
 
 /* Override reactstrap table inside the wrapper */
 .tableWrapper :global(.table) {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .tableWrapper :global(.table thead th) {
-    color: black !important;
-    padding: 0.65rem 0.9rem !important;
-    font-family: Manrope, sans-serif !important;
-    font-size: .8rem !important;
-    font-weight: 600 !important;
-    white-space: nowrap !important;
-    border: none !important;
+  color: black !important;
+  padding: 0.65rem 0.9rem !important;
+  font-family: Manrope, sans-serif !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  border: none !important;
 }
 
 .tableWrapper :global(.table tbody td) {
-    padding: 0.55rem 0.9rem;
-    font-family: Manrope, sans-serif;
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: #2a2a2a;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    vertical-align: middle;
+  padding: 0.55rem 0.9rem;
+  font-family: Manrope, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #2a2a2a;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  vertical-align: middle;
 }
 
 .tableWrapper :global(.table tbody tr:nth-child(even)) {
-    background: #f9f8ff;
+  background: #f9f8ff;
 }
 
 .tableWrapper :global(.table tbody tr:hover) {
-    background: #f0eeff;
+  background: #f0eeff;
 }
 
 /* ── Footer ───────────────────────────────────────────────────── */
 .footer {
-    padding: 1rem 1.5rem 1.5rem;
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.07);
-    background: #fff;
-    position: sticky;
-    bottom: 0;
+  padding: 1rem 1.5rem 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
+  background: #fff;
+  position: sticky;
+  bottom: 0;
 }
 
 .cancelBtn {
-    background: #f2f2f2;
-    border: none;
-    border-radius: 5px;
-    padding: 0.6rem 1.4rem;
-    font-family: Manrope, sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    color: #555;
-    transition: background 150ms;
+  background: #f2f2f2;
+  border: none;
+  border-radius: 5px;
+  padding: 0.6rem 1.4rem;
+  font-family: Manrope, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #555;
+  transition: background 150ms;
 }
 
 .cancelBtn:hover {
-    background: #e8e8e8;
+  background: #e8e8e8;
 }
 
 .nextBtn {
-    border-radius: 5px;
-    background: linear-gradient(296deg, #D1245F 0%, #453AC1 50.9%, #400FE8 100%);
-    box-shadow: 0px 3.3px 5.8px 0px rgba(172, 53, 159, 0.31);
-    border: none;
-    padding: 0.6rem 1.8rem;
-    font-family: Manrope, sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #fff;
-    cursor: pointer;
-    transition: opacity 200ms;
+  border-radius: 5px;
+  background: linear-gradient(296deg, #d1245f 0%, #453ac1 50.9%, #400fe8 100%);
+  box-shadow: 0px 3.3px 5.8px 0px rgba(172, 53, 159, 0.31);
+  border: none;
+  padding: 0.6rem 1.8rem;
+  font-family: Manrope, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: opacity 200ms;
 }
 
 .nextBtn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .nextBtn:not(:disabled):hover {
-    opacity: 0.88;
+  opacity: 0.88;
 }
 
 /* ── Empty upload hint ────────────────────────────────────────── */
 .uploadHint {
-    text-align: center;
-    padding: 1.5rem;
-    color: #aaa;
-    font-family: Manrope, sans-serif;
-    font-size: 0.82rem;
-    font-weight: 600;
-    background: #f9f9f9;
-    border-radius: 8px;
-    border: 1.5px dashed #ddd;
+  text-align: center;
+  padding: 1.5rem;
+  color: #aaa;
+  font-family: Manrope, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border: 1.5px dashed #ddd;
 }
 
 .fileName {
-    font-family: Manrope, sans-serif;
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: #453AC1;
-    margin-top: 0.25rem;
-    margin-bottom: 0;
+  font-family: Manrope, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #453ac1;
+  margin-top: 0.25rem;
+  margin-bottom: 0;
 }
 
 /* ── Responsive ───────────────────────────────────────────────── */
 @media (max-width: 600px) {
-    .modal {
-        border-radius: 12px;
-    }
+  .modal {
+    border-radius: 12px;
+  }
 
-    .body {
-        padding: 1rem;
-    }
+  .body {
+    padding: 1rem;
+  }
 
-    .actions {
-        flex-direction: column;
-    }
+  .actions {
+    flex-direction: column;
+  }
 
-    .downloadBtn,
-    .uploadLabel {
-        width: 100%;
-    }
+  .downloadBtn,
+  .uploadLabel {
+    width: 100%;
+  }
 }

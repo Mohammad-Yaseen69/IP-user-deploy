@@ -9,14 +9,7 @@ const StepProgress = ({ currentStep, percent }) => {
   const [openAIDrawer, setOpenAIDrawer] = useState(false);
   const toggleAiDrawer = () => setOpenAIDrawer((prev) => !prev);
 
-  const steps = [
-    "account",
-    "company",
-    "activity",
-    "ownership",
-    "documents",
-    "review",
-  ];
+  const steps = ["account", "company", "activity", "ownership", "documents", "review"];
 
   const totalSteps = steps.length;
   const currentStepNo = steps.findIndex((x) => x === currentStep) + 1;
@@ -25,7 +18,7 @@ const StepProgress = ({ currentStep, percent }) => {
     <>
       <div className={styles.mobileStepContainer}>
         <p className={styles.stepCount}>
-          {t('Step')} {currentStepNo} {t('of')} {totalSteps}
+          {t("Step")} {currentStepNo} {t("of")} {totalSteps}
           <span> · {currentStep}</span>
         </p>
         <div className={styles.dropdownPill} onClick={toggleAiDrawer}>
@@ -40,7 +33,13 @@ const StepProgress = ({ currentStep, percent }) => {
         </div>
       </div>
 
-      <AssistantDrawer open={openAIDrawer} toggleDrawer={toggleAiDrawer} percent={percent} stepsLeft={stepsLeft} currentStep={currentStep} />
+      <AssistantDrawer
+        open={openAIDrawer}
+        toggleDrawer={toggleAiDrawer}
+        percent={percent}
+        stepsLeft={stepsLeft}
+        currentStep={currentStep}
+      />
     </>
   );
 };

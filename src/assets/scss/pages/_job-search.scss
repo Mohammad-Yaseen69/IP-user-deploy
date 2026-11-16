@@ -2,7 +2,7 @@
     53. Job CSS start
 ==========================**/
 .filter-cards-view {
-  hr{
+  hr {
     opacity: 0.6;
   }
   .job-filter {
@@ -30,8 +30,8 @@
     padding-left: 33px;
   }
 }
-.filter-cards-view{
-  .checkbox_animated{
+.filter-cards-view {
+  .checkbox_animated {
     vertical-align: 0;
   }
 }
@@ -87,7 +87,7 @@
           li {
             display: inline-block;
             letter-spacing: -2px;
-            + li{
+            + li {
               margin-left: 4px;
             }
           }
@@ -104,7 +104,7 @@
     margin-top: 20px;
     border-top: 1px solid $light-gray;
     padding-top: 20px;
-    h6{
+    h6 {
       font-size: 15px;
     }
     p {
@@ -119,7 +119,7 @@
         margin-bottom: 10px;
         cursor: pointer;
         color: $light-text;
-        i{
+        i {
           font-size: 6px;
           vertical-align: middle;
         }
@@ -135,7 +135,7 @@
       margin-top: 20px;
       margin-bottom: 30px;
       border-bottom: 1px solid $light-semi-gray;
-      &:last-child{
+      &:last-child {
         border-bottom: 0;
       }
       .row {

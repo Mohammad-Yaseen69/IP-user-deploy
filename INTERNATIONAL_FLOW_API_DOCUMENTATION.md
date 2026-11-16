@@ -209,14 +209,7 @@ Basic response:
   "data": {
     "destination_currency": "PKR",
     "payer_required_fields": [
-      [
-        "firstname",
-        "lastname",
-        "date_of_birth",
-        "address",
-        "bank_account_number",
-        "id_number"
-      ]
+      ["firstname", "lastname", "date_of_birth", "address", "bank_account_number", "id_number"]
     ]
   }
 }

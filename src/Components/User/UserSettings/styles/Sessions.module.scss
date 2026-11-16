@@ -1,43 +1,43 @@
 .session {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding: 1rem;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.185);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .s_left {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-    padding: 1rem;
-    border-bottom: 1px solid rgba(128, 128, 128, 0.185);
+    gap: 1rem;
 
-    &:last-child {
-        border-bottom: none;
-    }
+    p {
+      display: flex;
+      flex-direction: column;
+      margin: 0;
 
-    .s_left {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-
-        p {
-            display: flex;
-            flex-direction: column;
-            margin: 0;
-
-            span {
-                &:nth-child(2) {
-                    font-size: .6rem;
-                }
-            }
+      span {
+        &:nth-child(2) {
+          font-size: 0.6rem;
         }
+      }
     }
+  }
 
-    .s_right {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
+  .s_right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 
-        span {
-            font-size: .7rem;
-            background-color: rgba(24, 255, 24, 0.288);
-            padding: .5rem;
-        }
+    span {
+      font-size: 0.7rem;
+      background-color: rgba(24, 255, 24, 0.288);
+      padding: 0.5rem;
     }
+  }
 }

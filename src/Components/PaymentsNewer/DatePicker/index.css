@@ -1,68 +1,73 @@
 .custom-datepicker {
-    width: 100%;
-    /* border: 1px solid #ccc; */
-    border-radius: 4px;
-    padding: 10px;
-    background-color: white;
-    position: absolute;
-    top: 62px;
-    left: 0px;
-    padding: 2rem;
-    z-index: 1;
-    background-blend-mode: multiply;
+  width: 100%;
+  /* border: 1px solid #ccc; */
+  border-radius: 4px;
+  padding: 10px;
+  background-color: white;
+  position: absolute;
+  top: 62px;
+  left: 0px;
+  padding: 2rem;
+  z-index: 1;
+  background-blend-mode: multiply;
 }
 
 .calendar-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 .calendar-nav select {
-    border: none;
-    background-color: transparent;
-    font-size: 16px;
+  border: none;
+  background-color: transparent;
+  font-size: 16px;
 }
 
 .calendar-arrows {
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
 }
 
 .calendar-arrows img {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
 }
 
 .day {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 30px;
-    /* border: 1px solid #ccc; */
-    border-radius: 6px;
-    cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  /* border: 1px solid #ccc; */
+  border-radius: 6px;
+  cursor: pointer;
 }
 
 .day.active {
-    background: linear-gradient(-24deg, rgb(210, 60, 122) 0%, rgb(164, 52, 167) 43.66%, rgb(88, 38, 239) 100%);
-    color: white;
+  background: linear-gradient(
+    -24deg,
+    rgb(210, 60, 122) 0%,
+    rgb(164, 52, 167) 43.66%,
+    rgb(88, 38, 239) 100%
+  );
+  color: white;
 }
 
 .day.empty {
-    color: gray;
-    cursor: not-allowed;
+  color: gray;
+  cursor: not-allowed;
 }
 
 .day span {
-    font-size: 14px;
+  font-size: 14px;
 }
 .day.disabled {
   color: #acc;

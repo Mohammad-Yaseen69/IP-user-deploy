@@ -33,7 +33,7 @@
   }
 
   .info-block {
-    +.info-block {
+    + .info-block {
       padding-top: 30px;
       border-top: 1px solid $light-gray;
       margin-top: 30px;
@@ -63,13 +63,13 @@
   }
 
   ul.search-info {
-    >li {
+    > li {
       display: inline-block;
       font-size: 12px;
       line-height: 1;
       color: #586082;
 
-      +li {
+      + li {
         border-left: 1px solid lighten($dark-color, 50%);
         padding-left: 8px;
         margin-left: 8px;
@@ -88,13 +88,13 @@
   }
 
   #video-links {
-    .embed-responsive+.embed-responsive {
+    .embed-responsive + .embed-responsive {
       margin-top: 30px;
     }
   }
 
   .search-vid-block {
-    >div {
+    > div {
       &:nth-child(n + 2) {
         margin-top: 30px;
       }
@@ -186,7 +186,7 @@
     }
 
     .info-block {
-      +.info-block {
+      + .info-block {
         margin-top: 15px;
         padding-top: 15px;
       }

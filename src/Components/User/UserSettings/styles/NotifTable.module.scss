@@ -1,27 +1,26 @@
 .table {
-    width: 100%;
-    border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
 
-    th,
-    td {
-        padding: 8px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-        padding: 1rem;
-    }
+  th,
+  td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    padding: 1rem;
+  }
 
-    th:nth-child(1),
-    td:nth-child(1) {
-        width: 60%;
-        min-width: 300px;
-    }
+  th:nth-child(1),
+  td:nth-child(1) {
+    width: 60%;
+    min-width: 300px;
+  }
 
-    th {
-        font-weight: bold;
-        color: #555;
-    }
+  th {
+    font-weight: bold;
+    color: #555;
+  }
 }
-
 
 // @media screen and (max-width: 600px) {
 

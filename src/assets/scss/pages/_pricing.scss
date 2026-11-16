@@ -84,7 +84,7 @@
     padding-top: 90px;
     padding-bottom: 30px;
     &.list-group {
-     .list-group-item {
+      .list-group-item {
         display: flex;
       }
     }
@@ -92,7 +92,6 @@
       padding: 0;
       li {
         margin-bottom: 20px;
-
 
         h6 {
           font-weight: 500;
@@ -154,9 +153,9 @@
 }
 @media only screen and (max-width: 1470px) {
   // pricing page //
-  .pricing-simple{
-    .card-body{
-      h1{
+  .pricing-simple {
+    .card-body {
+      h1 {
         font-size: 70px;
       }
     }
@@ -176,16 +175,16 @@
   }
 }
 @media screen and (min-width: 768px) and (max-width: 1199px) {
-  .pricing-simple{
-    .card-body{
-      h3{
+  .pricing-simple {
+    .card-body {
+      h3 {
         font-size: 24px;
       }
     }
   }
   .pricing-block {
-    .pricing-header{
-      h2{
+    .pricing-header {
+      h2 {
         font-size: 22px;
       }
     }
@@ -226,8 +225,8 @@
     }
   }
   .pricing-content {
-    &.price-simple{
-      .row{
+    &.price-simple {
+      .row {
         margin-bottom: -20px;
       }
     }
@@ -303,8 +302,8 @@
 }
 @media only screen and (max-width: 575px) {
   .pricing-content {
-    &.price-simple{
-      .row{
+    &.price-simple {
+      .row {
         margin-bottom: 0;
       }
     }

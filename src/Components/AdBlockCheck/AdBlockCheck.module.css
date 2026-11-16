@@ -24,7 +24,6 @@
   max-width: 400px;
   width: 100%;
   position: relative;
-
 }
 
 .modal h2 {
@@ -87,7 +86,7 @@
   gap: 10px;
   aspect-ratio: 1/1;
   border-radius: var(--RADIUS-radius-2, 8px);
-  background: #5926F0;
+  background: #5926f0;
 }
 
 .modal-title {
@@ -101,7 +100,7 @@
 }
 
 .modal-content {
-  color: #6E7687;
+  color: #6e7687;
 
   font-size: 14px;
   font-style: normal;
@@ -114,11 +113,11 @@
   padding: var(--md, 16px);
   align-self: stretch;
   border-radius: var(--md, 10px);
-  border: 1px solid #E4DBFF;
-  background: #F2EEFF;
+  border: 1px solid #e4dbff;
+  background: #f2eeff;
 
   strong {
-    color: var(--text-primary, #1B1F2A);
+    color: var(--text-primary, #1b1f2a);
     margin-bottom: 10px;
     font-family: Inter;
     font-size: 14px;
@@ -127,7 +126,7 @@
   }
 
   p {
-    color: #6E7687;
+    color: #6e7687;
 
     font-size: 14px;
     font-style: normal;
@@ -138,7 +137,7 @@
 }
 
 .modal-message {
-  color: #6E7687;
+  color: #6e7687;
   align-self: stretch;
   font-size: 14px;
   font-style: normal;
@@ -149,7 +148,7 @@
 }
 
 .no-ads {
-  color: #6E7687;
+  color: #6e7687;
   text-wrap: wrap;
   font-family: Inter;
   font-size: 14px;
@@ -159,7 +158,7 @@
   padding: 0px;
 
   span {
-    color: #4A32E3;
+    color: #4a32e3;
 
     font-family: Inter;
     font-size: 14px;
@@ -179,9 +178,9 @@
   gap: 8px;
   flex: 1 0 0;
   border-radius: var(--sm, 6px);
-  background: #4A32E3 !important;
-  border: 1px solid #4A32E3 !important;
-  color: var(--Greyscale-0, #FFF);
+  background: #4a32e3 !important;
+  border: 1px solid #4a32e3 !important;
+  color: var(--Greyscale-0, #fff);
   text-align: center;
   font-size: 16px;
   font-style: normal;

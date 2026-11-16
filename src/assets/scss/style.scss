@@ -86,8 +86,8 @@
 @import "./utils/theme-font";
 
 :root {
-    --theme-default: #5826f0;
-    --theme-secondary: #e64067;
+  --theme-default: #5826f0;
+  --theme-secondary: #e64067;
 }
 
 // *** base ***
@@ -154,7 +154,7 @@
 @import "./pages/user-profile.scss";
 @import "./pages/invoice.scss";
 @import "components/react-plugin";
-// *** layout *** 
+// *** layout ***
 @import "./layout/footer.scss";
 @import "./layout/grid.scss";
 @import "./layout/header.scss";

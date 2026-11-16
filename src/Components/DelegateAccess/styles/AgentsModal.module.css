@@ -1,737 +1,734 @@
 .overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    z-index: 1050;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
 }
 
 .modal {
-    background: #fff;
-    border-radius: 16px;
-    width: 100%;
-    max-width: 780px;
-    max-height: 90vh;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 780px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
 }
 
 .modalHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 13px 14px 13px;
-    flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 14px 13px;
+  flex-shrink: 0;
 }
 
 .modalTitle {
-    font-size: 18px;
-    font-weight: 700;
-    color: #1a1a1a;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    margin-bottom: 15px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 15px;
 
-    div {
-        display: flex;
-        width: var(--xl, 32px);
-        height: 32px;
-        padding: var(--sm, 8px);
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        aspect-ratio: 1/1;
-        border-radius: var(--RADIUS-radius-2, 8px);
-        background: Blue;
-    }
+  div {
+    display: flex;
+    width: var(--xl, 32px);
+    height: 32px;
+    padding: var(--sm, 8px);
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    aspect-ratio: 1/1;
+    border-radius: var(--RADIUS-radius-2, 8px);
+    background: Blue;
+  }
 }
 
 .closeBtn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    transition: background 0.2s;
-    font-size: 20px;
-    line-height: 1;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  transition: background 0.2s;
+  font-size: 20px;
+  line-height: 1;
 }
 
 .closeBtn:hover {
-    background: #f5f5f5;
-    color: #333;
+  background: #f5f5f5;
+  color: #333;
 }
 
 .modalBody {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
+  display: flex;
+  flex: 1;
+  overflow: hidden;
 }
 
 .sidebar {
-    width: 40%;
-    background: #ffff;
-    padding: 0px 11px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    flex-shrink: 0;
+  width: 40%;
+  background: #ffff;
+  padding: 0px 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
 }
 
 .stepItem {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    cursor: default;
-    position: relative;
-
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: default;
+  position: relative;
 }
 
 .stepItem:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    left: 22px;
-    bottom: -8px;
-    width: 2px;
-    height: 12px;
-    background: #e0e0e0;
+  content: "";
+  position: absolute;
+  left: 22px;
+  bottom: -8px;
+  width: 2px;
+  height: 12px;
+  background: #e0e0e0;
 }
 
 .stepItem.active .stepItemAfter,
 .stepItem.done .stepItemAfter {
-    background: #5626e6;
+  background: #5626e6;
 }
 
 .stepItem.done .stepItemAfter {
-    background: #10B981;
+  background: #10b981;
 }
 
 .stepIcon {
-    width: 33px;
-    height: 33px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    font-size: 13px;
-    font-weight: 700;
-    background: #e8e8f0;
-    color: #999;
-    transition: all 0.3s;
+  width: 33px;
+  height: 33px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 700;
+  background: #e8e8f0;
+  color: #999;
+  transition: all 0.3s;
 }
 
 .stepIcon.active {
-    background: #5626e6;
-    color: white;
+  background: #5626e6;
+  color: white;
 }
 
 .stepIcon.done {
-    background: #10B981;
-    color: white;
+  background: #10b981;
+  color: white;
 }
 
 .stepLabel {
-    color: #000;
+  color: #000;
+  font-family: Manrope;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+  /* 133.333% */
+  letter-spacing: -0.54px;
+  margin: 0;
+  padding: 0;
+
+  p {
+    color: var(--Secondary, #6f6f6f);
     font-family: Manrope;
-    font-size: 16px;
+    font-size: 12px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 24px;
-    /* 133.333% */
-    letter-spacing: -0.54px;
+    font-weight: 600;
+    line-height: 18px;
+    letter-spacing: -0.12px;
     margin: 0;
     padding: 0;
-
-    p {
-        color: var(--Secondary, #6F6F6F);
-        font-family: Manrope;
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 18px;
-        letter-spacing: -0.12px;
-        margin: 0;
-        padding: 0;
-    }
+  }
 }
 
 .stepLabel.active {
-    /* color: #5626e6; */
-    font-weight: 700;
+  /* color: #5626e6; */
+  font-weight: 700;
 }
 
 .stepLabel.done {
-    /* color: #5626e6; */
+  /* color: #5626e6; */
 }
 
 .stepContainer {
-    width: 100%;
-    padding: 10px;
-    background: #fff;
+  width: 100%;
+  padding: 10px;
+  background: #fff;
 }
 
 .stepContent {
-    width: 100%;
-    flex: 1;
-    padding: 24px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    border-radius: var(--md, 10px);
-    background: var(--bg-elevated, #F8F9FC);
+  width: 100%;
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-radius: var(--md, 10px);
+  background: var(--bg-elevated, #f8f9fc);
 }
 
 .formGroup {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .nameInput {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-direction: row;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-direction: row;
 }
 
 .formLabel {
-    color: var(--text-secondary, #6E7687);
-    font-family: Inter;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 150%;
-    /* 21px */
-    letter-spacing: -0.42px;
+  color: var(--text-secondary, #6e7687);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
+  /* 21px */
+  letter-spacing: -0.42px;
 }
 
 .formInput,
 .formSelect {
-    width: 100%;
-    padding: 10px 14px;
-    border-radius: 8px;
-    font-size: 14px;
-    color: #1a1a1a;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    appearance: none;
-    border-radius: var(--sm, 6px);
-    border: 1px solid var(--Greyscale-25, #E4E3E5);
-    background: var(--Greyscale-0, #FFF);
-    box-shadow: 0 1px 1.5px 0 rgba(44, 54, 53, 0.03);
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1a1a1a;
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  appearance: none;
+  border-radius: var(--sm, 6px);
+  border: 1px solid var(--Greyscale-25, #e4e3e5);
+  background: var(--Greyscale-0, #fff);
+  box-shadow: 0 1px 1.5px 0 rgba(44, 54, 53, 0.03);
 }
 
 .formInput:focus,
 .formSelect:focus {
-    border-color: #5626e6;
-    box-shadow: 0 0 0 3px rgba(86, 38, 230, 0.08);
+  border-color: #5626e6;
+  box-shadow: 0 0 0 3px rgba(86, 38, 230, 0.08);
 }
 
 .formInput:disabled,
 .formSelect:disabled {
-    background: #f5f5f5;
-    cursor: not-allowed;
-    color: #aaa;
+  background: #f5f5f5;
+  cursor: not-allowed;
+  color: #aaa;
 }
 
 .formInput::placeholder {
-    color: #bbb;
+  color: #bbb;
 }
 
 .permRow {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #f5f5f5;
 }
 
 .permRow:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .permLabel {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .permDot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #5626e6;
-    flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #5626e6;
+  flex-shrink: 0;
 }
 
 .permName {
-    font-size: 14px;
-    font-weight: 500;
-    color: #1a1a1a;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
 }
 
 .permDesc {
-    font-size: 12px;
-    color: #999;
+  font-size: 12px;
+  color: #999;
 }
 
 .warningBanner {
-    background: #fff8e1;
-    border: 1px solid #ffe082;
-    border-radius: 10px;
-    padding: 14px 16px;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
 }
 
 .warningIcon {
-    color: #f59e0b;
-    flex-shrink: 0;
-    margin-top: 1px;
+  color: #f59e0b;
+  flex-shrink: 0;
+  margin-top: 1px;
 }
 
 .warningText {
-    font-size: 13px;
-    color: #92400e;
-    line-height: 1.5;
+  font-size: 13px;
+  color: #92400e;
+  line-height: 1.5;
 }
 
 .reviewCard {
-    background: #f8f8fc;
-    border-radius: 10px;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    border-radius: var(--md, 10px);
-    border: 1px solid var(--Border-primary, #E7E7E7);
-    background: var(--Background-Surface-secondary, #FFF);
+  background: #f8f8fc;
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-radius: var(--md, 10px);
+  border: 1px solid var(--Border-primary, #e7e7e7);
+  background: var(--Background-Surface-secondary, #fff);
 }
 
 .reviewRow {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
 }
 
 .reviewRowKey {
-    color: #888;
-    font-weight: 500;
+  color: #888;
+  font-weight: 500;
 }
 
 .reviewRowVal {
-    color: #1a1a1a;
-    font-weight: 600;
-    text-align: right;
+  color: #1a1a1a;
+  font-weight: 600;
+  text-align: right;
 }
 
 .statusScreen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 48px 24px;
-    text-align: center;
-    gap: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+  gap: 12px;
 }
 
 .statusTitle {
-    font-size: 18px;
-    font-weight: 700;
-    color: #1a1a1a;
-    margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
 }
 
 .statusMsg {
-    font-size: 14px;
-    color: #666;
-    margin: 0;
+  font-size: 14px;
+  color: #666;
+  margin: 0;
 }
 
 .modalFooter {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 24px;
-    flex-shrink: 0;
-    background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  flex-shrink: 0;
+  background: #fff;
 }
 
 .footerLeft {
+  display: flex;
+  height: 60px;
+  width: 38%;
+  padding: 17px 48px 20px 14px;
+  align-items: center;
+  gap: 10px;
+  border-radius: var(--RADIUS-radius-2, 8px);
+  background: var(--bg-elevated, #f8f9fc);
+  cursor: pointer;
+
+  span {
     display: flex;
-    height: 60px;
-    width: 38%;
-    padding: 17px 48px 20px 14px;
+    width: 38px;
+    height: 38px;
+    padding: 9.105px 8.607px 9.107px 8.605px;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    gap: 10px;
-    border-radius: var(--RADIUS-radius-2, 8px);
-    background: var(--bg-elevated, #F8F9FC);
-    cursor: pointer;
+    border-radius: 1770px;
+    border: 1px solid var(--COLORS-Primary-100, #c8b7fa);
+  }
 
-    span {
-        display: flex;
-        width: 38px;
-        height: 38px;
-        padding: 9.105px 8.607px 9.107px 8.605px;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        border-radius: 1770px;
-        border: 1px solid var(--COLORS-Primary-100, #C8B7FA);
+  div {
+    margin: 0;
+    padding: 0;
+
+    p {
+      color: var(--Secondary, #6f6f6f);
+      font-family: Manrope;
+      font-size: 10px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 14px;
+      margin: 0;
+      padding: 0;
     }
 
-    div {
-        margin: 0;
-        padding: 0;
-
-        p {
-            color: var(--Secondary, #6F6F6F);
-            font-family: Manrope;
-            font-size: 10px;
-            font-style: normal;
-            font-weight: 600;
-            line-height: 14px;
-            margin: 0;
-            padding: 0;
-        }
-
-        h2 {
-            color: var(--COLORS-Neutral-1000, #333);
-            font-family: Manrope;
-            font-size: 16px;
-            font-style: normal;
-            font-weight: 600;
-            line-height: 24px;
-            letter-spacing: -0.32px;
-            margin: 0;
-            padding: 0;
-        }
+    h2 {
+      color: var(--COLORS-Neutral-1000, #333);
+      font-family: Manrope;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 24px;
+      letter-spacing: -0.32px;
+      margin: 0;
+      padding: 0;
     }
+  }
 }
 
 .footerRight {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex: 1 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1 0 0;
 
-    div {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
+  div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 }
 
 .btnCancel,
 .btnBack {
-    cursor: progress;
-    border: none;
-    margin-left: 10px;
-    background: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  cursor: progress;
+  border: none;
+  margin-left: 10px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btnCancel:hover {
-    background: #f5f5f5;
+  background: #f5f5f5;
 }
 
-
-
 .btnBack:hover {
-    background: #f5f5f5;
+  background: #f5f5f5;
 }
 
 .btnNext {
-    padding: 9px 24px;
-    border: none;
-    border-radius: var(--sm, 6px);
-    background: var(--Primary-600---Base, #4A32E3);
-    font-size: 14px;
-    font-weight: 600;
-    color: #fff;
-    cursor: pointer;
-    transition: background 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  padding: 9px 24px;
+  border: none;
+  border-radius: var(--sm, 6px);
+  background: var(--Primary-600---Base, #4a32e3);
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .btnNext:hover {
-    background: #451dbb;
+  background: #451dbb;
 }
 
 .btnNext:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .btnDone {
-    padding: 9px 24px;
-    border: none;
-    border-radius: 8px;
-    background: #22c55e;
-    font-size: 14px;
-    font-weight: 600;
-    color: #fff;
-    cursor: pointer;
-    transition: background 0.2s;
+  padding: 9px 24px;
+  border: none;
+  border-radius: 8px;
+  background: #22c55e;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
 .btnDone:hover {
-    background: #16a34a;
+  background: #16a34a;
 }
 
 .permTreeWrapper {
-    /* border: 1.5px solid #eee; */
-    /* border-radius: 10px; */
-    overflow: hidden;
+  /* border: 1.5px solid #eee; */
+  /* border-radius: 10px; */
+  overflow: hidden;
 }
 
 @media (max-width: 700px) {
-    .modal {
-        height: 100vh;
-        overflow: hidden;
+  .modal {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .modalBody {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: #fff;
+    padding: 0;
+    display: block;
+    overflow-y: auto;
+  }
+
+  .modal {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    border-radius: 0;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+  }
+
+  .modalHeader {
+    padding: 18px 16px 10px;
+    border-bottom: 1px solid #f1f1f1;
+  }
+
+  .modalTitle {
+    font-size: 20px;
+    margin-bottom: 0;
+  }
+
+  .sidebar {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 15%;
+    padding: 5px 10px;
+    border-right: none;
+    border-bottom: 1px solid #f3f3f3;
+
+    .stepsWrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      align-self: stretch;
     }
+  }
 
-    .modalBody {
-        flex: 1;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-    }
+  .stepItem {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0;
+    min-width: 70px;
+  }
 
-    .overlay {
-        position: fixed;
-        inset: 0;
-        background: #fff;
-        padding: 0;
-        display: block;
-        overflow-y: auto;
-    }
+  .stepItem:not(:last-child)::after {
+    display: none;
+  }
 
-    .modal {
-        width: 100%;
-        max-width: 100%;
-        height: 100%;
-        max-height: 100%;
-        border-radius: 0;
-        box-shadow: none;
-        display: flex;
-        flex-direction: column;
-        background: #fff;
-    }
+  .stepLabel {
+    font-size: 10px;
+    text-align: center;
+    line-height: 14px;
+  }
 
+  .stepLabel p {
+    font-size: 9px;
+    margin-bottom: 2px;
+    color: var(--Secondary, #6f6f6f);
+  }
 
-    .modalHeader {
-        padding: 18px 16px 10px;
-        border-bottom: 1px solid #f1f1f1;
-    }
+  .stepIcon {
+    width: 28px;
+    height: 28px;
+  }
 
-    .modalTitle {
-        font-size: 20px;
-        margin-bottom: 0;
-    }
+  .stepContainer {
+    width: 100%;
+    padding: 14px;
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch !important;
+    z-index: 10;
+  }
 
-    .sidebar {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        gap: 15%;
-        padding: 5px 10px;
-        border-right: none;
-        border-bottom: 1px solid #f3f3f3;
+  .stepContent {
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    gap: 0px;
+    display: flex;
+    flex-direction: column;
+    min-height: max-content;
+  }
 
-        .stepsWrapper {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            align-self: stretch;
-        }
-    }
+  .nameInput {
+    flex-direction: row;
+    gap: 10px;
+  }
 
-    .stepItem {
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        padding: 0;
-        min-width: 70px;
-    }
+  .nameInput .formGroup {
+    flex: 1;
+  }
 
-    .stepItem:not(:last-child)::after {
-        display: none;
-    }
+  .formInput,
+  .formSelect {
+    height: 46px;
+    font-size: 14px;
+  }
 
-    .stepLabel {
-        font-size: 10px;
-        text-align: center;
-        line-height: 14px;
-    }
+  .modalFooter {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    padding: 7px 7px;
+    border-top: 1px solid #eee;
+    z-index: 20;
+    gap: 10px;
+    flex-direction: column;
+  }
 
-    .stepLabel p {
-        font-size: 9px;
-        margin-bottom: 2px;
-        color: var(--Secondary, #6F6F6F);
+  .footerLeft {
+    width: 100%;
+    height: auto;
+    padding: 12px;
+  }
 
-    }
+  .footerRight {
+    width: 100%;
+  }
 
-    .stepIcon {
-        width: 28px;
-        height: 28px;
-    }
+  .footerRight div {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+  }
 
-    .stepContainer {
-        width: 100%;
-        padding: 14px;
-        flex: 1;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch !important;
-        z-index: 10;
-    }
+  .btnBack {
+    border-radius: var(--sm, 6px);
+    background: var(--Greyscale-15, #f3f3f4);
+    display: flex;
+    width: 130px;
+    height: 48px;
+    padding: 0 var(--md, 16px);
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+  }
 
-    .stepContent {
-        background: transparent;
-        padding: 0;
-        border-radius: 0;
-        gap: 0px;
-        display: flex;
-        flex-direction: column;
-        min-height: max-content;
-    }
+  .btnBack,
+  .btnNext {
+    flex: 1;
+    justify-content: center;
+    height: 46px;
+    padding: 0;
+    margin: 0;
+  }
 
-    .nameInput {
-        flex-direction: row;
-        gap: 10px;
-    }
+  .btnCancel {
+    display: none;
+  }
 
-    .nameInput .formGroup {
-        flex: 1;
-    }
-
-    .formInput,
-    .formSelect {
-        height: 46px;
-        font-size: 14px;
-    }
-
-    .modalFooter {
-        position: sticky;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background: #fff;
-        padding: 7px 7px;
-        border-top: 1px solid #eee;
-        z-index: 20;
-        gap: 10px;
-        flex-direction: column;
-    }
-
-    .footerLeft {
-        width: 100%;
-        height: auto;
-        padding: 12px;
-    }
-
-    .footerRight {
-        width: 100%;
-
-    }
-
-    .footerRight div {
-        width: 100%;
-        display: flex;
-        gap: 10px;
-    }
-
-    .btnBack {
-        border-radius: var(--sm, 6px);
-        background: var(--Greyscale-15, #F3F3F4);
-        display: flex;
-        width: 130px;
-        height: 48px;
-        padding: 0 var(--md, 16px);
-        justify-content: center;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .btnBack,
-    .btnNext {
-        flex: 1;
-        justify-content: center;
-        height: 46px;
-        padding: 0;
-        margin: 0;
-    }
-
-    .btnCancel {
-        display: none;
-    }
-
-    .reviewCard {
-        border-radius: var(--md, 10px);
-        border: 1px solid var(--Border-primary, #E7E7E7);
-        background: var(--Background-Surface-secondary, #FFF);
-    }
-
+  .reviewCard {
+    border-radius: var(--md, 10px);
+    border: 1px solid var(--Border-primary, #e7e7e7);
+    background: var(--Background-Surface-secondary, #fff);
+  }
 }
 
 .title span {
-    font-size: 18px;
-    font-weight: 600;
+  font-size: 18px;
+  font-weight: 600;
 }
 
 .body {
-    padding: 10px 20px 20px 20px;
+  padding: 10px 20px 20px 20px;
 }
 
 .formGroup {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
 }
 
 .formGroup label {
-    font-size: 13px;
-    margin-bottom: 5px;
-    color: #555;
+  font-size: 13px;
+  margin-bottom: 5px;
+  color: #555;
 }
 
 .formGroup input,
 .formGroup select {
-    display: block;
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: var(--bs-body-color);
-    appearance: none;
-    background-color: var(--bs-body-bg);
-    background-clip: padding-box;
-    border: var(--bs-border-width) solid var(--bs-border-color);
-    border-radius: var(--bs-border-radius);
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--bs-body-color);
+  appearance: none;
+  background-color: var(--bs-body-bg);
+  background-clip: padding-box;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  transition:
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 }

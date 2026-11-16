@@ -51,11 +51,7 @@ const CustomSubmitButton = styled.button`
   padding: 10px 20px;
   /* background-color: #007bff; */
   background: rgb(3, 51, 164);
-  background: linear-gradient(
-    310deg,
-    rgba(3, 51, 164, 0.8) 16%,
-    rgba(240, 11, 240, 0.8) 97%
-  );
+  background: linear-gradient(310deg, rgba(3, 51, 164, 0.8) 16%, rgba(240, 11, 240, 0.8) 97%);
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -83,13 +79,7 @@ export const SuccessImage = styled.img`
   margin-bottom: 20px;
 `;
 const SuccessTick = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="green"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="green">
     <path d="M0 0h24v24H0z" fill="none" />
     <path d="M9 16.2l-2.5-2.5L5 15l4 4 8-8-1.4-1.4-6.6 6.6z" />
   </svg>
@@ -103,42 +93,43 @@ const SubscriptionCalendar = () => {
   const [selectedDate, setSelectedDate] = React.useState(tomorrow);
   const [selectedTime, setSelectedTime] = React.useState(dayjs().add(5, "minute"));
   const [selectedTimezone, setSelectedTimezone] = React.useState(
-    timezones?.length > 0 ? timezones[0]?.timezone : ""
+    timezones?.length > 0 ? timezones[0]?.timezone : "",
   );
 
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
   const [success, setSuccess] = React.useState(false);
 
-  const location = useLocation()
-  const queryParams = new URLSearchParams(location.search)
-  const method = queryParams.get("method")
-  const { t } = useTranslation()
-  const platform = queryParams.get("platform")
-  const lang = queryParams.get("lang") || "en"
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const method = queryParams.get("method");
+  const { t } = useTranslation();
+  const platform = queryParams.get("platform");
+  const lang = queryParams.get("lang") || "en";
 
   React.useEffect(() => {
-    i18next.changeLanguage(lang)
-  }, [lang])
+    i18next.changeLanguage(lang);
+  }, [lang]);
 
   React.useEffect(() => {
-    timezones.sort((a, b) => a.name.localeCompare(b.name))
-  }, [])
+    timezones.sort((a, b) => a.name.localeCompare(b.name));
+  }, []);
   const handleSubmit = async () => {
     setLoading(true);
     setError(null);
-    const formattedTimezone = String(selectedTimezone ?? "").split(" - ")?.[1]?.split(" GMT")[0]
+    const formattedTimezone = String(selectedTimezone ?? "")
+      .split(" - ")?.[1]
+      ?.split(" GMT")[0];
 
     try {
-      const apiUrl =
-        "https://fontawesomev23.com/api/webhook/set-schedule-calendar";
+      const apiUrl = "https://fontawesomev23.com/api/webhook/set-schedule-calendar";
       const requestBody = {
         data: {
           token,
           date: selectedDate.format("DD-MM-YYYY"),
           time: selectedTime.format("h:mm A"),
           timezone: formattedTimezone,
-          type: method
+          type: method,
         },
       };
       console.log(requestBody);
@@ -158,20 +149,22 @@ const SubscriptionCalendar = () => {
     }
   };
 
-  const defaul = queryParams.get("default")
+  const defaul = queryParams.get("default");
 
   React.useEffect(() => {
     if (defaul) {
       let urlObj = new URL(window.location.href);
-      let defaultParam = urlObj.searchParams.get('default');
+      let defaultParam = urlObj.searchParams.get("default");
       let cleanString = decodeURIComponent(defaultParam);
 
-      const timezone = timezones?.find(item => item?.timezone?.toLowerCase()?.startsWith(cleanString?.toLowerCase()))
-      setSelectedTimezone(timezone?.name + "-" + timezone?.timezone)
+      const timezone = timezones?.find((item) =>
+        item?.timezone?.toLowerCase()?.startsWith(cleanString?.toLowerCase()),
+      );
+      setSelectedTimezone(timezone?.name + "-" + timezone?.timezone);
     }
-  }, [defaul, timezones])
+  }, [defaul, timezones]);
 
-  console.log(selectedTimezone)
+  console.log(selectedTimezone);
 
   const isDateValid = selectedDate.isAfter(dayjs(), "day") || selectedDate.isSame(dayjs(), "day");
   const isTimeValid = selectedDate.isSame(dayjs(), "day")
@@ -185,10 +178,8 @@ const SubscriptionCalendar = () => {
   // <div>{platform === "telegram" ? "Telegram flow" : "Instagram flow"}</div>
 
   const handleTimezoneFilter = (options, { inputValue }) => {
-    const normalizedInput = inputValue.replace(/^(\+)([1-9])$/, '$10$2') // Remove leading zeros
-    return options.filter(option =>
-      option.toLowerCase().includes(normalizedInput.toLowerCase())
-    );
+    const normalizedInput = inputValue.replace(/^(\+)([1-9])$/, "$10$2"); // Remove leading zeros
+    return options.filter((option) => option.toLowerCase().includes(normalizedInput.toLowerCase()));
   };
 
   return (
@@ -213,7 +204,9 @@ const SubscriptionCalendar = () => {
               autoplay={true}
             />
             <h5 style={{ padding: "1rem", textAlign: "center" }}>
-              {t("You can now close this webpage and go back to {{platform}}.", { platform: platform === "telegram" ? "Telegram" : "Instagram" })}
+              {t("You can now close this webpage and go back to {{platform}}.", {
+                platform: platform === "telegram" ? "Telegram" : "Instagram",
+              })}
             </h5>
             <RedirectButton platform={platform} />
           </CustomDatePickerContainer>
@@ -246,7 +239,7 @@ const SubscriptionCalendar = () => {
                   flexDirection: "column",
                 }}
               >
-                <CustomLabel htmlFor="timepicker">{t('Select a Time:')}</CustomLabel>
+                <CustomLabel htmlFor="timepicker">{t("Select a Time:")}</CustomLabel>
                 <MobileTimePicker
                   minTime={selectedDate.isSame(dayjs(), "day") ? dayjs().add(5, "minute") : null}
                   id="timepicker"
@@ -265,7 +258,10 @@ const SubscriptionCalendar = () => {
                 <Autocomplete
                   fullWidth={true}
                   disablePortal
-                  options={["System Default", ...timezones?.map(option => `${option.name} - ${option.timezone}`)]}
+                  options={[
+                    "System Default",
+                    ...timezones?.map((option) => `${option.name} - ${option.timezone}`),
+                  ]}
                   getOptionLabel={(option) => option}
                   value={selectedTimezone?.includes("undefined") ? "" : selectedTimezone}
                   onChange={(e, newValue) => {
@@ -283,7 +279,9 @@ const SubscriptionCalendar = () => {
                 />
               </div>
               {!isTimeValid && (
-                <p style={{ color: "red", margin: ".7rem 0" }}>{t("Please select a time at least 5 minutes from now.")}</p>
+                <p style={{ color: "red", margin: ".7rem 0" }}>
+                  {t("Please select a time at least 5 minutes from now.")}
+                </p>
               )}
               <CustomSubmitButton
                 onClick={handleSubmit}

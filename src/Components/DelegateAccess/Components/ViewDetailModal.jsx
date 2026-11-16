@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Badge,
-  Row,
-  Col,
-} from "reactstrap";
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Badge, Row, Col } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import styles from "../styles/ViewDetailModal.module.css";
 
@@ -34,8 +25,13 @@ const ViewDetailModal = ({ isOpen, toggle, item, isRole }) => {
             {(isRole ? item.title : item.first_name)?.charAt(0).toUpperCase()}
           </div>
           <div className="ms-3">
-            <h5 className="mb-0 fw-bold">{isRole ? item.title : `${item.first_name} ${item.last_name}`}</h5>
-            <small className="text-muted">{t("ID:")}{item._id}</small>
+            <h5 className="mb-0 fw-bold">
+              {isRole ? item.title : `${item.first_name} ${item.last_name}`}
+            </h5>
+            <small className="text-muted">
+              {t("ID:")}
+              {item._id}
+            </small>
           </div>
         </div>
       </ModalHeader>
@@ -60,11 +56,14 @@ const ViewDetailModal = ({ isOpen, toggle, item, isRole }) => {
               <DetailItem label="Email" value={item.email} />
               <DetailItem label="Phone" value={item.phone} />
               <DetailItem label="Role" value={item.role?.title || item.role} />
-              <DetailItem label="Status" value={
-                <Badge color={item.status === "active" ? "success" : "warning"} pill>
-                  {item.status}
-                </Badge>
-              } />
+              <DetailItem
+                label="Status"
+                value={
+                  <Badge color={item.status === "active" ? "success" : "warning"} pill>
+                    {item.status}
+                  </Badge>
+                }
+              />
               <DetailItem label="Country" value={item.country} />
               <DetailItem label="Created At" value={new Date(item.createdAt).toLocaleString()} />
               <Col xs={12} md={6} className="mb-3">
@@ -100,7 +99,9 @@ const ViewDetailModal = ({ isOpen, toggle, item, isRole }) => {
           {item.deniedPermissions?.length > 0 && (
             <Col xs={12} className="mt-3">
               <div className={styles.permissionsSection}>
-                <span className={`${styles.detailLabel} text-danger`}>{t("Denied Permissions")}</span>
+                <span className={`${styles.detailLabel} text-danger`}>
+                  {t("Denied Permissions")}
+                </span>
                 <div className="d-flex flex-wrap gap-2 mt-2">
                   {item.deniedPermissions.map((p, i) => (
                     <Badge key={i} color="danger" outline>

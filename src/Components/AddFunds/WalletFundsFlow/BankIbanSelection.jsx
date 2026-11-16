@@ -1,4 +1,4 @@
-import { Check } from 'react-feather';
+import { Check } from "react-feather";
 import logo_w from "../../../assets/images/logo/logo_white.png";
 
 const BankIbanSelection = ({
@@ -10,7 +10,7 @@ const BankIbanSelection = ({
   type,
   t,
   styles,
-  cardStyles
+  cardStyles,
 }) => {
   return (
     <div className={styles.bankDets}>
@@ -42,16 +42,12 @@ const BankIbanSelection = ({
                     <span style={{ fontSize: ".75rem", opacity: 0.85 }}>
                       {bank.bankName || "Bank Account"}
                     </span>
-                    <span style={{ fontSize: ".7rem" }}>
-                      {bank.recipientIbanMasked}
-                    </span>
+                    <span style={{ fontSize: ".7rem" }}>{bank.recipientIbanMasked}</span>
                     <span style={{ fontSize: ".65rem", opacity: 0.85 }}>
                       {bank.transactionCount} {t("transactions")}
                     </span>
                   </div>
-                  {selectedBankId === bank._id && (
-                    <Check style={{ color: "white" }} size={20} />
-                  )}
+                  {selectedBankId === bank._id && <Check style={{ color: "white" }} size={20} />}
                 </div>
               </div>
             ))}
@@ -60,7 +56,9 @@ const BankIbanSelection = ({
       )}
 
       <div style={{ padding: "0", border: "none" }}>
-        <h5 style={{ fontWeight: 700 }}>{savedBanks.length > 0 ? t("Add bank details") : t("Enter your bank IBAN")}</h5>
+        <h5 style={{ fontWeight: 700 }}>
+          {savedBanks.length > 0 ? t("Add bank details") : t("Enter your bank IBAN")}
+        </h5>
         <div
           style={{
             display: "flex",
@@ -75,7 +73,7 @@ const BankIbanSelection = ({
                 marginBottom: "0.5rem",
                 fontWeight: 600,
                 fontSize: "14px",
-                color: "#8A8A8A"
+                color: "#8A8A8A",
               }}
             >
               {t("Type in the IBAN of the bank account you'll be transferring from:")}
@@ -86,7 +84,7 @@ const BankIbanSelection = ({
               value={recipientData.iban}
               maxLength={34}
               onChange={(e) => {
-                const value = e.target.value.replace(/\s/g, "")
+                const value = e.target.value.replace(/\s/g, "");
                 handleRecipientChange("iban", value);
                 setSelectedBankId(null);
               }}
@@ -106,13 +104,12 @@ const BankIbanSelection = ({
                 textAlign: "right",
                 fontSize: "12px",
                 marginTop: "4px",
-                color: recipientData.iban.length === 34 ? "red" : "#8A8A8A"
+                color: recipientData.iban.length === 34 ? "red" : "#8A8A8A",
               }}
             >
               {recipientData.iban.length} / 34 {t("characters")}
             </div>
           </div>
-
         </div>
       </div>
     </div>

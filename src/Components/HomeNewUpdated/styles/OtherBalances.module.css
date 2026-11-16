@@ -1,88 +1,88 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .sub {
-    border-radius: 4px;
-    background: rgba(0, 0, 0, 0.04);
-    padding: .5rem .7rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.04);
+  padding: 0.5rem 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .sub span {
-    color: rgba(0, 0, 0, 0.80);
-    font-family: Manrope;
-    font-size: .85rem;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
+  color: rgba(0, 0, 0, 0.8);
+  font-family: Manrope;
+  font-size: 0.85rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
 }
 
 .sub p {
-    margin-bottom: 0;
-    color: #000;
-    font-family: Manrope;
-    font-size: 1.1rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: -1.26px;
+  margin-bottom: 0;
+  color: #000;
+  font-family: Manrope;
+  font-size: 1.1rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -1.26px;
 }
 
 @media screen and (max-width: 1000px) {
-    .container {
-        gap: .5rem;
-        flex-direction: column-reverse;
-        min-width: 30vw;
-    }
+  .container {
+    gap: 0.5rem;
+    flex-direction: column-reverse;
+    min-width: 30vw;
+  }
 
-    .sub {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: .5rem;
-    }
+  .sub {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
 
-    .sub:nth-child(1) span {
-        color: #FF0004;
-        leading-trim: both;
+  .sub:nth-child(1) span {
+    color: #ff0004;
+    leading-trim: both;
 
-        text-edge: cap;
-        font-family: Manrope;
-        font-size: .7rem;
-        font-style: normal;
-        font-weight: 600;
-        line-height: normal;
-        letter-spacing: -0.24px;
-        white-space: nowrap;
-    }
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 0.7rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.24px;
+    white-space: nowrap;
+  }
 
-    .sub:nth-child(2) span {
-        color: #5BA412;
-        leading-trim: both;
-        text-edge: cap;
-        font-family: Manrope;
-        font-size: .7rem;
-        font-style: normal;
-        font-weight: 600;
-        line-height: normal;
-        letter-spacing: -0.24px;
-        white-space: nowrap;
-    }
+  .sub:nth-child(2) span {
+    color: #5ba412;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 0.7rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.24px;
+    white-space: nowrap;
+  }
 
-    .sub p {
-        color: #000;
-        white-space: nowrap;
-        leading-trim: both;
-        text-edge: cap;
-        font-family: Manrope;
-        font-size: 1rem;
-        font-style: normal;
-        font-weight: 700;
-        line-height: normal;
-        letter-spacing: -0.36px;
-    }
+  .sub p {
+    color: #000;
+    white-space: nowrap;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.36px;
+  }
 }

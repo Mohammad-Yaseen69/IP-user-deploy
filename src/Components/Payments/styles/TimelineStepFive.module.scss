@@ -1,66 +1,66 @@
 .container {
-    padding: 1rem;
+  padding: 1rem;
 
-    &>* {
-        margin: 0;
-        padding: 0;
+  & > * {
+    margin: 0;
+    padding: 0;
+  }
+
+  .top {
+    height: 80px;
+    width: 80px;
+    background: linear-gradient(to right bottom, #e64067, #5926f0, #4828a0);
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 1rem;
+    text-align: center;
+  }
+
+  .details {
+    border-top: 1px solid rgba(128, 128, 128, 0.2);
+    width: 50%;
+    overflow-x: auto;
+    margin: auto;
+
+    .item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      p {
+        font-weight: 600;
+      }
     }
+  }
 
-    .top {
-        height: 80px;
-        width: 80px;
-        background: linear-gradient(to right bottom, #e64067, #5926f0, #4828a0);
-        border-radius: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0 auto 1rem;
-        text-align: center;
-    }
-
-    .details {
-        border-top: 1px solid rgba(128, 128, 128, 0.2);
-        width: 50%;
-        overflow-x: auto;
-        margin: auto;
-
-        .item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            p {
-                font-weight: 600;
-            }
-        }
-    }
-
-    .bottom {
-        display: flex;
-        justify-content: flex-end;
-        margin-top: 2rem;
-    }
+  .bottom {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2rem;
+  }
 }
 
 @media screen and (max-width: 760px) {
-    .container {
-        .details {
-            width: 100%;
-        }
+  .container {
+    .details {
+      width: 100%;
     }
+  }
 }
 
 @media screen and (max-width: 400px) {
-    .container {
-        .details {
-            .item {
-                gap: .5rem;
+  .container {
+    .details {
+      .item {
+        gap: 0.5rem;
 
-                p {
-                    padding: 0;
-                    margin: 0;
-                }
-            }
+        p {
+          padding: 0;
+          margin: 0;
         }
+      }
     }
+  }
 }

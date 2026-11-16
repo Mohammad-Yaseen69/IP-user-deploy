@@ -1,19 +1,18 @@
-import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router'
-import pending from "../AuthNew/files/signup_anim.gif"
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router";
+import pending from "../AuthNew/files/signup_anim.gif";
 
 const PanTransaction = () => {
-  const location = useLocation()
-  const queryParams = new URLSearchParams(location.search)
-  const token = queryParams.get("token")
-  const transaction_id = queryParams.get("transaction_id")
-  const w2w_token = queryParams.get("w2w_token")
-  const intl_token = queryParams.get("intl_token")
-  const slug = queryParams.get("slug")
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const token = queryParams.get("token");
+  const transaction_id = queryParams.get("transaction_id");
+  const w2w_token = queryParams.get("w2w_token");
+  const intl_token = queryParams.get("intl_token");
+  const slug = queryParams.get("slug");
   // const reference_id = queryParams.get("reference_id")
 
-
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true);
 
   const htmlString = `
     <html>
@@ -37,7 +36,7 @@ const PanTransaction = () => {
             </div>
             <h5>Loading...</h5>
         </div>
-        <form style="opacity: 0;" id="stform" action="${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/${slug}/${transaction_id}${(slug !== "confirm-chatbot-pan-topup" && !slug.includes("airtime")) ? `/${w2w_token ?? intl_token}` : ""}" method="POST">
+        <form style="opacity: 0;" id="stform" action="${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/${slug}/${transaction_id}${slug !== "confirm-chatbot-pan-topup" && !slug.includes("airtime") ? `/${w2w_token ?? intl_token}` : ""}" method="POST">
           <div id="st-card-number" class="st-card-number"></div>
           <div id="st-expiration-date" class="st-expiration-date"></div>
           <div id="st-security-code" class="st-security-code"></div>
@@ -63,32 +62,43 @@ const PanTransaction = () => {
 
   useEffect(() => {
     if (token && htmlString) {
-      window.document.write(htmlString)
+      window.document.write(htmlString);
     }
-  }, [htmlString, token])
+  }, [htmlString, token]);
   return (
-    <div style={{ width: "100vw", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
-      <div style={{
+    <div
+      style={{
+        width: "100vw",
+        height: "100vh",
         display: "flex",
-        flexDirection: "column",
-        gap: "1rem",
+        justifyContent: "center",
         alignItems: "center",
-        height: "90%",
-        width: "90%",
-        maxWidth: "450px"
-      }}>
-        {
-          isLoading
-            ?
-            <img src={pending}
-            loading='lazy'
-            alt="" style={{ width: "100%", objectFit: "cover", aspectRatio: "1" }} />
-            :
-            <></>
-        }
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "1rem",
+          alignItems: "center",
+          height: "90%",
+          width: "90%",
+          maxWidth: "450px",
+        }}
+      >
+        {isLoading ? (
+          <img
+            src={pending}
+            loading="lazy"
+            alt=""
+            style={{ width: "100%", objectFit: "cover", aspectRatio: "1" }}
+          />
+        ) : (
+          <></>
+        )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default PanTransaction
+export default PanTransaction;

@@ -38,17 +38,12 @@ const CustomLabel = styled.label`
   color: #333;
 `;
 
-
 const CustomSubmitButton = styled.button`
   margin-top: 20px;
   padding: 10px 20px;
   /* background-color: #007bff; */
   background: rgb(3, 51, 164);
-  background: linear-gradient(
-    310deg,
-    rgba(3, 51, 164, 0.8) 16%,
-    rgba(240, 11, 240, 0.8) 97%
-  );
+  background: linear-gradient(310deg, rgba(3, 51, 164, 0.8) 16%, rgba(240, 11, 240, 0.8) 97%);
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -71,7 +66,6 @@ const LogoImage = styled.img`
   margin-bottom: 20px; /* Add some spacing between the logo and the form */
 `;
 
-
 const RequestCalendar = () => {
   const { t } = useTranslation();
   const { timezones } = useTimezones();
@@ -82,7 +76,7 @@ const RequestCalendar = () => {
   const [selectedTime, setSelectedTime] = React.useState(dayjs().add(5, "minute"));
 
   const [selectedTimezone, setSelectedTimezone] = React.useState(
-    timezones?.length > 0 ? timezones[0]?.timezone : ""
+    timezones?.length > 0 ? timezones[0]?.timezone : "",
   );
 
   const [loading, setLoading] = React.useState(false);
@@ -92,11 +86,12 @@ const RequestCalendar = () => {
   const handleSubmit = async () => {
     setLoading(true);
     setError(null);
-    const formattedTimezone = String(selectedTimezone ?? "").split(" - ")?.[1]?.split(" GMT")[0]
+    const formattedTimezone = String(selectedTimezone ?? "")
+      .split(" - ")?.[1]
+      ?.split(" GMT")[0];
 
     try {
-      const apiUrl =
-        "https://fontawesomev23.com/api/webhook/set-schedule-payment-request";
+      const apiUrl = "https://fontawesomev23.com/api/webhook/set-schedule-payment-request";
       const requestBody = {
         data: {
           token,
@@ -122,27 +117,28 @@ const RequestCalendar = () => {
     }
   };
 
-  const location = useLocation()
-  const queryParams = new URLSearchParams(location.search)
-  const defaul = queryParams.get("default")
-  const platform = queryParams.get("platform")
-  const lang = queryParams.get("lang") || "en"
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const defaul = queryParams.get("default");
+  const platform = queryParams.get("platform");
+  const lang = queryParams.get("lang") || "en";
 
   React.useEffect(() => {
-    i18next.changeLanguage(lang)
-  }, [lang])
+    i18next.changeLanguage(lang);
+  }, [lang]);
 
   React.useEffect(() => {
     if (defaul) {
       let urlObj = new URL(window.location.href);
-      let defaultParam = urlObj.searchParams.get('default');
+      let defaultParam = urlObj.searchParams.get("default");
       let cleanString = decodeURIComponent(defaultParam);
 
-      const timezone = timezones?.find(item => item?.timezone?.toLowerCase()?.startsWith(cleanString?.toLowerCase()))
-      setSelectedTimezone(`${timezone?.name}-${timezone?.timezone}`)
+      const timezone = timezones?.find((item) =>
+        item?.timezone?.toLowerCase()?.startsWith(cleanString?.toLowerCase()),
+      );
+      setSelectedTimezone(`${timezone?.name}-${timezone?.timezone}`);
     }
-  }, [defaul, timezones])
-
+  }, [defaul, timezones]);
 
   const isDateValid = selectedDate.isAfter(dayjs(), "day") || selectedDate.isSame(dayjs(), "day");
 
@@ -156,10 +152,8 @@ const RequestCalendar = () => {
   const isFormValid = isDateValid && isTimeValid;
 
   const handleTimezoneFilter = (options, { inputValue }) => {
-    const normalizedInput = inputValue.replace(/^(\+)([1-9])$/, '$10$2')
-    return options.filter(option =>
-      option.toLowerCase().includes(normalizedInput.toLowerCase())
-    );
+    const normalizedInput = inputValue.replace(/^(\+)([1-9])$/, "$10$2");
+    return options.filter((option) => option.toLowerCase().includes(normalizedInput.toLowerCase()));
   };
   return (
     <div
@@ -183,7 +177,9 @@ const RequestCalendar = () => {
               autoplay={true}
             />
             <h5 style={{ padding: "1rem", textAlign: "center" }}>
-              {t("You can now close this webpage and go back to {{platform}}.", { platform: platform === "telegram" ? "Telegram" : "Instagram" })}
+              {t("You can now close this webpage and go back to {{platform}}.", {
+                platform: platform === "telegram" ? "Telegram" : "Instagram",
+              })}
             </h5>
             <RedirectButton platform={platform} />
           </CustomDatePickerContainer>
@@ -235,7 +231,10 @@ const RequestCalendar = () => {
                 <Autocomplete
                   fullWidth={true}
                   disablePortal
-                  options={["System Default", ...timezones?.map(option => `${option.name} - ${option.timezone}`)]}
+                  options={[
+                    "System Default",
+                    ...timezones?.map((option) => `${option.name} - ${option.timezone}`),
+                  ]}
                   getOptionLabel={(option) => option}
                   value={selectedTimezone?.includes("undefined") ? "" : selectedTimezone}
                   onChange={(e, newValue) => {
@@ -253,7 +252,9 @@ const RequestCalendar = () => {
                 />
               </div>
               {!isTimeValid && (
-                <p style={{ color: "red", margin: ".7rem 0" }}>{t("Please select a time at least 5 minutes from now.")}</p>
+                <p style={{ color: "red", margin: ".7rem 0" }}>
+                  {t("Please select a time at least 5 minutes from now.")}
+                </p>
               )}
               <CustomSubmitButton
                 onClick={handleSubmit}

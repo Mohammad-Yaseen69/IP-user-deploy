@@ -1,13 +1,12 @@
 @import "variables";
 
 .br-theme-bootstrap-stars {
-
   .br-widget {
     height: 28px;
     white-space: nowrap;
-  
+
     a {
-      font: normal normal normal 18px/1 'Glyphicons Halflings';
+      font: normal normal normal 18px/1 "Glyphicons Halflings";
       text-rendering: auto;
       -webkit-font-smoothing: antialiased;
       text-decoration: none;
@@ -15,7 +14,7 @@
     }
 
     a:after {
-      content: '\e006';
+      content: "\e006";
       color: $star-default;
     }
 
@@ -37,24 +36,21 @@
       cursor: default;
     }
   }
-
 }
 
 @media print {
   .br-theme-bootstrap-stars {
-
     .br-widget {
       a:after {
-        content: '\e007';
+        content: "\e007";
         color: black;
       }
 
       a.br-active:after,
       a.br-selected:after {
-        content: '\e006';
+        content: "\e006";
         color: black;
       }
     }
-
   }
 }

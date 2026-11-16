@@ -7,8 +7,18 @@ import { ChevronDown } from "react-feather";
 import { useTranslation } from "react-i18next";
 
 const ushareCountries = [
-  "FRA", "GLP", "MTQ", "REU", "GUF", "MYT",
-  "PYF", "MAF", "BLM", "SPM", "WLF", "NCL"
+  "FRA",
+  "GLP",
+  "MTQ",
+  "REU",
+  "GUF",
+  "MYT",
+  "PYF",
+  "MAF",
+  "BLM",
+  "SPM",
+  "WLF",
+  "NCL",
 ];
 
 const Country = ({ data, dataHandler, username }) => {
@@ -21,15 +31,15 @@ const Country = ({ data, dataHandler, username }) => {
 
   // Step 1: Base filtered countries based on allowedCountries & username
   const countries = useMemo(() => {
-    const base = allCountries.filter(item =>
-      allowedCountries?.some(it => it?.country_iso_code === item.alpha3)
+    const base = allCountries.filter((item) =>
+      allowedCountries?.some((it) => it?.country_iso_code === item.alpha3),
     );
 
     if (username === "spmfrance") {
-      return base.filter(c => ushareCountries.includes(c.alpha3));
+      return base.filter((c) => ushareCountries.includes(c.alpha3));
     }
     if (username === "usharellc") {
-      return base.filter(c => !ushareCountries.includes(c.alpha3));
+      return base.filter((c) => !ushareCountries.includes(c.alpha3));
     }
 
     return base;
@@ -40,14 +50,12 @@ const Country = ({ data, dataHandler, username }) => {
     let list = countries;
 
     if (search) {
-      list = countries.filter(item =>
-        item.name.toLowerCase().includes(search.toLowerCase())
-      );
+      list = countries.filter((item) => item.name.toLowerCase().includes(search.toLowerCase()));
     }
 
     // Only include IP country if it exists in filtered list
-    if (ipCountry && list.some(c => c.alpha3 === ipCountry.alpha3)) {
-      list = [ipCountry, ...list.filter(c => c.alpha3 !== ipCountry.alpha3)];
+    if (ipCountry && list.some((c) => c.alpha3 === ipCountry.alpha3)) {
+      list = [ipCountry, ...list.filter((c) => c.alpha3 !== ipCountry.alpha3)];
     }
 
     return list;
@@ -60,12 +68,12 @@ const Country = ({ data, dataHandler, username }) => {
       const dataGeo = await res.json();
 
       const ipIso = allowedCountries.find(
-        it => it.country_name.toLowerCase() === dataGeo?.country_name?.toLowerCase()
+        (it) => it.country_name.toLowerCase() === dataGeo?.country_name?.toLowerCase(),
       )?.country_iso_code;
 
       if (ipIso) {
         localStorage.setItem("ip_country", ipIso);
-        const coun = countries.find(item => item.alpha3 === ipIso);
+        const coun = countries.find((item) => item.alpha3 === ipIso);
         if (coun) setIpCountry(coun);
       }
     } catch (err) {
@@ -76,14 +84,14 @@ const Country = ({ data, dataHandler, username }) => {
   useEffect(() => {
     const alpha3 = localStorage.getItem("ip_country");
     if (alpha3) {
-      const coun = countries.find(item => item.alpha3 === alpha3);
+      const coun = countries.find((item) => item.alpha3 === alpha3);
       if (coun) setIpCountry(coun);
     } else {
       getCountry();
     }
   }, [countries]);
 
-  console.log(data.country)
+  console.log(data.country);
   return (
     <>
       <div
@@ -91,7 +99,7 @@ const Country = ({ data, dataHandler, username }) => {
         onClick={() => setShowList(true)}
         className={styles.selectFromList}
       >
-        {(typeof data.country === "object" && Object.keys(data.country).length > 0) ? (
+        {typeof data.country === "object" && Object.keys(data.country).length > 0 ? (
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <img src={data?.country?.file_url} alt="" />
             <h3>{data?.country?.name}</h3>
@@ -109,12 +117,12 @@ const Country = ({ data, dataHandler, username }) => {
             type="text"
             placeholder={t("Search")}
             value={search}
-            onChange={e => setSearch(e.target.value)}
+            onChange={(e) => setSearch(e.target.value)}
           />
         </div>
         <div className={styles.list}>
           {filtered.length > 0 ? (
-            filtered.map(item => (
+            filtered.map((item) => (
               <div
                 key={item?.alpha3}
                 className={`${styles.item} ${data?.country?.alpha3 === item?.alpha3 ? styles.active : ""}`}

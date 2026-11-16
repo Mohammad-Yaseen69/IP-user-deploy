@@ -1,112 +1,148 @@
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
-import QRCodeStyling from 'qr-code-styling';
-import logoImg from '../../../assets/images/logo/logo2.webp';
-import signatureImg from './signatur.png';
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+import QRCodeStyling from "qr-code-styling";
+import logoImg from "../../../assets/images/logo/logo2.webp";
+import signatureImg from "./signatur.png";
 
 const formatDate = (value, options = {}) => {
-    if (!value) return new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric', ...options });
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return '-';
-    return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric', ...options });
+  if (!value)
+    return new Date().toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+      ...options,
+    });
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "-";
+  return date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    ...options,
+  });
 };
 
 const toBase64 = (src) =>
-    new Promise((resolve, reject) => {
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = () => {
-            const c = document.createElement('canvas');
-            c.width = img.naturalWidth;
-            c.height = img.naturalHeight;
-            c.getContext('2d').drawImage(img, 0, 0);
-            resolve(c.toDataURL('image/png'));
-        };
-        img.onerror = () => reject(new Error('Image load failed'));
-        img.src = src;
-    });
+  new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      const c = document.createElement("canvas");
+      c.width = img.naturalWidth;
+      c.height = img.naturalHeight;
+      c.getContext("2d").drawImage(img, 0, 0);
+      resolve(c.toDataURL("image/png"));
+    };
+    img.onerror = () => reject(new Error("Image load failed"));
+    img.src = src;
+  });
 
 const generateQrBase64 = async (url) => {
-    try {
-        const qr = new QRCodeStyling({
-            width: 280,
-            height: 280,
-            data: url,
-            qrOptions: { typeNumber: '0', mode: 'Byte', errorCorrectionLevel: 'Q' },
-            image: logoImg,
-            imageOptions: { hideBackgroundDots: true, imageSize: 0.2, margin: 6 },
-            dotsOptions: {
-                type: 'extra-rounded',
-                color: '#45159C',
-                gradient: {
-                    type: 'linear',
-                    rotation: 0.314159,
-                    colorStops: [
-                        { offset: 0, color: '#5626E6' },
-                        { offset: 1, color: '#3A0B99' },
-                    ],
-                },
-            },
-            backgroundOptions: { color: '#ffffff' },
-        });
-        const blob = await qr.getRawData('png');
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result);
-            reader.readAsDataURL(blob);
-        });
-    } catch (e) {
-        console.warn('QR Code generation failed, fallback to plain QR', e);
-        return null;
-    }
+  try {
+    const qr = new QRCodeStyling({
+      width: 280,
+      height: 280,
+      data: url,
+      qrOptions: { typeNumber: "0", mode: "Byte", errorCorrectionLevel: "Q" },
+      image: logoImg,
+      imageOptions: { hideBackgroundDots: true, imageSize: 0.2, margin: 6 },
+      dotsOptions: {
+        type: "extra-rounded",
+        color: "#45159C",
+        gradient: {
+          type: "linear",
+          rotation: 0.314159,
+          colorStops: [
+            { offset: 0, color: "#5626E6" },
+            { offset: 1, color: "#3A0B99" },
+          ],
+        },
+      },
+      backgroundOptions: { color: "#ffffff" },
+    });
+    const blob = await qr.getRawData("png");
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.readAsDataURL(blob);
+    });
+  } catch (e) {
+    console.warn("QR Code generation failed, fallback to plain QR", e);
+    return null;
+  }
 };
 
-const getSafeString = (val, fallback = '') => {
-    if (!val) return fallback;
-    if (typeof val === 'string' || typeof val === 'number') return String(val);
-    if (typeof val === 'object') {
-        return val.country_name || val.name || val.title || val.label || fallback;
-    }
-    return fallback;
+const getSafeString = (val, fallback = "") => {
+  if (!val) return fallback;
+  if (typeof val === "string" || typeof val === "number") return String(val);
+  if (typeof val === "object") {
+    return val.country_name || val.name || val.title || val.label || fallback;
+  }
+  return fallback;
 };
 
-const buildLetterHtml = ({ logoBase64, qrBase64, signatureBase64, iban, userDetails, displayUrl }) => {
-    const holderName = getSafeString(iban?.account_holder_name, 'HEAVYMORE LTD');
-    const holderType = getSafeString(userDetails?.account_type, '---');
-    const companyType = getSafeString(userDetails?.category?.name, '---');
-    const jurisdiction = getSafeString(userDetails?.country?.country_name, 'Cyprus');
-    const incDate = userDetails?.company?.date_of_incorporation ? formatDate(userDetails?.company?.date_of_incorporation) : (userDetails?.dob ? formatDate(userDetails.dob) : '24 November 2020');
-    const regAddress = getSafeString(userDetails?.address, 'Solonos 7, Kolossi, 4632, Limassol, Cyprus');
-    const orgNumber = getSafeString(userDetails?.company?.registration_number || userDetails?.company?.tax_id, '---');
-    const virtualIbanId = getSafeString(iban?.virtualIbanId || iban?._id || iban?.id, '');
-    const customerId = virtualIbanId
+const buildLetterHtml = ({
+  logoBase64,
+  qrBase64,
+  signatureBase64,
+  iban,
+  userDetails,
+  displayUrl,
+}) => {
+  const holderName = getSafeString(iban?.account_holder_name, "HEAVYMORE LTD");
+  const holderType = getSafeString(userDetails?.account_type, "---");
+  const companyType = getSafeString(userDetails?.category?.name, "---");
+  const jurisdiction = getSafeString(userDetails?.country?.country_name, "Cyprus");
+  const incDate = userDetails?.company?.date_of_incorporation
+    ? formatDate(userDetails?.company?.date_of_incorporation)
+    : userDetails?.dob
+      ? formatDate(userDetails.dob)
+      : "24 November 2020";
+  const regAddress = getSafeString(
+    userDetails?.address,
+    "Solonos 7, Kolossi, 4632, Limassol, Cyprus",
+  );
+  const orgNumber = getSafeString(
+    userDetails?.company?.registration_number || userDetails?.company?.tax_id,
+    "---",
+  );
+  const virtualIbanId = getSafeString(iban?.virtualIbanId || iban?._id || iban?.id, "");
+  const customerId = virtualIbanId;
 
-    const ibanNumber = getSafeString(iban?.iban, 'MT17 SYPL 3948 0354 2000 1814 7054 916');
-    const bic = getSafeString(iban?.bank?.bic || iban?.swift_code || iban?.bic, 'SYPLMTM2');
-    const currency = getSafeString(iban?.currency, 'EUR');
-    const currencyLabel = currency === 'EUR' ? 'EUR (Euro)' : currency;
-    const status = getSafeString(iban?.status, 'Active');
-    const statusNormalized = String(status).charAt(0).toUpperCase() + String(status).slice(1).toLowerCase();
-    const accountOpenedDate = iban?.createdAt ? formatDate(iban.createdAt, { day: '2-digit', month: '2-digit', year: 'numeric' }) : '15/06/2026';
+  const ibanNumber = getSafeString(iban?.iban, "MT17 SYPL 3948 0354 2000 1814 7054 916");
+  const bic = getSafeString(iban?.bank?.bic || iban?.swift_code || iban?.bic, "SYPLMTM2");
+  const currency = getSafeString(iban?.currency, "EUR");
+  const currencyLabel = currency === "EUR" ? "EUR (Euro)" : currency;
+  const status = getSafeString(iban?.status, "Active");
+  const statusNormalized =
+    String(status).charAt(0).toUpperCase() + String(status).slice(1).toLowerCase();
+  const accountOpenedDate = iban?.createdAt
+    ? formatDate(iban.createdAt, {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      })
+    : "15/06/2026";
 
-    const todayDate = formatDate(new Date());
-    const refCode = `ICL-${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}${String(new Date().getDate()).padStart(2, '0')}-${customerId.slice(-4)}`;
+  const todayDate = formatDate(new Date());
+  const refCode = `ICL-${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}${String(new Date().getDate()).padStart(2, "0")}-${customerId.slice(-4)}`;
 
-    const renderTableRow = (label, value, isLast = false, isStatus = false, isMono = false) => `
-        <tr style="border-bottom: ${isLast ? 'none' : '1px solid #E6E2F5'};">
+  const renderTableRow = (label, value, isLast = false, isStatus = false, isMono = false) => `
+        <tr style="border-bottom: ${isLast ? "none" : "1px solid #E6E2F5"};">
             <td style="padding: 11px 20px; color: #55506B; font-size: 13.5px; font-weight: 500; width: 44%; vertical-align: middle;">
                 ${label}
             </td>
-            <td style="padding: 11px 20px; color: #1A1826; font-size: 13.5px; font-weight: 600; vertical-align: middle; line-height: 1.45; ${isMono ? "font-family: 'SF Mono', 'Consolas', monospace;" : ''}">
-                ${isStatus
-            ? `<span style="display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; background: #DCFCE7; color: #15803D;">${value}</span>`
-            : (value || '-')
-        }
+            <td style="padding: 11px 20px; color: #1A1826; font-size: 13.5px; font-weight: 600; vertical-align: middle; line-height: 1.45; ${isMono ? "font-family: 'SF Mono', 'Consolas', monospace;" : ""}">
+                ${
+                  isStatus
+                    ? `<span style="display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; background: #DCFCE7; color: #15803D;">${value}</span>`
+                    : value || "-"
+                }
             </td>
         </tr>
     `;
 
-    return `
+  return `
     <div id="iban-letter" style="
         width: 794px;
         background: #ffffff;
@@ -120,10 +156,11 @@ const buildLetterHtml = ({ logoBase64, qrBase64, signatureBase64, iban, userDeta
         <!-- ═══ TOP HEADER ═══ -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px;">
             <div style="display: flex; align-items: center;">
-                ${logoBase64
-            ? `<img src="${logoBase64}" style="height: 30px; width: auto;" />`
-            : `<span style="font-size: 24px; font-weight: 800; color: #5626E6;">InstaPay</span>`
-        }
+                ${
+                  logoBase64
+                    ? `<img src="${logoBase64}" style="height: 30px; width: auto;" />`
+                    : `<span style="font-size: 24px; font-weight: 800; color: #5626E6;">InstaPay</span>`
+                }
             </div>
             <div style="
                 font-size: 11.5px;
@@ -177,14 +214,14 @@ const buildLetterHtml = ({ logoBase64, qrBase64, signatureBase64, iban, userDeta
             </div>
             <table style="width: 100%; border-collapse: collapse; background: #ffffff;">
                 <tbody>
-                    ${renderTableRow('Full legal name', holderName)}
-                    ${renderTableRow('Holder type', holderType)}
-                    ${holderType === 'business' ? renderTableRow('Company type', companyType) : ''}
-                    ${renderTableRow('Registration / Incorporation jurisdiction', jurisdiction)}
-                    ${holderType === 'business' ? renderTableRow('Incorporation date', incDate) : renderTableRow('Date of birth', incDate)}
-                    ${renderTableRow('Registered address', regAddress)}
-                    ${renderTableRow('Organisation / Registration number', orgNumber)}
-                    ${renderTableRow('Customer ID', customerId, true)}
+                    ${renderTableRow("Full legal name", holderName)}
+                    ${renderTableRow("Holder type", holderType)}
+                    ${holderType === "business" ? renderTableRow("Company type", companyType) : ""}
+                    ${renderTableRow("Registration / Incorporation jurisdiction", jurisdiction)}
+                    ${holderType === "business" ? renderTableRow("Incorporation date", incDate) : renderTableRow("Date of birth", incDate)}
+                    ${renderTableRow("Registered address", regAddress)}
+                    ${renderTableRow("Organisation / Registration number", orgNumber)}
+                    ${renderTableRow("Customer ID", customerId, true)}
                 </tbody>
             </table>
         </div>
@@ -198,13 +235,13 @@ const buildLetterHtml = ({ logoBase64, qrBase64, signatureBase64, iban, userDeta
             </div>
             <table style="width: 100%; border-collapse: collapse; background: #ffffff;">
                 <tbody>
-                    ${renderTableRow('Account name', holderName)}
-                    ${renderTableRow('IBAN / Account number', ibanNumber, false, false, true)}
-                    ${renderTableRow('BIC / SWIFT', bic, false, false, true)}
-                    ${renderTableRow('Account currency', currencyLabel)}
-                    ${renderTableRow('Account type', 'E-money payment account (virtual IBAN)')}
-                    ${renderTableRow('Account status', statusNormalized, false, true)}
-                    ${renderTableRow('Account opened', accountOpenedDate, true)}
+                    ${renderTableRow("Account name", holderName)}
+                    ${renderTableRow("IBAN / Account number", ibanNumber, false, false, true)}
+                    ${renderTableRow("BIC / SWIFT", bic, false, false, true)}
+                    ${renderTableRow("Account currency", currencyLabel)}
+                    ${renderTableRow("Account type", "E-money payment account (virtual IBAN)")}
+                    ${renderTableRow("Account status", statusNormalized, false, true)}
+                    ${renderTableRow("Account opened", accountOpenedDate, true)}
                 </tbody>
             </table>
         </div>
@@ -230,11 +267,11 @@ const buildLetterHtml = ({ logoBase64, qrBase64, signatureBase64, iban, userDeta
             </div>
             <table style="width: 100%; border-collapse: collapse; background: #ffffff;">
                 <tbody>
-                    ${renderTableRow('Programme operator (brand)', 'Kemit Kingdom SA (K2 SA), trading as InstaPay · Route des Falaises 7, 2000 Neuchâtel, Switzerland · Reg. No 1238')}
-                    ${renderTableRow('Account issued by', 'System Pay Services (Malta) Limited')}
-                    ${renderTableRow('Regulated by', 'Malta Financial Services Authority (MFSA)')}
-                    ${renderTableRow('Authorisation', 'Financial Institution / EMI licence - C 000000')}
-                    ${renderTableRow('Client-fund protection', '100% of client e-money is safeguarded in segregated accounts, held separately from the institution\'s own funds.', true)}
+                    ${renderTableRow("Programme operator (brand)", "Kemit Kingdom SA (K2 SA), trading as InstaPay · Route des Falaises 7, 2000 Neuchâtel, Switzerland · Reg. No 1238")}
+                    ${renderTableRow("Account issued by", "System Pay Services (Malta) Limited")}
+                    ${renderTableRow("Regulated by", "Malta Financial Services Authority (MFSA)")}
+                    ${renderTableRow("Authorisation", "Financial Institution / EMI licence - C 000000")}
+                    ${renderTableRow("Client-fund protection", "100% of client e-money is safeguarded in segregated accounts, held separately from the institution's own funds.", true)}
                 </tbody>
             </table>
         </div>
@@ -253,10 +290,11 @@ const buildLetterHtml = ({ logoBase64, qrBase64, signatureBase64, iban, userDeta
                 <div style="font-size: 14px; font-weight: 700; color: #1A1826; margin-bottom: 4px;">
                     InstaPay Operations
                 </div>
-                ${signatureBase64
-            ? `<div style="height: 44px; display: flex; align-items: center; margin-bottom: 6px;"><img src="${signatureBase64}" style="max-height: 42px; max-width: 150px; width: auto; object-fit: contain;" /></div>`
-            : ''
-        }
+                ${
+                  signatureBase64
+                    ? `<div style="height: 44px; display: flex; align-items: center; margin-bottom: 6px;"><img src="${signatureBase64}" style="max-height: 42px; max-width: 150px; width: auto; object-fit: contain;" /></div>`
+                    : ""
+                }
                 <div style="font-size: 13px; color: #55506B; line-height: 1.5; font-weight: 400;">
                     Authorised signatory · Client Operations &amp; Compliance<br />
                     InstaPay, a brand of Kemit Kingdom - K2 - SA, Route des Falaises 7, 2000 Neuchâtel, Switzerland<br />
@@ -280,10 +318,11 @@ const buildLetterHtml = ({ logoBase64, qrBase64, signatureBase64, iban, userDeta
                     padding: 4px;
                     box-sizing: border-box;
                 ">
-                    ${qrBase64
-            ? `<img src="${qrBase64}" style="width: 110px; height: 110px; border-radius: 4px;" />`
-            : `<div style="font-size: 10px; color: #98A2B3;">QR Code</div>`
-        }
+                    ${
+                      qrBase64
+                        ? `<img src="${qrBase64}" style="width: 110px; height: 110px; border-radius: 4px;" />`
+                        : `<div style="font-size: 10px; color: #98A2B3;">QR Code</div>`
+                    }
                 </div>
                 <div style="font-size: 10px; color: #55506B; margin-top: 6px; font-weight: 500;">
                     SCAN OR VISIT TO VERIFY
@@ -328,76 +367,85 @@ const buildLetterHtml = ({ logoBase64, qrBase64, signatureBase64, iban, userDeta
 };
 
 const generateIbanLetterPdf = async (iban, userDetails = {}, options = {}) => {
-    const virtualIbanId = iban?.virtualIbanId || iban?._id || iban?.id || '';
-    const origin = window.location.origin || 'https://my.insta-pay.ch';
-    const cleanHost = origin.replace(/^https?:\/\//, '');
-    const qrUrl = `${origin}/v/${virtualIbanId}`;
-    const displayUrl = `${cleanHost}/v/${virtualIbanId}`;
+  const virtualIbanId = iban?.virtualIbanId || iban?._id || iban?.id || "";
+  const origin = window.location.origin || "https://my.insta-pay.ch";
+  const cleanHost = origin.replace(/^https?:\/\//, "");
+  const qrUrl = `${origin}/v/${virtualIbanId}`;
+  const displayUrl = `${cleanHost}/v/${virtualIbanId}`;
 
-    const [logoBase64, qrBase64, signatureBase64] = await Promise.allSettled([
-        toBase64(logoImg),
-        generateQrBase64(qrUrl),
-        toBase64(signatureImg),
-    ]).then((results) =>
-        results.map((r) => (r.status === 'fulfilled' ? r.value : null))
-    );
+  const [logoBase64, qrBase64, signatureBase64] = await Promise.allSettled([
+    toBase64(logoImg),
+    generateQrBase64(qrUrl),
+    toBase64(signatureImg),
+  ]).then((results) => results.map((r) => (r.status === "fulfilled" ? r.value : null)));
 
-    const html = buildLetterHtml({ logoBase64, qrBase64, signatureBase64, iban, userDetails, displayUrl });
+  const html = buildLetterHtml({
+    logoBase64,
+    qrBase64,
+    signatureBase64,
+    iban,
+    userDetails,
+    displayUrl,
+  });
 
-    const wrapper = document.createElement('div');
-    wrapper.style.cssText = 'position:absolute;left:-9999px;top:0;z-index:-1;width:794px;';
-    wrapper.innerHTML = html;
-    document.body.appendChild(wrapper);
+  const wrapper = document.createElement("div");
+  wrapper.style.cssText = "position:absolute;left:-9999px;top:0;z-index:-1;width:794px;";
+  wrapper.innerHTML = html;
+  document.body.appendChild(wrapper);
 
-    const target = wrapper.querySelector('#iban-letter');
+  const target = wrapper.querySelector("#iban-letter");
 
-    try {
-        const canvas = await html2canvas(target, {
-            scale: 2,
-            useCORS: true,
-            allowTaint: true,
-            logging: false,
-            backgroundColor: '#ffffff',
-            width: 794,
-            windowWidth: 794,
-        });
+  try {
+    const canvas = await html2canvas(target, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      logging: false,
+      backgroundColor: "#ffffff",
+      width: 794,
+      windowWidth: 794,
+    });
 
-        const imgData = canvas.toDataURL('image/jpeg', 0.92);
-        const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
-        const pdfWidth = 210;
-        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    const imgData = canvas.toDataURL("image/jpeg", 0.92);
+    const doc = new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4",
+      compress: true,
+    });
+    const pdfWidth = 210;
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-        if (pdfHeight <= 297) {
-            doc.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
-        } else {
-            let heightLeft = pdfHeight;
-            let position = 0;
-            const pageHeight = 297;
+    if (pdfHeight <= 297) {
+      doc.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight, undefined, "FAST");
+    } else {
+      let heightLeft = pdfHeight;
+      let position = 0;
+      const pageHeight = 297;
 
-            doc.addImage(imgData, 'JPEG', 0, position, pdfWidth, pdfHeight, undefined, 'FAST');
-            heightLeft -= pageHeight;
+      doc.addImage(imgData, "JPEG", 0, position, pdfWidth, pdfHeight, undefined, "FAST");
+      heightLeft -= pageHeight;
 
-            while (heightLeft > 0) {
-                position = heightLeft - pdfHeight;
-                doc.addPage();
-                doc.addImage(imgData, 'JPEG', 0, position, pdfWidth, pdfHeight, undefined, 'FAST');
-                heightLeft -= pageHeight;
-            }
-        }
-
-        if (options.isPreview) {
-            const blobUrl = doc.output('bloburl');
-            window.open(blobUrl, '_blank');
-        } else {
-            const fileName = `IBAN_Confirmation_Letter_${(iban?.iban || 'document').replace(/\s/g, '_')}.pdf`;
-            doc.save(fileName);
-        }
-    } finally {
-        if (document.body.contains(wrapper)) {
-            document.body.removeChild(wrapper);
-        }
+      while (heightLeft > 0) {
+        position = heightLeft - pdfHeight;
+        doc.addPage();
+        doc.addImage(imgData, "JPEG", 0, position, pdfWidth, pdfHeight, undefined, "FAST");
+        heightLeft -= pageHeight;
+      }
     }
+
+    if (options.isPreview) {
+      const blobUrl = doc.output("bloburl");
+      window.open(blobUrl, "_blank");
+    } else {
+      const fileName = `IBAN_Confirmation_Letter_${(iban?.iban || "document").replace(/\s/g, "_")}.pdf`;
+      doc.save(fileName);
+    }
+  } finally {
+    if (document.body.contains(wrapper)) {
+      document.body.removeChild(wrapper);
+    }
+  }
 };
 
 export default generateIbanLetterPdf;
-

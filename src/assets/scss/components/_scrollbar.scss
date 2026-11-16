@@ -22,10 +22,11 @@
     background: rgba($primary-color, 0.2);
   }
 }
-.horizontal-scroll{
+.horizontal-scroll {
   height: 440px;
 }
-.both-side-scroll, .vertical-scroll{
+.both-side-scroll,
+.vertical-scroll {
   height: 460px;
   overflow: hidden;
 }

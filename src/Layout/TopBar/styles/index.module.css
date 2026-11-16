@@ -1,69 +1,75 @@
-.header {}
+.header {
+}
 
 .top {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .profile {
-    display: flex;
-    align-items: center;
-    gap: .4rem;
-    border-radius: 20px;
-    background: #FAFAFA;
-    box-shadow: 0px 3.057px 7.642px 0px rgba(38, 51, 77, 0.03);
-    flex: 1;
-    max-width: 50%;
-    padding: .65rem;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 20px;
+  background: #fafafa;
+  box-shadow: 0px 3.057px 7.642px 0px rgba(38, 51, 77, 0.03);
+  flex: 1;
+  max-width: 50%;
+  padding: 0.65rem;
+  cursor: pointer;
 }
 
 .dp {
-    height: 2.5rem;
-    width: 2.5rem;
-    border-radius: 10px;
-    display: grid;
-    place-items: center;
-    background: linear-gradient(-24deg, rgb(210, 60, 122) 0%, rgb(164, 52, 167) 43.66%, rgb(88, 38, 239) 100%);
-    color: white;
-    font-size: 1rem;
-    font-weight: 800;
-    border: 2px solid #72C123;
-    padding: 2px;
+  height: 2.5rem;
+  width: 2.5rem;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(
+    -24deg,
+    rgb(210, 60, 122) 0%,
+    rgb(164, 52, 167) 43.66%,
+    rgb(88, 38, 239) 100%
+  );
+  color: white;
+  font-size: 1rem;
+  font-weight: 800;
+  border: 2px solid #72c123;
+  padding: 2px;
 }
 
 .profile img {
-    background: transparent;
+  background: transparent;
 }
 
 .profile p {
-    margin-bottom: 0px;
-    font-size: .8rem;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  margin-bottom: 0px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .profile p:nth-child(3) {
-    color: #cfcfcf;
-    min-width: 3ch;
+  color: #cfcfcf;
+  min-width: 3ch;
 }
 
 .right {
-    flex: 1;
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    align-items: center;
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  align-items: center;
 }
 
 @media screen and (max-width: 420px) {
-    .right {
-        gap: .5rem;
-    }
-    .dp {
-        flex-shrink: 0;
-    }
+  .right {
+    gap: 0.5rem;
+  }
+  .dp {
+    flex-shrink: 0;
+  }
 }

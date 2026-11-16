@@ -170,8 +170,9 @@ $i: normal, italic, oblique, initial, inherit;
 
 /*====== Font-style css ends ======*/
 /*====== Text-Decoration css starts ======*/
-$i: overline, line-through, underline, dashed, blink, dotted, initial, none,
-  solid, wavy, inherit, double;
+$i:
+  overline, line-through, underline, dashed, blink, dotted, initial, none, solid, wavy, inherit,
+  double;
 
 @each $val in $i {
   .text-#{$val} {
@@ -181,8 +182,7 @@ $i: overline, line-through, underline, dashed, blink, dotted, initial, none,
 
 /*====== Text-Decoration css ends ======*/
 /*====== Vertical-Align css starts ======*/
-$i: baseline, sub, super, top, text-top, middle, bottom, text-bottom, initial,
-  inherit;
+$i: baseline, sub, super, top, text-top, middle, bottom, text-bottom, initial, inherit;
 
 @each $val in $i {
   .#{$val} {
@@ -235,8 +235,9 @@ $i: 10;
 /*====== Image-sizes css ends ======*/
 /*======= Text css starts ===========*/
 $text-name: primary, secondary, success, danger, info, light, dark, warning;
-$text-color: $primary-color, $secondary-color, $success-color, $danger-color,
-  $info-color, $light-color, $dark-color, $warning-color;
+$text-color:
+  $primary-color, $secondary-color, $success-color, $danger-color, $info-color, $light-color,
+  $dark-color, $warning-color;
 
 @each $var in $text-name {
   $i: index($text-name, $var);
@@ -264,10 +265,10 @@ $text-color: $primary-color, $secondary-color, $success-color, $danger-color,
   text-transform: capitalize;
 }
 
-$label-name: theme, primary, secondary, success, danger, info, light, dark,
-  warning;
-$label-color: $primary-color, $primary-color, $secondary-color, $success-color,
-  $danger-color, $info-color, $light-color, $dark-color, $warning-color;
+$label-name: theme, primary, secondary, success, danger, info, light, dark, warning;
+$label-color:
+  $primary-color, $primary-color, $secondary-color, $success-color, $danger-color, $info-color,
+  $light-color, $dark-color, $warning-color;
 
 @each $var in $label-name {
   $i: index($label-name, $var);
@@ -279,8 +280,9 @@ $label-color: $primary-color, $primary-color, $secondary-color, $success-color,
 
 /*======= Badge-color css starts  ======= */
 $badge-name: primary, secondary, success, danger, info, light, dark, warning;
-$badge-color: $primary-color, $secondary-color, $success-color, $danger-color,
-  $info-color, $light-color, $dark-color, $warning-color;
+$badge-color:
+  $primary-color, $secondary-color, $success-color, $danger-color, $info-color, $light-color,
+  $dark-color, $warning-color;
 
 @each $var in $badge-name {
   $i: index($badge-name, $var);
@@ -288,7 +290,7 @@ $badge-color: $primary-color, $secondary-color, $success-color, $danger-color,
   .badge-#{$var} {
     background-color: nth($badge-color, $i);
 
-    @if ($badge-name=="light") {
+    @if ($badge-name== "light") {
       color: $theme-body-font-color !important;
     }
   }
@@ -303,10 +305,10 @@ $badge-color: $primary-color, $secondary-color, $success-color, $danger-color,
 }
 
 /*======= Background-color css starts  ======= */
-$background-name: primary, secondary, success, danger, info, light, dark,
-  warning;
-$background-color: $primary-color, $secondary-color, $success-color,
-  $danger-color, $info-color, $light-color, $dark-color, $warning-color;
+$background-name: primary, secondary, success, danger, info, light, dark, warning;
+$background-color:
+  $primary-color, $secondary-color, $success-color, $danger-color, $info-color, $light-color,
+  $dark-color, $warning-color;
 
 @each $var in $background-name {
   $i: index($background-name, $var);
@@ -323,11 +325,12 @@ $background-color: $primary-color, $secondary-color, $success-color,
 }
 
 /*======= Font-color css starts  ======= */
-$text-name: primary, secondary, success, danger, info, light, dark, warning,
-  google-plus, twitter, linkedin, fb;
-$label-color: $primary-color, $secondary-color, $success-color, $danger-color,
-  $info-color, $light-color, $dark-color, $warning-color, $google-plus, $twitter,
-  $linkedin, $fb;
+$text-name:
+  primary, secondary, success, danger, info, light, dark, warning, google-plus, twitter, linkedin,
+  fb;
+$label-color:
+  $primary-color, $secondary-color, $success-color, $danger-color, $info-color, $light-color,
+  $dark-color, $warning-color, $google-plus, $twitter, $linkedin, $fb;
 
 @each $var in $text-name {
   $i: index($text-name, $var);
@@ -347,20 +350,15 @@ $label-color: $primary-color, $secondary-color, $success-color, $danger-color,
 
 /*======= Button-color css starts  ======= */
 // btn--color//
-@each $btn-name,
-$btn-color in (primary, $primary-color),
-(secondary, $secondary-color),
-(success, $success-color),
-(danger, $danger-color),
-(info, $info-color),
-(light, $light-color),
-(dark, $dark-color),
-(warning, $warning-color) {
+@each $btn-name, $btn-color in (primary, $primary-color), (secondary, $secondary-color),
+  (success, $success-color), (danger, $danger-color), (info, $info-color), (light, $light-color),
+  (dark, $dark-color), (warning, $warning-color)
+{
   .btn-#{$btn-name} {
     background-color: $btn-color !important;
     border-color: $btn-color !important;
 
-    @if ($btn-name=="info") {
+    @if ($btn-name== "info") {
       color: $white;
 
       &:hover,
@@ -404,15 +402,10 @@ $btn-color in (primary, $primary-color),
 }
 
 /*======= Button-color css ends  ======= */
-@each $btn-name,
-$btn-color in (primary, $primary-color),
-(secondary, $secondary-color),
-(success, $success-color),
-(danger, $danger-color),
-(info, $info-color),
-(light, $light-color),
-(dark, $dark-color),
-(warning, $warning-color) {
+@each $btn-name, $btn-color in (primary, $primary-color), (secondary, $secondary-color),
+  (success, $success-color), (danger, $danger-color), (info, $info-color), (light, $light-color),
+  (dark, $dark-color), (warning, $warning-color)
+{
   .btn-outline-#{$btn-name}-2x {
     border-width: 2px;
     border-color: $btn-color;
@@ -432,15 +425,10 @@ $btn-color in (primary, $primary-color),
 }
 
 // outline buttons//
-@each $btn-name,
-$btn-color in (primary, $primary-color),
-(secondary, $secondary-color),
-(success, $success-color),
-(danger, $danger-color),
-(info, $info-color),
-(light, $light-color),
-(dark, $dark-color),
-(warning, $warning-color) {
+@each $btn-name, $btn-color in (primary, $primary-color), (secondary, $secondary-color),
+  (success, $success-color), (danger, $danger-color), (info, $info-color), (light, $light-color),
+  (dark, $dark-color), (warning, $warning-color)
+{
   .btn-outline-#{$btn-name} {
     border-color: $btn-color;
     color: $btn-color;
@@ -450,7 +438,7 @@ $btn-color in (primary, $primary-color),
       color: $btn-color;
     }
 
-    @if ($btn-name=="light") {
+    @if ($btn-name== "light") {
       color: $theme-body-font-color;
     }
 
@@ -466,15 +454,10 @@ $btn-color in (primary, $primary-color),
 }
 
 //active button css //
-@each $btn-name,
-$btn-color in (primary, $primary-color),
-(secondary, $secondary-color),
-(success, $success-color),
-(danger, $danger-color),
-(info, $info-color),
-(light, $light-color),
-(dark, $dark-color),
-(warning, $warning-color) {
+@each $btn-name, $btn-color in (primary, $primary-color), (secondary, $secondary-color),
+  (success, $success-color), (danger, $danger-color), (info, $info-color), (light, $light-color),
+  (dark, $dark-color), (warning, $warning-color)
+{
   .btn-#{$btn-name}:not([disabled]):not(.disabled).active {
     background-color: darken($btn-color, 10%);
     border-color: darken($btn-color, 10%);
@@ -492,15 +475,10 @@ $btn-color in (primary, $primary-color),
 }
 
 //* active button css end *//
-@each $btn-name,
-$btn-color in (primary, $primary-color),
-(secondary, $secondary-color),
-(success, $success-color),
-(danger, $danger-color),
-(info, $info-color),
-(light, $light-color),
-(dark, $dark-color),
-(warning, $warning-color) {
+@each $btn-name, $btn-color in (primary, $primary-color), (secondary, $secondary-color),
+  (success, $success-color), (danger, $danger-color), (info, $info-color), (light, $light-color),
+  (dark, $dark-color), (warning, $warning-color)
+{
   .btn-outline-#{$btn-name}-2x:not([disabled]):not(.disabled).active {
     background-color: $btn-color;
     border-color: $btn-color;
@@ -521,8 +499,9 @@ $btn-color in (primary, $primary-color),
 
 /*======= Table-Border-Bottom-color css starts  ======= */
 $border-name: primary, secondary, success, danger, info, light, dark, warning;
-$border-color: $primary-color, $secondary-color, $success-color, $danger-color,
-  $info-color, $light-color, $dark-color, $warning-color;
+$border-color:
+  $primary-color, $secondary-color, $success-color, $danger-color, $info-color, $light-color,
+  $dark-color, $warning-color;
 
 @each $var in $border-name {
   $i: index($border-name, $var);
@@ -536,8 +515,9 @@ $border-color: $primary-color, $secondary-color, $success-color, $danger-color,
 
 /*======= Table styling css starts  ======= */
 $table-name: primary, secondary, success, danger, info, light, dark, warning;
-$table-color: $primary-color, $secondary-color, $success-color, $danger-color,
-  $info-color, $light-color, $dark-color, $warning-color;
+$table-color:
+  $primary-color, $secondary-color, $success-color, $danger-color, $info-color, $light-color,
+  $dark-color, $warning-color;
 
 @each $var in $table-name {
   $i: index($table-name, $var);
@@ -562,8 +542,9 @@ $table-color: $primary-color, $secondary-color, $success-color, $danger-color,
 
 /*======= All-Borders-color css starts  ======= */
 $b-name: primary, secondary, success, danger, info, light, dark, warning;
-$b-color: $primary-color, $secondary-color, $success-color, $danger-color,
-  $info-color, $light-color, $dark-color, $warning-color;
+$b-color:
+  $primary-color, $secondary-color, $success-color, $danger-color, $info-color, $light-color,
+  $dark-color, $warning-color;
 
 @each $var in $b-name {
   $i: index($b-name, $var);
@@ -617,7 +598,7 @@ $i: 1;
     input {
       background-color: $primary-color;
 
-      &+input {
+      & + input {
         background-color: $secondary-color;
       }
     }
@@ -653,7 +634,7 @@ $i: 1;
     background-color: rgba(68, 102, 242, 0.15);
   }
 
-  >div {
+  > div {
     &::-webkit-scrollbar-track {
       -webkit-box-shadow: inset 0 0 6px $light-gray;
     }
@@ -703,7 +684,7 @@ $i: 1;
 
 /**====== Animation css start ======**/
 .options {
-  >div {
+  > div {
     color: $gray-60;
     display: inline-block;
     padding: 2px 10px;
@@ -814,7 +795,6 @@ button {
 
 .daterangepicker {
   select {
-
     &.monthselect,
     &.yearselect {
       border-color: $light-gray;

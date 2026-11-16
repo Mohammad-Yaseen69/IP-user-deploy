@@ -1,33 +1,32 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-    .title {
-        all: unset;
-        font-size: 1.1rem;
-        font-weight: 600;
-        background: linear-gradient(to right bottom, #e64067, #5926f0, #4828a0);
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
+  .title {
+    all: unset;
+    font-size: 1.1rem;
+    font-weight: 600;
+    background: linear-gradient(to right bottom, #e64067, #5926f0, #4828a0);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 
-    input {
-        all: unset;
-        padding: 1rem 1rem .5rem;
-        font-size: 2rem;
-        width: fit-content;
-        max-width: 150px;
-        border-bottom: 1px solid rgba(128, 128, 128, 0.205);
-    }
+  input {
+    all: unset;
+    padding: 1rem 1rem 0.5rem;
+    font-size: 2rem;
+    width: fit-content;
+    max-width: 150px;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.205);
+  }
 
-    .currency {
-        border: 1px solid rgba(128, 128, 128, 0.205);
-        margin: 0;
-        padding: .5rem;
-        background-color: white;
-        font-size: .8rem;
-        margin-top: 1rem;
-    }
-
+  .currency {
+    border: 1px solid rgba(128, 128, 128, 0.205);
+    margin: 0;
+    padding: 0.5rem;
+    background-color: white;
+    font-size: 0.8rem;
+    margin-top: 1rem;
+  }
 }

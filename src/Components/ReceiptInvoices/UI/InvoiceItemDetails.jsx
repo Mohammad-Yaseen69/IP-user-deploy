@@ -22,25 +22,32 @@ const InvoiceItemDetails = ({ inv }) => {
   const [openRecipientIds, setOpenRecipientIds] = useState(new Set());
   const queryClient = useQueryClient();
   const width = useWindowWidth();
-  const [active, setActive] = useState(inv.active)
+  const [active, setActive] = useState(inv.active);
   const can = usePermission();
 
-  const country = inv?.countryIsoCode ? countriesInDiffLangs[i18n.language]?.find(c => c.alpha3 === inv.countryIsoCode) : null
-  const guestCountry = inv?.guestDetails?.country_iso_code ? countriesInDiffLangs[i18n.language]?.find(c => c.alpha3 === inv.guestDetails.country_iso_code) : null
-  const guestDetails = inv?.guestDetails
+  const country = inv?.countryIsoCode
+    ? countriesInDiffLangs[i18n.language]?.find((c) => c.alpha3 === inv.countryIsoCode)
+    : null;
+  const guestCountry = inv?.guestDetails?.country_iso_code
+    ? countriesInDiffLangs[i18n.language]?.find(
+        (c) => c.alpha3 === inv.guestDetails.country_iso_code,
+      )
+    : null;
+  const guestDetails = inv?.guestDetails;
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: () => apiWrapper({
-      endpoint: `/api/invoice/toggle-active/${inv._id}`,
-      method: "PUT"
-    }),
+    mutationFn: () =>
+      apiWrapper({
+        endpoint: `/api/invoice/toggle-active/${inv._id}`,
+        method: "PUT",
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["GetInvoicesList"] });
     },
     onError: (res) => {
-      const dec = decryptData(res.response?.data?.data)
-      toast.error(dec.message || "We are unable to process your request at the moment.")
-    }
-  })
+      const dec = decryptData(res.response?.data?.data);
+      toast.error(dec.message || "We are unable to process your request at the moment.");
+    },
+  });
 
   const toggleRecipient = (id) => {
     setOpenRecipientIds((prev) => {
@@ -53,17 +60,19 @@ const InvoiceItemDetails = ({ inv }) => {
 
   return (
     <div style={{ paddingTop: "0px" }} className={`${styles.expandRow}`}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-        <span style={{ fontWeight: 600, fontSize: "20px" }}>
-          {t("Active")}
-        </span>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        <span style={{ fontWeight: 600, fontSize: "20px" }}>{t("Active")}</span>
         {can("invoices.edit") && (
           <Toggle
             checked={active}
-            onChange={() =>
-              !isPending &&
-              mutateAsync().then(() => setActive(!active))
-            }
+            onChange={() => !isPending && mutateAsync().then(() => setActive(!active))}
           />
         )}
       </div>
@@ -103,9 +112,7 @@ const InvoiceItemDetails = ({ inv }) => {
         }}
       >
         <InfoItem label="QR Code">
-          <div
-            style={{ display: "flex", gap: "15px", flexDirection: "column" }}
-          >
+          <div style={{ display: "flex", gap: "15px", flexDirection: "column" }}>
             <QrDetails
               inInvoiceDetails={true}
               inInvoice={true}
@@ -113,10 +120,7 @@ const InvoiceItemDetails = ({ inv }) => {
               username={userDetails.username}
             />
             {can("invoices.download") && (
-              <DownloadButton
-                style={{ alignSelf: "auto" }}
-                url={inv.qrCode?.url}
-              />
+              <DownloadButton style={{ alignSelf: "auto" }} url={inv.qrCode?.url} />
             )}
           </div>
         </InfoItem>
@@ -192,9 +196,7 @@ const InvoiceItemDetails = ({ inv }) => {
                   {" "}
                   {t("Date")}:{" "}
                 </span>
-                <h5 style={{ textAlign: "right" }}>
-                  {formatDateTime(inv.createdAt, "date")}
-                </h5>
+                <h5 style={{ textAlign: "right" }}>{formatDateTime(inv.createdAt, "date")}</h5>
               </div>
               <div
                 style={{
@@ -209,9 +211,7 @@ const InvoiceItemDetails = ({ inv }) => {
                   {" "}
                   {t("Time")}:{" "}
                 </span>
-                <h5 style={{ textAlign: "right" }}>
-                  {formatDateTime(inv.createdAt, "time")}
-                </h5>
+                <h5 style={{ textAlign: "right" }}>{formatDateTime(inv.createdAt, "time")}</h5>
               </div>
             </div>
           </InfoItem>
@@ -230,9 +230,7 @@ const InvoiceItemDetails = ({ inv }) => {
                   {" "}
                   {t("Currency")}:{" "}
                 </span>
-                <h5 style={{ textAlign: "right" }}>
-                  {inv.receivingWallet?.currency?.code}
-                </h5>
+                <h5 style={{ textAlign: "right" }}>{inv.receivingWallet?.currency?.code}</h5>
               </div>
               <div
                 style={{
@@ -246,19 +244,13 @@ const InvoiceItemDetails = ({ inv }) => {
                   {" "}
                   {t("Wallet Id")}:{" "}
                 </span>
-                <h5 style={{ textAlign: "right" }}>
-                  {inv.receivingWallet?.wallet_id}
-                </h5>
+                <h5 style={{ textAlign: "right" }}>{inv.receivingWallet?.wallet_id}</h5>
               </div>
             </div>
           </InfoItem>
 
           <InfoItem label={"Is Payable"}>
-            <h5>
-              {t(inv.paid
-                ? "Paid"
-                : "This Invoice is payable.")}
-            </h5>
+            <h5>{t(inv.paid ? "Paid" : "This Invoice is payable.")}</h5>
           </InfoItem>
 
           {guestDetails && (
@@ -275,9 +267,7 @@ const InvoiceItemDetails = ({ inv }) => {
                   <span style={{ fontSize: "14px" }} className={styles.label}>
                     {t("Payment Method")}:
                   </span>
-                  <h5 style={{ textAlign: "right" }}>
-                    {guestDetails.paymentMethod || "card"}
-                  </h5>
+                  <h5 style={{ textAlign: "right" }}>{guestDetails.paymentMethod || "card"}</h5>
                 </div>
                 <div
                   style={{
@@ -449,9 +439,7 @@ const InvoiceItemDetails = ({ inv }) => {
                     <img src={r?.userInfo?.profileImage?.url} alt="" />
                   )}
                   {!r?.userInfo?.profileImage?.url && (
-                    <span className={styles.pfpPlace}>
-                      {r?.userInfo?.name?.[0]}
-                    </span>
+                    <span className={styles.pfpPlace}>{r?.userInfo?.name?.[0]}</span>
                   )}
 
                   <div>
@@ -521,9 +509,7 @@ const InvoiceItemDetails = ({ inv }) => {
                       <h5>{s?.zipCode ?? "-"}</h5>
                     </div>
                   ) : (
-                    <h5>
-                      {t("This beneficiary doesn't have shipping details")}
-                    </h5>
+                    <h5>{t("This beneficiary doesn't have shipping details")}</h5>
                   )}
                 </div>
               )}

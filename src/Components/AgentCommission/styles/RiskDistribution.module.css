@@ -1,198 +1,203 @@
 .riskChartWrap {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 16px;
-    width: 100%;
-    height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  height: 100%;
 }
 
 .riskLegend {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 30%;
-    height: 100%;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 30%;
+  height: 100%;
+  justify-content: center;
 }
 
 .riskLegendItem {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .riskLegendLeft {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .riskDot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .riskLabel {
-    color: #69707D;
-    font-size: 12px;
-    font-weight: 400;
-    font-family: 'Inter', sans-serif;
+  color: #69707d;
+  font-size: 12px;
+  font-weight: 400;
+  font-family: "Inter", sans-serif;
 }
 
 .riskCount {
-    color: #242731;
-    font-size: 12px;
-    font-weight: 600;
-    font-family: 'Inter', sans-serif;
+  color: #242731;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
 }
 
 .sectionCard {
-    background: #FFFFFF;
-    border: 1px solid #EBE8F5;
-    border-radius: 14px;
-    box-shadow: 0px 1px 2px 0px rgba(15, 11, 31, 0.04);
-    padding: 20px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  background: #ffffff;
+  border: 1px solid #ebe8f5;
+  border-radius: 14px;
+  box-shadow: 0px 1px 2px 0px rgba(15, 11, 31, 0.04);
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .sectionHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .sectionHeaderLeft {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .sectionTitle {
-    color: #242731;
-    font-size: 14px;
-    font-weight: 600;
-    margin: 0;
-    line-height: 20px;
+  color: #242731;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  line-height: 20px;
 }
 
 .sectionSubtitle {
-    color: #9B9EAA;
-    font-size: 12px;
-    font-weight: 400;
-    margin: 0;
-    line-height: 16px;
+  color: #9b9eaa;
+  font-size: 12px;
+  font-weight: 400;
+  margin: 0;
+  line-height: 16px;
 }
 
 .boxSection {
-    background: #FFFFFF;
-    border-radius: 13px;
-    border: 1px solid #EBE8F5;
-    box-shadow: 0 1px 2px 0 rgba(15, 15, 15, 0.05);
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    width: 70%;
+  background: #ffffff;
+  border-radius: 13px;
+  border: 1px solid #ebe8f5;
+  box-shadow: 0 1px 2px 0 rgba(15, 15, 15, 0.05);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 70%;
 }
 
 .sectionTitle {
-    font-size: 14px;
-    font-weight: 600;
-    color: #101828;
-    margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #101828;
+  margin: 0;
 }
 
 .funnelList {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .funnelItem {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
 }
 
 .funnelLabelContainer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 .funnelLabel {
-    font-size: 13px;
-    font-weight: 500;
-    color: #475467;
+  font-size: 13px;
+  font-weight: 500;
+  color: #475467;
 }
 
 .funnelValueDark {
-    font-size: 13px;
-    font-weight: 600;
-    color: #101828;
+  font-size: 13px;
+  font-weight: 600;
+  color: #101828;
 }
 
 .funnelBarContainer {
-    width: 100%;
-    height: 8px;
-    background: #F2F4F7;
-    border-radius: 99px;
-    overflow: hidden;
+  width: 100%;
+  height: 8px;
+  background: #f2f4f7;
+  border-radius: 99px;
+  overflow: hidden;
 }
 
 .funnelBar {
-    height: 100%;
-    border-radius: 99px;
-    transition: width 0.4s ease-in-out;
-    background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 0px, rgba(255, 255, 255, 0.15) 4px, transparent 4px, transparent 8px);
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.4s ease-in-out;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 0px,
+    rgba(255, 255, 255, 0.15) 4px,
+    transparent 4px,
+    transparent 8px
+  );
 }
 
 .actionButtons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .actionBtn {
-    display: flex;
-    height: 64px;
-    padding: var(--sm, 8px) var(--md, 16px);
-    align-items: center;
-    grid-row: span 1;
-    grid-column: span 1;
-    justify-self: stretch;
-    border-radius: var(--md, 10px);
-    border: 1px solid var(--border-subtle, #E1E5EE);
-    background: var(--gray-gray-50, #F8F9FC);
-    color: var(--text-primary, #1B1F2A);
-    font-family: Inter;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 150%;
-    letter-spacing: -0.42px;
-    width: 23.9%;
-    gap: 8px;
+  display: flex;
+  height: 64px;
+  padding: var(--sm, 8px) var(--md, 16px);
+  align-items: center;
+  grid-row: span 1;
+  grid-column: span 1;
+  justify-self: stretch;
+  border-radius: var(--md, 10px);
+  border: 1px solid var(--border-subtle, #e1e5ee);
+  background: var(--gray-gray-50, #f8f9fc);
+  color: var(--text-primary, #1b1f2a);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+  letter-spacing: -0.42px;
+  width: 23.9%;
+  gap: 8px;
 }
 
 .actionBtn:hover {
-    background: #F9FAFB;
-    border-color: #D0D5DD;
+  background: #f9fafb;
+  border-color: #d0d5dd;
 }
 
-
 .subAgentHeaderRow {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

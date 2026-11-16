@@ -32,20 +32,21 @@
     }
   }
 }
-.modal-page{
-  .modal-content{
+.modal-page {
+  .modal-content {
     border: 1px solid $light-semi-gray;
   }
-  .modal-header, .modal-body{
+  .modal-header,
+  .modal-body {
     padding: 16px;
   }
-  .modal-header{
+  .modal-header {
     border-bottom: 1px solid $light-semi-gray;
-    .btn-close{
+    .btn-close {
       top: 21px;
     }
   }
-  .modal-footer{
+  .modal-footer {
     padding: 12px;
     border-top: 1px solid $light-semi-gray;
   }
@@ -138,22 +139,22 @@ span.twitter-typeahead {
   }
 }
 // rating
-.rating-page{
-  .rating{
-    span span span{
+.rating-page {
+  .rating {
+    span span span {
       color: $primary-color;
     }
   }
 }
 // strater-kit index page
-.starter-main{
-  .card-body{
-    .alert{
-      i{
+.starter-main {
+  .card-body {
+    .alert {
+      i {
         display: flex;
         align-items: center;
       }
-      &:before{
+      &:before {
         top: 28px;
       }
     }
@@ -306,22 +307,22 @@ span.twitter-typeahead {
   }
 }
 // learning list view page
-.learning-block{
-  .product-box.learning-box{
+.learning-block {
+  .product-box.learning-box {
     border-radius: 20px;
   }
 }
-.page-wrapper{
-  .page-body-wrapper{
-    .page-body{
-      .mega-inline.border-style{
-        .card{
+.page-wrapper {
+  .page-body-wrapper {
+    .page-body {
+      .mega-inline.border-style {
+        .card {
           border-radius: 0 !important;
         }
-      } 
+      }
     }
   }
-} 
+}
 // faq css end
 .job-filter {
   .faq-form {
@@ -363,43 +364,44 @@ span.twitter-typeahead {
   }
 }
 // basic card
-.basic-card{
-  .card{
-    .card-header{
-      &.bg-primary , &.bg-secondary{
-        h4{
+.basic-card {
+  .card {
+    .card-header {
+      &.bg-primary,
+      &.bg-secondary {
+        h4 {
           color: $white;
         }
       }
     }
   }
-  .border-card{
+  .border-card {
     border-bottom: 1px solid $white;
   }
-  .border-bottom-light{
+  .border-bottom-light {
     border-bottom: 1px solid $light-gray;
   }
 }
 // tabbed page
-.tabbed-cardpage{
-  .card-body{
-    .tabbed-card{
-      ul.nav-pills:not(.border-tab){
+.tabbed-cardpage {
+  .card-body {
+    .tabbed-card {
+      ul.nav-pills:not(.border-tab) {
         top: 24px;
       }
     }
   }
 }
 // tilt animation
-.tilt-showcase{
-  .card.height-equal{
-    .card-body{
+.tilt-showcase {
+  .card.height-equal {
+    .card-body {
       overflow: hidden;
     }
   }
 }
-.wow-title{
-  .badge{
+.wow-title {
+  .badge {
     padding-bottom: 6px;
   }
 }

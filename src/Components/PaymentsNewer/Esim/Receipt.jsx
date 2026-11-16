@@ -1,38 +1,35 @@
-import React from 'react'
-import styles from "./styles/receipt.module.scss"
-import ipLogo from './files/iplogo.svg'
-import eSimBanner from './files/eSimBanner.svg'
-import receiptBg from "../AirtimeFlow/files/rec_bg.png"
-import styles2 from "../AirtimeFlow/styles/steptwo.module.css"
-import useWindowWidth from '../../../utils/useWindowWidth'
-import { useTranslation } from 'react-i18next'
+import React from "react";
+import styles from "./styles/receipt.module.scss";
+import ipLogo from "./files/iplogo.svg";
+import eSimBanner from "./files/eSimBanner.svg";
+import receiptBg from "../AirtimeFlow/files/rec_bg.png";
+import styles2 from "../AirtimeFlow/styles/steptwo.module.css";
+import useWindowWidth from "../../../utils/useWindowWidth";
+import { useTranslation } from "react-i18next";
 
 const Receipt = ({ data, dataHandler, createTransaction }) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
-  const width = useWindowWidth()
+  const width = useWindowWidth();
 
   const detsJSX = (label, val, purple) => (
     <div className={`${styles.dets}  ${purple ? styles.purple : ""}`}>
       <span>{label}</span>
       <span>{val}</span>
     </div>
-  )
+  );
 
   return (
     <div>
-
       <div style={{ width: "100%", overflow: "hidden" }}>
         <img style={{ maxWidth: "100%" }} src={eSimBanner} alt="" />
       </div>
 
-      <div style={{ flexDirection: 'column' }} className={styles.cont}>
-
-        <div style={{ width: '100%' }} className={styles.receipt}>
-          <div style={{ background: `url(${receiptBg})`, }} className={styles.top}>
+      <div style={{ flexDirection: "column" }} className={styles.cont}>
+        <div style={{ width: "100%" }} className={styles.receipt}>
+          <div style={{ background: `url(${receiptBg})` }} className={styles.top}>
             <img src={ipLogo} alt="" />
           </div>
-
 
           <div className={styles.middle}>
             {/* <h3>{t("eSIM QR Code Receipt")}</h3>
@@ -65,11 +62,18 @@ const Receipt = ({ data, dataHandler, createTransaction }) => {
         <div className={styles.transaction_details}>
           <div>
             <span>{t("Esim Price")}</span>
-            <span> {data.package_details?.data?.sending?.currency} {data.package_details?.data?.sending?.value}</span>
+            <span>
+              {" "}
+              {data.package_details?.data?.sending?.currency}{" "}
+              {data.package_details?.data?.sending?.value}
+            </span>
           </div>
           <div>
             <span>{t("Fees")}</span>
-            <span> {data.package_details?.data?.fee?.currency} {data.package_details?.data?.fee?.value}</span>
+            <span>
+              {" "}
+              {data.package_details?.data?.fee?.currency} {data.package_details?.data?.fee?.value}
+            </span>
           </div>
           <div>
             <span>{t("Estimated Time")}</span>
@@ -77,36 +81,44 @@ const Receipt = ({ data, dataHandler, createTransaction }) => {
           </div>
           <div>
             <span>{t("Total Amount")}</span>
-            <span> {data.package_details?.data?.total?.currency} {data.package_details?.data?.total?.value}</span>
+            <span>
+              {" "}
+              {data.package_details?.data?.total?.currency}{" "}
+              {data.package_details?.data?.total?.value}
+            </span>
           </div>
         </div>
-
-
       </div>
-
 
       <div className={styles2.btns} style={{ justifyContent: "flex-end", marginTop: "1rem" }}>
         <span
           onClick={() => {
-            dataHandler("step", data.step - 1)
+            dataHandler("step", data.step - 1);
           }}
           className={styles2.back}
         >
           {t("Back")}
         </span>
-        <button
-          onClick={() => createTransaction()}
-          className={styles2.nxt}
-          disabled={data.loading}
-        >
+        <button onClick={() => createTransaction()} className={styles2.nxt} disabled={data.loading}>
           {t("Next")}
-          <svg xmlns="http://www.w3.org/2000/svg" width="9" height="15" viewBox="0 0 9 15" fill="none">
-            <path d="M1.7876 1.5625L7.47528 6.97362C7.88959 7.36778 7.88959 8.02847 7.47528 8.42262L1.7876 13.8337" stroke="white" stroke-width="2" stroke-linecap="round" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="9"
+            height="15"
+            viewBox="0 0 9 15"
+            fill="none"
+          >
+            <path
+              d="M1.7876 1.5625L7.47528 6.97362C7.88959 7.36778 7.88959 8.02847 7.47528 8.42262L1.7876 13.8337"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
           </svg>
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Receipt
+export default Receipt;

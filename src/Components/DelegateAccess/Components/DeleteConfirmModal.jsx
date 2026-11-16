@@ -3,7 +3,15 @@ import { Modal, ModalBody, Button, Spinner } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import { AlertTriangle, CheckCircle, XCircle, X } from "react-feather";
 
-const DeleteConfirmModal = ({ isOpen, toggle, onConfirm, itemName, isLoading, isSuccess, isError }) => {
+const DeleteConfirmModal = ({
+  isOpen,
+  toggle,
+  onConfirm,
+  itemName,
+  isLoading,
+  isSuccess,
+  isError,
+}) => {
   const { t } = useTranslation();
 
   const renderContent = () => {
@@ -66,7 +74,12 @@ const DeleteConfirmModal = ({ isOpen, toggle, onConfirm, itemName, isLoading, is
           <Button color="light" className="px-4 py-2 fw-bold" onClick={toggle} disabled={isLoading}>
             {t("Cancel")}
           </Button>
-          <Button color="danger" className="px-4 py-2 fw-bold ms-2" onClick={onConfirm} disabled={isLoading}>
+          <Button
+            color="danger"
+            className="px-4 py-2 fw-bold ms-2"
+            onClick={onConfirm}
+            disabled={isLoading}
+          >
             {t("Delete")}
           </Button>
         </div>
@@ -79,9 +92,7 @@ const DeleteConfirmModal = ({ isOpen, toggle, onConfirm, itemName, isLoading, is
       <button className="close-btn" onClick={toggle}>
         <X size={18} />
       </button>
-      <ModalBody className="text-center p-4">
-        {renderContent()}
-      </ModalBody>
+      <ModalBody className="text-center p-4">{renderContent()}</ModalBody>
 
       <style>{`
         .delete-confirm-modal .modal-content {

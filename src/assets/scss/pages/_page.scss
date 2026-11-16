@@ -3,8 +3,9 @@
 ==========================**/
 /*test Nav bar color */
 $page-name: theme, primary, secondary, success, danger, info, dark, warning;
-$page-color: var(--theme-default), var(--theme-default), $secondary-color,
-  $success-color, $danger-color, $info-color, $dark-color, $warning-color;
+$page-color:
+  var(--theme-default), var(--theme-default), $secondary-color, $success-color, $danger-color,
+  $info-color, $dark-color, $warning-color;
 @each $var in $page-name {
   $i: index($page-name, $var);
   .pagination-#{$var} {

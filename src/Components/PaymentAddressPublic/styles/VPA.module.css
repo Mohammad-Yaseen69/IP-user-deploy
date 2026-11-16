@@ -1,295 +1,303 @@
 .container {
-    display: flex;
-    justify-content: space-between;
-    /* align-items: flex-end; */
-    gap: 1.5rem;
-    margin-bottom: 3rem;
-    /* margin-top: -130px; */
+  display: flex;
+  justify-content: space-between;
+  /* align-items: flex-end; */
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+  /* margin-top: -130px; */
 }
 
 .left {
-    max-width: 350px;
+  max-width: 350px;
 }
 
 .top {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .left h4 {
-    color: #000;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
+  color: #000;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
 }
 
 .left p {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
-    overflow: hidden;
-    color: #7E7E7E;
-    text-overflow: ellipsis;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 170%;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+  color: #7e7e7e;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 170%;
 }
 
 .right {
-    border-radius: 22.892px;
-    background: #FAFAFA;
-    width: 310.096px;
-    height: 335.746px;
-    flex-shrink: 0;
-    padding: 35px;
-    display: flex;
-    flex-direction: column;
+  border-radius: 22.892px;
+  background: #fafafa;
+  width: 310.096px;
+  height: 335.746px;
+  flex-shrink: 0;
+  padding: 35px;
+  display: flex;
+  flex-direction: column;
 }
 
 .currency {
-    display: flex;
-    padding: 7px 10px;
-    /* width: 83px; */
-    width: fit-content;
-    gap: 5px;
-    margin: auto;
-    align-items: center;
-    border-radius: 6.775px;
-    background: rgba(89, 38, 240, 0.06);
-    margin-bottom: 10px;
+  display: flex;
+  padding: 7px 10px;
+  /* width: 83px; */
+  width: fit-content;
+  gap: 5px;
+  margin: auto;
+  align-items: center;
+  border-radius: 6.775px;
+  background: rgba(89, 38, 240, 0.06);
+  margin-bottom: 10px;
 }
 
 .currency div {
-    background: linear-gradient(-24deg, rgb(210, 60, 122) 0%, rgb(164, 52, 167) 43.66%, rgb(88, 38, 239) 100%);
-    color: white;
-    font-weight: 600;
-    font-size: .7rem;
-    height: 16px;
-    min-width: 16px;
-    width: fit-content;
-    padding: .2rem;
-    border-radius: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  background: linear-gradient(
+    -24deg,
+    rgb(210, 60, 122) 0%,
+    rgb(164, 52, 167) 43.66%,
+    rgb(88, 38, 239) 100%
+  );
+  color: white;
+  font-weight: 600;
+  font-size: 0.7rem;
+  height: 16px;
+  min-width: 16px;
+  width: fit-content;
+  padding: 0.2rem;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-
 .currency span {
-    color: var(--colour-of-country-names, #000);
-    font-family: Manrope;
-    font-size: 9.838px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
+  color: var(--colour-of-country-names, #000);
+  font-family: Manrope;
+  font-size: 9.838px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
 }
 
 .currency p {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .top label {
-    color: #7D7D7D;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 150%;
-    /* 21px */
-    text-transform: capitalize;
-    text-align: center;
-    margin-bottom: 0;
+  color: #7d7d7d;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+  /* 21px */
+  text-transform: capitalize;
+  text-align: center;
+  margin-bottom: 0;
 }
 
 .amount label {
-    color: #7D7D7D;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 150%;
-    /* 21px */
-    text-transform: capitalize;
-    text-align: center;
-    margin-bottom: 0;
+  color: #7d7d7d;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+  /* 21px */
+  text-transform: capitalize;
+  text-align: center;
+  margin-bottom: 0;
 }
 
 .amount {
-    display: grid;
-    justify-content: flex-start;
+  display: grid;
+  justify-content: flex-start;
 }
 
 .amount input,
 .amount span {
-    color: #000;
-    font-size: 40.5px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    letter-spacing: -1.417px;
-    border: none;
-    padding: 0;
-    background-color: transparent;
+  color: #000;
+  font-size: 40.5px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -1.417px;
+  border: none;
+  padding: 0;
+  background-color: transparent;
 }
 
 .amount div {
-    display: flex;
+  display: flex;
 }
 
 .amount input::before {
-    content: "$";
+  content: "$";
 }
 
 .buttons {
-    margin-top: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .button {
-    display: flex;
-    gap: 1rem;
-    padding: 9px 11px;
-    align-items: center;
+  display: flex;
+  gap: 1rem;
+  padding: 9px 11px;
+  align-items: center;
 }
 
 .button div {
-    border-radius: 6.517px;
-    background: radial-gradient(124.63% 259.09% at 48.48% 152.15%, rgba(230, 64, 103, 0.10) 0%, rgba(89, 38, 240, 0.10) 55.65%, rgba(72, 40, 160, 0.10) 100%), #FFF;
-    height: 30px;
-    width: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  border-radius: 6.517px;
+  background:
+    radial-gradient(
+      124.63% 259.09% at 48.48% 152.15%,
+      rgba(230, 64, 103, 0.1) 0%,
+      rgba(89, 38, 240, 0.1) 55.65%,
+      rgba(72, 40, 160, 0.1) 100%
+    ),
+    #fff;
+  height: 30px;
+  width: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .guestBtn {
-    border-radius: 10.391px;
-    background: rgba(255, 255, 255, 0.55);
-    box-shadow: 0px 3.978px 32.819px 0px rgba(0, 0, 0, 0.09);
-    color: #000;
-    font-size: 11.275px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: -0.225px;
+  border-radius: 10.391px;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: 0px 3.978px 32.819px 0px rgba(0, 0, 0, 0.09);
+  color: #000;
+  font-size: 11.275px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.225px;
 }
 
 .ipBtn {
-    border-radius: 10.391px;
-    background: #5926F0;
-    box-shadow: 0px 3.978px 32.819px 0px rgba(0, 0, 0, 0.09);
-    color: #FFF;
-    font-size: 11.275px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: -0.225px;
+  border-radius: 10.391px;
+  background: #5926f0;
+  box-shadow: 0px 3.978px 32.819px 0px rgba(0, 0, 0, 0.09);
+  color: #fff;
+  font-size: 11.275px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.225px;
 }
 
 .button img {
-    width: 18px;
-    height: 18px;
-    object-fit: contain;
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
 }
 
-
-
 @media (min-width: 1000px) and (max-width: 1450px) {
-    .button div {
-        width: 20px;
-        height: 20px;
-    }
-    .button{
-        border-radius: 8px;
-        padding: 8px;
-        gap: 6px;
-    }
+  .button div {
+    width: 20px;
+    height: 20px;
+  }
+  .button {
+    border-radius: 8px;
+    padding: 8px;
+    gap: 6px;
+  }
 
+  .buttons {
+    gap: 5px;
+  }
+  .button img {
+    width: 15px;
+    height: 15px;
+  }
 
-    .buttons{
-        gap: 5px;
-    }
-    .button img {
-        width: 15px;
-        height: 15px;
-    }
+  .amount input,
+  .amount span {
+    font-size: 25px !important;
+  }
 
-    .amount input,
-    .amount span {
-        font-size: 25px !important;
-    }
-
-    .amount { 
-        margin: 1rem 0 !important;
-    }
+  .amount {
+    margin: 1rem 0 !important;
+  }
 }
 
 @media screen and (max-width: 1000px) {
-    .container {
-        margin-top: 2rem;
-        margin-bottom: 0;
-        flex-direction: column-reverse;
-    }
+  .container {
+    margin-top: 2rem;
+    margin-bottom: 0;
+    flex-direction: column-reverse;
+  }
 
-    .right {
-        width: 100%;
-        align-items: center;
-        gap: 1rem;
-        height: fit-content;
-    }
+  .right {
+    width: 100%;
+    align-items: center;
+    gap: 1rem;
+    height: fit-content;
+  }
 
-    .amount {
-        align-items: center;
-        display: flex;
-        flex-direction: column;
-        gap: .3rem;
-        margin-top: 1rem;
-    }
+  .amount {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin-top: 1rem;
+  }
 
-    .amount label {
-        font-size: .8rem;
-        margin: 0 auto;
-    }
+  .amount label {
+    font-size: 0.8rem;
+    margin: 0 auto;
+  }
 
-    .amount input {
-        width: 100%;
-        max-width: 10ch;
-        margin-left: .3rem;
-    }
+  .amount input {
+    width: 100%;
+    max-width: 10ch;
+    margin-left: 0.3rem;
+  }
 
-    .buttons {
-        width: 100%;
-    }
+  .buttons {
+    width: 100%;
+  }
 
-    .button {
-        padding: .7rem .8rem;
-    }
+  .button {
+    padding: 0.7rem 0.8rem;
+  }
 
-    .button div:not(.gperror) {
-        height: 35px !important;
-        width: 35px !important;
-    }
+  .button div:not(.gperror) {
+    height: 35px !important;
+    width: 35px !important;
+  }
 
-    .button img {
-        width: 22px;
-        height: 22px;
-    }
+  .button img {
+    width: 22px;
+    height: 22px;
+  }
 
-    .button span {
-        font-size: .9rem;
-    }
+  .button span {
+    font-size: 0.9rem;
+  }
 }
 
 .gperror {
-    width: 100% !important;
+  width: 100% !important;
 }

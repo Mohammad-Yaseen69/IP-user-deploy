@@ -1,0 +1,80 @@
+@use "settings-ui" as ui;
+
+.container {
+  @include ui.tab-root;
+}
+
+.sectionHeader {
+  @include ui.section-header;
+}
+
+.sectionText {
+  @include ui.section-text;
+}
+
+.sectionTitle {
+  @include ui.section-title;
+}
+
+.sectionSubtitle {
+  @include ui.section-subtitle;
+}
+
+.button {
+  @include ui.button;
+  @include ui.button-medium;
+  margin: 0;
+}
+
+.buttonSecondary {
+  @include ui.button-secondary;
+}
+
+.loader {
+  width: 400px;
+  max-width: 100%;
+  height: 400px;
+  margin: 0 auto;
+}
+
+.empty {
+  @include ui.card;
+  align-items: center;
+  gap: 8px;
+  padding: 56px 24px;
+  text-align: center;
+
+  @media screen and (max-width: ui.$mobile) {
+    padding: 40px 16px;
+  }
+
+  .emptyTile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    margin-bottom: 16px;
+    border-radius: 16px;
+    background: ui.$primary-50;
+  }
+
+  .emptyTitle {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: ui.$text-primary;
+  }
+
+  .emptyText {
+    max-width: 380px;
+    margin: 0 0 16px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.42px;
+    color: ui.$text-secondary;
+  }
+}

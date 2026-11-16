@@ -88,19 +88,19 @@ th {
   tbody {
     tr {
       &:nth-of-type(odd) {
-        > *{
+        > * {
           --bs-table-accent-bg: unset;
         }
       }
     }
   }
 }
-.table-striped{
-  &.table-styling{
-    > tbody{
-      > tr{
-        &:nth-of-type(odd){
-          &:hover{
+.table-striped {
+  &.table-styling {
+    > tbody {
+      > tr {
+        &:nth-of-type(odd) {
+          &:hover {
             > * {
               color: $primary-color;
             }
@@ -113,10 +113,10 @@ th {
       }
     }
   }
-  &.bg-primary{
-    > tbody{
-      > tr{
-        &:nth-of-type(odd){
+  &.bg-primary {
+    > tbody {
+      > tr {
+        &:nth-of-type(odd) {
           * {
             color: $white;
           }
@@ -361,24 +361,24 @@ th {
     display: none;
   }
   .rdt_Table {
-    .rdt_TableHead{
-      .rdt_TableHeadRow{
-        .rdt_TableCol{
+    .rdt_TableHead {
+      .rdt_TableHeadRow {
+        .rdt_TableCol {
           &:first-child,
           &:nth-child(2),
-          &:nth-last-child(2){
+          &:nth-last-child(2) {
             min-width: 228px;
           }
-          &:last-child{
-            .rdt_TableCol_Sortable{
+          &:last-child {
+            .rdt_TableCol_Sortable {
               justify-content: center;
             }
           }
-          .rdt_TableCol_Sortable{
+          .rdt_TableCol_Sortable {
             font-weight: 600;
             font-size: 14px;
             justify-content: flex-start;
-            span{
+            span {
               display: none;
             }
           }
@@ -386,15 +386,15 @@ th {
       }
     }
     .rdt_TableBody {
-      .rdt_TableRow{
-        .rdt_TableCell{
+      .rdt_TableRow {
+        .rdt_TableCell {
           justify-content: flex-start;
           &:first-child,
           &:nth-child(2),
-          &:nth-last-child(2){
+          &:nth-last-child(2) {
             min-width: 228px;
           }
-          &:last-child{
+          &:last-child {
             justify-content: center;
           }
         }
@@ -413,7 +413,7 @@ th {
   }
 }
 .support-table {
-  .progress-showcase{
+  .progress-showcase {
     width: 100px;
   }
 }

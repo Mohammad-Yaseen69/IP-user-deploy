@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import ConfigDB from '../../Config/ThemeConfig';
-import Context from './index';
+import React, { useEffect, useState } from "react";
+import ConfigDB from "../../Config/ThemeConfig";
+import Context from "./index";
 
 const AnimationThemeProvider = (props) => {
-  const [animation, setAnimation] = useState('');
+  const [animation, setAnimation] = useState("");
 
   useEffect(() => {
     setAnimation(ConfigDB.data.router_animation);
@@ -11,7 +11,7 @@ const AnimationThemeProvider = (props) => {
 
   const routerAnimation = (layout_anim) => {
     ConfigDB.data.settings.router_animation = layout_anim;
-    localStorage.setItem('animation', layout_anim);
+    localStorage.setItem("animation", layout_anim);
     setAnimation(layout_anim);
   };
 
@@ -20,7 +20,7 @@ const AnimationThemeProvider = (props) => {
       value={{
         ...props,
         animation,
-        routerAnimation
+        routerAnimation,
       }}
     >
       {props.children}

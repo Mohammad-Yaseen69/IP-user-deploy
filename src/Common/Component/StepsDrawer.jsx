@@ -50,8 +50,7 @@ const StepsDrawer = ({
   const { t } = useTranslation();
   const doneCount =
     SIDEBAR_STEPS.findIndex(
-      (x) =>
-        x.stepName === currentStep || x?.alsoActiveFor?.includes(currentStep),
+      (x) => x.stepName === currentStep || x?.alsoActiveFor?.includes(currentStep),
     ) + 1;
 
   return (
@@ -65,8 +64,8 @@ const StepsDrawer = ({
           borderTopRightRadius: "25px",
         },
       }}
-      onClose={()=>toggleDrawer(false)}
-      onOpen={()=>toggleDrawer(true)}
+      onClose={() => toggleDrawer(false)}
+      onOpen={() => toggleDrawer(true)}
     >
       <div className={styles.container}>
         <div className={styles.slideBtn} />
@@ -75,7 +74,10 @@ const StepsDrawer = ({
           <span className={styles.checkListHeading}>{t("Where you are")}</span>
 
           <span className={styles.checkListCount}>
-            Step {doneCount} of {SIDEBAR_STEPS.length}
+            {t("Step")}
+            &nbsp;{doneCount}&nbsp;
+            {t("of")}&nbsp;
+            {SIDEBAR_STEPS.length}
           </span>
         </div>
 
@@ -83,17 +85,13 @@ const StepsDrawer = ({
           {SIDEBAR_STEPS.map((item) => {
             const isActive = isSidebarStepActive(item, currentStep);
             const isCompleted = isSidebarStepCompleted(item, currentStep);
-            const { label, statusBgColor, icon, textColor, iconBgColor } =
-              getIcon(
-                isCompleted ? "done" : isActive ? "inprogress" : "incomplete",
-              );
+            const { label, statusBgColor, icon, textColor, iconBgColor } = getIcon(
+              isCompleted ? "done" : isActive ? "inprogress" : "incomplete",
+            );
             return (
               <div className={styles.checklistRow} key={item.stepName}>
                 <div className={styles.checklistItem}>
-                  <div
-                    className={styles.iconContainer}
-                    style={{ backgroundColor: iconBgColor }}
-                  >
+                  <div className={styles.iconContainer} style={{ backgroundColor: iconBgColor }}>
                     {icon}
                   </div>
                   <span>{item.label}</span>

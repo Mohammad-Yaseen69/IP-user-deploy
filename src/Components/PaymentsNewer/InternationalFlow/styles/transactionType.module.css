@@ -1,5 +1,3 @@
-
-
 .cards {
   display: grid;
   gap: 20px;
@@ -7,8 +5,8 @@
   width: 100%;
 }
 
-p{
-    font-weight: 600;
+p {
+  font-weight: 600;
 }
 
 .card {
@@ -22,12 +20,10 @@ p{
   text-align: center;
 }
 
-
-.card:hover{
+.card:hover {
   transform: translateY(-4px);
   transform: scale(1.025);
 }
-
 
 .active {
   background: #5926f0;
@@ -64,4 +60,3 @@ p{
   background: rgba(255, 255, 255, 0.25);
   color: white;
 }
-

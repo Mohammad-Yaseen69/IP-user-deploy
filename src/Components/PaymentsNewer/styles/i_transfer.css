@@ -1,365 +1,364 @@
 .i_t_con {
-    height: 700px;
+  height: 700px;
 }
 
 .qr_scan_toggler {
-    min-height: 200px;
+  min-height: 200px;
 }
 
 .qr_text_mt {
-    margin-top: 60px;
+  margin-top: 60px;
 }
 
 .head_left_side {
-    font-size: 1.6rem;
+  font-size: 1.6rem;
 }
 
 .head_confirm {
-    font-size: 32px;
+  font-size: 32px;
 }
 
 .coun_card_con {
-    max-height: 415px;
+  max-height: 415px;
 }
 
 .i_t_b_con {
-    max-height: 300px;
+  max-height: 300px;
 }
 
 .i_t_flag {
-    width: 51px;
-    height: 34px;
-    object-fit: cover;
+  width: 51px;
+  height: 34px;
+  object-fit: cover;
 }
 
-.i_t_s_coun>img {
-    width: 39px;
-    height: 26px;
+.i_t_s_coun > img {
+  width: 39px;
+  height: 26px;
 }
 
-.i_t_s_coun>span {
-    font-size: 1rem;
+.i_t_s_coun > span {
+  font-size: 1rem;
 }
 
 .i_t_selected {
-    padding: 1rem;
-    /* height: 80px; */
+  padding: 1rem;
+  /* height: 80px; */
 }
 
 .i_t_sc {
-    padding: 45px 0;
+  padding: 45px 0;
 }
 
 .i_t_mt1 {
-    margin-top: 1rem;
+  margin-top: 1rem;
 }
 
 .i_t_mt2 {
-    margin-top: 2rem;
+  margin-top: 2rem;
 }
 
 .i_t_c_c {
-    width: 310px;
-    height: 250px;
-    translate: -10% 0;
+  width: 310px;
+  height: 250px;
+  translate: -10% 0;
 }
 
 .i_t_button {
-    padding: 7px 24px;
-    font-size: 1rem;
-    gap: 12px;
+  padding: 7px 24px;
+  font-size: 1rem;
+  gap: 12px;
 }
 
 .w_a_i {
-    padding: 16px;
+  padding: 16px;
 }
 
 .conf_cont {
-    gap: 14px;
+  gap: 14px;
 }
 
 .c_f_a_head {
-    margin-top: 1rem;
-    font-size: 1.4rem;
+  margin-top: 1rem;
+  font-size: 1.4rem;
 }
 
 .c_f_a_amount {
-    font-size: 3rem;
+  font-size: 3rem;
 }
 
 .c_f_a_amount input {
-    background-color: red;
+  background-color: red;
 }
 
 .m_t_1_0 {
-    margin-top: 1rem;
+  margin-top: 1rem;
 }
 
 .c_f_a_warning {
-    margin-top: 1rem;
+  margin-top: 1rem;
 }
 
 .m_t_1_05 {
-    margin: 1rem auto 0;
+  margin: 1rem auto 0;
 }
 
 .c_f_w_head {
-    font-size: 1.1rem;
+  font-size: 1.1rem;
 }
 
 .card_crypto {
-    height: 250px;
-    gap: 1.3rem;
-    max-width: 480px;
-    width: 100%;
-    margin: 0 auto;
+  height: 250px;
+  gap: 1.3rem;
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .card_crypto p {
-    font-size: .8rem;
+  font-size: 0.8rem;
 }
 
 .card_crypto h2 {
-    font-size: 3rem;
+  font-size: 3rem;
 }
 
 .card_crypto h4 {
-    font-size: 1.2rem;
+  font-size: 1.2rem;
 }
 
-.card_crypto>div>div>img {
-    width: 60px;
+.card_crypto > div > div > img {
+  width: 60px;
 }
 
-.card_crypto>div>img {
-    width: 30px;
+.card_crypto > div > img {
+  width: 30px;
 }
 
 .card_crypto span {
-    font-size: 18px;
+  font-size: 18px;
 }
 
 .timer_count {
-    font-size: 2.2rem;
+  font-size: 2.2rem;
 }
 
 .timer_cont {
-    padding: 1rem;
+  padding: 1rem;
 }
 
 .f_s_3r {
-    font-size: 3rem;
+  font-size: 3rem;
 }
 
 .otp_cont {
-    background: url(../files/otp_bg.svg);
-    background-size: cover;
-    background-position: center;
+  background: url(../files/otp_bg.svg);
+  background-size: cover;
+  background-position: center;
 }
 
 .i_t_amount::-webkit-inner-spin-button,
 .i_t_amount::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    appearance: none;
-    margin: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
 }
 
 .i_t_amount {
-    -moz-appearance: textfield;
+  -moz-appearance: textfield;
 }
 
 .w_t_w_b_l {
-    max-height: 350px;
+  max-height: 350px;
 }
 
 @media screen and (max-width: 1700px) {
-    .head_confirm {
-        font-size: 20px;
-    }
+  .head_confirm {
+    font-size: 20px;
+  }
 }
 
 @media screen and (max-width: 1650px) {
-    .card_crypto {
-        max-width: unset;
-        margin: 0 0;
-    }
+  .card_crypto {
+    max-width: unset;
+    margin: 0 0;
+  }
 }
 
 @media screen and (max-width: 1599px) {
-    .w_t_w_b_l {
-        max-height: 200px;
-    }
+  .w_t_w_b_l {
+    max-height: 200px;
+  }
 
-    .qr_scan_toggler {
-        min-height: 160px;
-    }
+  .qr_scan_toggler {
+    min-height: 160px;
+  }
 
-    .qr_text_mt {
-        margin-top: 30px;
-    }
+  .qr_text_mt {
+    margin-top: 30px;
+  }
 
-    .i_t_con {
-        height: 530px;
-    }
+  .i_t_con {
+    height: 530px;
+  }
 
-    .head_left_side {
-        font-size: 1.1rem;
-    }
+  .head_left_side {
+    font-size: 1.1rem;
+  }
 
-    .coun_card_con {
-        max-height: 300px;
-    }
+  .coun_card_con {
+    max-height: 300px;
+  }
 
-    .i_t_amount {
-        padding: 0;
-    }
+  .i_t_amount {
+    padding: 0;
+  }
 
-    .i_t_pt {
-        max-height: 430px;
-        overflow-y: auto;
-    }
+  .i_t_pt {
+    max-height: 430px;
+    overflow-y: auto;
+  }
 
-    .i_t_b_con {
-        max-height: var(--max-height);
-    }
+  .i_t_b_con {
+    max-height: var(--max-height);
+  }
 
-    .i_t_flag {
-        width: 45px;
-        height: 30px;
-    }
+  .i_t_flag {
+    width: 45px;
+    height: 30px;
+  }
 
-    .i_t_s_coun {
-        margin-top: .4rem;
-    }
+  .i_t_s_coun {
+    margin-top: 0.4rem;
+  }
 
-    .i_t_s_coun>img {
-        width: 33px;
-        height: 22px;
-    }
+  .i_t_s_coun > img {
+    width: 33px;
+    height: 22px;
+  }
 
-    .i_t_s_coun>span {
-        font-size: .7rem;
-    }
+  .i_t_s_coun > span {
+    font-size: 0.7rem;
+  }
 
-    .i_t_selected {
-        padding: 8px;
-        height: fit-content;
-    }
+  .i_t_selected {
+    padding: 8px;
+    height: fit-content;
+  }
 
-    .i_t_sc {
-        padding: 20px 0px;
-    }
+  .i_t_sc {
+    padding: 20px 0px;
+  }
 
-    .i_t_mt1 {
-        margin-top: 0rem;
-    }
+  .i_t_mt1 {
+    margin-top: 0rem;
+  }
 
-    .i_t_mt2 {
-        margin-top: 1rem;
-    }
+  .i_t_mt2 {
+    margin-top: 1rem;
+  }
 
-    .i_t_c_c {
-        width: 250px;
-        height: 250px;
-    }
+  .i_t_c_c {
+    width: 250px;
+    height: 250px;
+  }
 
-    .i_t_button {
-        padding: 5px 16px;
-        font-size: .7rem;
-        gap: 7px;
-    }
+  .i_t_button {
+    padding: 5px 16px;
+    font-size: 0.7rem;
+    gap: 7px;
+  }
 
-    .i_t_c_search {
-        padding: 2px 10px;
-    }
+  .i_t_c_search {
+    padding: 2px 10px;
+  }
 
-    .w_a_i {
-        padding: 8px 12px;
-    }
+  .w_a_i {
+    padding: 8px 12px;
+  }
 
-    .conf_cont {
-        gap: 6px;
-    }
+  .conf_cont {
+    gap: 6px;
+  }
 
+  .c_f_a_head {
+    margin-top: 0;
+    font-size: 1rem;
+  }
 
-    .c_f_a_head {
-        margin-top: 0;
-        font-size: 1rem;
-    }
+  .c_f_a_amount {
+    font-size: 2rem;
+  }
 
-    .c_f_a_amount {
-        font-size: 2rem;
-    }
+  .c_f_a_warning {
+    font-size: 0.7rem;
+    margin-top: 0;
+  }
 
-    .c_f_a_warning {
-        font-size: .7rem;
-        margin-top: 0;
-    }
+  .m_t_1_0 {
+    margin-top: 0rem;
+  }
 
-    .m_t_1_0 {
-        margin-top: 0rem;
-    }
+  .m_t_1_05 {
+    margin: 0.5rem auto 0;
+  }
 
-    .m_t_1_05 {
-        margin: .5rem auto 0;
-    }
+  .orange_warning {
+    font-size: 0.6rem;
+  }
 
-    .orange_warning {
-        font-size: .6rem;
-    }
+  .orange_warning span {
+    font-size: 0.8rem;
+  }
 
-    .orange_warning span {
-        font-size: .8rem;
-    }
+  .c_f_w_head {
+    font-size: 0.8rem;
+  }
 
-    .c_f_w_head {
-        font-size: .8rem;
-    }
+  .card_crypto {
+    height: 200px;
+  }
 
-    .card_crypto {
-        height: 200px;
-    }
+  .card_crypto p {
+    font-size: 0.5rem;
+  }
 
-    .card_crypto p {
-        font-size: .5rem;
-    }
+  .card_crypto h2 {
+    font-size: 1.7rem;
+  }
 
-    .card_crypto h2 {
-        font-size: 1.7rem;
-    }
+  .card_crypto h4 {
+    font-size: 0.9rem;
+  }
 
-    .card_crypto h4 {
-        font-size: .9rem;
-    }
+  .card_crypto > div > div > img {
+    width: 40px;
+  }
 
-    .card_crypto>div>div>img {
-        width: 40px;
-    }
+  .card_crypto > div > img {
+    width: 20px;
+  }
 
-    .card_crypto>div>img {
-        width: 20px;
-    }
+  .card_crypto span {
+    font-size: 15px;
+  }
 
-    .card_crypto span {
-        font-size: 15px;
-    }
+  .timer_count {
+    font-size: 1.3rem;
+  }
 
-    .timer_count {
-        font-size: 1.3rem;
-    }
+  .timer_cont {
+    padding: 0.5rem;
+  }
 
-    .timer_cont {
-        padding: .5rem;
-    }
-
-    .f_s_3r {
-        font-size: 2rem;
-    }
+  .f_s_3r {
+    font-size: 2rem;
+  }
 }
 
 @media screen and (max-width: 600px) {
-    .i_t_flag {
-        width: 26px;
-        height: 19px;
-    }
+  .i_t_flag {
+    width: 26px;
+    height: 19px;
+  }
 }

@@ -1,14 +1,14 @@
 {
   "Chrome": {
-    "desktop": "Open Chrome > click the lock 🔒 icon to the left of the URL > Permissions > Location > set to 'Allow' OR go Settings > Privacy & security > Site Settings > Location and choose 'Sites can ask to use your location' then allow InstaPay.", 
+    "desktop": "Open Chrome > click the lock 🔒 icon to the left of the URL > Permissions > Location > set to 'Allow' OR go Settings > Privacy & security > Site Settings > Location and choose 'Sites can ask to use your location' then allow InstaPay.",
     "mobile": "Open Chrome app > Menu (⋮) > Settings > Privacy and security > Site Settings > Location > turn on 'Sites can ask to use your location', then allow InstaPay on prompt."
   },
   "Safari": {
-    "desktop": "Safari > Preferences (or Settings) > Websites > Location > find your site and set to 'Allow'. Also make sure Mac system Location Services are on.", 
+    "desktop": "Safari > Preferences (or Settings) > Websites > Location > find your site and set to 'Allow'. Also make sure Mac system Location Services are on.",
     "iOS": "Open iOS Settings > Privacy & Security > Location Services > ensure Location Services is on > scroll to Safari Websites and set 'While Using the App' or 'Ask'."
   },
   "Firefox": {
-    "desktop": "Click the Permissions (lock/🛡️) icon left of URL > Settings next to 'Location' > change from 'Block' to 'Allow' or 'Ask'. OR go Firefox Settings > Privacy & Security > Permissions > Location Settings and update it.", 
+    "desktop": "Click the Permissions (lock/🛡️) icon left of URL > Settings next to 'Location' > change from 'Block' to 'Allow' or 'Ask'. OR go Firefox Settings > Privacy & Security > Permissions > Location Settings and update it.",
     "mobile": "Open Firefox app > Menu > Settings > Permissions > Location > set to 'Ask' or 'Allow'."
   },
   "Edge": {

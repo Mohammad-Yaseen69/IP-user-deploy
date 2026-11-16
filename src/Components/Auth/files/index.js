@@ -1,16 +1,8 @@
-import instaIcon from "./instaIcon.svg"
-import whatsappIcon from "./whatsappIcon.svg"
-import biometricIcon from "./biometricIcon.jpg"
-import smsIcon from "./smsIcon.png"
-import authIcon from "./authIcon.svg"
-import email from "./email.svg"
+import instaIcon from "./instaIcon.svg";
+import whatsappIcon from "./whatsappIcon.svg";
+import biometricIcon from "./biometricIcon.jpg";
+import smsIcon from "./smsIcon.png";
+import authIcon from "./authIcon.svg";
+import email from "./email.svg";
 
-
-export {
-    instaIcon,
-    whatsappIcon,
-    biometricIcon,
-    smsIcon,
-    authIcon,
-    email
-}
+export { instaIcon, whatsappIcon, biometricIcon, smsIcon, authIcon, email };
