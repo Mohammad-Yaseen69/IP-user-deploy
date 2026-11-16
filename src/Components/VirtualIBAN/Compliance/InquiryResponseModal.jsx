@@ -1,43 +1,98 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Modal, ModalBody } from "reactstrap";
 import { X, UploadCloud } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+import { UserContext } from "../../../Context/UserContext";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError";
 
+const KYC_KYB_ACCEPT = { pdf: ".pdf,application/pdf", image: "image/*", video: "video/*" };
+const matchesKycKybType = (file, fileType) => {
+  const type = String(fileType || "")
+    .trim()
+    .toLowerCase();
+  if (type === "pdf") return file.type === "application/pdf" || /\.pdf$/i.test(file.name);
+  if (type === "image" || type === "video") return file.type.startsWith(`${type}/`);
+  return true;
+};
+
 const InquiryResponseModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
   const { t } = useTranslation();
+  const { verifyToken } = useContext(UserContext);
   const [userAnswer, setUserAnswer] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
   if (!isOpen || !inquiry) return null;
 
+  const isKycKyb = inquiry.source === "kyc_kyb";
   const requiresFile = inquiry.inquiry_type === "FILE" || inquiry.inquiry_type === "BOTH";
   const requiresAnswer = inquiry.inquiry_type === "QUESTION";
 
   const handleFileChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
+    const file = e.target.files?.[0];
+    if (!file) return;
+    // Same limits the KYC/KYB settings upload enforces.
+    if (isKycKyb && file.size > 5 * 1024 * 1024) {
+      toast.error(t("File size cannot exceed 5MB"));
+      e.target.value = "";
+      return;
     }
+    if (isKycKyb && !matchesKycKybType(file, inquiry.file_type)) {
+      toast.error(
+        `${t("Invalid file type. Please upload a")} ${String(inquiry.file_type).toUpperCase()} ${t("file.")}`,
+      );
+      e.target.value = "";
+      return;
+    }
+    setSelectedFile(file);
+  };
+
+  const submitKycKyb = async () => {
+    const formData = new FormData();
+    if (requiresAnswer) {
+      formData.append("text_value", userAnswer.trim());
+      formData.append("file", userAnswer.trim());
+    } else {
+      formData.append("file", selectedFile);
+      formData.append("file_type", selectedFile.type);
+    }
+    formData.append("file_id", inquiry._id);
+
+    await apiWrapper({
+      endpoint: inquiry.uploadEndpoint,
+      method: "POST",
+      payload: formData,
+      isFormData: true,
+      isDecrypted: false,
+    });
+    toast.success(t("Document uploaded successfully."));
+    // KYC/KYB requests live on userDetails, so refresh it to move the item to "In review".
+    if (verifyToken) verifyToken(true);
   };
 
   const handleSubmit = async (e) => {
     e?.preventDefault();
 
     if (requiresFile && !selectedFile) {
-      toast.error(t("compliance.fileRequired", "Please attach the requested document."));
+      toast.error(t("Please attach the requested document."));
       return;
     }
 
     if (requiresAnswer && !userAnswer.trim()) {
-      toast.error(t("compliance.answerRequired", "Please provide an answer to the inquiry."));
+      toast.error(t("Please provide an answer to the inquiry."));
       return;
     }
 
     setLoading(true);
     try {
+      if (isKycKyb) {
+        await submitKycKyb();
+        toggle();
+        return;
+      }
+
       const formData = new FormData();
       if (userAnswer.trim()) {
         formData.append("user_answer", userAnswer.trim());
@@ -54,15 +109,13 @@ const InquiryResponseModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
         isDecrypted: true,
       });
 
-      toast.success(
-        res?.message || t("compliance.uploadSuccess", "Response submitted successfully."),
-      );
+      toast.success(res?.message || t("Response submitted successfully."));
       if (onSuccess) onSuccess();
       toggle();
     } catch (error) {
       handlePaymentApiError({
         error,
-        fallback: t("compliance.uploadError", "Failed to upload response."),
+        fallback: t("Failed to upload response."),
         setError: (message) => toast.error(message),
       });
     } finally {
@@ -72,7 +125,14 @@ const InquiryResponseModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
 
   return (
     <Modal isOpen={isOpen} toggle={toggle} centered size="md">
-      <ModalBody style={{ padding: "24px", background: "#ffffff", borderRadius: "16px" }}>
+      <ModalBody
+        style={{
+          padding: "24px",
+          background: "#ffffff",
+          borderRadius: "16px",
+          overflowWrap: "anywhere",
+        }}
+      >
         <div
           style={{
             display: "flex",
@@ -93,7 +153,9 @@ const InquiryResponseModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
               {inquiry.title}
             </h4>
             <span style={{ fontSize: "12px", color: "#6b7280" }}>
-              {t("compliance.inquiryType", "Compliance Inquiry")} · {inquiry.inquiry_type}
+              {isKycKyb
+                ? t("KYC/KYB document request")
+                : `${t("Compliance Inquiry")} · ${inquiry.inquiry_type}`}
             </span>
           </div>
           <button
@@ -141,16 +203,12 @@ const InquiryResponseModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
                   color: "#374151",
                 }}
               >
-                {t("compliance.yourAnswer", "Your Response")}{" "}
-                {requiresAnswer && <span style={{ color: "#dc2626" }}>*</span>}
+                {t("Your Response")} {requiresAnswer && <span style={{ color: "#dc2626" }}>*</span>}
               </label>
               <textarea
                 value={userAnswer}
                 onChange={(e) => setUserAnswer(e.target.value)}
-                placeholder={t(
-                  "compliance.answerPlaceholder",
-                  "Type your explanation or response here...",
-                )}
+                placeholder={t("Type your explanation or response here...")}
                 rows={4}
                 style={{
                   width: "100%",
@@ -175,8 +233,7 @@ const InquiryResponseModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
                   color: "#374151",
                 }}
               >
-                {t("compliance.attachDocument", "Attach Supporting Document")}{" "}
-                <span style={{ color: "#dc2626" }}>*</span>
+                {t("Attach Supporting Document")} <span style={{ color: "#dc2626" }}>*</span>
                 {inquiry.file_type && (
                   <span
                     style={{
@@ -186,7 +243,7 @@ const InquiryResponseModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
                       marginLeft: "6px",
                     }}
                   >
-                    ({t("compliance.allowedType", "Format")}: {inquiry.file_type})
+                    ({t("Format")}: {inquiry.file_type})
                   </span>
                 )}
               </label>
@@ -214,14 +271,16 @@ const InquiryResponseModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
                     textAlign: "center",
                   }}
                 >
-                  {selectedFile
-                    ? selectedFile.name
-                    : t("compliance.chooseFile", "Click to select a file")}
+                  {selectedFile ? selectedFile.name : t("Click to select a file")}
                 </span>
                 <input
                   type="file"
                   onChange={handleFileChange}
-                  accept={inquiry.file_type || "*"}
+                  accept={
+                    isKycKyb
+                      ? KYC_KYB_ACCEPT[String(inquiry.file_type || "").toLowerCase()]
+                      : inquiry.file_type || "*"
+                  }
                   style={{ display: "none" }}
                 />
               </label>
@@ -251,7 +310,7 @@ const InquiryResponseModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
                 cursor: "pointer",
               }}
             >
-              {t("compliance.cancel", "Cancel")}
+              {t("Cancel")}
             </button>
             <button
               type="submit"
@@ -268,9 +327,7 @@ const InquiryResponseModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
                 opacity: loading ? 0.7 : 1,
               }}
             >
-              {loading
-                ? t("compliance.submitting", "Submitting...")
-                : t("compliance.submitResponse", "Submit Response")}
+              {loading ? t("Submitting...") : t("Submit Response")}
             </button>
           </div>
         </form>

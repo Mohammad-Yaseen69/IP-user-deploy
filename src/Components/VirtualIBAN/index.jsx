@@ -6,12 +6,14 @@ import { UserContext } from "../../Context/UserContext";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import { useVirtualIbanProcessingStatus, useVirtualIbans } from "../../hooks/useVirtualIban";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
+import { getAdditionalFiles, isPendingAdditionalFile } from "../../utils/Functions/additionalFiles";
 import useWindowWidth from "../../utils/useWindowWidth";
 import InstaPayLoader from "../Loader";
 import TopRight from "../topRight";
 import Compliance from "./Compliance";
 import AccountsSidebar from "./components/AccountsSidebar";
 import BalanceHeader from "./components/BalanceHeader";
+import IbanCreationFailed from "./components/IbanCreationFailed";
 import InactiveIban from "./components/InactiveIban";
 import MonthlyExpenses from "./components/MonthlyExpenses";
 import QuickActions from "./components/QuickActions";
@@ -44,7 +46,9 @@ const VirtualBank = () => {
   const [onboardingStep, setOnboardingStep] = useState("landing");
 
   const ibans = useMemo(() => asVirtualIbanArray(rawIbans), [rawIbans]);
-  const creationInProgress = ibanCreationStatus === true;
+  const creationInProgress = ibanCreationStatus?.inProgress === true;
+  // shortcut: only shown when the user has no IBAN yet; a failed second account still lands on the dashboard
+  const creationFailed = ibanCreationStatus?.failed === true;
   const isInitialLoading = ibansLoading || ibanCreationStatusLoading;
   const canCreateIban = can("virtual-iban.account.create");
   const canViewDetails = can("virtual-iban.details.view");
@@ -126,11 +130,46 @@ const VirtualBank = () => {
     },
   });
 
+  const complianceRequests = useMemo(() => {
+    const uploadEndpoint =
+      userDetails?.account_type === "individual"
+        ? `/api/user/upload-additional-file/${userDetails?._id}`
+        : `/api/company/upload-additional-file-kyb/${userDetails?._id}`;
+
+    const kycKybRequests = getAdditionalFiles(userDetails)
+      .filter((file) => !file?.purpose || ["instapay_kyc", "instapay_kyb"].includes(file.purpose))
+      .map((file) => {
+        const rawStatus = String(file?.status || "").toLowerCase();
+        const status = isPendingAdditionalFile(file)
+          ? "REQUESTED"
+          : ["uploaded", "needs-review", "needs_review"].includes(rawStatus)
+            ? "UPLOADED"
+            : null;
+
+        return (
+          status && {
+            _id: file._id,
+            title: file.document_type,
+            description: file.desc,
+            inquiry_type: file.input_type === "text" ? "QUESTION" : "FILE",
+            file_type: file.file_type,
+            status,
+            source: "kyc_kyb",
+            uploadEndpoint,
+          }
+        );
+      })
+      .filter(Boolean);
+    return [...inquiries, ...kycKybRequests];
+  }, [inquiries, userDetails]);
+
   useEffect(() => {
-    if (inquiries.find((req) => req.status === "REQUESTED" || req.status === "action_needed")) {
+    if (
+      complianceRequests.find((req) => req.status === "REQUESTED" || req.status === "action_needed")
+    ) {
       setActiveTab("compliance");
     }
-  }, [inquiries]);
+  }, [complianceRequests]);
 
   useEffect(() => {
     if (!selectedAccount && ibans?.length) {
@@ -242,6 +281,13 @@ const VirtualBank = () => {
         </div>
       ) : creationInProgress ? (
         <div style={{ minHeight: "520px", width: "100%" }} />
+      ) : creationFailed && !showGetIBAN && ibans.length === 0 && canCreateIban ? (
+        <div className={styles.main}>
+          <IbanCreationFailed
+            feeRefunded={ibanCreationStatus?.feeRefunded}
+            onRetry={handleOpenIBAN}
+          />
+        </div>
       ) : showGetIBAN || (ibans.length === 0 && canCreateIban) ? (
         userDetails?.account_type === "business" ? (
           <OnboardingIBAN ref={onboardingRef} onStepChange={setOnboardingStep} />
@@ -350,7 +396,7 @@ const VirtualBank = () => {
               <div className={styles.section}>
                 <Compliance
                   refetch={refetchInquries}
-                  inquiries={inquiries}
+                  inquiries={complianceRequests}
                   isLoading={inquriesLoading}
                 />
               </div>
@@ -370,7 +416,7 @@ const VirtualBank = () => {
           isOpen={creationInProgress}
           toggle={() => {}}
           onCreated={handleBackToDashboard}
-          resumeProcessingData={ibanCreationStatus}
+          resumeProcessingData={creationInProgress}
           resumeProcessingLoading={ibanCreationStatusLoading}
         />
       )}
