@@ -4,6 +4,15 @@ import { CardText } from "reactstrap";
 import { UserContext } from "../../Context/UserContext";
 import { renderAccountName } from "../../utils/Functions/transactionHelpers";
 import styles from "./styles/Recents.module.css";
+import {
+  ArrowUpRight,
+  ArrowDownLeft,
+  Plus,
+  Zap,
+  Bitcoin,
+  FileText,
+  Smartphone,
+} from "lucide-react";
 
 function formatTime(createdAt) {
   const date = new Date(createdAt);
@@ -20,10 +29,34 @@ function formatTime(createdAt) {
   }
 }
 
+const getTxnIcon = (transaction) => {
+  const key = (transaction?.service_type || transaction?.payment_type || "").toLowerCase();
+  const isCredit = transaction?.transaction_type?.toLowerCase() === "credit";
+
+  if (key.includes("topup") || key.includes("top_up") || key.includes("top-up")) return Plus;
+  if (key.includes("bill")) return Zap;
+  if (key.includes("crypto")) return Bitcoin;
+  if (key.includes("quot")) return FileText;
+  if (key.includes("mobile")) return Smartphone;
+
+  return isCredit ? ArrowDownLeft : ArrowUpRight;
+};
+
 const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
   const { beneficiaries } = useContext(UserContext);
   const { t } = useTranslation();
   // console.log("sender", transaction)
+
+  const getIconTheme = (type) =>
+    type?.toLowerCase() === "credit"
+      ? { bg: "#F0ECFF", color: "#5926F0" }
+      : { bg: "#F3F4F6", color: "#6B7280" };
+
+  const isCredit = transaction?.transaction_type?.toLowerCase() === "credit";
+  const Icon = getTxnIcon(transaction);
+  const iconTheme = getIconTheme(transaction?.transaction_type);
+
+  const getAmountColor = (type) => (type?.toLowerCase() === "credit" ? "#1CB234" : "#1D1535");
 
   const badgeColor = useMemo(() => {
     switch (transaction?.status?.toLowerCase()) {
@@ -77,16 +110,10 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
           {t(transaction?.headerText)}:
         </CardText>
       )}
-      <div
-        key={transaction?._id}
-        className={styles.recent_item}
-        style={{ /*overflowX: "auto",*/ scrollbarWidth: "none" }}
-      >
+      <div key={transaction?._id} className={styles.recent_item} style={{ scrollbarWidth: "none" }}>
         <div className="d-flex gap-2 align-items-center">
-          <div className={styles.left}>
-            <span className={styles.icon} style={{ fontSize: "1rem", fontWeight: 700 }}>
-              {renderAccountName(transaction, internationalReceiver)?.slice(0, 20)?.[0]}
-            </span>
+          <div className={styles.left} style={{ background: iconTheme.bg }}>
+            <Icon size={14} color={iconTheme.color} />
           </div>
           <div
             style={{
@@ -136,19 +163,18 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
             className={`ml-auto ${styles.head}`}
             style={{
               fontWeight: "700",
-              color:
-                transaction?.transaction_type?.toLowerCase() === "debit" ? "#FF7293" : "#1CB234",
+              color: getAmountColor(transaction?.transaction_type),
               whiteSpace: "nowrap",
             }}
           >
             {transaction?.transaction_type?.toLowerCase() === "debit" ? "-" : "+"}
-            {transaction?.currency?.code}{" "}
             {transaction?.total
               ? transaction?.total?.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })
               : ""}
+            {transaction?.currency?.code}{" "}
           </div>
           <div
             style={{
@@ -161,7 +187,24 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
               whiteSpace: "nowrap",
             }}
           >
-            <span style={{ color: badgeColor, fontWeight: 600, textAlign: "right" }}>
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
+                color: badgeColor,
+                fontWeight: 600,
+              }}
+            >
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: badgeColor,
+                  display: "inline-block",
+                }}
+              />
               {t(transaction?.status?.toUpperCase())}
             </span>
           </div>

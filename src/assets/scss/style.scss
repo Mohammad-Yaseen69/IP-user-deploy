@@ -94,7 +94,6 @@
 @import "./base/reset";
 @import "./base/typography";
 //  *** components ***
-@import "./components/according.scss";
 @import "./components/alert.scss";
 @import "./components/avatars.scss";
 @import "./components/badge.scss";
@@ -102,11 +101,9 @@
 @import "./components/breadcrumb.scss";
 @import "./components/buttons.scss";
 @import "./components/card.scss";
-@import "./components/dropdown.scss";
 @import "./components/form-input.scss";
 @import "./components/form-wizard";
 @import "./components/forms.scss";
-@import "./components/icons.scss";
 @import "./components/list.scss";
 @import "./components/loader.scss";
 @import "./components/print.scss";
@@ -115,10 +112,8 @@
 @import "./components/switch.scss";
 @import "./components/tab.scss";
 @import "./components/table.scss";
-@import "./components/touchspin.scss";
 @import "./components/typeahead-search.scss";
 @import "./components/scrollbar";
-@import "./components/select2.scss";
 //	*** pages ***
 @import "./pages/blog.scss";
 @import "./pages/bookmark-app.scss";
@@ -133,7 +128,6 @@
 @import "./pages/general-widget.scss";
 @import "./pages/ecommerce.scss";
 @import "./pages/email-application.scss";
-@import "./pages/errorpage.scss";
 @import "./pages/faq.scss";
 @import "./pages/file.scss";
 @import "./pages/gallery.scss";
@@ -145,8 +139,6 @@
 @import "./pages/login.scss";
 @import "./pages/megaoption.scss";
 @import "./pages/order-history.scss";
-@import "./pages/page.scss";
-@import "./pages/pricing.scss";
 @import "./pages/progress.scss";
 @import "./pages/projectlist.scss";
 @import "./pages/social-app.scss";

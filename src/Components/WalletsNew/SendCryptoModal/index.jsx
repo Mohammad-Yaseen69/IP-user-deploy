@@ -11,6 +11,7 @@ import {
   useCryptoPayout,
   useCryptoPayoutFee,
   useValidateCryptoAddress,
+  toPayoutResult,
 } from "../../../hooks/Payments/useCryptoPayout";
 import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError";
 import useWindowWidth from "../../../utils/useWindowWidth";
@@ -531,7 +532,7 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
         idempotencyKey: getKey(),
       });
 
-      setPayoutResult(res?.data || res || null);
+      setPayoutResult(toPayoutResult(res));
       setVerified(true);
     } catch (error) {
       resetIdempotencyKey();

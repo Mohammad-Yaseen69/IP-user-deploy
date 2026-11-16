@@ -1,13 +1,15 @@
+import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import dayjs from "dayjs";
 import { Receipt } from "lucide-react";
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
+import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
 import { DateGroup, EmptyState } from "../../Common/Ledger/Cells";
 import { ActiveFilters, FilterPanel } from "../../Common/Ledger/Filters";
 import Ledger from "../../Common/Ledger/Ledger";
@@ -45,7 +47,77 @@ const defaultRange = {
   key: "selection",
 };
 
-const TransactionsTable = () => {
+const PAGE_SIZE = 15;
+const START_PAGE = 1;
+
+const fetchTransactionsPage = ({ userId, page, search, apiDates, filters, headers, signal }) => {
+  const baseUrl = `${import.meta.env.VITE_IP_DEV_API}/api/transaction`;
+  const filterQuery = new URLSearchParams(filters).toString();
+  const withFilters = (url) => (filterQuery ? `${url}?${filterQuery}` : url);
+  const config = { headers, signal };
+
+  if (apiDates) {
+    return axios.post(
+      withFilters(`${baseUrl}/search-account-transactions-by-date/${userId}/${page}/${PAGE_SIZE}`),
+      { data: encryptData({ ...apiDates, query: search }) },
+      config,
+    );
+  }
+  if (search) {
+    return axios.get(
+      withFilters(
+        `${baseUrl}/search-account-transactions/${userId}/${page}/${PAGE_SIZE}/${encodeURIComponent(search)}`,
+      ),
+      config,
+    );
+  }
+  return axios.get(
+    withFilters(`${baseUrl}/account-transactions/${userId}/${page}/${PAGE_SIZE}`),
+    config,
+  );
+};
+
+const isEndOfResults = (error) => {
+  const encrypted = error?.response?.data?.data;
+  if (!encrypted) return false;
+  try {
+    return decryptData(encrypted)?.status === false;
+  } catch {
+    return false;
+  }
+};
+
+const useTransactions = (search, apiDates, filters) => {
+  const { userDetails, authHeader } = useContext(UserContext);
+  return useInfiniteQuery({
+    queryKey: ["accountTransactions", userDetails?._id, search, apiDates, filters],
+    initialPageParam: START_PAGE,
+    queryFn: async ({ pageParam = START_PAGE, signal }) => {
+      try {
+        const res = await fetchTransactionsPage({
+          userId: userDetails?._id,
+          page: pageParam,
+          search,
+          apiDates,
+          filters,
+          headers: authHeader,
+          signal,
+        });
+        const raw = decryptData(res.data.data)?.transactionList ?? [];
+        return { list: raw.filter(transactionFilter), hasMore: raw.length >= PAGE_SIZE };
+      } catch (error) {
+        if (isEndOfResults(error)) return { list: [], hasMore: false };
+        throw error;
+      }
+    },
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage.hasMore ? allPages.length + START_PAGE : undefined,
+    enabled: !!userDetails?._id,
+    retry: false,
+  });
+};
+
+const TransactionsTable = ({ title, description }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
@@ -53,26 +125,24 @@ const TransactionsTable = () => {
   const [active, setActive] = useState("All");
   const [activeItem, setActiveItem] = useState(0);
   const [dateRange, setDateRange] = useState(defaultRange);
-  const [transactions, setTransactions] = useState([]);
   const [searchQuery, setSearchQuery] = useState(search);
   const [apiDates, setApiDates] = useState(null);
   const [filters, setFilters] = useState({});
-  const [page, setPage] = useState(1);
-  const [maxLimit, setMaxLimit] = useState(false);
-  const { userDetails, authHeader, verifyToken, getUserBeneficiaries } = useContext(UserContext);
+  const { userDetails, verifyToken, getUserBeneficiaries } = useContext(UserContext);
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(search);
-  const [isLoading, setIsLoading] = useState(true);
-  const loaderRef = useRef(null);
-  const [stopLoader, setStopLoader] = useState(false);
   const [showStatementModal, setShowStatementModal] = useState(false);
-  const debounceTimerRef = useRef(null);
-  const lastQueryKeyRef = useRef(null);
-  const isFetchingRef = useRef(false);
   const can = usePermission();
 
   const currentTrxType = apiDates ? "date_and_query" : debouncedSearchQuery ? "query" : "all";
-  const filterQuery = new URLSearchParams(filters).toString();
-  const withFilters = (url) => (filterQuery ? `${url}?${filterQuery}` : url);
+
+  const { data, isLoading, isFetching, hasNextPage, fetchNextPage, isFetchNextPageError } =
+    useTransactions(debouncedSearchQuery, apiDates, filters);
+
+  const transactions = useMemo(() => data?.pages.flatMap((page) => page.list) ?? [], [data]);
+
+  const canLoadMore = hasNextPage && !isFetchNextPageError;
+
+  const loaderRef = useInfiniteScroll({ hasNextPage: canLoadMore, isFetching, fetchNextPage });
 
   useEffect(() => {
     getUserBeneficiaries();
@@ -80,126 +150,19 @@ const TransactionsTable = () => {
 
   useEffect(() => {
     if (searchQuery === debouncedSearchQuery) return;
-
-    debounceTimerRef.current = setTimeout(() => {
-      setDebouncedSearchQuery(searchQuery);
-    }, 1000);
-
-    return () => clearTimeout(debounceTimerRef.current);
+    const timer = setTimeout(() => setDebouncedSearchQuery(searchQuery), 1000);
+    return () => clearTimeout(timer);
   }, [searchQuery, debouncedSearchQuery]);
 
   useEffect(() => {
-    if (!userDetails?._id) {
-      setIsLoading(false);
-      return;
-    }
-
-    const queryKey = JSON.stringify([
-      currentTrxType,
-      debouncedSearchQuery,
-      apiDates,
-      filters,
-      userDetails._id,
-    ]);
-    const queryChanged = lastQueryKeyRef.current !== queryKey;
-
-    if (queryChanged) {
-      lastQueryKeyRef.current = queryKey;
-      setTransactions([]);
-      setMaxLimit(false);
-      setStopLoader(false);
-      setActive("All");
-      if (page !== 1) {
-        setPage(1);
-        return;
-      }
-    }
-
-    if (maxLimit && !queryChanged) return;
-
-    const controller = new AbortController();
-    let isCurrentRequest = true;
-    isFetchingRef.current = true;
-    setIsLoading(true);
-
-    const handleSuccess = (response) => {
-      if (!isCurrentRequest) return;
-      const decrypted = decryptData(response.data.data);
-      const pageTransactions = (decrypted?.transactionList ?? []).filter(transactionFilter);
-
-      setTransactions((previous) =>
-        page === 1 ? pageTransactions : [...previous, ...pageTransactions],
-      );
-      const hasMore = (decrypted?.transactionList ?? []).length >= 15;
-      setMaxLimit(!hasMore);
-      setStopLoader(!hasMore);
-      isFetchingRef.current = false;
-      setIsLoading(false);
-    };
-
-    const handleFailure = (error) => {
-      if (!isCurrentRequest || axios.isCancel(error) || error?.code === "ERR_CANCELED") return;
-      isFetchingRef.current = false;
-      setIsLoading(false);
-      setStopLoader(true);
-      if (page === 1) setTransactions([]);
-      const encryptedErrorData = error?.response?.data?.data;
-      if (encryptedErrorData) {
-        try {
-          const decrypted = decryptData(encryptedErrorData);
-          if (decrypted?.status === false) setMaxLimit(true);
-        } catch {}
-      }
-    };
-
-    const baseUrl = import.meta.env.VITE_IP_DEV_API;
-    const headers = { headers: authHeader, signal: controller.signal };
-    let request;
-
-    if (currentTrxType === "all") {
-      request = axios.get(
-        withFilters(
-          `${baseUrl}/api/transaction/account-transactions/${userDetails._id}/${page}/15`,
-        ),
-        headers,
-      );
-    } else if (currentTrxType === "query") {
-      request = axios.get(
-        withFilters(
-          `${baseUrl}/api/transaction/search-account-transactions/${userDetails._id}/${page}/15/${encodeURIComponent(debouncedSearchQuery)}`,
-        ),
-        headers,
-      );
-    } else {
-      const encrypted = encryptData({ ...apiDates, query: debouncedSearchQuery });
-      request = axios.post(
-        withFilters(
-          `${baseUrl}/api/transaction/search-account-transactions-by-date/${userDetails._id}/${page}/15`,
-        ),
-        { data: encrypted },
-        headers,
-      );
-    }
-
-    request.then(handleSuccess).catch(handleFailure);
-
-    return () => {
-      isCurrentRequest = false;
-      controller.abort();
-      isFetchingRef.current = false;
-    };
-  }, [page, currentTrxType, debouncedSearchQuery, apiDates, filters, userDetails?._id, authHeader]);
+    setActive("All");
+  }, [debouncedSearchQuery, apiDates, filters]);
 
   useEffect(() => {
     verifyToken();
   }, [currentTrxType]);
 
-  const applyFilters = (next) => {
-    setFilters(next);
-    setPage(1);
-    setMaxLimit(false);
-    setStopLoader(false);
-  };
+  const applyFilters = (next) => setFilters(next);
 
   const handleChange = (ranges) => {
     if (ranges.selection) {
@@ -214,29 +177,8 @@ const TransactionsTable = () => {
         to: endDate.toISOString().split("T")[0],
       });
       setDateRange(ranges.selection);
-      setPage(1);
     }
   };
-
-  useEffect(() => {
-    if (isLoading || maxLimit || stopLoader) return;
-
-    const node = loaderRef.current;
-    if (!node) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !isFetchingRef.current) {
-          isFetchingRef.current = true;
-          setPage((prev) => prev + 1);
-        }
-      },
-      { threshold: 0.1 },
-    );
-
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [isLoading, maxLimit, stopLoader]);
 
   const filtered = useMemo(() => {
     switch (active) {
@@ -255,7 +197,6 @@ const TransactionsTable = () => {
 
   const changeSearch = (value) => {
     setSearchQuery(value);
-    setPage(1);
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has("search")) {
       urlParams.delete("search");
@@ -268,7 +209,6 @@ const TransactionsTable = () => {
   const clearDates = () => {
     setApiDates(null);
     setDateRange(defaultRange);
-    setPage(1);
   };
 
   const clearChips = () => {
@@ -299,6 +239,8 @@ const TransactionsTable = () => {
   return (
     <>
       <Ledger
+        title={title}
+        description={description}
         tabs={TABS}
         active={active}
         onTab={setActive}
@@ -367,7 +309,7 @@ const TransactionsTable = () => {
           </EmptyState>
         )}
 
-        {!isLoading && !stopLoader && (
+        {!isLoading && canLoadMore && (
           <div ref={loaderRef} className={s.loader}>
             <InstaPayLoader />
           </div>

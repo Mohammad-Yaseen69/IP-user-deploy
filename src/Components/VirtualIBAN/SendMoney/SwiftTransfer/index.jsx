@@ -1011,7 +1011,6 @@ const SwiftTransfer = forwardRef(
           : userDetails?.whatsapp_verification
             ? "whatsapp"
             : "sms";
-
     const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT);
     const [amount, setAmount] = useState("");
     const [selectedBeneficiary, setSelectedBeneficiary] = useState(null);

@@ -1,7 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { Form } from "reactstrap";
-// import { CgArrowsExchangeV } from "react-icons/cg"
-// import con_ic from "./files/con_ic.svg"
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
@@ -11,6 +9,7 @@ import styles from "./styles/CurConversion.module.css";
 import { LimitsErrorMessage } from "../../utils/Functions/paymentLimits";
 import { formatCurrency } from "../../Helper/AmountFormat";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
+import ExchangeCard from "../WalletsNew/Exchange/Exchange";
 
 let timeout;
 
@@ -300,12 +299,7 @@ const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true 
     }
   }, [formattedAmount]);
   return (
-    <div className={styles.container}>
-      {showHeading && (
-        <h4>
-          {t("Currency")} {t("Conversion")}
-        </h4>
-      )}
+    <>
       {filteredWallets.length > 1 ? (
         <Form
           onSubmit={(e) => {
@@ -314,121 +308,64 @@ const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true 
           }}
           className={styles.form}
         >
-          <div className={styles.input_con}>
-            <select value={userCurrency} onChange={(e) => setUserCurrency(e.target.value)}>
-              {filteredWallets
-                ?.filter(
-                  (item) =>
-                    item?.status &&
-                    !item?.blocked &&
-                    !item?.admin_blocked &&
-                    !item?.blocked &&
-                    !item?.admin_blocked &&
-                    item?.currency?.code !== exchangedCurrency,
-                )
-                ?.map((item) => (
-                  <option
-                    key={item?._id}
-                    value={item?.currency?.code}
-                    style={{
-                      display: userCurrency === item?.currency?.code ? "none" : "inherit",
-                    }}
-                  >
-                    {item?.currency?.code}
-                  </option>
-                ))}
-            </select>
-            {/* <input type="number" placeholder={t("Enter Amount")} onKeyPress={handleChangeNumber} value={enteredCurrency} onChange={e => {
-                                const value = e.target.value
-                                setEnteredCurrency(value)
-                            }} /> */}
-            <input
-              type="text"
-              value={formattedAmount}
-              maxLength={12}
-              onChange={(e) => setFormattedAmount(e.target.value)}
-              onKeyUp={handleKeyUp}
-              onBlur={handleBlur}
-              placeholder="Enter Amount"
-              data-type="currency"
-            />
-          </div>
-          <div className={styles.input_con}>
-            <select
-              value={exchangedCurrency}
-              onChange={(e) => setExchangedCurrency(e.target.value)}
-            >
-              {filteredWallets
-                ?.filter((item) => item?.currency?.code !== userCurrency)
-                ?.map((item) => (
-                  <option
-                    key={item._id}
-                    value={item?.currency?.code}
-                    style={{
-                      fontSize: "1rem",
-                      fontWeight: 900,
-                      display: exchangedCurrency === item?.currency?.code ? "none" : "inherit",
-                    }}
-                  >
-                    {item?.currency?.code}
-                  </option>
-                ))}
-            </select>
-            <div
-              style={{ cursor: "pointer" }}
-              onClick={() => {
-                const oldUserCur = userCurrency;
-                const oldExcCur = exchangedCurrency;
-                setUserCurrency(oldExcCur);
-                setExchangedCurrency(oldUserCur);
-                // setTimeout(() => {
-                //     convertCurrency()
-                // }, 500)
-              }}
-            ></div>
-            <input
-              type="text"
-              placeholder={t("Exchanged Amount")}
-              value={
-                fxDet?.receiver?.amount?.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 6,
-                }) ?? ""
-              }
-              disabled
-            />
-          </div>
-          {error && (
-            <p style={{ fontWeight: 600, color: "orange" }}>
-              {" "}
-              {t(
-                "We are unable to process your request at the moment, please try again later! Error Code: {{code}}",
-                { code: errorCode },
-              )}
-            </p>
-          )}
-          <button
-            style={{
-              opacity:
-                !enteredCurrency ||
-                !resultCurrency ||
-                !userCurrency ||
-                !exchangedCurrency ||
-                invalid ||
-                exchangedCurrency === userCurrency
-                  ? ".7"
-                  : 1,
-              cursor:
-                !enteredCurrency ||
-                !resultCurrency ||
-                !userCurrency ||
-                !exchangedCurrency ||
-                invalid ||
-                exchangedCurrency === userCurrency
-                  ? "not-allowed"
-                  : "pointer",
+          <ExchangeCard
+            fromCode={userCurrency}
+            fromOptions={filteredWallets
+              .filter((w) => w.currency.code !== exchangedCurrency)
+              .map((w) => w.currency.code)}
+            onFromChange={setUserCurrency}
+            amountValue={formattedAmount}
+            onAmountChange={setFormattedAmount}
+            onAmountKeyUp={handleKeyUp}
+            onAmountBlur={handleBlur}
+            fromBalance={`${Number(balance).toFixed(2)} ${userCurrency}`}
+            toCode={exchangedCurrency}
+            toOptions={filteredWallets
+              .filter((w) => w.currency.code !== userCurrency)
+              .map((w) => w.currency.code)}
+            onToChange={setExchangedCurrency}
+            receiveValue={
+              fxDet?.receiver?.amount?.toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 6,
+              }) ?? ""
+            }
+            toBalance={
+              receiverWallet
+                ? `${Number(receiverWallet?.balance?.available ?? 0).toFixed(2)} ${exchangedCurrency}`
+                : ""
+            }
+            rateText={
+              fxDet?.exchange_rate
+                ? `1 ${userCurrency} = ${Number(fxDet.exchange_rate).toFixed(4)} ${exchangedCurrency}`
+                : "—"
+            }
+            feeText={
+              fxDet?.fee?.amount != null
+                ? `${Number(fxDet.fee.amount).toFixed(2)} ${userCurrency}`
+                : "—"
+            }
+            errorText={
+              error
+                ? t(
+                    "We are unable to process your request at the moment, please try again later! Error Code: {{code}}",
+                    { code: errorCode },
+                  )
+                : null
+            }
+            onSwap={() => {
+              const oldUser = userCurrency;
+              setUserCurrency(exchangedCurrency);
+              setExchangedCurrency(oldUser);
             }}
-            disabled={
+            submitLabel={
+              balance < Number(enteredCurrency || 0)
+                ? t("Insufficient Balance")
+                : loading
+                  ? t("Fetching Rates...")
+                  : t("Convert")
+            }
+            submitDisabled={
               !enteredCurrency ||
               !resultCurrency ||
               !userCurrency ||
@@ -437,64 +374,39 @@ const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true 
               exchangedCurrency === userCurrency ||
               loading
             }
+            onSubmit={() => toggleModal()}
           >
-            {balance < enteredCurrency ? (
-              <span>{t(`Insufficient Balance in PKR`).replace("PKR", userCurrency)}</span>
-            ) : (
-              <>
-                <svg
-                  width="20"
-                  height="19"
-                  viewBox="0 0 20 19"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M1.67864 9.74298C1.59902 9.77925 1.51256 9.79805 1.42507 9.7981C1.31209 9.79812 1.20131 9.76688 1.10498 9.70786C1.00865 9.64883 0.930523 9.56431 0.879239 9.46365C0.827955 9.36298 0.805514 9.25009 0.814396 9.13746C0.823279 9.02484 0.863139 8.91686 0.92957 8.82548L1.79256 7.63788C3.08946 5.85998 4.78372 4.40957 6.74029 3.40226C8.69687 2.39494 10.8617 1.85855 13.0622 1.83583V1.37341C13.0618 1.1107 13.1369 0.853405 13.2785 0.632132C13.4201 0.410858 13.6223 0.234917 13.861 0.125237C14.0998 0.0155559 14.365 -0.0232486 14.6251 0.013439C14.8852 0.0501266 15.1293 0.160762 15.3284 0.332186L18.7148 3.24454C18.8628 3.37468 18.9813 3.53485 19.0625 3.71439C19.1437 3.89393 19.1857 4.08871 19.1857 4.28576C19.1857 4.48281 19.1437 4.67759 19.0625 4.85713C18.9813 5.03667 18.8628 5.19684 18.7148 5.32698L15.3284 8.23933C15.1293 8.41076 14.8852 8.52139 14.6251 8.55808C14.365 8.59477 14.0998 8.55596 13.861 8.44628C13.6223 8.3366 13.4201 8.16066 13.2785 7.93939C13.1369 7.71812 13.0618 7.46082 13.0622 7.19811V6.73569H11.0815C9.24507 6.73281 7.42965 7.12598 5.75899 7.88838L1.67864 9.74298ZM14.2411 10.4829L18.3214 8.62832C18.4447 8.5714 18.5835 8.55708 18.7158 8.58762C18.8482 8.61815 18.9666 8.69181 19.0525 8.797C19.1384 8.9022 19.1869 9.03297 19.1904 9.16874C19.1939 9.30451 19.1521 9.43759 19.0717 9.54705L18.2075 10.7347C16.9105 12.5123 15.2162 13.9625 13.2596 14.9696C11.303 15.9767 9.13826 16.5129 6.93782 16.5355V16.9973C6.93965 17.2606 6.86498 17.5188 6.72287 17.7405C6.58076 17.9622 6.37734 18.1378 6.13731 18.2461C5.95691 18.3292 5.76077 18.3724 5.56219 18.3729C5.23484 18.3724 4.91866 18.2539 4.67164 18.0391L1.28522 15.1268C1.13726 14.9966 1.01874 14.8365 0.937548 14.6569C0.856356 14.4774 0.814361 14.2826 0.814361 14.0855C0.814361 13.8885 0.856356 13.6937 0.937548 13.5142C1.01874 13.3346 1.13726 13.1745 1.28522 13.0443L4.67164 10.132C4.87071 9.96054 5.11483 9.84991 5.37497 9.81322C5.6351 9.77653 5.9003 9.81534 6.13901 9.92502C6.37773 10.0347 6.57992 10.2106 6.72153 10.4319C6.86314 10.6532 6.93822 10.9105 6.93782 11.1732V11.6356H8.91859C10.755 11.6385 12.5704 11.2453 14.2411 10.4829Z"
-                    fill="white"
-                  />
-                </svg>
-                <span>{loading ? t("Fetching Rates...") : t("Convert")}</span>
-              </>
-            )}
-          </button>
+            <ConversionModal
+              isOpen={isOpen}
+              toggleModal={toggleModal}
+              amount={enteredCurrency}
+              exchangeAmount={resultCurrency}
+              currency={userCurrency}
+              exchangeCurrency={exchangedCurrency}
+              exchangePrice={exchangePrice}
+              setEnteredCurrency={setEnteredCurrency}
+              setResultCurrency={setResultCurrency}
+              setUserCurrency={setUserCurrency}
+              setExchangedCurrency={setExchangedCurrency}
+              exchangeFee={exchangeFee}
+              fxDet={fxDet}
+              senderWallet={senderWallet}
+              receiverWallet={receiverWallet}
+              quoteExpiresAt={quoteExpiresAt}
+              isQuoteExpired={isQuoteExpired}
+              onRefreshQuote={refreshQuote}
+              isRefreshing={loading}
+            />
+          </ExchangeCard>
         </Form>
       ) : (
-        <div
-          style={{
-            padding: "10px",
-            fontSize: ".9rem",
-            fontWeight: 600,
-            textAlign: "center",
-          }}
-        >
-          {t("You must have at least two currencies wallet for this feature!")}
+        <div className={styles.emptyCard}>
+          <p className={styles.emptyText}>
+            {t("You must have at least two currencies wallet for this feature!")}
+          </p>
         </div>
       )}
-      <ConversionModal
-        isOpen={isOpen}
-        toggleModal={toggleModal}
-        amount={enteredCurrency}
-        exchangeAmount={resultCurrency}
-        currency={userCurrency}
-        exchangeCurrency={exchangedCurrency}
-        exchangePrice={exchangePrice}
-        setEnteredCurrency={setEnteredCurrency}
-        setResultCurrency={setResultCurrency}
-        setUserCurrency={setUserCurrency}
-        setExchangedCurrency={setExchangedCurrency}
-        exchangeFee={exchangeFee}
-        fxDet={fxDet}
-        senderWallet={senderWallet}
-        receiverWallet={receiverWallet}
-        quoteExpiresAt={quoteExpiresAt}
-        isQuoteExpired={isQuoteExpired}
-        onRefreshQuote={refreshQuote}
-        isRefreshing={loading}
-      />
-    </div>
+    </>
   );
 };
 

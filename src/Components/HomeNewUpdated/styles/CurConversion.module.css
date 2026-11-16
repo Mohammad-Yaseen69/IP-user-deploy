@@ -1,4 +1,4 @@
-.container {
+/* .container {
   margin-top: 1rem;
 }
 
@@ -121,4 +121,27 @@
   .container {
     margin-top: 0;
   }
+} */
+
+.emptyCard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  height: 100%;
+  padding: 24px;
+  box-sizing: border-box;
+  background: #ffffff;
+  border-radius: 16px;
+}
+
+.emptyText {
+  margin: 0;
+  max-width: 280px;
+  font-family: Manrope, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: center;
+  color: #6b7280;
 }

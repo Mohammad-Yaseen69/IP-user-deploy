@@ -274,7 +274,10 @@ const ConversionModal = ({
             );
             return;
           }
-          const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message);
+          const error = LimitsErrorMessage(
+            decrypted?.code ?? decrypted?.message,
+            decrypted?.message,
+          );
           if (error) {
             reset();
             setError(error);

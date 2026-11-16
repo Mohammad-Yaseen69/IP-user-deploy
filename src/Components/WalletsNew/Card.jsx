@@ -1,23 +1,36 @@
 import { useTranslation } from "react-i18next";
 import styles from "./styles/Card.module.css";
-import card_bg from "../HomeNewUpdated/files/card_bg.svg";
+import card_bg from "../HomeNewUpdated/files/card.png";
 import logo_white from "../../assets/images/logo/logo_white.png";
-// import card_bg_green from "../HomeNewUpdated/files/card_bg_green.svg"
+// // import card_bg_green from "../HomeNewUpdated/files/card_bg_green.svg"
 import { Check, Copy } from "react-feather";
 import { Progress } from "reactstrap";
-import { useContext, useEffect, useState } from "react";
-// import { UserContext } from "../../Context/UserContext"
-// import axios from "axios"
-// import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
+import { useState } from "react";
 import r_styles from "../HomeNewUpdated/styles/Reserved.module.css";
 import { removeCommasAndCurrency } from "./AccountLimits";
 import { formatCurrency } from "../../Helper/AmountFormat";
 
-const Card = ({ wallet, current, index, data }) => {
+const Card = ({
+  wallet,
+  current,
+  index,
+  data,
+  canSetDefault,
+  onSetDefault,
+  variant = "default",
+  className = "",
+  style,
+}) => {
   const [copied, setCopied] = useState(false);
   const { t } = useTranslation();
-  // const [isLoading, setIsLoading] = useState(false)
-  // const { userWallets, authHeader, userDetails } = useContext(UserContext)
+
+  const showSetDefault =
+    canSetDefault &&
+    index === current &&
+    !wallet?.default &&
+    wallet?.status === "active" &&
+    !wallet?.blocked &&
+    !wallet?.admin_blocked;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(`${wallet?.wallet_id?.toUpperCase()}`);
@@ -25,51 +38,11 @@ const Card = ({ wallet, current, index, data }) => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // const [totalBalance, setTotalBalance] = useState(0)
-  // const [total, setTotal] = useState(0)
-
-  // const getExchangedAmounts = async (from, to, amount) => {
-  //     setIsLoading(true);
-  //     try {
-  //         const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
-  //             headers: authHeader
-  //         });
-  //         const dec = decryptData(res?.data?.data);
-  //         return dec?.exchangeRate?.exchanged_amount ?? 0;
-  //     } catch (error) {
-  //         return 0; // return 0 in case of error
-  //     } finally {
-  //         setIsLoading(false);
-  //     }
-  // };
-
-  // useEffect(() => {
-  //     if (userWallets?.length > 0) {
-  //         const calculateTotal = async () => {
-  //             const promises = userWallets.filter(item => item?.wallet_type === "insta").map(item => getExchangedAmounts(item?.currency?.code, wallet?.currency?.code, item?.balance?.available));
-  //             const balances = await Promise.all(promises);
-  //             const total = balances.reduce((acc, balance) => acc + balance, 0);
-  //             setTotalBalance(total ?? 0);
-  //         };
-
-  //         calculateTotal();
-  //     }
-  // }, [userWallets]);
-
-  // useEffect(() => {
-  //     if (userDetails?.level && wallet?.wallet_type === "insta") {
-  //         getExchangedAmounts("USD", wallet?.currency?.code, userDetails?.level?.account_balance_limit)
-  //             .then(res => {
-  //                 setTotal(res)
-  //             })
-  //     }
-  // }, [wallet, userDetails])
-
-  console.log(wallet);
-
   const translateX = (index - current) * 20;
+  const isCompact = variant === "compact";
+
   return (
-    <div className={styles.card} style={{ width: "90%", boxShadow: "none" }}>
+    <div className={`${styles.card} ${isCompact ? styles.compact : ""} ${className}`} style={style}>
       {wallet?.balance?.reserved ? (
         <>
           <div
@@ -116,24 +89,117 @@ const Card = ({ wallet, current, index, data }) => {
           </div>
           <div className={`${r_styles.flex} ${r_styles.r_wallet}`}>
             <span>{t("Wallet ID")}:</span>
-            <h5 style={{ fontSize: "10px" }}>
+            <h5 className={r_styles.wallet_id}>
               {wallet?.wallet_id}
               {copied ? (
-                <Check size={12} />
+                <Check size={14} />
               ) : (
-                <div onClick={copyToClipboard} style={{ cursor: "pointer" }}>
-                  <Copy size={12} />
-                </div>
+                <span onClick={copyToClipboard} className={r_styles.copy_btn}>
+                  <Copy size={14} />
+                </span>
               )}
             </h5>
           </div>
-          <div className={`${r_styles.flex} ${r_styles.r_bal}`} style={{ marginTop: ".5rem" }}>
-            <span>{t("Monthly limit")}:</span>
-            <h5>
-              {data?.balance_limits?.total} / {data?.balance_limits?.remaining}
-            </h5>
+          {data?.balance_limits ? (
+            <div className={r_styles.limit_Row}>
+              <p>{t("Monthly limit")}</p>
+              <span>
+                {data.balance_limits.used} / {data.balance_limits.total}
+              </span>
+            </div>
+          ) : (
+            <span
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                color: "#fff",
+              }}
+            >
+              {" "}
+              {t("Loading...")}
+            </span>
+          )}
+
+          <Progress
+            value={
+              (removeCommasAndCurrency(data?.balance_limits?.used) /
+                removeCommasAndCurrency(data?.balance_limits?.total)) *
+              100
+            }
+            barStyle={{
+              background: "linear-gradient(to right, #f2eeff, #5926f0)",
+              borderRadius: "999px",
+            }}
+            style={{
+              height: "6px",
+              background: "#fff",
+              borderRadius: "999px",
+            }}
+          />
+        </>
+      ) : (
+        <div className={styles.top_container}>
+          <div className={styles.top}>
+            <div className={styles.walletAmount}>
+              <h3 className={styles.heading}>
+                {wallet?.currency?.code} {t("Wallet")}
+              </h3>
+            </div>
+            {showSetDefault ? (
+              <button
+                type="button"
+                className={styles.set_default_btn}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onSetDefault?.();
+                }}
+              >
+                {t("Set as Default")}
+              </button>
+            ) : (
+              <img src={logo_white} alt="logo" className={styles.logo} />
+            )}
           </div>
-          <div className={r_styles.bb}>
+          <div className={styles.walletAmount}>
+            <h3>
+              {wallet?.currency?.symbol}&nbsp;{formatCurrency(wallet?.balance?.available, true)}
+            </h3>
+          </div>
+          <div className={styles.wallet_details}>
+            <span style={{ fontSize: "0.7rem" }}>{t("Wallet ID")}: </span>
+            <div className={styles.wd_sub}>
+              <span>
+                {`${wallet?.wallet_type?.toUpperCase()}-${wallet?.wallet_id?.toUpperCase()}`}
+              </span>
+              {copied ? (
+                <Check style={{ marginRight: ".5rem" }} size={12} />
+              ) : (
+                <div onClick={copyToClipboard} style={{ cursor: "pointer" }}>
+                  <Copy style={{ marginRight: ".5rem" }} size={16} />
+                </div>
+              )}
+            </div>
+          </div>
+          {data?.balance_limits ? (
+            <div className={styles.limit_row}>
+              <p>{t("Monthly limit")}</p>
+              <span>
+                {data.balance_limits.total} / {data.balance_limits.remaining}
+              </span>
+            </div>
+          ) : (
+            <span
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                color: "#fff",
+              }}
+            >
+              {" "}
+              {t("Loading...")}
+            </span>
+          )}
+          <div className={styles.bb}>
             <Progress
               value={
                 (removeCommasAndCurrency(data?.balance_limits?.used) /
@@ -141,76 +207,20 @@ const Card = ({ wallet, current, index, data }) => {
                 100
               }
               barStyle={{
-                background: "linear-gradient(to right, rgba(256,256,256,.6), rgba(256,256,256,.9))",
+                background: "linear-gradient(to right, #F2EEFF, #5926F0)",
                 borderRadius: "50px",
                 margin: "2px",
               }}
               style={{
                 height: window.innerWidth > 1500 ? "12px" : "9px",
-                background: "rgba(256,256,256,.3)",
+                background: "#fff",
               }}
             />
-            <span style={{ right: "5px" }}>{data?.balance_limits?.remaining}</span>
           </div>
-        </>
-      ) : (
-        <>
-          <div className={styles.top}>
-            <div className={styles.left}>
-              <span>{t("Balance")}</span>
-              <h3>
-                {wallet?.currency?.code}&nbsp;{formatCurrency(wallet?.balance?.available, true)}
-              </h3>
-            </div>
-            <div className={styles.right}>
-              <img src={logo_white} alt="" />
-            </div>
-          </div>
-          <div className={styles.wallet_details}>
-            <span>{t("Wallet ID")}: </span>
-            <div className={styles.wd_sub}>
-              {copied ? (
-                <Check style={{ marginRight: ".5rem" }} size={12} />
-              ) : (
-                <div onClick={copyToClipboard} style={{ cursor: "pointer" }}>
-                  <Copy style={{ marginRight: ".5rem" }} size={12} />
-                </div>
-              )}
-              <span>
-                {`${wallet?.wallet_type?.toUpperCase()}-${wallet?.wallet_id?.toUpperCase()}`}
-              </span>
-            </div>
-          </div>
-          <div className={styles.bottom}>
-            <p>{t("Monthly limit")}</p>
-            <h3>
-              {data?.balance_limits?.total} / {data?.balance_limits?.remaining}
-            </h3>
-            <div className={styles.bb}>
-              <Progress
-                value={
-                  (removeCommasAndCurrency(data?.balance_limits?.used) /
-                    removeCommasAndCurrency(data?.balance_limits?.total)) *
-                  100
-                }
-                barStyle={{
-                  background:
-                    "linear-gradient(to right, rgba(256,256,256,.6), rgba(256,256,256,.9))",
-                  borderRadius: "50px",
-                  margin: "2px",
-                }}
-                style={{
-                  height: window.innerWidth > 1500 ? "12px" : "9px",
-                  background: "rgba(256,256,256,.3)",
-                }}
-              />
-              <span style={{ right: "5px" }}>{data?.balance_limits?.remaining}</span>
-            </div>
-          </div>
-        </>
+        </div>
       )}
       <img
-        src={/*current === index ?*/ card_bg /*: card_bg_green */}
+        src={card_bg}
         style={{
           position: "absolute",
           height: "100%",
