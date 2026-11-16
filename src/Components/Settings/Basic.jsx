@@ -1274,11 +1274,14 @@ const Basic = ({ setCurrentTab }) => {
             </Label>
             <div className={styles.external}>
               <PhoneInput
+                key={`${isEditMode}-${userDetails?.phone}`}
                 phone={phone}
-                country={phoneCountry}
-                disableDropdown={true}
-                setPhone={setPhone}
-                disabled={!isEditMode || isIndividualAccount}
+                country={
+                  isBusiness
+                    ? phoneCountry
+                    : countriesData.find((item) => item.alpha3 === country)?.alpha3
+                }
+                disableDropdown={!isBusiness}
                 newUI={true}
                 customStyles={{
                   padding: "10px 12px",
