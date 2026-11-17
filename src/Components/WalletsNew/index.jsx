@@ -25,6 +25,7 @@ import eth from "../PaymentsNewer/files/etherium.png";
 import usdt from "../PaymentsNewer/files/Tether.png";
 import RecentTrans from "../HomeNewUpdated/RecentTrans";
 import TopBar from "../../Layout/TopBar";
+import WalletActivityMobile from "../TransactionsNewApi/WalletActivityMobile";
 
 export const getLimits = async (
   currentWallet,
@@ -466,15 +467,16 @@ const WalletsNew = () => {
               </div>
             </div>
             <CurConversion />
+            <WalletActivityMobile />
             {/* {can("transactions.wallet.list") && (
               <TransactionsTable
                 title={t("Wallet transactions")}
                 description={t("Every payment in and out of this wallet, all currencies")}
               />
             )} */}
-            {can("dashboard.recent-transactions.view") && (
+            {/* {can("dashboard.recent-transactions.view") && (
               <RecentTrans currentWallet={currentWallet} />
-            )}
+            )} */}
           </div>
         </div>
       )}
