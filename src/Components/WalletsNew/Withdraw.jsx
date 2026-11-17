@@ -11,7 +11,7 @@ import ConfirmSend from "../PaymentsNewer/ConfirmSend";
 import countries from "../PaymentsNewer/CountriesData.json";
 import OTPConfirmation from "../PaymentsNewer/OTPConfirmation";
 import Receipt from "../PaymentsNewer/InternationalReceipt";
-import { useActionData, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 import ChooseType from "./withdrawal/ChooseType";
 import ChooseWithdrawal from "./withdrawal/ChooseWithdrawal";

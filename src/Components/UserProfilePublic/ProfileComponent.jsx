@@ -1,4 +1,4 @@
-import { Card, CardBody, CardText, Input, Modal, ModalBody, ModalHeader } from "reactstrap";
+import { Card, CardBody, Modal, ModalBody, ModalHeader } from "reactstrap";
 // import cover from "./files/cover.png"
 import cover_1 from "./files/cover_1.png";
 import cover_2 from "./files/cover_2.png";

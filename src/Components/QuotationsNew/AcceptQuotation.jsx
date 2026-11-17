@@ -22,7 +22,6 @@ import styles from "../PendingNew/PaymentsFlow/Modal.module.css";
 import int_styles from "../PaymentsNewer/Mobile/styles/International.module.css";
 import paym_styles from "../PaymentsNewer/InternationalFlow/styles/index.module.css";
 import { toast } from "react-toastify";
-import recent from "../PaymentsNewer/Mobile/files/recent.svg";
 import { createShambeToken } from "../../Helper/CreateToken";
 import NotFoundModal from "../NotFound/NotFoundModal";
 import TrustpaymentPage from "../AddFunds/WalletFund/CreditTransaction";

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer } from "react";
+import { useContext, useEffect, useReducer } from "react";
 import { Modal, ModalBody } from "reactstrap";
 import styles from "../styles/CardToCard.module.scss";
 import useWindowWidth from "../../../utils/useWindowWidth";

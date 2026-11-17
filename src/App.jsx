@@ -1,5 +1,5 @@
 import "react-phone-input-2/lib/style.css";
-import React, { lazy, useLayoutEffect, useState } from "react";
+import { lazy, useLayoutEffect, useState } from "react";
 import Routers from "./RouteNew";
 import CustomizerProvider from "./Helper/Customizer/CustomizerProvider";
 import AnimationThemeProvider from "./Helper/AnimationTheme/AnimationThemeProvider";

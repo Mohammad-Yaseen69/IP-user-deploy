@@ -3,7 +3,6 @@ import crypto_selected from "./files/crypto_selected.png";
 import { Card, CardBody } from "reactstrap";
 import c_vid from "../PaymentsNewer/files/confirm.mp4";
 import CryptoCurrencyNew from "../PaymentsNewer/CryptoCurrencyNew";
-import CryptoFundReceipt from "./CryptoFundReceipt";
 import SelectedCryptoCurrency from "../PaymentsNewer/SelectedCryptoCurrency";
 import styles from "../PaymentsNewer/Mobile/styles/International.module.css";
 import flowStyles from "../PaymentsNewer/InternationalFlow/styles/index.module.css";

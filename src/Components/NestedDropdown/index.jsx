@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown, ChevronUp } from "react-feather";
 import { useTranslation } from "react-i18next";
 import styles from "./index.module.css";

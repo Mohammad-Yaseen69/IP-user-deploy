@@ -9,7 +9,7 @@ import axios from "axios";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { UserContext } from "../../Context/UserContext";
-import { useLocation, useParams } from "react-router";
+import { useLocation } from "react-router";
 import cities from "../CitiesDropDown/CitiesData.json";
 import CreditCardInput from "../CreditInput";
 import { LimitsErrorMessage, possibleErrors } from "../../utils/Functions/paymentLimits";

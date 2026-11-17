@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Modal, ModalBody } from "reactstrap";
 import styles from "../styles/cardToWallet.module.scss";
 import { ctw_white } from "../files";

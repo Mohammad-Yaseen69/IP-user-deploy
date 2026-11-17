@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { ChevronRight, HelpCircle } from "react-feather";
+import { ChevronRight } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { Button, Card, CardBody, Input } from "reactstrap";
-import InviteFriendModal from "./InviteFriendModal";
 
 const CryptoSendWallet = ({ setWallet, setSubStep, wallet }) => {
   const { t } = useTranslation();

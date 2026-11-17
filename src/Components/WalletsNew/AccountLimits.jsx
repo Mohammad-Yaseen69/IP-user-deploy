@@ -2,11 +2,8 @@ import { useTranslation } from "react-i18next";
 import styles from "./styles/AccountLimits.module.css";
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 import { ChevronLeft, ChevronRight } from "react-feather";
-import { useContext, useEffect, useState } from "react";
-import axios from "axios";
-import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
+import { useState } from "react";
 import InstaPayLoader from "../Loader";
-import { UserContext } from "../../Context/UserContext";
 
 export function removeCommasAndCurrency(num) {
   return String(String(num)?.replace(/,/g, ""))?.replace(/[A-Za-z]+/g, "");

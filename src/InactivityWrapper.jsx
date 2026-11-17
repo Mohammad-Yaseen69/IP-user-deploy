@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { UserContext } from "./Context/UserContext";
 
 export const InactivityContext = createContext({});

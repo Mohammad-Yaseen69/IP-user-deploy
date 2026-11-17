@@ -1,4 +1,3 @@
-import React from "react";
 import { ChevronLeft } from "react-feather";
 import { useTranslation } from "react-i18next";
 import styles from "./styles.module.css";

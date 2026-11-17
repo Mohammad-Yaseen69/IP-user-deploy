@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./styles/DownloadData.module.scss";
 import { Check, DownloadSimpleLarge } from "./Icons";

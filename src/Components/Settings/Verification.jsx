@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -10,8 +10,6 @@ import {
   Modal,
   ModalBody,
   ModalHeader,
-  Table,
-  Badge,
 } from "reactstrap";
 import { H4 } from "../../AbstractElements";
 import { UserContext } from "../../Context/UserContext";

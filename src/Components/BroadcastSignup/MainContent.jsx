@@ -1,16 +1,6 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import Dropzone from "react-dropzone-uploader";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-  Table,
-} from "reactstrap";
+import { Button, Card, CardBody, CardHeader, Table } from "reactstrap";
 import Papa from "papaparse";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import axios from "axios";

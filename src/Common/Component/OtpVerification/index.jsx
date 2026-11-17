@@ -7,7 +7,6 @@ import {
   ChevronRight,
   ChevronLeft,
   Smartphone,
-  Star,
   Mail,
   MessageCircle,
   Lock,

@@ -2,8 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import styles from "./Wallets.module.css";
 import { UserContext } from "../../../Context/UserContext";
 import card_styles from "../../PaymentsNewer/InternationalFlow/styles/walletscomponent.module.css";
-import axios from "axios";
-import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import logo_white from "../../../assets/images/logo/logo_white.png";
 import { Progress } from "reactstrap";
 import { useTranslation } from "react-i18next";

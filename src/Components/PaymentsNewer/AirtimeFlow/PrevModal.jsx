@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import useWindowWidth from "../../../utils/useWindowWidth";
 import styles from "./styles/prevmodal.module.scss";
@@ -6,7 +6,6 @@ import { Search } from "react-feather";
 import { UserContext } from "../../../Context/UserContext";
 import axios from "axios";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
-import { IoScan } from "react-icons/io5";
 import { BsQrCode } from "react-icons/bs";
 import { useTranslation } from "react-i18next";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";

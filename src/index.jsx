@@ -1,4 +1,3 @@
-import React from "react";
 import { createRoot } from "react-dom/client";
 import "./index.scss";
 import { i18nReady } from "./i18n";
