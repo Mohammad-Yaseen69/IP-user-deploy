@@ -43,8 +43,6 @@ const ConfirmWalletFund = ({
   type = "add_fund",
   paymentWithSavedCard = false,
   currentCard,
-  merchant = "",
-  payer = {},
   setExternalLink = () => {},
   paypalAmount,
   token,
@@ -65,7 +63,7 @@ const ConfirmWalletFund = ({
   const svgRef = useRef(null);
   const chevRef = useRef(null);
   const [transDetails, setTransDetails] = useState(null);
-  const { userDetails, authHeader, userWallets } = useContext(UserContext);
+  const { userDetails, authHeader } = useContext(UserContext);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { getKey, reset } = useIdempotency();
@@ -301,62 +299,10 @@ const ConfirmWalletFund = ({
         } finally {
           setLoading(false);
         }
-      } else {
-        const data =
-          type === "kyb"
-            ? { wallet_id: wallet?._id }
-            : {
-                wallet_id: wallet?._id,
-                country_iso_code: userDetails?.country_iso_code,
-                payment_page_id: payer?.payment_page_id,
-                merchant_id: merchant,
-                amount: +amount,
-                currency: userWallets?.[0]?.currency?.code,
-                service_name: payoutChannel?.sub_name,
-              };
-
-        try {
-          if (type === "kyb") {
-            sendKybWalletOTP();
-          } else {
-            const res = await axios.post(
-              `${import.meta.env.VITE_IP_DEV_API}/api/collection/create-payment-order`,
-              {
-                data: encryptData(data),
-              },
-              {
-                headers: { ...authHeader, "idempotency-key": getKey() },
-              },
-            );
-            const decrypted = await decryptData(res.data.data);
-
-            setExternalLink(decrypted?.external_link);
-          }
-          // console.log(decrypted)
-        } catch (error) {
-          const dec = decryptData(error?.response?.data?.data);
-          if (dec?.message === "Unauthorize to access this route") {
-            const coun = localStorage.getItem("ip_country");
-            localStorage.clear();
-            localStorage.setItem("ip_country", coun);
-            window.location.pathname = "/login";
-          }
-          const error2 = apiErrorMessage(dec?.message);
-          const error1 = LimitsErrorMessage(dec?.code);
-
-          if (error1) {
-            setError(t(error1));
-          } else if (error2) {
-            setError(t(error2));
-          } else {
-            setError(
-              dec?.message ??
-                "We cannot process your request at the moment, please try again later.",
-            );
-          }
-        } finally {
-          setLoading(false);
-        }
+      } else if (type === "kyb") {
+        // only KYB wallet payment reaches here; every add-funds channel is handled above
+        sendKybWalletOTP();
+        setLoading(false);
       }
     };
     if (complete) {

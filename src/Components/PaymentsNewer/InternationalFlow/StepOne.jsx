@@ -652,6 +652,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                 <PaymentTypesModal
                   isOpen={showTypesModal}
                   toggle={() => setShowTypesModal(!showTypesModal)}
+                  bankComingSoon={true}
                 />
               )}
             </div>
