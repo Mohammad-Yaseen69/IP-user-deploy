@@ -9,11 +9,20 @@ export const handlePaymentApiError = ({
   setProfileLockTime = () => {},
   navigate = () => {},
   fallback = "We are unable to process your request at the moment, please try again later.",
+  keepVerbatim = () => false,
 }) => {
   try {
     const decrypted = decryptData(error?.response?.data?.data);
 
-    const limitError = LimitsErrorMessage(decrypted?.code ?? decrypted?.message);
+    if (decrypted?.message && keepVerbatim(decrypted.message)) {
+      setError?.(decrypted.message);
+      return decrypted.message;
+    }
+
+    const limitError = LimitsErrorMessage(
+      decrypted?.code ?? decrypted?.message,
+      decrypted?.message,
+    );
     const apiError = apiErrorMessage(decrypted?.message);
 
     if (apiError) {
