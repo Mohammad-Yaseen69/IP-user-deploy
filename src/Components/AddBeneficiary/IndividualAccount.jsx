@@ -32,6 +32,7 @@ import PaymentChannelUI from "./PaymentChannelUI";
 import NeemaBenExtrasFields from "./NeemaBenExtrasFields";
 import citiesData from "../CitiesDropDown/CitiesData.json";
 import { preventEdgeSpaces, preventEmailSpaces } from "../../hooks/useTrimInput";
+import { getMaxDate } from "../../utils/Functions/validations";
 
 const IndividualAccount = ({
   nameRegex,
@@ -939,6 +940,7 @@ const IndividualAccount = ({
                             justifyContent: "center",
                             position: "static",
                           }}
+                          maxDate={getMaxDate()}
                           value={additionFields[item] || null}
                           onChange={(e) =>
                             handleAddtionalFieldChange({

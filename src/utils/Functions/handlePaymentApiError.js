@@ -9,6 +9,7 @@ export const handlePaymentApiError = ({
   setProfileLockTime = () => {},
   navigate = () => {},
   fallback = "We are unable to process your request at the moment, please try again later.",
+  keepVerbatim = () => false,
 }) => {
   try {
     const decrypted = decryptData(error?.response?.data?.data);
