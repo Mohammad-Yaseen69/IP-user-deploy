@@ -45,7 +45,6 @@ import {
 import dayjs from "dayjs";
 import CountryBasedPhone from "../PhoneInput/PhoneNumberBasedOnCountry.json";
 import { getInitials } from "../../utils/Functions/getInitials";
-import CountryBasedPhone from "../PhoneInput/PhoneNumberBasedOnCountry.json";
 
 export const currentDate = new Date();
 export const minDate = new Date(
