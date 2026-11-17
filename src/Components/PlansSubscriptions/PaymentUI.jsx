@@ -18,6 +18,7 @@ import PayWithCrypto from "../PaymentAddressPublic/PayWithCrypto";
 import { useState } from "react";
 import InvoiceDetails from "../ReceiptInvoices/InvoicePayment/InvoiceDetails";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
+import useEffectivePermission, { PERMISSIONS } from "../../hooks/GeneralUse/useEffectivePermission";
 
 const PaymentUI = ({ data, user_name, state, dataHandler, url }) => {
   const { t } = useTranslation();
@@ -25,6 +26,8 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url }) => {
   const width = useWindowWidth();
   const [verificationBadge, setShowVerificationBadge] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
+  const hasPermission = useEffectivePermission();
+  const canGuestPayWithCrypto = hasPermission(PERMISSIONS.CRYPTO_GUEST_PAY);
 
   const termsText = data?.plan?.termsAndConditions?.text || data?.termsAndConditions?.text || "";
   const isTruncated = termsText.length > 500;
@@ -47,7 +50,7 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url }) => {
       width: "15px",
       // disabled: true
     },
-    {
+    canGuestPayWithCrypto && {
       label: "Pay with Crypto",
       logo: CryptoPay,
       onClick: () => {
@@ -60,7 +63,7 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url }) => {
       logo: addFunds,
       onClick: () => dataHandler("showCreditModal", !state.showCreditModal),
     },
-  ];
+  ].filter(Boolean);
   return (
     <>
       {state.showCreditModal && (

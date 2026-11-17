@@ -321,7 +321,7 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
       handleQuoteError(error, {
         onDetails: (message) => {
           setBeneficiaryError(message);
-          toast.error(message);
+          // toast.error(message);
         },
       });
     }
