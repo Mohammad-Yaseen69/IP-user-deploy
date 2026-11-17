@@ -10,7 +10,7 @@ import InstaPayLoader from "../Loader";
 import RecentTransItem from "./RecentTransItem";
 import { ChevronRight } from "react-feather";
 
-const RecentTrans = ({ currentWallet }) => {
+const RecentTrans = ({ title, currentWallet }) => {
   const { t } = useTranslation();
   const { userDetails, authHeader } = useContext(UserContext);
   const [transactions, setTransactions] = useState([]);
@@ -108,7 +108,7 @@ const RecentTrans = ({ currentWallet }) => {
               color: "#111827",
             }}
           >
-            {t("Recent activity")}
+            {t(title ?? "Recent activity")}
           </h4>
           <p
             style={{

@@ -156,7 +156,9 @@ const TransactionsTable = ({ currentWallet, filtered: externalFiltered, setFilte
         try {
           const decrypted = decryptData(encryptedErrorData);
           if (decrypted?.status === false) setMaxLimit(true);
-        } catch {}
+        } catch {
+          console.log(error);
+        }
       }
     };
 
@@ -285,23 +287,35 @@ const TransactionsTable = ({ currentWallet, filtered: externalFiltered, setFilte
   };
 
   const filtered = useMemo(() => {
+    let result = transactions;
+
     switch (active) {
       case "Sent":
-        return transactions.filter((item) => item?.transaction_type === "debit");
+        result = result.filter((item) => item?.transaction_type === "debit");
+        break;
       case "Received":
-        return transactions.filter((item) => item?.transaction_type === "credit");
+        result = result.filter((item) => item?.transaction_type === "credit");
+        break;
       case "Quotes":
-        return transactions.filter((item) => item?.payment_type === "quotation");
+        result = result.filter((item) => item?.payment_type === "quotation");
+        break;
       case "Requests":
-        return transactions.filter((item) => item?.payment_type === "payment_request");
-      default:
-        return transactions;
+        result = result.filter((item) => item?.type === "payment_request");
+        break;
     }
-  }, [active, transactions]);
 
-  useEffect(() => {
-    if (typeof setFiltered === "function") setFiltered(filtered);
-  }, [filtered]);
+    const statuses = [].concat(filters.status ?? []).map((v) => String(v).toLowerCase());
+    if (statuses.length) {
+      result = result.filter((item) => statuses.includes(item?.status?.toLowerCase()));
+    }
+
+    const types = [].concat(filters.transaction_type ?? []).map((v) => String(v).toLowerCase());
+    if (types.length) {
+      result = result.filter((item) => types.includes(item?.transaction_type?.toLowerCase()));
+    }
+
+    return result;
+  }, [active, transactions, filters]);
 
   const groups = useMemo(() => {
     const byDay = new Map();
