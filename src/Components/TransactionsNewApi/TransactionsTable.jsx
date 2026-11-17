@@ -311,7 +311,7 @@ const TransactionsTable = ({ title, description }) => {
             </EmptyState>
           )}
 
-          {!isLoading && !stopLoader && (
+          {!isLoading && (
             <div ref={loaderRef} className={s.loader}>
               <InstaPayLoader />
             </div>
