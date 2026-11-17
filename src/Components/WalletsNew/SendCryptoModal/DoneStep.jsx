@@ -6,6 +6,7 @@ import convertStyles from "../../VirtualIBAN/ConvertFundsModal/convertFunds.modu
 import styles from "./sendCrypto.module.scss";
 import { getProtocolLabel } from "./cryptoProtocols";
 import { formatCurrency } from "../../../Helper/AmountFormat";
+import { boundaryAddress } from "./ReviewStep";
 
 const formatMoney = (value, currency) => {
   const amount = Number(value ?? 0);
@@ -125,7 +126,9 @@ const DoneStep = ({
 
         <div className={convertStyles.reviewRow}>
           <div className={convertStyles.reviewRowLabel}>{t("Destination address")}</div>
-          <div className={`${convertStyles.reviewRowValue} ${styles.monoValue}`}>{address}</div>
+          <div className={`${convertStyles.reviewRowValue} ${styles.monoValue}`}>
+            {boundaryAddress(address)}
+          </div>
         </div>
 
         {payoutResult?.new_balance !== undefined && (

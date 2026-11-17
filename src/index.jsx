@@ -62,6 +62,7 @@ const preloadAuthPage = () => {
   const isAuthPage = /^\/(login|signup)(\/|$)/i.test(window.location.pathname);
   if (isAuthPage && !localStorage.getItem("token")) {
     import("./Components/Auth").catch(() => {});
+    if (!window.location.href.includes("login")) import("./Components/Auth/Signup").catch(() => {});
   }
 };
 
@@ -86,6 +87,26 @@ const scheduleSentryReplay = () => {
   }
 };
 
+const BOOTSTRAP_RETRY_KEY = "ip-bootstrap-retried";
+
+const claimBootstrapRetry = () => {
+  try {
+    if (sessionStorage.getItem(BOOTSTRAP_RETRY_KEY)) return false;
+    sessionStorage.setItem(BOOTSTRAP_RETRY_KEY, "1");
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const clearBootstrapRetry = () => {
+  try {
+    sessionStorage.removeItem(BOOTSTRAP_RETRY_KEY);
+  } catch {
+    return;
+  }
+};
+
 async function bootstrap() {
   try {
     preloadAuthPage();
@@ -96,8 +117,13 @@ async function bootstrap() {
         <App />
       </BrowserRouter>,
     );
+    clearBootstrapRetry();
   } catch (error) {
-    console.error("Application initialization failed:", error);
+    Sentry.captureException(error);
+    if (claimBootstrapRetry()) {
+      window.location.reload();
+      return;
+    }
   } finally {
     scheduleSentryReplay();
   }

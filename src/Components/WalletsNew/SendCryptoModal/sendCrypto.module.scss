@@ -328,3 +328,45 @@
     color: #fff;
   }
 }
+
+.payoutDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.fieldLabel {
+  font-family: Inter, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  margin: 6px 0 0;
+}
+
+.optionalTag {
+  font-weight: 500;
+  color: #6e7687;
+}
+
+.fieldInput {
+  width: 100%;
+  border: 1px solid #e1e5ee;
+  border-radius: 8px;
+  background: #fff;
+  padding: 9px 12px;
+  font-family: Inter, sans-serif;
+  font-size: 13px;
+  color: #333;
+  outline: none;
+
+  &:focus {
+    border-color: #5926f0;
+  }
+}
+
+.fieldHint {
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  color: #6e7687;
+}

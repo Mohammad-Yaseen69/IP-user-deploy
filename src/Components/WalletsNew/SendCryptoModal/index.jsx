@@ -21,6 +21,8 @@ import SidebarProgress from "../../VirtualIBAN/VirtualIbanModal/SidebarProgress"
 import convertStyles from "../../VirtualIBAN/ConvertFundsModal/convertFunds.module.scss";
 import withdrawStyles from "../../VirtualIBAN/WithdrawBalanceModal/withdrawBalance.module.scss";
 import {
+  buildPayoutConfirmPayload,
+  DEFAULT_PAYOUT_PURPOSE,
   getAmountError,
   getAmountNumber,
   getContinueLabel,
@@ -29,6 +31,7 @@ import {
   goNext,
   isSidebarStepActive,
   isSidebarStepCompleted,
+  isVerbatimPayoutError,
   SIDEBAR_STEPS,
   STEPS,
 } from "../../../stateMachines/cryptoPayout";
@@ -36,6 +39,7 @@ import AmountStep from "./AmountStep";
 import BeneficiaryStep from "./BeneficiaryStep";
 import ReviewStep from "./ReviewStep";
 import DoneStep from "./DoneStep";
+import PayoutDetailsFields from "./PayoutDetailsFields";
 import AddBeneficiaryFlowV2 from "../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2";
 import {
   filterProtocolsForAddress,
@@ -219,6 +223,8 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
   const [payoutResult, setPayoutResult] = useState(null);
   const [isAddBeneficiaryOpen, setIsAddBeneficiaryOpen] = useState(false);
   const [savedBeneficiaryId, setSavedBeneficiaryId] = useState("");
+  const [purpose, setPurpose] = useState(DEFAULT_PAYOUT_PURPOSE);
+  const [documentReference, setDocumentReference] = useState("");
 
   const feeMutation = useCryptoPayoutFee();
   const payoutMutation = useCryptoPayout();
@@ -256,6 +262,8 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
   }, [selectedBeneficiary, cryptoCurrency]);
 
   const address = getChannelAddress(selectedChannel);
+
+  const payoutAsset = getChannelAsset(selectedChannel) || cryptoCurrency;
 
   const savedProtocol = useMemo(() => getChannelProtocol(selectedChannel), [selectedChannel]);
 
@@ -415,6 +423,8 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
     setPayoutResult(null);
     setIsAddBeneficiaryOpen(false);
     setSavedBeneficiaryId("");
+    setPurpose(DEFAULT_PAYOUT_PURPOSE);
+    setDocumentReference("");
     resetIdempotencyKey();
   };
 
@@ -433,7 +443,7 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
     wallet_id: walletId,
     beneficiary_id: getBeneficiaryId(selectedBeneficiary),
     amount: getAmountNumber(amount),
-    crypto_currency: cryptoCurrency,
+    crypto_currency: payoutAsset,
     protocol,
     address,
   });
@@ -466,6 +476,7 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
       error,
       navigate,
       setProfileLockTime,
+      keepVerbatim: isVerbatimPayoutError,
       setError: (message) => {
         if (isQuoteError(message)) {
           setIsQuoteExpired(true);
@@ -508,9 +519,16 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
   const confirmPayout = async (setVerified, type, otp, setOtpError) => {
     try {
       const res = await payoutMutation.mutateAsync({
-        token: otpToken,
-        otp,
-        type: type || authType,
+        ...buildPayoutConfirmPayload({
+          token: otpToken,
+          otp,
+          type: type || authType,
+          cryptoCurrency: payoutAsset,
+          protocol,
+          address,
+          purpose,
+          documentReference,
+        }),
         idempotencyKey: getKey(),
       });
 
@@ -522,6 +540,7 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
         error,
         navigate,
         setProfileLockTime,
+        keepVerbatim: isVerbatimPayoutError,
         setError: (message) => {
           if (isQuoteError(message)) {
             setIsQuoteExpired(true);
@@ -615,6 +634,14 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
             isQuoteExpired={isQuoteExpired || !feeDetails?.token}
             onRefreshQuote={handleRefreshQuote}
             isRefreshing={feeMutation.isPending}
+            details={
+              <PayoutDetailsFields
+                purpose={purpose}
+                setPurpose={setPurpose}
+                documentReference={documentReference}
+                setDocumentReference={setDocumentReference}
+              />
+            }
           />
         );
       case STEPS.OTP:

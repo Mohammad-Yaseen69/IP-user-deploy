@@ -750,13 +750,13 @@ const Basic = ({ setCurrentTab }) => {
 
   const completion = Number(profileCompletedPercentage);
 
-  const referralLink = userDetails?.username
-    ? `${window.location.origin}/signup/${userDetails.username}`
+  const profileLink = userDetails?.username
+    ? `${window.location.origin}/profile/${userDetails.username}`
     : "";
   const [linkCopied, setLinkCopied] = useState(false);
-  const copyReferralLink = async () => {
+  const copyProfileLink = async () => {
     try {
-      await navigator.clipboard.writeText(referralLink);
+      await navigator.clipboard.writeText(profileLink);
       setLinkCopied(true);
       setTimeout(() => setLinkCopied(false), 2000);
     } catch (err) {
@@ -1011,16 +1011,16 @@ const Basic = ({ setCurrentTab }) => {
                 </div>
               </div>
             </div>
-            {referralLink && (
+            {profileLink && (
               <div className={styles.linkBox}>
                 <LinkSimpleSmall />
-                <span className={styles.linkText} title={referralLink}>
-                  {referralLink.replace(/^https?:\/\//, "")}
+                <span className={styles.linkText} title={profileLink}>
+                  {profileLink.replace(/^https?:\/\//, "")}
                 </span>
                 <button
                   type="button"
                   className={`${styles.button} ${styles.copyButton}`}
-                  onClick={copyReferralLink}
+                  onClick={copyProfileLink}
                 >
                   <Copy />
                   {linkCopied ? t("Copied") : t("Copy")}

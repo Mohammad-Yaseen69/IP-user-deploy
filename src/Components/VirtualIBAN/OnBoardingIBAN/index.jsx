@@ -553,7 +553,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
       if (feePayment.method === "bank" && isSavedBankPaymentStarted(dec)) {
         setVerified(true);
         setShowOtpModal(false);
-        await completeActivation();
+        await completeActivation({ bankTransfer: true });
         return;
       }
 
@@ -583,11 +583,17 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     }
   };
 
-  const completeActivation = async () => {
+  const completeActivation = async ({ bankTransfer = false } = {}) => {
     await checkRequestStatus();
     dispatch({ type: "SET_STATUS", payload: "submitted" });
     dispatch({ type: "SET_STEP", payload: "status" });
-    toast.success(t("IBAN Activation request and payment completed successfully!"));
+    toast.success(
+      bankTransfer
+        ? t(
+            "IBAN Activation request submitted. Your bank payment is being processed and will complete once the transfer clears.",
+          )
+        : t("IBAN Activation request and payment completed successfully!"),
+    );
   };
 
   const closeMobileWalletStatus = async () => {
@@ -913,7 +919,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
             },
           }}
           onAuthorized={async () => {
-            await completeActivation();
+            await completeActivation({ bankTransfer: true });
             setPlaidLink(null);
           }}
           onCancelled={() => {

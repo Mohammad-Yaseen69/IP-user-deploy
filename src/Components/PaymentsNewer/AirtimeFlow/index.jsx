@@ -248,7 +248,9 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         sub_service_id: data.flow === "e-sim" ? 14 : data.service_type?.id || 12,
         local_wallet_id: data?.localWallet?._id,
         type: data.flow === "e-sim" && "esim",
-        ...(isBankTransfer && data.recipient_iban ? { recipient_iban: data.recipient_iban } : {}),
+        ...(isBankTransfer && data.recipient_iban
+          ? { recipient_iban: data.recipient_iban, saveForFutureUse: true }
+          : {}),
         ...(isBankTransfer && data.recipient_bank_id
           ? { savedBankId: data.recipient_bank_id, isSaveBank: true }
           : {}),

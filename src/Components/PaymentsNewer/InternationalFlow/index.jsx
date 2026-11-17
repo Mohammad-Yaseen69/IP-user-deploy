@@ -1137,6 +1137,7 @@ const InternationFlow = ({
     ...(internationalData?.recipient_iban
       ? {
           recipient_iban: internationalData.recipient_iban,
+          saveForFutureUse: true,
         }
       : {}),
     ...(internationalData?.recipient_bank_id

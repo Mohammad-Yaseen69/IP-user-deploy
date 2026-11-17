@@ -11,6 +11,7 @@ import {
   isCheckedIdentifier,
   parseIban,
 } from "../../../../../utils/Functions/bankIdentifiers";
+import moment from "moment";
 
 const STATE_NAME_FIELD = "state_name";
 const PROVIDER_NAME_FIELD = "mobile_wallet_name";
@@ -223,6 +224,7 @@ const DynamicField = ({
             onChange={(next) => onChange(next ? next.format("YYYY-MM-DD") : "")}
             placeholder="DD/MM/YYYY"
             disabled={disabled}
+            maxDate={name === "date_of_birth" ? moment().subtract(18, "years") : undefined}
             InputProps={datePickerInputProps}
             inputProps={datePickerInnerInputProps}
             style={{ flex: 1, width: "100%" }}
