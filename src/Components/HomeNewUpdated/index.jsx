@@ -446,7 +446,11 @@ const HomeNewUpdated = () => {
               <Stats currentWallet={selectedWallet} />
             </RenderWhenVisible>
           )}
-          {can("dashboard.insights.view") && <TransDetails selectedWallet={selectedWallet} />}
+          {can("dashboard.insights.view") && (
+            <RenderWhenVisible minHeight={300}>
+              <TransDetails selectedWallet={selectedWallet} />
+            </RenderWhenVisible>
+          )}
           <CurConversion />
         </div>
       )}

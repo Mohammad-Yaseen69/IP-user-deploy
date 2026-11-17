@@ -26,8 +26,8 @@ export const loadOtherBalance = () => import("./OtherBalance");
 // Same breakpoint the dashboard uses to pick its mobile or desktop branch.
 const isDesktopDashboard = () => window.innerWidth > 1000;
 
-// Above-the-fold widgets for each branch. Stats is left out on purpose: it is
-// loaded when scrolled into view.
+// Above-the-fold widgets for each branch. Stats and the mobile TransDetails are
+// left out on purpose: they load when scrolled into view.
 const desktopWidgets = [
   loadSearch,
   loadBalanceCard,
@@ -47,7 +47,6 @@ const mobileWidgets = [
   loadWalletsMobile,
   loadCryptoCard,
   loadQuickLinksMobile,
-  loadTransDetails,
   loadCurConversion,
 ];
 
