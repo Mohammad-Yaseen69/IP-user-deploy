@@ -110,7 +110,7 @@ const RecentTrans = ({ currentWallet }) => {
           >
             {t("Recent activity")}
           </h4>
-          {/* <p
+          <p
             style={{
               margin: "4px 0 0",
               fontSize: "13px",
@@ -119,8 +119,8 @@ const RecentTrans = ({ currentWallet }) => {
               color: "#9AA3B2",
             }}
           >
-            All currencies
-          </p> */}
+            {t("All currencies")}
+          </p>
         </div>
 
         <a
@@ -136,7 +136,7 @@ const RecentTrans = ({ currentWallet }) => {
             whiteSpace: "nowrap",
           }}
         >
-          See all
+          {t("See all")}
           <ChevronRight size={16} />
         </a>
       </div>

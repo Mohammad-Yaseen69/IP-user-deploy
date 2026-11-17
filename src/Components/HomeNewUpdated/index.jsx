@@ -1,33 +1,33 @@
 import { useMemo, useContext, useEffect, useState, lazy } from "react";
 import styles from "./styles/index.module.scss";
-import cardsStyle from "./styles/CardsContainer.module.css";
+// import cardsStyle from "./styles/CardsContainer.module.css";
 import { useTranslation } from "react-i18next";
-import { BsFillPlayFill } from "react-icons/bs";
+import { BsBriefcase, BsCheckLg, BsChevronRight } from "react-icons/bs";
 import { ChevronRight } from "react-feather";
 import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
-import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
+// import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 import { useMoneyInOut } from "../WalletsNew/MoneyInOut/useMoneyInOut";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 
 const BalanceComponent = lazy(() => import("./BalanceCard"));
 const EarnMoneyBanner = lazy(() => import("./EarnMoneyBanner"));
-const TransDetails = lazy(() => import("./TransDetails"));
+// const TransDetails = lazy(() => import("./TransDetails"));
 const QuickLinksNew = lazy(() => import("./QuickLinksNew"));
-const Stats = lazy(() => import("./Stats"));
+// const Stats = lazy(() => import("./Stats"));
 const RecentTrans = lazy(() => import("./RecentTrans"));
 const RightContainer = lazy(() => import("./RightContainer"));
-const SearchComponent = lazy(() => import("./Search"));
-const ReferalRewards = lazy(() => import("./ReferalRewards"));
+// const SearchComponent = lazy(() => import("./Search"));
+// const ReferalRewards = lazy(() => import("./ReferalRewards"));
 const CryptoCard = lazy(() => import("./CryptoCard"));
 const RecentBeneficiaries = lazy(() => import("./RecentBeneficiaries"));
-const WalletsMobile = lazy(() => import("./WalletsMobile"));
+// const WalletsMobile = lazy(() => import("./WalletsMobile"));
 const CurConversion = lazy(() => import("./CurConversion"));
-const QuickLinksMobile = lazy(() => import("./QuickLinksMobile"));
+// const QuickLinksMobile = lazy(() => import("./QuickLinksMobile"));
 const TopBar = lazy(() => import("../../Layout/TopBar"));
-const BusinessModal = lazy(() => import("../BusinessModal"));
-const OtherBalance = lazy(() => import("./OtherBalance"));
+// const BusinessModal = lazy(() => import("../BusinessModal"));
+// const OtherBalance = lazy(() => import("./OtherBalance"));
 const MoneyInOut = lazy(() => import("../WalletsNew/MoneyInOut/MoneyInOut"));
 const SpendingBreakdown = lazy(() => import("../Analytics/SpendingBreakdown"));
 
@@ -279,7 +279,7 @@ const HomeNewUpdated = () => {
           <div className={styles.top}>
             <div className={styles.top_section}>
               <h4>{t("Dashboard")}</h4>
-              <p>Manage and monitor your InstaPay Wallet</p>
+              <p>{t("Manage and monitor your InstaPay Wallet")}</p>
             </div>
             <TopRight />
           </div>
@@ -333,13 +333,13 @@ const HomeNewUpdated = () => {
           <div className={styles.crypto_row}>
             <div className={styles.crypto_top}>
               <div className={styles.crypto_title}>
-                <h4>Crypto balances</h4>
-                <p>Every service you use, with what needs your attention</p>
+                <h4>{t("Crypto balances")}</h4>
+                <p>{t("Every service you use, with what needs your attention")}</p>
               </div>
               <a href="/onboarding-IBAN/crypto" className={styles.crypto_link}>
-                Open Crypto
+                {t("Open Crypto")}
                 <span className={styles.crypto_chevron}>
-                  <ChevronRight size={17} />
+                  <ChevronRight size={16} />
                 </span>
               </a>
             </div>
@@ -360,39 +360,6 @@ const HomeNewUpdated = () => {
               </div>
             )}
           </div>
-          {userDetails?.account_type === "individual" && (
-            <div className={styles.banner_row}>
-              <div className={styles.banner_business}>
-                <button
-                  onClick={() => setShowBusinessModal(true)}
-                  className={cardsStyle.button}
-                  style={{
-                    background:
-                      "linear-gradient(to left, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
-                    color: "white",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: ".75rem",
-                    borderRadius: "7px",
-                    padding: "1rem",
-                  }}
-                >
-                  <img src={crown} alt="c" loading="lazy" style={{ width: "20px" }} />
-                  <span
-                    style={{
-                      color: "white",
-                      WebkitTextFillColor: "white",
-                      fontSize: ".9rem",
-                    }}
-                  >
-                    {t("Upgrade to Business Account")}
-                  </span>
-                  <BsFillPlayFill size={25} style={{ marginLeft: "auto" }} />
-                </button>
-              </div>
-            </div>
-          )}
           <div className={styles.analytics_row}>
             <SpendingBreakdown
               data={analyticsSummaryForWallet}
@@ -403,13 +370,157 @@ const HomeNewUpdated = () => {
             />
             <CurConversion />
           </div>
-          <div className={styles.banner_main}>
-            <EarnMoneyBanner
-              showLink={true}
-              code={userDetails?.username}
-              rewardsEarned={totalReferralAmount}
-              friendsJoined={friendsJoined}
-            />
+          <div
+            style={{
+              display: "flex",
+              alignItems: "stretch",
+              gap: "1rem",
+              width: "100%",
+            }}
+          >
+            {userDetails?.account_type === "individual" ? (
+              <>
+                <div
+                  className={styles.banner_main}
+                  style={{
+                    width: "63%",
+                  }}
+                >
+                  <EarnMoneyBanner
+                    showLink={true}
+                    code={userDetails?.username}
+                    rewardsEarned={totalReferralAmount}
+                    friendsJoined={friendsJoined}
+                  />
+                </div>
+                <div style={{ width: "37%", display: "flex" }}>
+                  <div
+                    style={{
+                      flex: 1,
+                      minWidth: 0,
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      justifyContent: "flex-start",
+                      gap: "16px",
+                      boxSizing: "border-box",
+                      padding: "24px",
+                      background: "#FFFFFF",
+                      border: "1px solid #EAECF0",
+                      borderRadius: "16px",
+                      boxShadow: "0px 1px 2px rgba(16, 24, 40, 0.05)",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "48px",
+                        height: "48px",
+                        borderRadius: "10px",
+                        background: "#F4F1FE",
+                        color: "#5926F0",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                      }}
+                    >
+                      <BsBriefcase size={18} />
+                    </div>
+
+                    <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                      <h3
+                        style={{
+                          fontSize: "18px",
+                          fontWeight: 800,
+                          color: "#1B1F2A",
+                          lineHeight: "26.1px",
+                          fontFamily: "Inter",
+                        }}
+                      >
+                        {t("Upgrade to a Business account")}
+                      </h3>
+                      <p
+                        style={{
+                          fontWeight: "400",
+                          fontSize: "14px",
+                          color: "#6E7687",
+                          lineHeight: "21px",
+                        }}
+                      >
+                        {t("Run payroll, invoices and team cards from the same login.")}
+                      </p>
+                    </div>
+                    <ul
+                      style={{
+                        listStyle: "none",
+                        margin: 0,
+                        padding: 0,
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "8px",
+                        fontWeight: "400",
+                        fontSize: "13px",
+                        lineHeight: "18.85px",
+                      }}
+                    >
+                      {[
+                        t("Business IBAN in your company name"),
+                        t("Bulk payments and approvals"),
+                      ].map((item) => (
+                        <li
+                          key={item}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            fontSize: "0.875rem",
+                            color: "#667085",
+                          }}
+                        >
+                          <BsCheckLg size={14} style={{ color: "#12B76A", flexShrink: 0 }} />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                    <button
+                      onClick={() => setShowBusinessModal(true)}
+                      style={{
+                        marginTop: "auto",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        alignSelf: "flex-start",
+                        background: "#EFF1F6",
+                        color: "#1B1F2A",
+                        border: "none",
+                        borderRadius: "8px",
+                        padding: "10px 16px",
+                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontStyle: "Medium",
+                        lineHeight: "20.3px",
+                        cursor: "pointer",
+                        fontFamily: "Inter",
+                      }}
+                    >
+                      {t("Start upgrade")}
+                      <BsChevronRight size={12} />
+                    </button>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className={styles.banner_mains}>
+                  <EarnMoneyBanner
+                    showLink={true}
+                    code={userDetails?.username}
+                    rewardsEarned={totalReferralAmount}
+                    friendsJoined={friendsJoined}
+                  />
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
@@ -445,9 +556,9 @@ const HomeNewUpdated = () => {
           )}
           <div className={styles.crypto_row}>
             <div className={styles.crypto_top}>
-              <h3 className={styles.crypto_heading}>Crypto</h3>
+              <h3 className={styles.crypto_heading}>{t("Crypto")}</h3>
               <a href="/onboarding-IBAN/crypto" className={styles.crypto_link}>
-                Open Crypto
+                {t("Open Crypto")}
                 <ChevronRight size={14} />
               </a>
             </div>

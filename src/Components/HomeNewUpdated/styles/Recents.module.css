@@ -1,6 +1,29 @@
 .body {
-  max-height: 70vh;
+  max-height: 60vh;
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.body:hover {
+  scrollbar-color: #d1d5db transparent;
+}
+
+.body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.body::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 999px;
+}
+
+.body:hover::-webkit-scrollbar-thumb {
+  background: #d1d5db;
 }
 
 .recent_item {
@@ -32,6 +55,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.head {
+  margin: 0;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20.3px;
+  letter-spacing: -0.15px;
+  color: #1b1f2a;
+}
+
+.recent_item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  padding: 10px 7px;
+  border-radius: 12px;
+  background: transparent;
 }
 
 @media screen and (max-width: 1649px) {

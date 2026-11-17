@@ -11,10 +11,10 @@
   padding: 28px 32px;
   border-radius: 20px;
   color: #fff;
-  font-family: "Manrope", sans-serif;
   background:
     radial-gradient(circle at 0% 100%, rgba(190, 60, 170, 0.589) 0%, rgba(190, 60, 170, 0) 45%),
     linear-gradient(90deg, #3d19b8 0%, #5926f0 55%, #7b52f2 100%);
+  font-family: Inter;
 }
 
 .banner::before {
@@ -38,18 +38,19 @@
 .content h2 {
   margin: 0 0 10px;
   font-size: clamp(20px, 1.8vw, 26px);
-  font-weight: 700;
-  line-height: 1.25;
+  font-weight: 600;
+  line-height: 34.8px;
   color: #fff;
   max-width: 420px;
 }
 
 .content p {
   margin: 0;
+  font-weight: 400;
   max-width: 480px;
   font-size: 14px;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.85);
+  line-height: 21px;
+  color: #fff;
 }
 
 .footer {

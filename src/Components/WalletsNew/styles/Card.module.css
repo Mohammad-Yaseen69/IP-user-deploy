@@ -126,29 +126,6 @@
   color: #fff;
 }
 
-@media screen and (max-width: 1600px) {
-  .card {
-    padding: 0.65rem;
-  }
-
-  .left h3 {
-    font-size: 0.9vw;
-  }
-
-  .right img {
-    width: 30px;
-    height: 30px;
-  }
-
-  .bottom h3 {
-    font-size: 0.9vw;
-  }
-
-  .bb span {
-    font-size: 0.4rem;
-  }
-}
-
 .top_container {
   justify-content: space-between;
   align-items: center;
@@ -295,6 +272,88 @@ set_default_btn:hover {
   height: 8px !important;
 }
 
+@media screen and (max-width: 1600px) {
+  .card {
+    padding: 0.65rem;
+  }
+
+  .left h3 {
+    font-size: 0.9vw;
+  }
+
+  .right img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .bottom h3 {
+    font-size: 0.9vw;
+  }
+
+  .bb span {
+    font-size: 0.4rem;
+  }
+}
+
+@media screen and (min-width: 1400) {
+  .compact {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    aspect-ratio: auto;
+    height: 30vh;
+    padding: 1rem;
+    border-radius: 16px;
+    box-sizing: border-box;
+  }
+
+  .compact .top_container {
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    padding: 0;
+  }
+
+  .compact .top img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .compact .top .walletAmount h3 {
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .compact .top_container > .walletAmount h3 {
+    font-size: 28px;
+    font-weight: 600;
+  }
+
+  .compact .wallet_details > span {
+    font-size: 14px;
+    color: #fff;
+  }
+
+  .compact .wd_sub {
+    font-size: 13px;
+    min-height: 24px;
+    padding: 2px 6px;
+  }
+
+  .compact .limit_row {
+    margin-top: 1.2rem;
+  }
+
+  .compact .limit_row p,
+  .compact .limit_row span {
+    font-size: 12px !important;
+  }
+
+  .compact .bb :global(.progress) {
+    height: 6px !important;
+  }
+}
+
 @media screen and (max-width: 1000px) {
   .left span {
     font-size: 10px;
@@ -334,17 +393,28 @@ set_default_btn:hover {
   }
 }
 
+@media screen and (max-width: 768px) {
+  .card,
+  .compact,
+  .card.reservedCard {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+
 @media screen and (max-width: 480px) {
   .card {
     width: 100%;
     min-width: 0;
     max-width: 100%;
     aspect-ratio: auto;
-    min-height: 180px;
+    height: 35vh;
+    min-height: 0;
     padding: 16px;
     border-radius: 14px;
     box-sizing: border-box;
-    gap: 12px;
     overflow: hidden;
   }
 
@@ -357,6 +427,7 @@ set_default_btn:hover {
   .top {
     align-items: flex-start;
     gap: 8px;
+    margin-bottom: 5px;
   }
 
   .top img,
@@ -389,11 +460,12 @@ set_default_btn:hover {
     font-size: 22px;
     font-weight: 600;
     margin: 0;
+    margin-bottom: 5px;
   }
 
   .wallet_details {
-    margin: 4px 0 0 0;
-    padding-top: 0;
+    margin: 0;
+    padding-top: 6px;
     font-size: 10px;
   }
 
@@ -455,7 +527,6 @@ set_default_btn:hover {
   }
 }
 
-/* Reserved card: aspect-ratio, min-width, width, compact sab override */
 .card.reservedCard {
   aspect-ratio: auto;
   min-width: 0;
@@ -467,11 +538,4 @@ set_default_btn:hover {
   overflow: visible;
   border-radius: 16px;
   gap: 0;
-}
-
-@media screen and (max-width: 480px) {
-  .card.reservedCard {
-    padding: 14px 16px;
-    overflow: hidden;
-  }
 }

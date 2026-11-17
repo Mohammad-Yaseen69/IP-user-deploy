@@ -118,12 +118,12 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
             <button
               type="button"
               className={`${cardsStyle.wallet_btn} ${cardsStyle.wallet_btn_active}`}
-              onClick={() => setTab("wallet")}
+              // onClick={() => setTab("wallet")}
             >
               <span>{t("Wallet")}</span>
             </button>
           </div>
-          <a href="/wallet" className={cardsStyle.wallet_link}>
+          <a href="/wallets" className={cardsStyle.wallet_link}>
             {t("Open wallet")}
             <ChevronRight size={16} strokeWidth={2} />
           </a>
@@ -243,7 +243,7 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
           )}
         </div>
         <BusinessModal isOpen={showBusinessModal} toggle={() => setShowBusinessModal(false)} />
-        {userDetails?.account_type === "individual" && (
+        {/* {userDetails?.account_type === "individual" && (
           <button
             onClick={() => setShowBusinessModal(true)}
             className={cardsStyle.button}
@@ -299,7 +299,7 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
             </span>
             <BsFillPlayFill size={25} style={{ marginLeft: "auto" }} />
           </button>
-        )}
+        )} */}
       </div>
       {/* {can("wallet.payment.conversion") && <CurConversion />} */}
     </div>
