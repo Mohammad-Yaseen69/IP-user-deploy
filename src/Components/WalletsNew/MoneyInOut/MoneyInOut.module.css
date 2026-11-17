@@ -79,10 +79,13 @@
 
 .summaryValue {
   grid-column: 1 / -1;
-  font-size: 23px;
-  line-height: 18.85px;
+  font-size: clamp(13px, 1.4vw, 20px);
+  line-height: 1.2;
   font-weight: 700;
   color: #1a1a1f;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .summaryValue small {
@@ -192,5 +195,144 @@
 
   .summaryItem:last-child {
     grid-column: 1 / -1;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f3 25%, #e6e6ec 37%, #f0f0f3 63%);
+  background-size: 400% 100%;
+  animation: skeletonShimmer 1.4s ease infinite;
+  border-radius: 6px;
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+.skeletonTitle {
+  width: 150px;
+  height: 18px;
+  margin-bottom: 8px;
+}
+.skeletonSubtitle {
+  width: 180px;
+  height: 12px;
+}
+.skeletonToggle {
+  width: 92px;
+  height: 32px;
+  border-radius: 8px;
+}
+.skeletonLabel {
+  width: 72px;
+  height: 12px;
+  margin-bottom: 10px;
+}
+.skeletonValue {
+  width: 120px;
+  height: 22px;
+}
+.skeletonHint {
+  width: 220px;
+  height: 12px;
+  margin: 14px 0 18px;
+}
+
+/* Chart skeleton: real chart jaisa layout */
+.skeletonChart {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.skeletonYAxis {
+  width: 28px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.skeletonTick {
+  width: 22px;
+  height: 10px;
+}
+
+.skeletonPlotWrap {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.skeletonPlot {
+  position: relative;
+  flex: 1;
+}
+
+.skeletonGridLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #f0f0f3;
+}
+.skeletonZeroLine {
+  background: #e4e4ea;
+}
+
+.skeletonColumns {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  gap: 10px;
+}
+.skeletonColumn {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.skeletonHalfTop,
+.skeletonHalfBottom {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.skeletonHalfTop {
+  align-items: flex-end;
+}
+.skeletonHalfBottom {
+  align-items: flex-start;
+}
+.skeletonBar {
+  width: 55%;
+  max-width: 40px;
+  border-radius: 4px;
+}
+
+.skeletonXRow {
+  display: flex;
+  gap: 10px;
+  height: 10px;
+  margin-top: 10px;
+}
+.skeletonXCell {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+}
+.skeletonXLabel {
+  width: 22px;
+  height: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
   }
 }

@@ -34,18 +34,15 @@
   justify-content: center;
 }
 
-@media screen and (min-width: 1650px) {
-  .head {
-    font-size: 1rem;
-  }
-}
-
 @media screen and (max-width: 1649px) {
   .recent_item {
     padding: 7px;
   }
-
   .head {
-    font-size: 0.7rem;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20.3px;
+    letter-spacing: -0.15px;
+    color: #1b1f2a;
   }
 }

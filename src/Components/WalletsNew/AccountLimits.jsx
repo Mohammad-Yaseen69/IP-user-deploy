@@ -1,12 +1,7 @@
 import { useTranslation } from "react-i18next";
 import styles from "./styles/AccountLimits.module.css";
-import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
-import { ChevronLeft, ChevronRight } from "react-feather";
-import { useContext, useEffect, useState } from "react";
-import axios from "axios";
-import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
+import { useState } from "react";
 import InstaPayLoader from "../Loader";
-import { UserContext } from "../../Context/UserContext";
 
 export function removeCommasAndCurrency(num) {
   return String(String(num)?.replace(/,/g, ""))?.replace(/[A-Za-z]+/g, "");
@@ -28,61 +23,57 @@ const calcPercent = (used, total) => {
 const getLimit = (data, key) => data?.others?.find((o) => o?.limits?.[key])?.limits?.[key] || {};
 
 const PERIODS = [
-  { key: "all", label: "All" },
-  { key: "daily", label: "Daily", title: "Daily Limit" },
-  { key: "monthly", label: "Monthly", title: "Monthly Limit" },
-  { key: "yearly", label: "Yearly", title: "Yearly Limit" },
+  { key: "daily", label: "Daily" },
+  { key: "monthly", label: "Monthly" },
+  { key: "yearly", label: "Yearly" },
 ];
 
-const ALL_PERIODS = PERIODS.filter((p) => p.key !== "all");
+const ROWS = [
+  { title: "Incoming", source: "Incoming Limit" },
+  { title: "Outgoing", source: "Sending Limit" },
+  { title: "Transactions", source: "Allowed Number Of Transactions" },
+];
+
+const getRow = (data, source, periodKey) =>
+  data?.others?.find((o) => o?.title === source)?.limits?.[periodKey] || {};
 
 const AccountLimits = ({ currentWallet, data, loading, error }) => {
   const { t } = useTranslation();
-  const [period, setPeriod] = useState("all");
+  const [period, setPeriod] = useState("daily");
+  const currency = currentWallet?.currency?.code ?? "";
 
-  const handleTabClick = (key) => {
-    if (key === "all") {
-      setPeriod("all");
-      return;
-    }
-    setPeriod(key);
-  };
+  if (loading) {
+    return (
+      <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
+        <InstaPayLoader />
+      </div>
+    );
+  }
 
-  const visiblePeriods =
-    period === "all" ? ALL_PERIODS : ALL_PERIODS.filter((p) => p.key === period);
+  if (error) {
+    return (
+      <div
+        style={{
+          height: "300px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          fontWeight: 600,
+        }}
+      >
+        {error}
+      </div>
+    );
+  }
 
-  return loading ? (
-    <div
-      style={{
-        height: "300px",
-        width: "300px",
-        margin: "0 auto",
-      }}
-    >
-      <InstaPayLoader />
-    </div>
-  ) : error ? (
-    <div
-      style={{
-        height: "300px",
-        width: "100%",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        fontSize: "1rem",
-        fontWeight: 600,
-      }}
-    >
-      {error}
-    </div>
-  ) : (
+  return (
     <div className={styles.container}>
       <div className={styles.left}>
         <div className={styles.left_limits}>
           <div className={styles.lim_top}>
             <div className={styles.lim_title}>
-              <h1>{t("Limit")}</h1>
-              <span>{t("EUR, resets at midnight")}</span>
+              <h1>{t("Limits")}</h1>
+              <span>{`${currency}, ${t("resets at midnight")}`}</span>
             </div>
             <div className={styles.lim_toggle}>
               {PERIODS.map((p) => (
@@ -91,17 +82,21 @@ const AccountLimits = ({ currentWallet, data, loading, error }) => {
                   type="button"
                   aria-selected={period === p.key}
                   className={`${styles.lim_tab} ${period === p.key ? styles.lim_tab_active : ""}`}
-                  onClick={() => handleTabClick(p.key)}
+                  onClick={() => setPeriod(p.key)}
                 >
                   {t(p.label)}
                 </button>
               ))}
             </div>
           </div>
-          <div></div>
+
           <div className={styles.limit_section}>
-            {visiblePeriods.map((p) => (
-              <LimitRow key={p.key} title={t(p.title)} limit={getLimit(data, p.key)} />
+            {ROWS.map((row) => (
+              <LimitRow
+                key={row.title}
+                title={t(row.title)}
+                limit={getRow(data, row.source, period)}
+              />
             ))}
 
             <div className={styles.lim_mini_grid}>
@@ -110,13 +105,13 @@ const AccountLimits = ({ currentWallet, data, loading, error }) => {
                 { label: t("Maximum top-up"), value: data?.max_topup_amount },
                 { label: t("Maximum per payment"), value: data?.transaction_amount_limit },
               ].map((item) => {
-                const { amount, currency } = splitAmount(item.value);
+                const { amount, currency: cur } = splitAmount(item.value);
                 return (
                   <div className={styles.lim_mini} key={item.label}>
                     <span>{item.label}</span>
                     <div className={styles.lim_mini_value}>
                       <strong>{amount}</strong>
-                      {currency && <small>{currency}</small>}
+                      {cur && <small>{cur}</small>}
                     </div>
                   </div>
                 );
@@ -139,17 +134,19 @@ const LimitRow = ({ title, limit }) => {
     <div className={styles.lim_used_remaining}>
       <div className={styles.headings}>
         <h2>{title}</h2>
-        <strong>{limit?.total}</strong>
+        <span className={styles.usedOfTotal}>
+          <strong>{limit?.used ?? 0}</strong> {t("of")} {limit?.total ?? 0}
+        </span>
       </div>
       <div className={styles.lim_progress}>
-        <div className={styles.lim_progress_fill} style={{ width: `${pct}%` }}></div>
+        <div className={styles.lim_progress_fill} style={{ width: `${pct}%` }} />
       </div>
       <div className={styles.lim_progress_text}>
         <span>
           {Math.round(pct)}% {t("used")}
         </span>
         <span>
-          {limit?.remaining} {t("left")}
+          {limit?.remaining ?? 0} {t("left")}
         </span>
       </div>
     </div>

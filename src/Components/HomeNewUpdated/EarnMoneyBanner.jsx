@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Check, ChevronRight, Copy } from "react-feather";
+import { Check, ChevronRight, Copy, Gift } from "react-feather";
 import styles from "./styles/EMB.module.css";
 
 const LEARN_MORE_URL = "https://insta-pay.ch/affiliation-program";
 
-const EarnMoneyBanner = ({
+const DesktopBanner = ({
   height,
   showLink = true,
   headSize,
@@ -37,7 +37,10 @@ const EarnMoneyBanner = ({
   });
 
   return (
-    <div className={styles.banner} style={{ height, minWidth, borderRadius: radius }}>
+    <div
+      className={`${styles.banner} ${styles.desktopBanner}`}
+      style={{ height, minWidth, borderRadius: radius }}
+    >
       <div className={styles.content}>
         <h2 style={{ fontSize: headSize }}>{t("Earn with the InstaPay Partner Program")}</h2>
         <p style={{ fontSize: textSize }}>
@@ -83,5 +86,48 @@ const EarnMoneyBanner = ({
     </div>
   );
 };
+
+const MobileBanner = ({ code = "", rewardsEarned = 0, friendsJoined = 0 }) => {
+  const { t } = useTranslation();
+  const handlelink = () => window.open(LEARN_MORE_URL, "_blank", "noopener,noreferrer");
+
+  const formattedRewards = Number(rewardsEarned).toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  return (
+    <div
+      className={styles.mobileBanner}
+      onClick={handlelink}
+      role="link"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === "Enter" && handlelink()}
+    >
+      <div className={styles.mobileIcon}>
+        <Gift size={20} />
+      </div>
+      <div className={styles.mobileText}>
+        <h3>{t("Earn with the Partner Program")}</h3>
+        <p>
+          {code
+            ? t("Share {{code}}. {{friends}} friends joined, {{rewards}} USD earned.", {
+                code,
+                friends: friendsJoined,
+                rewards: formattedRewards,
+              })
+            : t("Share your code and earn a share of every fee your friends pay.")}
+        </p>
+      </div>
+    </div>
+  );
+};
+
+const EarnMoneyBanner = (props) => (
+  <>
+    <DesktopBanner {...props} />
+    <MobileBanner {...props} />
+  </>
+);
 
 export default EarnMoneyBanner;

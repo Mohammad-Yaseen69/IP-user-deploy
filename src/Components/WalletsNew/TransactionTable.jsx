@@ -1,38 +1,83 @@
-import { useTranslation } from "react-i18next";
-import styles from "../TransactionsNewApi/styles/index.module.scss";
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import TransactionItem from "../TransactionsNewApi/TransactionItem";
-import { UserContext } from "../../Context/UserContext";
 import axios from "axios";
+import dayjs from "dayjs";
+import { Receipt } from "lucide-react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router";
+import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
-import InstaPayLoader from "../Loader";
-import TransactionItemMobile from "../TransactionsNewApi/Mobile/TransactionItemMobile";
+import { usePermission } from "../../hooks/GeneralUse/usePermission";
+import { DateGroup, EmptyState } from "../../Common/Ledger/Cells";
+import { ActiveFilters, FilterPanel } from "../../Common/Ledger/Filters";
 import Ledger from "../../Common/Ledger/Ledger";
+import s from "../../Common/Ledger/ledger.module.scss";
+import InstaPayLoader from "../Loader";
+import DownloadStatement from "../WalletsNew/DownloadStatement";
+import TransactionItem from "../TransactionsNewApi/TransactionItem";
 
-const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
+const PAGE_SIZE = 15;
+
+const TABS = ["All", "Sent", "Received", "Requests", "Quotes"].map((key) => ({ key, label: key }));
+
+const FILTER_GROUPS = [
+  {
+    key: "status",
+    label: "Status",
+    options: ["CANCELLED", "COMPLETED", "DECLINED", "FAILED", "INITIATED", "PENDING", "PROCESSING"],
+  },
+  { key: "transaction_type", label: "Type", options: ["credit", "debit"] },
+];
+
+const transactionFilter = (t) => {
+  if (
+    t.transaction_type?.toLowerCase() === "credit" &&
+    t.status?.toLowerCase() === "failed" &&
+    t.payment_type?.toLowerCase() === "mobile_wallet"
+  ) {
+    return false;
+  }
+  return true;
+};
+
+const defaultRange = {
+  startDate: undefined,
+  endDate: undefined,
+  key: "selection",
+};
+
+const TransactionsTable = ({ currentWallet, filtered: externalFiltered, setFiltered }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation();
+  const search = new URLSearchParams(location.search).get("search") ?? "";
+
   const [active, setActive] = useState("All");
   const [activeItem, setActiveItem] = useState(0);
-  const [dateRange, setDateRange] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
-    key: "selection",
-  });
-
-  const [searchQuery, setSearchQuery] = useState("");
-  const [apiDates, setApiDates] = useState(null);
-  const [page, setPage] = useState(1);
-  const [currentTrxType, setCurrentTrxType] = useState("all");
-  const [maxLimit, setMaxLimit] = useState(false);
-  const { userDetails, authHeader } = useContext(UserContext);
-  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
-  const [debounceTimer, setDebounceTimer] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [dateRange, setDateRange] = useState(defaultRange);
   const [transactions, setTransactions] = useState([]);
-  const loaderRef = useRef();
-  const mobileLoaderRef = useRef();
+  const [searchQuery, setSearchQuery] = useState(search);
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(search);
+  const [apiDates, setApiDates] = useState(null);
+  const [filters, setFilters] = useState({});
+  const [page, setPage] = useState(1);
+  const [maxLimit, setMaxLimit] = useState(false);
   const [stopLoader, setStopLoader] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showStatementModal, setShowStatementModal] = useState(false);
+
+  const { userDetails, authHeader, verifyToken, getUserBeneficiaries } = useContext(UserContext);
+  const can = usePermission();
+
+  const loaderRef = useRef(null);
+  const debounceTimerRef = useRef(null);
+  const lastQueryKeyRef = useRef(null);
+  const isFetchingRef = useRef(false);
+
+  const walletId = currentWallet?.wallet_id;
+  const currentTrxType = apiDates ? "date_and_query" : debouncedSearchQuery ? "query" : "all";
+  const filterQuery = new URLSearchParams(filters).toString();
+  const withFilters = (url) => (filterQuery ? `${url}?${filterQuery}` : url);
 
   useEffect(() => {
     if (searchQuery !== debouncedSearchQuery) {
@@ -169,305 +214,329 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
   };
 
   useEffect(() => {
-    if (!currentWallet || !userDetails) return;
-    if (maxLimit) return;
-    if (currentTrxType === "all") {
-      getAllTransactions();
-    }
-    if (currentTrxType === "query") {
-      getTransactionsByQuery();
-    }
-    if (currentTrxType === "date_and_query") {
-      getTransactionsByQueryAndDate();
-    }
-  }, [page, currentTrxType, debouncedSearchQuery, apiDates, currentWallet, userDetails, maxLimit]);
+    if (searchQuery === debouncedSearchQuery) return;
+
+    debounceTimerRef.current = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 1000);
+
+    return () => clearTimeout(debounceTimerRef.current);
+  }, [searchQuery, debouncedSearchQuery]);
 
   useEffect(() => {
-    if (currentWallet) {
-      setStopLoader(false);
-      setMaxLimit(false);
-      setFiltered([]);
+    if (!walletId || !userDetails) {
+      setIsLoading(false);
+      return;
+    }
+
+    const queryKey = JSON.stringify([
+      currentTrxType,
+      debouncedSearchQuery,
+      apiDates,
+      filters,
+      walletId,
+    ]);
+    const queryChanged = lastQueryKeyRef.current !== queryKey;
+
+    if (queryChanged) {
+      lastQueryKeyRef.current = queryKey;
       setTransactions([]);
-      setPage(1);
+      setMaxLimit(false);
+      setStopLoader(false);
+      setActive("All");
+      if (page !== 1) {
+        setPage(1);
+        return;
+      }
     }
-  }, [currentWallet]);
+
+    if (maxLimit && !queryChanged) return;
+
+    const controller = new AbortController();
+    let isCurrentRequest = true;
+    isFetchingRef.current = true;
+    setIsLoading(true);
+
+    const handleSuccess = (response) => {
+      if (!isCurrentRequest) return;
+      const decrypted = decryptData(response.data.data);
+      const rawList = decrypted?.transactionList ?? [];
+      const pageTransactions = rawList.filter(transactionFilter);
+
+      setTransactions((previous) =>
+        page === 1 ? pageTransactions : [...previous, ...pageTransactions],
+      );
+
+      const hasMore = rawList.length >= PAGE_SIZE;
+      setMaxLimit(!hasMore);
+      setStopLoader(!hasMore);
+      isFetchingRef.current = false;
+      setIsLoading(false);
+    };
+
+    const handleFailure = (error) => {
+      if (!isCurrentRequest || axios.isCancel(error) || error?.code === "ERR_CANCELED") return;
+      isFetchingRef.current = false;
+      setIsLoading(false);
+      setStopLoader(true);
+      if (page === 1) setTransactions([]);
+
+      const encryptedErrorData = error?.response?.data?.data;
+      if (encryptedErrorData) {
+        try {
+          const decrypted = decryptData(encryptedErrorData);
+          if (decrypted?.status === false) setMaxLimit(true);
+        } catch {}
+      }
+    };
+
+    const baseUrl = import.meta.env.VITE_IP_DEV_API;
+    const config = { headers: authHeader, signal: controller.signal };
+    let request;
+
+    if (currentTrxType === "all") {
+      request = axios.get(
+        withFilters(
+          `${baseUrl}/api/transaction/get-all-transactions-by-wallet/${walletId}/${page}/${PAGE_SIZE}`,
+        ),
+        config,
+      );
+    } else if (currentTrxType === "query") {
+      request = axios.get(
+        withFilters(
+          `${baseUrl}/api/transaction/search-wallet-transactions/${walletId}/${page}/${PAGE_SIZE}/${encodeURIComponent(debouncedSearchQuery)}`,
+        ),
+        config,
+      );
+    } else {
+      const encrypted = encryptData({ ...apiDates, query: debouncedSearchQuery });
+      request = axios.post(
+        withFilters(
+          `${baseUrl}/api/transaction/search-account-transactions-wallet-by-date/${walletId}/${page}/${PAGE_SIZE}`,
+        ),
+        { data: encrypted },
+        config,
+      );
+    }
+
+    request.then(handleSuccess).catch(handleFailure);
+
+    return () => {
+      isCurrentRequest = false;
+      controller.abort();
+      isFetchingRef.current = false;
+    };
+  }, [
+    page,
+    currentTrxType,
+    debouncedSearchQuery,
+    apiDates,
+    filters,
+    walletId,
+    userDetails,
+    authHeader,
+  ]);
 
   useEffect(() => {
-    setTransactions([]);
-    setFiltered([]);
-    setMaxLimit(false);
-    setStopLoader(false);
-    setPage(1);
-    if (apiDates !== null) {
-      setCurrentTrxType("date_and_query");
-    } else if (debouncedSearchQuery.length > 0 && apiDates === null) {
-      setCurrentTrxType("query");
-    } else if (debouncedSearchQuery.length === 0 && apiDates === null) {
-      setCurrentTrxType("all");
-    }
-  }, [debouncedSearchQuery, apiDates]);
-
-  useEffect(() => {
-    setTransactions([]);
-    setFiltered([]);
-    setMaxLimit(false);
-    setStopLoader(false);
-    setPage(1);
+    verifyToken();
   }, [currentTrxType]);
 
-  const handleChange = (ranges) => {
-    setFiltered([]);
-    setPage(1);
-    setMaxLimit(false);
-    if (ranges.selection) {
-      const startDate = ranges.selection.startDate.toISOString().split("T")[0];
-      const endDate = ranges.selection.endDate.toISOString().split("T")[0];
-
-      const formattedDateRange = {
-        from: startDate,
-        to: endDate,
-      };
-
-      setApiDates(formattedDateRange);
-      setDateRange(ranges.selection);
-    }
-  };
-
-  const TABS = [
-    { key: "All", label: "All" },
-    { key: "Sent", label: "Sent" },
-    { key: "Received", label: "Received" },
-    { key: "Exchange", label: "Exchanges" },
-  ];
-
-  const matchesTab = (item, tab) => {
-    switch (tab) {
-      case "Sent":
-        return item?.transaction_type === "debit";
-      case "Received":
-        return item?.transaction_type === "credit";
-      case "Exchange":
-        return item?.type === "exchange";
-      default:
-        return true;
-    }
-  };
-
   useEffect(() => {
-    setFiltered(transactions.filter((i) => matchesTab(i, active)));
-  }, [active, transactions]);
-  const tableWrapperRef = useRef(null);
-  const tableWrapperRefMobile = useRef(null);
+    if (isLoading || maxLimit || stopLoader) return;
 
-  useEffect(() => {
+    const node = loaderRef.current;
+    if (!node) return;
+
     const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
+      ([entry]) => {
+        if (entry.isIntersecting && !isFetchingRef.current) {
+          isFetchingRef.current = true;
           setPage((prev) => prev + 1);
         }
       },
       { threshold: 0.1 },
     );
 
-    if (loaderRef.current) observer.observe(loaderRef.current);
-    if (mobileLoaderRef.current) observer.observe(mobileLoaderRef.current);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [isLoading, maxLimit, stopLoader]);
 
-    return () => {
-      observer.disconnect();
-    };
-  }, [loaderRef.current, mobileLoaderRef.current]);
+  const applyFilters = (next) => {
+    setFilters(next);
+    setPage(1);
+    setMaxLimit(false);
+    setStopLoader(false);
+  };
+
+  const handleDateChange = (ranges) => {
+    if (ranges.selection) {
+      const startDate = new Date(ranges.selection.startDate);
+      startDate.setDate(startDate.getDate() + 1);
+
+      const endDate = new Date(ranges.selection.endDate);
+      endDate.setDate(endDate.getDate() + 1);
+
+      setApiDates({
+        from: startDate.toISOString().split("T")[0],
+        to: endDate.toISOString().split("T")[0],
+      });
+      setDateRange(ranges.selection);
+      setPage(1);
+    }
+  };
+
+  const changeSearch = (value) => {
+    setSearchQuery(value);
+    setPage(1);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has("search")) {
+      urlParams.delete("search");
+      const newUrl =
+        window.location.pathname + (urlParams.toString() ? `?${urlParams.toString()}` : "");
+      window.history.replaceState({}, document.title, newUrl);
+    }
+  };
+
+  const clearDates = () => {
+    setApiDates(null);
+    setDateRange(defaultRange);
+    setPage(1);
+  };
+
+  const clearChips = () => {
+    clearDates();
+    applyFilters({});
+  };
+
+  const clearAll = () => {
+    changeSearch("");
+    clearChips();
+  };
+
+  const filtered = useMemo(() => {
+    switch (active) {
+      case "Sent":
+        return transactions.filter((item) => item?.transaction_type === "debit");
+      case "Received":
+        return transactions.filter((item) => item?.transaction_type === "credit");
+      case "Quotes":
+        return transactions.filter((item) => item?.payment_type === "quotation");
+      case "Requests":
+        return transactions.filter((item) => item?.payment_type === "payment_request");
+      default:
+        return transactions;
+    }
+  }, [active, transactions]);
 
   useEffect(() => {
-    if (active === "All") {
-      setFiltered(transactions);
-    }
-    if (active === "Sent") {
-      const sentTransactions = transactions?.filter((item) => item?.transaction_type === "debit");
-      setFiltered(sentTransactions);
-    }
-    if (active === "Received") {
-      const receivedTransactions = transactions?.filter(
-        (item) => item?.transaction_type === "credit",
-      );
-      setFiltered(receivedTransactions);
-    }
-    if (active === "Quoted") {
-      const quotedTransactions = transactions?.filter((item) => item?.payment_type === "quotation");
-      setFiltered(quotedTransactions);
-    }
-    if (active === "Requested") {
-      const requestedTransactions = transactions?.filter(
-        (item) => item?.type === "payment_request",
-      );
-      setFiltered(requestedTransactions);
-    }
-  }, [active]);
+    if (typeof setFiltered === "function") setFiltered(filtered);
+  }, [filtered]);
 
-  const tabCounts = useMemo(
-    () =>
-      Object.fromEntries(
-        TABS.map((tab) => [tab.key, transactions.filter((i) => matchesTab(i, tab.key)).length]),
-      ),
-    [transactions],
-  );
+  const groups = useMemo(() => {
+    const byDay = new Map();
+    [...filtered]
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .forEach((item, index) => {
+        const day = dayjs(item.createdAt).format("D MMM YYYY");
+        byDay.set(day, [...(byDay.get(day) ?? []), { item, index }]);
+      });
+    return [...byDay];
+  }, [filtered]);
+
+  const dateLabel = apiDates
+    ? `${dayjs(dateRange.startDate).format("MMM D")} - ${dayjs(dateRange.endDate).format("MMM D, YYYY")}`
+    : t("All dates");
+
   return (
-    <div className={styles.ledgerCompact}>
+    <>
       <Ledger
         title={t("Wallet transactions")}
         description={t("Every payment in and out of this wallet, all currencies")}
-        tabs={TABS.map((tab) => ({
-          key: tab.key,
-          label: tab.label,
-          count: tabCounts[tab.key],
-        }))}
+        tabs={TABS}
         active={active}
         onTab={setActive}
         search={{
-          placeholder: t("Search names or transaction IDs"),
           value: searchQuery,
-          onChange: (value) => {
-            setFiltered([]);
-            setPage(1);
-            setMaxLimit(false);
-            setSearchQuery(value);
-          },
+          onChange: changeSearch,
+          placeholder: t("Search names or transaction IDs"),
         }}
         dateRange={dateRange}
-        onDateChange={handleChange}
-        columns={[
-          t("Date & Time"),
-          t("Type"),
-          t("Transaction ID"),
-          t("Payment Type"),
-          t("Recipient"),
-          t("Amount"),
-          t("Status"),
-          "",
-        ]}
-        template="repeat(7, minmax(0, 1fr)) 15px"
-        hideDownload
-        hideFilters
+        onDateChange={handleDateChange}
+        dateLabel={dateLabel}
+        filters={
+          <FilterPanel
+            groups={FILTER_GROUPS}
+            filters={filters}
+            count={Object.keys(filters).length + (apiDates ? 1 : 0)}
+            onApply={applyFilters}
+          />
+        }
+        activeFilters={
+          <ActiveFilters
+            groups={FILTER_GROUPS}
+            filters={filters}
+            dateLabel={apiDates && dateLabel}
+            onApply={applyFilters}
+            onClearDate={clearDates}
+            onClearAll={clearChips}
+          />
+        }
+        hideDownload={!can("transactions.main.export")}
+        onDownload={() => setShowStatementModal((prev) => !prev)}
+        columns={[t("Transaction"), t("Recipient"), t("Status"), t("Time"), t("Amount"), ""]}
+        template="2.2fr 1.6fr 112px 90px 1.3fr 16px"
       >
-        <div className={styles.table}>
-          <div className={styles.tableWrapper}>
-            <div className={styles.table_body} ref={tableWrapperRef}>
-              {isLoading ? (
-                <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
-                  <InstaPayLoader />
-                </div>
-              ) : (
-                <>
-                  {filtered.length > 0 ? (
-                    filtered
-                      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                      .map((item, index) => {
-                        let color;
-                        if (item?.status?.toLowerCase() === "completed") {
-                          color = "#15bd43";
-                        }
-                        if (item?.status?.toLowerCase() === "pending") {
-                          color = "rgba(89, 38, 240, 0.55)";
-                        }
-                        if (item?.status?.toLowerCase() === "cancelled") {
-                          color = "#ed1d1d";
-                        }
-
-                        return (
-                          <TransactionItem
-                            color={color}
-                            item={item}
-                            key={item._id}
-                            activeItem={activeItem}
-                            setActiveItem={setActiveItem}
-                            index={index}
-                          />
-                        );
-                      })
-                  ) : (
-                    <span style={{ textAlign: "center", marginTop: "2rem" }}>
-                      {t("No Transactions")}
-                    </span>
-                  )}
-                </>
-              )}
-              {!isLoading && !stopLoader && (
-                <div
-                  ref={loaderRef}
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    width: "100%",
-                  }}
-                >
-                  <div style={{ width: "200px" }}>
-                    <InstaPayLoader />
-                  </div>
-                </div>
-              )}
-            </div>
-            <div
-              className={styles.table_body_mobile}
-              ref={tableWrapperRefMobile}
-              style={{ minHeight: "300px" }}
-            >
-              {isLoading ? (
-                <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
-                  <InstaPayLoader />
-                </div>
-              ) : (
-                <>
-                  {filtered.length > 0 ? (
-                    filtered
-                      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                      .map((item, index) => {
-                        let color;
-                        if (item?.status?.toLowerCase() === "completed") {
-                          color = "#15bd43";
-                        }
-                        if (item?.status?.toLowerCase() === "pending") {
-                          color = "rgba(89, 38, 240, 0.55)";
-                        }
-                        if (item?.status?.toLowerCase() === "cancelled") {
-                          color = "#ed1d1d";
-                        }
-
-                        return (
-                          <TransactionItemMobile
-                            color={color}
-                            item={item}
-                            key={item._id}
-                            activeItem={activeItem}
-                            setActiveItem={setActiveItem}
-                            index={index}
-                          />
-                        );
-                      })
-                  ) : (
-                    <span style={{ textAlign: "center", marginTop: "2rem" }}>
-                      {t("No Transactions")}
-                    </span>
-                  )}
-                </>
-              )}
-              {!isLoading && !stopLoader && (
-                <div
-                  ref={mobileLoaderRef}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    width: "100%",
-                  }}
-                >
-                  <div style={{ width: "200px" }}>
-                    <InstaPayLoader />
-                  </div>
-                </div>
-              )}
-            </div>
+        {isLoading ? (
+          <div className={s.loader}>
+            <InstaPayLoader />
           </div>
-        </div>
+        ) : groups.length > 0 ? (
+          groups.map(([day, rows]) => (
+            <div key={day}>
+              <DateGroup label={day} />
+              {rows.map(({ item, index }) => (
+                <TransactionItem
+                  key={item._id ?? item.id}
+                  item={item}
+                  index={index}
+                  activeItem={activeItem}
+                  setActiveItem={setActiveItem}
+                />
+              ))}
+            </div>
+          ))
+        ) : (
+          <EmptyState
+            Icon={Receipt}
+            title={t("No transactions yet")}
+            text={t("Money you send and receive will appear here, grouped by day.")}
+          >
+            <button type="button" className={s.btnPrimary} onClick={() => navigate("/wallets")}>
+              {t("Add funds")}
+            </button>
+            <button type="button" className={s.btn} onClick={clearAll}>
+              {t("Clear search")}
+            </button>
+          </EmptyState>
+        )}
+
+        {!isLoading && !stopLoader && (
+          <div ref={loaderRef} className={s.loader}>
+            <InstaPayLoader />
+          </div>
+        )}
       </Ledger>
-    </div>
+
+      {showStatementModal && (
+        <DownloadStatement
+          showModal={showStatementModal}
+          setShowModal={setShowStatementModal}
+          wallet={currentWallet}
+          isTransection={true}
+        />
+      )}
+    </>
   );
 };
 

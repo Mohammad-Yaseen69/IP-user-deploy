@@ -1,3 +1,18 @@
+.reserved {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  min-height: 240px;
+  padding: 16px 8px;
+  margin: 0;
+  box-sizing: border-box;
+  color: #fff;
+  gap: 1rem;
+  font-family: Inter;
+}
+
 .flex {
   display: flex;
   align-items: center;
@@ -8,132 +23,174 @@
 }
 
 .r_total {
-  gap: 0.9rem;
-  border-radius: 3.544px;
-  background: rgba(255, 255, 255, 0.08);
-  padding: 0.5rem;
-  margin-bottom: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  background: transparent;
 }
 
 .r_total span {
-  color: rgba(255, 255, 255, 0.8);
-  font-family: "Red Hat Display";
-  font-size: 8.86px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
 }
 
 .r_total h5 {
   color: #fff;
-  font-family: "Clash Display";
   font-size: 1rem;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  letter-spacing: -0.177px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.2px;
+}
+
+.r_balance_details {
+  display: flex;
+  align-items: center;
+  gap: 24px;
 }
 
 .r_blocked {
-  border-radius: 3.544px;
-  background: rgba(255, 255, 255, 0.1);
-  justify-content: space-between;
-  padding: 0.5rem;
-  margin-bottom: 0.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border-radius: 0;
 }
 
 .r_blocked span {
-  color: rgba(255, 255, 255, 0.8);
-  font-family: "Red Hat Display";
-  font-size: 7.336px;
-  font-style: normal;
+  color: #fff;
+  font-size: 15px;
   font-weight: 400;
   line-height: normal;
 }
 
 .r_blocked h5 {
   color: #fff;
-  font-family: "Clash Display";
-  font-size: 8.86px;
-  font-style: normal;
-  font-weight: 400;
+  font-size: 12px;
+  font-weight: 500;
   line-height: normal;
 }
 
-.r_wallet {
-  gap: 0.5rem;
-  margin-top: 0.4rem;
-  margin-bottom: 0.4rem;
+.walletId {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2px;
 }
 
-.r_wallet span {
-  color: rgba(255, 255, 255, 0.8);
-  font-family: "Red Hat Display";
-  font-size: 8.86px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
+.r_wallet span,
+.walletId > span {
+  color: #ffffffea;
+  font-size: 12px;
 }
 
 .r_wallet h5 {
-  padding: 0.4rem;
-  border-radius: 6.699px;
-  background: rgba(217, 217, 217, 0.08);
-  box-shadow: 0px 2.679px 8.708px 0px rgba(0, 0, 0, 0.06);
-  backdrop-filter: blur(1.3397164344787598px);
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 5px;
+  margin-left: 5px;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
   color: #fff;
-  leading-trim: both;
-  text-edge: cap;
-  font-family: "Clash Display";
-  font-size: 12.404px;
-  font-style: normal;
-  font-weight: 400;
+  font-size: 15px;
+  font-weight: 500;
   line-height: normal;
-  letter-spacing: -0.248px;
+  letter-spacing: 0;
 }
 
-.r_bal {
-  gap: 0.6rem;
-  margin-bottom: auto;
+.wallet_id {
+  display: flex;
+  align-items: center;
+  /* gap: 5px; */
 }
 
-.r_bal span {
-  color: rgba(255, 255, 255, 0.8);
-  font-family: "Red Hat Display";
-  font-size: 7.088px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
+.copy_btn {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
 
-.r_bal h5 {
+.limit_Row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.limit_Row p {
+  margin: 0;
   color: #fff;
-  font-family: "Clash Display";
-  font-size: 10.189px;
-  font-style: normal;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.limit_Row span {
+  color: #fff;
+  font-size: 10px;
   font-weight: 400;
-  line-height: normal;
-  letter-spacing: 0.204px;
+}
+
+.load {
+  color: #fff;
+  font-size: 10px;
+}
+
+.limitBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
 }
 
 .bb {
   position: relative;
-  margin-top: 0.5rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: block;
 }
 
-.bb span {
-  color: #fff;
-  text-align: right;
-  leading-trim: both;
-  text-edge: cap;
-  font-family: "Clash Display";
-  font-size: 7.336px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  position: absolute;
-  bottom: 0px;
+.bb :global(.progress) {
+  width: 100%;
+  height: 8px !important;
+  background: #ffffff !important;
+  border-radius: 999px !important;
+  overflow: hidden;
+}
+
+.bb :global(.progress-bar) {
+  height: 10px;
+  background: linear-gradient(90deg, #f2eeff 0%, #5926f0 100%) !important;
+  border-radius: 999px !important;
+  transition: width 0.3s ease;
+  top: 0;
+}
+
+.compacts {
+  width: 100%;
+  min-width: 0;
+  border-radius: 12px;
+  gap: 4px;
+  min-height: 0;
+  padding: 0;
+}
+
+.compacts .limitBlock {
+  padding-top: 0;
+}
+
+.compacts .r_wallet h5 {
+  font-size: 12px;
+}
+.compacts .r_total h5 {
+  font-size: 12px;
+}
+
+.compacts .limitBlock {
+  padding-top: 10px;
+  gap: 5px;
 }

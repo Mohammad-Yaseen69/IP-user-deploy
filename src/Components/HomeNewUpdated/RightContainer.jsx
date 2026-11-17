@@ -113,7 +113,22 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
       }}
     >
       <div className={`${cardsStyle.container}`}>
-        <h4 className="d_r_head">{t("My Wallets")}</h4>
+        <div className={cardsStyle.wallet_header}>
+          <div className={cardsStyle.wallet_toggle}>
+            <button
+              type="button"
+              className={`${cardsStyle.wallet_btn} ${cardsStyle.wallet_btn_active}`}
+              onClick={() => setTab("wallet")}
+            >
+              <span>{t("Wallet")}</span>
+            </button>
+          </div>
+          <a href="/wallet" className={cardsStyle.wallet_link}>
+            {t("Open wallet")}
+            <ChevronRight size={16} strokeWidth={2} />
+          </a>
+        </div>
+
         {can("wallet.list.view") && (
           <Swiper
             effect={isSafari ? "fade" : "cards"}
