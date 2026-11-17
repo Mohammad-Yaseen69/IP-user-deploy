@@ -81,6 +81,7 @@ const LogActivity = lazy(() => import("../Components/LogActivity"));
 const VirtyalBank = lazy(() => import("../Components/VirtualIBAN"));
 // const KYBOnboarding = lazy(() => import("../Components/KYBOnboarding/index"))
 const ThirdPartySenders = lazy(() => import("../Components/ThirdPartySenders"));
+const CopyX = lazy(() => import("../Components/CopyX"));
 const OnboardingIBAN = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN"));
 const PriceActivation = lazy(
   () => import("../Components/VirtualIBAN/OnBoardingIBAN/PriceActivation/PriceActivation.jsx"),
@@ -116,6 +117,7 @@ const FeeModelRequests = lazy(
 );
 const LeadClaimConfirm = lazy(() => import("../Components/Auth/LeadClaimConfirm.jsx"));
 const PermissionFallback = lazy(() => import("./PermissionFallback"));
+const PaytentlyCardCollected = lazy(() => import("../Components/PaytentlyCardCollected"));
 
 const PermissionRoute = ({ permission, children }) => {
   const can = usePermission();
@@ -448,6 +450,8 @@ export const routes = [
       </PermissionRoute>
     ),
   },
+  { path: "/copy-trading", component: <CopyX /> },
+  { path: "/copy-trading/:screen", component: <CopyX /> },
   { path: "*", component: <NotFound type="Page" /> },
 ];
 
@@ -532,6 +536,7 @@ export const publicRoutes = [
   { path: "/v/:ibanId", component: <IbanValidationPage /> },
   { path: "/Insta-media", component: <InstaMedia /> },
   { path: "/lead-claim-confirm", component: <LeadClaimConfirm /> },
+  { path: "/paytently/card-collected", component: <PaytentlyCardCollected /> },
   { path: "*", component: <NotFound type="Page" /> },
 ];
 export const authRoutes = [

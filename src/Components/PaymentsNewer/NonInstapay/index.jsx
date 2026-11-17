@@ -42,6 +42,8 @@ import CreditCard from "../InternationalFlow/CreditCard";
 import { Link } from "react-router-dom";
 import PlaidBankTransfer from "../../AddFunds/WalletFundsFlow/PlaidBankTransfer";
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
+import { initiatePaytentlyPayment, usePaytently } from "../../../utils/Functions/paytently";
+import PaytentlyHostedModal from "../../AddFunds/PaytentlyHostedModal";
 
 const leftSideContent = [
   "Choose the beneficiary!",
@@ -104,12 +106,14 @@ function reducer(state, action) {
 const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) => {
   const [data, dispatch] = useReducer(reducer, initialState);
   const { userDetails, userWallets, setProfileLockTime } = useContext(UserContext);
+  // The quoted sending amount, not data.amount: typing in "They Receive" leaves that stale.
   const { limitStatus, clearStatus } = useTopupLimitCheck(
     data?.currency?.currency?.code,
-    +String(data?.amount)?.replaceAll(",", ""),
+    +String(data?.exchange_rate?.sending?.amount ?? data?.amount)?.replaceAll(",", ""),
     data?.payment_type?.value,
   );
   const [showCardModal, setShowCardModal] = useState(false);
+  const [paytentlyHosted, setPaytentlyHosted] = useState(null);
   const { getExchangeRate: getPlainExchangeRate } = usePlainFx();
   const { getKey, reset } = useIdempotency();
   const queryClient = useQueryClient();
@@ -127,7 +131,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
       apiWrapper({
         endpoint: `/api/pre-wallet/get-fee-details?${data?.exchange_rate?.receiver?.amount ? `preserved_amount=${data?.exchange_rate?.receiver?.amount}` : ""}`,
         method: "POST",
-        // isEncrypted: false,
+
         payload: {
           receiverCountryCode,
           sendingWalletId,
@@ -227,6 +231,16 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
   const { mutateAsync: initiateCardPayment } = useMutation({
     mutationFn: (otp) => {
       dataHandler("loading", true);
+
+      if (usePaytently) {
+        return initiatePaytentlyPayment({
+          walletId: data?.currency?._id,
+          flow: "non_instapay",
+          otp: { token: data.otp_token, otp: otp, type: data.codeType },
+          idempotencyKey: getKey(),
+        });
+      }
+
       const payload = {
         token: data.otp_token,
         otp: otp,
@@ -243,7 +257,18 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
       });
     },
     onSuccess: (dec) => {
-      console.log(dec);
+      if (usePaytently) {
+        if (!dec?.hosted_forms_url) {
+          dataHandler(
+            "otpError",
+            dec?.message ?? "We cannot process your request at the moment, please try again later.",
+          );
+          return;
+        }
+        setPaytentlyHosted({ hostedUrl: dec.hosted_forms_url, authorizeUrl: dec.authorize_url });
+        dataHandler("showOtpModal", false);
+        return;
+      }
       dataHandler("cardTransactionDetails", dec);
     },
     onError: (error) => {
@@ -447,7 +472,8 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
         dataHandler("step", 4);
         break;
       case 4:
-        if (data.payment_type?.value === "card") {
+        // Paytently collects the card on its own hosted form, so our card step is skipped.
+        if (data.payment_type?.value === "card" && !usePaytently) {
           dataHandler("showCard", true);
         }
         dataHandler("step", 5);
@@ -515,6 +541,9 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
           : false;
       case 5:
         if (data.payment_type?.value === "card") {
+          // Paytently validates the card on its own hosted form; nothing to check here.
+          if (usePaytently) return false;
+
           const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
           const currentDate = new Date();
           const currentMonth = currentDate.getMonth() + 1;
@@ -604,6 +633,12 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
 
   const renderModals = () => (
     <>
+      <PaytentlyHostedModal
+        isOpen={!!paytentlyHosted?.hostedUrl}
+        hostedUrl={paytentlyHosted?.hostedUrl}
+        authorizeUrl={paytentlyHosted?.authorizeUrl}
+        onClose={() => setPaytentlyHosted(null)}
+      />
       {showCardModal && (
         <NotFoundModal
           isOpen={showCardModal}

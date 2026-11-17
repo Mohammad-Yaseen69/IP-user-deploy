@@ -1,16 +1,27 @@
 .body {
-  max-height: 40vh;
+  max-height: 70vh;
   overflow-y: auto;
 }
 
 .recent_item {
-  border-radius: 4px;
-  padding: 12px;
+  position: relative;
   display: flex;
   align-items: center;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
   justify-content: space-between;
   border-radius: 12px;
+  background: transparent;
+}
+
+.recent_item::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.375rem;
+  width: 95%;
+  height: 1px;
+  background: #e5e7eb;
+  pointer-events: none;
 }
 
 .recent_item div .left {
@@ -21,42 +32,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.recent_item:nth-child(3n + 1) {
-  background-color: #fff9f3;
-}
-
-.recent_item:nth-child(3n + 2) {
-  background-color: #f8f3ff;
-}
-
-.recent_item:nth-child(3n + 3) {
-  background-color: #f8fff3;
-}
-
-.recent_item .left {
-  background-color: #ffecdb;
-}
-
-.recent_item:nth-child(3n + 2) .left {
-  background-color: #ecdfff;
-}
-
-.recent_item:nth-child(3n + 3) .left {
-  background-color: #deffc7;
-}
-
-.recent_item .left .icon {
-  color: #ff9b42;
-}
-
-.recent_item:nth-child(3n + 2) .left .icon {
-  color: #a869ff;
-}
-
-.recent_item:nth-child(3n + 3) .left .icon {
-  color: #83dc45;
 }
 
 @media screen and (min-width: 1650px) {
@@ -72,15 +47,5 @@
 
   .head {
     font-size: 0.7rem;
-  }
-
-  .body {
-    max-height: 300px;
-  }
-}
-
-@media screen and (max-width: 800px) {
-  .body {
-    max-height: 150px;
   }
 }

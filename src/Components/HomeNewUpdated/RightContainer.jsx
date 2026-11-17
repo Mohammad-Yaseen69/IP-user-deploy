@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Card, CardBody } from "reactstrap";
 import { ChevronDown } from "react-feather";
 import cardsStyle from "./styles/CardsContainer.module.css";
-import ADCard from "./ADCard";
 import opt1 from "./files/opt1.svg";
 import opt2 from "./files/opt2.svg";
 import opt3 from "./files/mwc_active.svg";
@@ -19,15 +18,48 @@ import { Link } from "react-router-dom";
 import BusinessModal from "../BusinessModal";
 import { isSafari } from "react-device-detect";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
+import CardD from "../WalletsNew/Card";
+import axios from "axios";
+import { getLimits } from "../WalletsNew";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessModal }) => {
   const [activeDot, setActiveDot] = useState(0);
   const { t } = useTranslation();
-  const { userWallets: allWallets, getUserWallets } = useContext(UserContext);
-  const { userDetails } = useContext(UserContext);
+  const {
+    userWallets: allWallets,
+    getUserWallets,
+    authHeader,
+    userDetails,
+  } = useContext(UserContext);
   const swiperRef = useRef(null);
   const can = usePermission();
   const userWallets = allWallets.filter((w) => w?.wallet_type !== "crypto");
+
+  const activeWallet = userWallets?.[activeDot];
+
+  const [limits, setLimits] = useState({});
+  const [limitsLoading, setLimitsLoading] = useState(false);
+  const [limitsError, setLimitsError] = useState(false);
+  const cancelRef = useRef();
+
+  useEffect(() => {
+    if (!activeWallet?._id) return;
+
+    cancelRef.current?.cancel();
+    cancelRef.current = axios.CancelToken.source();
+
+    getLimits(
+      activeWallet,
+      setLimits,
+      authHeader,
+      setLimitsLoading,
+      setLimitsError,
+      cancelRef.current.token,
+    );
+
+    return () => cancelRef.current?.cancel();
+  }, [activeWallet?._id]);
 
   useEffect(() => {
     getUserWallets();
@@ -77,9 +109,6 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
         display: "flex",
         flexDirection: "column",
         borderRadius: "16px",
-        border: "1px solid rgba(0, 0, 0, 0.10)",
-        background: "#FFF",
-        boxShadow: "0px 2px 5px 0px rgba(38, 51, 77, 0.03)",
         padding: window.innerWidth > 1650 ? "1.5rem" : "1rem",
       }}
     >
@@ -103,46 +132,62 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
             ref={swiperRef}
           >
             {userWallets.length > 0
-              ? userWallets.map((data, index) => (
+              ? userWallets.map((item, index) => (
                   <SwiperSlide
-                    key={index}
-                    style={{
-                      cursor: "none",
-                      borderRadius: "10px",
-                    }}
+                    key={item?.wallet_id ?? index}
+                    style={{ cursor: "none", borderRadius: "10px" }}
                   >
-                    <ADCard data={data} isActive={activeDot === index} />
+                    <CardD
+                      variant="compact"
+                      wallet={item}
+                      data={index === activeDot ? limits : null}
+                      index={index}
+                      current={activeDot}
+                    />
                   </SwiperSlide>
                 ))
               : ""}
           </Swiper>
         )}
         {can("wallet.list.view") && (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              gap: "10px",
-            }}
-            className={`d_r_act_dot ${cardsStyle.dots}`}
-          >
-            {userWallets.map((_, index) => (
-              <span
-                key={index * Date.now()}
-                style={{
-                  height: "7px",
-                  width: activeDot === index ? "30px" : "7px",
-                  borderRadius: "30px",
-                  background: activeDot === index ? "#5926f0" : "#666666",
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  setActiveDot(index);
-                  setCurrentWallet(userWallets?.[index]);
-                  swiperRef?.current?.swiper?.slideTo(index);
-                }}
-              />
-            ))}
+          <div className={cardsStyle.carouselNav}>
+            <button
+              type="button"
+              className={cardsStyle.navBtn}
+              aria-label="previous wallet"
+              onClick={() => swiperRef?.current?.swiper?.slidePrev()}
+            >
+              <ChevronLeft size={18} />
+            </button>
+
+            <div className={cardsStyle.dotsWrap}>
+              {userWallets.map((_, index) => (
+                <span
+                  key={index * Date.now()}
+                  style={{
+                    height: "7px",
+                    width: activeDot === index ? "30px" : "7px",
+                    borderRadius: "30px",
+                    background: activeDot === index ? "#5926f0" : "#666666",
+                    cursor: "pointer",
+                    transition: "width 200ms ease",
+                  }}
+                  onClick={() => {
+                    setActiveDot(index);
+                    setCurrentWallet(userWallets?.[index]);
+                    swiperRef?.current?.swiper?.slideTo(index);
+                  }}
+                />
+              ))}
+            </div>
+            <button
+              type="button"
+              className={cardsStyle.navBtn}
+              aria-label="next wallet"
+              onClick={() => swiperRef?.current?.swiper?.slideNext()}
+            >
+              <ChevronRight size={18} />
+            </button>
           </div>
         )}
         <div
@@ -165,23 +210,8 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
                       gap: ".5rem",
                     }}
                   >
-                    <div
-                      key={opt}
-                      className={`d_r_c_opt ${cardsStyle.action}`}
-                      style={{
-                        background:
-                          "radial-gradient(124.63% 259.09% at 48.48% 152.15%, rgba(230, 64, 103, 0.10) 0%, rgba(89, 38, 240, 0.10) 55.65%, rgba(72, 40, 160, 0.10) 100%), #FFF",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        borderRadius: "10px",
-                        boxShadow:
-                          "0px 11.288448333740234px 11.288448333740234px -6.271359920501709px rgba(109, 41, 220, 0.15)",
-                        cursor: "pointer",
-                        transition: "100ms ease-in-out",
-                      }}
-                    >
-                      <img src={opt.img} style={{ width: opt.width }} />
+                    <div className={`d_r_c_opt ${cardsStyle.optTile}`}>
+                      <img src={opt.img} style={{ width: opt.width }} alt="" />
                     </div>
                     <span
                       style={{
@@ -256,7 +286,7 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
           </button>
         )}
       </div>
-      {can("wallet.payment.conversion") && <CurConversion />}
+      {/* {can("wallet.payment.conversion") && <CurConversion />} */}
     </div>
   );
 };
