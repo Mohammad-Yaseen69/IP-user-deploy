@@ -72,9 +72,6 @@ import {
 } from "../../../../hooks/useVirtualIban";
 import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError";
 import OTPConfirmation from "../../../../Common/Component/OtpVerification";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
-import AddBeneficiary from "../../../AddBeneficiary";
 import {
   validateSwiftBeneficiary,
   isValidDescription,
@@ -789,7 +786,7 @@ const ReviewStep = ({
   );
 };
 
-const downloadSwiftReceipt = ({
+const downloadSwiftReceipt = async ({
   amount,
   currencyCode,
   selectedBeneficiary,
@@ -799,6 +796,10 @@ const downloadSwiftReceipt = ({
   payoutResult,
   t,
 }) => {
+  const [{ default: jsPDF }, { default: autoTable }] = await Promise.all([
+    import("jspdf"),
+    import("jspdf-autotable"),
+  ]);
   const doc = new jsPDF();
 
   const feeAmount = feeDetails?.fee;
