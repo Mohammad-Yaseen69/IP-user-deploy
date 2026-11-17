@@ -105,6 +105,7 @@ const SpendingBreakdown = ({ data = {}, reports = {}, currentWallet, setApiDates
         toolbar: { show: false },
         animations: { enabled: false },
       },
+      labels: categories.map((category) => t(category.name)),
       colors: categories.map((category) => category.color),
       dataLabels: { enabled: false },
       legend: { show: false },

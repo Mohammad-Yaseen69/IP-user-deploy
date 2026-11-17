@@ -264,16 +264,23 @@ const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true 
   //     }
   // }
 
+  const isFiatWallet = (item) =>
+    item?.wallet_type !== "crypto" &&
+    !["btc", "eth", "usdt"].includes(item?.currency?.code?.toLowerCase());
+
   const filteredWallets = useMemo(() => {
-    return userWallets
-      ?.filter((item) => !item?.blocked && !item?.admin_blocked && item?.status === "active")
-      ?.filter(
-        (item) =>
-          item?.currency?.code?.toLowerCase() !== "btc" &&
-          item?.currency?.code?.toLowerCase() !== "eth",
-      )
-      ?.sort((a, b) => (b?.default === true ? 1 : -1))
-      ?.map((item) => ({ name: item?.currency?.code, ...item }));
+    const seen = new Set();
+    return (userWallets ?? [])
+      .filter((item) => item?.status === "active" && !item?.blocked && !item?.admin_blocked)
+      .filter(isFiatWallet)
+      .filter((item) => {
+        const code = item?.currency?.code;
+        if (!code || seen.has(code)) return false;
+        seen.add(code);
+        return true;
+      })
+      .sort((a, b) => (b?.default === true ? 1 : -1))
+      .map((item) => ({ name: item?.currency?.code, ...item }));
   }, [userWallets]);
 
   const [formattedAmount, setFormattedAmount] = useState("1.00");
@@ -318,7 +325,7 @@ const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true 
             onAmountChange={setFormattedAmount}
             onAmountKeyUp={handleKeyUp}
             onAmountBlur={handleBlur}
-            fromBalance={`${Number(balance).toFixed(2)} ${userCurrency}`}
+            fromBalance={`${Number(balance).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${userCurrency}`}
             toCode={exchangedCurrency}
             toOptions={filteredWallets
               .filter((w) => w.currency.code !== userCurrency)
@@ -363,7 +370,7 @@ const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true 
                 ? t("Insufficient Balance")
                 : loading
                   ? t("Fetching Rates...")
-                  : t("Convert")
+                  : `${t("Exchange")} ${userCurrency} to ${exchangedCurrency}`
             }
             submitDisabled={
               !enteredCurrency ||

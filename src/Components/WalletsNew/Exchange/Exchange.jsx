@@ -76,7 +76,9 @@ const ExchangeCard = ({
     <div className={styles.box}>
       <div className={styles.boxTop}>
         <span className={styles.label}>You send</span>
-        <span className={styles.balance}>Balance {fromBalance}</span>
+        <span className={styles.balance}>
+          Balance <strong className={styles.balanceValue}>{fromBalance}</strong>
+        </span>
       </div>
       <div className={styles.row}>
         <input
@@ -107,7 +109,9 @@ const ExchangeCard = ({
     <div className={styles.box}>
       <div className={styles.boxTop}>
         <span className={styles.label}>You get</span>
-        <span className={styles.balance}>Balance {toBalance}</span>
+        <span className={styles.balance}>
+          Balance <strong className={styles.balanceValue}>{toBalance}</strong>
+        </span>
       </div>
       <div className={styles.row}>
         <div className={`${styles.input} ${styles.muted}`}>{receiveValue}</div>

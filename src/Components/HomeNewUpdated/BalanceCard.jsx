@@ -106,7 +106,7 @@ const BalanceComponent = () => {
               </h4>
               <button
                 type="button"
-                className={styles.eyeButton}
+                className={`${styles.eyeButton} ${hidden ? styles.eyeCenter : styles.eyeTop}`}
                 onClick={() => setHidden((prev) => !prev)}
                 aria-label={hidden ? t("Show balances") : t("Hide balances")}
               >
@@ -114,16 +114,15 @@ const BalanceComponent = () => {
               </button>
             </div>
           )}
-
-          <div className={styles.footer}>
-            <div className={styles.footerLeft}>
-              <span className={styles.footerItem}>
-                <WalletIcon />
-                {walletCount} {walletCount === 1 ? t("wallet") : t("wallets")}
-              </span>
-            </div>
-            <span className={styles.footerItem}>{t("Estimated total value in USD")}</span>
+        </div>
+        <div className={styles.footer}>
+          <div className={styles.footerLeft}>
+            <span className={styles.footerItem}>
+              <WalletIcon />
+              {walletCount} {walletCount === 1 ? t("wallet") : t("wallets")}
+            </span>
           </div>
+          <span className={styles.footerItem}>{t("Estimated total value in USD")}</span>
         </div>
       </CardBody>
     </Card>

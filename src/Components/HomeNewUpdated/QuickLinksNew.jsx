@@ -21,34 +21,45 @@ const QuickLinksNew = () => {
   const { t } = useTranslation();
 
   const items = [
-    { icon: Plus, text: t("Add Money"), width: 20, link: "/add-funds" },
+    {
+      icon: Plus,
+      text: t("Add Money"),
+      shortText: t("Add Money"),
+      width: 20,
+      link: "/add-funds",
+    },
     {
       icon: ArrowUpRight,
       text: t("Send Money"),
+      shortText: t("Send Mon.. "),
       width: 20,
       link: "/payments?payment_action=send_money",
     },
     {
       icon: ArrowDownToLine,
       text: t("Request Money"),
+      shortText: t("Request Mon.."),
       width: 20,
       link: "/payments?payment_action=req_money",
     },
     {
       icon: FileText,
       text: t("Send A Quote"),
+      shortText: t("Send Quote"),
       width: 20,
       link: "/payments?payment_action=send_quote",
     },
     {
       icon: ScanLine,
       text: t("Scan to pay"),
+      shortText: t("Scan to pay"),
       width: 20,
       link: "/chips-in",
     },
     {
       icon: Zap,
       text: t("My Payment Address"),
+      shortText: t("Payment Address"),
       width: 20,
       link: "/payment-address",
     },
@@ -60,7 +71,10 @@ const QuickLinksNew = () => {
           <div className="ql_icon">
             <item.icon size={item.width} color="#5926f0" strokeWidth={2} />
           </div>
-          <p className="ql_text">{item.text}</p>
+          <p className="ql_text">
+            <span className="ql_full_text">{item.text}</span>
+            <span className="ql_short_text">{item.shortText}</span>
+          </p>
         </Link>
       ))}
     </div>

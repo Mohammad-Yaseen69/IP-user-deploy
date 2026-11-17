@@ -63,9 +63,10 @@
 
 .left_limits {
   border-radius: var(--8, 8px);
-  background: #fafafa;
+  background: #fff;
   display: flex;
   padding: 1rem;
+  border-radius: 16px;
   flex-direction: column;
 }
 
@@ -301,6 +302,16 @@
 
 .chev {
   display: none;
+}
+
+.usedOfTotal {
+  font-size: 13px;
+  color: #6b6b7b;
+}
+
+.usedOfTotal strong {
+  font-weight: 600;
+  color: #1a1f36;
 }
 
 @media screen and (max-width: 400px) {

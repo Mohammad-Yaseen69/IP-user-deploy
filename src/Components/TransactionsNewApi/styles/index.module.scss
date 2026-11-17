@@ -29,6 +29,16 @@
     font-size: 14px;
   }
 }
+
+.ledgerCompact .ledgerDesktopRows {
+  display: flex;
+  flex-direction: column;
+}
+
+.ledgerCompact .ledgerMobileRows {
+  display: none;
+}
+
 .table {
   .menu {
     background-color: #fff;
@@ -671,6 +681,17 @@
     font-size: 14px;
     font-weight: 400;
     color: #8a8a9a;
+  }
+  .ledgerCompact .ledgerDesktopRows {
+    display: none;
+  }
+
+  .ledgerCompact .ledgerMobileRows {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-height: 60vh;
+    overflow-y: auto;
   }
 }
 

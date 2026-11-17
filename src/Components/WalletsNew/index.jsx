@@ -23,6 +23,9 @@ import { ChevronRight } from "lucide-react";
 import btc from "../PaymentsNewer/files/bitcoin.png";
 import eth from "../PaymentsNewer/files/etherium.png";
 import usdt from "../PaymentsNewer/files/Tether.png";
+import RecentTrans from "../HomeNewUpdated/RecentTrans";
+import TopBar from "../../Layout/TopBar";
+import WalletActivityMobile from "../TransactionsNewApi/WalletActivityMobile";
 
 export const getLimits = async (
   currentWallet,
@@ -404,20 +407,25 @@ const WalletsNew = () => {
                 currentWallet={currentWallet}
               />
             )}
-
-            {can("transactions.wallet.list") && (
-              <TransactionsTable
-                title="Wallet transactions   "
-                description="Every payment in and out of this wallet, all currencies"
-              />
-            )}
+            <div
+              style={{
+                maxHeight: "80vh",
+                overflowX: "auto",
+              }}
+            >
+              {can("transactions.wallet.list") && (
+                <TransactionsTable
+                  title={t("Wallet transactions")}
+                  description={t("Every payment in and out of this wallet, all currencies")}
+                />
+              )}
+            </div>
           </div>
         </div>
       ) : (
         <div className={`${styles.mobile} ${styles.w_m_root}`}>
-          <div className={styles.w_m_head}>
-            <h4 className={styles.w_m_title}>{t("My Wallet")}</h4>
-            <p className={styles.w_m_sub}>{t("One wallet, every currency")}</p>
+          <div style={{}}>
+            <TopBar />
           </div>
           <div
             className={styles.bottom}
@@ -425,7 +433,7 @@ const WalletsNew = () => {
               display: "flex",
               flexDirection: "column",
               gap: "16px",
-              marginBottom: "1rem",
+              margin: "1rem 0",
             }}
           >
             <Top currentWallet={currentWallet} setCurrentWallet={setCurrentWallet} data={data} />
@@ -458,29 +466,17 @@ const WalletsNew = () => {
                 ))}
               </div>
             </div>
-
-            {/* {can("wallet.limits.view") && (
-              <AccountLimits
-                data={data}
-                error={error}
-                loading={loading}
-                currentWallet={currentWallet}
+            <CurConversion />
+            <WalletActivityMobile />
+            {/* {can("transactions.wallet.list") && (
+              <TransactionsTable
+                title={t("Wallet transactions")}
+                description={t("Every payment in and out of this wallet, all currencies")}
               />
             )} */}
-            {can("wallet.analytics.view") && (
-              <MoneyInOut
-                currency={currentWallet?.currency?.code}
-                data={moneyData}
-                loading={moneyLoading}
-              />
-            )}
-            <CurConversion />
-            {can("transactions.wallet.list") && (
-              <TransactionsTable
-                title="Wallet transactions   "
-                description="Every payment in and out of this wallet, all currencies"
-              />
-            )}
+            {/* {can("dashboard.recent-transactions.view") && (
+              <RecentTrans currentWallet={currentWallet} />
+            )} */}
           </div>
         </div>
       )}

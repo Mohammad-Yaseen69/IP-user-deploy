@@ -152,4 +152,69 @@
   .cta {
     justify-content: center;
   }
+  .desktopBanner {
+    display: none;
+  }
+}
+
+.mobileBanner {
+  display: none;
+}
+
+@media screen and (max-width: 999px) {
+  .mobileBanner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 16px;
+    border-radius: 20px;
+    background:
+      radial-gradient(
+        circle at 0% 60%,
+        rgba(139, 92, 246, 0.14) 0%,
+        rgba(167, 139, 250, 0.06) 35%,
+        rgba(255, 255, 255, 0) 60%
+      ),
+      #ffffff;
+    box-shadow: 0 10px 30px rgba(89, 38, 240, 0.08);
+    font-family: Inter;
+    border: 1px solid #eff1f6;
+    cursor: pointer;
+  }
+
+  .mobileIcon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #fff;
+    color: #5926f0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  }
+
+  .mobileText {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .mobileText h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #1a1f36;
+  }
+
+  .mobileText p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #6b6b7b;
+  }
 }
