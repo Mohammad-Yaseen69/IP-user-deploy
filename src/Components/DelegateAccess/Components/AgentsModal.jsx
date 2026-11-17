@@ -154,16 +154,10 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
       if (!hierarchy[item.module]) hierarchy[item.module] = { module: item.module, features: {} };
       const featureKey = item.feature || "general";
       if (!hierarchy[item.module].features[featureKey])
-        hierarchy[item.module].features[featureKey] = {
-          feature: item.feature,
-          actions: [],
-        };
+        hierarchy[item.module].features[featureKey] = { feature: item.feature, actions: [] };
       hierarchy[item.module].features[featureKey].actions.push(item);
     });
-    return Object.values(hierarchy).map((m) => ({
-      ...m,
-      features: Object.values(m.features),
-    }));
+    return Object.values(hierarchy).map((m) => ({ ...m, features: Object.values(m.features) }));
   };
 
   const isIndeterminate = (key, type = "module") => {
@@ -267,10 +261,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
     onMutate: () => setStatus({ type: "loading", message: t("Creating agent...") }),
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ["agents"] });
-      setStatus({
-        type: "success",
-        message: res?.message || t("Agent created successfully"),
-      });
+      setStatus({ type: "success", message: res?.message || t("Agent created successfully") });
     },
     onError: (err) => {
       let errorMsg = t("Failed to create agent");
@@ -300,10 +291,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
     onMutate: () => setStatus({ type: "loading", message: t("Updating agent...") }),
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ["agents"] });
-      setStatus({
-        type: "success",
-        message: res?.message || t("Agent updated successfully"),
-      });
+      setStatus({ type: "success", message: res?.message || t("Agent updated successfully") });
     },
     onError: (err) => {
       let errorMsg = t("Failed to update agent");

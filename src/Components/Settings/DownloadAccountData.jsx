@@ -2,8 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./styles/DownloadData.module.scss";
 import { Check, DownloadSimpleLarge } from "./Icons";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
 import { UserContext } from "../../Context/UserContext";
 import img from "../../assets/images/logo/logo2.png";
 import {
@@ -17,7 +15,6 @@ import {
   HeadingLevel,
   WidthType,
 } from "docx";
-import * as FileSaver from "file-saver";
 import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
@@ -134,13 +131,14 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
     return personalBody.filter((item) => item !== null);
   };
 
-  const generateCSV = () => {
+  const generateCSV = async () => {
     setDownloading(true);
     const cell = (value) => `"${String(value ?? "").replace(/"/g, '""')}"`;
     const csv = [["Title", "Details"], ...getPersonalRows()]
       .map((row) => row.map(cell).join(","))
       .join("\r\n");
     const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+    const FileSaver = await import("file-saver");
     FileSaver.saveAs(
       blob,
       `${userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name}_${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`}${new Date().toLocaleString()}.csv`,
@@ -148,7 +146,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
     setDownloading(false);
   };
 
-  const generatePDF = () => {
+  const generatePDF = async () => {
     setDownloading(true);
     const tableStyles = {
       fontSize: 7,
@@ -159,6 +157,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
       textColor: [255, 255, 255],
     };
 
+    const [{ default: jsPDF }] = await Promise.all([import("jspdf"), import("jspdf-autotable")]);
     const doc = new jsPDF();
 
     doc.addImage(img, "png", 14, 10, 46.5, 13);
@@ -449,7 +448,8 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
       ],
     });
 
-    Packer.toBlob(doc).then((blob) => {
+    Packer.toBlob(doc).then(async (blob) => {
+      const FileSaver = await import("file-saver");
       FileSaver.saveAs(
         blob,
         `${userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name}_${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`}${new Date().toLocaleString()}.docx`,

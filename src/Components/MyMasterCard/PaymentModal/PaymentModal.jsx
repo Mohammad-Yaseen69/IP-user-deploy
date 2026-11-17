@@ -10,7 +10,7 @@ import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
 import TrustpaymentPage from "../../AddFunds/WalletFund/CreditTransaction";
 import { CARD_TYPES } from "../../CreditInput/CreditCardTypes";
-import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow";
+import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow/apiErrorMessage";
 import OTPConfirmation from "../../../Common/Component/OtpVerification";
 import styles from "../styles/onboard.module.scss";
 import ConfirmationStep from "./ConfirmationStep";

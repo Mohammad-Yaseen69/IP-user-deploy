@@ -9,7 +9,7 @@ import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import CurConversion from "../../HomeNewUpdated/CurConversion";
 import InstaPayLoader from "../../Loader";
 import FeesComponent from "./FeesComponent";
-import { getLimits } from "../../WalletsNew";
+import { getLimits } from "../../WalletsNew/getLimits";
 import { removeCommasAndCurrency } from "../../WalletsNew/AccountLimits";
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
 

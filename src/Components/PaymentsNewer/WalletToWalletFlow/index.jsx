@@ -22,7 +22,7 @@ import SendActionCard from "../Common/SendActionCard";
 import w2w from "../files/w2w.png";
 import wallet_ic from "../files/wallet.svg";
 import GeneralNoticeModal from "../GeneralNoticeModal";
-import { apiErrorMessage } from "../InternationalFlow";
+import { apiErrorMessage } from "../InternationalFlow/apiErrorMessage";
 import CreditCard from "../InternationalFlow/CreditCard";
 import ErrorModal from "../InternationalFlow/ErrorModal";
 import FeesComponent from "../InternationalFlow/FeesComponent";

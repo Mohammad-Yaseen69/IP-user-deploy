@@ -27,7 +27,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import { LimitsErrorMessage } from "../../../utils/Functions/paymentLimits";
-import { apiErrorMessage } from "../InternationalFlow";
+import { apiErrorMessage } from "../InternationalFlow/apiErrorMessage";
 import usePlainFx from "../../../hooks/Payments/usePlainFx";
 import useSendOtp from "../../../hooks/GeneralUse/useSendOtp";
 import { useNavigate } from "react-router";

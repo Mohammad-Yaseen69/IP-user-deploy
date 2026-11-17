@@ -39,7 +39,7 @@ import { createShambeToken } from "../../../Helper/CreateToken";
 import NotFoundModal from "../../NotFound/NotFoundModal";
 import { cleanString } from "../../../Helper/cleanString";
 import { currencies } from "../InternationalFlow/StepOne";
-import { apiErrorMessage } from "../InternationalFlow";
+import { apiErrorMessage } from "../InternationalFlow/apiErrorMessage";
 import useTopupLimitCheck from "../../../hooks/Payments/useTopupLimitCheck";
 import GeneralNoticeModal from "../GeneralNoticeModal";
 import PlaidBankTransfer from "../../AddFunds/WalletFundsFlow/PlaidBankTransfer";

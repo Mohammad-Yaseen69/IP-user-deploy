@@ -15,7 +15,7 @@ import TrustpaymentPage from "./WalletFund/CreditTransaction";
 import { useNavigate } from "react-router";
 import { createShambeToken } from "../../Helper/CreateToken";
 import NotFoundModal from "../NotFound/NotFoundModal";
-import { apiErrorMessage } from "../PaymentsNewer/InternationalFlow";
+import { apiErrorMessage } from "../PaymentsNewer/InternationalFlow/apiErrorMessage";
 
 import { WidgetSDK } from "@keabank/websdk";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";

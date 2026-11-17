@@ -45,6 +45,7 @@ import {
 import dayjs from "dayjs";
 import CountryBasedPhone from "../PhoneInput/PhoneNumberBasedOnCountry.json";
 import { getInitials } from "../../utils/Functions/getInitials";
+import CountryBasedPhone from "../PhoneInput/PhoneNumberBasedOnCountry.json";
 
 export const currentDate = new Date();
 export const minDate = new Date(
@@ -820,6 +821,7 @@ const Basic = ({ setCurrentTab }) => {
 
   const handleDiscard = () => {
     setIsEditMode(false);
+    setPhone(userDetails?.phone ?? "");
     setUserNameError("");
     setUsernameValid(true);
   };
