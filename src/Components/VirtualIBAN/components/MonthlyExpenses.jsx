@@ -1,4 +1,3 @@
-import React from "react";
 import { useTranslation } from "react-i18next";
 import styles from "../styles/Monthlyexpenses.module.css";
 import { Select, MenuItem, FormControl } from "@material-ui/core";

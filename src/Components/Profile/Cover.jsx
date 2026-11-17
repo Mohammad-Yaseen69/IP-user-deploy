@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { UserContext } from "../../Context/UserContext";
 import styles from "./styles/index.module.scss";
 import cover from "../UserProfilePublic/files/cover_1.png";

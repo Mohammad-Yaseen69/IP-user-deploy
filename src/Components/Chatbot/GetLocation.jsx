@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 // import RequestLocation from '../RequestLocation'
-import { CustomDatePickerContainer, SuccessImage } from "./schedule-calendar";
+import { CustomDatePickerContainer } from "./schedule-calendar";
 import { useLocation } from "react-router";
 import axios from "axios";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";

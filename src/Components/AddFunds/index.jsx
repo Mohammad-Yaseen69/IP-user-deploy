@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import money from "./files/money.png";
 import crypto from "./files/crypto.png";
 import CryptoFund from "./CryptoFund";
-import WalletFund from "./WalletFund";
 import { useLocation, useParams } from "react-router";
 import CryptoJS from "../../Helper/cryptoJs";
 import Success from "./ResponseModals/Success";
@@ -17,7 +16,6 @@ import { UserContext } from "../../Context/UserContext";
 import InstaPayLoader from "../Loader";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import WalletFundsFlow from "./WalletFundsFlow";
-import set from "date-fns/fp/set/index.js";
 
 const AddFunds = () => {
   const { t } = useTranslation();

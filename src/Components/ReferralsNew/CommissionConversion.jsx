@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Input, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { UserContext } from "../../Context/UserContext";
-import { NumberInputValidator } from "../../Helper/NumberInput";
 import Draggable from "react-draggable";
 import { Check, ChevronRight } from "react-feather";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";

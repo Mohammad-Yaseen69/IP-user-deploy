@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Input } from "reactstrap";
 import { UserContext } from "../../../Context/UserContext";
 import styles from "../../PaymentsNewer/styles/AmountAndCurrency.module.scss";

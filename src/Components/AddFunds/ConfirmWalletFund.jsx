@@ -1,5 +1,5 @@
 import { Card, CardBody, Modal, ModalBody } from "reactstrap";
-import { Check, CheckCircle, ChevronRight, XCircle } from "react-feather";
+import { Check, ChevronRight, XCircle } from "react-feather";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import Draggable from "react-draggable";
 import { useTranslation } from "react-i18next";

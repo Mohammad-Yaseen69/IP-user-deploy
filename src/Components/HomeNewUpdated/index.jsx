@@ -4,7 +4,6 @@ import cardsStyle from "./styles/CardsContainer.module.css";
 import { useTranslation } from "react-i18next";
 import { BsFillPlayFill } from "react-icons/bs";
 import { ChevronRight } from "react-feather";
-import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 import { useMoneyInOut } from "../WalletsNew/MoneyInOut/useMoneyInOut";

@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "../styles/Tabsnav.module.css";
 import OverViewIcon from "../files/images/OverView.svg";
 import mange from "../files/images/Mange.svg";

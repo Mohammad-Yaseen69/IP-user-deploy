@@ -24,9 +24,7 @@ import {
   Globe,
   Home,
   List,
-  Plus,
   RefreshCw,
-  Search,
   Send,
   User,
 } from "react-feather";
@@ -39,7 +37,6 @@ import ContactBox from "../../../MyMasterCard/PaymentModal/ContactBox";
 import { getAmountNumber } from "../../utils/amount";
 import { getVirtualIbanId } from "../../utils/virtualIban";
 import {
-  CHARGE_BEARER_OPTIONS,
   getContinueLabel,
   getDisabledState,
   getPurposeCode,
@@ -47,7 +44,6 @@ import {
   goNext,
   isSidebarStepActive,
   isSidebarStepCompleted,
-  MIN_AMOUNT,
   MAX_AMOUNT,
   PURPOSE_OPTIONS,
   SIDEBAR_STEPS,
@@ -83,13 +79,9 @@ import {
   getBeneficiaryName,
   getBeneficiaryTypeLabel,
   getBeneficiaryCountry,
-  getBeneficiaryBankDetail,
   getBeneficiaryBic,
   getBeneficiaryBankName,
-  getBeneficiaryInitial,
   getBeneficiaryId,
-  getBeneficiaryAccountCount,
-  getBeneficiarySubtitle,
   getRawSwiftCode,
   hasBeneficiarySwiftCode,
   isBeneficiaryAddressTooLong,

@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "../styles/CardToCard.module.scss";
 import { ChevronDown } from "react-feather";

@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import styles from "./styles/index.module.scss";
 import TopRight from "../topRight";
 import EarnMoneyBanner from "../HomeNewUpdated/EarnMoneyBanner";
-import { Check, ChevronDown, ChevronRight, MoreHorizontal } from "react-feather";
+import { Check, MoreHorizontal } from "react-feather";
 import copy_ic from "../ChipsInNew/copy.png";
 import ref_share from "./ref_share.png";
 import { useContext, useEffect, useMemo, useState } from "react";
@@ -11,7 +11,7 @@ import { UserContext } from "../../Context/UserContext";
 import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { Button, Card, CardBody, CardText, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import countries from "../PaymentsNewer/CountriesData.json";
 import InstaPayLoader from "../Loader";
 import CommissionConversion from "./CommissionConversion";
@@ -19,7 +19,6 @@ import SuccessModal from "../AddBeneficiary/SuccessModal";
 import CommissionWithdraw from "./CommissionWithdraw";
 import RefItem from "./RefItem";
 import TransactionItem from "../TransactionsNewApi/TransactionItem";
-import TransactionItemMobile from "../TransactionsNewApi/Mobile/TransactionItemMobile";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 const ReferralsNew = () => {

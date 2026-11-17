@@ -18,7 +18,6 @@ import axios from "axios";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import { toast } from "react-toastify";
 import { LimitsErrorMessage } from "../../../utils/Functions/paymentLimits";
-import recent from "../../PaymentsNewer/Mobile/files/recent.svg";
 import int_styles from "../../PaymentsNewer/Mobile/styles/International.module.css";
 
 import paym_styles from "../../PaymentsNewer/InternationalFlow/styles/index.module.css";

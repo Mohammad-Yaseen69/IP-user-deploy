@@ -12,8 +12,6 @@ import {
   FileText,
   Home,
   List,
-  Plus,
-  Search,
   Send,
   User,
 } from "react-feather";
@@ -67,14 +65,10 @@ import {
   getBeneficiaryName,
   getBeneficiaryTypeLabel,
   getBeneficiaryCountry,
-  getBeneficiaryBankDetail,
   getBeneficiaryBic,
   getBeneficiaryBankName,
   getBeneficiaryIban,
-  getBeneficiaryInitial,
   getBeneficiaryId,
-  getBeneficiaryAccountCount,
-  getBeneficiarySubtitle,
   isBeneficiaryAddressTooLong,
   maskIban,
 } from "../Common/beneficiaryHelpers";

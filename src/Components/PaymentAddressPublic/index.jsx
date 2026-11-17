@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import TopRight from "../topRight";
 import PaymentAddressComponent from "./PaymentAddressComponent";
 import { Card, CardBody, CardText } from "reactstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -9,10 +8,6 @@ import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { useContext } from "react";
 import { UserContext } from "../../Context/UserContext";
-import { ChevronLeft } from "react-feather";
-import Success from "../AddFunds/ResponseModals/Success";
-import Error from "../AddFunds/ResponseModals/Error";
-import Abort from "../AddFunds/ResponseModals/Abort";
 import Receipt from "../PaymentsNewer/InternationalFlow/Receipt";
 import FailedTransaction from "../PaymentsNewer/InternationalFlow/FailedTransaction";
 import InstaPayLoader from "../Loader";

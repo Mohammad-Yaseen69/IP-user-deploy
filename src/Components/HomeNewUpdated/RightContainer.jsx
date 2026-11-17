@@ -1,6 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { Card, CardBody } from "reactstrap";
-import { ChevronDown } from "react-feather";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import cardsStyle from "./styles/CardsContainer.module.css";
 import opt1 from "./files/opt1.svg";
 import opt2 from "./files/opt2.svg";

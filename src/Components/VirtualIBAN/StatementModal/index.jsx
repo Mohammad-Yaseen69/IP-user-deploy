@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { Modal, ModalBody } from "reactstrap";
 import { FileText } from "react-feather";
 import { useTranslation } from "react-i18next";

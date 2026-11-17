@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import PaymentMethod from "./Payments/PaymentMethod";
 import W2W from "./Payments/W2W";

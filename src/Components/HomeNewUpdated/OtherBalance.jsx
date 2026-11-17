@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./styles/OtherBalances.module.css";
 import { UserContext } from "../../Context/UserContext";

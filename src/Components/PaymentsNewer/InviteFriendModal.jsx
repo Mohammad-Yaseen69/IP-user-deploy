@@ -1,15 +1,6 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  FormGroup,
-  Label,
-  Input,
-} from "reactstrap";
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Input } from "reactstrap";
 import styles from "../AuthNew/styles/index.module.css";
 import PhoneInput from "../PhoneInput";
 import { UserContext } from "../../Context/UserContext";

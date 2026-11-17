@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import styles from "./styles/index.module.scss";
 import Giftpng from "./files/gift-png.png";
 import IpLogo from "./files/ip.svg";
@@ -11,11 +11,8 @@ import {
   Wallet2,
   FileDown,
   CreditCardP,
-  Notification,
-  Speaker,
   Apay,
   Gpay,
-  Samsung,
   Copy,
   checktoggle,
   ApayWhite,

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { Card, CardBody } from "reactstrap";
 import styles from "./styles/balance.module.css";
 import { useTranslation } from "react-i18next";
