@@ -13,18 +13,9 @@ import TransactionItemDetails from "./TransactionItemDetails.jsx";
 import CitiesData from "../CitiesDropDown/CitiesData.json";
 import { formatCurrency } from "../../Helper/AmountFormat.js";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
+import { service_name_formatter } from "../../utils/Functions/serviceNameFormatter";
 
-export const service_name_formatter = (itemName) => {
-  if (itemName) {
-    const nameArr = itemName.split("_");
-    const newName = nameArr
-      .map((item) =>
-        item?.toLowerCase() === "aba" ? "ABA" : `${item[0].toUpperCase()}${item?.slice(1)}`,
-      )
-      .join(" ");
-    return newName;
-  }
-};
+export { service_name_formatter };
 
 const TransactionItem = ({
   item,

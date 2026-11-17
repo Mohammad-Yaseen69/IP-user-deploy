@@ -196,11 +196,25 @@ const Layout = ({ children, classNames, ...rest }) => {
       loadForcedAdditionalFilesModal().catch(() => {});
       loadAnotherLoginModal().catch(() => {});
     };
-    if ("requestIdleCallback" in window) {
-      window.requestIdleCallback(prefetch, { timeout: 3000 });
+    let idleId;
+    let timeoutId;
+    const schedule = () => {
+      if ("requestIdleCallback" in window) {
+        idleId = window.requestIdleCallback(prefetch);
+      } else {
+        timeoutId = setTimeout(prefetch, 2000);
+      }
+    };
+    if (document.readyState === "complete") {
+      schedule();
     } else {
-      setTimeout(prefetch, 1000);
+      window.addEventListener("load", schedule, { once: true });
     }
+    return () => {
+      window.removeEventListener("load", schedule);
+      if (idleId !== undefined) window.cancelIdleCallback?.(idleId);
+      if (timeoutId !== undefined) clearTimeout(timeoutId);
+    };
   }, []);
 
   useEffect(() => {
@@ -520,7 +534,6 @@ const Layout = ({ children, classNames, ...rest }) => {
               </Suspense>
             )}
             {canShowForcedAuthenticator && <ForcedAuthenticatorModal />}
-            <Loader />
             <TapTop />
             <div
               style={{
@@ -542,9 +555,9 @@ const Layout = ({ children, classNames, ...rest }) => {
                 <div className="page-body" style={{ marginTop: 0, paddingTop: 0 }}>
                   <TransitionGroup {...rest}>
                     <CSSTransition timeout={100} classNames={animationTheme} unmountOnExit>
-                      {/* <div> */}
-                      <Outlet />
-                      {/* </div> */}
+                      <Suspense fallback={<Loader />}>
+                        <Outlet />
+                      </Suspense>
                     </CSSTransition>
                   </TransitionGroup>
                 </div>
@@ -583,9 +596,10 @@ const Layout = ({ children, classNames, ...rest }) => {
               }}
               className={styles.mobile_layout}
             >
-              <Loader />
               <MobileSidebar setShowModal={setShowModal} />
-              <Outlet />
+              <Suspense fallback={<Loader />}>
+                <Outlet />
+              </Suspense>
               <BottomNav setShowModal={setShowModal} />
             </div>
           </>
