@@ -7,7 +7,7 @@ import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import logo_white from "../../../assets/images/logo/logo_white.png";
 import { Progress } from "reactstrap";
 import { useTranslation } from "react-i18next";
-import { getLimits } from "../../WalletsNew";
+import { getLimits } from "../../WalletsNew/getLimits";
 import { removeCommasAndCurrency } from "../../WalletsNew/AccountLimits";
 import { formatCurrencyLocal } from "./Amount";
 import { useLocation } from "react-router";

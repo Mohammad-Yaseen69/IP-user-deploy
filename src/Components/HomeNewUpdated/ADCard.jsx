@@ -11,7 +11,7 @@ import axios from "axios";
 import React from "react";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import r_styles from "./styles/Reserved.module.css";
-import { getLimits } from "../WalletsNew";
+import { getLimits } from "../WalletsNew/getLimits";
 import { removeCommasAndCurrency } from "../WalletsNew/AccountLimits";
 
 const ADCard = ({ data, isActive }) => {

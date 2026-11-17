@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { UserContext } from "../../../../Context/UserContext";
-import { getLimits } from "../../../WalletsNew";
+import { getLimits } from "../../../WalletsNew/getLimits";
 
 /** The account limits My Wallets shows, for whichever wallet is open here. */
 export const useWalletLimits = (wallet) => {

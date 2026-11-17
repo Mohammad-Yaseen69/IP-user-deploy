@@ -20,7 +20,7 @@ import { UserContext } from "../../Context/UserContext";
 import FeesComponent from "../PaymentsNewer/InternationalFlow/FeesComponent";
 import InstaPayLoader from "../Loader";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
-import { apiErrorMessage } from "../PaymentsNewer/InternationalFlow";
+import { apiErrorMessage } from "../PaymentsNewer/InternationalFlow/apiErrorMessage";
 import { LimitsErrorMessage } from "../../utils/Functions/paymentLimits";
 import { WidgetSDK } from "@keabank/websdk";
 import ErrorModal from "../PaymentsNewer/InternationalFlow/ErrorModal";
