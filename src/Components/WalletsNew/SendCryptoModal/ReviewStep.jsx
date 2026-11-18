@@ -62,6 +62,7 @@ const ReviewStep = ({
   isQuoteExpired,
   onRefreshQuote,
   isRefreshing,
+  details = null,
 }) => {
   const { t } = useTranslation();
   const [secondsLeft, setSecondsLeft] = useState(0);
@@ -170,6 +171,8 @@ const ReviewStep = ({
           </div>
         </div>
       </div>
+
+      {details}
 
       <div className={styles.dangerBox}>
         <DangerIcon />
