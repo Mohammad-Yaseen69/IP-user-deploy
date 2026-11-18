@@ -8,22 +8,14 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { formatCurrency } from "../../Helper/AmountFormat";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
+import { service_name_formatter } from "../../utils/Functions/serviceNameFormatter";
 import { AmountCell, PartyCell, StatusCell, TxCell } from "../../Common/Ledger/Cells";
 import s from "../../Common/Ledger/ledger.module.scss";
 import { capitalizeStatus, isVoid } from "../../Common/Ledger/utils";
 import statuses from "./files/thunesTransactionStatus.json";
 import TransactionSheet from "./Transactionsheet";
 
-export const service_name_formatter = (itemName) => {
-  if (!itemName) return "";
-  return itemName
-    .split("_")
-    .filter(Boolean)
-    .map((word) =>
-      word.toLowerCase() === "aba" ? "ABA" : `${word[0].toUpperCase()}${word.slice(1)}`,
-    )
-    .join(" ");
-};
+export { service_name_formatter };
 
 const TransactionItem = ({ item, index, activeItem, setActiveItem, fromReferral = false }) => {
   const { t, i18n } = useTranslation();

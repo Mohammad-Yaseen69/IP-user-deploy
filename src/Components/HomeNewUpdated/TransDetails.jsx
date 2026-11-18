@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Card, CardBody } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
@@ -8,7 +8,7 @@ import { UserContext } from "../../Context/UserContext";
 import InstaPayLoader from "../Loader";
 import styles from "./styles/TransDetails.module.css";
 import { Link } from "react-router-dom";
-import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
+import { service_name_formatter } from "../../utils/Functions/serviceNameFormatter";
 
 const TransDetails = ({ selectedWallet }) => {
   const { t } = useTranslation();
@@ -36,17 +36,20 @@ const TransDetails = ({ selectedWallet }) => {
   // ]
 
   const { userDetails, userWallets, authHeader, totalReferralAmount } = useContext(UserContext);
-  const [data, setData] = useState([]);
+  const [transactionSummary, setTransactionSummary] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const accountId = userDetails?._id;
 
   useEffect(() => {
+    if (!accountId) return undefined;
+    let cancelled = false;
     const getDetails = async () => {
       setIsLoading(true);
       try {
         const encrypted = encryptData({
           from: "2023-01-01",
           to: new Date().toISOString().split("T")[0].toString(),
-          account_id: userDetails?._id,
+          account_id: accountId,
         });
         const response = await axios.post(
           `${import.meta.env.VITE_IP_DEV_API}/api/transaction/get-transactions-report-user/0/0`,
@@ -59,51 +62,56 @@ const TransDetails = ({ selectedWallet }) => {
         );
 
         const decrypted = decryptData(response.data.data);
-        const defaultWalletCurrency = userWallets?.filter(
-          (item) => item?._id === selectedWallet?._id,
-        )?.[0]?.currency;
-        const currentData = decrypted?.transactionSummary?.[defaultWalletCurrency?.code]?.total;
-        setData([
-          {
-            name: "Number of Transactions",
-            value: (() => {
-              const transactions = Number(currentData?.totalTransactions);
-              return !isNaN(transactions)
-                ? transactions.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })
-                : "0.00";
-            })(),
-          },
-          {
-            name: "Total Transaction Amount",
-            value: `${defaultWalletCurrency?.symbol ?? ""}${currentData?.totalAmounts?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? 0.0}`,
-          },
-          {
-            name: "Total Sent",
-            value: `${defaultWalletCurrency?.symbol ?? ""}${currentData?.debitAmount?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? 0.0}`,
-          },
-          {
-            name: "Total Received",
-            value: `${defaultWalletCurrency?.symbol ?? ""}${currentData?.creditAmount?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? 0.0}`,
-          },
-          {
-            name: "Referral Rewards",
-            value: `${defaultWalletCurrency?.symbol ?? ""}${totalReferralAmount?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? 0.0}`,
-          },
-        ]);
-        console.log(data);
+        if (!cancelled) setTransactionSummary(decrypted?.transactionSummary ?? {});
       } catch (error) {
         // console.log(decryptData(error?.response?.data?.data))
       } finally {
-        setIsLoading(false);
+        if (!cancelled) setIsLoading(false);
       }
     };
-    if (userDetails) {
-      getDetails();
-    }
-  }, [userDetails, userWallets, selectedWallet]);
+    getDetails();
+    return () => {
+      cancelled = true;
+    };
+  }, [userDetails, userWallets]);
+
+  const data = useMemo(() => {
+    if (!transactionSummary) return [];
+    const defaultWalletCurrency = userWallets?.filter(
+      (item) => item?._id === selectedWallet?._id,
+    )?.[0]?.currency;
+    const currentData = transactionSummary?.[defaultWalletCurrency?.code]?.total;
+    return [
+      {
+        name: "Number of Transactions",
+        value: (() => {
+          const transactions = Number(currentData?.totalTransactions);
+          return !isNaN(transactions)
+            ? transactions.toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })
+            : "0.00";
+        })(),
+      },
+      {
+        name: "Total Transaction Amount",
+        value: `${defaultWalletCurrency?.symbol ?? ""}${currentData?.totalAmounts?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? 0.0}`,
+      },
+      {
+        name: "Total Sent",
+        value: `${defaultWalletCurrency?.symbol ?? ""}${currentData?.debitAmount?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? 0.0}`,
+      },
+      {
+        name: "Total Received",
+        value: `${defaultWalletCurrency?.symbol ?? ""}${currentData?.creditAmount?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? 0.0}`,
+      },
+      {
+        name: "Referral Rewards",
+        value: `${defaultWalletCurrency?.symbol ?? ""}${totalReferralAmount?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? 0.0}`,
+      },
+    ];
+  }, [transactionSummary, userWallets, selectedWallet, totalReferralAmount]);
 
   return (
     <>

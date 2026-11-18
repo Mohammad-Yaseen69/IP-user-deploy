@@ -5,28 +5,47 @@ import { useTranslation } from "react-i18next";
 import { BsFillPlayFill } from "react-icons/bs";
 import { ChevronRight } from "react-feather";
 import { UserContext } from "../../Context/UserContext";
-import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
+import { service_name_formatter } from "../../utils/Functions/serviceNameFormatter";
+import RenderWhenVisible from "./RenderWhenVisible";
+import {
+  loadBalanceCard,
+  loadBusinessModal,
+  loadCryptoCard,
+  loadCurConversion,
+  loadEarnMoneyBanner,
+  loadOtherBalance,
+  loadQuickLinksMobile,
+  loadQuickLinksNew,
+  loadRecentBeneficiaries,
+  loadRecentTrans,
+  loadReferalRewards,
+  loadRightContainer,
+  loadSearch,
+  loadTopBar,
+  loadTransDetails,
+  loadWalletsMobile,
+} from "./dashboardChunks";
 import { useMoneyInOut } from "../WalletsNew/MoneyInOut/useMoneyInOut";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 
-const BalanceComponent = lazy(() => import("./BalanceCard"));
-const EarnMoneyBanner = lazy(() => import("./EarnMoneyBanner"));
-const TransDetails = lazy(() => import("./TransDetails"));
-const QuickLinksNew = lazy(() => import("./QuickLinksNew"));
+const BalanceComponent = lazy(loadBalanceCard);
+const EarnMoneyBanner = lazy(loadEarnMoneyBanner);
+const TransDetails = lazy(loadTransDetails);
+const QuickLinksNew = lazy(loadQuickLinksNew);
 const Stats = lazy(() => import("./Stats"));
-const RecentTrans = lazy(() => import("./RecentTrans"));
-const RightContainer = lazy(() => import("./RightContainer"));
-const SearchComponent = lazy(() => import("./Search"));
-const ReferalRewards = lazy(() => import("./ReferalRewards"));
-const CryptoCard = lazy(() => import("./CryptoCard"));
-const RecentBeneficiaries = lazy(() => import("./RecentBeneficiaries"));
-const WalletsMobile = lazy(() => import("./WalletsMobile"));
-const CurConversion = lazy(() => import("./CurConversion"));
-const QuickLinksMobile = lazy(() => import("./QuickLinksMobile"));
-const TopBar = lazy(() => import("../../Layout/TopBar"));
-const BusinessModal = lazy(() => import("../BusinessModal"));
-const OtherBalance = lazy(() => import("./OtherBalance"));
+const RecentTrans = lazy(loadRecentTrans);
+const RightContainer = lazy(loadRightContainer);
+const SearchComponent = lazy(loadSearch);
+const ReferalRewards = lazy(loadReferalRewards);
+const CryptoCard = lazy(loadCryptoCard);
+const RecentBeneficiaries = lazy(loadRecentBeneficiaries);
+const WalletsMobile = lazy(loadWalletsMobile);
+const CurConversion = lazy(loadCurConversion);
+const QuickLinksMobile = lazy(loadQuickLinksMobile);
+const TopBar = lazy(loadTopBar);
+const BusinessModal = lazy(loadBusinessModal);
+const OtherBalance = lazy(loadOtherBalance);
 const MoneyInOut = lazy(() => import("../WalletsNew/MoneyInOut/MoneyInOut"));
 const SpendingBreakdown = lazy(() => import("../Analytics/SpendingBreakdown"));
 
@@ -36,6 +55,7 @@ import usdt from "../PaymentsNewer/files/Tether.png";
 import crown from "./files/crown.svg";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import TopRight from "../topRight";
+import axios from "axios";
 
 const HomeNewUpdated = () => {
   const [currenciesData, setCurrenciesData] = useState([

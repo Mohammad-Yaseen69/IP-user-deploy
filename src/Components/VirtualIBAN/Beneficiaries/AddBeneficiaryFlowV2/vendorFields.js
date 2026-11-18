@@ -370,9 +370,12 @@ export const getBvnkRequirements = (method, recipientType, channel = {}, senderT
 
   const entity = BVNK_ENTITY_FIELDS[recipientType === "business" ? "business" : "individual"];
 
-  const beneficiaryFields = [...entity, ...rail.beneficiary];
+  const railFields = (list = []) =>
+    recipientType === "business" ? list : list.filter((f) => f !== "registration_number");
+
+  const beneficiaryFields = [...entity, ...railFields(rail.beneficiary)];
   const channelFields = rail.channel;
-  const requiredBeneficiary = [...entity, ...(rail.requiredBeneficiary || [])];
+  const requiredBeneficiary = [...entity, ...railFields(rail.requiredBeneficiary)];
   const requiredChannel = rail.requiredChannel || [];
 
   const baseDefs =
