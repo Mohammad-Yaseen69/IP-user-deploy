@@ -7,7 +7,7 @@ import channel from "./files/receiving_channel.svg";
 import { Info } from "react-feather";
 import allCountries from "../CountriesData.json";
 import ListModal from "./ListModal";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useMemo } from "react";
 import { UserContext } from "../../../Context/UserContext";
 import InstaPayLoader from "../../Loader";
 import allCurrencies from "./Currencies.json";
