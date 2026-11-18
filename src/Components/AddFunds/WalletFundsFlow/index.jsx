@@ -559,6 +559,7 @@ const WalletFundsFlow = ({ setAction }) => {
             iban_id: data.channel?.iban?._id,
             wallet_id: data?.wallet?.wallet_id,
             amount: Number(String(data?.amount)?.replaceAll(",", "")),
+            amount_currency: "wallet",
           });
           dataHandler("exchange_rate", {
             fee: {
@@ -1032,7 +1033,6 @@ const WalletFundsFlow = ({ setAction }) => {
                       setChannel={(e) => dataHandler("channel", e)}
                       thunesServices={data.mobile_wallet_channels}
                       thunesProviders={data.mobile_wallet_services}
-                      wallet={data.wallet}
                     />
                   )}
 
@@ -1358,7 +1358,6 @@ const WalletFundsFlow = ({ setAction }) => {
                       setChannel={(e) => dataHandler("channel", e)}
                       thunesServices={data.mobile_wallet_channels}
                       thunesProviders={data.mobile_wallet_services}
-                      wallet={data.wallet}
                     />
                   )}
 

@@ -15,7 +15,7 @@ import mw from "../../PaymentsNewer/files/mw.png";
 import pc from "../../PaymentsNewer/files/pc.png";
 import TypingSpan from "../../TypingSpan";
 
-const Channels = ({ setChannel, channel, thunesServices, thunesProviders = [], wallet }) => {
+const Channels = ({ setChannel, channel, thunesServices, thunesProviders = [] }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
   const { data: virtualIbans = [], isLoading: ibansLoading } = useVirtualIbans(userDetails?._id);
@@ -98,8 +98,7 @@ const Channels = ({ setChannel, channel, thunesServices, thunesProviders = [], w
         !iban?.adminBlocked &&
         !iban?.userBlocked &&
         !iban?.freezeIban &&
-        !iban?.blockOutbound &&
-        iban?.currency === wallet?.currency?.code,
+        !iban?.blockOutbound,
     )
     .map((iban) => ({
       name: `${t("From my IBAN")} (${iban.currency} ••${String(iban?.iban ?? "").slice(-4)})`,
