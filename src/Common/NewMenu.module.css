@@ -15,6 +15,7 @@
   gap: 10px;
   background: #fff;
   transition: align-items 0s;
+  height: 94.5%;
 }
 
 .wrapper.expanded {
