@@ -349,6 +349,7 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
       const dec = decryptData(res.data.data);
       dataHandler("mobile_wallet_services", dec?.data?.payers ?? []);
     } catch {
+      //
     } finally {
       dataHandler("loading", false);
     }
