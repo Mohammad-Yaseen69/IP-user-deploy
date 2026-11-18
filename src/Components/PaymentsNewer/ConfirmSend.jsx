@@ -401,6 +401,7 @@ const ConfirmSend = ({
                   if (!isMounted.current) return;
                 }}
                 disabled={!isDraggable}
+                nodeRef={chevRef}
               >
                 <div
                   style={{
