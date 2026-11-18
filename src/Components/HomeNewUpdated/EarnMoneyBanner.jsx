@@ -1,44 +1,133 @@
-import { Card } from "reactstrap";
-import styles from "./styles/EMB.module.css";
-import { Link } from "react-router-dom";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Check, ChevronRight, Copy, Gift } from "react-feather";
+import styles from "./styles/EMB.module.css";
 
-const EarnMoneyBanner = ({
-  height = undefined,
+const LEARN_MORE_URL = "https://insta-pay.ch/affiliation-program";
+
+const DesktopBanner = ({
+  height,
   showLink = true,
-  headSize = undefined,
-  textSize = undefined,
-  radius = undefined,
-  minWidth = "",
+  headSize,
+  textSize,
+  radius,
+  minWidth,
+  code = "",
+  rewardsEarned = 0,
+  friendsJoined = 0,
 }) => {
   const { t } = useTranslation();
-  const is_big_width = window.innerWidth > 1600;
+  const [copied, setCopied] = useState(false);
+  const showStats = Boolean(code);
+
+  const handleCopy = async () => {
+    if (!code) return;
+    try {
+      await navigator.clipboard.writeText(code);
+    } catch (error) {
+      console.error("Copy failed:", error);
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const formattedRewards = Number(rewardsEarned).toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
   return (
-    <>
-      <div className={styles.banner} style={minWidth ? { minWidth: "40vw" } : {}}>
-        <h2>{t("Earn money with our affiliate program!")}</h2>
-        {/* <div className={styles.description}> */}
-        <p>
+    <div
+      className={`${styles.banner} ${styles.desktopBanner}`}
+      style={{ height, minWidth, borderRadius: radius }}
+    >
+      <div className={styles.content}>
+        <h2 style={{ fontSize: headSize }}>{t("Earn with the InstaPay Partner Program")}</h2>
+        <p style={{ fontSize: textSize }}>
           {t(
-            "Generate passive income by sharing your InstaPay affiliate code with your followers. For each transaction they make, \nyou earn a commission, thereby maximizing the profits from your online influence.",
+            "Share your code. You earn a share of every fee your friends pay, paid monthly into your wallet.",
           )}
         </p>
-        <Link to={"https://insta-pay.ch/affiliation-program"}>{t("Learn More")} &rarr;</Link>
-        {/* </div> */}
       </div>
-      <Card className={styles.m_card}>
-        <h4>{t("Earn money with our affiliate program!")}</h4>
-        <p>
-          {t(
-            "Generate passive income by sharing your InstaPay affiliate code with your followers. For each transaction they make, \nyou earn a commission, thereby maximizing the profits from your online influence.",
-          )}
-        </p>
-        {showLink && (
-          <Link to={"https://insta-pay.ch/affiliation-program"}>{t("Learn More")} &rarr;</Link>
+
+      <div className={styles.footer}>
+        {showStats && (
+          <div className={styles.stats}>
+            <div>
+              <span>{t("Rewards earned")}</span>
+              <strong>{formattedRewards} USD</strong>
+            </div>
+            <div>
+              <span>{t("Friends joined")}</span>
+              <strong>{friendsJoined}</strong>
+            </div>
+          </div>
         )}
-      </Card>
-    </>
+
+        <div className={styles.actions}>
+          {showStats && (
+            <div className={styles.code}>
+              <span>{code}</span>
+              <button type="button" onClick={handleCopy}>
+                {copied ? <Check size={14} /> : <Copy size={14} />}
+                {copied ? t("Copied") : t("Copy code")}
+              </button>
+            </div>
+          )}
+
+          {showLink && (
+            <a href={LEARN_MORE_URL} target="_blank" rel="noreferrer" className={styles.cta}>
+              {t("See how it works")}
+              <ChevronRight size={16} />
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
+
+const MobileBanner = ({ code = "", rewardsEarned = 0, friendsJoined = 0 }) => {
+  const { t } = useTranslation();
+  const handlelink = () => window.open(LEARN_MORE_URL, "_blank", "noopener,noreferrer");
+
+  const formattedRewards = Number(rewardsEarned).toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  return (
+    <div
+      className={styles.mobileBanner}
+      onClick={handlelink}
+      role="link"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === "Enter" && handlelink()}
+    >
+      <div className={styles.mobileIcon}>
+        <Gift size={20} />
+      </div>
+      <div className={styles.mobileText}>
+        <h3>{t("Earn with the Partner Program")}</h3>
+        <p>
+          {code
+            ? t("Share {{code}}. {{friends}} friends joined, {{rewards}} USD earned.", {
+                code,
+                friends: friendsJoined,
+                rewards: formattedRewards,
+              })
+            : t("Share your code and earn a share of every fee your friends pay.")}
+        </p>
+      </div>
+    </div>
+  );
+};
+
+const EarnMoneyBanner = (props) => (
+  <>
+    <DesktopBanner {...props} />
+    <MobileBanner {...props} />
+  </>
+);
 
 export default EarnMoneyBanner;
