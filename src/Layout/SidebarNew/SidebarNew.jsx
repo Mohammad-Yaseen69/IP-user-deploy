@@ -108,7 +108,6 @@ const SidebarNew = ({ setShowModal, showModal }) => {
       ref={sidebarRef}
       style={{
         background: "white",
-        margin: "1rem",
         borderRadius: "16px",
         height: "calc(100vh - 2rem)",
         boxShadow: "15.1463px 4.32752px 242.341px rgba(0, 0, 0, 0.07)",
