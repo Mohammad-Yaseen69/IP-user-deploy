@@ -178,7 +178,7 @@ const App = () => {
           </Suspense>
         </ErrorBoundary>
       )}
-      <ToastContainer />
+      <ToastContainer closeOnClick draggable />
     </div>
   );
 };
