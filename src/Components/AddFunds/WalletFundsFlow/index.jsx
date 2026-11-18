@@ -25,6 +25,7 @@ import wallet_ic from "../files/add_f_ic.png";
 import BankDeposit from "./BankDeposit";
 import PlaidBankTransfer from "./PlaidBankTransfer";
 import TopIcon from "../../PaymentsNewer/Mobile/files/Top";
+import { useVirtualIbanTransferFee } from "../../../hooks/useVirtualIban";
 
 export const PlaidCurrencies = ["EUR", "GBP", "SEK", "DKK", "NOK", "CHF"];
 const initialState = {
@@ -185,6 +186,7 @@ const WalletFundsFlow = ({ setAction }) => {
   const [data, dispatch] = useReducer(reducer, initialState);
   const { userDetails, authHeader, userWallets } = useContext(UserContext);
   const navigate = useNavigate();
+  const ibanTransferFee = useVirtualIbanTransferFee();
 
   const dataHandler = (field, value) => {
     dispatch({ type: "UPDATE_FIELD", field, value });
@@ -551,6 +553,39 @@ const WalletFundsFlow = ({ setAction }) => {
         } finally {
           dataHandler("loading", false);
         }
+      } else if (data.channel?.value === "virtual_iban") {
+        try {
+          const dec = await ibanTransferFee.mutateAsync({
+            iban_id: data.channel?.iban?._id,
+            wallet_id: data?.wallet?.wallet_id,
+            amount: Number(String(data?.amount)?.replaceAll(",", "")),
+          });
+          dataHandler("exchange_rate", {
+            fee: {
+              amount: dec?.data?.fee?.value,
+              currency: dec?.data?.fee?.currency,
+            },
+            sending: {
+              currency: dec?.data?.total?.currency,
+              amount: dec?.data?.total?.value,
+            },
+            receiver: {
+              currency: dec?.data?.recipient?.currency,
+              amount: dec?.data?.recipient?.value,
+            },
+            total: dec?.data?.total?.value,
+            total_currency: dec?.data?.total?.currency,
+            token: dec?.data?.token,
+          });
+        } catch (error) {
+          const dec = decryptData(error?.response?.data?.data);
+          dataHandler(
+            "exchange_rate_error",
+            dec?.message ?? "We cannot process your request at the moment, please try again later.",
+          );
+        } finally {
+          dataHandler("loading", false);
+        }
       } else if (data.channel?.value === "bank_transfer") {
         try {
           const enc = encryptData({
@@ -650,7 +685,8 @@ const WalletFundsFlow = ({ setAction }) => {
         if (
           data.channel?.value === "paypal" ||
           data?.channel?.value === "crypto" ||
-          data?.channel?.value === "mobile_wallet"
+          data?.channel?.value === "mobile_wallet" ||
+          data?.channel?.value === "virtual_iban"
         ) {
           dataHandler("show_confirmation", true);
         } else {
@@ -996,6 +1032,7 @@ const WalletFundsFlow = ({ setAction }) => {
                       setChannel={(e) => dataHandler("channel", e)}
                       thunesServices={data.mobile_wallet_channels}
                       thunesProviders={data.mobile_wallet_services}
+                      wallet={data.wallet}
                     />
                   )}
 
@@ -1321,6 +1358,7 @@ const WalletFundsFlow = ({ setAction }) => {
                       setChannel={(e) => dataHandler("channel", e)}
                       thunesServices={data.mobile_wallet_channels}
                       thunesProviders={data.mobile_wallet_services}
+                      wallet={data.wallet}
                     />
                   )}
 
