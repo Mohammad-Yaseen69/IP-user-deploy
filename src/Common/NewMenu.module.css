@@ -8,12 +8,17 @@
   top: 0;
   bottom: 0;
   z-index: 10;
-  padding: 18px 8px;
+  padding: 8px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
   background: #fff;
+  transition: align-items 0s;
+}
+
+.wrapper.expanded {
+  align-items: flex-end;
 }
 
 :global(body.new-menu-expanded)
@@ -41,6 +46,7 @@
   color: #1a1617;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  flex-shrink: 0;
 }
 
 .toggle:hover {
@@ -65,6 +71,7 @@
 }
 
 .item {
+  box-sizing: border-box;
   height: 36px;
   width: 36px;
   padding: 0 8px;

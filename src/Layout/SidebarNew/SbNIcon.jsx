@@ -11,9 +11,9 @@ const SidebarIconNew = () => {
       <div
         className="logo-wrapper"
         style={{
-          marginTop: ".5rem",
           position: "relative",
           zIndex: 10000,
+          padding: "0 21px ",
         }}
       >
         <SidebarLogo sidebartoogle={sidebartoogle} setSidebartoogle={setSidebartoogle} />
@@ -24,7 +24,7 @@ const SidebarIconNew = () => {
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: "2rem",
+            gap: "1.3rem",
             alignItems: "center",
           }}
         >
