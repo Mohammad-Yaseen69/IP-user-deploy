@@ -952,3 +952,19 @@
     border-radius: 50%;
   }
 }
+
+.walletOption:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.walletShort {
+  color: #b42318 !important;
+}
+
+.footError {
+  flex-basis: 100%;
+  order: -1;
+  font-size: 12px;
+  color: #b42318;
+}

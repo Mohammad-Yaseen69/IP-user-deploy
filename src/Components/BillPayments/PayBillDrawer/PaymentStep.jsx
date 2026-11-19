@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowRight, CheckCircle, Lock } from "react-feather";
 import styles from "../billPayments.module.scss";
@@ -9,6 +10,7 @@ import {
 import BillIcon from "../components/BillIcon";
 import CurrencyFlag from "../components/CurrencyFlag";
 import { PAYMENT_METHODS } from "../data/paymentMethods";
+import { isFieldValid } from "../hooks/usePayBillFlow";
 
 const isSameDay = (a, b) => new Date(a).toDateString() === new Date(b).toDateString();
 
@@ -25,6 +27,7 @@ const formatRange = ({ min, max, currency }) =>
 
 const PaymentStep = ({ flow, wallets, isAdding }) => {
   const { t } = useTranslation();
+  const [phoneTouched, setPhoneTouched] = useState(false);
   const { products, product, wallet, amountLimits, statements } = flow;
   const bills = products.data || [];
   const foundStatements = statements.data || [];
@@ -113,6 +116,14 @@ const PaymentStep = ({ flow, wallets, isAdding }) => {
                   country={flow.country?.alpha3}
                   phone={flow.identifiers.mobile_number}
                   setPhone={(value) => flow.setIdentifier("mobile_number", value)}
+                  onBlur={() => setPhoneTouched(true)}
+                  error={
+                    phoneTouched &&
+                    flow.identifiers.mobile_number &&
+                    !isFieldValid("mobile_number", flow.identifiers.mobile_number)
+                      ? "Enter a valid mobile number"
+                      : ""
+                  }
                 />
               ) : (
                 <input
@@ -295,21 +306,28 @@ const PaymentStep = ({ flow, wallets, isAdding }) => {
                         {wallets.map((item) => {
                           const code = item.currency?.code;
                           const isConverted = !!billCurrency && code !== billCurrency;
+                          const isEmpty = getWalletAvailable(item) <= 0;
+                          const isShort = wallet?._id === item._id && !flow.hasEnoughFunds;
                           return (
                             <button
                               type="button"
                               key={item._id}
                               className={`${styles.walletOption} ${wallet?._id === item._id ? styles.walletOptionActive : ""}`}
                               aria-pressed={wallet?._id === item._id}
+                              disabled={isEmpty}
                               onClick={() => flow.selectWallet(item)}
                             >
                               <CurrencyFlag code={code} size={22} />
                               <strong className={styles.rowMain}>
                                 {code} {t("Wallet")}
                               </strong>
-                              <span>
+                              <span className={isShort ? styles.walletShort : ""}>
                                 {formatWalletAmount(getWalletAvailable(item))}{" "}
-                                {isConverted ? `· ${t("converted")}` : t("available")}
+                                {isShort
+                                  ? `· ${t("not enough")}`
+                                  : isConverted
+                                    ? `· ${t("converted")}`
+                                    : t("available")}
                               </span>
                               {wallet?._id === item._id && (
                                 <CheckCircle size={16} className={styles.walletCheck} />
@@ -363,6 +381,11 @@ const PaymentStep = ({ flow, wallets, isAdding }) => {
                   : "—"}
                 <small>{amountLimits ? amountLimits.currency : product?.price?.currency}</small>
               </div>
+            </div>
+          )}
+          {!flow.hasEnoughFunds && (
+            <div className={styles.footError}>
+              {t("Not enough balance in this wallet. Choose another wallet or top up.")}
             </div>
           )}
           <button
