@@ -23,6 +23,7 @@ export const useCryptoPayoutFee = () =>
         payload,
         isEncrypted: true,
         isDecrypted: true,
+        retries: 2,
       }),
   });
 
@@ -35,6 +36,7 @@ export const useValidateCryptoAddress = () =>
         payload,
         isEncrypted: true,
         isDecrypted: true,
+        retries: 2,
       }),
   });
 
@@ -47,6 +49,7 @@ export const useCryptoWithdrawalFee = () =>
         payload,
         isEncrypted: true,
         isDecrypted: true,
+        retries: 2,
       }),
   });
 

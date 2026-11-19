@@ -25,7 +25,10 @@ import { useAvailableMethods, useRequiredFields, useRequirements } from "./useVe
 import { BANK_COUNTRY_FIELD, getEditRequirements, getFieldDef } from "./vendorFields";
 import { apiWrapper } from "../../../../utils/Functions/apiWrapper";
 import { UserContext } from "../../../../Context/UserContext";
-import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError";
+import {
+  handlePaymentApiError,
+  NETWORK_ERROR_MESSAGE,
+} from "../../../../utils/Functions/handlePaymentApiError";
 import { collectIdentifierErrors } from "../../../../utils/Functions/bankIdentifiers";
 import { useValidateCryptoAddress } from "../../../../hooks/Payments/useCryptoPayout";
 import { useDebounce } from "../../../../hooks/useDebounce/useDebounce";
@@ -563,9 +566,11 @@ const AddBeneficiaryFlowV2 = ({
         setProfileLockTime,
         fallback: "We could not save this beneficiary.",
         setError: (message) => {
+          const offline = message === NETWORK_ERROR_MESSAGE;
           setProviderError({
-            title: "Could not save the beneficiary",
+            title: offline ? "Connection problem" : "Could not save the beneficiary",
             body: message,
+            canRetry: offline,
           });
           setStage("details");
           toast.error(message);
@@ -659,6 +664,7 @@ const AddBeneficiaryFlowV2 = ({
             setChannelField={setChannelField}
             errors={errors}
             providerError={providerError}
+            onRetry={() => validateDetails() && submit()}
             recipientName={recipientName}
             channelCheck={channelCheck}
             lockedFields={lockedFields}
