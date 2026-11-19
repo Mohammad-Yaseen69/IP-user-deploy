@@ -3,11 +3,11 @@ import { useTranslation } from "react-i18next";
 import { formatCurrency } from "../../Helper/AmountFormat";
 import { Panel } from "./Primitives";
 import s from "./ui.module.scss";
+import { currencySymbol } from "./utils";
 
 const CurrencyPill = ({ label, value, wallets, onChange }) => {
-  const wallet = wallets.find((item) => item?.currency?.code === value);
   // Only real signs fit the 28px badge; letter symbols such as "CHF" fall back to the first letter.
-  const symbol = wallet?.currency?.symbol;
+  const symbol = currencySymbol(value);
   return (
     <label className={s.exCurrency}>
       <i>{symbol && symbol.length <= 2 ? symbol : value?.[0]}</i>

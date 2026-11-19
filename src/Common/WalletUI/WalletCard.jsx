@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { removeCommasAndCurrency } from "../../Components/WalletsNew/AccountLimits";
 import { formatCurrency } from "../../Helper/AmountFormat";
 import glow from "./files/card-glow.svg";
-import { splitAmount } from "./utils";
+import { currencySymbol, splitAmount } from "./utils";
 import s from "./ui.module.scss";
 
 const WalletCard = ({ wallet, limits, small = false, hidden = false, onSetDefault }) => {
@@ -13,7 +13,7 @@ const WalletCard = ({ wallet, limits, small = false, hidden = false, onSetDefaul
 
   const code = wallet?.currency?.code ?? "";
   // Letter symbols ("CHF", "Rs") need a space before the amount; signs ("$", "€") do not.
-  const rawSymbol = wallet?.currency?.symbol || code;
+  const rawSymbol = currencySymbol(code);
   const symbol = /[A-Za-z.]$/.test(rawSymbol) ? `${rawSymbol} ` : rawSymbol;
   const available = wallet?.balance?.available ?? 0;
   const reserved = wallet?.balance?.reserved ?? 0;

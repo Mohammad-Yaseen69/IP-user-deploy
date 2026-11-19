@@ -31,6 +31,7 @@ import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import { Tooltip } from "@mui/material";
 import SendCryptoModal from "./SendCryptoModal";
 import WalletCard from "../../Common/WalletUI/WalletCard";
+import { currencySymbol } from "../../Common/WalletUI/utils";
 import u from "../../Common/WalletUI/ui.module.scss";
 import r from "./styles/redesign.module.scss";
 
@@ -301,9 +302,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
       )}
       <div className={r.heroHead}>
         <div className={r.heroTitle}>
-          <span className={r.currencyTile}>
-            {currentWallet?.currency?.symbol || currentWallet?.currency?.code}
-          </span>
+          <span className={r.currencyTile}>{currencySymbol(currentWallet?.currency?.code)}</span>
           <div>
             <h2 className={u.title}>
               {currentWallet?.currency?.code} {t("Wallet")}
