@@ -1,5 +1,22 @@
 // Pure helpers for the redesigned Wallets and Dashboard pages.
 
+// Symbol for an ISO currency code from the browser's own currency data ("INR" -> "₹", "CHF" -> "CHF").
+// The backend's currency.symbol is not reliable (INR arrives as the Bengali word for taka), and codes
+// Intl does not know (USDT) fall back to the code itself.
+export const currencySymbol = (code = "") => {
+  try {
+    return new Intl.NumberFormat("en", {
+      style: "currency",
+      currency: code,
+      currencyDisplay: "narrowSymbol",
+    })
+      .formatToParts(0)
+      .find((part) => part.type === "currency").value;
+  } catch {
+    return code ?? "";
+  }
+};
+
 // Splits a formatted amount so the decimals can be dimmed like the design.
 export const splitAmount = (value) => {
   const [whole, decimals] = String(value ?? "0.00").split(".");
