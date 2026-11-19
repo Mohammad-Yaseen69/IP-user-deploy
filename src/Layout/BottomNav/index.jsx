@@ -33,6 +33,24 @@ const BottomNav = ({ setShowModal }) => {
     }
   }, [location.pathname]);
 
+  const [isTyping, setIsTyping] = useState(false);
+  useEffect(() => {
+    const isTextField = (el) =>
+      el?.isContentEditable ||
+      el?.tagName === "TEXTAREA" ||
+      (el?.tagName === "INPUT" &&
+        !["checkbox", "radio", "button", "submit", "range", "file"].includes(el.type));
+    const onFocusIn = (e) => setIsTyping(isTextField(e.target));
+    const onFocusOut = () => setIsTyping(isTextField(document.activeElement));
+    const onFocusOutDeferred = () => setTimeout(onFocusOut, 0); // activeElement updates after focusout
+    document.addEventListener("focusin", onFocusIn);
+    document.addEventListener("focusout", onFocusOutDeferred);
+    return () => {
+      document.removeEventListener("focusin", onFocusIn);
+      document.removeEventListener("focusout", onFocusOutDeferred);
+    };
+  }, []);
+
   const navData = userDetails
     ? [
         {
@@ -108,7 +126,7 @@ const BottomNav = ({ setShowModal }) => {
     });
   }, []);
 
-  return !dontShow ? (
+  return !dontShow && !isTyping ? (
     <>
       <nav
         className={styles.bottom_nav}
