@@ -83,9 +83,9 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
   const can = usePermission();
   // Crypto wallets live on the Crypto & Stablecoins page, not here.
   const userWallets = useMemo(
-    () => (allWallets || []).filter((w) => w?.provider !== "bvnk"),
+    () => (allWallets || []).filter((w) => w?.provider !== "bvnk" && w?.wallet_type !== "crypto"),
     [allWallets],
-  ).filter((wallet) => wallet?.wallet_type !== "crypto");
+  );
   const [activeDot, setActiveDot] = useState(0);
   const [currentDefault, setCurrentDefault] = useState(false);
   const [currentActive, setCurrentActive] = useState(false);
@@ -103,11 +103,17 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
     }
   }, [userDetails]);
 
+  // A link is applied once: later wallet refreshes must not drag the carousel back to the linked wallet.
+  const appliedLinkRef = useRef(null);
   useEffect(() => {
-    if (wallet_address && userWallets?.length > 0) {
+    const link = `${action}|${wallet_address}`;
+    if (!wallet_address) {
+      appliedLinkRef.current = null;
+    } else if (userWallets?.length > 0 && appliedLinkRef.current !== link) {
       const wallet = userWallets?.find((item) => item?.wallet_id === wallet_address);
       const index = userWallets?.findIndex((item) => item?.wallet_id === wallet_address);
       if (wallet?.wallet_id && index !== -1) {
+        appliedLinkRef.current = link;
         setActiveDot(index);
         setCurrentWallet(wallet);
         if (swiperRef?.current?.swiper) {
@@ -269,8 +275,8 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
     }));
   };
 
-  const handleClose = () => {
-    setShowWithdrawalModal(false);
+  // Drops ?action / ?wallet_address so a modal opened from a link does not reopen itself.
+  const clearLinkParams = () => {
     queryParams.delete("action");
     queryParams.delete("wallet_address");
     navigate(
@@ -280,6 +286,16 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
       },
       { replace: true },
     );
+  };
+
+  const handleClose = () => {
+    setShowWithdrawalModal(false);
+    clearLinkParams();
+  };
+
+  const setStatementModal = (open) => {
+    setShowDownloadStatementModal(open);
+    if (!open && (action || wallet_address)) clearLinkParams();
   };
 
   const canSetDefault =
@@ -543,7 +559,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
       )}
       <DownloadStatement
         showModal={showDownloadStatementModal}
-        setShowModal={setShowDownloadStatementModal}
+        setShowModal={setStatementModal}
         wallet={currentWallet}
       />
       <Modal isOpen={showConversionModal}>
