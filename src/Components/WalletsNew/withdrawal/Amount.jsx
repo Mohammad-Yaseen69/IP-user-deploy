@@ -13,6 +13,25 @@ import { service_name_formatter } from "../../TransactionsNewApi/TransactionItem
 import { formatCurrency } from "../../../Helper/AmountFormat";
 
 let timeout;
+
+const HANDLED_ERROR_MARKERS = [
+  "strictly positive value expected",
+  "Invalid Amount Fee",
+  "unavailable payer",
+  "1003012",
+  "1006001",
+  "Invalid Amount..",
+  "insufficient balance",
+  "An error occurred while creating the quotation",
+  "max payer",
+  "min payer",
+];
+
+const isHandledError = (error) =>
+  error === "sww" ||
+  HANDLED_ERROR_MARKERS.some((marker) => error.includes(marker)) ||
+  Object.values(possibleErrors).includes(error);
+
 const AmountAndCurrency = ({
   amount,
   setAmount,
@@ -150,7 +169,7 @@ const AmountAndCurrency = ({
               console.log(data);
             })
             .catch((err) => {
-              const dec = decryptData(err?.response.data.data);
+              const dec = err?.response?.data?.data ? decryptData(err.response.data.data) : null;
               console.log(dec);
               setLimValue(formatCurrency(dec?.value, true));
               const error = LimitsErrorMessage(dec?.code ?? dec?.message);
@@ -567,6 +586,11 @@ const AmountAndCurrency = ({
             {exchangeError === "sww" && (
               <p style={{ marginBottom: 0, textAlign: "center" }}>
                 {t("We are unable to process your request at the moment. please try again later")}
+              </p>
+            )}
+            {!isHandledError(exchangeError) && (
+              <p style={{ marginBottom: 0, textAlign: "center", fontWeight: 600 }}>
+                {t(exchangeError)}
               </p>
             )}
           </>
