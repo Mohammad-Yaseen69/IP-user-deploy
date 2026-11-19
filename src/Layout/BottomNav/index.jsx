@@ -9,7 +9,7 @@ import Home_a from "./files/Home_a.svg";
 import Card_a from "./files/Card_a.svg";
 import Filter_a from "./files/Filter_a.svg";
 import Analytics_a from "./files/Analytics_a.svg";
-import logo from "../../assets/images/logo/logo.webp";
+import logo from "../../assets/images/logo/logo-icon.webp";
 import { Link, useLocation } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { MobileSbContext } from "../Layout";
@@ -32,6 +32,24 @@ const BottomNav = ({ setShowModal }) => {
       setDontShow(false);
     }
   }, [location.pathname]);
+
+  const [isTyping, setIsTyping] = useState(false);
+  useEffect(() => {
+    const isTextField = (el) =>
+      el?.isContentEditable ||
+      el?.tagName === "TEXTAREA" ||
+      (el?.tagName === "INPUT" &&
+        !["checkbox", "radio", "button", "submit", "range", "file"].includes(el.type));
+    const onFocusIn = (e) => setIsTyping(isTextField(e.target));
+    const onFocusOut = () => setIsTyping(isTextField(document.activeElement));
+    const onFocusOutDeferred = () => setTimeout(onFocusOut, 0); // activeElement updates after focusout
+    document.addEventListener("focusin", onFocusIn);
+    document.addEventListener("focusout", onFocusOutDeferred);
+    return () => {
+      document.removeEventListener("focusin", onFocusIn);
+      document.removeEventListener("focusout", onFocusOutDeferred);
+    };
+  }, []);
 
   const navData = userDetails
     ? [
@@ -108,7 +126,7 @@ const BottomNav = ({ setShowModal }) => {
     });
   }, []);
 
-  return !dontShow ? (
+  return !dontShow && !isTyping ? (
     <>
       <nav
         className={styles.bottom_nav}

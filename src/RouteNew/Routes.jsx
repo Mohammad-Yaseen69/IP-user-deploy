@@ -1,7 +1,5 @@
-import { lazy } from "react";
-import { Navigate } from "react-router";
+import { lazy, Suspense } from "react";
 import { usePermission } from "../hooks/GeneralUse/usePermission";
-import { MENU } from "../Layout/SidebarNew/SbNMenu";
 import { BusinessRoute } from "../hooks/GeneralUse/useBusiness";
 import { AgentRoute } from "../hooks/GeneralUse/useAgent";
 const BusinessAccount = lazy(() => import("../Components/AddBeneficiary/BusinessAccount"));
@@ -33,6 +31,7 @@ const PartnerVerificationPage = lazy(() => import("../Components/PartnerVerifica
 const PaymentAddress = lazy(() => import("../Components/PaymentAddress"));
 const PaymentAddressPublic = lazy(() => import("../Components/PaymentAddressPublic"));
 const PaymentsNewer = lazy(() => import("../Components/PaymentsNewer"));
+const BillPayments = lazy(() => import("../Components/BillPayments"));
 const PendingNew = lazy(() => import("../Components/PendingNew"));
 const Portfolio = lazy(() => import("../Components/Portfolio"));
 const ProfileTest = lazy(() => import("../Components/Profile"));
@@ -83,6 +82,7 @@ const LogActivity = lazy(() => import("../Components/LogActivity"));
 const VirtyalBank = lazy(() => import("../Components/VirtualIBAN"));
 // const KYBOnboarding = lazy(() => import("../Components/KYBOnboarding/index"))
 const ThirdPartySenders = lazy(() => import("../Components/ThirdPartySenders"));
+const CopyX = lazy(() => import("../Components/CopyX"));
 const OnboardingIBAN = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN"));
 const PriceActivation = lazy(
   () => import("../Components/VirtualIBAN/OnBoardingIBAN/PriceActivation/PriceActivation.jsx"),
@@ -117,45 +117,16 @@ const FeeModelRequests = lazy(
   () => import("../Components/AgentCommission/FeeRequests/FeeModelRequests.jsx"),
 );
 const LeadClaimConfirm = lazy(() => import("../Components/Auth/LeadClaimConfirm.jsx"));
+const PermissionFallback = lazy(() => import("./PermissionFallback"));
+const PaytentlyCardCollected = lazy(() => import("../Components/PaytentlyCardCollected"));
 
 const PermissionRoute = ({ permission, children }) => {
   const can = usePermission();
   if (!can(permission)) {
-    let fallbackPath = null;
-    for (const section of MENU) {
-      if (section.menu) {
-        for (const item of section.menu) {
-          if (item.type === "link" && item.url) {
-            if (!item.permission || can(item.permission)) {
-              try {
-                const urlObj = new URL(item.url, window.location.origin);
-                fallbackPath = urlObj.pathname + urlObj.search;
-              } catch (e) {
-                fallbackPath = item.url;
-              }
-              break;
-            }
-          }
-        }
-      }
-      if (fallbackPath) break;
-    }
-
-    if (fallbackPath && fallbackPath !== window.location.pathname) {
-      return <Navigate to={fallbackPath} replace />;
-    }
-
     return (
-      <div
-        style={{
-          padding: "2rem",
-          textAlign: "center",
-          width: "100%",
-          marginTop: "10vh",
-        }}
-      >
-        You don&apos;t have permission to view this page.
-      </div>
+      <Suspense fallback={null}>
+        <PermissionFallback can={can} />
+      </Suspense>
     );
   }
 
@@ -216,6 +187,14 @@ export const routes = [
     component: (
       <PermissionRoute permission="payments.view">
         <PaymentsNewer />
+      </PermissionRoute>
+    ),
+  },
+  {
+    path: "/pay-bills",
+    component: (
+      <PermissionRoute permission="payments.view">
+        <BillPayments />
       </PermissionRoute>
     ),
   },
@@ -480,6 +459,8 @@ export const routes = [
       </PermissionRoute>
     ),
   },
+  { path: "/copy-trading", component: <CopyX /> },
+  { path: "/copy-trading/:screen", component: <CopyX /> },
   { path: "*", component: <NotFound type="Page" /> },
 ];
 
@@ -564,6 +545,7 @@ export const publicRoutes = [
   { path: "/v/:ibanId", component: <IbanValidationPage /> },
   { path: "/Insta-media", component: <InstaMedia /> },
   { path: "/lead-claim-confirm", component: <LeadClaimConfirm /> },
+  { path: "/paytently/card-collected", component: <PaytentlyCardCollected /> },
   { path: "*", component: <NotFound type="Page" /> },
 ];
 export const authRoutes = [

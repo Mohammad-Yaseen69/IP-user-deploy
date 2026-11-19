@@ -1,15 +1,11 @@
 import axios from "axios";
 import styles from "./styles/PAC.module.scss";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
-import { Camera } from "react-feather";
-import AvatarEditor from "react-avatar-editor";
 import { Button } from "reactstrap";
 import { toast } from "react-toastify";
-import { BsCrop, BsPencil, BsPencilFill } from "react-icons/bs";
 import AdjustModal from "../Settings/AdjustModal";
-import { FaAdjust } from "react-icons/fa";
 import { IoCrop } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 

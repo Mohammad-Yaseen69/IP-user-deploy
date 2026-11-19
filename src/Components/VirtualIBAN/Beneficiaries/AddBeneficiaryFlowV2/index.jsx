@@ -1,7 +1,5 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Modal } from "@mui/material";
-import DateMomentUtils from "@date-io/moment";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { ArrowLeft, X } from "react-feather";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
@@ -22,7 +20,7 @@ import {
   prefillEditBag,
 } from "./buildPayloads";
 import { useAvailableMethods, useRequiredFields, useRequirements } from "./useVendorRequirements";
-import { BANK_COUNTRY_FIELD, getEditRequirements, getFieldDef } from "./vendorFields";
+import { BANK_COUNTRY_FIELD, getFieldDef } from "./vendorFields";
 import { apiWrapper } from "../../../../utils/Functions/apiWrapper";
 import { UserContext } from "../../../../Context/UserContext";
 import {
@@ -89,6 +87,7 @@ const AddBeneficiaryFlowV2 = ({
   const [addressStatus, setAddressStatus] = useState("");
 
   const validateAddress = useValidateCryptoAddress();
+  const bodyRef = useRef(null);
 
   const isCryptoChannel = form.method === "crypto_wallet";
   const cryptoAsset = form.channel?.crypto_asset || "";
@@ -455,7 +454,16 @@ const AddBeneficiaryFlowV2 = ({
 
     if (stage === "recipient" && !validateRecipient()) return;
     if (stage === "method" && !validateMethod()) return;
-    if (stage === "details" && !validateDetails()) return;
+    if (stage === "details" && !validateDetails()) {
+      requestAnimationFrame(() => {
+        const hint = bodyRef.current?.querySelector(`.${styles.hintTextError}`);
+        (hint?.closest(`.${styles.field}`) || hint)?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      });
+      return;
+    }
 
     const next = stageAt(1);
     if (next) setStage(next);
@@ -620,7 +628,7 @@ const AddBeneficiaryFlowV2 = ({
   const primaryDisabled = () => {
     if (saving) return true;
     if (stage === "method") return !form.method || (isTransferMethod && fieldsLoading);
-    if (stage === "details" && channelCheck?.state === "invalid") return true;
+    if (stage === "details" && ["invalid", "checking"].includes(channelCheck?.state)) return true;
     return false;
   };
 
@@ -693,7 +701,7 @@ const AddBeneficiaryFlowV2 = ({
 
   return (
     <Modal open={open} onClose={handleClose} aria-labelledby="add-beneficiary-v2">
-      <MuiPickersUtilsProvider utils={DateMomentUtils}>
+      <>
         <div className={styles.root}>
           <div className={styles.modal}>
             <div className={styles.header}>
@@ -717,7 +725,9 @@ const AddBeneficiaryFlowV2 = ({
               )}
             </div>
 
-            <div className={styles.body}>{renderBody()}</div>
+            <div className={styles.body} ref={bodyRef}>
+              {renderBody()}
+            </div>
 
             <div className={styles.footer}>
               <div className={styles.footerSide}>
@@ -757,7 +767,7 @@ const AddBeneficiaryFlowV2 = ({
             </div>
           </div>
         </div>
-      </MuiPickersUtilsProvider>
+      </>
     </Modal>
   );
 };

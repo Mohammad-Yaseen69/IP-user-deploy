@@ -1,4 +1,3 @@
-import React from "react";
 import { Modal, ModalBody, Button, Spinner } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import { AlertTriangle, CheckCircle, XCircle, X } from "react-feather";

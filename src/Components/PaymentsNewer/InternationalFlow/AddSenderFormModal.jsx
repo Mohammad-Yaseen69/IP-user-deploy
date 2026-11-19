@@ -9,8 +9,7 @@ import PhoneInput from "../../PhoneInput";
 import CountryDropDown from "../../AddBeneficiary/CountryDropDown";
 import CitiesDropDown from "../../CitiesDropDown";
 import NestedDropdown from "../../NestedDropdown";
-import DateMomentUtils from "@date-io/moment";
-import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
+import DatePicker from "../../../CommonElements/DatePicker";
 import iso2 from "../../AddFunds/WalletFund/countries_iso2.json";
 import { useQuery } from "@tanstack/react-query";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
@@ -787,7 +786,7 @@ const AddSenderFormModal = ({
         </span>
       </ModalHeader>
       <ModalBody style={{ maxHeight: "78vh", overflow: "auto" }}>
-        <MuiPickersUtilsProvider utils={DateMomentUtils}>
+        <>
           <form
             onSubmit={handleSubmit(submitForm)}
             style={{ display: "flex", flexDirection: "column", gap: "16px" }}
@@ -1080,7 +1079,7 @@ const AddSenderFormModal = ({
                   )}
             </button>
           </form>
-        </MuiPickersUtilsProvider>
+        </>
       </ModalBody>
     </Modal>
   );

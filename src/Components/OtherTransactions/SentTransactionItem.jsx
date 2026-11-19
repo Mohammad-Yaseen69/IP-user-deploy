@@ -1,5 +1,5 @@
 // import { useSelector } from "react-redux"
-import { ChevronDown, ChevronLeft, ChevronRight, X } from "react-feather";
+import { ChevronDown, ChevronRight, X } from "react-feather";
 import styles from "./styles/index.module.scss";
 import { useContext, useMemo, useState } from "react";
 import ImagePreviewModal from "../ImagePreviewModal.jsx";

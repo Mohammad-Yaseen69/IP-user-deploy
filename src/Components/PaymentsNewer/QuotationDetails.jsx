@@ -1,16 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Button,
   Card,
   CardBody,
-  FormGroup,
   Input,
   Label,
   Modal,
   ModalBody,
   ModalFooter,
   ModalHeader,
-  Tooltip,
 } from "reactstrap";
 import styles from "./styles/AmountAndCurrency.module.scss";
 import { UserContext } from "../../Context/UserContext";
