@@ -33,7 +33,6 @@ const TIP_SLOTS = {
 const MoneyInOut = ({ currency = "", data = [], loading = false }) => {
   const { t, i18n } = useTranslation();
   const [range, setRange] = useState(12);
-  const [hovered, setHovered] = useState(null);
 
   const months = useMemo(() => data.slice(-range), [data, range]);
   const totals = useMemo(
@@ -41,8 +40,6 @@ const MoneyInOut = ({ currency = "", data = [], loading = false }) => {
       months.reduce((sum, m) => ({ in: sum.in + m.in, out: sum.out + m.out }), { in: 0, out: 0 }),
     [months],
   );
-  // The current month stays highlighted until another one is hovered.
-  const active = hovered != null && hovered < months.length ? hovered : months.length - 1;
   const max = niceMax(Math.max(0, ...months.flatMap((m) => [m.in, m.out])));
   const height = (value) => (value > 0 ? `max(2px, ${(value / max) * 100}%)` : 0);
   const monthYear = (date, month = "short") =>
@@ -70,17 +67,7 @@ const MoneyInOut = ({ currency = "", data = [], loading = false }) => {
     <Panel
       title={t("Money in and out")}
       sub={t("{{currency}}, last {{months}} months", { currency, months: range })}
-      right={
-        <Segmented
-          label={t("Period")}
-          options={RANGES}
-          value={range}
-          onChange={(value) => {
-            setRange(value);
-            setHovered(null);
-          }}
-        />
-      }
+      right={<Segmented label={t("Period")} options={RANGES} value={range} onChange={setRange} />}
     >
       <div className={s.mioStats}>
         {figures(totals).map((stat) => (
@@ -120,8 +107,8 @@ const MoneyInOut = ({ currency = "", data = [], loading = false }) => {
                 </div>
               ))}
               <div className={`${s.gridline} ${s.baseline}`} style={{ top: "50%" }} />
-              <div className={s.cols} onMouseLeave={() => setHovered(null)}>
-                {months.map((m, i) => {
+              <div className={s.cols}>
+                {months.map((m) => {
                   const rows = figures(m);
                   return (
                     <Tooltip
@@ -147,13 +134,10 @@ const MoneyInOut = ({ currency = "", data = [], loading = false }) => {
                     >
                       <button
                         type="button"
-                        className={`${s.col} ${i === active ? s.colActive : ""}`}
+                        className={s.col}
                         aria-label={`${monthYear(m.date, "long")}: ${rows
                           .map((row) => `${row.label} ${row.value}`)
                           .join(", ")} ${currency}`}
-                        onMouseEnter={() => setHovered(i)}
-                        onFocus={() => setHovered(i)}
-                        onBlur={() => setHovered(null)}
                       >
                         <div>
                           <i className={s.barIn} style={{ height: height(m.in) }} />
