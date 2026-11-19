@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { ArrowRight, Lock } from "react-feather";
+import { ArrowRight, CheckCircle, Lock } from "react-feather";
 import styles from "../billPayments.module.scss";
 import PhoneInput from "../../PhoneInput";
 import {
@@ -311,6 +311,9 @@ const PaymentStep = ({ flow, wallets, isAdding }) => {
                                 {formatWalletAmount(getWalletAvailable(item))}{" "}
                                 {isConverted ? `· ${t("converted")}` : t("available")}
                               </span>
+                              {wallet?._id === item._id && (
+                                <CheckCircle size={16} className={styles.walletCheck} />
+                              )}
                             </button>
                           );
                         })}

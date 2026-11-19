@@ -56,7 +56,7 @@ const PayBillDrawer = ({
   const canGoBack = !isDone && flow.step !== PAY_STEPS.BILLER;
 
   return (
-    <Drawer anchor="right" open onClose={onClose}>
+    <Drawer anchor="right" open onClose={onClose} PaperProps={{ className: styles.drawerPaper }}>
       <div className={styles.drawer}>
         <div className={styles.drawerHead}>
           {canGoBack && (

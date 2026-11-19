@@ -188,11 +188,13 @@ export const usePayBillFlow = ({
     selectProduct(null);
   };
 
-  // Prices depend on the wallet currency, so the chosen bill is re-picked from the new list.
-  const selectWallet = (nextWallet) => {
-    setWallet(nextWallet);
-    selectProduct(null);
-  };
+  const selectWallet = (nextWallet) => setWallet(nextWallet);
+
+  // Prices depend on the wallet currency, so the chosen bill is swapped for its copy from the new list.
+  useEffect(() => {
+    const repriced = product && products.data?.find((item) => item.id === product.id);
+    if (repriced && repriced !== product) setProduct(repriced);
+  }, [products.data]);
 
   const setIdentifier = (field, value) =>
     setIdentifiers((current) => ({ ...current, [field]: value }));

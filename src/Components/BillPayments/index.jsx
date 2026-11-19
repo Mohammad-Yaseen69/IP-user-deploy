@@ -54,6 +54,8 @@ const BillPayments = () => {
 
   // null = closed; otherwise { biller } or { savedBill } to start on, or { mode: "add" } to save a bill
   const [drawer, setDrawer] = useState(null);
+  const billerCountry =
+    homeCountry || countries.find((item) => item.alpha3 === bills[0]?.country?.iso_code) || null;
   const payBill = () => setDrawer({});
   const addBill = () => setDrawer({ mode: "add" });
 
@@ -88,11 +90,7 @@ const BillPayments = () => {
           />
           <AutopayCard />
           <PaySomethingNew
-            country={
-              homeCountry ||
-              countries.find((item) => item.alpha3 === bills[0]?.country?.iso_code) ||
-              null
-            }
+            country={billerCountry}
             onPickBiller={(biller) => setDrawer({ biller })}
             onChooseCountry={payBill}
           />
@@ -109,7 +107,7 @@ const BillPayments = () => {
           savedBill={drawer.savedBill}
           initialCountry={
             countries.find((item) => item.alpha3 === drawer.savedBill?.country?.iso_code) ||
-            homeCountry
+            billerCountry
           }
           initialBiller={drawer.biller}
           initialWallet={wallet}

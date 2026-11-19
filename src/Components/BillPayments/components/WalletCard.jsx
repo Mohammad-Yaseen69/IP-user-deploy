@@ -15,10 +15,12 @@ const getCoverageText = (wallet, bills, t) => {
   const currency = wallet?.currency?.code;
 
   if (!unpaid.count) return t("Nothing unpaid right now");
-  if (unpaid.currency !== currency) {
-    return `${t("Unpaid bills are in")} ${unpaid.currency}, ${t("converted at review")}`;
+  const foreign = unpaid.totals.filter((item) => item.currency !== currency);
+  if (foreign.length) {
+    const codes = foreign.map((item) => item.currency).join(", ");
+    return `${t("Unpaid bills are in")} ${codes}, ${t("converted at review")}`;
   }
-  const left = getWalletAvailable(wallet) - unpaid.total;
+  const left = getWalletAvailable(wallet) - unpaid.totals[0].total;
   return `${formatWalletAmount(left)} ${currency} ${t("left after unpaid bills, before fees")}`;
 };
 
