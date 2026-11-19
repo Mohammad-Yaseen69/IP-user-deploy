@@ -7,6 +7,7 @@ import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
 import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError";
 import { useDebounce } from "../../../hooks/useDebounce/useDebounce";
 import { getWalletAvailable } from "../../VirtualIBAN/CryptoWallet/instapay/wallets";
+import { usePhoneVerification } from "../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/usePhoneVerification";
 import { getPaymentMethod } from "../data/paymentMethods";
 import {
   useAddSavedBill,
@@ -128,8 +129,16 @@ export const usePayBillFlow = ({
       (amountLimits.min == null || Number(amount) >= amountLimits.min) &&
       (amountLimits.max == null || Number(amount) <= amountLimits.max));
 
+  // Checks the number with the phone verification service; an unreachable service is not held against it.
+  const phoneCheck = usePhoneVerification(
+    identifiers.mobile_number,
+    requiredFields.includes("mobile_number"),
+  );
+
   const hasIdentifiers =
-    !!product && requiredFields.every((field) => isFieldValid(field, identifiers[field]));
+    !!product &&
+    requiredFields.every((field) => isFieldValid(field, identifiers[field])) &&
+    !["checking", "invalid"].includes(phoneCheck?.state);
 
   const debouncedAmount = useDebounce(amount, 500);
   const previewParams = {
@@ -370,6 +379,7 @@ export const usePayBillFlow = ({
     error,
     canReview,
     hasEnoughFunds,
+    phoneCheck,
     isReviewing: quoteMutation.isPending || isSendingOtp,
     isConfirming: confirmMutation.isPending,
     reviewPayment,

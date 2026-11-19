@@ -112,19 +112,26 @@ const PaymentStep = ({ flow, wallets, isAdding }) => {
             <div className={styles.field} key={field}>
               <span className={styles.eyebrow}>{t(FIELD_LABELS[field])}</span>
               {field === "mobile_number" ? (
-                <PhoneInput
-                  country={flow.country?.alpha3}
-                  phone={flow.identifiers.mobile_number}
-                  setPhone={(value) => flow.setIdentifier("mobile_number", value)}
-                  onBlur={() => setPhoneTouched(true)}
-                  error={
-                    phoneTouched &&
-                    flow.identifiers.mobile_number &&
-                    !isFieldValid("mobile_number", flow.identifiers.mobile_number)
-                      ? "Enter a valid mobile number"
-                      : ""
-                  }
-                />
+                <>
+                  <PhoneInput
+                    country={flow.country?.alpha3}
+                    phone={flow.identifiers.mobile_number}
+                    setPhone={(value) => flow.setIdentifier("mobile_number", value)}
+                    onBlur={() => setPhoneTouched(true)}
+                    error={
+                      phoneTouched &&
+                      flow.identifiers.mobile_number &&
+                      !isFieldValid("mobile_number", flow.identifiers.mobile_number)
+                        ? "Enter a valid mobile number"
+                        : flow.phoneCheck?.state === "invalid"
+                          ? flow.phoneCheck.message
+                          : ""
+                    }
+                  />
+                  {flow.phoneCheck && flow.phoneCheck.state !== "invalid" && (
+                    <span className={styles.muted}>{t(flow.phoneCheck.message)}</span>
+                  )}
+                </>
               ) : (
                 <input
                   className={styles.input}
