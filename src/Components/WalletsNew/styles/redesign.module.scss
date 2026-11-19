@@ -83,6 +83,8 @@ $mobile: 1000px;
 
 .swiper {
   width: 100%;
+  // The design shows one card at a time, so the stacked neighbours are clipped to the card's box.
+  overflow: hidden !important;
   border-radius: 14px;
 }
 
