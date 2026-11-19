@@ -10,7 +10,8 @@ import countries from "../PaymentsNewer/CountriesData.json";
 import Receipt from "./Payments/InternationalReceipt";
 import { useTranslation } from "react-i18next";
 
-const BenefCard = ({ item, index, total }) => {
+// `trigger` lets the redesigned dashboard draw its own avatar while this component keeps the payment flow.
+const BenefCard = ({ item, index, total, trigger }) => {
   const [showModal, setShowModal] = useState(false);
   const toggle = () => {
     // verifyToken()
@@ -104,10 +105,11 @@ const BenefCard = ({ item, index, total }) => {
 
   return (
     <>
+      {trigger?.(toggle)}
       <div
         key={item}
         style={{
-          display: "flex",
+          display: trigger ? "none" : "flex",
           flexDirection: "column",
           alignItems: "center",
           gap: ".5rem",

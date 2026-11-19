@@ -92,6 +92,23 @@ $mobile: 1000px;
   border-radius: 14px;
 }
 
+// Optional card title above the tabs (wallet page).
+.heading {
+  padding: 19px 20px 0;
+
+  h3 {
+    margin: 0;
+    @include type(16px, 600, $text, -0.32px);
+    line-height: 23.2px;
+  }
+
+  p {
+    margin: 4px 0 0;
+    @include type(13px, 400, $muted, -0.154px);
+    line-height: 18.85px;
+  }
+}
+
 .tabs {
   display: flex;
   overflow-x: auto;
