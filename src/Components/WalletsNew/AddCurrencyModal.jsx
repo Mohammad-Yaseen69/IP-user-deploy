@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
 import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
-import { Button, Input, Modal, ModalBody, ModalHeader } from "reactstrap";
+import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { useTranslation } from "react-i18next";
 import { CheckCircle } from "react-feather";

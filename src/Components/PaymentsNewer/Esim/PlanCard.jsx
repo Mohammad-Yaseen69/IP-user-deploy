@@ -1,10 +1,7 @@
-import eSimBanner from "./files/eSimBanner.svg";
 import styles from "./styles/steptwo.module.scss";
-import styles2 from "../AirtimeFlow/styles/steptwo.module.css";
 import sim from "./files/sim.svg";
 import line from "./files/line.svg";
 import line2 from "./files/line2.svg";
-import info from "./files/info.svg";
 import { useTranslation } from "react-i18next";
 
 const PlanCard = ({ plan, data, handlePlanSelect }) => {

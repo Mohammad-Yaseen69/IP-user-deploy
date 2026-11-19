@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Card, CardHeader } from "reactstrap";
-import { MoreHorizontal } from "react-feather";
 import styles from "./styles/Recents.module.css";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../Context/UserContext";
@@ -83,7 +82,7 @@ const RecentTrans = ({ title, currentWallet }) => {
     };
 
     fetchData();
-  }, [currentWallet]);
+  }, [currentWallet?.wallet_id]);
   return (
     <Card
       style={{

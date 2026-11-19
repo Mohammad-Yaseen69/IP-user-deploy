@@ -9,13 +9,12 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="shortcut icon" href="apple-touch-icon.png" />
     <!-- <link rel="manifest" href="/manifest.json" /> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://api.fontshare.com" />
+    <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Manrope:wght@200..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
       rel="stylesheet"
     />
     <link
@@ -26,19 +25,10 @@
       href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap"
       rel="stylesheet"
     />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap"
-      rel="stylesheet"
-    />
     <meta name="googlebot" content="notranslate" />
     <meta name="google" content="notranslate" />
     <!-- google analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MR0R10FSVS"></script>
-    <script defer>
+    <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
@@ -46,10 +36,148 @@
       gtag("js", new Date());
 
       gtag("config", "G-MR0R10FSVS");
+
+      (function () {
+        function loadGtag() {
+          var s = document.createElement("script");
+          s.async = true;
+          s.src = "https://www.googletagmanager.com/gtag/js?id=G-MR0R10FSVS";
+          document.head.appendChild(s);
+        }
+        function whenIdle() {
+          if ("requestIdleCallback" in window) {
+            window.requestIdleCallback(loadGtag, { timeout: 5000 });
+          } else {
+            setTimeout(loadGtag, 2000);
+          }
+        }
+        if (document.readyState === "complete") {
+          whenIdle();
+        } else {
+          window.addEventListener("load", whenIdle, { once: true });
+        }
+      })();
     </script>
     <!-- google analytics -->
     <title>InstaPay</title>
     <style>
+      #initial-loader {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        overflow: hidden;
+        z-index: 99999;
+      }
+
+      .ip-mark {
+        fill: #5a21f7;
+      }
+
+      .ip-mark-page {
+        flex-shrink: 0;
+        width: 160%;
+        height: 100%;
+        max-width: 1000px;
+        max-height: 1000px;
+      }
+
+      .ip-mark path {
+        animation-duration: 2.68s;
+        animation-iteration-count: infinite;
+        animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      .ip-mark-square {
+        animation-name: ip-mark-square;
+      }
+
+      .ip-mark-lower {
+        animation-name: ip-mark-lower;
+      }
+
+      .ip-mark-upper {
+        animation-name: ip-mark-upper;
+      }
+
+      .ip-mark-round {
+        animation-name: ip-mark-round;
+      }
+
+      @keyframes ip-mark-square {
+        0%,
+        10% {
+          opacity: 0;
+          transform: translateX(-576px);
+        }
+        10.1% {
+          opacity: 1;
+          transform: translateX(-576px);
+        }
+        28%,
+        100% {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      @keyframes ip-mark-lower {
+        0%,
+        21% {
+          opacity: 0;
+          transform: translateY(284px);
+        }
+        21.1% {
+          opacity: 1;
+          transform: translateY(284px);
+        }
+        31% {
+          opacity: 1;
+          transform: translateY(-16px);
+        }
+        35%,
+        100% {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      @keyframes ip-mark-upper {
+        0%,
+        36% {
+          opacity: 0;
+          transform: translateY(-332px);
+        }
+        36.1% {
+          opacity: 1;
+          transform: translateY(-332px);
+        }
+        51%,
+        100% {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      @keyframes ip-mark-round {
+        0%,
+        58% {
+          opacity: 0;
+          transform: translateX(176px);
+        }
+        58.1% {
+          opacity: 1;
+          transform: translateX(176px);
+        }
+        67%,
+        100% {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
       @font-face {
         font-family: "EmojiOne";
         src:
@@ -113,7 +241,16 @@
 
   <body translate="no">
     <!-- <noscript>You need to enable JavaScript to run this app.</noscript> -->
-    <div translate="no" id="root"></div>
+    <div translate="no" id="root">
+      <div id="initial-loader" role="status" aria-label="Loading InstaPay">
+        <svg class="ip-mark ip-mark-page" viewBox="0 0 1920 1080" aria-hidden="true">
+          <path class="ip-mark-square" d="M815 486h156v155H815z" />
+          <path class="ip-mark-lower" d="M815 641h156v155z" />
+          <path class="ip-mark-upper" d="M815 331h156v155z" />
+          <path class="ip-mark-round" d="M971 331a155 155 0 0 1 0 310z" />
+        </svg>
+      </div>
+    </div>
     <script type="module" src="/src/index.jsx"></script>
   </body>
 </html>

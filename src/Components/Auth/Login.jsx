@@ -1,4 +1,4 @@
-import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { lazy, Suspense, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import styles from "./styles/index.module.css";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../Context/UserContext";
@@ -11,7 +11,6 @@ import gs from "./files/gs.svg";
 import as from "./files/as.svg";
 import authenticator from "./files/authenticator.webp";
 import axios from "axios";
-import FaceAnimation from "./FaceAnimation";
 import BiometricSvg from "../../assets/icons/fingerprint.png";
 import { startAuthentication } from "@simplewebauthn/browser";
 import * as rdd from "react-device-detect";
@@ -28,6 +27,9 @@ import LocationDeniedModal from "./LocationDeniedModal";
 import { InputAdornment, Stack, TextField } from "@mui/material";
 import { AlarmIcon } from "../PaymentAddressPublic/PayAsGuest/Svgs";
 import { LOGIN_PAGE_TYPES, setLastLoginUsedPage } from "../../utils/Functions/loginPage";
+
+const loadFaceAnimation = () => import("./FaceAnimation");
+const FaceAnimation = lazy(loadFaceAnimation);
 
 const linkStyle = {
   color: "#5926F0",
@@ -73,6 +75,15 @@ const Login = ({ country, setIsLoginForm }) => {
   const location = useLocation();
   const params = new URLSearchParams(location.search || "");
   const isQuickLoginRef = useRef(false);
+
+  useEffect(() => {
+    const prefetch = () => loadFaceAnimation().catch(() => {});
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(prefetch, { timeout: 3000 });
+    } else {
+      setTimeout(prefetch, 1000);
+    }
+  }, []);
   const redirectQuery = params.get("redirect");
   const redirect =
     location?.state?.redirect ?? (redirectQuery ? decodeURIComponent(redirectQuery) : null);
@@ -504,20 +515,20 @@ const Login = ({ country, setIsLoginForm }) => {
           setIsLoginError(
             `Uh-Oh! The password/${credentialIsEmail ? "email" : "phone number"} you entered is wrong.`,
           );
-        }
-        if (decrypted.message?.toLowerCase()?.includes("inactive")) {
+        } else if (decrypted.message?.toLowerCase()?.includes("inactive")) {
           setIsLoginError(`Uh-Oh! Your account is not active anymore.`);
-        }
-        if (decrypted.message?.toLowerCase()?.includes("onhold")) {
+        } else if (decrypted.message?.toLowerCase()?.includes("onhold")) {
           setIsLoginError(`Uh-Oh! Your account is onhold.`);
-        }
-        if (decrypted.message?.toLowerCase()?.includes("delete")) {
+        } else if (decrypted.message?.toLowerCase()?.includes("delete")) {
           setIsLoginError(decrypted?.message);
-        }
-        if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+        } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
           const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
           const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
           setProfileLockTime(timeInSec);
+        } else {
+          setIsLoginError(
+            decrypted?.message || "We're unable to process your request. Please try again",
+          );
         }
       });
   };
@@ -1439,12 +1450,22 @@ const Login = ({ country, setIsLoginForm }) => {
                 </div>
               ) : (
                 <div className={styles.otp_inp}>
-                  <FaceAnimation
-                    currentInput={currentActiveInput}
-                    verification={otpVerified}
-                    isCorrect={isOtpCorrect}
-                    startTyping
-                  />
+                  <Suspense
+                    fallback={
+                      <div style={{ display: "flex", justifyContent: "center" }}>
+                        <div>
+                          <svg width="51" height="62" />
+                        </div>
+                      </div>
+                    }
+                  >
+                    <FaceAnimation
+                      currentInput={currentActiveInput}
+                      verification={otpVerified}
+                      isCorrect={isOtpCorrect}
+                      startTyping
+                    />
+                  </Suspense>
                   <div
                     style={{
                       animation:

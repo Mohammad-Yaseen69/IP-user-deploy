@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "./styles/CryptoCurrency.module.css";
 import { useTranslation } from "react-i18next";
 import { Button } from "reactstrap";

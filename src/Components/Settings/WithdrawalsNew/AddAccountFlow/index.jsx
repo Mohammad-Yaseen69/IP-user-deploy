@@ -48,7 +48,7 @@ const STAGE_LABELS = {
 const MODE_STAGES = {
   create: ["country", "method", "details", "confirm"],
   channel: ["method", "details", "confirm"],
-  crypto: ["details", "confirm"],
+  crypto: ["country", "details", "confirm"],
   edit: ["details", "confirm"],
 };
 
@@ -116,12 +116,24 @@ const AddAccountFlow = ({
   const isCrypto = method === "crypto_wallet";
   const isEdit = mode === "edit";
 
+  const cryptoIsos = useMemo(
+    () => new Set(cryptoRows.map((row) => row.record?.iso_code).filter(Boolean)),
+    [cryptoRows],
+  );
+  const filteredCountries = useMemo(
+    () =>
+      mode === "crypto"
+        ? countries.filter((country) => !cryptoIsos.has(country.alpha3))
+        : countries,
+    [countries, cryptoIsos, mode],
+  );
+
   const resolveCountry = useCallback(
     (iso3) => {
       if (!iso3) return null;
-      return countries.find((item) => item.alpha3 === iso3) ?? findCountry(iso3) ?? null;
+      return filteredCountries.find((item) => item.alpha3 === iso3) ?? findCountry(iso3) ?? null;
     },
-    [countries],
+    [filteredCountries],
   );
 
   /* Fresh state every time the dialog opens, seeded from what it was opened on. */
@@ -134,7 +146,7 @@ const AddAccountFlow = ({
 
     if (isEdit && target) {
       setMethod(target.method);
-      setCountry(target.isCrypto ? null : resolveCountry(target.record?.iso_code));
+      setCountry(resolveCountry(target.record?.iso_code));
       setChannel(
         target.isCrypto
           ? {
@@ -313,6 +325,7 @@ const AddAccountFlow = ({
 
   const selectCountry = (next) => {
     setCountry(next);
+    if (mode === "crypto") return;
     setMethod("");
     setChannel({});
   };
@@ -325,7 +338,11 @@ const AddAccountFlow = ({
   const save = async () => {
     setBusy(true);
     const ok = isCrypto
-      ? await saveCryptoAccount({ channel, editing: isEdit ? target : null })
+      ? await saveCryptoAccount({
+          channel,
+          country: isEdit ? null : country,
+          editing: isEdit ? target : null,
+        })
       : await saveFiatAccount({
           record,
           country,
@@ -393,10 +410,11 @@ const AddAccountFlow = ({
       case "country":
         return (
           <StepCountry
-            countries={countries}
+            countries={filteredCountries}
             country={country}
             onSelect={selectCountry}
             usedIsos={usedIsos}
+            isCrypto={isCrypto}
             holderName={holderName}
             onOpenBeneficiaries={() => {
               onClose();
@@ -433,6 +451,9 @@ const AddAccountFlow = ({
               error={methodsError}
               usedMethods={usedMethods}
               cryptoCount={cryptoRows.length}
+              cryptoInCountry={cryptoRows.some(
+                (row) => row.record?.iso_code && row.record.iso_code === country?.alpha3,
+              )}
               onSelect={selectMethod}
             />
           </>
@@ -455,7 +476,13 @@ const AddAccountFlow = ({
             takenAddresses={takenAddresses}
             walletError={walletError}
             onValidChange={onValidChange}
-            onChange={stages.includes("method") ? () => setStage("method") : null}
+            onChange={
+              stages.includes("method")
+                ? () => setStage("method")
+                : stages.includes("country")
+                  ? () => setStage("country")
+                  : null
+            }
             addressFields={addressFields}
             optionalAddress={optionalAddress}
             address={address}

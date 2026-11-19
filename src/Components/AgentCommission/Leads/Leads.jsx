@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import useWindowWidth from "../../../utils/useWindowWidth";
 import { useTranslation } from "react-i18next";
 import styles from "../styles/leads.module.css";

@@ -24,7 +24,7 @@ import paym_styles from "../../PaymentsNewer/InternationalFlow/styles/index.modu
 import { toast } from "react-toastify";
 import { createShambeToken } from "../../../Helper/CreateToken";
 import NotFoundModal from "../../NotFound/NotFoundModal";
-import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow";
+import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow/apiErrorMessage";
 import { useQueryClient } from "@tanstack/react-query";
 
 const initialState = {
@@ -831,7 +831,12 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
                 </div>
                 <div className={styles.right} style={{ minWidth: "550px" }}>
                   {data.step === 1 && (
-                    <StepFour data={data} dataHandler={dataHandler} loading={data.loading} />
+                    <StepFour
+                      data={data}
+                      dataHandler={dataHandler}
+                      loading={data.loading}
+                      bankComingSoon={true}
+                    />
                   )}
                   {data.step === 2 && data.show_cards ? (
                     <CreditCard
@@ -994,7 +999,12 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
                 ) : (
                   <>
                     {data.step === 1 && (
-                      <StepFour data={data} dataHandler={dataHandler} loading={data.loading} />
+                      <StepFour
+                        data={data}
+                        dataHandler={dataHandler}
+                        loading={data.loading}
+                        bankComingSoon={true}
+                      />
                     )}
                     {data.step === 2 && data.show_cards ? (
                       <CreditCard

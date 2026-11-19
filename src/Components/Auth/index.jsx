@@ -1,12 +1,11 @@
 import styles from "./styles/index.module.css";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import RegistrationCompleted from "../AuthNew/RegistrationCompleted";
 import LanguagePicker from "../LanguagePicker";
 import { useTranslation } from "react-i18next";
 import FullLogo from "../../assets/images/logo/logo2.webp";
 import Login from "./Login";
 import coun from "../PaymentsNewer/CountriesData.json";
-import Signup from "./Signup";
 import useCountryLocation from "../../hooks/GeneralUse/useCountryLocation";
 import { useLocation } from "react-router";
 import rightImage from "./agentAuth/files/image.png";
@@ -14,6 +13,12 @@ import ShortLogo from "../../assets/images/logo/logo_white.png";
 import useWindowWidth from "../../utils/useWindowWidth";
 import { StuckCircle } from "../PaymentAddressPublic/PayAsGuest/Svgs";
 import { Link } from "react-router-dom";
+import InstaPayLoader from "../Loader";
+
+const loadSignup = () => import("./Signup");
+const Signup = lazy(loadSignup);
+
+if (!window?.location?.href?.includes("login")) loadSignup().catch(() => {});
 
 const swissFlag = coun.find((item) => item.alpha3 === "CHE")?.file_url;
 
@@ -31,10 +36,10 @@ const Auth = () => {
   const redirect = new URLSearchParams(location.search).get("redirect");
   const width = useWindowWidth();
   const [registerStep, setRegisterStep] = useState(1);
+  const [isRedirecting] = useState(() => Boolean(localStorage.getItem("token")));
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
+    if (isRedirecting) {
       const path =
         sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined"
           ? sessionStorage.getItem("path")
@@ -55,6 +60,16 @@ const Auth = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (isRedirecting) return;
+    const prefetch = () => loadSignup().catch(() => {});
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(prefetch, { timeout: 3000 });
+    } else {
+      setTimeout(prefetch, 1000);
+    }
+  }, []);
+
   // signup state
   const [step, setStep] = useState(1);
 
@@ -64,6 +79,8 @@ const Auth = () => {
 
   const [registrationCompleted] = useState(false);
   const [hideLogo, setHideLogo] = useState(false);
+
+  if (isRedirecting) return <InstaPayLoader fallback />;
 
   const showText = width > 1100 || width <= 810;
   return (
@@ -126,11 +143,13 @@ const Auth = () => {
             {isLoginForm ? (
               <Login country={country} setIsLoginForm={setIsLoginForm} />
             ) : (
-              <Signup
-                handleStepChange={setRegisterStep}
-                setIsLoginForm={setIsLoginForm}
-                setHideLogo={setHideLogo}
-              />
+              <Suspense fallback={<InstaPayLoader fallback />}>
+                <Signup
+                  handleStepChange={setRegisterStep}
+                  setIsLoginForm={setIsLoginForm}
+                  setHideLogo={setHideLogo}
+                />
+              </Suspense>
             )}
             <div>
               <div className={styles.f_footer}>

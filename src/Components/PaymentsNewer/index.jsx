@@ -25,7 +25,6 @@ const NonInstapayPayment = lazy(() => import("./NonInstapay"));
 
 // Static assets (normal imports)
 import rq from "./files/mobile/rq.png";
-import sc from "./files/mobile/sc.png";
 import qr from "./files/mobile/qr.png";
 import w2_ic from "./files/wallet.svg";
 import qr_ic from "./files/qr.svg";
@@ -45,6 +44,7 @@ import a_m_i from "./files/airtime.svg";
 import int_m_i from "./files/int.svg";
 import ni_m_i from "./files/non_ip.svg";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
+import useEffectivePermission, { PERMISSIONS } from "../../hooks/GeneralUse/useEffectivePermission";
 
 const PaymentsNewer = () => {
   const {
@@ -60,12 +60,14 @@ const PaymentsNewer = () => {
   const queryParams = new URLSearchParams(location.search);
   const payment_action = queryParams.get("payment_action");
   const send_type = queryParams.get("send_type");
+  const hasPermission = useEffectivePermission();
+  const canInternationTransfer = hasPermission(PERMISSIONS.INTERNATIONAL_TRANSFER);
 
   const { t } = useTranslation();
   const can = usePermission();
 
   // Permission: payments.international.send
-  const canSendInternational = can("payments.international.send");
+  const canSendInternational = can("payments.international.send") && canInternationTransfer;
   // Permission: payments.wallet.send
   const canSendWallet = can("payments.wallet.send");
   // Permission: payments.qr.send
@@ -456,40 +458,40 @@ const PaymentsNewer = () => {
                         : userDetails?.level?.international_transfer?.bank ||
                           userDetails?.level?.international_transfer?.cash_pickup ||
                           userDetails?.level?.international_transfer?.mobile_money
-                    ) ? (
-                      <button
-                        onClick={() => {
-                          setCurrentFlow("international");
-                          setSendPaymentType("international");
-                          setStep(3);
-                        }}
-                        style={{ background: `url(${internation_m})` }}
-                      >
-                        <img
-                          src={int_m_i}
-                          alt=""
-                          loading="lazy"
-                          style={{
-                            width: "30px",
-                            objectFit: "contain",
-                            height: "30px",
-                          }}
-                        />
-                        <span
-                          style={{
-                            fontSize: "1rem",
-                            color: "white",
-                            fontWeight: "600",
-                            textAlign: "left",
-                            maxWidth: "12ch",
-                          }}
-                        >
-                          {t("International Transfer")}
-                        </span>
-                      </button>
-                    ) : (
-                      ""
-                    )}
+                    )
+                      ? canInternationTransfer && (
+                          <button
+                            onClick={() => {
+                              setCurrentFlow("international");
+                              setSendPaymentType("international");
+                              setStep(3);
+                            }}
+                            style={{ background: `url(${internation_m})` }}
+                          >
+                            <img
+                              src={int_m_i}
+                              alt=""
+                              loading="lazy"
+                              style={{
+                                width: "30px",
+                                objectFit: "contain",
+                                height: "30px",
+                              }}
+                            />
+                            <span
+                              style={{
+                                fontSize: "1rem",
+                                color: "white",
+                                fontWeight: "600",
+                                textAlign: "left",
+                                maxWidth: "12ch",
+                              }}
+                            >
+                              {t("International Transfer")}
+                            </span>
+                          </button>
+                        )
+                      : ""}
                     {(userDetails?.account_type === "individual"
                       ? userDetails?.level?.wallet_to_wallet?.send
                       : userDetails?.level?.wallet_to_wallet?.send) && (

@@ -34,3 +34,8 @@ export const isCardValid = (data) => {
 
   return year > currentYear || (year === currentYear && month > currentMonth);
 };
+
+export const getMaxDate = (min = 18) => {
+  const currentDate = new Date();
+  return new Date(currentDate.getFullYear() - min, currentDate.getMonth(), currentDate.getDate());
+};

@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Eye, EyeOff, Layers, TrendingUp, Users } from "react-feather";
+import { Eye, EyeOff } from "react-feather";
 import styles from "../cryptoPage.module.scss";
 import { formatCryptoAmount } from "../utils/format";
 import { useQuery } from "@tanstack/react-query";

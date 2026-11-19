@@ -12,6 +12,7 @@ import logo from "../../assets/images/logo/logo.webp";
 import PaymentActionsButtons from "../ReceiptInvoices/InvoicePayment/PaymentActionsButtons";
 import PayAsGuest from "./PayAsGuest";
 import PayWithCrypto from "./PayWithCrypto";
+import useEffectivePermission, { PERMISSIONS } from "../../hooks/GeneralUse/useEffectivePermission";
 
 const PlansModal = ({
   isOpen,
@@ -33,7 +34,8 @@ const PlansModal = ({
   const [selectedAction, setSelectedAction] = useState(null);
   const [selectedPlan, setSelectedPlan] = useState();
   const [showTermsModal, setShowTermsModal] = useState(false);
-
+  const hasPermission = useEffectivePermission();
+  const canGuestPayWithCrypto = hasPermission(PERMISSIONS.CRYPTO_GUEST_PAY);
   useEffect(() => {
     if (plansData) {
       setSelectedPlan(plansData[0]);
@@ -81,7 +83,7 @@ const PlansModal = ({
       width: "13px",
       // disabled: true
     },
-    {
+    canGuestPayWithCrypto && {
       label: "Pay with Crypto",
       logo: CryptoPay,
       action: () => {
@@ -96,7 +98,7 @@ const PlansModal = ({
         toggle();
       },
     },
-  ];
+  ].filter(Boolean);
 
   const handleContinue = () => {
     if (selectedAction?.action) {

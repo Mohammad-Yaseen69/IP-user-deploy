@@ -1,10 +1,11 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Input, Label } from "reactstrap";
 import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
+import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import styles from "./styles/DeleteAccount.module.scss";
 import { CaretDown, CheckCircleMedium } from "./Icons";
@@ -44,6 +45,7 @@ const DeleteAccount = () => {
     axios
       .delete(`${import.meta.env.VITE_IP_DEV_API}/api/account/delete-account/${userDetails?._id}`, {
         headers: authHeader,
+        data: { data: encryptData({ reason }) },
       })
       .then((res) => {
         const decrypted = decryptData(res.data.data);

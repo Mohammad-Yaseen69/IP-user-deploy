@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "./styles/Wizard.module.css";
 
 const Wizard = ({ total, current, complete = false }) => {

@@ -1,34 +1,9 @@
-import React, { useEffect, useState } from "react";
-import load from "../../assets/load.gif";
+import LoaderMark from "../../Components/Loader/LoaderMark";
 
-const Loader = () => {
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setShow(true);
-    }, 3000);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [show]);
-
-  return (
-    <div className={`loader-wrapper ${!show ? "" : "d-none"}`}>
-      {/* <div className="dot"></div>
-      <div className="dot"></div>
-      <div className="dot"></div>
-      <div className="dot"> </div>
-      <div className="dot"></div> */}
-      <div style={{ height: "500px", width: "500px" }}>
-        <img
-          src={load}
-          alt="Loader"
-          style={{ height: "100%", width: "100%", objectFit: "cover" }}
-        />
-      </div>
-    </div>
-  );
-};
+const Loader = () => (
+  <div className="loader-wrapper" style={{ overflow: "hidden" }}>
+    <LoaderMark page role="img" aria-label="Loader" />
+  </div>
+);
 
 export default Loader;

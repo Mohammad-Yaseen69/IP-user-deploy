@@ -1,4 +1,3 @@
-import React from "react";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper";

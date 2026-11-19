@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
-import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import styled from "@emotion/styled";
 import axios from "axios";
 import { useParams, useLocation } from "react-router-dom";
-import CryptoJS from "crypto-js";
+import CryptoJS from "../../Helper/cryptoJs";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import RedirectButton from "../../CommonElements/RedirectButton";
 import i18next from "i18next";

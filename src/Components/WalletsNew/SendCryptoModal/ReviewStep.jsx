@@ -44,7 +44,7 @@ const formatMoney = (value, currency) => {
   return `${Number.isFinite(amount) ? amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 8 }) : value} ${currency}`;
 };
 
-const boundaryAddress = (address) => {
+export const boundaryAddress = (address) => {
   const value = String(address || "");
   if (value.length <= 12) return value;
   return `${value.slice(0, 6)}......${value.slice(-6)}`;
@@ -62,6 +62,7 @@ const ReviewStep = ({
   isQuoteExpired,
   onRefreshQuote,
   isRefreshing,
+  details = null,
 }) => {
   const { t } = useTranslation();
   const [secondsLeft, setSecondsLeft] = useState(0);
@@ -170,6 +171,8 @@ const ReviewStep = ({
           </div>
         </div>
       </div>
+
+      {details}
 
       <div className={styles.dangerBox}>
         <DangerIcon />

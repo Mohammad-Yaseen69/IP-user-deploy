@@ -100,7 +100,7 @@ const StepDetails = ({
         icon={METHOD_AVATAR_ICON[method]}
         name={
           isCrypto
-            ? t(METHOD_LABELS[method])
+            ? [country?.name, t(METHOD_LABELS[method])].filter(Boolean).join(" · ")
             : `${country?.name ?? ""} · ${t(METHOD_LABELS[method])}`
         }
         meta={

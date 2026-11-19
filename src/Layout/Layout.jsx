@@ -1,4 +1,13 @@
-import { Fragment, createContext, useContext, useEffect, useMemo, useState } from "react";
+import {
+  Fragment,
+  Suspense,
+  createContext,
+  lazy,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import TapTop from "./TapTop/index";
@@ -7,7 +16,6 @@ import AnimationThemeContext from "../Helper/AnimationTheme";
 import ConfigDB from "../Config/ThemeConfig";
 import Loader from "./Loader";
 import SidebarNew from "./SidebarNew/SidebarNew";
-import ProfileCompletionModal from "../Components/ProfileCompletionModal";
 import ForcedAuthenticatorModal from "../Components/ForcedAuthenticatorModal";
 import { UserContext } from "../Context/UserContext";
 import styles from "./Layout.module.css";
@@ -16,25 +24,41 @@ import MobileSidebar from "./MobileSidebar";
 import InactivityLogoutModal from "../Components/InactivityLogoutModal";
 import ThreeDaysModal from "../Components/SecurityQuestionsModals/ThreeDaysModal";
 import ThirtyDaysModal from "../Components/SecurityQuestionsModals/ThirtyDaysModal";
-import { InactivityContext } from "../InactivityWrapper";
-import InactivityCountDownTimer from "../Components/InactivityCounter";
+import { InactivityContext, InactivityCountdownContext } from "../InactivityWrapper";
+import "swiper/css";
+import "../Components/MyMasterCard/styles/modal.reset.css";
+import "./globalElementStyles.css";
+import "../Context/Typing.css";
+import "../Components/AddBeneficiary/req_star.css";
+import "../Components/Settings/styles/Switch.css";
 import SourceOfFunds from "../Components/SourceOfFundsModal";
-import AddBeneficiaryAddressModal from "../Components/AddBeneficiaryAddressModal";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
-import FinancialInfoModal from "../Components/FinancialInfoModal";
 import success from "../Components/Auth/files/success.gif";
 import SocketsService from "../Services/Socket";
-import AnotherLoginModal from "../Components/AnotherLoginModal";
 import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
-import AdditionalDocumentModal from "./AdditionalDocumentModal";
-import ForcedAdditionalFilesModal from "../Components/ForcedAdditionalFilesModal";
 import { getPendingAdditionalFiles, MASTERCARD_PURPOSE } from "../utils/Functions/additionalFiles";
 import NewMenu from "../Common/NewMenu";
-import AssistantWidget from "../Components/AssistantWidget";
 import { useVirtualIbans } from "../hooks/useVirtualIban";
 import PushConsentModal from "../Components/PushConsentModal";
 import { isPushSupported, getPushPermissionState } from "../Services/PushNotificationService";
+import useWindowWidth from "../utils/useWindowWidth";
+
+const loadAddBeneficiaryAddressModal = () => import("../Components/AddBeneficiaryAddressModal");
+const AddBeneficiaryAddressModal = lazy(loadAddBeneficiaryAddressModal);
+const loadInactivityCountDownTimer = () => import("../Components/InactivityCounter");
+const InactivityCountDownTimer = lazy(loadInactivityCountDownTimer);
+const loadFinancialInfoModal = () => import("../Components/FinancialInfoModal");
+const FinancialInfoModal = lazy(loadFinancialInfoModal);
+const loadAdditionalDocumentModal = () => import("./AdditionalDocumentModal");
+const AdditionalDocumentModal = lazy(loadAdditionalDocumentModal);
+const loadProfileCompletionModal = () => import("../Components/ProfileCompletionModal");
+const ProfileCompletionModal = lazy(loadProfileCompletionModal);
+const loadForcedAdditionalFilesModal = () => import("../Components/ForcedAdditionalFilesModal");
+const ForcedAdditionalFilesModal = lazy(loadForcedAdditionalFilesModal);
+const loadAnotherLoginModal = () => import("../Components/AnotherLoginModal");
+const AnotherLoginModal = lazy(loadAnotherLoginModal);
+const AssistantWidget = lazy(() => import("../Components/AssistantWidget"));
 
 export const MobileSbContext = createContext(null);
 
@@ -163,6 +187,37 @@ const Layout = ({ children, classNames, ...rest }) => {
     profileCompleted === true && !showModal && hasRequiredAdditionalFiles && !onRequiredFilesPage;
 
   useEffect(() => {
+    const prefetch = () => {
+      loadAddBeneficiaryAddressModal().catch(() => {});
+      loadInactivityCountDownTimer().catch(() => {});
+      loadFinancialInfoModal().catch(() => {});
+      loadAdditionalDocumentModal().catch(() => {});
+      loadProfileCompletionModal().catch(() => {});
+      loadForcedAdditionalFilesModal().catch(() => {});
+      loadAnotherLoginModal().catch(() => {});
+    };
+    let idleId;
+    let timeoutId;
+    const schedule = () => {
+      if ("requestIdleCallback" in window) {
+        idleId = window.requestIdleCallback(prefetch);
+      } else {
+        timeoutId = setTimeout(prefetch, 2000);
+      }
+    };
+    if (document.readyState === "complete") {
+      schedule();
+    } else {
+      window.addEventListener("load", schedule, { once: true });
+    }
+    return () => {
+      window.removeEventListener("load", schedule);
+      if (idleId !== undefined) window.cancelIdleCallback?.(idleId);
+      if (timeoutId !== undefined) clearTimeout(timeoutId);
+    };
+  }, []);
+
+  useEffect(() => {
     if (location.pathname.toLowerCase().includes("my-mastercard")) return;
     if (hasRequiredAdditionalFiles) return;
 
@@ -193,6 +248,8 @@ const Layout = ({ children, classNames, ...rest }) => {
       return [];
     }
   }, [beneficiaries, location]);
+  const [dismissedBeneficiaries, setDismissedBeneficiaries] = useState(null);
+  const windowWidth = useWindowWidth();
 
   useEffect(() => {
     setShowModal(!profileCompleted);
@@ -322,14 +379,20 @@ const Layout = ({ children, classNames, ...rest }) => {
 
   return (
     <Fragment>
-      {beneficiaryWithoutAddresses.length > 0 && (
-        <AddBeneficiaryAddressModal
-          isOpen={beneficiaryWithoutAddresses.length > 0}
-          toggle={getUserBeneficiaries}
-          close={() => (beneficiaryWithoutAddresses.length = 0)}
-          beneficiaries={beneficiaryWithoutAddresses}
-        />
-      )}
+      {beneficiaryWithoutAddresses.length > 0 &&
+        dismissedBeneficiaries !== beneficiaryWithoutAddresses && (
+          <Suspense fallback={null}>
+            <AddBeneficiaryAddressModal
+              isOpen={beneficiaryWithoutAddresses.length > 0}
+              toggle={getUserBeneficiaries}
+              close={() => {
+                beneficiaryWithoutAddresses.length = 0;
+                setDismissedBeneficiaries(beneficiaryWithoutAddresses);
+              }}
+              beneficiaries={beneficiaryWithoutAddresses}
+            />
+          </Suspense>
+        )}
       <Modal isOpen={showOfflineModal}>
         <ModalHeader>
           <span style={{ fontSize: "22px", fontWeight: 600, color: "red" }}>
@@ -346,7 +409,11 @@ const Layout = ({ children, classNames, ...rest }) => {
       {showSourceModal && (
         <SourceOfFunds isOpen={showSourceModal} toggle={() => setShowSourceModal(false)} />
       )}
-      {showTimerCountdown && <InactivityCountDownTimer />}
+      {showTimerCountdown && (
+        <Suspense fallback={null}>
+          <InactivityCountDownTimer />
+        </Suspense>
+      )}
       <MobileSbContextProvider>
         <InactivityLogoutModal
           isOpen={showInactivityModal}
@@ -355,15 +422,17 @@ const Layout = ({ children, classNames, ...rest }) => {
         {is30DaysInfo &&
           profileCompleted === true &&
           userDetails?.account_type === "individual" && (
-            <FinancialInfoModal
-              isOpen={
-                is30DaysInfo &&
-                userDetails?.account_type === "individual" &&
-                profileCompleted === true
-              }
-              toggleOnSuccess={() => setIs30DaysInfo(!is30DaysInfo)}
-              setShowSuccessModal={setShowSuccessModal}
-            />
+            <Suspense fallback={null}>
+              <FinancialInfoModal
+                isOpen={
+                  is30DaysInfo &&
+                  userDetails?.account_type === "individual" &&
+                  profileCompleted === true
+                }
+                toggleOnSuccess={() => setIs30DaysInfo(!is30DaysInfo)}
+                setShowSuccessModal={setShowSuccessModal}
+              />
+            </Suspense>
           )}
 
         {showAdditionalFilesModal &&
@@ -371,25 +440,29 @@ const Layout = ({ children, classNames, ...rest }) => {
           !location.pathname.toLowerCase().includes("my-mastercard") &&
           !location.pathname.toLowerCase().includes("payments") &&
           !hideOptionalFilesModalHere && (
-            <AdditionalDocumentModal
-              isOpen={showAdditionalFilesModal}
-              toggle={() => setShowAdditionalModal(false)}
-            />
+            <Suspense fallback={null}>
+              <AdditionalDocumentModal
+                isOpen={showAdditionalFilesModal}
+                toggle={() => setShowAdditionalModal(false)}
+              />
+            </Suspense>
           )}
 
         {threeDaysReminderInfo &&
           profileCompleted === true &&
           userDetails?.account_type === "individual" && (
-            <FinancialInfoModal
-              isOpen={
-                threeDaysReminderInfo &&
-                userDetails?.account_type === "individual" &&
-                profileCompleted === true
-              }
-              toggle={() => set3DaysReminderInfo(!threeDaysReminderInfo)}
-              toggleOnSuccess={() => set3DaysReminderInfo(!threeDaysReminderInfo)}
-              setShowSuccessModal={setShowSuccessModal}
-            />
+            <Suspense fallback={null}>
+              <FinancialInfoModal
+                isOpen={
+                  threeDaysReminderInfo &&
+                  userDetails?.account_type === "individual" &&
+                  profileCompleted === true
+                }
+                toggle={() => set3DaysReminderInfo(!threeDaysReminderInfo)}
+                toggleOnSuccess={() => set3DaysReminderInfo(!threeDaysReminderInfo)}
+                setShowSuccessModal={setShowSuccessModal}
+              />
+            </Suspense>
           )}
         {is30Days && !threeDaysReminderInfo && profileCompleted === true && !is30DaysInfo ? (
           <ThirtyDaysModal isOpen={is30Days} toggle={() => {}} />
@@ -424,26 +497,29 @@ const Layout = ({ children, classNames, ...rest }) => {
             </div>
           </ModalBody>
         </Modal>
-        {window.innerWidth > 1000 ? (
+        {windowWidth > 1000 ? (
           <div className={styles.pc_layout}>
             {((showModal === true && typeof profileCompleted === "boolean") ||
               (showModal &&
                 showKyc &&
                 !window.location.pathname.toLowerCase().includes("/settings"))) && (
-              <ProfileCompletionModal
-                setShowModal={setShowModal}
-                profileIncompleteReason={profileIncompleteReason}
-                kyc={showKyc && profileCompleted}
-              />
+              <Suspense fallback={null}>
+                <ProfileCompletionModal
+                  setShowModal={setShowModal}
+                  profileIncompleteReason={profileIncompleteReason}
+                  kyc={showKyc && profileCompleted}
+                />
+              </Suspense>
             )}
             {showForcedFilesModal && (
-              <ForcedAdditionalFilesModal
-                files={pendingAdditionalFiles.required}
-                target={requiredFilesTarget}
-              />
+              <Suspense fallback={null}>
+                <ForcedAdditionalFilesModal
+                  files={pendingAdditionalFiles.required}
+                  target={requiredFilesTarget}
+                />
+              </Suspense>
             )}
             {canShowForcedAuthenticator && <ForcedAuthenticatorModal />}
-            <Loader />
             <TapTop />
             <div
               style={{
@@ -465,9 +541,9 @@ const Layout = ({ children, classNames, ...rest }) => {
                 <div className="page-body" style={{ marginTop: 0, paddingTop: 0 }}>
                   <TransitionGroup {...rest}>
                     <CSSTransition timeout={100} classNames={animationTheme} unmountOnExit>
-                      {/* <div> */}
-                      <Outlet />
-                      {/* </div> */}
+                      <Suspense fallback={<Loader />}>
+                        <Outlet />
+                      </Suspense>
                     </CSSTransition>
                   </TransitionGroup>
                 </div>
@@ -482,17 +558,21 @@ const Layout = ({ children, classNames, ...rest }) => {
               (showModal &&
                 showKyc &&
                 !window.location.pathname.toLowerCase().includes("/settings"))) && (
-              <ProfileCompletionModal
-                setShowModal={setShowModal}
-                profileIncompleteReason={profileIncompleteReason}
-                kyc={showKyc && profileCompleted}
-              />
+              <Suspense fallback={null}>
+                <ProfileCompletionModal
+                  setShowModal={setShowModal}
+                  profileIncompleteReason={profileIncompleteReason}
+                  kyc={showKyc && profileCompleted}
+                />
+              </Suspense>
             )}
             {showForcedFilesModal && (
-              <ForcedAdditionalFilesModal
-                files={pendingAdditionalFiles.required}
-                target={requiredFilesTarget}
-              />
+              <Suspense fallback={null}>
+                <ForcedAdditionalFilesModal
+                  files={pendingAdditionalFiles.required}
+                  target={requiredFilesTarget}
+                />
+              </Suspense>
             )}
             {canShowForcedAuthenticator && <ForcedAuthenticatorModal />}
             <div
@@ -502,18 +582,21 @@ const Layout = ({ children, classNames, ...rest }) => {
               }}
               className={styles.mobile_layout}
             >
-              <Loader />
               <MobileSidebar setShowModal={setShowModal} />
-              <Outlet />
+              <Suspense fallback={<Loader />}>
+                <Outlet />
+              </Suspense>
               <BottomNav setShowModal={setShowModal} />
             </div>
           </>
         )}
         {showAnotherLoginModal && (
-          <AnotherLoginModal
-            isOpen={showAnotherLoginModal}
-            toggle={() => setShowAnotherLoginModal(false)}
-          />
+          <Suspense fallback={null}>
+            <AnotherLoginModal
+              isOpen={showAnotherLoginModal}
+              toggle={() => setShowAnotherLoginModal(false)}
+            />
+          </Suspense>
         )}
         <PushConsentModal
           isOpen={showPushConsent}
@@ -521,7 +604,9 @@ const Layout = ({ children, classNames, ...rest }) => {
           accountId={userDetails?._id}
           authHeader={authHeader}
         />
-        <AssistantWidget />
+        <Suspense fallback={null}>
+          <AssistantWidget />
+        </Suspense>
       </MobileSbContextProvider>
     </Fragment>
   );

@@ -77,7 +77,7 @@ const useWithdrawalActions = () => {
     return ok;
   };
 
-  const saveCryptoAccount = async ({ channel, editing = null }) => {
+  const saveCryptoAccount = async ({ channel, country = null, editing = null }) => {
     const record = editing?.record ?? null;
     const cryptoList = record
       ? getCryptoList(record).map((crypto, index) =>
@@ -88,6 +88,7 @@ const useWithdrawalActions = () => {
       userDetails,
       cryptoList,
       record,
+      country,
     });
 
     const ok = await run(

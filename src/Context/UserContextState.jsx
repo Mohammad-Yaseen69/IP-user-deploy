@@ -1,13 +1,12 @@
 import { getCroppedImg, UserContext } from "./UserContext";
 import axios from "axios";
 import { decryptData } from "../Helper/EssentilaMethods/Decryption";
-import { useEffect, useState } from "react";
+import { lazy, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { publicRoutes } from "../RouteNew/Routes";
 import { useNavigate } from "react-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import questionsData from "../Components/Settings/questions.json";
-import SessionExpireModal from "../Components/SessionExpireModal";
+const SessionExpireModal = lazy(() => import("../Components/SessionExpireModal"));
 import { useSearchParams } from "react-router-dom";
 import { apiWrapper } from "../utils/Functions/apiWrapper";
 import i18n from "../i18n";
@@ -227,6 +226,11 @@ const UserState = ({ children }) => {
     }
   };
 
+  // The app shell and Layout both call verifyToken on mount, before the first
+  // response has set userDetails. Share the in-flight request so only one goes
+  // out; a second response would also re-run every [userDetails] effect.
+  const verifyTokenRequestRef = useRef(null);
+
   const verifyToken = (isFetchRequired = false) => {
     if (
       (!window.location.pathname.includes("auth") &&
@@ -234,12 +238,13 @@ const UserState = ({ children }) => {
         Object.keys(userDetails || {}).length === 0) ||
       isFetchRequired
     ) {
+      if (!isFetchRequired && verifyTokenRequestRef.current) return;
       const isAgentLoginCheck = localStorage.getItem("isAgentLogin");
       const url = isAgentLoginCheck
         ? `/api/business-agents/agents/auth/${token}`
         : `/api/account/auth/${token}`;
 
-      axios
+      const request = axios
         .get(`${import.meta.env.VITE_IP_DEV_API}${url}`)
         .then((res) => {
           const decrypted = decryptData(res.data.data);
@@ -330,7 +335,11 @@ const UserState = ({ children }) => {
               }
             }
           }
+        })
+        .finally(() => {
+          if (verifyTokenRequestRef.current === request) verifyTokenRequestRef.current = null;
         });
+      verifyTokenRequestRef.current = request;
     }
   };
 
@@ -531,7 +540,8 @@ const UserState = ({ children }) => {
       .get(`${import.meta.env.VITE_IP_DEV_API}/api/user/get-security-question`, {
         headers: authHeader,
       })
-      .then((res) => {
+      .then(async (res) => {
+        const { default: questionsData } = await import("../Components/Settings/questions.json");
         const decrypted = decryptData(res.data.data);
         const questions = decrypted.questionsList?.map((item) => {
           const question = questionsData.find(

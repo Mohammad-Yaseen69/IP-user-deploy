@@ -6,6 +6,7 @@ import convertStyles from "../../VirtualIBAN/ConvertFundsModal/convertFunds.modu
 import styles from "./sendCrypto.module.scss";
 import { getProtocolLabel } from "./cryptoProtocols";
 import { formatCurrency } from "../../../Helper/AmountFormat";
+import { boundaryAddress } from "./ReviewStep";
 
 const formatMoney = (value, currency) => {
   const amount = Number(value ?? 0);
@@ -53,7 +54,11 @@ const DoneStep = ({
         </div>
         <div className={convertStyles.doneText}>
           <h3>{t("Crypto payout submitted")}</h3>
-          <p>{t("We will update this transaction once the network confirms it.")}</p>
+          <p>
+            {payoutResult?.under_review
+              ? t(payoutResult.review_message)
+              : t("We will update this transaction once the network confirms it.")}
+          </p>
         </div>
       </div>
 
@@ -89,20 +94,23 @@ const DoneStep = ({
           </div>
         </div>
 
-        <div className={convertStyles.reviewRow} style={{ background: "#f2eeff" }}>
-          <div
-            className={convertStyles.reviewRowLabel}
-            style={{ fontWeight: 600, color: "#5926f0" }}
-          >
-            {t("Recipient receives")}
+        {/* A compliance hold reply carries no recipient amount yet. */}
+        {payoutResult?.recipient && (
+          <div className={convertStyles.reviewRow} style={{ background: "#f2eeff" }}>
+            <div
+              className={convertStyles.reviewRowLabel}
+              style={{ fontWeight: 600, color: "#5926f0" }}
+            >
+              {t("Recipient receives")}
+            </div>
+            <div
+              className={convertStyles.reviewRowValue}
+              style={{ fontWeight: 700, color: "#5926f0", fontSize: "16px" }}
+            >
+              {formatMoney(payoutResult?.recipient?.value, recipientCurrency)}
+            </div>
           </div>
-          <div
-            className={convertStyles.reviewRowValue}
-            style={{ fontWeight: 700, color: "#5926f0", fontSize: "16px" }}
-          >
-            {formatMoney(payoutResult?.recipient?.value, recipientCurrency)}
-          </div>
-        </div>
+        )}
 
         <div className={convertStyles.reviewRow}>
           <div className={convertStyles.reviewRowLabel}>{t("Beneficiary")}</div>
@@ -118,7 +126,9 @@ const DoneStep = ({
 
         <div className={convertStyles.reviewRow}>
           <div className={convertStyles.reviewRowLabel}>{t("Destination address")}</div>
-          <div className={`${convertStyles.reviewRowValue} ${styles.monoValue}`}>{address}</div>
+          <div className={`${convertStyles.reviewRowValue} ${styles.monoValue}`}>
+            {boundaryAddress(address)}
+          </div>
         </div>
 
         {payoutResult?.new_balance !== undefined && (

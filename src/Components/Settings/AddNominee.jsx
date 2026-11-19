@@ -16,9 +16,10 @@ import PhoneInput from "../PhoneInput";
 import SuccessModal from "../User/UserSettings/SuccessModal";
 import styles from "./styles/Nominee.module.scss";
 import { Camera, CaretDown, Warning } from "./Icons";
+import { getMaxDate } from "../../utils/Functions/validations";
 
 const currentDate = new Date();
-const maxDate = currentDate;
+const maxDate = getMaxDate();
 const minDate = new Date(
   currentDate.getFullYear() - 100,
   currentDate.getMonth(),
@@ -140,13 +141,12 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
 
   const handleDateChange = (date) => {
     if (date) {
-      const selected = new Date(date);
-      if (selected <= maxDate && selected >= minDate) {
-        setDob(date.format("YYYY-MM-DD"));
-      } else if (selected > maxDate) {
+      if (date.isAfter(maxDate, "day")) {
         toast.error(t("Future dates are not allowed."));
-      } else {
+      } else if (date.isBefore(minDate, "day")) {
         toast.error(t("Date cannot be more than 150 years old."));
+      } else {
+        setDob(date.format("YYYY-MM-DD"));
       }
     } else {
       setDob("");

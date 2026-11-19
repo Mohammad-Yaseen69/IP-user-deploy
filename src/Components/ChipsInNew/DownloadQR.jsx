@@ -5,7 +5,6 @@ import { useState } from "react";
 import sticker from "./files/qr.svg";
 import poster from "./files/poster.svg";
 import download from "./download.svg";
-import { Link } from "react-router-dom";
 import QrPoster from "../DownloadQrPage/QrPoster";
 
 const DownloadQR = ({ isOpen, toggle, qrCode, wallet }) => {

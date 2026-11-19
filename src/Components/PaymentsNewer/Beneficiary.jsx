@@ -1,12 +1,10 @@
-import { Check, ChevronLeft, ChevronRight, HelpCircle, Search, X, XCircle } from "react-feather";
+import { Check, ChevronLeft, ChevronRight, HelpCircle, Search, XCircle } from "react-feather";
 import { Badge, Button, Card, CardBody, Input } from "reactstrap";
-import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import BeneficiaryCard from "./BeneficiaryCard";
 import InviteFriendModal from "./InviteFriendModal";
 import { useLocation, useNavigate } from "react-router";
-import AddCSVModal from "../Payments/CSVModal";
 import { UserContext } from "../../Context/UserContext";
 import axios from "axios";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";

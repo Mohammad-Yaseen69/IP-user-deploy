@@ -35,9 +35,11 @@
   align-items: center;
   gap: 10px;
   direction: ltr;
+  pointer-events: none;
 }
 
 .launcherLabel {
+  pointer-events: auto;
   padding: 8px 13px;
   border-radius: 999px;
   background: #1d1b28;
@@ -53,6 +55,7 @@
 
 /* Transparent hit area: the orb (below) is drawn over it while docked. */
 .bubble {
+  pointer-events: auto;
   width: 56px;
   height: 56px;
   padding: 0;
@@ -200,7 +203,7 @@
 .panel {
   width: 400px;
   height: 600px;
-  max-height: calc(100vh - 140px);
+  max-height: calc(100dvh - 140px);
   background: var(--assistant-surface);
   border: 1px solid var(--assistant-border);
   border-radius: 18px;
@@ -217,7 +220,7 @@
 @media (max-width: 480px) {
   .panel {
     width: calc(100vw - 32px);
-    height: calc(100vh - 190px);
+    height: min(560px, calc(100dvh - 190px));
   }
 }
 

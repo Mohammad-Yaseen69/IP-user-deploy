@@ -4,7 +4,6 @@ import share from "../PaymentsNewer/files/PaymentsNewFiles/share.png";
 // import { Download, Share } from "react-feather";
 import download from "./download_b.svg";
 import styles from "./styles/QRCard.module.scss";
-import qrImg from "./img.jpeg";
 import { useState } from "react";
 import SocialModal from "../ShareBtn/SocialModal";
 

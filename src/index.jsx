@@ -1,23 +1,13 @@
-import React from "react";
 import { createRoot } from "react-dom/client";
 import "./index.scss";
-import App from "./App";
-// import reportWebVitals from './reportWebVitals';
-import "./i18n";
+import { i18nReady } from "./i18n";
 
 // import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 // libs css
-import "swiper/swiper-bundle.css";
-import "react-date-range/dist/styles.css";
-import "react-date-range/dist/theme/default.css";
-import "react-phone-input-2/lib/style.css";
-import "./Components/PaymentsNewer/styles/i_transfer.css";
-import "./Components/PaymentsNewer/styles/ConfirmContainer.css";
-import "./Components/PaymentsNewer/styles/Timeline.css";
-import "./Components/AddFunds/styles/creditcard.css";
 import { BrowserRouter } from "react-router-dom";
 import * as Sentry from "@sentry/react";
+import { preloadDashboard } from "./Components/HomeNewUpdated/dashboardChunks";
 
 window.addEventListener("error", (e) => {
   if (
@@ -37,31 +27,22 @@ if (import.meta.env.NODE_ENV === "development") {
 Sentry.init({
   dsn: "https://448eafaae4776c67a2f5831cf64a23e5@o4509485673349120.ingest.us.sentry.io/4509485675118592",
   sendDefaultPii: true,
-  integrations: [
-    Sentry.browserTracingIntegration(),
-    Sentry.replayIntegration({
-      maskAllText: false,
-      blockAllMedia: false,
-    }),
-    Sentry.browserProfilingIntegration(),
-  ],
-  tracesSampleRate: 1.0,
+  integrations: [Sentry.browserTracingIntegration()],
+  tracesSampleRate: 0.2,
   tracePropagationTargets: [
     "localhost",
     "https://my.insta-pay.ch",
     "https://ip-user-deploy-e57p.vercel.app",
   ],
-  replaysSessionSampleRate: 0.1,
+  replaysSessionSampleRate: 0.5,
   replaysOnErrorSampleRate: 1.0,
   environment: import.meta.env.DEV ? "development" : "production",
   beforeSend(event) {
-    console.log(event, "Sentry Event");
     if (import.meta.env.DEV) {
       return null;
     }
     return event;
   },
-  profilesSampleRate: 1.0,
   defaultIntegrations: false,
   enableLogs: true,
 });
@@ -75,13 +56,112 @@ if (!import.meta.env.DEV) {
 const container = document.getElementById("root");
 const root = createRoot(container);
 
-root.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
-  document.getElementById("root"),
-);
+const preloadAuthPage = () => {
+  const isAuthPage = /^\/(login|signup)(\/|$)/i.test(window.location.pathname);
+  if (isAuthPage && !localStorage.getItem("token")) {
+    import("./Components/Auth").catch(() => {});
+    if (!window.location.href.includes("login")) import("./Components/Auth/Signup").catch(() => {});
+  }
+};
 
+const preloadDashboardRoute = () => {
+  let hasToken = false;
+  try {
+    hasToken = !!localStorage.getItem("token");
+  } catch {
+    return;
+  }
+  if (hasToken && window.location.pathname === "/") preloadDashboard();
+};
+
+const loadSentryReplay = () => {
+  import("./Helper/sentryReplay")
+    .then(({ replayIntegration }) => {
+      Sentry.addIntegration(
+        replayIntegration({
+          maskAllText: false,
+          blockAllMedia: false,
+        }),
+      );
+    })
+    .catch(() => {});
+};
+
+const REPLAY_COHORT_KEY = "ip-sentry-replay-cohort";
+const REPLAY_COHORT_RATE = 0.2;
+
+const isInReplayCohort = () => {
+  try {
+    const stored = sessionStorage.getItem(REPLAY_COHORT_KEY);
+    if (stored !== null) return stored === "1";
+    const inCohort = Math.random() < REPLAY_COHORT_RATE;
+    sessionStorage.setItem(REPLAY_COHORT_KEY, inCohort ? "1" : "0");
+    return inCohort;
+  } catch {
+    return Math.random() < REPLAY_COHORT_RATE;
+  }
+};
+
+const scheduleSentryReplay = () => {
+  if (!isInReplayCohort()) return;
+  const loadWhenIdle = () => {
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(loadSentryReplay);
+    } else {
+      setTimeout(loadSentryReplay, 2000);
+    }
+  };
+  if (document.readyState === "complete") {
+    loadWhenIdle();
+  } else {
+    window.addEventListener("load", loadWhenIdle, { once: true });
+  }
+};
+
+const BOOTSTRAP_RETRY_KEY = "ip-bootstrap-retried";
+
+const claimBootstrapRetry = () => {
+  try {
+    if (sessionStorage.getItem(BOOTSTRAP_RETRY_KEY)) return false;
+    sessionStorage.setItem(BOOTSTRAP_RETRY_KEY, "1");
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const clearBootstrapRetry = () => {
+  try {
+    sessionStorage.removeItem(BOOTSTRAP_RETRY_KEY);
+  } catch {
+    return;
+  }
+};
+
+async function bootstrap() {
+  try {
+    preloadAuthPage();
+    preloadDashboardRoute();
+    const [{ default: App }] = await Promise.all([import("./App"), i18nReady]);
+
+    root.render(
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>,
+    );
+    clearBootstrapRetry();
+  } catch (error) {
+    Sentry.captureException(error);
+    if (claimBootstrapRetry()) {
+      window.location.reload();
+      return;
+    }
+  } finally {
+    scheduleSentryReplay();
+  }
+}
+
+bootstrap();
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://cra.link/PWA

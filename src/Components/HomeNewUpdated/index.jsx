@@ -4,7 +4,6 @@ import styles from "./styles/index.module.scss";
 import { useTranslation } from "react-i18next";
 import { BsBriefcase, BsCheckLg, BsChevronRight } from "react-icons/bs";
 import { ChevronRight } from "react-feather";
-import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
 // import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 import { useMoneyInOut } from "../WalletsNew/MoneyInOut/useMoneyInOut";
@@ -38,6 +37,7 @@ import crown from "./files/crown.svg";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import TopRight from "../topRight";
 import { BalanceVisibilityProvider } from "../../Context/BalanceVisibilityContext";
+import axios from "axios";
 
 const HomeNewUpdated = () => {
   const [currenciesData, setCurrenciesData] = useState([

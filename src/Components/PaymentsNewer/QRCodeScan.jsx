@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Card, CardBody, Input, Modal, ModalBody, ModalHeader } from "reactstrap";
 import QrReader from "react-qr-reader";
 import invite from "./files/invite.png";

@@ -6,6 +6,16 @@ import { sentryVitePlugin } from "@sentry/vite-plugin";
 export default defineConfig({
   plugins: [
     react(),
+    {
+      name: "drop-identity-en-translations",
+      apply: "build",
+      enforce: "pre",
+      transform(code, id) {
+        if (!/[\\/]src[\\/]translations[\\/]en\.json(\?.*)?$/.test(id)) return null;
+        const entries = Object.entries(JSON.parse(code)).filter(([key, value]) => key !== value);
+        return { code: JSON.stringify(Object.fromEntries(entries)), map: null };
+      },
+    },
     visualizer({
       open: true,
       gzipSize: true,
@@ -73,11 +83,18 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          mui: ["@mui/material", "@mui/x-date-pickers"],
-          charts: ["apexcharts", "react-apexcharts"],
-          pdf: ["jspdf", "jspdf-autotable"],
-          excel: ["xlsx"],
+        manualChunks(id) {
+          if (
+            id === "\0commonjsHelpers.js" ||
+            id === "\0vite/preload-helper.js" ||
+            /[\\/]node_modules[\\/](react|react-dom|scheduler|prop-types|object-assign|@popperjs[\\/]core|@babel[\\/]runtime|dom-helpers|react-transition-group|hoist-non-react-statics)[\\/]/.test(
+              id,
+            )
+          )
+            return "vendor";
+          if (/[\\/]node_modules[\\/](react-)?apexcharts[\\/]/.test(id)) return "charts";
+          if (/[\\/]node_modules[\\/]jspdf(-autotable)?[\\/]/.test(id)) return "pdf";
+          if (/[\\/]node_modules[\\/]xlsx[\\/]/.test(id)) return "excel";
         },
       },
     },

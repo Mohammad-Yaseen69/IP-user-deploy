@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Edit, Save, Trash2, XCircle } from "react-feather";
 import { Input } from "reactstrap";
 import PaymentsConfirmationModal from "./PaymentsConfirmationModal";

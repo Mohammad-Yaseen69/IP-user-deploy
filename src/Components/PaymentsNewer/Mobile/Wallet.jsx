@@ -3,7 +3,7 @@ import styles from "./styles/International.module.css";
 import { useEffect, useState } from "react";
 import { ChevronLeft, X } from "react-feather";
 import recent from "../files/recent.svg";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import WalletToWalletFlow from "../WalletToWalletFlow";
 
 const WalletTransferMobile = ({
