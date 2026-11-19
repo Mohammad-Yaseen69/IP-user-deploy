@@ -12,6 +12,7 @@ import useStepValidation, { required } from "../../../../hooks/useStepValidation
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import useCountryStates from "../../Beneficiaries/AddBeneficiaryFlowV2/useCountryStates";
 
 const formatDateForInput = (val) => {
   if (!val) return "";
@@ -52,14 +53,6 @@ const formatDateForInput = (val) => {
   return "";
 };
 
-const COMPANY_RULES = {
-  countryOfIncorporation: required.text("countryOfIncorporation"),
-  registrationNumber: required.text("registrationNumber"),
-  legalName: required.text("legalName"),
-  registeredAddress: required.list("registeredAddress"),
-  dateOfIncorporation: required.list("dateOfIncorporation"),
-};
-
 const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentStep }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
@@ -82,8 +75,26 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
     taxNumber: userDetails?.company?.tax_id || data.taxNumber || "",
     mainContact: data.mainContact || "",
     agent: agentDefault,
+    idExpiryDate: data?.idExpiryDate || "",
   });
+
+  const COMPANY_RULES = {
+    countryOfIncorporation: required.text("countryOfIncorporation"),
+    registrationNumber: required.text("registrationNumber"),
+    legalName: required.text("legalName"),
+    registeredAddress: required.list("registeredAddress"),
+    dateOfIncorporation: required.list("dateOfIncorporation"),
+    ...(data.isRhub && {
+      idExpiryDate: required.list("idExpiryDate"),
+      state: required.list("state"),
+    }),
+  };
+
   const { err, validate } = useStepValidation(form, COMPANY_RULES);
+
+  const { data: states = [], isLoading: statesLoading } = useCountryStates(
+    userDetails?.country_iso_code,
+  );
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
@@ -105,13 +116,15 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
     onChange?.(form);
   }, [form]);
 
-  const isFormValid = Boolean(
-    form.countryOfIncorporation?.trim() &&
-    form.registrationNumber?.trim() &&
-    form.legalName?.trim() &&
-    form.registeredAddress?.trim() &&
-    form.dateOfIncorporation?.trim(),
-  );
+  const isFormValid =
+    (!data.isRhub || (!!form.idExpiryDate?.trim() && !!form.state?.trim())) &&
+    Boolean(
+      form.countryOfIncorporation?.trim() &&
+      form.registrationNumber?.trim() &&
+      form.legalName?.trim() &&
+      form.registeredAddress?.trim() &&
+      form.dateOfIncorporation?.trim(),
+    );
 
   const set = (key) => (e) => {
     let value = e.target.value;
@@ -140,10 +153,10 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
     { num: "06", label: t("Review"), active: false, key: "review" },
   ];
 
-  const DateField = ({ isMobile }) => (
+  const DateField = ({ isMobile, field = "dateOfIncorporation" }) => (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
-        value={form?.dateOfIncorporation ? dayjs(form?.dateOfIncorporation) : null}
+        value={form?.[field] ? dayjs(form?.[field]) : null}
         sx={{
           background: isMobile ? "#fff" : "#FAFBFF",
           "& input": {
@@ -159,6 +172,7 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
           "& fieldset": {
             borderRadius: isMobile ? "12px" : "6px",
             border: "1.5px solid #E2E8F0",
+            ...err(field),
           },
           "& .Mui-focused fieldset": {
             borderColor: "#4A32E3 !important",
@@ -172,13 +186,17 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
         }}
         disableFuture={true}
         onChange={(value) =>
-          set("dateOfIncorporation")({
+          set(field)({
             target: { value: dayjs(value).format("YYYY-MM-DD") },
           })
         }
         renderInput={(params) => <input {...params} />}
-        disabled={Boolean(userDetails?.company?.date_of_incorporation)}
-        readOnly={Boolean(userDetails?.company?.date_of_incorporation)}
+        disabled={
+          field === "dateOfIncorporation" && Boolean(userDetails?.company?.date_of_incorporation)
+        }
+        readOnly={
+          field === "dateOfIncorporation" && Boolean(userDetails?.company?.date_of_incorporation)
+        }
       />
     </LocalizationProvider>
   );
@@ -448,6 +466,39 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
                   readOnly
                 />
               </div>
+              {data.isRhub && (
+                <>
+                  <div className={styles.inputGroup}>
+                    <label className={styles.inputLabel}>{t("ID EXPIRY DATE")}</label>
+                    <DateField field="idExpiryDate" />
+                  </div>
+                  <div className={styles.inputGroup}>
+                    <label className={styles.inputLabel}>
+                      {t("State")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
+                    </label>
+
+                    <select
+                      className={styles.textInput}
+                      style={{
+                        height: "auto",
+                        padding: "12px",
+                        ...err("state"),
+                      }}
+                      value={form.state}
+                      onChange={set("state")}
+                    >
+                      <option value="">
+                        {statesLoading ? t("Loading...") : t("--Select-State--")}
+                      </option>
+                      {states.map((item) => (
+                        <option key={item.value} value={item.value}>
+                          {item.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

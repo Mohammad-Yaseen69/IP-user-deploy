@@ -26,12 +26,12 @@ import Pricing from "./components/Pricing";
 import ReviewStep from "./components/ReviewStep";
 import StatusScreen from "./components/StatusScreen";
 
-import { Modal, ModalBody, Spinner } from "reactstrap";
+import { Modal, ModalBody, ModalFooter, ModalHeader, Spinner } from "reactstrap";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
 import useSendOtp from "../../../hooks/GeneralUse/useSendOtp";
 import OTPConfirmation from "../../../Common/Component/OtpVerification";
-import { useMediaQuery } from "@mui/material";
+import { FormControlLabel, FormLabel, Radio, RadioGroup, useMediaQuery } from "@mui/material";
 import useDraft from "../../../hooks/GeneralUse/useDraft";
 import {
   BUSINESS_PROFILE_SCOPE,
@@ -42,6 +42,7 @@ import {
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
 import { useRiskPreview } from "../../../hooks/useRiskPreview";
 import { RiskPreviewContext } from "./riskPreviewContext";
+import MissingInfoModal from "../../MyMasterCard/MissingInfoModal";
 
 const STEPS_BUSINESS = [
   "landing",
@@ -91,6 +92,7 @@ const initialState = {
   step: "landing",
   userType: "business",
   status: "submitted",
+  provider: "bvnk",
   account: { email: "", otp: "" },
   company: {
     legalName: "",
@@ -105,6 +107,8 @@ const initialState = {
     taxNumber: "",
     mainContact: "",
     agent: "",
+    idExpiryDate: "",
+    state: "",
   },
   activity: {
     industry: "",
@@ -167,6 +171,8 @@ function onboardingReducer(state, action) {
           files: { ...state.documents.files, ...action.payload.files },
         },
       };
+    case "SET_PROVIDER":
+      return { ...state, provider: action.payload };
     case "RESET_ALL":
       return initialState;
     default:
@@ -188,14 +194,17 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
   const [otpToken, setOtpToken] = useState("");
   const [codeType, setCodeType] = useState("sms");
   const [otpMethods, setOtpMethods] = useState(null);
+  const [providerModal, setProviderModal] = useState(false);
   const [loadingStatus, setLoadingStatus] = useState(true);
   const [statusCheckedFor, setStatusCheckedFor] = useState(null);
   const [draftHydrated, setDraftHydrated] = useState(false);
+  const [missingPhoneModal, setMissingPhoneModal] = useState(false);
   const hydratedForRef = useRef(null);
 
   const draftEnabled = Boolean(userDetails?._id) && userDetails?.account_type === "business";
   const profileDraft = useDraft(BUSINESS_PROFILE_SCOPE, { enabled: draftEnabled });
   const ibanDraft = useDraft(IBAN_ONBOARDING_SCOPE, { enabled: draftEnabled });
+  const isRhub = state.provider === "rhub";
 
   const checkRequestStatus = async () => {
     if (!userDetails?._id) {
@@ -572,6 +581,19 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     [riskPreview.data, riskPreview.isFetching],
   );
 
+  const toggleProvideModal = () => {
+    setProviderModal((prev) => !prev);
+  };
+
+  const handleNext = () => {
+    if (!userDetails?.phone && isRhub) {
+      setMissingPhoneModal(true);
+      return;
+    }
+    handleTypeSelect("business");
+    setProviderModal(false);
+  };
+
   if (loadingStatus || (draftEnabled && !draftHydrated)) {
     return (
       <div
@@ -610,10 +632,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
             </p>
             <div className={styles.buttoncont}>
               {canCreateIban && (
-                <button
-                  className={styles.buttonGroup1}
-                  onClick={() => handleTypeSelect("business")}
-                >
+                <button className={styles.buttonGroup1} onClick={toggleProvideModal}>
                   {t("Request IBAN Activation")} <ArrowRight size={16} />
                 </button>
               )}
@@ -642,7 +661,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
           </div>
 
           <div className={styles.footerContainer}>
-            <button className={styles.buttonGroup1} onClick={() => handleTypeSelect("business")}>
+            <button className={styles.buttonGroup1} onClick={toggleProvideModal}>
               <span>{t("Request IBAN Activation")}</span>
               <div className={styles.forwardBtnIcon}>
                 <ArrowRight size={18} />
@@ -708,7 +727,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
           onBack={goBack}
           onChange={(form) => dispatch({ type: "UPDATE_COMPANY", payload: form })}
           userType={state.userType}
-          data={state.company}
+          data={{ ...state.company, idExpiryDate: state.idExpiryDate, isRhub }}
           currentStep={state.step}
         />
       )}
@@ -841,6 +860,45 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
           />
         </ModalBody>
       </Modal>
+      {providerModal && (
+        <Modal
+          style={{ maxWidth: isMobile ? "90%" : "auto" }}
+          isOpen={providerModal}
+          toggle={toggleProvideModal}
+          centered
+        >
+          <ModalHeader>{t("IBAN Type")}</ModalHeader>
+          <ModalBody>
+            <FormLabel>{t("Select IBAN type")}</FormLabel>
+            <RadioGroup
+              onChange={(_, val) => dispatch({ type: "SET_PROVIDER", payload: val })}
+              row
+              defaultValue="bvnk"
+              name="radio-buttons-group"
+            >
+              <FormControlLabel value="bvnk" control={<Radio />} label={t("EUR")} />
+              <FormControlLabel value="rhub" control={<Radio />} label={t("USD")} />
+            </RadioGroup>
+          </ModalBody>
+          <ModalFooter>
+            <button className={styles.secondaryBtn} onClick={toggleProvideModal}>
+              {t("Close")}
+            </button>
+            <button className={styles.primaryBtn} onClick={handleNext}>
+              {t("Next")}
+            </button>
+          </ModalFooter>
+        </Modal>
+      )}
+      {missingPhoneModal && (
+        <MissingInfoModal
+          isOpen={missingPhoneModal}
+          toggle={() => setMissingPhoneModal(false)}
+          missingType="phone"
+          onSuccess={handleNext}
+          description={"To proceed with your IBAN activation, please provide your phone."}
+        />
+      )}
     </RiskPreviewContext.Provider>
   );
 });
