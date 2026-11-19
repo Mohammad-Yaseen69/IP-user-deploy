@@ -16,6 +16,7 @@
   background: #fff;
   transition: align-items 0s;
   height: 94.5%;
+  margin-top: 1rem;
 }
 
 .wrapper.expanded {

@@ -20,8 +20,10 @@ const Card = ({
   variant = "default",
   className = "",
   style,
+  hideBalance = false,
 }) => {
   const [copied, setCopied] = useState(false);
+  const displayAmount = (value) => (hideBalance ? "*******" : formatCurrency(value, true));
   const { t } = useTranslation();
 
   const showSetDefault =
@@ -49,7 +51,7 @@ const Card = ({
             <span>{t("Total Balance")}:</span>
             <h5>
               {wallet.currency?.code}{" "}
-              {formatCurrency(wallet.balance.available + wallet.balance.reserved, true)}
+              {displayAmount(wallet.balance.available + wallet.balance.reserved)}
             </h5>
           </div>
 
@@ -58,7 +60,7 @@ const Card = ({
               <span>{t("Available balance")}:</span>
               <h5>
                 {wallet.currency?.code}&nbsp;
-                {formatCurrency(wallet.balance.available, true)}
+                {displayAmount(wallet.balance.available)}
               </h5>
             </div>
 
@@ -66,7 +68,7 @@ const Card = ({
               <span>{t("Blocked balance")}:</span>
               <h5>
                 {wallet.currency?.code}&nbsp;
-                {formatCurrency(wallet.balance.reserved, true)}
+                {displayAmount(wallet.balance.reserved)}
               </h5>
             </div>
           </div>
@@ -152,7 +154,7 @@ const Card = ({
           </div>
           <div className={styles.walletAmount}>
             <h3>
-              {wallet?.currency?.symbol}&nbsp;{formatCurrency(wallet?.balance?.available, true)}
+              {wallet?.currency?.symbol}&nbsp;{displayAmount(wallet?.balance?.available)}
             </h3>
           </div>
           <div className={styles.wallet_details}>

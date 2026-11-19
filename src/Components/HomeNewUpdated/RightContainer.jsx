@@ -22,9 +22,11 @@ import CardD from "../WalletsNew/Card";
 import axios from "axios";
 import { getLimits } from "../WalletsNew";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useBalanceVisibility } from "../../Context/BalanceVisibilityContext";
 
 const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessModal }) => {
   const [activeDot, setActiveDot] = useState(0);
+  const { hidden: hideBalance } = useBalanceVisibility();
   const { t } = useTranslation();
   const {
     userWallets: allWallets,
@@ -158,6 +160,7 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
                       data={index === activeDot ? limits : null}
                       index={index}
                       current={activeDot}
+                      hideBalance={hideBalance}
                     />
                   </SwiperSlide>
                 ))

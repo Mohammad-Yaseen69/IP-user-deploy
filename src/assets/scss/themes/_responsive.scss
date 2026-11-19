@@ -891,26 +891,6 @@
         div.sidebar-wrapper {
           width: 220px;
 
-          &.close_icon {
-            &:hover {
-              width: 255px;
-
-              .sidebar-main {
-                .sidebar-links {
-                  .simplebar-wrapper {
-                    .simplebar-mask {
-                      .simplebar-content-wrapper {
-                        .simplebar-content {
-                          padding: 24px 12px !important;
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-
           &:not(.close_icon) {
             .sidebar-main {
               .sidebar-links {
