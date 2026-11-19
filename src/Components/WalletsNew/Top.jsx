@@ -330,10 +330,11 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
               effect={"cards"}
               grabCursor={true}
               modules={[EffectCards]}
+              // Keep Swiper's default perSlideOffset: at 0 it writes an invalid `--0.75%` offset for the
+              // previous card, which then stays frozen where the drag left it. The stack is clipped in CSS.
               cardsEffect={{
                 rotate: false,
                 slideShadows: false,
-                perSlideOffset: 0,
               }}
               className={`mySwiper ${r.swiper}`}
               onSwiper={(swiper) => {
