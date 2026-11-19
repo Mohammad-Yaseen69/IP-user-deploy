@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   addSavedBill,
   confirmBillPayment,
@@ -82,13 +82,16 @@ export const useBillPaymentStatus = (referenceId) =>
 
 export const useBillQuote = () => useMutation({ mutationFn: getBillQuote });
 
-export const useBillQuotePreview = (params, enabled) =>
-  useQuery({
-    queryKey: ["bill-payment", "quote-preview", params],
-    queryFn: () => getBillQuote(params),
-    enabled,
-    staleTime: 60 * 1000,
-    retry: false,
+// One quote per wallet, so each wallet's total (fee included) is known before it can be picked.
+export const useBillWalletQuotes = (params, walletIds, enabled) =>
+  useQueries({
+    queries: walletIds.map((walletId) => ({
+      queryKey: ["bill-payment", "quote-preview", { ...params, walletId }],
+      queryFn: () => getBillQuote({ ...params, walletId }),
+      enabled,
+      staleTime: 60 * 1000,
+      retry: false,
+    })),
   });
 
 export const useConfirmBillPayment = () => {

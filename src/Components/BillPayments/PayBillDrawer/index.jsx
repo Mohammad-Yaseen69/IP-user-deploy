@@ -45,6 +45,7 @@ const PayBillDrawer = ({
     initialCountry,
     initialBiller,
     initialWallet,
+    wallets: isAdding ? [] : wallets,
     savedBill,
     onSaved: onClose,
   });
