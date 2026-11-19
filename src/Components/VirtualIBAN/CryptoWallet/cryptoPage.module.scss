@@ -1547,3 +1547,17 @@
     background: linear-gradient(134deg, #4a1fcc 18%, #3d2288 91%);
   }
 }
+
+.railMenuSearch {
+  position: sticky;
+  top: -6px;
+  width: 100%;
+  margin-bottom: 4px;
+  padding: 8px 10px;
+  border: 1px solid var(--cw-border);
+  border-radius: 8px;
+  background: var(--cw-surface);
+  font-size: 13px;
+  color: var(--cw-text);
+  outline: none;
+}

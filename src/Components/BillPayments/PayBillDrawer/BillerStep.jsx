@@ -69,7 +69,8 @@ const BillerStep = ({ flow, countries, isAdding }) => {
             options={countryOptions}
             onChange={(option) => flow.selectCountry(option.country)}
             placeholder={t("Choose a country")}
-            emptyText={t("Bill payment is not available in any country yet.")}
+            searchPlaceholder={t("Search countries")}
+            emptyText={t("No countries found.")}
           />
         </div>
 

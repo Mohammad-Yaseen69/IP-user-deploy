@@ -31,6 +31,7 @@ export const UnpaidCard = ({ bills, onPayBill, onAddBill }) => {
   const { t } = useTranslation();
   const summary = summariseUnpaid(bills);
   const { month } = summary;
+  const [main = { total: 0 }, ...others] = summary.totals;
 
   return (
     <div className={styles.card}>
@@ -38,9 +39,14 @@ export const UnpaidCard = ({ bills, onPayBill, onAddBill }) => {
         <span className={styles.eyebrow}>{t("Unpaid bills")}</span>
       </div>
       <div className={styles.bigAmount}>
-        {formatWalletAmount(summary.total)}
-        <small>{summary.currency}</small>
+        {formatWalletAmount(main.total)}
+        <small>{main.currency}</small>
       </div>
+      {others.length > 0 && (
+        <div className={styles.muted}>
+          {others.map((item) => `+ ${formatWalletAmount(item.total)} ${item.currency}`).join(" · ")}
+        </div>
+      )}
       <div className={styles.muted}>
         {summary.count
           ? [

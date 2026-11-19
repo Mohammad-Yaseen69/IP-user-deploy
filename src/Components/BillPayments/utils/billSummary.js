@@ -1,17 +1,16 @@
-// shortcut: totals only the earliest unpaid bill's currency, convert to one currency when users save bills in several
+// Bills in different currencies are never added together: one total per currency, earliest due first.
 export const summariseUnpaid = (bills, now = new Date()) => {
   const due = bills
     .filter((bill) => bill.status === "due")
     .sort((a, b) => new Date(a.statement.due_date || 0) - new Date(b.statement.due_date || 0));
-  const currency = due[0]?.statement.balance.currency;
-  const total = due
-    .filter((bill) => bill.statement.balance.currency === currency)
-    .reduce((sum, bill) => sum + bill.statement.balance.value, 0);
+  const totals = {};
+  due.forEach(({ statement: { balance } }) => {
+    totals[balance.currency] = (totals[balance.currency] || 0) + balance.value;
+  });
 
   return {
     count: due.length,
-    total,
-    currency,
+    totals: Object.entries(totals).map(([currency, total]) => ({ currency, total })),
     nextDue: due[0]?.statement.due_date,
     month: buildMonthTimeline(bills, now),
   };

@@ -647,7 +647,12 @@
 
 .walletOptionActive {
   border-color: var(--cw-accent);
-  box-shadow: 0 0 0 2px var(--cw-accent-soft);
+  box-shadow: inset 0 0 0 1px var(--cw-accent);
+}
+
+.walletCheck {
+  flex-shrink: 0;
+  color: var(--cw-accent);
 }
 
 .error {
@@ -736,6 +741,15 @@
 
   .status {
     display: none;
+  }
+
+  // the global drawer rule fixes every right drawer at 35%, which is unusable on a phone
+  .drawerPaper:global(.MuiDrawer-paperAnchorRight) {
+    width: calc(100% - 20px) !important;
+  }
+
+  .drawerFoot {
+    flex-wrap: wrap;
   }
 }
 
