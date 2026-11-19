@@ -24,7 +24,7 @@ const getAuthHeader = () => ({
   source: "user",
 });
 
-export const apiWrapper = async ({
+const request = async ({
   endpoint,
   payload = {},
   method = METHODS.GET,
@@ -116,5 +116,19 @@ export const apiWrapper = async ({
     }
     console.error("API Wrapper Error:", error);
     throw error;
+  }
+};
+
+export const isNetworkError = (error) =>
+  !!error?.isAxiosError && (!error.response || [502, 503, 504].includes(error.response.status));
+
+export const apiWrapper = async ({ retries = 0, ...options }) => {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await request(options);
+    } catch (error) {
+      if (attempt >= retries || !isNetworkError(error)) throw error;
+      await new Promise((resolve) => setTimeout(resolve, 1000 * 2 ** attempt));
+    }
   }
 };

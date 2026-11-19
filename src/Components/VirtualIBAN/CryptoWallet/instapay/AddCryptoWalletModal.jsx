@@ -72,6 +72,7 @@ const AddCryptoWalletModal = ({ isOpen, toggle }) => {
         endpoint: "/api/currency/get-currencies",
         method: "GET",
         isDecrypted: true,
+        retries: 2,
       });
       const currency = (list?.currencies || []).find((item) => item?.code === asset.code);
       if (!currency?._id) throw new Error(t("This currency is not available right now."));
