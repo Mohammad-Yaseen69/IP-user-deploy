@@ -1,4 +1,3 @@
-import eSimBanner from "./files/eSimBanner.svg";
 import styles from "./styles/steptwo.module.scss";
 import styles2 from "../AirtimeFlow/styles/steptwo.module.css";
 import info from "./files/info.svg";

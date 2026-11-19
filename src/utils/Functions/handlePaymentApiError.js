@@ -1,4 +1,4 @@
-import { apiErrorMessage } from "../../Components/PaymentsNewer/InternationalFlow";
+import { apiErrorMessage } from "../../Components/PaymentsNewer/InternationalFlow/apiErrorMessage";
 import { LimitsErrorMessage } from "./paymentLimits";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { clearAuthStorage, getLoginPath } from "./loginPage";
@@ -13,6 +13,11 @@ export const handlePaymentApiError = ({
 }) => {
   try {
     const decrypted = decryptData(error?.response?.data?.data);
+
+    if (decrypted?.message && keepVerbatim(decrypted.message)) {
+      setError?.(decrypted.message);
+      return decrypted.message;
+    }
 
     const limitError = LimitsErrorMessage(
       decrypted?.code ?? decrypted?.message,

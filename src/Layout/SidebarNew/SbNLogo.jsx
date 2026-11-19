@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Grid } from "react-feather";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import CustomizerContext from "../../Helper/Customizer";
 import cubaimg from "../../assets/images/logo/logo.svg";

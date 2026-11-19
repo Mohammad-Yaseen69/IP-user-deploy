@@ -1,5 +1,5 @@
 import "react-phone-input-2/lib/style.css";
-import React, { lazy, useLayoutEffect, useState } from "react";
+import { lazy, useLayoutEffect, useState } from "react";
 import Routers from "./RouteNew";
 import CustomizerProvider from "./Helper/Customizer/CustomizerProvider";
 import AnimationThemeProvider from "./Helper/AnimationTheme/AnimationThemeProvider";
@@ -50,7 +50,7 @@ const App = () => {
         ? crypto.randomUUID()
         : `${Date.now()}-${Math.random()}`;
     let appInUse = false;
-    const paths = ["/profile/", "/pay/", "/invoice"];
+    const paths = ["/profile/", "/pay/", "/invoice", "/paytently/"];
 
     const closeWindow = (e) => {
       try {

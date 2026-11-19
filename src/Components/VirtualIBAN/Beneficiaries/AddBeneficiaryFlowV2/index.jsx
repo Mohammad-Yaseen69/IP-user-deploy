@@ -22,7 +22,7 @@ import {
   prefillEditBag,
 } from "./buildPayloads";
 import { useAvailableMethods, useRequiredFields, useRequirements } from "./useVendorRequirements";
-import { BANK_COUNTRY_FIELD, getEditRequirements, getFieldDef } from "./vendorFields";
+import { BANK_COUNTRY_FIELD, getFieldDef } from "./vendorFields";
 import { apiWrapper } from "../../../../utils/Functions/apiWrapper";
 import { UserContext } from "../../../../Context/UserContext";
 import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError";

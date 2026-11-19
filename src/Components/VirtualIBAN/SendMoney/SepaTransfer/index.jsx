@@ -12,8 +12,6 @@ import {
   FileText,
   Home,
   List,
-  Plus,
-  Search,
   Send,
   User,
 } from "react-feather";
@@ -60,8 +58,6 @@ import { handlePaymentApiError } from "../../../../utils/Functions/handlePayment
 import OTPConfirmation from "../../../../Common/Component/OtpVerification";
 import sepaCountries from "./sepaCountries.json";
 import { Tooltip } from "@mui/material";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
 import { isValidDescription } from "../../utils/swiftValidation";
 import BeneficiaryStep from "../Common/BeneficiaryStep";
 import AddressTooLongBanner from "../Common/AddressTooLongBanner";
@@ -69,14 +65,10 @@ import {
   getBeneficiaryName,
   getBeneficiaryTypeLabel,
   getBeneficiaryCountry,
-  getBeneficiaryBankDetail,
   getBeneficiaryBic,
   getBeneficiaryBankName,
   getBeneficiaryIban,
-  getBeneficiaryInitial,
   getBeneficiaryId,
-  getBeneficiaryAccountCount,
-  getBeneficiarySubtitle,
   isBeneficiaryAddressTooLong,
   maskIban,
 } from "../Common/beneficiaryHelpers";
@@ -483,7 +475,7 @@ const ReviewStep = ({
     </div>
   );
 };
-const downloadSepaReceipt = ({
+const downloadSepaReceipt = async ({
   amount,
   currencyCode,
   transferSpeed,
@@ -494,6 +486,10 @@ const downloadSepaReceipt = ({
   payoutResult,
   t,
 }) => {
+  const [{ default: jsPDF }, { default: autoTable }] = await Promise.all([
+    import("jspdf"),
+    import("jspdf-autotable"),
+  ]);
   const doc = new jsPDF();
   const margin = 14;
   const speed =

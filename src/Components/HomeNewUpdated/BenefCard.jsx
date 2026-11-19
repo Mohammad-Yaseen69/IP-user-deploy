@@ -1,14 +1,16 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useContext, useEffect, useMemo, useState } from "react";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
-import PaymentMethod from "./Payments/PaymentMethod";
-import W2W from "./Payments/W2W";
-import OTPConfirmation from "./Payments/OTPConfirmation";
 import { UserContext } from "../../Context/UserContext";
-import W2WReceipt from "./Payments/W2WReceipt";
-import International from "./Payments/International";
 import countries from "../PaymentsNewer/CountriesData.json";
-import Receipt from "./Payments/InternationalReceipt";
 import { useTranslation } from "react-i18next";
+import InstaPayLoader from "../Loader";
+const PaymentMethod = lazy(() => import("./Payments/PaymentMethod"));
+const W2W = lazy(() => import("./Payments/W2W"));
+const OTPConfirmation = lazy(() => import("./Payments/OTPConfirmation"));
+const W2WReceipt = lazy(() => import("./Payments/W2WReceipt"));
+const International = lazy(() => import("./Payments/International"));
+const Receipt = lazy(() => import("./Payments/InternationalReceipt"));
+import styles from "./styles/RecentBenef.module.css";
 
 const BenefCard = ({ item, index, total }) => {
   const [showModal, setShowModal] = useState(false);
@@ -33,6 +35,17 @@ const BenefCard = ({ item, index, total }) => {
         ? item?.first_name.slice(0, 8) + ".."
         : item?.company_name?.slice(0, 8) + "..",
     );
+  };
+  const getInitials = (item) => {
+    if (item?.beneficiary_type === "individual") {
+      return `${item?.first_name?.[0] ?? ""}${item?.last_name?.[0] ?? ""}`.toUpperCase();
+    }
+
+    const words = (item?.company_name ?? "").trim().split(/\s+/).filter(Boolean);
+    if (words.length >= 2) {
+      return `${words[0][0]}${words[1][0]}`.toUpperCase();
+    }
+    return (words[0] ?? "").slice(0, 2).toUpperCase();
   };
 
   useEffect(() => {
@@ -106,6 +119,7 @@ const BenefCard = ({ item, index, total }) => {
     <>
       <div
         key={item}
+        className={styles.bf_item}
         style={{
           display: "flex",
           flexDirection: "column",
@@ -121,6 +135,7 @@ const BenefCard = ({ item, index, total }) => {
         onMouseLeave={(_) => setShowTooltip(false)}
       >
         <div
+          className={styles.bf_ring}
           style={{
             padding: "3px",
             border: "1.224px solid #5926F0",
@@ -131,6 +146,7 @@ const BenefCard = ({ item, index, total }) => {
           }}
         >
           <div
+            className={styles.bf_avatar}
             style={{
               width: window.innerWidth > 1500 ? "60px" : "45px",
               height: window.innerWidth > 1500 ? "60px" : "45px",
@@ -144,12 +160,11 @@ const BenefCard = ({ item, index, total }) => {
               fontWeight: 800,
             }}
           >
-            {item?.beneficiary_type === "individual"
-              ? item?.first_name?.[0]?.toUpperCase()
-              : item?.company_name?.[0]?.toUpperCase()}
+            {getInitials(item)}
           </div>
         </div>
         <p
+          className={styles.bf_name}
           style={{
             marginBottom: 0,
             whiteSpace: "nowrap",
@@ -182,95 +197,98 @@ const BenefCard = ({ item, index, total }) => {
           {t("Send Money To")} {item?.first_name} {item?.last_name}
         </ModalHeader>
         <ModalBody>
-          {step === 1 && paymentMethod === null && (
-            <PaymentMethod setPaymentMethod={setPaymentMethod} item={item} setStep={setStep} />
-          )}
-          {step === 2 && paymentMethod?.value === "wallet" && (
-            <W2W
-              item={item}
-              setStep={setStep}
-              amount={amount}
-              setAmount={setAmount}
-              currency={currency}
-              setCurrency={setCurrency}
-              reason={reason}
-              setReason={setReason}
-              paymentType={paymentType}
-              setPaymentType={setPaymentType}
-              unlimited={unlimited}
-              setUnlimited={setUnlimited}
-              recCycle={recCycle}
-              setRecCycle={setRecCycle}
-              recStartDate={recStartDate}
-              setRecStartDate={setRecStartDate}
-              scheduleDate={scheduleDate}
-              setScheduleDate={setScheduleDate}
-              scheduleTime={scheduleTime}
-              setScheduleTime={setScheduleTime}
-              walletDetails={walletDetails}
-            />
-          )}
-          {step === 2 && paymentMethod?.value !== "wallet" && (
-            <International
-              item={item}
-              paymentMethod={paymentMethod}
-              country={country}
-              setService={setService}
-              service={service}
-              setStep={setStep}
-              amount={amount}
-              setAmount={setAmount}
-              currency={currency}
-              setCurrency={setCurrency}
-              reason={reason}
-              setReason={setReason}
-              quotationDetails={quotationDetails}
-              setQuotationDetails={setQuotationDetails}
-              createdTransaction={createdTransaction}
-              setCreatedTransaction={setCreatedTransaction}
-            />
-          )}
-          {step === 3 && (
-            <OTPConfirmation
-              setStep={setStep}
-              type={paymentMethod.value === "wallet" ? "wallet" : ""}
-              paymentDetails={{
-                receiver_wallet_id: walletDetails?.wallet_id,
-                sender_wallet_id: userWallets.filter((item) => item.currency.code === currency)?.[0]
-                  ?._id,
-                purpose: reason,
-                amount: +amount,
-                type: paymentType?.value,
-                recCycle,
-                recStartDate,
-                unlimited,
-                scheduleDate,
-                scheduleTime,
-              }}
-              createdTransaction={createdTransaction}
-              setTransactionDetails={setTransactionDetails}
-            />
-          )}
-          {step === 4 && paymentMethod?.value === "wallet" && (
-            <W2WReceipt
-              amount={amount}
-              currency={currency}
-              item={item}
-              transactionDetails={transactionDetails}
-              walletDetails={walletDetails}
-              type={paymentType?.value}
-            />
-          )}
-          {step === 4 && paymentMethod?.value !== "wallet" && (
-            <Receipt
-              amount={amount}
-              currency={currency}
-              country={country}
-              payoutChannel={paymentMethod}
-              item={item}
-              transactionDetails={transactionDetails}
-            />
-          )}
+          <Suspense fallback={<InstaPayLoader />}>
+            {step === 1 && paymentMethod === null && (
+              <PaymentMethod setPaymentMethod={setPaymentMethod} item={item} setStep={setStep} />
+            )}
+            {step === 2 && paymentMethod?.value === "wallet" && (
+              <W2W
+                item={item}
+                setStep={setStep}
+                amount={amount}
+                setAmount={setAmount}
+                currency={currency}
+                setCurrency={setCurrency}
+                reason={reason}
+                setReason={setReason}
+                paymentType={paymentType}
+                setPaymentType={setPaymentType}
+                unlimited={unlimited}
+                setUnlimited={setUnlimited}
+                recCycle={recCycle}
+                setRecCycle={setRecCycle}
+                recStartDate={recStartDate}
+                setRecStartDate={setRecStartDate}
+                scheduleDate={scheduleDate}
+                setScheduleDate={setScheduleDate}
+                scheduleTime={scheduleTime}
+                setScheduleTime={setScheduleTime}
+                walletDetails={walletDetails}
+              />
+            )}
+            {step === 2 && paymentMethod?.value !== "wallet" && (
+              <International
+                item={item}
+                paymentMethod={paymentMethod}
+                country={country}
+                setService={setService}
+                service={service}
+                setStep={setStep}
+                amount={amount}
+                setAmount={setAmount}
+                currency={currency}
+                setCurrency={setCurrency}
+                reason={reason}
+                setReason={setReason}
+                quotationDetails={quotationDetails}
+                setQuotationDetails={setQuotationDetails}
+                createdTransaction={createdTransaction}
+                setCreatedTransaction={setCreatedTransaction}
+              />
+            )}
+            {step === 3 && (
+              <OTPConfirmation
+                setStep={setStep}
+                type={paymentMethod.value === "wallet" ? "wallet" : ""}
+                paymentDetails={{
+                  receiver_wallet_id: walletDetails?.wallet_id,
+                  sender_wallet_id: userWallets.filter(
+                    (item) => item.currency.code === currency,
+                  )?.[0]?._id,
+                  purpose: reason,
+                  amount: +amount,
+                  type: paymentType?.value,
+                  recCycle,
+                  recStartDate,
+                  unlimited,
+                  scheduleDate,
+                  scheduleTime,
+                }}
+                createdTransaction={createdTransaction}
+                setTransactionDetails={setTransactionDetails}
+              />
+            )}
+            {step === 4 && paymentMethod?.value === "wallet" && (
+              <W2WReceipt
+                amount={amount}
+                currency={currency}
+                item={item}
+                transactionDetails={transactionDetails}
+                walletDetails={walletDetails}
+                type={paymentType?.value}
+              />
+            )}
+            {step === 4 && paymentMethod?.value !== "wallet" && (
+              <Receipt
+                amount={amount}
+                currency={currency}
+                country={country}
+                payoutChannel={paymentMethod}
+                item={item}
+                transactionDetails={transactionDetails}
+              />
+            )}
+          </Suspense>
         </ModalBody>
       </Modal>
       {/* <SendPaymentModal item={item} showModal={showModal} toggle={toggle} /> */}

@@ -1,0 +1,129 @@
+// Global rules that lived in unused template page partials (chart, dashboard,
+// dashboard_2, megaoption). Those partials were dropped from the bundle; these
+// rules still apply app-wide (ApexCharts, .card-header, .border-style), so they
+// are kept here verbatim.
+
+// from pages/_chart.scss
+.apexcharts-tooltip {
+  z-index: 7 !important;
+}
+.apexcharts-toolbar {
+  z-index: 1 !important;
+}
+.apexcharts-menu-item {
+  width: 110px;
+}
+
+// from pages/_dashboard_default.scss
+.apexcharts-tooltip.apexcharts-theme-light {
+  .apexcharts-tooltip-title {
+    color: $primary-color !important;
+    background: rgba($primary-color, 0.1) !important;
+  }
+}
+
+// from pages/_dashboard_2.scss
+.card-header {
+  text-transform: capitalize;
+
+  p {
+    font-size: 12px;
+    color: $primary-color;
+    width: fit-content;
+    position: relative;
+    margin-bottom: 18px;
+
+    i {
+      font-size: 3px;
+      margin-top: -2px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+  }
+
+  h4 {
+    text-align: left;
+  }
+
+  .d-flex {
+    .flex-grow-1 {
+      &:nth-child(2) {
+        p {
+          color: #4828a0;
+        }
+
+        .square-after {
+          &:after {
+            position: absolute;
+            content: "";
+            width: 76px;
+            height: 25px;
+            background-color: #4828a01c;
+            top: -2px;
+            right: -12px;
+            border-radius: 4px;
+            transition: all 0.5s ease-in;
+          }
+        }
+      }
+
+      &:nth-child(1) {
+        p {
+          color: $primary-color;
+        }
+
+        .square-after {
+          &:after {
+            position: absolute;
+            content: "";
+            width: 76px;
+            height: 25px;
+            background-color: rgba($primary-color, 0.1);
+            top: -2px;
+            right: -12px;
+            border-radius: 4px;
+            transition: all 0.5s ease-in;
+          }
+        }
+      }
+
+      &:nth-child(3) {
+        p {
+          color: #e64067;
+        }
+
+        .square-after {
+          &:after {
+            position: absolute;
+            content: "";
+            width: 76px;
+            height: 25px;
+            background-color: #e640671f;
+            top: -2px;
+            right: -12px;
+            border-radius: 4px;
+            transition: all 0.5s ease-in;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1366px) and (min-width: 1200px) {
+  .card-header {
+    p {
+      i {
+        margin-left: 3px;
+      }
+    }
+  }
+}
+
+// from pages/_megaoption.scss
+.border-style {
+  .card {
+    box-shadow: none;
+    border: 1px solid $light-gray !important;
+  }
+}

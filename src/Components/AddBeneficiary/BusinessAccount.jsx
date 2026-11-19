@@ -1,4 +1,3 @@
-import { Circle, CheckCircle, Plus } from "react-feather";
 import {
   Button,
   CardBody,
@@ -15,7 +14,6 @@ import "react-phone-input-2/lib/style.css";
 import "./req_star.css";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
-import WalletDetails from "./WalletDetails";
 import CountryDropDown from "./CountryDropDown";
 import CitiesDropDown from "../CitiesDropDown";
 import ConfirmationModal from "./ConfirmationModal";
@@ -30,8 +28,6 @@ import {
   bankExtrasInitial,
   BUSINESS_RELATIONSHIPS,
   idTypeData,
-  friendsAndFamily,
-  BeneficiaryRelation,
   C2B_RELATIONSHIPS,
   normalizeBankExtras,
 } from "../../utils/Data";
@@ -40,9 +36,8 @@ import useBenCreateFunc from "../../hooks/BeneficiaryHooks/useBenCreateFunc";
 import useBenEditFunc from "../../hooks/BeneficiaryHooks/useBenEditFunc";
 import citiesData from "../CitiesDropDown/CitiesData.json";
 import InstaPayLoader from "../Loader";
-import { useLocation, useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import SuccessModal from "./SuccessModal";
-import NestedDropdown from "../NestedDropdown";
 import { handleNameInput, preventEdgeSpaces, preventEmailSpaces } from "../../hooks/useTrimInput";
 
 const BusinessAccount = ({

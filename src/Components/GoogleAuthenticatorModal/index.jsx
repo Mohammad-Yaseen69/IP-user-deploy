@@ -2,7 +2,7 @@ import { useContext, useRef, useState } from "react";
 import styles from "./styles/index.module.css";
 import { Input, Label, Modal, ModalBody } from "reactstrap";
 import { useTranslation } from "react-i18next";
-import { ChevronRight, Copy, Eye, EyeOff } from "react-feather";
+import { ChevronRight, Eye, EyeOff } from "react-feather";
 import { toast } from "react-toastify";
 import { UserContext } from "../../Context/UserContext";
 import success from "./success.mp4";

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styles from "./styles/Notifications.module.scss";
 import Switch from "./Switch";
 import { useTranslation } from "react-i18next";
