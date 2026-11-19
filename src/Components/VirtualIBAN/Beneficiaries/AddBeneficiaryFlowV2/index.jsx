@@ -1,7 +1,5 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Modal } from "@mui/material";
-import DateMomentUtils from "@date-io/moment";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { ArrowLeft, X } from "react-feather";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
@@ -687,7 +685,7 @@ const AddBeneficiaryFlowV2 = ({
 
   return (
     <Modal open={open} onClose={handleClose} aria-labelledby="add-beneficiary-v2">
-      <MuiPickersUtilsProvider utils={DateMomentUtils}>
+      <>
         <div className={styles.root}>
           <div className={styles.modal}>
             <div className={styles.header}>
@@ -751,7 +749,7 @@ const AddBeneficiaryFlowV2 = ({
             </div>
           </div>
         </div>
-      </MuiPickersUtilsProvider>
+      </>
     </Modal>
   );
 };
