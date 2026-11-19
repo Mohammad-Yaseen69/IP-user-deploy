@@ -14,6 +14,7 @@ import styles from "../styles/RecentTransactions.module.css";
 import Empty from "./Empty";
 import InstaPayLoader from "../../Loader";
 import { formatCurrency } from "../../../Helper/AmountFormat";
+import { truncateHash } from "../../../utils/Functions/transactionHelpers";
 
 const statusColors = {
   COMPLETED: { bg: "rgba(34,197,94,0.1)", color: "#16a34a" },
@@ -52,9 +53,6 @@ const formatPaymentRail = (method) => {
     return "SEPA Credit Transfer (SEPA_CT)";
   return String(method).replace(/_/g, " ");
 };
-
-const truncateHash = (hash = "") =>
-  hash.length > 40 ? `${hash.slice(0, 25)}.....${hash.slice(-30)}` : hash;
 
 const normalizeStatus = (raw) => {
   if (!raw) return "PENDING";
