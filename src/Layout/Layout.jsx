@@ -24,7 +24,7 @@ import MobileSidebar from "./MobileSidebar";
 import InactivityLogoutModal from "../Components/InactivityLogoutModal";
 import ThreeDaysModal from "../Components/SecurityQuestionsModals/ThreeDaysModal";
 import ThirtyDaysModal from "../Components/SecurityQuestionsModals/ThirtyDaysModal";
-import { InactivityCountdownContext } from "../InactivityWrapper";
+import { InactivityContext, InactivityCountdownContext } from "../InactivityWrapper";
 import "swiper/css";
 import "../Components/MyMasterCard/styles/modal.reset.css";
 import "./globalElementStyles.css";
@@ -78,7 +78,7 @@ const MobileSbContextProvider = ({ children }) => {
 };
 
 const Layout = ({ children, classNames, ...rest }) => {
-  const { setTogglSidebar, sidebar_types } = useContext(CheckContext);
+  const { sidebar_types } = useContext(CheckContext);
   const { t } = useTranslation();
   const location = useLocation();
   const query = new URLSearchParams(location.search);
@@ -349,22 +349,7 @@ const Layout = ({ children, classNames, ...rest }) => {
     return () => clearTimeout(timer);
   }, [userDetails?._id]);
 
-  useEffect(() => {
-    const path = location.pathname.toLowerCase();
-    if (
-      path === "/" ||
-      path === "/dashboard/default" ||
-      path === "/my-mastercard" ||
-      path === "/payments" ||
-      path.startsWith("/copy-trading")
-    ) {
-      setTogglSidebar(true);
-    } else {
-      setTogglSidebar(false);
-    }
-  }, [location]);
-
-  const showTimerCountdown = useContext(InactivityCountdownContext);
+  const { showTimerCountdown } = useContext(InactivityContext);
 
   useEffect(() => {
     verifyToken();

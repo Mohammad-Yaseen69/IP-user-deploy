@@ -1,51 +1,32 @@
 import { useMemo, useContext, useEffect, useState, lazy } from "react";
 import styles from "./styles/index.module.scss";
-import cardsStyle from "./styles/CardsContainer.module.css";
+// import cardsStyle from "./styles/CardsContainer.module.css";
 import { useTranslation } from "react-i18next";
-import { BsFillPlayFill } from "react-icons/bs";
+import { BsBriefcase, BsCheckLg, BsChevronRight } from "react-icons/bs";
 import { ChevronRight } from "react-feather";
 import { UserContext } from "../../Context/UserContext";
-import { service_name_formatter } from "../../utils/Functions/serviceNameFormatter";
-import RenderWhenVisible from "./RenderWhenVisible";
-import {
-  loadBalanceCard,
-  loadBusinessModal,
-  loadCryptoCard,
-  loadCurConversion,
-  loadEarnMoneyBanner,
-  loadOtherBalance,
-  loadQuickLinksMobile,
-  loadQuickLinksNew,
-  loadRecentBeneficiaries,
-  loadRecentTrans,
-  loadReferalRewards,
-  loadRightContainer,
-  loadSearch,
-  loadTopBar,
-  loadTransDetails,
-  loadWalletsMobile,
-} from "./dashboardChunks";
+// import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 import { useMoneyInOut } from "../WalletsNew/MoneyInOut/useMoneyInOut";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 
-const BalanceComponent = lazy(loadBalanceCard);
-const EarnMoneyBanner = lazy(loadEarnMoneyBanner);
-const TransDetails = lazy(loadTransDetails);
-const QuickLinksNew = lazy(loadQuickLinksNew);
-const Stats = lazy(() => import("./Stats"));
-const RecentTrans = lazy(loadRecentTrans);
-const RightContainer = lazy(loadRightContainer);
-const SearchComponent = lazy(loadSearch);
-const ReferalRewards = lazy(loadReferalRewards);
-const CryptoCard = lazy(loadCryptoCard);
-const RecentBeneficiaries = lazy(loadRecentBeneficiaries);
-const WalletsMobile = lazy(loadWalletsMobile);
-const CurConversion = lazy(loadCurConversion);
-const QuickLinksMobile = lazy(loadQuickLinksMobile);
-const TopBar = lazy(loadTopBar);
-const BusinessModal = lazy(loadBusinessModal);
-const OtherBalance = lazy(loadOtherBalance);
+const BalanceComponent = lazy(() => import("./BalanceCard"));
+const EarnMoneyBanner = lazy(() => import("./EarnMoneyBanner"));
+// const TransDetails = lazy(() => import("./TransDetails"));
+const QuickLinksNew = lazy(() => import("./QuickLinksNew"));
+// const Stats = lazy(() => import("./Stats"));
+const RecentTrans = lazy(() => import("./RecentTrans"));
+const RightContainer = lazy(() => import("./RightContainer"));
+// const SearchComponent = lazy(() => import("./Search"));
+// const ReferalRewards = lazy(() => import("./ReferalRewards"));
+const CryptoCard = lazy(() => import("./CryptoCard"));
+const RecentBeneficiaries = lazy(() => import("./RecentBeneficiaries"));
+// const WalletsMobile = lazy(() => import("./WalletsMobile"));
+const CurConversion = lazy(() => import("./CurConversion"));
+// const QuickLinksMobile = lazy(() => import("./QuickLinksMobile"));
+const TopBar = lazy(() => import("../../Layout/TopBar"));
+// const BusinessModal = lazy(() => import("../BusinessModal"));
+// const OtherBalance = lazy(() => import("./OtherBalance"));
 const MoneyInOut = lazy(() => import("../WalletsNew/MoneyInOut/MoneyInOut"));
 const SpendingBreakdown = lazy(() => import("../Analytics/SpendingBreakdown"));
 
@@ -55,6 +36,7 @@ import usdt from "../PaymentsNewer/files/Tether.png";
 import crown from "./files/crown.svg";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import TopRight from "../topRight";
+import { BalanceVisibilityProvider } from "../../Context/BalanceVisibilityContext";
 import axios from "axios";
 
 const HomeNewUpdated = () => {
@@ -286,220 +268,334 @@ const HomeNewUpdated = () => {
 
   return (
     <>
-      {window.innerWidth > 1000 && (
-        <div
-          className={styles.container}
-          onClick={() => {
-            if (profileCompletedPercentage < 100 && !showCompletionModal) {
-              setShowCompletionModal(true);
-            }
-          }}
-        >
-          <div className={styles.top}>
-            <div className={styles.top_section}>
-              <h4>{t("Dashboard")}</h4>
-              <p>Manage and monitor your InstaPay Wallet</p>
+      <BalanceVisibilityProvider>
+        {window.innerWidth > 1000 && (
+          <div
+            className={styles.container}
+            onClick={() => {
+              if (profileCompletedPercentage < 100 && !showCompletionModal) {
+                setShowCompletionModal(true);
+              }
+            }}
+          >
+            <div className={styles.top}>
+              <div className={styles.top_section}>
+                <h4>{t("Dashboard")}</h4>
+                <p>{t("Manage and monitor your InstaPay Wallet")}</p>
+              </div>
+              <TopRight />
             </div>
-            <TopRight />
-          </div>
-          <div className={styles.greeting}>
-            <h1>
-              {getGreeting()}, <span className={styles.name}>{firstName}</span>
-            </h1>
-            <div className={styles.greeting_alert}>
-              <span className={styles.date}>{getTodayDate()}</span>
-              {/* <span className={`${styles.pill} ${styles.pill_warning}`}>
+            <div className={styles.greeting}>
+              <h1>
+                {getGreeting()}, <span className={styles.name}>{firstName}</span>
+              </h1>
+              <div className={styles.greeting_alert}>
+                <span className={styles.date}>{getTodayDate()}</span>
+                {/* <span className={`${styles.pill} ${styles.pill_warning}`}>
                 {t("2 bills due this week")}
               </span> */}
-              {/* <span className={`${styles.pill} ${styles.pill_info}`}>
+                {/* <span className={`${styles.pill} ${styles.pill_info}`}>
                 {t("1 payment pending")}
               </span> */}
-            </div>
-          </div>
-          <div className={styles.sub}>
-            <div className={styles.left}>
-              <div className={styles.card}>
-                <div className={styles.balance_currencies}>
-                  {can("dashboard.balance.view") && <BalanceComponent />}
-                  {/* {can("dashboard.balance.view") &&
-                    userWallets.some((item) => item?.balance?.reserved) && <OtherBalance />} */}
-                </div>
-                <QuickLinksNew />
               </div>
             </div>
-          </div>
-
-          <div className={styles.right}>
-            {can("wallet.list.view") && (
-              <RightContainer
-                setCurrentWallet={setSelectedWallet}
-                showBusinessModal={showBusinessModal}
-                setShowBusinessModal={setShowBusinessModal}
+            <div className={styles.sub}>
+              <div className={styles.left}>
+                <div className={styles.card}>
+                  <div className={styles.balance_currencies}>
+                    {can("dashboard.balance.view") && <BalanceComponent />}
+                    {/* {can("dashboard.balance.view") &&
+                    userWallets.some((item) => item?.balance?.reserved) && <OtherBalance />} */}
+                  </div>
+                  <QuickLinksNew />
+                </div>
+              </div>
+            </div>
+            <div className={styles.right}>
+              {can("wallet.list.view") && (
+                <RightContainer
+                  setCurrentWallet={setSelectedWallet}
+                  showBusinessModal={showBusinessModal}
+                  setShowBusinessModal={setShowBusinessModal}
+                />
+              )}
+            </div>
+            <div className={styles.Money_section}>
+              {can("dashboard.insights.view") && (
+                <MoneyInOut currency={currency} data={moneyData} loading={moneyLoading} />
+              )}
+              {can("dashboard.recent-transactions.view") && (
+                <RecentTrans currentWallet={selectedWallet} />
+              )}
+            </div>
+            <div className={styles.quickTransfer}>
+              <RecentBeneficiaries />
+            </div>
+            <div className={styles.crypto_row}>
+              <div className={styles.crypto_top}>
+                <div className={styles.crypto_title}>
+                  <h4>{t("Crypto balances")}</h4>
+                  <p>{t("Every service you use, with what needs your attention")}</p>
+                </div>
+                <a href="/onboarding-IBAN/crypto" className={styles.crypto_link}>
+                  {t("Open Crypto")}
+                  <span className={styles.crypto_chevron}>
+                    <ChevronRight size={16} />
+                  </span>
+                </a>
+              </div>
+              {userWallets.some((item) => item?.balance?.reserved) ? (
+                <div className={styles.crypto_track}>
+                  {currenciesData.map((item) => (
+                    <CryptoCard key={item.name} item={item} />
+                  ))}
+                </div>
+              ) : (
+                <div
+                  className={styles.crypto_track}
+                  style={{ display: "flex", scrollbarWidth: "none" }}
+                >
+                  {currenciesData.map((item) => (
+                    <CryptoCard key={item.name} item={item} />
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className={styles.analytics_row}>
+              <SpendingBreakdown
+                data={analyticsSummaryForWallet}
+                reports={analyticsReports}
+                currentWallet={activeWallet}
+                setApiDates={setApiDates}
+                isLoading={analyticsLoading}
               />
-            )}
+              <CurConversion />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "stretch",
+                gap: "1rem",
+                width: "100%",
+              }}
+            >
+              {userDetails?.account_type === "individual" ? (
+                <>
+                  <div
+                    className={styles.banner_main}
+                    style={{
+                      width: "63%",
+                    }}
+                  >
+                    <EarnMoneyBanner
+                      showLink={true}
+                      code={userDetails?.username}
+                      rewardsEarned={totalReferralAmount}
+                      friendsJoined={friendsJoined}
+                    />
+                  </div>
+                  <div style={{ width: "37%", display: "flex" }}>
+                    <div
+                      style={{
+                        flex: 1,
+                        minWidth: 0,
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                        justifyContent: "flex-start",
+                        gap: "16px",
+                        boxSizing: "border-box",
+                        padding: "24px",
+                        background: "#FFFFFF",
+                        border: "1px solid #EAECF0",
+                        borderRadius: "16px",
+                        boxShadow: "0px 1px 2px rgba(16, 24, 40, 0.05)",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: "48px",
+                          height: "48px",
+                          borderRadius: "10px",
+                          background: "#F4F1FE",
+                          color: "#5926F0",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          flexShrink: 0,
+                        }}
+                      >
+                        <BsBriefcase size={18} />
+                      </div>
+
+                      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                        <h3
+                          style={{
+                            fontSize: "18px",
+                            fontWeight: 800,
+                            color: "#1B1F2A",
+                            lineHeight: "26.1px",
+                            fontFamily: "Inter",
+                          }}
+                        >
+                          {t("Upgrade to a Business account")}
+                        </h3>
+                        <p
+                          style={{
+                            fontWeight: "400",
+                            fontSize: "14px",
+                            color: "#6E7687",
+                            lineHeight: "21px",
+                          }}
+                        >
+                          {t("Run payroll, invoices and team cards from the same login.")}
+                        </p>
+                      </div>
+                      <ul
+                        style={{
+                          listStyle: "none",
+                          margin: 0,
+                          padding: 0,
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "8px",
+                          fontWeight: "400",
+                          fontSize: "13px",
+                          lineHeight: "18.85px",
+                        }}
+                      >
+                        {[
+                          t("Business IBAN in your company name"),
+                          t("Bulk payments and approvals"),
+                        ].map((item) => (
+                          <li
+                            key={item}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "8px",
+                              fontSize: "0.875rem",
+                              color: "#667085",
+                            }}
+                          >
+                            <BsCheckLg size={14} style={{ color: "#12B76A", flexShrink: 0 }} />
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                      <button
+                        onClick={() => setShowBusinessModal(true)}
+                        style={{
+                          marginTop: "auto",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: "8px",
+                          alignSelf: "flex-start",
+                          background: "#EFF1F6",
+                          color: "#1B1F2A",
+                          border: "none",
+                          borderRadius: "8px",
+                          padding: "10px 16px",
+                          fontSize: "14px",
+                          fontWeight: 600,
+                          fontStyle: "Medium",
+                          lineHeight: "20.3px",
+                          cursor: "pointer",
+                          fontFamily: "Inter",
+                        }}
+                      >
+                        {t("Start upgrade")}
+                        <BsChevronRight size={12} />
+                      </button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className={styles.banner_mains}>
+                    <EarnMoneyBanner
+                      showLink={true}
+                      code={userDetails?.username}
+                      rewardsEarned={totalReferralAmount}
+                      friendsJoined={friendsJoined}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
           </div>
-          <div className={styles.Money_section}>
+        )}
+        {/*
+      mobile screen */}
+        {window.innerWidth < 1000 && (
+          <div
+            className={styles.mobile_home}
+            onClick={() => {
+              if (profileCompletedPercentage < 100 && !showCompletionModal) {
+                setShowCompletionModal(true);
+              }
+            }}
+          >
+            {/* <BusinessModal isOpen={showBusinessModal} toggle={() => setShowBusinessModal(false)} /> */}
+            <TopBar />
+            <div className={styles.greeting}>
+              <h1>
+                {getGreeting()}, {firstName}
+              </h1>
+              <p>{getTodayDate()}</p>
+            </div>
+            <BalanceVisibilityProvider>
+              <div className={styles.mobile_balance}>
+                {can("dashboard.balance.view") && <BalanceComponent />}
+                <QuickLinksNew />
+              </div>
+            </BalanceVisibilityProvider>
+            <RecentBeneficiaries />
             {can("dashboard.insights.view") && (
               <MoneyInOut currency={currency} data={moneyData} loading={moneyLoading} />
             )}
             {can("dashboard.recent-transactions.view") && (
-              <RecentTrans currentWallet={selectedWallet} />
+              <RecentTrans currentWallet={activeWallet} />
             )}
-          </div>
-          <div className={styles.quickTransfer}>
-            <RecentBeneficiaries />
-          </div>
-          <div className={styles.crypto_row}>
-            <div className={styles.crypto_top}>
-              <div className={styles.crypto_title}>
-                <h4>Crypto balances</h4>
-                <p>Every service you use, with what needs your attention</p>
+            <div className={styles.crypto_row}>
+              <div className={styles.crypto_top}>
+                <h3 className={styles.crypto_heading}>{t("Crypto")}</h3>
+                <a href="/onboarding-IBAN/crypto" className={styles.crypto_link}>
+                  {t("Open Crypto")}
+                  <ChevronRight size={14} />
+                </a>
               </div>
-              <a href="/onboarding-IBAN/crypto" className={styles.crypto_link}>
-                Open Crypto
-                <span className={styles.crypto_chevron}>
-                  <ChevronRight size={17} />
-                </span>
-              </a>
-            </div>
-            {userWallets.some((item) => item?.balance?.reserved) ? (
               <div className={styles.crypto_track}>
                 {currenciesData.map((item) => (
-                  <CryptoCard key={item.name} item={item} />
+                  <div key={item.name} className={styles.crypto_item}>
+                    <div className={styles.crypto_left}>
+                      <span className={styles.crypto_icon} style={{ background: item.item_bg }}>
+                        <img src={item.img} alt={item.name} />
+                      </span>
+                      <div className={styles.crypto_info}>
+                        <strong>{item.name}</strong>
+                        <small>{item.value.toUpperCase()}</small>
+                      </div>
+                    </div>
+
+                    <div className={styles.crypto_right}>
+                      <strong>${item.price ? item.price.toLocaleString("en-US") : "0.00"}</strong>
+                      <small>≈ {item.eurPrice ? item.eurPrice.toFixed(2) : "0.00"} EUR</small>
+                    </div>
+                  </div>
                 ))}
-              </div>
-            ) : (
-              <div
-                className={styles.crypto_track}
-                style={{ display: "flex", scrollbarWidth: "none" }}
-              >
-                {currenciesData.map((item) => (
-                  <CryptoCard key={item.name} item={item} />
-                ))}
-              </div>
-            )}
-          </div>
-          {userDetails?.account_type === "individual" && (
-            <div className={styles.banner_row}>
-              <div className={styles.banner_business}>
-                <button
-                  onClick={() => setShowBusinessModal(true)}
-                  className={cardsStyle.button}
-                  style={{
-                    background:
-                      "linear-gradient(to left, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
-                    color: "white",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: ".75rem",
-                    borderRadius: "7px",
-                    padding: "1rem",
-                  }}
-                >
-                  <img src={crown} alt="c" loading="lazy" style={{ width: "20px" }} />
-                  <span
-                    style={{
-                      color: "white",
-                      WebkitTextFillColor: "white",
-                      fontSize: ".9rem",
-                    }}
-                  >
-                    {t("Upgrade to Business Account")}
-                  </span>
-                  <BsFillPlayFill size={25} style={{ marginLeft: "auto" }} />
-                </button>
               </div>
             </div>
-          )}
-          <div className={styles.analytics_row}>
-            <SpendingBreakdown
-              data={analyticsSummaryForWallet}
-              reports={analyticsReports}
-              currentWallet={activeWallet}
-              setApiDates={setApiDates}
-              isLoading={analyticsLoading}
-            />
-            <CurConversion />
-          </div>
-          <div className={styles.banner_main}>
+            {/* <CurConversion /> */}
             <EarnMoneyBanner
-              showLink={true}
+              showLink={false}
               code={userDetails?.username}
               rewardsEarned={totalReferralAmount}
               friendsJoined={friendsJoined}
             />
           </div>
-        </div>
-      )}
-      {/* 
-      mobile screen */}
-      {window.innerWidth < 1000 && (
-        <div
-          className={styles.mobile_home}
-          onClick={() => {
-            if (profileCompletedPercentage < 100 && !showCompletionModal) {
-              setShowCompletionModal(true);
-            }
-          }}
-        >
-          {/* <BusinessModal isOpen={showBusinessModal} toggle={() => setShowBusinessModal(false)} /> */}
-          <TopBar />
-          <div className={styles.greeting}>
-            <h1>
-              {getGreeting()}, {firstName}
-            </h1>
-            <p>{getTodayDate()}</p>
-          </div>
-          <div className={styles.mobile_balance}>
-            {can("dashboard.balance.view") && <BalanceComponent />}
-            <QuickLinksNew />
-          </div>
-          <RecentBeneficiaries />
-          {can("dashboard.insights.view") && (
-            <MoneyInOut currency={currency} data={moneyData} loading={moneyLoading} />
-          )}
-          {can("dashboard.recent-transactions.view") && (
-            <RecentTrans currentWallet={activeWallet} />
-          )}
-          <div className={styles.crypto_row}>
-            <div className={styles.crypto_top}>
-              <h3 className={styles.crypto_heading}>Crypto</h3>
-              <a href="/onboarding-IBAN/crypto" className={styles.crypto_link}>
-                Open Crypto
-                <ChevronRight size={14} />
-              </a>
-            </div>
-            <div className={styles.crypto_track}>
-              {currenciesData.map((item) => (
-                <div key={item.name} className={styles.crypto_item}>
-                  <div className={styles.crypto_left}>
-                    <span className={styles.crypto_icon} style={{ background: item.item_bg }}>
-                      <img src={item.img} alt={item.name} />
-                    </span>
-                    <div className={styles.crypto_info}>
-                      <strong>{item.name}</strong>
-                      <small>{item.value.toUpperCase()}</small>
-                    </div>
-                  </div>
-
-                  <div className={styles.crypto_right}>
-                    <strong>${item.price ? item.price.toLocaleString("en-US") : "0.00"}</strong>
-                    <small>≈ {item.eurPrice ? item.eurPrice.toFixed(2) : "0.00"} EUR</small>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          {/* <CurConversion /> */}
-          <EarnMoneyBanner
-            showLink={false}
-            code={userDetails?.username}
-            rewardsEarned={totalReferralAmount}
-            friendsJoined={friendsJoined}
-          />
-        </div>
-      )}
+        )}
+      </BalanceVisibilityProvider>
     </>
   );
 };

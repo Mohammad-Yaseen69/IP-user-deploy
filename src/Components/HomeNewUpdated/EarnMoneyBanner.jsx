@@ -42,7 +42,10 @@ const DesktopBanner = ({
       style={{ height, minWidth, borderRadius: radius }}
     >
       <div className={styles.content}>
-        <h2 style={{ fontSize: headSize }}>{t("Earn with the InstaPay Partner Program")}</h2>
+        <h2 style={{ fontSize: headSize }}>
+          {" "}
+          {t("Earn with the InstaPay")} <br /> {t("Partner Program")}
+        </h2>
         <p style={{ fontSize: textSize }}>
           {t(
             "Share your code. You earn a share of every fee your friends pay, paid monthly into your wallet.",

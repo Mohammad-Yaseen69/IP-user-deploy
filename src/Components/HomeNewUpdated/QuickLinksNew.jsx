@@ -31,14 +31,14 @@ const QuickLinksNew = () => {
     {
       icon: ArrowUpRight,
       text: t("Send Money"),
-      shortText: t("Send Mon.. "),
+      shortText: t("Send "),
       width: 20,
       link: "/payments?payment_action=send_money",
     },
     {
       icon: ArrowDownToLine,
       text: t("Request Money"),
-      shortText: t("Request Mon.."),
+      shortText: t("Request "),
       width: 20,
       link: "/payments?payment_action=req_money",
     },

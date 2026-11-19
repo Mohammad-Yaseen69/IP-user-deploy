@@ -12,7 +12,6 @@ import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import { getLimits } from "./getLimits";
 import MoneyInOut from "./MoneyInOut/MoneyInOut";
 import { useMoneyInOut } from "./MoneyInOut/useMoneyInOut";
-import TransactionsTable from "../TransactionsNewApi/TransactionsTable";
 import CurConversion from "../HomeNewUpdated/CurConversion";
 import { ChevronRight } from "lucide-react";
 // import { useLocation } from "react-router"
@@ -21,7 +20,7 @@ import eth from "../PaymentsNewer/files/etherium.png";
 import usdt from "../PaymentsNewer/files/Tether.png";
 import RecentTrans from "../HomeNewUpdated/RecentTrans";
 import TopBar from "../../Layout/TopBar";
-import WalletActivityMobile from "../TransactionsNewApi/WalletActivityMobile";
+import TransactionsTable from "./TransactionTable";
 
 export { getLimits };
 
@@ -299,8 +298,9 @@ const WalletsNew = () => {
             >
               {can("transactions.wallet.list") && (
                 <TransactionsTable
-                  title={t("Wallet transactions")}
-                  description={t("Every payment in and out of this wallet, all currencies")}
+                  currentWallet={currentWallet}
+                  filtered={filtered}
+                  setFiltered={setFiltered}
                 />
               )}
             </div>
@@ -323,9 +323,9 @@ const WalletsNew = () => {
             <Top currentWallet={currentWallet} setCurrentWallet={setCurrentWallet} data={data} />
             <div className={styles.crypto_row}>
               <div className={styles.crypto_top}>
-                <h3 className={styles.crypto_heading}>Crypto</h3>
+                <h3 className={styles.crypto_heading}>{t("Crypto")}</h3>
                 <a href="/onboarding-IBAN/crypto" className={styles.crypto_link}>
-                  Open Crypto
+                  {t(" Open Crypto")}
                   <ChevronRight size={14} />
                 </a>
               </div>
@@ -351,16 +351,16 @@ const WalletsNew = () => {
               </div>
             </div>
             <CurConversion />
-            <WalletActivityMobile />
+            {/* <WalletActivityMobile /> */}
             {/* {can("transactions.wallet.list") && (
               <TransactionsTable
                 title={t("Wallet transactions")}
                 description={t("Every payment in and out of this wallet, all currencies")}
               />
-            )} */}
-            {/* {can("dashboard.recent-transactions.view") && (
-              <RecentTrans currentWallet={currentWallet} />
-            )} */}
+              )} */}
+            {can("dashboard.recent-transactions.view") && (
+              <RecentTrans currentWallet={currentWallet} title={t("wallet Activity")} />
+            )}
           </div>
         </div>
       )}

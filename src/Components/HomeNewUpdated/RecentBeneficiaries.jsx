@@ -4,7 +4,65 @@ import { UserContext } from "../../Context/UserContext";
 import BenefCard from "./BenefCard";
 import { useTranslation } from "react-i18next";
 import styles from "./styles/RecentBenef.module.css";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Plus } from "lucide-react";
+
+const NewBeneficiaryButton = () => {
+  const { t } = useTranslation();
+
+  return (
+    <a
+      href="/beneficiaries"
+      aria-label={t("Add new beneficiary")}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "8px",
+        textDecoration: "none",
+        flexShrink: 0,
+        cursor: "pointer",
+        background: "transparent",
+        border: "none",
+        padding: 0,
+      }}
+    >
+      <span
+        style={{
+          width: "56px",
+          height: "56px",
+          borderRadius: "50%",
+          border: "2px dashed #D0D5DD",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "#5926F0",
+          boxSizing: "border-box",
+          transition: "background 0.2s ease, border-color 0.2s ease",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = "#F4F1FE";
+          e.currentTarget.style.borderColor = "#5926F0";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = "transparent";
+          e.currentTarget.style.borderColor = "#D0D5DD";
+        }}
+      >
+        <Plus size={22} strokeWidth={1.5} aria-hidden="true" />
+      </span>
+      <span
+        style={{
+          fontSize: "14px",
+          fontWeight: 500,
+          color: "#667085",
+          lineHeight: "20px",
+        }}
+      >
+        {t("New")}
+      </span>
+    </a>
+  );
+};
 
 const RecentBeneficiaries = () => {
   const { t } = useTranslation();
@@ -16,7 +74,7 @@ const RecentBeneficiaries = () => {
     }
   }, [userDetails]);
 
-  console.log(beneficiaries);
+  const list = beneficiaries ?? [];
 
   return (
     <>
@@ -44,12 +102,12 @@ const RecentBeneficiaries = () => {
                 {t("All contacts")} <ChevronRight size={16} strokeWidth={2} aria-hidden="true" />
               </a>
             </div>
-            {beneficiaries.length > 0 ? (
-              beneficiaries.map((item, index) => (
-                <BenefCard index={index} total={beneficiaries?.length} key={item._id} item={item} />
+            {list.length > 0 ? (
+              list.map((item, index) => (
+                <BenefCard index={index} total={list.length} key={item._id} item={item} />
               ))
             ) : (
-              <div style={{ margin: "2rem auto" }}>{t("No Beneficiaries")}</div>
+              <NewBeneficiaryButton />
             )}
           </div>
         </CardBody>
@@ -62,12 +120,12 @@ const RecentBeneficiaries = () => {
           </a>
         </div>
         <div className={styles.mob_row}>
-          {beneficiaries.length > 0 ? (
-            beneficiaries.map((item, index) => (
-              <BenefCard index={index} total={beneficiaries?.length} key={item._id} item={item} />
+          {list.length > 0 ? (
+            list.map((item, index) => (
+              <BenefCard index={index} total={list.length} key={item._id} item={item} />
             ))
           ) : (
-            <div style={{ margin: "2rem auto" }}>{t("No Beneficiaries")}</div>
+            <NewBeneficiaryButton />
           )}
         </div>
       </div>

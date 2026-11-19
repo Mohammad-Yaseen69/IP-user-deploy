@@ -37,10 +37,14 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
   } = useContext(UserContext);
   const can = usePermission();
   // Crypto wallets live on the Crypto & Stablecoins page, not here.
+
   const userWallets = useMemo(
-    () => (allWallets || []).filter((w) => w?.provider !== "bvnk"),
+    () =>
+      (allWallets || []).filter(
+        (wallet) => wallet?.provider !== "bvnk" && wallet?.wallet_type !== "crypto",
+      ),
     [allWallets],
-  ).filter((wallet) => wallet?.wallet_type !== "crypto");
+  );
   const [activeDot, setActiveDot] = useState(0);
   const [currentDefault, setCurrentDefault] = useState(false);
   const [currentActive, setCurrentActive] = useState(false);

@@ -3,6 +3,7 @@ import { Card, CardBody } from "reactstrap";
 import styles from "./styles/balance.module.css";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../Context/UserContext";
+import { useBalanceVisibility } from "../../Context/BalanceVisibilityContext";
 
 const CURRENCY_LABEL = "USD";
 
@@ -59,7 +60,8 @@ const BalanceComponent = () => {
 
   const walletCount = userWallets?.length ?? 0;
 
-  const [hidden, setHidden] = useState(false);
+  // const [hidden, toggleHidden] = useState(false);
+  const { hidden, toggleHidden } = useBalanceVisibility();
 
   const formatted =
     Number(totalBalance)?.toLocaleString("en-US", {
@@ -77,7 +79,7 @@ const BalanceComponent = () => {
           <button
             type="button"
             className={styles.toggle}
-            onClick={() => setHidden((prev) => !prev)}
+            onClick={() => toggleHidden((prev) => !prev)}
           >
             <EyeIcon off={hidden} />
             <span>{hidden ? t("Show balances") : t("Hide balances")}</span>
@@ -107,7 +109,7 @@ const BalanceComponent = () => {
               <button
                 type="button"
                 className={`${styles.eyeButton} ${hidden ? styles.eyeCenter : styles.eyeTop}`}
-                onClick={() => setHidden((prev) => !prev)}
+                onClick={() => toggleHidden((prev) => !prev)}
                 aria-label={hidden ? t("Show balances") : t("Hide balances")}
               >
                 <EyeIcon off={hidden} />

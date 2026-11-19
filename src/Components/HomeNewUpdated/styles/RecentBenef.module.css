@@ -40,8 +40,8 @@
   left: 0;
   z-index: 2;
   background: #fff;
-  padding-right: 0.75rem;
-  padding: 14px;
+  padding-right: 0.5rem;
+  height: 100%;
 }
 
 .qt_head h3 {
@@ -67,8 +67,8 @@
   align-items: center;
   gap: 4px;
   margin-top: 6px;
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 600;
   color: #5926f0;
   text-decoration: none;
   white-space: nowrap;

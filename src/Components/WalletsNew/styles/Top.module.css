@@ -148,7 +148,9 @@
 }
 
 .swiper_wrap {
+  width: 100%;
   max-width: 100%;
+  min-width: 0;
 }
 
 .cards {
@@ -161,13 +163,14 @@
 }
 
 .swiper {
-  width: 100%;
+  width: 100% !important;
   max-width: 440px;
+  min-width: 0 !important;
 }
 
+.swiper :global(.swiper-wrapper),
 .swiper :global(.swiper-slide) {
-  height: auto;
-  border-radius: 16px;
+  width: 100%;
 }
 
 .dots {

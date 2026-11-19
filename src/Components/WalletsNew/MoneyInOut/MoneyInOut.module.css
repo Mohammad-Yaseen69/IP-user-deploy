@@ -18,9 +18,10 @@
 
 .title {
   margin: 0;
-  font-size: 17px;
-  font-weight: 600;
-  color: #1a1a1f;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1b1f2a;
+  line-height: 23.2px;
 }
 
 .subtitle {
@@ -55,7 +56,6 @@
 
 .summary {
   display: flex;
-  justify-content: space-around;
   gap: 24px;
   flex-wrap: wrap;
 }
@@ -154,7 +154,7 @@
   }
 
   .title {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .summary {
@@ -335,4 +335,9 @@
   .skeleton {
     animation: none;
   }
+}
+
+:global(.apexcharts-xaxis-texts-g) text:last-child {
+  font-weight: 700;
+  fill: #1b1f2a;
 }

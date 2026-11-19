@@ -250,7 +250,8 @@ const MoneyInOut = ({ currency = "", data = [], loading = false }) => {
       yaxis: {
         labels: {
           show: !isMobile,
-          minWidth: 40,
+          minWidth: 0,
+          offsetX: -8,
           style: { colors: "#9a9aa6", fontSize: "11px" },
           formatter: (value) => compactFormatter.format(value),
         },
@@ -361,7 +362,7 @@ const MoneyInOut = ({ currency = "", data = [], loading = false }) => {
         </div>
       </div>
 
-      <p className={styles.hint}>{latestMonth || "No monthly data"} · Hover a month to compare</p>
+      {/* <p className={styles.hint}>{latestMonth || "No monthly data"} · Hover a month to compare</p> */}
 
       {hasData ? (
         <Chart key={range} type="bar" series={series} options={options} height={chartHeight} />
