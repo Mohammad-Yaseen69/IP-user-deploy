@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Form } from "reactstrap";
 // import { CgArrowsExchangeV } from "react-icons/cg"
 // import con_ic from "./files/con_ic.svg"
@@ -11,12 +11,17 @@ import styles from "./styles/CurConversion.module.css";
 import { LimitsErrorMessage } from "../../utils/Functions/paymentLimits";
 import { formatCurrency } from "../../Helper/AmountFormat";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
-
-let timeout;
+import ExchangeCardView from "../../Common/WalletUI/ExchangeCardView";
 
 const QUOTE_TTL_MS = 2 * 60 * 1000;
 
-const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true }) => {
+// variant="card" swaps only the markup for the redesigned Exchange card; the conversion logic is shared.
+const CurConversion = ({
+  extCurrency = "",
+  extWallet = null,
+  showHeading = true,
+  variant = "",
+}) => {
   const { t } = useTranslation();
   const [enteredCurrency, setEnteredCurrency] = useState("");
   const [resultCurrency, setResultCurrency] = useState("");
@@ -27,6 +32,8 @@ const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true 
   const [loading, setLoading] = useState(false);
   const { userDetails, authHeader, userWallets } = useContext(UserContext);
   const [error, setError] = useState("");
+  // Per instance: the wallets page can show the inline card and the convert modal at the same time.
+  const timeoutRef = useRef();
 
   const [fxDet, setFxDet] = useState({});
   const [quoteExpiresAt, setQuoteExpiresAt] = useState(null);
@@ -241,10 +248,10 @@ const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true 
   }, [isQuoteExpired, isOpen]);
 
   useEffect(() => {
-    if (timeout) {
-      clearTimeout(timeout);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
     }
-    timeout = setTimeout(() => {
+    timeoutRef.current = setTimeout(() => {
       if (!enteredCurrency || enteredCurrency === "undefined") {
         setResultCurrency("");
         clearQuote();
@@ -254,7 +261,7 @@ const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true 
     }, 1000);
 
     return () => {
-      clearTimeout(timeout);
+      clearTimeout(timeoutRef.current);
     };
   }, [enteredCurrency, userCurrency, exchangedCurrency]);
 
@@ -299,6 +306,90 @@ const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true 
       setEnteredCurrency(cleaned);
     }
   }, [formattedAmount]);
+
+  const submitDisabled =
+    !enteredCurrency ||
+    !resultCurrency ||
+    !userCurrency ||
+    !exchangedCurrency ||
+    invalid ||
+    exchangedCurrency === userCurrency ||
+    loading;
+
+  const modal = (
+    <ConversionModal
+      isOpen={isOpen}
+      toggleModal={toggleModal}
+      amount={enteredCurrency}
+      exchangeAmount={resultCurrency}
+      currency={userCurrency}
+      exchangeCurrency={exchangedCurrency}
+      exchangePrice={exchangePrice}
+      setEnteredCurrency={setEnteredCurrency}
+      setResultCurrency={setResultCurrency}
+      setUserCurrency={setUserCurrency}
+      setExchangedCurrency={setExchangedCurrency}
+      exchangeFee={exchangeFee}
+      fxDet={fxDet}
+      senderWallet={senderWallet}
+      receiverWallet={receiverWallet}
+      quoteExpiresAt={quoteExpiresAt}
+      isQuoteExpired={isQuoteExpired}
+      onRefreshQuote={refreshQuote}
+      isRefreshing={loading}
+    />
+  );
+
+  if (variant === "card") {
+    return (
+      <>
+        <ExchangeCardView
+          wallets={filteredWallets ?? []}
+          from={userCurrency}
+          to={exchangedCurrency}
+          setFrom={setUserCurrency}
+          setTo={setExchangedCurrency}
+          amountInput={{
+            type: "text",
+            value: formattedAmount,
+            maxLength: 12,
+            onChange: (e) => setFormattedAmount(e.target.value),
+            onKeyUp: handleKeyUp,
+            onBlur: handleBlur,
+            placeholder: "0.00",
+            "data-type": "currency",
+          }}
+          received={
+            fxDet?.receiver?.amount?.toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 6,
+            }) ?? ""
+          }
+          senderWallet={senderWallet}
+          receiverWallet={receiverWallet}
+          rate={fxDet?.exchange_rate ? exchangePrice : ""}
+          fee={fxDet?.fee?.currency ? (fxDet.fee.amount ? exchangeFee : t("None")) : ""}
+          error={
+            error &&
+            t(
+              "We are unable to process your request at the moment, please try again later! Error Code: {{code}}",
+              { code: errorCode },
+            )
+          }
+          loading={loading}
+          insufficient={balance < enteredCurrency}
+          disabled={submitDisabled}
+          onSwap={() => {
+            setUserCurrency(exchangedCurrency);
+            setExchangedCurrency(userCurrency);
+          }}
+          onSubmit={toggleModal}
+        />
+        {modal}
+      </>
+    );
+  }
+
   return (
     <div className={styles.container}>
       {showHeading && (
@@ -473,27 +564,7 @@ const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true 
           {t("You must have at least two currencies wallet for this feature!")}
         </div>
       )}
-      <ConversionModal
-        isOpen={isOpen}
-        toggleModal={toggleModal}
-        amount={enteredCurrency}
-        exchangeAmount={resultCurrency}
-        currency={userCurrency}
-        exchangeCurrency={exchangedCurrency}
-        exchangePrice={exchangePrice}
-        setEnteredCurrency={setEnteredCurrency}
-        setResultCurrency={setResultCurrency}
-        setUserCurrency={setUserCurrency}
-        setExchangedCurrency={setExchangedCurrency}
-        exchangeFee={exchangeFee}
-        fxDet={fxDet}
-        senderWallet={senderWallet}
-        receiverWallet={receiverWallet}
-        quoteExpiresAt={quoteExpiresAt}
-        isQuoteExpired={isQuoteExpired}
-        onRefreshQuote={refreshQuote}
-        isRefreshing={loading}
-      />
+      {modal}
     </div>
   );
 };
