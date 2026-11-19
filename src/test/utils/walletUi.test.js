@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   bucketByMonth,
+  currencySymbol,
   niceMax,
   parseScheduleDate,
   spendingByLabel,
@@ -33,6 +34,15 @@ describe("wallet UI helpers", () => {
     expect(months[0]).toMatchObject({ in: 0, out: 7 });
     expect(months[11]).toMatchObject({ in: 100, out: 40 });
     expect(months[11].date.getMonth()).toBe(9);
+  });
+
+  it("takes currency symbols from the platform, falling back to the code", () => {
+    expect(currencySymbol("INR")).toBe("₹");
+    expect(currencySymbol("USD")).toBe("$");
+    expect(currencySymbol("EUR")).toBe("€");
+    expect(currencySymbol("CHF")).toBe("CHF");
+    expect(currencySymbol("USDT")).toBe("USDT");
+    expect(currencySymbol(undefined)).toBe("");
   });
 
   it("picks a readable axis maximum", () => {
