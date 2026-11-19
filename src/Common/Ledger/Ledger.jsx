@@ -36,10 +36,10 @@ const Ledger = ({
 
   return (
     <div className={s.ledger} style={{ "--cols": template }}>
-      {(title || description) && (
-        <div className={s.header}>
-          {title && <h3 className={s.main_title}>{t(title)}</h3>}
-          {description && <p className={s.main_description}>{t(description)}</p>}
+      {title && (
+        <div className={s.heading}>
+          <h3>{title}</h3>
+          {description && <p>{description}</p>}
         </div>
       )}
       <div className={s.tabs}>

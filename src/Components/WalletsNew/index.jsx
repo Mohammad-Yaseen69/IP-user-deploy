@@ -1,208 +1,34 @@
-// import styles from "./styles/index.module.css"
 import { useTranslation } from "react-i18next";
 import TopRight from "../topRight";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import Top from "./Top";
-import styles from "../TransactionsNewApi/styles/index.module.scss";
-import AccountLimits from "./AccountLimits";
+import WalletLimits from "./WalletLimits";
+import WalletLedger from "./WalletLedger";
+import ComingUp from "./ComingUp";
 import axios from "axios";
+import { getLimits } from "./getLimits";
 import { UserContext } from "../../Context/UserContext";
 import QrGenerate from "../Settings/QrGenerate";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
-import { getLimits } from "./getLimits";
-import MoneyInOut from "./MoneyInOut/MoneyInOut";
-import { useMoneyInOut } from "./MoneyInOut/useMoneyInOut";
 import CurConversion from "../HomeNewUpdated/CurConversion";
-import { ChevronRight } from "lucide-react";
-// import { useLocation } from "react-router"
-import btc from "../PaymentsNewer/files/bitcoin.png";
-import eth from "../PaymentsNewer/files/etherium.png";
-import usdt from "../PaymentsNewer/files/Tether.png";
-import RecentTrans from "../HomeNewUpdated/RecentTrans";
-import TopBar from "../../Layout/TopBar";
-import TransactionsTable from "./TransactionTable";
+import MoneyInOut from "../../Common/WalletUI/MoneyInOut";
+import { useMoneyInOut } from "../../Common/WalletUI/useMoneyInOut";
+import u from "../../Common/WalletUI/ui.module.scss";
 
+// Lives in its own file so other screens can load it without the whole page; re-exported for old imports.
 export { getLimits };
 
 const WalletsNew = () => {
   const { t } = useTranslation();
   const [currentWallet, setCurrentWallet] = useState(null);
   const cancelTokenRef = useRef();
-  const [currentType, setCurrentType] = useState("");
-  const [filtered, setFiltered] = useState([]);
   const can = usePermission();
-  const { data: moneyData, loading: moneyLoading } = useMoneyInOut(currentWallet);
-
-  const [categories, setCategories] = useState([
-    {
-      _id: "uncategorized",
-      name: "Uncategorized",
-      value: 0,
-      color: "#5926f0",
-    },
-  ]);
-
-  const [currenciesData, setCurrenciesData] = useState([
-    {
-      name: "Bitcoin",
-      img: btc,
-      value: "btc",
-      color: "#f39900",
-      graph_values: [13, 15, 25, 20, 30, 26, 24, 15, 16, 20],
-      item_bg: "#FFE1B4",
-      price: 0,
-      eurPrice: null,
-      text_color: "#ff9921",
-      text_bg: "rgba(255, 153, 33, 0.20)",
-      increment: "2.05%",
-      inc_bg: "#91BE65",
-      inc_color: "white",
-    },
-    {
-      name: "Tether",
-      img: usdt,
-      value: "usdt",
-      color: "#009393",
-      graph_values: [15, 12, 13, 10, 12, 14, 16, 16, 8],
-      item_bg: "#01E2E2",
-      price: 0,
-      eurPrice: null,
-      text_color: "#009393",
-      text_bg: "rgba(0, 147, 147, 0.22)",
-      increment: "2.05%",
-      inc_bg: "#fff",
-      inc_color: "black",
-    },
-    {
-      name: "Ethereum",
-      img: eth,
-      value: "eth",
-      color: "#101010",
-      graph_values: [8, 9, 16, 7, 20, 8, 12, 14],
-      item_bg: "#ececec",
-      price: 0,
-      eurPrice: null,
-      text_color: "#000",
-      text_bg: "rgba(0,0,0,.2)",
-      increment: "2.05%",
-      inc_bg: "#FD0D1b",
-      inc_color: "white",
-    },
-  ]);
-
-  useEffect(() => {
-    const getCryptoRates = async () => {
-      try {
-        const symbols = encodeURIComponent(JSON.stringify(["BTCUSDT", "ETHUSDT"]));
-
-        const [cryptoRes, exchangeRes] = await Promise.all([
-          fetch(`https://api.binance.com/api/v3/ticker/price?symbols=${symbols}`),
-          fetch("https://api.frankfurter.dev/v1/latest?base=USD&symbols=EUR"),
-        ]);
-
-        if (!cryptoRes.ok || !exchangeRes.ok) {
-          throw new Error("Failed to fetch currency rates");
-        }
-
-        const cryptoData = await cryptoRes.json();
-        const exchangeData = await exchangeRes.json();
-
-        const usdToEur = Number(exchangeData?.rates?.EUR);
-
-        if (!usdToEur) {
-          throw new Error("Invalid USD to EUR exchange rate");
-        }
-
-        const btcPrice = Number(cryptoData.find((i) => i.symbol === "BTCUSDT")?.price || 0);
-
-        const ethPrice = Number(cryptoData.find((i) => i.symbol === "ETHUSDT")?.price || 0);
-
-        setCurrenciesData((prev) =>
-          prev.map((currency) => {
-            let price = 0;
-
-            if (currency.value === "btc") price = btcPrice;
-            else if (currency.value === "eth") price = ethPrice;
-            else if (currency.value === "usdt") price = 1;
-
-            return {
-              ...currency,
-              price,
-              eurPrice: price * usdToEur,
-              increment: "0.00%",
-            };
-          }),
-        );
-      } catch (error) {
-        console.error("Error fetching crypto rates:", error);
-      }
-    };
-
-    getCryptoRates();
-  }, []);
-
-  useEffect(() => {
-    const updatedCategories = categories.map((category) => {
-      const filteredTransactions = filtered.filter((trx) => {
-        return (
-          trx?.status?.toLowerCase() == "completed" &&
-          trx?.categories?.some((trxCat) => trxCat === category._id) &&
-          trx?.transaction_type === currentType
-        );
-      });
-
-      const totalAmount = filteredTransactions.reduce((acc, trx) => acc + trx.amount, 0);
-
-      return {
-        ...category,
-        value: totalAmount,
-      };
-    });
-
-    const uncategorizedTransactions = filtered.filter(
-      (trx) =>
-        trx?.status?.toLowerCase() == "completed" &&
-        (!trx.categories || trx.categories?.length === 0) &&
-        trx?.transaction_type === currentType,
-    );
-    const totalUncategorizedAmount = uncategorizedTransactions.reduce(
-      (acc, trx) => acc + trx.amount,
-      0,
-    );
-
-    const uncategorizedIndex = updatedCategories.findIndex(
-      (category) => category._id === "uncategorized",
-    );
-
-    if (uncategorizedIndex !== -1) {
-      updatedCategories[uncategorizedIndex].value = totalUncategorizedAmount;
-    } else {
-      const uncategorizedCategory = {
-        _id: "uncategorized",
-        name: "Uncategorized",
-        value: totalUncategorizedAmount,
-        color: "#5926f0",
-      };
-
-      updatedCategories.push(uncategorizedCategory);
-    }
-
-    setCategories(updatedCategories);
-  }, [currentType]);
-
-  useEffect(() => {
-    let timeeout;
-    setCurrentType("debit");
-    timeeout = setTimeout(() => {
-      setCurrentType("credit");
-    }, 500);
-    return () => clearTimeout(timeeout);
-  }, [filtered]);
 
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const { authHeader, userWallets } = useContext(UserContext);
+  const { data: moneyData, loading: moneyLoading } = useMoneyInOut(currentWallet);
 
   useEffect(() => {
     if (currentWallet?._id) {
@@ -232,6 +58,14 @@ const WalletsNew = () => {
     return userWallets?.filter((item) => !item?.qrCode?.url) ?? [];
   }, [userWallets]);
 
+  // Same list the wallet carousel shows: crypto wallets live on the Crypto page.
+  const currencyCount = useMemo(
+    () =>
+      (userWallets ?? []).filter((w) => w?.provider !== "bvnk" && w?.wallet_type !== "crypto")
+        .length,
+    [userWallets],
+  );
+
   if (!can("wallet.view")) return null;
 
   return (
@@ -239,131 +73,51 @@ const WalletsNew = () => {
       {nonQrWallets?.length > 0 && (
         <QrGenerate wallets={userWallets?.filter((item) => !item?.qrCode?.url)} />
       )}
-      {window.innerWidth > 1000 ? (
-        <div className={styles.container}>
-          <div className={styles.top}>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <h4 style={{ marginBottom: 0 }}>{t("My Wallets")}</h4>
-              <p className={styles.w_m_sub}>{t("One wallet, every currency")}</p>
-            </div>
-            <TopRight />
+      <div className={u.page}>
+        <header className={u.header}>
+          <div className={u.headerText}>
+            <h1>{t("My Wallets")}</h1>
+            <p>
+              {currencyCount === 1
+                ? t("1 currency in one wallet.")
+                : t("{{n}} currencies in one wallet.", { n: currencyCount })}
+              {currentWallet?.wallet_id &&
+                ` ${t("Wallet ID")} ${currentWallet?.wallet_type?.toUpperCase()}-${currentWallet.wallet_id.toUpperCase()}.`}
+            </p>
           </div>
-          <div
-            className={styles.bottom}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "36px",
-              marginBottom: "1rem",
-            }}
-          >
-            <Top currentWallet={currentWallet} setCurrentWallet={setCurrentWallet} data={data} />
+          <div className={u.headerRight}>
+            <TopRight position="static" />
+          </div>
+        </header>
+        <div className={u.content}>
+          <Top currentWallet={currentWallet} setCurrentWallet={setCurrentWallet} data={data} />
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1.4fr 1fr",
-                gap: "24px",
-                alignItems: "stretch",
-              }}
-            >
-              {can("wallet.analytics.view") && (
-                <MoneyInOut
-                  currency={currentWallet?.currency?.code}
-                  data={moneyData}
-                  loading={moneyLoading}
-                />
-              )}
-              <CurConversion />
-            </div>
+          <div className={`${u.row} ${u.rowWide}`}>
+            {can("wallet.analytics.view") && (
+              <MoneyInOut
+                currency={currentWallet?.currency?.code}
+                data={moneyData}
+                loading={moneyLoading}
+              />
+            )}
+            {can("wallet.payment.conversion") && <CurConversion variant="card" />}
+          </div>
 
+          <div className={`${u.row} ${u.rowWide}`}>
             {can("wallet.limits.view") && (
-              <AccountLimits
+              <WalletLimits
                 data={data}
                 error={error}
                 loading={loading}
                 currentWallet={currentWallet}
               />
             )}
-            <div
-              style={{
-                maxHeight: "80vh",
-                overflowX: "auto",
-              }}
-            >
-              {can("transactions.wallet.list") && (
-                <TransactionsTable
-                  currentWallet={currentWallet}
-                  filtered={filtered}
-                  setFiltered={setFiltered}
-                />
-              )}
-            </div>
+            {can("schedules.view") && <ComingUp />}
           </div>
-        </div>
-      ) : (
-        <div className={`${styles.mobile} ${styles.w_m_root}`}>
-          <div style={{}}>
-            <TopBar />
-          </div>
-          <div
-            className={styles.bottom}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "16px",
-              margin: "1rem 0",
-            }}
-          >
-            <Top currentWallet={currentWallet} setCurrentWallet={setCurrentWallet} data={data} />
-            <div className={styles.crypto_row}>
-              <div className={styles.crypto_top}>
-                <h3 className={styles.crypto_heading}>{t("Crypto")}</h3>
-                <a href="/onboarding-IBAN/crypto" className={styles.crypto_link}>
-                  {t(" Open Crypto")}
-                  <ChevronRight size={14} />
-                </a>
-              </div>
-              <div className={styles.crypto_track}>
-                {currenciesData.map((item) => (
-                  <div key={item.name} className={styles.crypto_item}>
-                    <div className={styles.crypto_left}>
-                      <span className={styles.crypto_icon} style={{ background: item.item_bg }}>
-                        <img src={item.img} alt={item.name} />
-                      </span>
-                      <div className={styles.crypto_info}>
-                        <strong>{item.name}</strong>
-                        <small>{item.value.toUpperCase()}</small>
-                      </div>
-                    </div>
 
-                    <div className={styles.crypto_right}>
-                      <strong>${item.price ? item.price.toLocaleString("en-US") : "0.00"}</strong>
-                      <small>≈ {item.eurPrice ? item.eurPrice.toFixed(2) : "0.00"} EUR</small>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <CurConversion />
-            {/* <WalletActivityMobile /> */}
-            {/* {can("transactions.wallet.list") && (
-              <TransactionsTable
-                title={t("Wallet transactions")}
-                description={t("Every payment in and out of this wallet, all currencies")}
-              />
-              )} */}
-            {can("dashboard.recent-transactions.view") && (
-              <RecentTrans currentWallet={currentWallet} title={t("wallet Activity")} />
-            )}
-          </div>
+          {can("transactions.wallet.list") && <WalletLedger currentWallet={currentWallet} />}
         </div>
-      )}
+      </div>
     </>
   );
 };

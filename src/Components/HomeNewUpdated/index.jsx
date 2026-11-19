@@ -1,43 +1,42 @@
-import { useMemo, useContext, useEffect, useState, lazy } from "react";
+import { useContext, useEffect, useMemo, useState, lazy } from "react";
 import styles from "./styles/index.module.scss";
-// import cardsStyle from "./styles/CardsContainer.module.css";
+import cardsStyle from "./styles/CardsContainer.module.css";
 import { useTranslation } from "react-i18next";
-import { BsBriefcase, BsCheckLg, BsChevronRight } from "react-icons/bs";
-import { ChevronRight } from "react-feather";
+import { BsFillPlayFill } from "react-icons/bs";
+import { MessageCircle } from "lucide-react";
+import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
-// import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
-import { useMoneyInOut } from "../WalletsNew/MoneyInOut/useMoneyInOut";
-import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
-import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
+import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 
-const BalanceComponent = lazy(() => import("./BalanceCard"));
 const EarnMoneyBanner = lazy(() => import("./EarnMoneyBanner"));
-// const TransDetails = lazy(() => import("./TransDetails"));
-const QuickLinksNew = lazy(() => import("./QuickLinksNew"));
-// const Stats = lazy(() => import("./Stats"));
-const RecentTrans = lazy(() => import("./RecentTrans"));
-const RightContainer = lazy(() => import("./RightContainer"));
-// const SearchComponent = lazy(() => import("./Search"));
-// const ReferalRewards = lazy(() => import("./ReferalRewards"));
+const TransDetails = lazy(() => import("./TransDetails"));
+const Stats = lazy(() => import("./Stats"));
+const SearchComponent = lazy(() => import("./Search"));
 const CryptoCard = lazy(() => import("./CryptoCard"));
 const RecentBeneficiaries = lazy(() => import("./RecentBeneficiaries"));
-// const WalletsMobile = lazy(() => import("./WalletsMobile"));
+const WalletsMobile = lazy(() => import("./WalletsMobile"));
 const CurConversion = lazy(() => import("./CurConversion"));
-// const QuickLinksMobile = lazy(() => import("./QuickLinksMobile"));
+const QuickLinksMobile = lazy(() => import("./QuickLinksMobile"));
 const TopBar = lazy(() => import("../../Layout/TopBar"));
-// const BusinessModal = lazy(() => import("../BusinessModal"));
-// const OtherBalance = lazy(() => import("./OtherBalance"));
-const MoneyInOut = lazy(() => import("../WalletsNew/MoneyInOut/MoneyInOut"));
-const SpendingBreakdown = lazy(() => import("../Analytics/SpendingBreakdown"));
+const BusinessModal = lazy(() => import("../BusinessModal"));
 
-import btc from "../PaymentsNewer/files/bitcoin.png";
-import eth from "../PaymentsNewer/files/etherium.png";
-import usdt from "../PaymentsNewer/files/Tether.png";
+import btc from "../PaymentsNewer/files/btc.png";
+import eth from "../PaymentsNewer/files/eth.webp";
+import usdt from "../PaymentsNewer/files/usdt.webp";
 import crown from "./files/crown.svg";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import TopRight from "../topRight";
-import { BalanceVisibilityProvider } from "../../Context/BalanceVisibilityContext";
-import axios from "axios";
+import MoneyInOut from "../../Common/WalletUI/MoneyInOut";
+import { useMoneyInOut } from "../../Common/WalletUI/useMoneyInOut";
+import u from "../../Common/WalletUI/ui.module.scss";
+import BalanceHero from "./redesign/BalanceHero";
+import WalletPanel from "./redesign/WalletPanel";
+import QuickTransfer from "./redesign/QuickTransfer";
+import RecentActivity from "./redesign/RecentActivity";
+import CryptoBalances from "./redesign/CryptoBalances";
+import SpendingCard from "./redesign/SpendingCard";
+import { PartnerBanner, UpgradeCard } from "./redesign/Promos";
+import d from "./redesign/dashboard.module.scss";
 
 const HomeNewUpdated = () => {
   const [currenciesData, setCurrenciesData] = useState([
@@ -49,7 +48,6 @@ const HomeNewUpdated = () => {
       graph_values: [13, 15, 25, 20, 30, 26, 24, 15, 16, 20],
       item_bg: "#FFE1B4",
       price: 0,
-      eurPrice: null,
       text_color: "#ff9921",
       text_bg: "rgba(255, 153, 33, 0.20)",
       increment: "2.05%",
@@ -64,7 +62,6 @@ const HomeNewUpdated = () => {
       graph_values: [15, 12, 13, 10, 12, 14, 16, 16, 8],
       item_bg: "#01E2E2",
       price: 0,
-      eurPrice: null,
       text_color: "#009393",
       text_bg: "rgba(0, 147, 147, 0.22)",
       increment: "2.05%",
@@ -79,7 +76,6 @@ const HomeNewUpdated = () => {
       graph_values: [8, 9, 16, 7, 20, 8, 12, 14],
       item_bg: "#ececec",
       price: 0,
-      eurPrice: null,
       text_color: "#000",
       text_bg: "rgba(0,0,0,.2)",
       increment: "2.05%",
@@ -93,41 +89,22 @@ const HomeNewUpdated = () => {
     const getCryptoRates = async () => {
       try {
         const symbols = encodeURIComponent(JSON.stringify(["BTCUSDT", "ETHUSDT"]));
+        const res = await fetch(`https://api.binance.com/api/v3/ticker/price?symbols=${symbols}`);
+        const data = await res.json();
 
-        const [cryptoRes, exchangeRes] = await Promise.all([
-          fetch(`https://api.binance.com/api/v3/ticker/price?symbols=${symbols}`),
-          fetch("https://api.frankfurter.dev/v1/latest?base=USD&symbols=EUR"),
-        ]);
-
-        if (!cryptoRes.ok || !exchangeRes.ok) {
-          throw new Error("Failed to fetch currency rates");
-        }
-
-        const cryptoData = await cryptoRes.json();
-        const exchangeData = await exchangeRes.json();
-
-        const usdToEur = Number(exchangeData?.rates?.EUR);
-
-        if (!usdToEur) {
-          throw new Error("Invalid USD to EUR exchange rate");
-        }
-
-        const btcPrice = Number(cryptoData.find((i) => i.symbol === "BTCUSDT")?.price || 0);
-
-        const ethPrice = Number(cryptoData.find((i) => i.symbol === "ETHUSDT")?.price || 0);
+        const btcPrice = data.find((i) => i.symbol === "BTCUSDT")?.price || 0;
+        const ethPrice = data.find((i) => i.symbol === "ETHUSDT")?.price || 0;
 
         setCurrenciesData((prev) =>
           prev.map((currency) => {
-            let price = 0;
-
-            if (currency.value === "btc") price = btcPrice;
-            else if (currency.value === "eth") price = ethPrice;
-            else if (currency.value === "usdt") price = 1;
+            let price = currency.price;
+            if (currency.value === "btc") price = Number(btcPrice);
+            else if (currency.value === "eth") price = Number(ethPrice);
+            else if (currency.value === "usdt") price = 1.0;
 
             return {
               ...currency,
-              price,
-              eurPrice: price * usdToEur,
+              price: price,
               increment: "0.00%",
             };
           }),
@@ -139,13 +116,6 @@ const HomeNewUpdated = () => {
 
     getCryptoRates();
   }, []);
-
-  const getTodayDate = () => {
-    const now = new Date();
-    const weekday = now.toLocaleDateString("en-GB", { weekday: "long" });
-    const month = now.toLocaleDateString("en-GB", { month: "long" });
-    return `${weekday} ${now.getDate()} ${month}`;
-  };
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -161,441 +131,197 @@ const HomeNewUpdated = () => {
     return "Good evening";
   };
 
-  const {
-    userDetails,
-    profileCompletedPercentage,
-    userWallets,
-    authHeader,
-    croppedImages,
-    isAgentLogin,
-    agentDetails,
-    totalReferralAmount,
-  } = useContext(UserContext);
-
+  const { userDetails, profileCompletedPercentage, userWallets, isAgentLogin, agentDetails } =
+    useContext(UserContext);
   const [showCompletionModal, setShowCompletionModal] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState(null);
-  const activeWallet = selectedWallet ?? userWallets?.[0];
-  const [friendsJoined, setFriendsJoined] = useState(0);
-  const [analyticsReports, setAnalyticsReports] = useState({});
-  const [analyticsSummary, setAnalyticsSummary] = useState({});
-  const [analyticsLoading, setAnalyticsLoading] = useState(false);
 
-  useEffect(() => {
-    if (!userDetails?._id || userDetails?.account_type !== "individual") return;
-
-    axios
-      .get(`${import.meta.env.VITE_IP_DEV_API}/api/invitation/get-referral/${userDetails._id}`, {
-        headers: authHeader,
-      })
-      .then((res) => {
-        const decrypted = decryptData(res.data.data);
-        setFriendsJoined(decrypted?.data?.length ?? 0);
-      })
-      .catch(() => setFriendsJoined(0));
-  }, [userDetails?._id]);
-
-  const [apiDates, setApiDates] = useState(() => {
-    const now = new Date();
-    const start = new Date(now);
-    start.setMonth(now.getMonth() - 1);
-    return {
-      from: start.toISOString().split("T")[0],
-      to: now.toISOString().split("T")[0],
-    };
-  });
-
-  const analyticsSummaryForWallet = useMemo(() => {
-    const code = activeWallet?.currency?.code;
-    if (code && analyticsSummary?.[code]) return analyticsSummary[code];
-    return Object.values(analyticsSummary ?? {})[0] ?? {};
-  }, [analyticsSummary, activeWallet]);
-
-  useEffect(() => {
-    if (!userDetails?._id || !activeWallet?.wallet_id || !apiDates) return;
-
-    const BASE = import.meta.env.VITE_IP_DEV_API;
-
-    const getAnalytics = async () => {
-      setAnalyticsLoading(true);
-      try {
-        const [typeRes, summaryRes] = await Promise.all([
-          axios.post(
-            `${BASE}/api/transaction/search-account-transactions-by-date-type/${userDetails._id}/0/0`,
-            { data: encryptData({ ...apiDates }) },
-            { headers: authHeader },
-          ),
-          axios.post(
-            `${BASE}/api/transaction/get-transactions-report-user/0/0`,
-            {
-              data: encryptData({
-                ...apiDates,
-                account_id: userDetails._id,
-                wallet_id: activeWallet.wallet_id,
-              }),
-            },
-            { headers: authHeader },
-          ),
-        ]);
-
-        const typeDecrypted = decryptData(typeRes.data.data);
-        const summaryDecrypted = decryptData(summaryRes.data.data);
-
-        setAnalyticsReports(typeDecrypted?.transactionsByServiceTypeAndCurrency ?? {});
-        setAnalyticsSummary(summaryDecrypted?.transactionSummary ?? {});
-      } catch (err) {
-        console.error("analytics error", err);
-      } finally {
-        setAnalyticsLoading(false);
-      }
-    };
-
-    getAnalytics();
-  }, [userDetails?._id, activeWallet?.wallet_id, apiDates]);
-  const { data: moneyData, loading: moneyLoading } = useMoneyInOut(selectedWallet);
-  const currency = selectedWallet?.currency?.code ?? userWallets?.[0]?.currency?.code;
-
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const [showBusinessModal, setShowBusinessModal] = useState(false);
+  const [hideBalances, setHideBalances] = useState(false);
+  const {
+    data: moneyData,
+    transactions: walletTransactions,
+    loading: moneyLoading,
+  } = useMoneyInOut(window.innerWidth > 1000 ? selectedWallet : null); // the mobile layout has its own charts
+  const walletCurrency = selectedWallet?.currency?.code ?? "";
+  const thisMonth = moneyData[moneyData.length - 1];
 
-  const firstName = (
+  const walletCount = useMemo(
+    () => (userWallets ?? []).filter((w) => w?.wallet_type !== "crypto").length,
+    [userWallets],
+  );
+
+  const firstName =
     userDetails?.account_type?.toLowerCase() === "individual"
       ? userDetails?.user?.first_name
       : isAgentLogin
         ? agentDetails?.first_name
-        : userDetails?.company?.company_name
-  )?.split(" ")[0];
+        : userDetails?.company?.company_name;
 
   return (
     <>
-      <BalanceVisibilityProvider>
-        {window.innerWidth > 1000 && (
-          <div
-            className={styles.container}
-            onClick={() => {
-              if (profileCompletedPercentage < 100 && !showCompletionModal) {
-                setShowCompletionModal(true);
-              }
-            }}
-          >
-            <div className={styles.top}>
-              <div className={styles.top_section}>
-                <h4>{t("Dashboard")}</h4>
-                <p>{t("Manage and monitor your InstaPay Wallet")}</p>
-              </div>
-              <TopRight />
+      {window.innerWidth > 1000 && (
+        <div
+          className={u.page}
+          onClick={() => {
+            if (profileCompletedPercentage < 100 && !showCompletionModal) {
+              setShowCompletionModal(true);
+            }
+          }}
+        >
+          <header className={u.header}>
+            <div className={u.headerText}>
+              <h1>{t("Dashboard")}</h1>
+              <p>{t("Manage and monitor your InstaPay Wallet")}</p>
             </div>
-            <div className={styles.greeting}>
-              <h1>
-                {getGreeting()}, <span className={styles.name}>{firstName}</span>
-              </h1>
-              <div className={styles.greeting_alert}>
-                <span className={styles.date}>{getTodayDate()}</span>
-                {/* <span className={`${styles.pill} ${styles.pill_warning}`}>
-                {t("2 bills due this week")}
-              </span> */}
-                {/* <span className={`${styles.pill} ${styles.pill_info}`}>
-                {t("1 payment pending")}
-              </span> */}
+            <div className={u.headerRight}>
+              <TopRight position="static" />
+            </div>
+          </header>
+
+          <div className={u.content}>
+            <div className={d.greeting}>
+              <div>
+                <h2>
+                  {t(getGreeting())}
+                  {firstName ? `, ${firstName}` : ""}
+                </h2>
+                <p>
+                  {new Date().toLocaleDateString(i18n.language, {
+                    weekday: "long",
+                    day: "numeric",
+                    month: "long",
+                  })}
+                </p>
+              </div>
+              <div className={d.greetingTools}>
+                <SearchComponent showOthers={false} />
+                <a
+                  href="https://api.whatsapp.com/send/?phone=41783192428"
+                  target="_blank"
+                  rel="noreferrer"
+                  className={d.chat}
+                >
+                  <MessageCircle size={16} />
+                  {t("Chat with us")}
+                </a>
               </div>
             </div>
-            <div className={styles.sub}>
-              <div className={styles.left}>
-                <div className={styles.card}>
-                  <div className={styles.balance_currencies}>
-                    {can("dashboard.balance.view") && <BalanceComponent />}
-                    {/* {can("dashboard.balance.view") &&
-                    userWallets.some((item) => item?.balance?.reserved) && <OtherBalance />} */}
-                  </div>
-                  <QuickLinksNew />
-                </div>
-              </div>
-            </div>
-            <div className={styles.right}>
+
+            <section className={d.hero}>
+              <BalanceHero
+                hidden={hideBalances}
+                onToggleHidden={() => setHideBalances((prev) => !prev)}
+                walletCount={walletCount}
+                activity={
+                  can("dashboard.insights.view") && selectedWallet && !moneyLoading
+                    ? { code: walletCurrency, net: thisMonth.in - thisMonth.out }
+                    : null
+                }
+              />
               {can("wallet.list.view") && (
-                <RightContainer
-                  setCurrentWallet={setSelectedWallet}
-                  showBusinessModal={showBusinessModal}
-                  setShowBusinessModal={setShowBusinessModal}
-                />
+                <WalletPanel setCurrentWallet={setSelectedWallet} hidden={hideBalances} />
               )}
-            </div>
-            <div className={styles.Money_section}>
+            </section>
+
+            <QuickTransfer />
+
+            <div className={`${u.row} ${u.rowDash}`}>
               {can("dashboard.insights.view") && (
-                <MoneyInOut currency={currency} data={moneyData} loading={moneyLoading} />
+                <MoneyInOut currency={walletCurrency} data={moneyData} loading={moneyLoading} />
               )}
               {can("dashboard.recent-transactions.view") && (
-                <RecentTrans currentWallet={selectedWallet} />
+                <RecentActivity currentWallet={selectedWallet} />
               )}
             </div>
-            <div className={styles.quickTransfer}>
-              <RecentBeneficiaries />
+
+            <CryptoBalances tickers={currenciesData} hidden={hideBalances} />
+
+            <div className={`${u.row} ${u.rowDash}`}>
+              {can("dashboard.insights.view") && (
+                <SpendingCard
+                  transactions={walletTransactions}
+                  currency={walletCurrency}
+                  loading={moneyLoading}
+                />
+              )}
+              {can("wallet.payment.conversion") && <CurConversion variant="card" />}
             </div>
-            <div className={styles.crypto_row}>
-              <div className={styles.crypto_top}>
-                <div className={styles.crypto_title}>
-                  <h4>{t("Crypto balances")}</h4>
-                  <p>{t("Every service you use, with what needs your attention")}</p>
-                </div>
-                <a href="/onboarding-IBAN/crypto" className={styles.crypto_link}>
-                  {t("Open Crypto")}
-                  <span className={styles.crypto_chevron}>
-                    <ChevronRight size={16} />
-                  </span>
-                </a>
-              </div>
-              {userWallets.some((item) => item?.balance?.reserved) ? (
-                <div className={styles.crypto_track}>
-                  {currenciesData.map((item) => (
-                    <CryptoCard key={item.name} item={item} />
-                  ))}
-                </div>
-              ) : (
-                <div
-                  className={styles.crypto_track}
-                  style={{ display: "flex", scrollbarWidth: "none" }}
+
+            <div className={`${u.row} ${u.rowDash}`}>
+              <PartnerBanner hidden={hideBalances} />
+              {userDetails?.account_type === "individual" && (
+                <UpgradeCard onUpgrade={() => setShowBusinessModal(true)} />
+              )}
+            </div>
+          </div>
+          <BusinessModal isOpen={showBusinessModal} toggle={() => setShowBusinessModal(false)} />
+        </div>
+      )}
+      {window.innerWidth < 1000 && (
+        <div
+          className={styles.mobile_home}
+          onClick={() => {
+            if (profileCompletedPercentage < 100 && !showCompletionModal) {
+              setShowCompletionModal(true);
+            }
+          }}
+        >
+          <BusinessModal isOpen={showBusinessModal} toggle={() => setShowBusinessModal(false)} />
+          <TopBar />
+          <EarnMoneyBanner />
+          <RecentBeneficiaries />
+          {can("wallet.list.view") && <WalletsMobile setCurrentWallet={setSelectedWallet} />}
+          {/* crypto */}
+          <div className={styles.crypto}>
+            <h5>
+              {t("crypto wallet balance")
+                .split(" ")
+                ?.map((item) => service_name_formatter(item))
+                ?.join(" ")}
+            </h5>
+            <div className={styles.scroll_view}>
+              {currenciesData.map((item) => (
+                <CryptoCard key={item.name} item={item} />
+              ))}
+            </div>
+            {userDetails?.account_type === "individual" && (
+              <button
+                onClick={() => setShowBusinessModal(true)}
+                className={cardsStyle.button}
+                style={{
+                  background: "linear-gradient(to left, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
+                  color: "white",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: ".75rem",
+                  borderRadius: "7px",
+                  padding: "1rem",
+                }}
+              >
+                <img src={crown} alt="c" loading="lazy" style={{ width: "20px" }} />
+                <span
+                  style={{
+                    color: "white",
+                    WebkitTextFillColor: "white",
+                    fontSize: ".9rem",
+                  }}
                 >
-                  {currenciesData.map((item) => (
-                    <CryptoCard key={item.name} item={item} />
-                  ))}
-                </div>
-              )}
-            </div>
-            <div className={styles.analytics_row}>
-              <SpendingBreakdown
-                data={analyticsSummaryForWallet}
-                reports={analyticsReports}
-                currentWallet={activeWallet}
-                setApiDates={setApiDates}
-                isLoading={analyticsLoading}
-              />
-              <CurConversion />
-            </div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "stretch",
-                gap: "1rem",
-                width: "100%",
-              }}
-            >
-              {userDetails?.account_type === "individual" ? (
-                <>
-                  <div
-                    className={styles.banner_main}
-                    style={{
-                      width: "63%",
-                    }}
-                  >
-                    <EarnMoneyBanner
-                      showLink={true}
-                      code={userDetails?.username}
-                      rewardsEarned={totalReferralAmount}
-                      friendsJoined={friendsJoined}
-                    />
-                  </div>
-                  <div style={{ width: "37%", display: "flex" }}>
-                    <div
-                      style={{
-                        flex: 1,
-                        minWidth: 0,
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-start",
-                        justifyContent: "flex-start",
-                        gap: "16px",
-                        boxSizing: "border-box",
-                        padding: "24px",
-                        background: "#FFFFFF",
-                        border: "1px solid #EAECF0",
-                        borderRadius: "16px",
-                        boxShadow: "0px 1px 2px rgba(16, 24, 40, 0.05)",
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: "48px",
-                          height: "48px",
-                          borderRadius: "10px",
-                          background: "#F4F1FE",
-                          color: "#5926F0",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          flexShrink: 0,
-                        }}
-                      >
-                        <BsBriefcase size={18} />
-                      </div>
-
-                      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                        <h3
-                          style={{
-                            fontSize: "18px",
-                            fontWeight: 800,
-                            color: "#1B1F2A",
-                            lineHeight: "26.1px",
-                            fontFamily: "Inter",
-                          }}
-                        >
-                          {t("Upgrade to a Business account")}
-                        </h3>
-                        <p
-                          style={{
-                            fontWeight: "400",
-                            fontSize: "14px",
-                            color: "#6E7687",
-                            lineHeight: "21px",
-                          }}
-                        >
-                          {t("Run payroll, invoices and team cards from the same login.")}
-                        </p>
-                      </div>
-                      <ul
-                        style={{
-                          listStyle: "none",
-                          margin: 0,
-                          padding: 0,
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: "8px",
-                          fontWeight: "400",
-                          fontSize: "13px",
-                          lineHeight: "18.85px",
-                        }}
-                      >
-                        {[
-                          t("Business IBAN in your company name"),
-                          t("Bulk payments and approvals"),
-                        ].map((item) => (
-                          <li
-                            key={item}
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "8px",
-                              fontSize: "0.875rem",
-                              color: "#667085",
-                            }}
-                          >
-                            <BsCheckLg size={14} style={{ color: "#12B76A", flexShrink: 0 }} />
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                      <button
-                        onClick={() => setShowBusinessModal(true)}
-                        style={{
-                          marginTop: "auto",
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: "8px",
-                          alignSelf: "flex-start",
-                          background: "#EFF1F6",
-                          color: "#1B1F2A",
-                          border: "none",
-                          borderRadius: "8px",
-                          padding: "10px 16px",
-                          fontSize: "14px",
-                          fontWeight: 600,
-                          fontStyle: "Medium",
-                          lineHeight: "20.3px",
-                          cursor: "pointer",
-                          fontFamily: "Inter",
-                        }}
-                      >
-                        {t("Start upgrade")}
-                        <BsChevronRight size={12} />
-                      </button>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className={styles.banner_mains}>
-                    <EarnMoneyBanner
-                      showLink={true}
-                      code={userDetails?.username}
-                      rewardsEarned={totalReferralAmount}
-                      friendsJoined={friendsJoined}
-                    />
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-        )}
-        {/*
-      mobile screen */}
-        {window.innerWidth < 1000 && (
-          <div
-            className={styles.mobile_home}
-            onClick={() => {
-              if (profileCompletedPercentage < 100 && !showCompletionModal) {
-                setShowCompletionModal(true);
-              }
-            }}
-          >
-            {/* <BusinessModal isOpen={showBusinessModal} toggle={() => setShowBusinessModal(false)} /> */}
-            <TopBar />
-            <div className={styles.greeting}>
-              <h1>
-                {getGreeting()}, {firstName}
-              </h1>
-              <p>{getTodayDate()}</p>
-            </div>
-            <BalanceVisibilityProvider>
-              <div className={styles.mobile_balance}>
-                {can("dashboard.balance.view") && <BalanceComponent />}
-                <QuickLinksNew />
-              </div>
-            </BalanceVisibilityProvider>
-            <RecentBeneficiaries />
-            {can("dashboard.insights.view") && (
-              <MoneyInOut currency={currency} data={moneyData} loading={moneyLoading} />
+                  {t("Upgrade to Business Account")}
+                </span>
+                <BsFillPlayFill size={25} style={{ marginLeft: "auto" }} />
+              </button>
             )}
-            {can("dashboard.recent-transactions.view") && (
-              <RecentTrans currentWallet={activeWallet} />
-            )}
-            <div className={styles.crypto_row}>
-              <div className={styles.crypto_top}>
-                <h3 className={styles.crypto_heading}>{t("Crypto")}</h3>
-                <a href="/onboarding-IBAN/crypto" className={styles.crypto_link}>
-                  {t("Open Crypto")}
-                  <ChevronRight size={14} />
-                </a>
-              </div>
-              <div className={styles.crypto_track}>
-                {currenciesData.map((item) => (
-                  <div key={item.name} className={styles.crypto_item}>
-                    <div className={styles.crypto_left}>
-                      <span className={styles.crypto_icon} style={{ background: item.item_bg }}>
-                        <img src={item.img} alt={item.name} />
-                      </span>
-                      <div className={styles.crypto_info}>
-                        <strong>{item.name}</strong>
-                        <small>{item.value.toUpperCase()}</small>
-                      </div>
-                    </div>
-
-                    <div className={styles.crypto_right}>
-                      <strong>${item.price ? item.price.toLocaleString("en-US") : "0.00"}</strong>
-                      <small>≈ {item.eurPrice ? item.eurPrice.toFixed(2) : "0.00"} EUR</small>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            {/* <CurConversion /> */}
-            <EarnMoneyBanner
-              showLink={false}
-              code={userDetails?.username}
-              rewardsEarned={totalReferralAmount}
-              friendsJoined={friendsJoined}
-            />
           </div>
-        )}
-      </BalanceVisibilityProvider>
+          <QuickLinksMobile />
+          {can("dashboard.insights.view") && <Stats currentWallet={selectedWallet} />}
+          {can("dashboard.insights.view") && <TransDetails selectedWallet={selectedWallet} />}
+          <CurConversion />
+        </div>
+      )}
     </>
   );
 };

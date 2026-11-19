@@ -1,11 +1,20 @@
+import "swiper/css";
+import "swiper/css/effect-cards";
 import { Swiper, SwiperSlide } from "swiper/react";
-import styles from "./styles/Top.module.css";
 import { EffectCards } from "swiper";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ArrowLeftRight,
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  Plus,
+  Power,
+  ScrollText,
+  Snowflake,
+} from "lucide-react";
 import { UserContext } from "../../Context/UserContext";
 import { useTranslation } from "react-i18next";
-import Card from "./Card";
 import DefaultWalletModal from "./DefaultWalletModal";
 import AddCurrencyModal from "./AddCurrencyModal";
 import { useLocation, useNavigate } from "react-router";
@@ -21,7 +30,42 @@ import QrGenerate from "../Settings/QrGenerate";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import { Tooltip } from "@mui/material";
 import SendCryptoModal from "./SendCryptoModal";
-import { ICONS } from "./files/icons";
+import WalletCard from "../../Common/WalletUI/WalletCard";
+import u from "../../Common/WalletUI/ui.module.scss";
+import r from "./styles/redesign.module.scss";
+
+// One action tile of the wallet hero. The wrapper span lets the tooltip show on a disabled button.
+const Tile = ({
+  Icon,
+  title,
+  sub,
+  tooltip = "",
+  showTooltip = false,
+  danger,
+  children,
+  ...rest
+}) => (
+  <Tooltip title={tooltip} arrow disableHoverListener={!showTooltip}>
+    <span className={r.tileWrap}>
+      <button type="button" className={r.tile} {...rest}>
+        <span className={`${r.tileIcon} ${danger ? r.tileIconDanger : ""}`}>
+          <Icon size={18} strokeWidth={1.75} />
+        </span>
+        <span className={r.tileText}>
+          <strong>{title}</strong>
+          <small>{sub}</small>
+        </span>
+        {children}
+      </button>
+    </span>
+  </Tooltip>
+);
+
+const Switch = ({ on }) => (
+  <span className={`${r.switch} ${on ? r.switchOn : ""}`} aria-hidden>
+    <i />
+  </span>
+);
 
 const Top = ({ currentWallet, setCurrentWallet, data }) => {
   const navigate = useNavigate();
@@ -37,14 +81,10 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
   } = useContext(UserContext);
   const can = usePermission();
   // Crypto wallets live on the Crypto & Stablecoins page, not here.
-
   const userWallets = useMemo(
-    () =>
-      (allWallets || []).filter(
-        (wallet) => wallet?.provider !== "bvnk" && wallet?.wallet_type !== "crypto",
-      ),
+    () => (allWallets || []).filter((w) => w?.provider !== "bvnk"),
     [allWallets],
-  );
+  ).filter((wallet) => wallet?.wallet_type !== "crypto");
   const [activeDot, setActiveDot] = useState(0);
   const [currentDefault, setCurrentDefault] = useState(false);
   const [currentActive, setCurrentActive] = useState(false);
@@ -198,7 +238,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
         });
     }
   };
-  const [savedWallet, setSavedWallet] = useState({});
+  const [savedWallet, setSavedWalelt] = useState({});
 
   const isCryptoWallet = useMemo(() => currentWallet?.wallet_type === "crypto", [currentWallet]);
 
@@ -240,94 +280,104 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
       { replace: true },
     );
   };
+
+  const canSetDefault =
+    can("wallet.status.update") && currentWallet?.wallet_type !== "crypto" && !blockedWallet;
+
+  const statusLabel = adminBlocked
+    ? t("Blocked By Admin")
+    : blocked
+      ? t("Blocked")
+      : currentActive
+        ? t("Active")
+        : t("Disabled");
+
   return (
-    <div className={styles.container}>
+    <div className={r.hero}>
       {savedWallet?._id && userDetails?.username ? (
         <QrGenerate wallets={[savedWallet]} key={"LOLO"} />
       ) : (
         ""
       )}
-      <div className={styles.left} style={{ alignItems: "flex-start" }}>
-        <div className={styles.balanceHeader}>
-          <span className={styles.balanceIcon}>
+      <div className={r.heroHead}>
+        <div className={r.heroTitle}>
+          <span className={r.currencyTile}>
             {currentWallet?.currency?.symbol || currentWallet?.currency?.code}
           </span>
-          <div className={styles.balanceText}>
-            <h2>
+          <div>
+            <h2 className={u.title}>
               {currentWallet?.currency?.code} {t("Wallet")}
             </h2>
-            <p>{t("Last 30 days")}</p>
+            <p className={u.sub}>{statusLabel}</p>
           </div>
         </div>
-        <div className={styles.cards}>
+        {can("wallet.currencies.add") && (
+          <button
+            type="button"
+            className={r.addCurrency}
+            onClick={() => setShowAddCurrencyModal(!showAddCurrencyModal)}
+          >
+            <Plus size={18} />
+            {t("Add new currency")}
+          </button>
+        )}
+      </div>
+
+      <div className={r.heroBody}>
+        <div className={r.cards}>
           {can("wallet.list.view") && (
-            <div className={styles.swiper_wrap}>
-              <Swiper
-                effect={"cards"}
-                grabCursor={true}
-                modules={[EffectCards]}
-                cardsEffect={{
-                  rotate: false,
-                  slideShadows: false,
-                }}
-                style={{
-                  minWidth: userWallets?.length === 1 ? "22vw" : "250px",
-                  width: userWallets?.length === 1 ? "100%" : "auto",
-                  cursor: "none",
-                }}
-                className={`mySwiper ${styles.swiper}`}
-                onSwiper={(swiper) => {
-                  if (activeDot > 0) {
-                    swiper.slideTo(activeDot);
-                  }
-                }}
-                onSlideChange={(e) => {
-                  setActiveDot(e.activeIndex);
-                }}
-                ref={swiperRef}
-              >
-                {userWallets?.length > 0
-                  ? userWallets.map((item, index) => (
-                      <SwiperSlide
-                        key={index}
-                        style={{
-                          cursor: "none",
-                          borderRadius: "10px",
-                        }}
-                      >
-                        <Card
-                          data={data}
-                          current={activeDot}
-                          index={index}
-                          key={index}
-                          wallet={item}
-                          canSetDefault={can("wallet.status.update")}
-                          onSetDefault={() => setShowConfirmationModal(true)}
-                        />
-                      </SwiperSlide>
-                    ))
-                  : ""}
-              </Swiper>
-            </div>
+            <Swiper
+              effect={"cards"}
+              grabCursor={true}
+              modules={[EffectCards]}
+              cardsEffect={{
+                rotate: false,
+                slideShadows: false,
+                perSlideOffset: 0,
+              }}
+              className={`mySwiper ${r.swiper}`}
+              onSwiper={(swiper) => {
+                if (activeDot > 0) {
+                  swiper.slideTo(activeDot);
+                }
+              }}
+              onSlideChange={(e) => {
+                setActiveDot(e.activeIndex);
+              }}
+              ref={swiperRef}
+            >
+              {userWallets?.length > 0
+                ? userWallets.map((item, index) => (
+                    <SwiperSlide key={index} style={{ borderRadius: "14px" }}>
+                      <WalletCard
+                        wallet={item}
+                        limits={data}
+                        onSetDefault={
+                          canSetDefault && index === activeDot
+                            ? () => setShowConfirmationModal(true)
+                            : undefined
+                        }
+                      />
+                    </SwiperSlide>
+                  ))
+                : ""}
+            </Swiper>
           )}
-          <div className={styles.carouselNav}>
+          <div className={r.switcher}>
             <button
               type="button"
-              className={styles.navBtn}
-              aria-label="previous wallet"
+              aria-label={t("Previous wallet")}
               onClick={() => swiperRef?.current?.swiper?.slidePrev()}
             >
               <ChevronLeft size={18} />
             </button>
-            <div className={styles.dots}>
-              {userWallets.map((_, index) => (
-                <span
-                  key={index * Date.now()}
-                  className={styles.dot}
-                  style={{
-                    width: activeDot === index ? "30px" : "7px",
-                    background: activeDot === index ? "#5926f0" : "#666666",
-                  }}
+            <div className={r.dots}>
+              {userWallets.map((item, index) => (
+                <button
+                  key={item?._id ?? index}
+                  type="button"
+                  aria-label={`${item?.currency?.code} ${t("Wallet")}`}
+                  className={activeDot === index ? r.dotActive : ""}
                   onClick={() => {
                     setActiveDot(index);
                     swiperRef?.current?.swiper?.slideTo(index);
@@ -337,259 +387,128 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
             </div>
             <button
               type="button"
-              className={styles.navBtn}
-              aria-label="next wallet"
+              aria-label={t("Next wallet")}
               onClick={() => swiperRef?.current?.swiper?.slideNext()}
             >
               <ChevronRight size={18} />
             </button>
           </div>
         </div>
-      </div>
-      <div className={styles.rightCol}>
-        {can("wallet.currencies.add") && (
-          <div className={styles.add_cur}>
-            <div onClick={() => setShowAddCurrencyModal(!showAddCurrencyModal)}>
-              <svg className={styles.plusIcon} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path
-                  d="M12 5V19M5 12H19"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
-              <span>{t("Add new Currency")}</span>
-            </div>
-          </div>
-        )}
-        <div className={styles.right}>
-          <div className={styles.actions}>
-            {can("wallet.payment.topup") ? (
-              <button
-                type="button"
+
+        <div className={r.tiles}>
+          <Tile
+            Icon={Plus}
+            title={t("Add funds")}
+            sub={t("Deposit to wallet")}
+            tooltip={t(
+              "This currency wallet is currently blocked/disabled and funds cannot be added.",
+            )}
+            showTooltip={blockedWallet}
+            disabled={blockedWallet || !can("wallet.payment.topup")}
+            onClick={() => {
+              navigate(
+                `/add-funds?type=${currentWallet?.wallet_type === "crypto" ? "crypto" : "wallet"}&wallet_address=${currentWallet?.wallet_id}`,
+              );
+            }}
+          />
+
+          <Tile
+            Icon={ArrowLeftRight}
+            title={service_name_formatter(t("convert funds "))}
+            sub={t("Multi-currency")}
+            tooltip={t(
+              "This currency wallet is currently blocked/disabled and funds cannot be converted.",
+            )}
+            showTooltip={blockedWallet}
+            disabled={blockedWallet || !can("wallet.payment.conversion")}
+            onClick={() => setShowConversionModal(!showConversionModal)}
+            id="convert_funds"
+          />
+
+          {isCryptoWallet ? (
+            can("wallet.payment.withdraw") && (
+              <Tile
+                Icon={ArrowRight}
+                title={t("Send Crypto")}
+                sub={t("To an external address")}
+                tooltip={t(
+                  "This currency wallet is currently blocked/disabled and you cannot send crypto.",
+                )}
+                showTooltip={blockedWallet}
                 disabled={blockedWallet}
-                className={styles.action}
-                onClick={() => {
-                  navigate(
-                    `/add-funds?type=${currentWallet?.wallet_type === "crypto" ? "crypto" : "wallet"}&wallet_address=${currentWallet?.wallet_id}`,
-                  );
-                }}
-              >
-                <span className={styles.actionIcon}>{ICONS.plus}</span>
-                <span className={styles.actionText}>
-                  <strong>{t("Add Funds")}</strong>
-                  <small>{t("Deposit to wallet")}</small>
-                </span>
-              </button>
-            ) : (
-              <Tooltip
-                title={t(
-                  "This currency wallet is currently blocked/disabled and funds cannot be added.",
-                )}
-                arrow
-                disableHoverListener={!blockedWallet}
-              >
-                <button
-                  type="button"
-                  disabled={true}
-                  className={styles.action}
-                  onClick={() => {
-                    navigate(
-                      `/add-funds?type=${currentWallet?.wallet_type === "crypto" ? "crypto" : "wallet"}&wallet_address=${currentWallet?.wallet_id}`,
-                    );
-                  }}
-                >
-                  <span className={styles.actionIcon}>{ICONS.convert}</span>
-                  <span className={styles.actionText}>
-                    <strong>{t("Add Funds")}</strong>
-                    <small>{t("Deposit to wallet")}</small>
-                  </span>
-                </button>
-              </Tooltip>
-            )}
+                onClick={() => openSendCryptoModal(currentWallet)}
+                id="send_crypto"
+              />
+            )
+          ) : (
+            <Tile
+              Icon={ArrowRight}
+              title={service_name_formatter(t("withdraw balance"))}
+              sub={t("To the specified account")}
+              tooltip={t(
+                "This currency wallet is currently blocked/disabled and you cannot withdraw balance.",
+              )}
+              showTooltip={blockedWallet}
+              disabled={blockedWallet || !can("wallet.payment.withdraw")}
+              onClick={() => setShowWithdrawalModal(!showWithdrawalModal)}
+              id="withdraw_balance"
+            />
+          )}
 
-            {can("wallet.payment.conversion") ? (
-              <button
-                type="button"
-                disabled={blockedWallet}
-                className={styles.action}
-                onClick={() => setShowConversionModal(!showConversionModal)}
-                id="convert_funds"
-              >
-                <span className={styles.actionIcon}>{ICONS.convert}</span>
-                <span className={styles.actionText}>
-                  <strong>{service_name_formatter(t("convert funds "))}</strong>
-                  <small>{t("Multi-currency")}</small>
-                </span>
-              </button>
-            ) : (
-              <Tooltip
-                title={t(
-                  "This currency wallet is currently blocked/disabled and funds cannot be converted.",
-                )}
-                arrow
-                disableHoverListener={!blockedWallet}
-              >
-                <button
-                  type="button"
-                  disabled={true}
-                  className={styles.action}
-                  onClick={() => setShowConversionModal(!showConversionModal)}
-                  id="convert_funds"
-                >
-                  <span className={styles.actionIcon}>{ICONS.convert}</span>
-                  <span className={styles.actionText}>
-                    <strong>{service_name_formatter(t("convert funds "))}</strong>
-                    <small>{t("Multi-currency")}</small>
-                  </span>
-                </button>
-              </Tooltip>
+          <Tile
+            Icon={ScrollText}
+            title={t("Statement")}
+            sub={t("Download PDF")}
+            tooltip={t(
+              "This currency wallet is currently blocked/disabled and you cannot download the statement.",
             )}
+            showTooltip={blockedWallet}
+            disabled={blockedWallet || !can("transactions.wallet.export")}
+            onClick={() => setShowDownloadStatementModal(!showDownloadStatementModal)}
+            id={"download_statement"}
+          />
 
-            {/* Withdraw / Send Crypto */}
-            {isCryptoWallet ? (
-              can("wallet.payment.withdraw") && (
-                <Tooltip
-                  title={t(
-                    "This currency wallet is currently blocked/disabled and you cannot send crypto.",
-                  )}
-                  arrow
-                  disableHoverListener={!blockedWallet}
-                >
-                  <button
-                    type="button"
-                    disabled={blockedWallet}
-                    className={styles.action}
-                    onClick={() => openSendCryptoModal(currentWallet)}
-                    id="send_crypto"
-                  >
-                    <span className={styles.actionIcon}>{ICONS.withdraw}</span>
-                    <span className={styles.actionText}>
-                      <strong>{t("Send Crypto")}</strong>
-                      <small>{t("Send to an external address")}</small>
-                    </span>
-                  </button>
-                </Tooltip>
-              )
-            ) : can("wallet.payment.withdraw") ? (
-              <button
-                type="button"
-                disabled={blockedWallet}
-                className={styles.action}
-                onClick={() => setShowWithdrawalModal(!showWithdrawalModal)}
-                id="withdraw_balance"
-              >
-                <span className={styles.actionIcon}>{ICONS.withdraw}</span>
-                <span className={styles.actionText}>
-                  <strong>{service_name_formatter(t("withdraw balance"))}</strong>
-                  <small>{t("To the specified account")}</small>
-                </span>
-              </button>
-            ) : (
-              <Tooltip
-                title={t(
-                  "This currency wallet is currently blocked/disabled and you cannot withdraw balance.",
-                )}
-                arrow
-              >
-                <button
-                  type="button"
-                  disabled={true}
-                  className={styles.action}
-                  onClick={() => setShowWithdrawalModal(!showWithdrawalModal)}
-                  id="withdraw_balance"
-                >
-                  <span className={styles.actionIcon}>{ICONS.withdraw}</span>
-                  <span className={styles.actionText}>
-                    <strong>{service_name_formatter(t("withdraw balance"))}</strong>
-                    <small>{t("To the specified account")}</small>
-                  </span>
-                </button>
-              </Tooltip>
-            )}
+          {can("wallet.status.update") && (
+            <Tile
+              Icon={Power}
+              title={t("Wallet Status")}
+              sub={currentActive ? t("Active") : t("Disabled")}
+              tooltip={t(
+                "This currency wallet is currently set as your default and cannot be disabled. To proceed, please set a different currency wallet as your default first.",
+              )}
+              showTooltip={currentDefault}
+              disabled={currentDefault}
+              onClick={handleChangeStatus}
+              id={"status_of_wallet"}
+              role="switch"
+              aria-checked={currentActive}
+            >
+              <Switch on={currentActive} />
+            </Tile>
+          )}
 
-            {/* Download Statement */}
-            {can("transactions.wallet.export") ? (
-              <button
-                type="button"
-                disabled={blockedWallet}
-                className={styles.action}
-                onClick={() => setShowDownloadStatementModal(!showDownloadStatementModal)}
-                id={"download_statement"}
-              >
-                <span className={styles.actionIcon}>{ICONS.statement}</span>
-                <span className={styles.actionText}>
-                  <strong>{t("Download Statement")}</strong>
-                  <small>{t("Download PDF")}</small>
-                </span>
-              </button>
-            ) : (
-              <Tooltip
-                title={t(
-                  "This currency wallet is currently blocked/disabled and you cannot download the statement.",
-                )}
-                arrow
-                disableHoverListener={!blockedWallet}
-              >
-                <button
-                  type="button"
-                  disabled={true}
-                  className={styles.action}
-                  onClick={() => setShowDownloadStatementModal(!showDownloadStatementModal)}
-                  id={"download_statement"}
-                >
-                  <span className={styles.actionIcon}>{ICONS.statement}</span>
-                  <span className={styles.actionText}>
-                    <strong>{t("Download Statement")}</strong>
-                    <small>{t("Download PDF")}</small>
-                  </span>
-                </button>
-              </Tooltip>
-            )}
-
-            {/* Auto Transfer Changes Required */}
-            {can("wallet.status.update") && (
-              <div className={`${styles.action} ${styles.disabledAction}`} aria-disabled="true">
-                <span className={styles.actionIcon}>{ICONS.autoTransfer}</span>
-                <span className={styles.actionText}>
-                  <strong>{t("Auto Transfer")}</strong>
-                  <small>{t("Automatically transfer to...")}</small>
-                </span>
-                <span className={styles.comingSoon}>{t("Coming soon")}</span>
-              </div>
-            )}
-
-            {/* Wallet Status (toggle) */}
-            {can("wallet.status.update") && (
-              <Tooltip
-                title={t(
-                  "This currency wallet is currently set as your default and cannot be disabled. To proceed, please set a different currency wallet as your default first.",
-                )}
-                arrow
-                disableHoverListener={!currentDefault}
-              >
-                <button
-                  type="button"
-                  className={`${styles.action} ${styles.status}`}
-                  onClick={currentDefault ? console.log("Lol") : handleChangeStatus}
-                  disabled={currentDefault}
-                  id={"status_of_wallet"}
-                >
-                  <span className={styles.actionIcon}>{ICONS.freeze}</span>
-                  <span className={styles.actionText}>
-                    <strong>{t("Freeze Wallet")}</strong>
-                    <small>{t("Freeze activity")}</small>
-                  </span>
-
-                  <div className={`${styles.switch} ${currentDefault ? styles.disabled : ""}`}>
-                    <div className={`${styles.thumb} ${currentActive ? styles.active : ""}`}></div>
-                  </div>
-                </button>
-              </Tooltip>
-            )}
-          </div>
+          {can("wallet.status.update") && (
+            <Tile
+              Icon={Snowflake}
+              danger
+              title={adminBlocked ? t("Blocked By Admin") : t("Freeze wallet")}
+              sub={blocked ? t("Unblock The Wallet") : t("Freeze activity")}
+              tooltip={t(
+                "This currency wallet is currently set as your default and cannot be blocked. To proceed, please set a different currency wallet as your default first.",
+              )}
+              showTooltip={currentDefault}
+              disabled={currentDefault || blocking}
+              onClick={handleBlockWallet}
+              id={"block_the_wallet"}
+              role="switch"
+              aria-checked={!!blocked}
+            >
+              <Switch on={blocked} />
+            </Tile>
+          )}
         </div>
       </div>
+
       <DefaultWalletModal
         setShowConfirmationModal={setShowConfirmationModal}
         showConfirmationModal={showConfirmationModal}
@@ -599,7 +518,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
       <AddCurrencyModal
         isOpen={showAddCurrencyModal}
         toggle={() => setShowAddCurrencyModal(!showAddCurrencyModal)}
-        setSavedWallet={setSavedWallet}
+        setSavedWalelt={setSavedWalelt}
       />
       {userWithdrawals?.length > 0 ? (
         <Withdraw wallet={currentWallet} isOpen={showWithdrawalModal} toggle={handleClose} />

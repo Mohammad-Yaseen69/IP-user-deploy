@@ -1,18 +1,3 @@
-.reserved {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  width: 100%;
-  height: 100%;
-  min-height: 240px;
-  padding: 16px 8px;
-  margin: 0;
-  box-sizing: border-box;
-  color: #fff;
-  gap: 1rem;
-  font-family: Inter;
-}
-
 .flex {
   display: flex;
   align-items: center;
@@ -23,174 +8,132 @@
 }
 
 .r_total {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  padding: 0;
-  background: transparent;
+  gap: 0.9rem;
+  border-radius: 3.544px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.5rem;
+  margin-bottom: 0.4rem;
 }
 
 .r_total span {
-  color: #fff;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: "Red Hat Display";
+  font-size: 8.86px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 }
 
 .r_total h5 {
   color: #fff;
+  font-family: "Clash Display";
   font-size: 1rem;
-  font-weight: 500;
-  line-height: 1.2;
-  letter-spacing: -0.2px;
-}
-
-.r_balance_details {
-  display: flex;
-  align-items: center;
-  gap: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.177px;
 }
 
 .r_blocked {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 0;
-  margin: 0;
-  background: transparent;
-  border-radius: 0;
+  border-radius: 3.544px;
+  background: rgba(255, 255, 255, 0.1);
+  justify-content: space-between;
+  padding: 0.5rem;
+  margin-bottom: 0.3rem;
 }
 
 .r_blocked span {
-  color: #fff;
-  font-size: 15px;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: "Red Hat Display";
+  font-size: 7.336px;
+  font-style: normal;
   font-weight: 400;
   line-height: normal;
 }
 
 .r_blocked h5 {
   color: #fff;
-  font-size: 12px;
-  font-weight: 500;
+  font-family: "Clash Display";
+  font-size: 8.86px;
+  font-style: normal;
+  font-weight: 400;
   line-height: normal;
 }
 
-.walletId {
-  display: flex;
-  flex-direction: column;
-  margin-top: 2px;
+.r_wallet {
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
 }
 
-.r_wallet span,
-.walletId > span {
-  color: #ffffffea;
-  font-size: 12px;
+.r_wallet span {
+  color: rgba(255, 255, 255, 0.8);
+  font-family: "Red Hat Display";
+  font-size: 8.86px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 }
 
 .r_wallet h5 {
+  padding: 0.4rem;
+  border-radius: 6.699px;
+  background: rgba(217, 217, 217, 0.08);
+  box-shadow: 0px 2.679px 8.708px 0px rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(1.3397164344787598px);
   display: flex;
   align-items: center;
-  gap: 5px;
-  margin-left: 5px;
-  padding: 0;
-  background: transparent;
-  box-shadow: none;
-  backdrop-filter: none;
+  gap: 0.4rem;
   color: #fff;
-  font-size: 15px;
-  font-weight: 500;
-  line-height: normal;
-  letter-spacing: 0;
-}
-
-.wallet_id {
-  display: flex;
-  align-items: center;
-  /* gap: 5px; */
-}
-
-.copy_btn {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.limit_Row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.limit_Row p {
-  margin: 0;
-  color: #fff;
-  font-size: 11px;
-  font-weight: 500;
-}
-
-.limit_Row span {
-  color: #fff;
-  font-size: 10px;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: "Clash Display";
+  font-size: 12.404px;
+  font-style: normal;
   font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.248px;
 }
 
-.load {
+.r_bal {
+  gap: 0.6rem;
+  margin-bottom: auto;
+}
+
+.r_bal span {
+  color: rgba(255, 255, 255, 0.8);
+  font-family: "Red Hat Display";
+  font-size: 7.088px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.r_bal h5 {
   color: #fff;
-  font-size: 10px;
-}
-
-.limitBlock {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
+  font-family: "Clash Display";
+  font-size: 10.189px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0.204px;
 }
 
 .bb {
   position: relative;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  display: block;
+  margin-top: 0.5rem;
 }
 
-.bb :global(.progress) {
-  width: 100%;
-  height: 8px !important;
-  background: #ffffff !important;
-  border-radius: 999px !important;
-  overflow: hidden;
-}
-
-.bb :global(.progress-bar) {
-  height: 10px;
-  background: linear-gradient(90deg, #f2eeff 0%, #5926f0 100%) !important;
-  border-radius: 999px !important;
-  transition: width 0.3s ease;
-  top: 0;
-}
-
-.compacts {
-  width: 100%;
-  min-width: 0;
-  border-radius: 12px;
-  gap: 4px;
-  min-height: 0;
-  padding: 0;
-}
-
-.compacts .limitBlock {
-  padding-top: 0;
-}
-
-.compacts .r_wallet h5 {
-  font-size: 12px;
-}
-.compacts .r_total h5 {
-  font-size: 12px;
-}
-
-.compacts .limitBlock {
-  padding-top: 10px;
-  gap: 5px;
+.bb span {
+  color: #fff;
+  text-align: right;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: "Clash Display";
+  font-size: 7.336px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  position: absolute;
+  bottom: 0px;
 }

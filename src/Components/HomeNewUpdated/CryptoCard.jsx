@@ -4,11 +4,6 @@ import chev_right from "./files/chev_right.png";
 import styles from "./styles/CryptoCard.module.css";
 import { UserContext } from "../../Context/UserContext";
 import { useTranslation } from "react-i18next";
-import InstaPayLoader from "../Loader";
-
-const WHITE = "#ffffff";
-const TEXT_DARK = "#111827";
-const BORDER = "1px solid #e5e7eb";
 
 const CryptoCard = ({ item }) => {
   const { t } = useTranslation();
@@ -24,18 +19,11 @@ const CryptoCard = ({ item }) => {
   const isPositive = !item.increment.startsWith("-");
   const isStable = item.name === "Tether";
 
-  const formatEuro = (amount) =>
-    `${amount.toLocaleString("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })} EUR`;
-
   return (
     <div
       className={window.innerWidth < 1000 ? styles.res_card : styles.card}
       style={{
-        background: WHITE,
-        border: BORDER,
+        background: item.item_bg,
       }}
     >
       {window.innerWidth > 1000 ? (
@@ -45,29 +33,45 @@ const CryptoCard = ({ item }) => {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              gap: "12px",
             }}
           >
-            <img src={item.img} alt={item.value} />
-            <h2 className={styles.card_heading} style={{ color: TEXT_DARK }}>
-              {t(`${item.value.toUpperCase()} ${item.name} `)}
-            </h2>
-            <span className={styles.card_value} style={{ color: "#6b7280", background: "#fff" }}>
-              {item.value.toUpperCase()}-{t("USD")}
+            <img src={item.img} alt={item.value} className={styles.card_icon} />
+            <span
+              style={{
+                color: item.inc_color,
+                background: item.inc_bg,
+              }}
+              className={styles.card_title}
+            >
+              <img
+                src={isStable ? chev_right : chev_up}
+                alt="c"
+                style={{
+                  transform: !isPositive && !isStable ? "rotate(180deg)" : "none",
+                  transition: "transform 0.3s ease",
+                }}
+              />
+              {item.increment}
             </span>
           </div>
-          <div className={styles.euroPrice}>
-            <h4 className={styles.card_price} style={{ color: TEXT_DARK }}>
-              {item.price.toLocaleString("en-US", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-              <span style={{ marginLeft: "5px" }}>USDC</span>
-            </h4>
-            <p style={{ color: "#6b7280" }}>
-              ≈ {item.eurPrice !== null ? formatEuro(item.eurPrice) : <InstaPayLoader />}
-            </p>
-          </div>
+
+          <h2 className={styles.card_heading}>{t(`${item.name} (${item.value.toUpperCase()})`)}</h2>
+          <span
+            style={{
+              background: item.text_bg,
+              color: item.text_color,
+            }}
+            className={styles.card_value}
+          >
+            {item.value.toUpperCase()}-{t("USD")}
+          </span>
+          <h4 className={styles.card_price} style={{ color: item.text_color }}>
+            $
+            {item.price.toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          </h4>
         </div>
       ) : (
         <div className={styles.wrapper_mobile}>
@@ -76,34 +80,30 @@ const CryptoCard = ({ item }) => {
               <img src={item.img} alt={item.value} className={styles.card_icon} />
               <span
                 style={{
-                  background: "#f3f4f6",
-                  color: "#6b7280",
+                  background: item.text_bg,
+                  color: item.text_color,
                 }}
                 className={styles.card_value}
               >
                 {item.value.toUpperCase()}-{t("USD")}
               </span>
             </div>
-            <h4 className={styles.card_price} style={{ color: TEXT_DARK }}>
+            <h4 className={styles.card_price} style={{ color: item.text_color }}>
               $
               {item.price.toLocaleString("en-US", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}
             </h4>
-            {item.eurPrice !== null && (
-              <p style={{ color: "#6b7280", fontSize: "12px" }}>≈ {formatEuro(item.eurPrice)}</p>
-            )}
           </div>
-
           <div className={styles.bottom}>
-            <h2 className={styles.card_heading} style={{ color: TEXT_DARK }}>
+            <h2 className={styles.card_heading}>
               {t(`${item.name} (${item.value.toUpperCase()})`)}
             </h2>
             <span
               style={{
-                color: TEXT_DARK,
-                background: "#f3f4f6",
+                color: item.inc_color,
+                background: item.inc_bg,
                 display: "flex",
                 alignItems: "center",
                 gap: ".2rem",

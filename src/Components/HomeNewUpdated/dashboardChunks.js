@@ -28,17 +28,8 @@ const isDesktopDashboard = () => window.innerWidth > 1000;
 
 // Above-the-fold widgets for each branch. Stats and the mobile TransDetails are
 // left out on purpose: they load when scrolled into view.
-const desktopWidgets = [
-  loadSearch,
-  loadBalanceCard,
-  loadReferalRewards,
-  loadCryptoCard,
-  loadEarnMoneyBanner,
-  loadRecentBeneficiaries,
-  loadRecentTrans,
-  loadQuickLinksNew,
-  loadRightContainer,
-];
+// The redesigned desktop dashboard bundles its own sections; only these three are still lazy there.
+const desktopWidgets = [loadSearch, loadCurConversion, loadBusinessModal];
 const mobileWidgets = [
   loadBusinessModal,
   loadTopBar,
