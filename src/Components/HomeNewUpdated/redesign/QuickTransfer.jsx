@@ -59,7 +59,7 @@ const QuickTransfer = () => {
             />
           );
         })}
-        <Link to="/beneficiaries/add" className={`${d.contact} ${d.contactNew}`}>
+        <Link to="/beneficiaries" className={`${d.contact} ${d.contactNew}`}>
           <i>
             <Plus size={16} />
           </i>
