@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import styles from "../styles/Monthlyexpenses.module.css";
-import { Select, MenuItem, FormControl } from "@material-ui/core";
+import { Select, MenuItem, FormControl } from "@mui/material";
 import ReactApexChart from "react-apexcharts";
 import { useState } from "react";
 import useVirtualIbanGraphData from "../../../hooks/useVirtualIban";
@@ -104,8 +104,9 @@ const ChartCard = ({ title, amount, type, chartData, filter, onFilterChange, isL
     <div className={styles.card}>
       <div className={styles.cardHeader}>
         <span className={styles.cardLabel}>{t(title)}</span>
-        <FormControl>
+        <FormControl variant="standard">
           <Select
+            variant="standard"
             className={styles.yearSelect}
             value={filter}
             onChange={(e) => onFilterChange(e.target.value)}

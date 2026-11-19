@@ -21,8 +21,7 @@ import { useTranslation } from "react-i18next";
 import PaymentChannelUI from "./PaymentChannelUI";
 import useBankDetails from "../../hooks/BeneficiaryHooks/useBankDetails";
 import useChannels from "../../hooks/BeneficiaryHooks/useChannels";
-import DateMomentUtils from "@date-io/moment";
-import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
+import DatePicker from "../../CommonElements/DatePicker";
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 import {
   bankExtrasInitial,
@@ -1294,7 +1293,7 @@ const BusinessAccount = ({
 
   return (
     <div style={isAddBeneficiary ? {} : { margin: "1rem 0 1rem 1rem" }}>
-      <MuiPickersUtilsProvider utils={DateMomentUtils}>
+      <>
         {isAddBeneficiary ? (
           Jsx()
         ) : (
@@ -1365,7 +1364,7 @@ const BusinessAccount = ({
             {Jsx()}
           </Form>
         )}
-      </MuiPickersUtilsProvider>
+      </>
     </div>
   );
 };

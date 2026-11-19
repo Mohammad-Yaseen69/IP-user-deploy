@@ -1,5 +1,4 @@
-import DateMomentUtils from "@date-io/moment";
-import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DatePicker from "../../CommonElements/DatePicker";
 import axios from "axios";
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -826,7 +825,7 @@ const Basic = ({ setCurrentTab }) => {
   };
 
   return (
-    <MuiPickersUtilsProvider utils={DateMomentUtils}>
+    <>
       <div className={`${styles.container} ${isEditMode ? styles.editing : ""}`}>
         <div style={{ position: "absolute", width: 0, height: 0 }}>
           {userDetails?.username ? (
@@ -1515,7 +1514,7 @@ const Basic = ({ setCurrentTab }) => {
           </div>
         )}
       </div>
-    </MuiPickersUtilsProvider>
+    </>
   );
 };
 

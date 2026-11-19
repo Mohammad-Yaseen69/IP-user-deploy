@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import Dropzone from "react-dropzone-uploader";
+import FileDropzone from "./FileDropzone";
 import { Button, Card, CardBody, CardHeader, Table } from "reactstrap";
 import Papa from "papaparse";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
@@ -21,9 +21,9 @@ const MainContent = () => {
   const [processedUsers, setProcessedUsers] = useState([]);
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const handleChangeStatus = ({ meta, file }, status) => {
+  const handleFile = (file) => {
+    setFile(file);
     if (file) {
-      setFile(file);
       const reader = new FileReader();
 
       reader.onload = async (e) => {
@@ -132,17 +132,11 @@ const MainContent = () => {
       <CardBody>
         <h5>{t("Upload/Drop XLSX File Here:")}</h5>
         <div style={{ display: "flex", gap: "2rem" }}>
-          <Dropzone
-            onChangeStatus={handleChangeStatus}
-            maxFiles={1}
-            multiple={false}
-            canCancel={false}
-            inputContent={t("Upload/Drop XLSX File Here")}
-            styles={{
-              dropzone: { height: 200, flex: 1 },
-              dropzoneActive: { borderColor: "green" },
-            }}
-            disabled={file}
+          <FileDropzone
+            onFile={handleFile}
+            label={t("Upload/Drop XLSX File Here")}
+            style={{ height: 200, flex: 1 }}
+            disabled={!!file}
             accept=".xlsx, .csv"
           />
           <Card style={{ flex: 1, height: "200px" }}>
