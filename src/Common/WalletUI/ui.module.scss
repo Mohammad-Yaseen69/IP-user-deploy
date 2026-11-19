@@ -406,7 +406,7 @@ $mobile: 1000px;
   padding: 0;
   background: none;
   border: 0;
-  cursor: pointer;
+  cursor: default;
 
   // Bars are absolutely placed so their % height always resolves against the half they sit in.
   > div {
@@ -444,27 +444,13 @@ $mobile: 1000px;
   }
 }
 
+// Every month uses the legend colours; hovering only shows the tooltip.
 .barIn {
-  background: #e6dfff;
+  background: $primary;
 }
 
 .barOut {
-  background: #e4e8ef;
-}
-
-.colActive {
-  .barIn {
-    background: $primary;
-  }
-
-  .barOut {
-    background: $text;
-  }
-
-  > span {
-    font-weight: 700;
-    color: $text;
-  }
+  background: $text;
 }
 
 /* ---------- Wallet card ---------- */
