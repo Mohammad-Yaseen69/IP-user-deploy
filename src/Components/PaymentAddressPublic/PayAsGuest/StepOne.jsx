@@ -8,7 +8,8 @@ import FeesComponent from "../../PaymentsNewer/InternationalFlow/FeesComponent";
 import InstaPayLoader from "../../Loader";
 import CardMaintenanceModal from "../../CardMaintenanceModal";
 
-const StepOne = ({ data, dataHandler, allowed, wallet }) => {
+// cardEnabled: card goes through Paytently, so skip the Trust maintenance notice.
+const StepOne = ({ data, dataHandler, allowed, wallet, cardEnabled = false }) => {
   const [showCardMaintenanceModal, setShowCardMaintenanceModal] = useState(false);
   const payouts = [
     {
@@ -71,7 +72,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
             }}
             onClick={() => {
               if (item.coming_soon) return console.log("");
-              if (item.value === "card") {
+              if (item.value === "card" && !cardEnabled) {
                 setShowCardMaintenanceModal(true);
                 return;
               }

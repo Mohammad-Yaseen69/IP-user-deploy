@@ -6539,5 +6539,7 @@
   "client": "client",
   "Client Referral Code": "Client Referral Code",
   "Sub-agents": "Sub-agents",
-  "All Statuses": "All Statuses"
+  "All Statuses": "All Statuses",
+  "This payment method is not available for this purchase.": "This payment method is not available for this purchase.",
+  "IBAN Activation request submitted. Your bank payment is being processed and will complete once the transfer clears.": "IBAN Activation request submitted. Your bank payment is being processed and will complete once the transfer clears."
 }

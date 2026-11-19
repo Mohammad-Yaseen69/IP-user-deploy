@@ -10,6 +10,7 @@ const OTPConfirmation = lazy(() => import("./Payments/OTPConfirmation"));
 const W2WReceipt = lazy(() => import("./Payments/W2WReceipt"));
 const International = lazy(() => import("./Payments/International"));
 const Receipt = lazy(() => import("./Payments/InternationalReceipt"));
+import styles from "./styles/RecentBenef.module.css";
 
 const BenefCard = ({ item, index, total }) => {
   const [showModal, setShowModal] = useState(false);
@@ -34,6 +35,17 @@ const BenefCard = ({ item, index, total }) => {
         ? item?.first_name.slice(0, 8) + ".."
         : item?.company_name?.slice(0, 8) + "..",
     );
+  };
+  const getInitials = (item) => {
+    if (item?.beneficiary_type === "individual") {
+      return `${item?.first_name?.[0] ?? ""}${item?.last_name?.[0] ?? ""}`.toUpperCase();
+    }
+
+    const words = (item?.company_name ?? "").trim().split(/\s+/).filter(Boolean);
+    if (words.length >= 2) {
+      return `${words[0][0]}${words[1][0]}`.toUpperCase();
+    }
+    return (words[0] ?? "").slice(0, 2).toUpperCase();
   };
 
   useEffect(() => {
@@ -107,6 +119,7 @@ const BenefCard = ({ item, index, total }) => {
     <>
       <div
         key={item}
+        className={styles.bf_item}
         style={{
           display: "flex",
           flexDirection: "column",
@@ -122,6 +135,7 @@ const BenefCard = ({ item, index, total }) => {
         onMouseLeave={(_) => setShowTooltip(false)}
       >
         <div
+          className={styles.bf_ring}
           style={{
             padding: "3px",
             border: "1.224px solid #5926F0",
@@ -132,6 +146,7 @@ const BenefCard = ({ item, index, total }) => {
           }}
         >
           <div
+            className={styles.bf_avatar}
             style={{
               width: window.innerWidth > 1500 ? "60px" : "45px",
               height: window.innerWidth > 1500 ? "60px" : "45px",
@@ -145,12 +160,11 @@ const BenefCard = ({ item, index, total }) => {
               fontWeight: 800,
             }}
           >
-            {item?.beneficiary_type === "individual"
-              ? item?.first_name?.[0]?.toUpperCase()
-              : item?.company_name?.[0]?.toUpperCase()}
+            {getInitials(item)}
           </div>
         </div>
         <p
+          className={styles.bf_name}
           style={{
             marginBottom: 0,
             whiteSpace: "nowrap",

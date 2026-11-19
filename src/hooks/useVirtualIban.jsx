@@ -5,6 +5,7 @@ import {
   asVirtualIbanArray,
   unwrapVirtualIbanResponse,
 } from "../Components/VirtualIBAN/utils/virtualIban";
+import { normalizeIbanPaymentModel } from "../Components/VirtualIBAN/utils/ibanPaymentModel";
 import { useContext } from "react";
 import { UserContext } from "../Context/UserContext";
 import { useIdempotency } from "./Payments/useIdempotency";
@@ -57,6 +58,26 @@ export const useIbanFee = () => {
     refetchOnMount: "always",
     refetchOnWindowFocus: false,
     enabled: !!userDetails?.level?._id,
+  });
+};
+
+export const useIbanPaymentModel = (enabled = true) => {
+  const { userDetails } = useContext(UserContext);
+
+  return useQuery({
+    queryKey: [...virtualIbanQueryKeys.all, "payment-model", userDetails?._id],
+    queryFn: async () => {
+      const res = await apiWrapper({
+        endpoint: "/api/iban-fees/get-payment-model",
+        method: "GET",
+        isDecrypted: true,
+      });
+
+      return normalizeIbanPaymentModel(res);
+    },
+    enabled: enabled && !!userDetails?._id,
+    staleTime: 60 * 1000,
+    refetchOnWindowFocus: false,
   });
 };
 

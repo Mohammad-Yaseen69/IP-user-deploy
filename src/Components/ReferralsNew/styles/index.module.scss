@@ -28,7 +28,20 @@
   .banner_con {
     display: flex;
     gap: 1.5rem;
+    align-items: stretch;
 
+    .banner_wrap {
+      flex: 2 1 0;
+      min-width: 0;
+      display: flex;
+    }
+    .stats_wrap {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      min-width: 11rem;
+    }
     .total_refs {
       flex: 1;
       border-radius: 30px;
