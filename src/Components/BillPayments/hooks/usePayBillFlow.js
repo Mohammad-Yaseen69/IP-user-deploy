@@ -6,6 +6,8 @@ import useSendOtp from "../../../hooks/GeneralUse/useSendOtp";
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
 import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError";
 import { useDebounce } from "../../../hooks/useDebounce/useDebounce";
+import { getWalletAvailable } from "../../VirtualIBAN/CryptoWallet/instapay/wallets";
+import { usePhoneVerification } from "../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/usePhoneVerification";
 import { getPaymentMethod } from "../data/paymentMethods";
 import {
   useAddSavedBill,
@@ -49,8 +51,9 @@ export const getRequiredFields = (product) => {
   return fields.length ? fields : ["account_number"];
 };
 
-const isFieldValid = (field, value) =>
-  field === "mobile_number" ? /^\d{9,20}$/.test(value || "") : !!value?.trim();
+// mobile_number holds dial code + number as digits; E.164 allows at most 15
+export const isFieldValid = (field, value) =>
+  field === "mobile_number" ? /^\d{9,15}$/.test(value || "") : !!value?.trim();
 
 const identifiersOf = (savedBill) => ({
   ...EMPTY_IDENTIFIERS,
@@ -126,11 +129,40 @@ export const usePayBillFlow = ({
       (amountLimits.min == null || Number(amount) >= amountLimits.min) &&
       (amountLimits.max == null || Number(amount) <= amountLimits.max));
 
+  // Checks the number with the phone verification service; an unreachable service is not held against it.
+  const phoneCheck = usePhoneVerification(
+    identifiers.mobile_number,
+    requiredFields.includes("mobile_number"),
+  );
+
   const hasIdentifiers =
-    !!product && requiredFields.every((field) => isFieldValid(field, identifiers[field]));
+    !!product &&
+    requiredFields.every((field) => isFieldValid(field, identifiers[field])) &&
+    !["checking", "invalid"].includes(phoneCheck?.state);
+
+  const debouncedAmount = useDebounce(amount, 500);
+  const previewParams = {
+    productId: product?.id,
+    walletId: wallet?._id,
+    paymentMethod: paymentMethodId,
+    amount: amountLimits ? Number(debouncedAmount) : undefined,
+  };
+  const preview = useBillQuotePreview(
+    previewParams,
+    !!product &&
+      !!wallet &&
+      !!getPaymentMethod(paymentMethodId)?.confirmEndpoint &&
+      isAmountValid &&
+      (!amountLimits || debouncedAmount === amount),
+  );
+
+  // The total is only known for the selected wallet, from the live quote.
+  const previewTotal = preview.data?.total?.value;
+  const hasEnoughFunds = previewTotal == null || previewTotal <= getWalletAvailable(wallet);
 
   const canReview =
     hasIdentifiers &&
+    hasEnoughFunds &&
     !!wallet &&
     !!getPaymentMethod(paymentMethodId)?.confirmEndpoint &&
     statementFields.every((field) => !!identifiers[field]) &&
@@ -231,22 +263,6 @@ export const usePayBillFlow = ({
       (field) =>
         identifierPayload([field])[field] === (savedBill.identifiers?.[field] || undefined),
     );
-
-  const debouncedAmount = useDebounce(amount, 500);
-  const previewParams = {
-    productId: product?.id,
-    walletId: wallet?._id,
-    paymentMethod: paymentMethodId,
-    amount: amountLimits ? Number(debouncedAmount) : undefined,
-  };
-  const preview = useBillQuotePreview(
-    previewParams,
-    !!product &&
-      !!wallet &&
-      !!getPaymentMethod(paymentMethodId)?.confirmEndpoint &&
-      isAmountValid &&
-      (!amountLimits || debouncedAmount === amount),
-  );
 
   const otpPayload = (token) => ({
     token,
@@ -362,6 +378,8 @@ export const usePayBillFlow = ({
     receipt,
     error,
     canReview,
+    hasEnoughFunds,
+    phoneCheck,
     isReviewing: quoteMutation.isPending || isSendingOtp,
     isConfirming: confirmMutation.isPending,
     reviewPayment,
