@@ -962,9 +962,12 @@
   color: #b42318 !important;
 }
 
-.footError {
-  flex-basis: 100%;
-  order: -1;
+.walletNote {
   font-size: 12px;
   color: #b42318;
+}
+
+.drawerFoot .primaryBtn {
+  flex-shrink: 0;
+  white-space: nowrap;
 }

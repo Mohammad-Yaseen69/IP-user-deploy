@@ -13,7 +13,7 @@ import {
   useAddSavedBill,
   useBillProducts,
   useBillQuote,
-  useBillQuotePreview,
+  useBillWalletQuotes,
   useBillStatements,
   useConfirmBillPayment,
 } from "./useBillPaymentQueries";
@@ -65,6 +65,7 @@ export const usePayBillFlow = ({
   initialCountry,
   initialBiller,
   initialWallet,
+  wallets = [],
   savedBill: initialSavedBill,
   onSaved,
 }) => {
@@ -141,28 +142,58 @@ export const usePayBillFlow = ({
     !["checking", "invalid"].includes(phoneCheck?.state);
 
   const debouncedAmount = useDebounce(amount, 500);
-  const previewParams = {
-    productId: product?.id,
-    walletId: wallet?._id,
-    paymentMethod: paymentMethodId,
-    amount: amountLimits ? Number(debouncedAmount) : undefined,
-  };
-  const preview = useBillQuotePreview(
-    previewParams,
+  // Off while the amount is still being typed, so a quote for the old amount never counts.
+  const isQuoting =
     !!product &&
-      !!wallet &&
-      !!getPaymentMethod(paymentMethodId)?.confirmEndpoint &&
-      isAmountValid &&
-      (!amountLimits || debouncedAmount === amount),
+    !!getPaymentMethod(paymentMethodId)?.confirmEndpoint &&
+    isAmountValid &&
+    (!amountLimits || debouncedAmount === amount);
+  const walletQuotes = useBillWalletQuotes(
+    {
+      productId: product?.id,
+      paymentMethod: paymentMethodId,
+      amount: amountLimits ? Number(debouncedAmount) : undefined,
+    },
+    wallets.map((item) => item._id),
+    isQuoting,
   );
+  const walletFunds = Object.fromEntries(
+    wallets.map((item, index) => {
+      const quote = walletQuotes[index];
+      const total = quote.data?.total?.value;
+      return [
+        item._id,
+        {
+          isChecking: isQuoting && (quote.isPending || quote.isFetching),
+          hasFunds: isQuoting && total != null && total <= getWalletAvailable(item),
+          quote: isQuoting ? quote.data : undefined,
+          error: quote.error,
+        },
+      ];
+    }),
+  );
+  const selectedFunds = walletFunds[wallet?._id] || {};
+  const isChecking = wallets.some((item) => walletFunds[item._id].isChecking);
+  const noWalletCanPay =
+    isQuoting && !isChecking && !wallets.some((item) => walletFunds[item._id].hasFunds);
 
-  // The total is only known for the selected wallet, from the live quote.
-  const previewTotal = preview.data?.total?.value;
-  const hasEnoughFunds = previewTotal == null || previewTotal <= getWalletAvailable(wallet);
+  useEffect(() => {
+    if (!isQuoting || isChecking || selectedFunds.hasFunds) return;
+    const payable = wallets.find((item) => walletFunds[item._id].hasFunds);
+    if (payable) setWallet(payable);
+  }, [isQuoting, isChecking, selectedFunds.hasFunds, wallet?._id]);
+
+  const [quoteError, setQuoteError] = useState("");
+  useEffect(() => {
+    if (selectedFunds.error) showError(selectedFunds.error, setQuoteError);
+    else setQuoteError("");
+  }, [selectedFunds.error]);
 
   const canReview =
     hasIdentifiers &&
-    hasEnoughFunds &&
+    isQuoting &&
+    !!selectedFunds.hasFunds &&
+    !selectedFunds.isChecking &&
     !!wallet &&
     !!getPaymentMethod(paymentMethodId)?.confirmEndpoint &&
     statementFields.every((field) => !!identifiers[field]) &&
@@ -359,8 +390,12 @@ export const usePayBillFlow = ({
     checkBill,
     savedBill,
     pickSavedBill,
-    preview: preview.data,
-    isPreviewing: preview.isFetching,
+    preview: selectedFunds.quote,
+    isPreviewing: !!selectedFunds.isChecking,
+    walletFunds,
+    isQuoting,
+    noWalletCanPay,
+    quoteError,
     nickname,
     setNickname,
     reminderEnabled,
@@ -378,7 +413,6 @@ export const usePayBillFlow = ({
     receipt,
     error,
     canReview,
-    hasEnoughFunds,
     phoneCheck,
     isReviewing: quoteMutation.isPending || isSendingOtp,
     isConfirming: confirmMutation.isPending,

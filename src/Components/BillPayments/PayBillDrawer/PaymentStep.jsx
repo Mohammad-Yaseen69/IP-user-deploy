@@ -313,15 +313,18 @@ const PaymentStep = ({ flow, wallets, isAdding }) => {
                         {wallets.map((item) => {
                           const code = item.currency?.code;
                           const isConverted = !!billCurrency && code !== billCurrency;
-                          const isEmpty = getWalletAvailable(item) <= 0;
-                          const isShort = wallet?._id === item._id && !flow.hasEnoughFunds;
+                          const funds = flow.walletFunds[item._id];
+                          const isShort = flow.isQuoting && !funds.isChecking && !funds.hasFunds;
+                          // A wallet can only be picked once its quote shows it covers the bill.
+                          const canPick =
+                            getWalletAvailable(item) > 0 && (!flow.isQuoting || funds.hasFunds);
                           return (
                             <button
                               type="button"
                               key={item._id}
                               className={`${styles.walletOption} ${wallet?._id === item._id ? styles.walletOptionActive : ""}`}
                               aria-pressed={wallet?._id === item._id}
-                              disabled={isEmpty}
+                              disabled={!canPick}
                               onClick={() => flow.selectWallet(item)}
                             >
                               <CurrencyFlag code={code} size={22} />
@@ -330,11 +333,13 @@ const PaymentStep = ({ flow, wallets, isAdding }) => {
                               </strong>
                               <span className={isShort ? styles.walletShort : ""}>
                                 {formatWalletAmount(getWalletAvailable(item))}{" "}
-                                {isShort
-                                  ? `· ${t("not enough")}`
-                                  : isConverted
-                                    ? `· ${t("converted")}`
-                                    : t("available")}
+                                {funds.isChecking
+                                  ? `· ${t("checking...")}`
+                                  : isShort
+                                    ? `· ${t("not enough")}`
+                                    : isConverted
+                                      ? `· ${t("converted")}`
+                                      : t("available")}
                               </span>
                               {wallet?._id === item._id && (
                                 <CheckCircle size={16} className={styles.walletCheck} />
@@ -342,6 +347,16 @@ const PaymentStep = ({ flow, wallets, isAdding }) => {
                             </button>
                           );
                         })}
+                        {flow.noWalletCanPay && (
+                          <div className={styles.walletNote}>
+                            {t(
+                              "None of your wallets has enough balance for this bill. Top up to pay it.",
+                            )}
+                          </div>
+                        )}
+                        {flow.quoteError && (
+                          <div className={styles.walletNote}>{flow.quoteError}</div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -388,11 +403,6 @@ const PaymentStep = ({ flow, wallets, isAdding }) => {
                   : "—"}
                 <small>{amountLimits ? amountLimits.currency : product?.price?.currency}</small>
               </div>
-            </div>
-          )}
-          {!flow.hasEnoughFunds && (
-            <div className={styles.footError}>
-              {t("Not enough balance in this wallet. Choose another wallet or top up.")}
             </div>
           )}
           <button
