@@ -16,8 +16,14 @@ const RailSelect = ({
   disabled = false,
   small = false,
   renderValue,
+  searchPlaceholder,
 }) => {
   const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const query = search.trim().toLowerCase();
+  const shown = query
+    ? options.filter((option) => String(option.label).toLowerCase().includes(query))
+    : options;
   const rootRef = useRef(null);
 
   useEffect(() => {
@@ -36,7 +42,11 @@ const RailSelect = ({
       <button
         type="button"
         className={`${styles.railSelect} ${styles.railSelectBtn} ${small ? styles.railSelectSm : ""}`}
-        onClick={() => !disabled && setOpen((prev) => !prev)}
+        onClick={() => {
+          if (disabled) return;
+          setOpen((prev) => !prev);
+          setSearch("");
+        }}
         disabled={disabled}
         aria-haspopup="listbox"
         aria-expanded={open}
@@ -59,8 +69,18 @@ const RailSelect = ({
 
       {open && (
         <div className={styles.railMenu} role="listbox">
-          {options.length === 0 && <div className={styles.railMenuEmpty}>{emptyText}</div>}
-          {options.map((option) => (
+          {searchPlaceholder && (
+            <input
+              autoFocus
+              className={styles.railMenuSearch}
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder={searchPlaceholder}
+              aria-label={searchPlaceholder}
+            />
+          )}
+          {shown.length === 0 && <div className={styles.railMenuEmpty}>{emptyText}</div>}
+          {shown.map((option) => (
             <button
               type="button"
               key={option.value}

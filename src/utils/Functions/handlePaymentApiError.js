@@ -2,6 +2,7 @@ import { apiErrorMessage } from "../../Components/PaymentsNewer/InternationalFlo
 import { LimitsErrorMessage } from "./paymentLimits";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { clearAuthStorage, getLoginPath } from "./loginPage";
+import { isNetworkError } from "./apiWrapper";
 
 export const handlePaymentApiError = ({
   error,
@@ -9,11 +10,15 @@ export const handlePaymentApiError = ({
   setProfileLockTime = () => {},
   navigate = () => {},
   fallback = "We are unable to process your request at the moment, please try again later.",
+  keepVerbatim = () => false,
 }) => {
   try {
     const decrypted = decryptData(error?.response?.data?.data);
 
-    const limitError = LimitsErrorMessage(decrypted?.code ?? decrypted?.message);
+    const limitError = LimitsErrorMessage(
+      decrypted?.code ?? decrypted?.message,
+      decrypted?.message,
+    );
     const apiError = apiErrorMessage(decrypted?.message);
 
     if (apiError) {
@@ -42,7 +47,11 @@ export const handlePaymentApiError = ({
     setError?.(message);
     return message;
   } catch {
-    setError?.(fallback);
-    return fallback;
+    const message = isNetworkError(error) ? NETWORK_ERROR_MESSAGE : fallback;
+    setError?.(message);
+    return message;
   }
 };
+
+export const NETWORK_ERROR_MESSAGE =
+  "We couldn't reach our servers. Please check your internet connection and try again.";

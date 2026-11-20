@@ -154,6 +154,14 @@ export const MENU = [
         permission: "payments.view",
       },
       {
+        title: "Pay Bills",
+        icon: <img loading="lazy" src={paym} style={{ marginRight: "12px" }} />,
+        activeIcon: <img loading="lazy" src={paym_a} style={{ marginRight: "12px" }} />,
+        type: "link",
+        url: `${window.location.origin}/pay-bills`,
+        permission: "payments.view",
+      },
+      {
         title: "Beneficiaries",
         icon: <img loading="lazy" src={ben} style={{ marginRight: "12px" }} />,
         activeIcon: <img loading="lazy" src={ben_a} style={{ marginRight: "12px" }} />,

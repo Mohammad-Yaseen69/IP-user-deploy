@@ -15,6 +15,7 @@ export const getCryptoWalletBalance = (cryptoWalletId) =>
     endpoint: `/api/crypto-wallets/${cryptoWalletId}/balance`,
     method: "GET",
     isDecrypted: true,
+    retries: 2,
   });
 
 /** Generate a deposit channel (address) when none exists yet. */

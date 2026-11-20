@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   CheckCircle,
   CheckSquare,
@@ -17,6 +17,8 @@ import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import useCountryLocation from "../../../hooks/GeneralUse/useCountryLocation";
 import permissionsData from "../../../utils/Data/permissionsData.json";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
+import { getPhoneCountry } from "../../../utils/Functions";
+import { UserContext } from "../../../Context/UserContext";
 import PhoneInput from "../../PhoneInput";
 import userFour from "../images/UsersFour.svg";
 import s from "../styles/AgentsModal.module.css";
@@ -32,6 +34,7 @@ const STEPS = [
 
 const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editData }) => {
   const { country } = useCountryLocation();
+  const { allowedCountries } = useContext(UserContext);
   const [step, setStep] = useState(1);
   const [permSearch, setPermSearch] = useState("");
   const [selectedPermissions, setSelectedPermissions] = useState(
@@ -151,16 +154,10 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
       if (!hierarchy[item.module]) hierarchy[item.module] = { module: item.module, features: {} };
       const featureKey = item.feature || "general";
       if (!hierarchy[item.module].features[featureKey])
-        hierarchy[item.module].features[featureKey] = {
-          feature: item.feature,
-          actions: [],
-        };
+        hierarchy[item.module].features[featureKey] = { feature: item.feature, actions: [] };
       hierarchy[item.module].features[featureKey].actions.push(item);
     });
-    return Object.values(hierarchy).map((m) => ({
-      ...m,
-      features: Object.values(m.features),
-    }));
+    return Object.values(hierarchy).map((m) => ({ ...m, features: Object.values(m.features) }));
   };
 
   const isIndeterminate = (key, type = "module") => {
@@ -264,10 +261,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
     onMutate: () => setStatus({ type: "loading", message: t("Creating agent...") }),
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ["agents"] });
-      setStatus({
-        type: "success",
-        message: res?.message || t("Agent created successfully"),
-      });
+      setStatus({ type: "success", message: res?.message || t("Agent created successfully") });
     },
     onError: (err) => {
       let errorMsg = t("Failed to create agent");
@@ -297,10 +291,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
     onMutate: () => setStatus({ type: "loading", message: t("Updating agent...") }),
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ["agents"] });
-      setStatus({
-        type: "success",
-        message: res?.message || t("Agent updated successfully"),
-      });
+      setStatus({ type: "success", message: res?.message || t("Agent updated successfully") });
     },
     onError: (err) => {
       let errorMsg = t("Failed to update agent");
@@ -619,7 +610,15 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                       <div className={s.formGroup}>
                         <label className={s.formLabel}>{t("Phone Number")}</label>
                         <PhoneInput
-                          country={isEdit && editData?.country ? editData.country : country}
+                          country={
+                            isEdit && editData?.country
+                              ? getPhoneCountry(
+                                  editData.phone,
+                                  editData.country,
+                                  (allowedCountries ?? []).map((item) => item?.country_iso_code),
+                                )
+                              : country
+                          }
                           phone={phone}
                           setPhone={handlePhoneChange}
                           error={phoneError}

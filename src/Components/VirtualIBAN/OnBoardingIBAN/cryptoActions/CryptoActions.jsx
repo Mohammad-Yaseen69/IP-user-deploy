@@ -14,6 +14,9 @@ import { asVirtualIbanArray, isVirtualIbanOutboundBlocked } from "../../utils/vi
 import { UserContext } from "../../../../Context/UserContext";
 import { usePermission } from "../../../../hooks/GeneralUse/usePermission";
 import MobileHeader from "../../../../Common/Component/MobileHeader";
+import useEffectivePermission, {
+  PERMISSIONS,
+} from "../../../../hooks/GeneralUse/useEffectivePermission";
 
 // const TEMP_ALLOWED_USERS=['yaseen123', 'ahmed', 'jackeb777', 'hunain','ali_tov']
 
@@ -24,6 +27,9 @@ const CryptoActions = () => {
   const can = usePermission();
   const convertRef = useRef(null);
   const payoutRef = useRef(null);
+  const hasPermission = useEffectivePermission();
+  const canTopupWithCrypto = hasPermission(PERMISSIONS.CRYPTO_WALLET_TOPUP);
+  const canCryptoPayout = hasPermission(PERMISSIONS.CRYPTO_PAYOUT);
 
   const [showTopup, setShowTopup] = useState(false);
   const [showConvert, setShowConvert] = useState(false);
@@ -123,27 +129,29 @@ const CryptoActions = () => {
                   <span>{t("Add, convert and send crypto from your virtual IBAN")}</span>
                 </div>
                 <div className={styles.cardsGrid3}>
-                  <div
-                    className={styles.card}
-                    onClick={() => setShowTopup(true)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <div className={`${styles.iconBox} ${styles.bgBlue}`}>
-                      <ArrowDownCircle size={20} />
-                    </div>
-                    <div className={styles.cardBody}>
-                      <h3 className={styles.cardTitle}>{t("Top up with crypto")}</h3>
-                      <p className={styles.cardDesc}>
-                        {t("Pay in USDT and receive euro on your virtual IBAN.")}
-                      </p>
-                      <div className={styles.badgeRow}>
-                        <span className={`${styles.tag} ${styles.tagBlue}`}>{t("USDT")}</span>
-                        <span className={`${styles.tag} ${styles.tagGray}`}>
-                          {t("Crypto to EUR")}
-                        </span>
+                  {canTopupWithCrypto && (
+                    <div
+                      className={styles.card}
+                      onClick={() => setShowTopup(true)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <div className={`${styles.iconBox} ${styles.bgBlue}`}>
+                        <ArrowDownCircle size={20} />
+                      </div>
+                      <div className={styles.cardBody}>
+                        <h3 className={styles.cardTitle}>{t("Top up with crypto")}</h3>
+                        <p className={styles.cardDesc}>
+                          {t("Pay in USDT and receive euro on your virtual IBAN.")}
+                        </p>
+                        <div className={styles.badgeRow}>
+                          <span className={`${styles.tag} ${styles.tagBlue}`}>{t("USDT")}</span>
+                          <span className={`${styles.tag} ${styles.tagGray}`}>
+                            {t("Crypto to EUR")}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
                   <Tooltip title={convertTooltip} arrow>
                     <div
                       className={`${styles.card} ${canConvert ? "" : styles.cardDisabled}`}
@@ -167,29 +175,35 @@ const CryptoActions = () => {
                       </div>
                     </div>
                   </Tooltip>
-                  <Tooltip title={payoutTooltip} arrow>
-                    <div
-                      className={`${styles.card} ${canPayout ? "" : styles.cardDisabled}`}
-                      onClick={canPayout ? () => setShowPayout(true) : undefined}
-                      style={{ cursor: canPayout ? "pointer" : "not-allowed" }}
-                    >
-                      <div className={`${styles.iconBox} ${styles.bgYellow}`}>
-                        <Send size={20} />
-                      </div>
-                      <div className={styles.cardBody}>
-                        <h3 className={styles.cardTitle}>{t("External crypto payout")}</h3>
-                        <p className={styles.cardDesc}>
-                          {t("Send from your virtual IBAN straight to an external crypto wallet.")}
-                        </p>
-                        <div className={styles.badgeRow}>
-                          <span className={`${styles.tag} ${styles.tagBlue}`}>
-                            {t("EUR to USDT / USDC")}
-                          </span>
-                          <span className={`${styles.tag} ${styles.tagGreen}`}>{t("Minutes")}</span>
+                  {canCryptoPayout && (
+                    <Tooltip title={payoutTooltip} arrow>
+                      <div
+                        className={`${styles.card} ${canPayout ? "" : styles.cardDisabled}`}
+                        onClick={canPayout ? () => setShowPayout(true) : undefined}
+                        style={{ cursor: canPayout ? "pointer" : "not-allowed" }}
+                      >
+                        <div className={`${styles.iconBox} ${styles.bgYellow}`}>
+                          <Send size={20} />
+                        </div>
+                        <div className={styles.cardBody}>
+                          <h3 className={styles.cardTitle}>{t("External crypto payout")}</h3>
+                          <p className={styles.cardDesc}>
+                            {t(
+                              "Send from your virtual IBAN straight to an external crypto wallet.",
+                            )}
+                          </p>
+                          <div className={styles.badgeRow}>
+                            <span className={`${styles.tag} ${styles.tagBlue}`}>
+                              {t("EUR to USDT / USDC")}
+                            </span>
+                            <span className={`${styles.tag} ${styles.tagGreen}`}>
+                              {t("Minutes")}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </Tooltip>
+                    </Tooltip>
+                  )}
                 </div>
               </div>
             </>

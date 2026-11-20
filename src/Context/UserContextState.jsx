@@ -5,7 +5,7 @@ import { lazy, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { publicRoutes } from "../RouteNew/Routes";
 import { useNavigate } from "react-router";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 const SessionExpireModal = lazy(() => import("../Components/SessionExpireModal"));
 import { useSearchParams } from "react-router-dom";
 import { apiWrapper } from "../utils/Functions/apiWrapper";
@@ -76,6 +76,7 @@ const UserState = ({ children }) => {
   const [profileIncompleteReason, setProfileIncompleteReason] = useState("");
   const [showModalState, setShowModalState] = useState(false);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [croppedImages, setCroppedImages] = useState({
     profileDP: "",
     profileBanner: "",
@@ -179,10 +180,10 @@ const UserState = ({ children }) => {
     setAgentDetails(null);
   };
 
-  // Ends the session and returns to the login page the user last signed in from.
   const logout = () => {
     clearAuthStorage();
     clearData();
+    queryClient.clear();
     navigate(getLoginPath(), { replace: true });
   };
 

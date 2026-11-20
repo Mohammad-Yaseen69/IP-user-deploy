@@ -504,20 +504,20 @@ const Login = ({ country, setIsLoginForm }) => {
           setIsLoginError(
             `Uh-Oh! The password/${credentialIsEmail ? "email" : "phone number"} you entered is wrong.`,
           );
-        }
-        if (decrypted.message?.toLowerCase()?.includes("inactive")) {
+        } else if (decrypted.message?.toLowerCase()?.includes("inactive")) {
           setIsLoginError(`Uh-Oh! Your account is not active anymore.`);
-        }
-        if (decrypted.message?.toLowerCase()?.includes("onhold")) {
+        } else if (decrypted.message?.toLowerCase()?.includes("onhold")) {
           setIsLoginError(`Uh-Oh! Your account is onhold.`);
-        }
-        if (decrypted.message?.toLowerCase()?.includes("delete")) {
+        } else if (decrypted.message?.toLowerCase()?.includes("delete")) {
           setIsLoginError(decrypted?.message);
-        }
-        if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+        } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
           const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
           const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
           setProfileLockTime(timeInSec);
+        } else {
+          setIsLoginError(
+            decrypted?.message || "We're unable to process your request. Please try again",
+          );
         }
       });
   };
