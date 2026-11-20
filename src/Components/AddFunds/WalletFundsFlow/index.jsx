@@ -48,6 +48,7 @@ const initialState = {
     max: 0,
   },
   loading: false,
+  limitsLoading: false,
   mobile_wallet_merchant: "",
   mobile_wallet_channels: [],
   mobile_wallet_services: [],
@@ -754,6 +755,7 @@ const WalletFundsFlow = ({ setAction }) => {
         return !data.wallet?._id || data.error;
       case 2:
         return (
+          data.limitsLoading ||
           !data.amount ||
           data.amount < parseFloat(String(data.limits.min ?? "0.00")?.replaceAll(",", "")) ||
           data.amount > parseFloat(String(data.limits.max ?? "0.00")?.replaceAll(",", "")) ||
