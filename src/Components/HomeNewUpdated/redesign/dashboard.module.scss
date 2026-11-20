@@ -471,9 +471,11 @@ a.stat:hover b {
 .quickText {
   flex: none;
   width: 170px;
+  margin-top: 5px;
 
   a {
-    margin-top: 6px;
+    margin: 0;
+    padding: 0;
   }
 }
 
@@ -1083,5 +1085,380 @@ a.stat:hover b {
 
   .donut {
     align-self: center;
+  }
+}
+
+@media screen and (max-width: 680px) {
+  .cryptoHead {
+    align-items: center;
+    padding: 16px 16px 8px;
+
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+      letter-spacing: -0.3px;
+      color: $text;
+    }
+
+    a {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 20px;
+      color: $primary;
+      white-space: nowrap;
+    }
+  }
+
+  .cryptoHead p {
+    display: none;
+  }
+
+  .cryptoGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 4px 16px 8px;
+  }
+
+  .crypto {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 0;
+    border: 0;
+    border-radius: 0;
+    border-bottom: 1px solid $border;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  .cryptoTop {
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    gap: 2px 8px;
+    min-width: 0;
+    font-size: 14px;
+    line-height: 20px;
+
+    small {
+      flex-basis: 100%;
+      margin-top: -2px;
+      padding-left: 32px;
+      font-size: 12px;
+      line-height: 16px;
+      color: $muted;
+    }
+  }
+
+  .cryptoIcon,
+  .cryptoTop img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .cryptoValue {
+    flex: none;
+    text-align: right;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    white-space: nowrap;
+
+    small {
+      margin-top: 2px;
+      font-size: 12px;
+      line-height: 16px;
+      color: $muted;
+    }
+  }
+
+  .quick {
+    flex-direction: column !important;
+    align-items: stretch;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .quickText {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    margin-top: 0;
+
+    h3 {
+      margin: 0 !important;
+      padding: 0;
+      line-height: 21px;
+    }
+
+    p {
+      display: none;
+    }
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+      margin: 0;
+      padding: 0;
+      line-height: 21px;
+      white-space: nowrap;
+    }
+  }
+
+  .contacts {
+    flex: none;
+    width: 100%;
+    gap: 14px;
+    padding: 4px 0 2px;
+    overflow-x: auto;
+  }
+
+  .contact {
+    width: 64px;
+    flex: none;
+    gap: 8px;
+
+    i {
+      width: 56px;
+      height: 56px;
+      font-size: 15px;
+    }
+
+    span {
+      font-size: 12px;
+      color: $text-2;
+    }
+  }
+
+  .partner {
+    min-height: 0;
+    gap: 12px;
+    padding: 14px 16px;
+    background: linear-gradient(120deg, #f2eeff 0%, #ffffff 100%);
+    border: 1px solid $tint-2;
+    border-radius: 16px;
+    color: $text;
+
+    &::before,
+    &::after {
+      display: none;
+    }
+
+    > div:first-child {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    h3 {
+      max-width: none;
+      font-size: 16px;
+      line-height: 20px;
+      letter-spacing: -0.3px;
+      color: $text;
+    }
+
+    h3 + p {
+      max-width: none;
+      margin-top: 0 !important;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 17px;
+      color: $text-2;
+    }
+
+    .partnerFoot {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .partnerStat {
+      font-size: 11px;
+      line-height: 15px;
+      color: $text-2;
+
+      b {
+        font-size: 14px;
+        line-height: 20px;
+        color: $text;
+      }
+
+      &:hover {
+        color: $text-2;
+      }
+    }
+
+    .partnerTools {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .code {
+      flex: 0 1 auto;
+      min-width: 0;
+      height: 36px;
+      padding: 0 4px 0 12px;
+      gap: 8px;
+      font-size: 13px;
+      line-height: 18px;
+      color: $text;
+      background: #fff;
+      border: 1px solid $tint-2;
+
+      button {
+        height: 28px;
+        padding: 0 8px;
+        font-size: 12px;
+        color: $primary;
+        background: $tint;
+      }
+    }
+
+    .white {
+      flex: 0 0 auto;
+      height: 36px;
+      padding: 0 12px;
+      gap: 4px;
+      font-size: 13px;
+      border: 1px solid $tint-2;
+      color: $primary;
+    }
+  }
+
+  .hero {
+    background: none;
+    border-radius: 0;
+    overflow: visible;
+  }
+
+  .heroMain {
+    padding: 16px;
+    overflow: visible;
+    background: linear-gradient(180deg, #f5f2ff 0%, #ffffff 100%);
+    border: 1px solid $border;
+    border-radius: 16px;
+
+    &::before {
+      display: none;
+    }
+  }
+
+  .heroTop {
+    min-height: 0;
+    padding: 0 0 8px;
+  }
+
+  .ghost {
+    display: none;
+  }
+
+  .balance {
+    position: static;
+    min-height: 0;
+    padding: 0;
+    gap: 0;
+    overflow: visible;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+
+    &::before {
+      display: none;
+    }
+  }
+
+  .balanceMain {
+    justify-content: center;
+    min-height: 0;
+    padding: 8px 0 12px;
+  }
+
+  .eye {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    background: #fff;
+    border: 1px solid $border;
+    box-shadow: 0 1px 2px rgba(27, 31, 42, 0.08);
+    color: $primary;
+  }
+
+  .balanceValue {
+    color: $text;
+
+    small {
+      color: $text-2;
+    }
+
+    b {
+      font-size: 40px;
+      letter-spacing: -1px;
+    }
+
+    span {
+      font-size: 26px;
+      color: $text-2;
+    }
+  }
+
+  .balanceMeta {
+    justify-content: center;
+    gap: 12px;
+    font-size: 12px;
+    line-height: 16px;
+    color: $text-2;
+
+    > span:last-of-type {
+      display: none;
+    }
+
+    > span:first-of-type {
+      color: $green;
+    }
+
+    small {
+      margin-left: 0;
+      font-size: 12px;
+      color: $muted;
+    }
+  }
+
+  .greeting {
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px 16px 0;
+  }
+
+  .greeting h2 {
+    font-size: 24px;
+    line-height: 29px;
+  }
+
+  .greetingTools {
+    width: 100%;
+    gap: 8px;
+    padding: 0 16px;
+    box-sizing: border-box;
+  }
+
+  .chat {
+    flex: none;
   }
 }
