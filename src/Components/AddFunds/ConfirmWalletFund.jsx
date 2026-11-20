@@ -21,6 +21,7 @@ import { WidgetSDK } from "@keabank/websdk";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import MobileWalletStatus from "../PaymentAddressPublic/PayAsGuest/MobileWalletStatus";
 import { useIdempotency } from "../../hooks/Payments/useIdempotency";
+import { useExecuteVirtualIbanTransfer } from "../../hooks/useVirtualIban";
 import { LimitsErrorMessage } from "../../utils/Functions/paymentLimits";
 import { initiatePaytentlyVerificationPayment } from "../../utils/Functions/paytently";
 import PaytentlyModal from "./PaytentlyModal";
@@ -77,6 +78,7 @@ const ConfirmWalletFund = ({
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { getKey, reset } = useIdempotency();
+  const executeIbanTransfer = useExecuteVirtualIbanTransfer();
 
   const isCrypto = useMemo(() => {
     return wallet?.wallet_type === "crypto";
@@ -377,6 +379,35 @@ const ConfirmWalletFund = ({
         } finally {
           setLoading(false);
         }
+      } else if (payoutChannel?.value === "virtual_iban") {
+        try {
+          const response = await executeIbanTransfer.mutateAsync({
+            iban_id: payoutChannel?.iban?._id,
+            wallet_id: wallet?.wallet_id,
+            token: exchangeRate?.token,
+          });
+
+          setMobileWalletTrxId(response?.data?.transaction_id);
+          setMobileSuccess(true);
+        } catch (error) {
+          const dec = decryptData(error?.response?.data?.data);
+
+          const error2 = apiErrorMessage(dec?.message);
+          const error1 = LimitsErrorMessage(dec?.code);
+
+          if (error1) {
+            setError(t(error1));
+          } else if (error2) {
+            setError(t(error2));
+          } else {
+            setError(
+              dec?.message ??
+                "We cannot process your request at the moment, please try again later.",
+            );
+          }
+        } finally {
+          setLoading(false);
+        }
       } else if (type === "kyb") {
         // only KYB wallet payment reaches here; every add-funds channel is handled above
         sendKybWalletOTP();
@@ -442,7 +473,10 @@ const ConfirmWalletFund = ({
         <MobileWalletStatus
           transactionId={mobileWalletTrxId}
           inGuestPay={false}
-          toggle={() => navigate("/transactions")}
+          toggle={() =>
+            navigate(payoutChannel?.value === "virtual_iban" ? "/virtual-IBAN" : "/transactions")
+          }
+          initialStatus={payoutChannel?.value === "virtual_iban" ? "PROCESSING" : "PENDING"}
         />
       ) : (
         <Card
