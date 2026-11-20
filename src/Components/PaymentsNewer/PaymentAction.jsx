@@ -3,7 +3,6 @@ import sm from "./files/sm.svg";
 import rm from "./files/rm.svg";
 import q from "./files/q.svg";
 import airtime_s from "./files/airtime.svg";
-import ctf from "./files/ctf.png";
 import { useTranslation } from "react-i18next";
 import { useContext, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
@@ -13,7 +12,6 @@ import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import send from "./files/send_money.png";
 import request from "./files/receive_money.png";
 import s_quote from "./files/send_q.png";
-import s_crypto from "./files/send_c.png";
 import request_q from "./files/request_q.png";
 import airtime from "./files/airtime.png";
 

@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from "react";
+import { useContext, useMemo } from "react";
 import styles from "../styles/index.module.scss";
 import share from "../files/share.png";
 import { useTranslation } from "react-i18next";

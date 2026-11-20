@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import styles from "./styles/index.module.scss";
 import Giftpng from "./files/gift-png.png";
 import IpLogo from "./files/ip.svg";
@@ -11,11 +11,8 @@ import {
   Wallet2,
   FileDown,
   CreditCardP,
-  Notification,
-  Speaker,
   Apay,
   Gpay,
-  Samsung,
   Copy,
   checktoggle,
   ApayWhite,
@@ -42,8 +39,6 @@ import { DateRangePicker } from "react-date-range";
 import CountriesData from "../PaymentsNewer/CountriesData.json";
 import "./styles/modal.reset.css";
 // Add PDF and DOCX generation imports
-import jsPDF from "jspdf";
-import "jspdf-autotable";
 import {
   Packer,
   Document,
@@ -55,7 +50,6 @@ import {
   HeadingLevel,
   WidthType,
 } from "docx";
-import * as FileSaver from "file-saver";
 import img from "../../assets/images/logo/logo2.webp";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
@@ -474,7 +468,7 @@ const CardPurchased = ({
     }
   };
 
-  const generatePDF = (filteredTransactions) => {
+  const generatePDF = async (filteredTransactions) => {
     setDownloading(true);
     const tableStyles = {
       fontSize: 8,
@@ -485,6 +479,7 @@ const CardPurchased = ({
       textColor: [255, 255, 255],
     };
 
+    const [{ default: jsPDF }] = await Promise.all([import("jspdf"), import("jspdf-autotable")]);
     const doc = new jsPDF({ orientation: "landscape" });
 
     // Add logo
@@ -757,8 +752,9 @@ const CardPurchased = ({
       ],
     });
 
-    Packer.toBlob(doc).then((blob) => {
+    Packer.toBlob(doc).then(async (blob) => {
       const fileName = `transaction_statement_${userDetails?.first_name || userDetails?.company_name}_${userDetails?.last_name}_${new Date().toISOString().split("T")[0]}.docx`;
+      const FileSaver = await import("file-saver");
       FileSaver.saveAs(blob, fileName);
       setDownloading(false);
     });

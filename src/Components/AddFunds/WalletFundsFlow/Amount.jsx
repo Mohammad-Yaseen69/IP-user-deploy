@@ -5,7 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../../Context/UserContext";
 import { formatCurrency } from "../../../Helper/AmountFormat";
 import { useLocation } from "react-router";
-import { getLimits } from "../../WalletsNew";
+import { getLimits } from "../../WalletsNew/getLimits";
 import InstaPayLoader from "../../Loader";
 
 export function formatCurrencyLocal(value) {

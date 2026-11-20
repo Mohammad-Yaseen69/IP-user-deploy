@@ -1,6 +1,6 @@
 import { useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Briefcase, CheckCircle, Edit2, Plus, Save, Trash2, User, Users } from "react-feather";
+import { Briefcase, CheckCircle, Edit2, Plus, Save, Trash2, User } from "react-feather";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { UserContext } from "../../../Context/UserContext";
 import AddSenderFormModal from "./AddSenderFormModal";

@@ -20,12 +20,15 @@ const Channels = ({ setChannel, channel, thunesServices, thunesProviders = [] })
   const { userDetails } = useContext(UserContext);
   const { data: virtualIbans = [], isLoading: ibansLoading } = useVirtualIbans(userDetails?._id);
   const [showCardMaintenanceModal, setShowCardMaintenanceModal] = useState(false);
+  const usePaytently = true; // Paytently is the card provider.
+  console.log("user detail(18)", userDetails);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const { data: methods, isLoading } = useQuery({
-    queryKey: ["AvailableMethods"],
+    // Own cache key: the KYC screen caches the same endpoint without purpose=topup.
+    queryKey: ["AvailableMethods", "topup"],
     queryFn: () =>
       apiWrapper({
-        endpoint: `/api/payment/get-available-methods/${userDetails?._id}/${userDetails?.country_iso_code}`,
+        endpoint: `/api/payment/get-available-methods/${userDetails?._id}/${userDetails?.country_iso_code}?purpose=topup`,
       }).then((dec) => dec?.data),
     retry: 3,
   });
@@ -53,7 +56,7 @@ const Channels = ({ setChannel, channel, thunesServices, thunesProviders = [] })
           name: "Bank Deposit",
           id: 2,
           icon: bd,
-          value: "bank",
+          value: "bank_deposit",
           coming_soon: userDetails?.level?.topup_channel?.bank_deposit === "coming_soon",
         }
       : {},
@@ -151,7 +154,7 @@ const Channels = ({ setChannel, channel, thunesServices, thunesProviders = [] })
                     return;
                   }
                 }
-                if (item?.value === "card") {
+                if (item?.value === "card" && !usePaytently) {
                   setShowCardMaintenanceModal(true);
                   return;
                 }

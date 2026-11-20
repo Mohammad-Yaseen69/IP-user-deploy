@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import otp_icon from "../../PaymentsNewer/files/otp_icon.png";
 import { Button } from "reactstrap";
 import { ChevronRight } from "react-feather";

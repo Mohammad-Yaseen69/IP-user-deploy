@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styles from "./styles/Sessions.module.scss";
 import { Desktop, DeviceMobile } from "./Icons";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";

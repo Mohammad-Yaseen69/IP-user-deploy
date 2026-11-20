@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "../styles/index.module.scss";
 import { useTranslation } from "react-i18next";
 import InstaPayLoader from "../../Loader";
