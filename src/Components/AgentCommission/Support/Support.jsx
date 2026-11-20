@@ -1,9 +1,8 @@
-import React from "react";
 import useWindowWidth from "../../../utils/useWindowWidth";
 import { useTranslation } from "react-i18next";
 import styles from "../styles/support.module.css";
 import TopRight from "../../topRight";
-import { FaBookBookmark, FaHeadset } from "react-icons/fa6";
+import { FaHeadset } from "react-icons/fa6";
 import { Star } from "react-feather";
 
 const Support = () => {

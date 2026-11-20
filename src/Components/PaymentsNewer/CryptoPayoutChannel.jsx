@@ -1,6 +1,5 @@
 import bd from "./files/bd.png";
 import cp from "./files/cp.png";
-import mw from "./files/mw.png";
 import pc from "./files/pc.png";
 import cw from "./files/cw.png";
 import i from "./files/i.svg";

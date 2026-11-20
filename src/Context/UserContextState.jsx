@@ -59,7 +59,6 @@ const UserState = ({ children }) => {
   const [beneficiariesLoading, setBeneficiariesLoading] = useState(true);
   const [referralLoading, setReferralLoading] = useState(true);
   const [walletsLoading, setWalletsLoading] = useState(true);
-  const verifyingToken = useRef(false);
   const [tokenCheckFailures, setTokenCheckFailures] = useState(0);
   const [beneficiaries, setBeneficiaries] = useState([]);
   const [registeredBeneficiaries, setRegisteredBeneficiaries] = useState([]);
@@ -235,21 +234,25 @@ const UserState = ({ children }) => {
     }
   };
 
+  // The app shell and Layout both call verifyToken on mount, before the first
+  // response has set userDetails. Share the in-flight request so only one goes
+  // out; a second response would also re-run every [userDetails] effect.
+  const verifyTokenRequestRef = useRef(null);
+
   const verifyToken = (isFetchRequired = false) => {
     if (
       (!window.location.pathname.includes("auth") &&
         !userDetails &&
-        Object.keys(userDetails || {}).length === 0 &&
-        !verifyingToken.current) ||
+        Object.keys(userDetails || {}).length === 0) ||
       isFetchRequired
     ) {
-      verifyingToken.current = true;
+      if (!isFetchRequired && verifyTokenRequestRef.current) return;
       const isAgentLoginCheck = localStorage.getItem("isAgentLogin");
       const url = isAgentLoginCheck
         ? `/api/business-agents/agents/auth/${token}`
         : `/api/account/auth/${token}`;
 
-      axios
+      const request = axios
         .get(`${import.meta.env.VITE_IP_DEV_API}${url}`)
         .then((res) => {
           const decrypted = decryptData(res.data.data);
@@ -345,8 +348,9 @@ const UserState = ({ children }) => {
           }
         })
         .finally(() => {
-          verifyingToken.current = false;
+          if (verifyTokenRequestRef.current === request) verifyTokenRequestRef.current = null;
         });
+      verifyTokenRequestRef.current = request;
     }
   };
 

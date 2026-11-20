@@ -1,6 +1,6 @@
 import { ChevronDown, ChevronRight } from "react-feather";
 import { useTranslation } from "react-i18next";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import styles from "./MobileTransactionItem.module.css";
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 import { UserContext } from "../../Context/UserContext";

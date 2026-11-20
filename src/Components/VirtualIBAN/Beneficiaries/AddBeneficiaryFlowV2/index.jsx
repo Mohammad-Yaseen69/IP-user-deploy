@@ -1,7 +1,5 @@
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Modal } from "@mui/material";
-import DateMomentUtils from "@date-io/moment";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { ArrowLeft, X } from "react-feather";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
@@ -22,7 +20,7 @@ import {
   prefillEditBag,
 } from "./buildPayloads";
 import { useAvailableMethods, useRequiredFields, useRequirements } from "./useVendorRequirements";
-import { BANK_COUNTRY_FIELD, getEditRequirements, getFieldDef } from "./vendorFields";
+import { BANK_COUNTRY_FIELD, getFieldDef } from "./vendorFields";
 import { apiWrapper } from "../../../../utils/Functions/apiWrapper";
 import { UserContext } from "../../../../Context/UserContext";
 import {
@@ -703,7 +701,7 @@ const AddBeneficiaryFlowV2 = ({
 
   return (
     <Modal open={open} onClose={handleClose} aria-labelledby="add-beneficiary-v2">
-      <MuiPickersUtilsProvider utils={DateMomentUtils}>
+      <>
         <div className={styles.root}>
           <div className={styles.modal}>
             <div className={styles.header}>
@@ -769,7 +767,7 @@ const AddBeneficiaryFlowV2 = ({
             </div>
           </div>
         </div>
-      </MuiPickersUtilsProvider>
+      </>
     </Modal>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import styles from "./styles/transactionType.module.css";
 import { UserContext } from "../../../Context/UserContext";
 import { useTranslation } from "react-i18next";

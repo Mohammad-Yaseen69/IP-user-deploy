@@ -3,8 +3,6 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { authHeader } from "../../Context/UserContext";
 import { toast } from "react-toastify";
 import { formatCurrency } from "../../Helper/AmountFormat";
-import * as XLSX from "xlsx";
-import { saveAs } from "file-saver";
 import { service_name_formatter } from "../../Components/TransactionsNewApi/TransactionItem";
 
 const formatHeader = (header) => {
@@ -153,6 +151,9 @@ export const exportToExcel = async (
       });
       return outputRow;
     });
+
+    const XLSX = await import("xlsx");
+    const { saveAs } = await import("file-saver");
 
     const worksheet = XLSX.utils.json_to_sheet(rowsWithDesiredHeaders, {
       header: desiredHeaders,

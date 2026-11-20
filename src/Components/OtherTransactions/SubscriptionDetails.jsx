@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./styles/index.module.scss";
 import { ChevronLeft, ChevronRight } from "react-feather";
 import ImagePreviewModal from "../ImagePreviewModal.jsx";
-import { Button } from "reactstrap";
 import SubscriptionPaymentFlow from "./PaymentFlow/index.jsx";
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem.jsx";
 

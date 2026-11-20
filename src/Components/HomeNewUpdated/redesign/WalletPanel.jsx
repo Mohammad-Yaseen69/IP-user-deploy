@@ -13,7 +13,7 @@ import u from "../../../Common/WalletUI/ui.module.scss";
 import WalletCard from "../../../Common/WalletUI/WalletCard";
 import { UserContext } from "../../../Context/UserContext";
 import { usePermission } from "../../../hooks/GeneralUse/usePermission";
-import { getLimits } from "../../WalletsNew";
+import { getLimits } from "../../WalletsNew/getLimits";
 import d from "./dashboard.module.scss";
 
 // Each card loads its own monthly limit, as the old dashboard card did.

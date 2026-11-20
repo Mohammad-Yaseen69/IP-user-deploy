@@ -115,7 +115,7 @@ const formatSubmissionTime = (dateInput) => {
 const getFeeAmount = async ({ payload, authHeader }) => {
   const encryptedData = encryptData(payload);
   const res = await axios.post(
-    `${import.meta.env.VITE_IP_DEV_API}/api/company/kyb-fee-details`,
+    `${import.meta.env.VITE_IP_DEV_API}/api/company/kyb-fee`,
     { data: encryptedData },
     { headers: authHeader },
   );
