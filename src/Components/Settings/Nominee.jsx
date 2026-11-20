@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import AddNominee, { NoNomineeNote } from "./AddNominee";
 import NomineeDetails from "./NomineeDetails";

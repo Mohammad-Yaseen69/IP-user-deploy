@@ -4,7 +4,6 @@ import bank from "../PaymentsNewer/files/bd.png";
 import ins from "../../assets/images/logo/logo_white.png";
 import mw from "../PaymentsNewer/files/mw.png";
 import pc from "../PaymentsNewer/files/pc.png";
-import cw from "../PaymentsNewer/files/cw.png";
 import { ChevronDown, ChevronUp, MoreHorizontal } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Modal, ModalBody } from "reactstrap";
 import { X, Send } from "react-feather";
 import { useTranslation } from "react-i18next";

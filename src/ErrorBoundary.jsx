@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import "./ErrorBoundary.css";
 import * as Sentry from "@sentry/react";
 import InstaPayLoader from "./Components/Loader";

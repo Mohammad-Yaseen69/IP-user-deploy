@@ -1,0 +1,152 @@
+.root {
+  /* tokens the shared Segmented reads; this panel renders outside the page wrapper */
+  --ct-gray-100: #eff1f6;
+  --ct-secondary: #6e7687;
+  --ct-text: #1b1f2a;
+  --ct-faint: #9aa3b2;
+
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1200;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  letter-spacing: -0.03em;
+}
+
+.root p {
+  margin: 0;
+}
+
+.fab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 100px;
+  background: #17141f;
+  color: #ffffff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 10px 30px rgba(23, 20, 31, 0.25);
+  cursor: pointer;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 320px;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 20px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid #e9e7ef;
+  box-shadow: 0 24px 64px rgba(20, 18, 41, 0.18);
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #17141f;
+}
+
+.sub {
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #5e5a6b;
+}
+
+.close {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #5e5a6b;
+  cursor: pointer;
+}
+
+.close:hover {
+  background: #eff1f6;
+}
+
+.label {
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #5e5a6b;
+}
+
+.presets {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.preset {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e9e7ef;
+  border-radius: 10px;
+  background: #ffffff;
+  font: inherit;
+  font-size: 14px;
+  color: #17141f;
+  text-align: left;
+  cursor: pointer;
+}
+
+.preset:hover {
+  border-color: #5926f0;
+  background: #fbf9ff;
+}
+
+.index {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: #f3efff;
+  color: #5926f0;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+@media (max-width: 560px) {
+  .root {
+    right: 16px;
+    bottom: 88px;
+  }
+
+  .panel {
+    width: calc(100vw - 32px);
+  }
+}

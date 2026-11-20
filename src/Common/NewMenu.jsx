@@ -1,4 +1,5 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { UserContext } from "../Context/UserContext";
 import { apiWrapper } from "../utils/Functions/apiWrapper";
@@ -11,6 +12,36 @@ import agentIcon from "../assets/images/logo/agentIcon.svg";
 import agentIcon2 from "../assets/images/logo/agent2.svg";
 import bgImg from "../assets/images/logo/Vector.png";
 import { useNavigate, useLocation } from "react-router-dom";
+import styles from "./NewMenu.module.css";
+
+const EXPANDED_STORAGE_KEY = "newMenuExpanded";
+
+const readExpanded = () => {
+  try {
+    return localStorage.getItem(EXPANDED_STORAGE_KEY) === "true";
+  } catch {
+    return false;
+  }
+};
+
+const ToggleIcon = ({ expanded }) => (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    style={{ transform: expanded ? "scaleX(-1)" : "none", transition: "transform .25s ease" }}
+  >
+    <path d="M3 12h12" />
+    <path d="M10 6l6 6-6 6" />
+    <path d="M21 5v14" />
+  </svg>
+);
+
 const ShopActiveIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 17 14" fill="none">
     <path
@@ -37,7 +68,24 @@ const ShopActiveIcon = () => (
 const NewMenu = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
+  const [expanded, setExpanded] = useState(readExpanded);
+
+  useEffect(() => {
+    document.body.classList.toggle("new-menu-expanded", expanded);
+    return () => document.body.classList.remove("new-menu-expanded");
+  }, [expanded]);
+
+  const toggleExpanded = () => {
+    setExpanded((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem(EXPANDED_STORAGE_KEY, String(next));
+      } catch {}
+      return next;
+    });
+  };
 
   const { data, isError } = useQuery({
     queryKey: ["UserStore"],
@@ -79,114 +127,77 @@ const NewMenu = () => {
       : location.pathname === "/store-create"
         ? "shop"
         : "instapay";
-  const containerStyle = {
-    padding: "5px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "6px",
-    borderRadius: "12px",
-    background: `url(${bgImg}), #000`,
-    boxShadow: "0 4px 15.9px 0 rgba(89, 38, 240, 0.38)",
-    position: "fixed",
-    left: "8px",
-    top: "18px",
-    zIndex: 10,
-  };
+  const items = [
+    {
+      key: "instapay",
+      label: t("InstaPay"),
+      onClick: () => navigate("/"),
+      icon: <img src={instapyLogo} alt="" width={20} height={20} />,
+      inactiveIcon: <img src={logo_white} alt="" width={20} height={20} />,
+    },
+    {
+      key: "shop",
+      label: t("E-shop"),
+      onClick: handleEshopClick,
+      icon: <ShopActiveIcon />,
+      inactiveIcon: <img src={InstaFolio} alt="" width={20} height={20} />,
+    },
+    {
+      key: "media",
+      label: t("InstaMedia"),
+      onClick: () => navigate("/Insta-media"),
+      icon: <img src={InstaMedia} alt="" width={18} height={18} />,
+      inactiveIcon: <img src={InstaMedia} alt="" width={18} height={18} />,
+    },
+    ...(userDetails?.isInstapayAgent
+      ? [
+          {
+            key: "agent",
+            label: t("Agent"),
+            onClick: () => navigate("/agent-commission"),
+            icon: <img src={agentIcon} alt="" width={20} height={20} />,
+            inactiveIcon: <img src={agentIcon2} alt="" width={20} height={20} />,
+          },
+        ]
+      : []),
+  ];
 
-  const itemStyle = {
-    width: "36px",
-    height: "36px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: "var(--RADIUS-radius-1, 4px)",
-    cursor: "pointer",
-    transition: "all .3s ease",
-    border: "0.25px solid rgba(255, 255, 255, 0.28)",
-    background: "rgba(255, 255, 255, 0.06)",
-    backdropFilter: "blur(0.65px)",
-  };
-
-  const activeStyle = {
-    ...itemStyle,
-    background: "#fff",
-    boxShadow: "0 4px 15.1px 0 rgba(0, 0, 0, 0.50)",
-    // border: "0.25px solid rgba(255, 255, 255, 0.28)",
-  };
+  const toggleLabel = expanded ? t("Collapse menu") : t("Expand menu");
 
   return (
-    <div style={containerStyle}>
-      <div
-        style={{
-          ...(activeItem === "instapay" ? activeStyle : itemStyle),
-          ...(activeItem !== "instapay" && {
-            border: "0.25px solid rgba(255, 255, 255, 0.28)",
-            background: "#4c29b5",
-          }),
-        }}
-        onClick={() => {
-          navigate("/");
-        }}
+    <div className={`${styles.wrapper} ${expanded ? styles.expanded : ""}`}>
+      <button
+        type="button"
+        className={styles.toggle}
+        onClick={toggleExpanded}
+        aria-expanded={expanded}
+        aria-label={toggleLabel}
+        title={toggleLabel}
       >
-        {" "}
-        {activeItem === "instapay" ? (
-          <img src={instapyLogo} alt="logo" width={20} height={20} />
-        ) : (
-          <img src={logo_white} alt="logo" width={20} height={20} />
-        )}
-      </div>
+        <ToggleIcon expanded={expanded} />
+      </button>
 
-      <div
-        style={{
-          ...(activeItem === "shop" ? activeStyle : itemStyle),
-          ...(activeItem !== "shop" && {
-            border: "0.25px solid rgba(255, 255, 255, 0.28)",
-            background: "#4c29b5",
-          }),
-        }}
-        onClick={handleEshopClick}
-      >
-        {activeItem === "shop" ? (
-          <ShopActiveIcon />
-        ) : (
-          <img src={InstaFolio} alt="media" width={20} height={20} />
-        )}
-      </div>
-
-      <div
-        onClick={() => {
-          navigate("/Insta-media");
-        }}
-        style={{
-          ...(activeItem === "media" ? activeStyle : itemStyle),
-          ...(activeItem !== "media" && {
-            border: "0.25px solid rgba(255, 255, 255, 0.28)",
-            background: "#4c29b5",
-          }),
-        }}
-      >
-        <img src={InstaMedia} alt="media" width={18} height={18} />
-      </div>
-      {userDetails?.isInstapayAgent && (
-        <div
-          onClick={() => {
-            navigate("/agent-commission");
-          }}
-          style={{
-            ...(activeItem === "agent" ? activeStyle : itemStyle),
-            ...(activeItem !== "agent" && {
-              border: "0.25px solid rgba(255, 255, 255, 0.28)",
-              background: "#4c29b5",
-            }),
-          }}
-        >
-          {activeItem === "agent" ? (
-            <img src={agentIcon} alt="agent" width={20} height={20} />
-          ) : (
-            <img src={agentIcon2} alt="agent" width={20} height={20} />
-          )}
-        </div>
-      )}
+      <nav className={styles.pill} style={{ backgroundImage: `url(${bgImg})` }}>
+        {items.map((item) => {
+          const isActive = activeItem === item.key;
+          return (
+            <button
+              key={item.key}
+              type="button"
+              className={`${styles.item} ${isActive ? styles.active : ""}`}
+              onClick={item.onClick}
+              title={expanded ? undefined : item.label}
+              aria-label={item.label}
+              aria-current={isActive ? "page" : undefined}
+            >
+              <span className={styles.icon}>{isActive ? item.icon : item.inactiveIcon}</span>
+              <span className={styles.label} aria-hidden={!expanded}>
+                {item.label}
+              </span>
+            </button>
+          );
+        })}
+      </nav>
     </div>
   );
 };

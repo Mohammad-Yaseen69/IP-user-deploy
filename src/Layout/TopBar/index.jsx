@@ -1,9 +1,7 @@
 import { useContext } from "react";
 import styles from "./styles/index.module.css";
 import { UserContext } from "../../Context/UserContext";
-import { Col } from "reactstrap";
 import Notifications from "../../Components/Notifications";
-import msg from "../../Components/topRight/msg.svg";
 import { MobileSbContext } from "../Layout";
 import LanguagePicker from "../../Components/LanguagePicker";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";

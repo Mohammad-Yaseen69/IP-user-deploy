@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import AssistantDrawer from "./AssistantDrawer";
 import { ChevronUp, Plus } from "react-feather";
 import styles from "../style/onboardingSteps.module.css";
