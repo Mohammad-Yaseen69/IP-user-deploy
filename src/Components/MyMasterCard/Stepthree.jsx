@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
 import styles from "./styles/onboard.module.scss";
 import Img from "./files/kyc-img.png";

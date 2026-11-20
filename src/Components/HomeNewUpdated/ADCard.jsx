@@ -7,11 +7,9 @@ import { useTranslation } from "react-i18next";
 import card_bg from "./files/card_bg.svg";
 import card_bg_green from "./files/card_bg_green.svg";
 import { UserContext } from "../../Context/UserContext";
-import axios from "axios";
 import React from "react";
-import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import r_styles from "./styles/Reserved.module.css";
-import { getLimits } from "../WalletsNew";
+import { getLimits } from "../WalletsNew/getLimits";
 import { removeCommasAndCurrency } from "../WalletsNew/AccountLimits";
 
 const ADCard = ({ data, isActive }) => {

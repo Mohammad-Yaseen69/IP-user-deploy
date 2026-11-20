@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { Check } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { Card, CardBody } from "reactstrap";

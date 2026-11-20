@@ -1,9 +1,7 @@
 import styles from "./styles/index.module.css";
 import six_dots from "./files/six_dots.svg";
-import heart from "./files/heart.svg";
-import comment from "./files/comment.svg";
 import share from "./files/share.svg";
-import { Eye, MoreHorizontal, Play, Trash } from "react-feather";
+import { MoreHorizontal, Play, Trash } from "react-feather";
 import { useContext, useEffect, useRef, useState } from "react";
 import EditModal from "./EditModal";
 import DeleteModal from "./DeleteModal";
