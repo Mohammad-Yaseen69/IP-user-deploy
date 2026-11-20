@@ -1,5 +1,5 @@
 import { Fragment, createContext, useContext, useEffect, useMemo, useState } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import TapTop from "./TapTop/index";
 import CheckContext from "../Helper/Customizer";
@@ -35,6 +35,8 @@ import AssistantWidget from "../Components/AssistantWidget";
 import { useVirtualIbans } from "../hooks/useVirtualIban";
 import PushConsentModal from "../Components/PushConsentModal";
 import { isPushSupported, getPushPermissionState } from "../Services/PushNotificationService";
+import InstaPayLoader from "../Components/Loader";
+import { getLoginPath } from "../utils/Functions/loginPage";
 
 export const MobileSbContext = createContext(null);
 
@@ -53,7 +55,7 @@ const MobileSbContextProvider = ({ children }) => {
   );
 };
 
-const Layout = ({ children, classNames, ...rest }) => {
+const LayoutContent = ({ children, classNames, ...rest }) => {
   const { setTogglSidebar, sidebar_types } = useContext(CheckContext);
   const { t } = useTranslation();
   const location = useLocation();
@@ -540,4 +542,35 @@ const Layout = ({ children, classNames, ...rest }) => {
     </Fragment>
   );
 };
+const Layout = (props) => {
+  const { userDetails, verifyToken, tokenCheckFailures } = useContext(UserContext);
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (token && !userDetails) {
+      verifyToken();
+    }
+  }, [token]);
+
+  useEffect(() => {
+    if (!tokenCheckFailures || !token || userDetails) return undefined;
+    const timer = setTimeout(() => verifyToken(), 3000);
+    return () => clearTimeout(timer);
+  }, [tokenCheckFailures]);
+
+  if (!token) {
+    const currentPath = window.location.pathname + window.location.search;
+    if (currentPath !== "/") {
+      sessionStorage.setItem("path", currentPath);
+    }
+    return <Navigate to={getLoginPath()} replace />;
+  }
+
+  if (!userDetails) {
+    return <InstaPayLoader fallback />;
+  }
+
+  return <LayoutContent {...props} />;
+};
+
 export default Layout;
