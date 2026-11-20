@@ -1010,9 +1010,15 @@ const ButtonsOtp = ({
     <form className={buttonStyles.otpStep} onSubmit={handleSubmit}>
       <div>
         <div className={buttonStyles.otpLabel}>{t("Enter OTP")}</div>
-        <p className={buttonStyles.otpHint}>{t("We've sent a 6-digit secure code to")}</p>
+        <p className={buttonStyles.otpHint}>
+          {authType === "authenticator"
+            ? t("Enter a code shown in the app to make sure everything works fine.")
+            : authType === "email"
+              ? t("We've sent a 6-digit secure code to")
+              : `${t("A one-time verification code has been sent to your")} ${authType === "whatsapp" ? t("whatsapp number.") : t("phone number.")}`}
+        </p>
         <div className={buttonStyles.otpCenter}>
-          <div className={buttonStyles.otpEmail}>{email}</div>
+          {authType === "email" && <div className={buttonStyles.otpEmail}>{email}</div>}
           <div className={buttonStyles.otpInputs}>
             {otpValues.map((value, index) => (
               <input
