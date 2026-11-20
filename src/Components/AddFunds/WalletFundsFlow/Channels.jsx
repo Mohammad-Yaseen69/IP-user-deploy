@@ -5,6 +5,7 @@ import { Check } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { Badge, Card, CardBody } from "reactstrap";
 import { UserContext } from "../../../Context/UserContext";
+import { useVirtualIbans } from "../../../hooks/useVirtualIban";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 import CardMaintenanceModal from "../../CardMaintenanceModal";
 import InstaPayLoader from "../../Loader";
@@ -17,6 +18,7 @@ import TypingSpan from "../../TypingSpan";
 const Channels = ({ setChannel, channel, thunesServices, thunesProviders = [] }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
+  const { data: virtualIbans = [], isLoading: ibansLoading } = useVirtualIbans(userDetails?._id);
   const [showCardMaintenanceModal, setShowCardMaintenanceModal] = useState(false);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const { data: methods, isLoading } = useQuery({
@@ -89,6 +91,23 @@ const Channels = ({ setChannel, channel, thunesServices, thunesProviders = [] })
       : {},
   ];
 
+  const ibanChannels = virtualIbans
+    .filter(
+      (iban) =>
+        String(iban?.status).toUpperCase() === "ACTIVE" &&
+        !iban?.adminBlocked &&
+        !iban?.userBlocked &&
+        !iban?.freezeIban &&
+        !iban?.blockOutbound,
+    )
+    .map((iban) => ({
+      name: `${t("From my IBAN")} (${iban.currency} ••${String(iban?.iban ?? "").slice(-4)})`,
+      id: iban._id,
+      icon: bd,
+      value: "virtual_iban",
+      iban,
+    }));
+
   const filteredChannels = useMemo(() => {
     const allChannels = [...thunesAllowed, ...payoutChannelData].filter((item) => item?.name);
 
@@ -98,6 +117,7 @@ const Channels = ({ setChannel, channel, thunesServices, thunesProviders = [] })
       (item) => methods?.includes(item.value) || methods?.includes(item.api_val),
     );
   }, [payoutChannelData, thunesAllowed, methods, isLoading]);
+  const channels = [...filteredChannels, ...ibanChannels];
   return (
     <>
       <CardMaintenanceModal
@@ -113,8 +133,8 @@ const Channels = ({ setChannel, channel, thunesServices, thunesProviders = [] })
           overflowY: "auto",
         }}
       >
-        {!isLoading ? (
-          filteredChannels.map((item) => (
+        {!isLoading && !ibansLoading ? (
+          channels.map((item) => (
             <Card
               key={item?.name}
               style={{ marginBottom: 0, borderRadius: "12px" }}
