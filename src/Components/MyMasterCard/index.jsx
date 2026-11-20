@@ -24,6 +24,7 @@ const MyMasterCard = () => {
   const [loading, setLoading] = useState(true);
   const [current, setCurrent] = useState(1);
   const [transactions, setTransactions] = useState([]);
+  const [transactionsLoading, setTransactionsLoading] = useState(true);
   const width = useWindowWidth();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -39,9 +40,9 @@ const MyMasterCard = () => {
 
   useEffect(() => {
     if (showT) {
-      ref.current.scrollIntoView({ behavior: "smooth" });
+      ref.current?.scrollIntoView({ behavior: "smooth" });
     }
-  }, [showT]);
+  }, [showT, loading, cardPurchased]);
 
   useEffect(() => {
     const getCard = async () => {
@@ -98,9 +99,16 @@ const MyMasterCard = () => {
         } catch (error) {
           const dec = decryptData(error?.response?.data?.data);
           console.log(dec);
+        } finally {
+          setTransactionsLoading(false);
         }
       };
-      if (cards[current]) getTransactions();
+      if (cards[current]) {
+        setTransactionsLoading(true);
+        getTransactions();
+      } else {
+        setTransactionsLoading(false);
+      }
     }, 400);
 
     return () => clearTimeout(timer);
@@ -160,7 +168,7 @@ const MyMasterCard = () => {
                     ref={ref}
                     cardNo={cards[current]?.last4}
                     transactions={transactions}
-                    isLoading={loading}
+                    isLoading={transactionsLoading}
                     searchQuery={searchQuery}
                     setSearchQuery={setSearchQuery}
                   />

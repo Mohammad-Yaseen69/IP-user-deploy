@@ -1,7 +1,9 @@
 import { useContext, useEffect, useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft, Inbox, Plus } from "react-feather";
 import { UserContext } from "../../../../Context/UserContext";
+import { cryptoPayoutQueryKeys } from "../../../../hooks/Payments/useCryptoPayout";
 import { usePermission } from "../../../../hooks/GeneralUse/usePermission";
 import AddCryptoWalletModal from "./AddCryptoWalletModal";
 import PortfolioCard from "../components/PortfolioCard";
@@ -14,7 +16,19 @@ import { getWalletAvailable, isLiveCryptoWallet } from "./wallets";
 const InstapayCryptoWallets = () => {
   const { t } = useTranslation();
   const can = usePermission();
-  const { userWallets, getUserWallets } = useContext(UserContext);
+  const { userWallets, getUserWallets, refetchBalances } = useContext(UserContext);
+  const queryClient = useQueryClient();
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const refreshHub = () => {
+    setRefreshKey((key) => key + 1);
+    refetchBalances?.();
+    queryClient.invalidateQueries({ queryKey: ["crypto"] }, { cancelRefetch: false });
+    queryClient.invalidateQueries(
+      { queryKey: cryptoPayoutQueryKeys.all },
+      { cancelRefetch: false },
+    );
+  };
 
   const wallets = useMemo(() => (userWallets || []).filter(isLiveCryptoWallet), [userWallets]);
 
@@ -48,7 +62,7 @@ const InstapayCryptoWallets = () => {
         {t("My crypto wallets")}
       </button>
       <div style={{ marginTop: 14 }}>
-        <InstapayWalletDetail wallet={selectedWallet} />
+        <InstapayWalletDetail wallet={selectedWallet} refreshKey={refreshKey} />
       </div>
     </section>
   ) : (
@@ -122,6 +136,7 @@ const InstapayCryptoWallets = () => {
             wallets={wallets}
             wallet={sendWallet}
             onSelectWallet={setSendWalletId}
+            onActionComplete={refreshHub}
           />
         )}
       </div>
