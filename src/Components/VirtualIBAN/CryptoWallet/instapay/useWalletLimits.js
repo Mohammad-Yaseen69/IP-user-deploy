@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { apiWrapper } from "../../../../utils/Functions/apiWrapper";
 import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError";
 import { formatCurrency } from "../../../../Helper/AmountFormat";
@@ -54,10 +54,11 @@ export const toAccountLimits = ({
 };
 
 /** The account-wide crypto limits, shown in the open wallet's currency. */
-export const useWalletLimits = (wallet) => {
+export const useWalletLimits = (wallet, refreshKey = 0) => {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const loadedWalletId = useRef(null);
 
   const walletId = wallet?._id;
 
@@ -65,14 +66,24 @@ export const useWalletLimits = (wallet) => {
     if (!walletId) return undefined;
     let stale = false;
 
-    setLoading(true);
-    setError(false);
-    setData({});
+    const isRefresh = loadedWalletId.current === walletId;
+    if (!isRefresh) {
+      loadedWalletId.current = null;
+      setLoading(true);
+      setData({});
+      setError(false);
+    }
     apiWrapper({ endpoint: `/api/crypto/limits/${walletId}`, isDecrypted: true, retries: 2 })
-      .then((res) => !stale && setData(toAccountLimits(res?.data || {})))
+      .then((res) => {
+        if (stale) return;
+        loadedWalletId.current = walletId;
+        setData(toAccountLimits(res?.data || {}));
+        setError(false);
+      })
       .catch(
         (err) =>
           !stale &&
+          !isRefresh &&
           handlePaymentApiError({
             error: err,
             fallback: "Something went wrong while fetching account limits.",
@@ -84,7 +95,7 @@ export const useWalletLimits = (wallet) => {
     return () => {
       stale = true;
     };
-  }, [walletId]);
+  }, [walletId, refreshKey]);
 
   return { data, loading, error };
 };

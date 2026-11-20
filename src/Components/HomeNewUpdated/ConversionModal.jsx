@@ -302,7 +302,9 @@ const ConversionModal = ({
     <Modal
       isOpen={isOpen}
       toggle={() => {
-        toggleModal();
+        if (!saving) {
+          toggleModal();
+        }
         setError(null);
       }}
       style={{ maxWidth: "500px", margin: "0 auto", height: "600px" }}
