@@ -20,7 +20,7 @@ export const usePayoutCountries = () => {
     let cancelled = false;
     setIsLoading(true);
 
-    apiWrapper({ endpoint: `/api/payment/countries/${senderIso}` })
+    apiWrapper({ endpoint: `/api/payment/countries/${senderIso}`, retries: 2 })
       .then((payoutCountries) => {
         if (cancelled) return;
         const supported = allCountries.filter((item) =>

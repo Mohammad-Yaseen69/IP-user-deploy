@@ -68,7 +68,7 @@ export const useWalletLimits = (wallet) => {
     setLoading(true);
     setError(false);
     setData({});
-    apiWrapper({ endpoint: `/api/crypto/limits/${walletId}`, isDecrypted: true })
+    apiWrapper({ endpoint: `/api/crypto/limits/${walletId}`, isDecrypted: true, retries: 2 })
       .then((res) => !stale && setData(toAccountLimits(res?.data || {})))
       .catch(
         (err) =>

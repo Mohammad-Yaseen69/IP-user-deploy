@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Modal } from "@mui/material";
 import DateMomentUtils from "@date-io/moment";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
@@ -25,7 +25,10 @@ import { useAvailableMethods, useRequiredFields, useRequirements } from "./useVe
 import { BANK_COUNTRY_FIELD, getEditRequirements, getFieldDef } from "./vendorFields";
 import { apiWrapper } from "../../../../utils/Functions/apiWrapper";
 import { UserContext } from "../../../../Context/UserContext";
-import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError";
+import {
+  handlePaymentApiError,
+  NETWORK_ERROR_MESSAGE,
+} from "../../../../utils/Functions/handlePaymentApiError";
 import { collectIdentifierErrors } from "../../../../utils/Functions/bankIdentifiers";
 import { useValidateCryptoAddress } from "../../../../hooks/Payments/useCryptoPayout";
 import { useDebounce } from "../../../../hooks/useDebounce/useDebounce";
@@ -86,6 +89,7 @@ const AddBeneficiaryFlowV2 = ({
   const [addressStatus, setAddressStatus] = useState("");
 
   const validateAddress = useValidateCryptoAddress();
+  const bodyRef = useRef(null);
 
   const isCryptoChannel = form.method === "crypto_wallet";
   const cryptoAsset = form.channel?.crypto_asset || "";
@@ -452,7 +456,16 @@ const AddBeneficiaryFlowV2 = ({
 
     if (stage === "recipient" && !validateRecipient()) return;
     if (stage === "method" && !validateMethod()) return;
-    if (stage === "details" && !validateDetails()) return;
+    if (stage === "details" && !validateDetails()) {
+      requestAnimationFrame(() => {
+        const hint = bodyRef.current?.querySelector(`.${styles.hintTextError}`);
+        (hint?.closest(`.${styles.field}`) || hint)?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      });
+      return;
+    }
 
     const next = stageAt(1);
     if (next) setStage(next);
@@ -563,9 +576,11 @@ const AddBeneficiaryFlowV2 = ({
         setProfileLockTime,
         fallback: "We could not save this beneficiary.",
         setError: (message) => {
+          const offline = message === NETWORK_ERROR_MESSAGE;
           setProviderError({
-            title: "Could not save the beneficiary",
+            title: offline ? "Connection problem" : "Could not save the beneficiary",
             body: message,
+            canRetry: offline,
           });
           setStage("details");
           toast.error(message);
@@ -615,7 +630,7 @@ const AddBeneficiaryFlowV2 = ({
   const primaryDisabled = () => {
     if (saving) return true;
     if (stage === "method") return !form.method || (isTransferMethod && fieldsLoading);
-    if (stage === "details" && channelCheck?.state === "invalid") return true;
+    if (stage === "details" && ["invalid", "checking"].includes(channelCheck?.state)) return true;
     return false;
   };
 
@@ -659,6 +674,7 @@ const AddBeneficiaryFlowV2 = ({
             setChannelField={setChannelField}
             errors={errors}
             providerError={providerError}
+            onRetry={() => validateDetails() && submit()}
             recipientName={recipientName}
             channelCheck={channelCheck}
             lockedFields={lockedFields}
@@ -711,7 +727,9 @@ const AddBeneficiaryFlowV2 = ({
               )}
             </div>
 
-            <div className={styles.body}>{renderBody()}</div>
+            <div className={styles.body} ref={bodyRef}>
+              {renderBody()}
+            </div>
 
             <div className={styles.footer}>
               <div className={styles.footerSide}>
