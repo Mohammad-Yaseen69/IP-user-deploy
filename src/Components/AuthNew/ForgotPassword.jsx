@@ -1,9 +1,8 @@
-import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import FormLogo from "./FormLogo";
 import styles from "./styles/index.module.css";
 // import PhoneInput from "react-phone-input-2"
 import { AlertTriangle, Check, ChevronRight, Eye, EyeOff } from "react-feather";
-import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import axios from "axios";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";

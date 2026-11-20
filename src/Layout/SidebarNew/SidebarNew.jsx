@@ -1,5 +1,6 @@
-import { Fragment, useContext, useEffect, useRef, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, ChevronRight } from "react-feather";
+import { Search, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import SimpleBar from "simplebar-react";
@@ -10,24 +11,24 @@ import BackBtn from "./SbNBackBtn";
 import SidebarIcon from "./SbNIcon";
 import { MENU } from "./SbNMenu";
 import SidebarSubMenu from "./SbNSubMenu";
+import { filterNavigationMenu } from "./filterNavigationMenu";
 import "./sm.css";
+import styles from "./SidebarNew.module.css";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 const SidebarNew = ({ setShowModal, showModal }) => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState([]);
-  const { togglSidebar, setTogglSidebar } = useContext(CustomizerContext);
+  const { togglSidebar } = useContext(CustomizerContext);
   const sidebar_types = localStorage.getItem("sidebar_types");
   const wrapper = sidebar_types || ConfigDB.data.settings.sidebar.type;
   const [margin, setMargin] = useState(0);
   const [leftArrow, setLeftArrow] = useState(false);
   const [rightArrow, setRightArrow] = useState(false);
   const [width, setWidth] = useState(0);
-  const [mobileView, setMobileView] = useState(window.innerWidth <= 670);
-  const sidebarRef = useRef(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const handleResize = () => {
     setWidth(window.innerWidth - 500);
-    setMobileView(window.innerWidth <= 670);
   };
   const id = window.location.pathname.split("/")?.pop();
   const layout = id;
@@ -68,58 +69,71 @@ const SidebarNew = ({ setShowModal, showModal }) => {
     }
   };
 
-  useEffect(() => {
-    const handleClick = (event) => {
-      const logo = document.querySelector("[data-testid='logo']");
-      if (
-        sidebarRef.current &&
-        !sidebarRef.current.contains(event.target) &&
-        (!logo || !logo.contains(event.target))
-      ) {
-        setTogglSidebar(true);
-      }
-    };
-
-    if (mobileView) {
-      document.addEventListener("click", handleClick);
-    }
-
-    return () => {
-      if (mobileView) {
-        document.removeEventListener("click", handleClick);
-      }
-    };
-  }, [setTogglSidebar, mobileView]);
   const { userDetails, profileCompletedPercentage } = useContext(UserContext);
+  const checkPermission = usePermission();
 
   const location = useLocation();
 
-  const [inheritSize, setInheritSize] = useState(false);
   const filteredMenu = MENU?.filter((item) => {
     if (item.showOnly === "business") {
       return userDetails?.account_type === "business";
     }
     return true;
   });
+  const canDisplayMenuItem = (item) => {
+    if (item.showOnly === "business" && userDetails?.account_type !== "business") {
+      return false;
+    }
+
+    if (
+      item.permission === "payments.send-as-third-party.view" &&
+      !userDetails?.isThirdPartyAllowed
+    ) {
+      return false;
+    }
+
+    return checkPermission(item.permission);
+  };
+  const searchedMenu = filterNavigationMenu(filteredMenu, searchQuery, t, canDisplayMenuItem);
   return (
     <div
-      className={`sidebar-wrapper ${togglSidebar ? "close_icon" : ""} `}
+      className={`sidebar-wrapper ${styles.sidebar} ${togglSidebar ? "close_icon" : ""}`}
       id="sidebar-wrapper"
-      ref={sidebarRef}
       style={{
         background: "white",
-        margin: "1rem",
         borderRadius: "16px",
+        marginTop: "1rem",
         height: "calc(100vh - 2rem)",
         boxShadow: "15.1463px 4.32752px 242.341px rgba(0, 0, 0, 0.07)",
         display:
           (location.pathname === "/create-pin" || location.pathname === "/update-pin") && "none",
       }}
-      onMouseEnter={() => setInheritSize(true)}
-      onMouseLeave={() => setInheritSize(false)}
     >
       <div>
-        <SidebarIcon /> {(!togglSidebar && userDetails?._id) || inheritSize ? "" : ""}
+        <SidebarIcon />
+        {userDetails?._id && !togglSidebar && (
+          <div className={styles.searchBox}>
+            <Search size={17} aria-hidden="true" />
+            <input
+              type="text"
+              role="searchbox"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder={t("Search navigation")}
+              aria-label={t("Search navigation")}
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                aria-label={t("Clear search")}
+                title={t("Clear search")}
+              >
+                <X size={15} aria-hidden="true" />
+              </button>
+            )}
+          </div>
+        )}
         <nav className="sidebar-main">
           <div
             className={`left-arrow ${leftArrow ? "d-none" : ""}`}
@@ -145,27 +159,31 @@ const SidebarNew = ({ setShowModal, showModal }) => {
                 <BackBtn />
                 {userDetails?._id ? (
                   <>
-                    {filteredMenu.map((item, i) => (
-                      <Fragment key={i}>
-                        <li
-                          style={{ width: togglSidebar ? "100%" : "auto" }}
-                          className={item.className}
-                        >
-                          <SidebarSubMenu
-                            userDetails={userDetails}
-
-                            menu={item.menu}
-                            isOpen={isOpen}
-                            setIsOpen={setIsOpen}
-                            level={0}
-                            setShowModal={setShowModal}
-                            profileCompletedPercentage={profileCompletedPercentage}
-                            showModal={showModal}
-                            inheritSize={inheritSize}
-                          />
-                        </li>
-                      </Fragment>
-                    ))}
+                    {searchQuery.trim() && searchedMenu.length === 0 ? (
+                      <li role="status" style={{ padding: "12px 16px", color: "#848484" }}>
+                        {t("No navigation results found")}
+                      </li>
+                    ) : (
+                      searchedMenu.map((item, i) => (
+                        <Fragment key={i}>
+                          <li
+                            style={{ width: togglSidebar ? "100%" : "auto" }}
+                            className={item.className}
+                          >
+                            <SidebarSubMenu
+                              userDetails={userDetails}
+                              menu={item.menu}
+                              isOpen={isOpen}
+                              setIsOpen={setIsOpen}
+                              level={0}
+                              setShowModal={setShowModal}
+                              profileCompletedPercentage={profileCompletedPercentage}
+                              showModal={showModal}
+                            />
+                          </li>
+                        </Fragment>
+                      ))
+                    )}
                   </>
                 ) : (
                   <>

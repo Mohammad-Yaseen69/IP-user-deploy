@@ -105,7 +105,7 @@
 
 //-----------------manual code----------------------
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { Modal, ModalBody, Button } from "reactstrap";
 import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
 import {

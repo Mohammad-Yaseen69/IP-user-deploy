@@ -1462,3 +1462,30 @@ a.stat:hover b {
     flex: none;
   }
 }
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 0 12px;
+
+  & + & {
+    border-top: 1px solid $border;
+  }
+}
+
+.skeletonLines {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.skeletonContact {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 86px;
+}

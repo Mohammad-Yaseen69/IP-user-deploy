@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router";
 import InstaPayLoader from "../Loader";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
-import { CustomDatePickerContainer, SuccessImage } from "./schedule-calendar";
+import { CustomDatePickerContainer } from "./schedule-calendar";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import RedirectButton from "../../CommonElements/RedirectButton";
 import { useTranslation } from "react-i18next";

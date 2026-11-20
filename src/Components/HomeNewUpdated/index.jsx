@@ -73,6 +73,7 @@ const HomeNewUpdated = () => {
     },
   ]);
   const can = usePermission();
+  const [pricesLoading, setPricesLoading] = useState(true);
 
   useEffect(() => {
     const getCryptoRates = async () => {
@@ -103,7 +104,7 @@ const HomeNewUpdated = () => {
       }
     };
 
-    getCryptoRates();
+    getCryptoRates().finally(() => setPricesLoading(false));
   }, []);
 
   const getGreeting = () => {
@@ -120,8 +121,14 @@ const HomeNewUpdated = () => {
     return "Good evening";
   };
 
-  const { userDetails, profileCompletedPercentage, userWallets, isAgentLogin, agentDetails } =
-    useContext(UserContext);
+  const {
+    userDetails,
+    profileCompletedPercentage,
+    userWallets,
+    walletsLoading,
+    isAgentLogin,
+    agentDetails,
+  } = useContext(UserContext);
   const [showCompletionModal, setShowCompletionModal] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState(null);
 
@@ -132,8 +139,8 @@ const HomeNewUpdated = () => {
   const {
     data: moneyData,
     transactions: walletTransactions,
-    loading: moneyLoading,
-  } = useMoneyInOut(selectedWallet);
+    loading: moneyRequestLoading,
+  } = useMoneyInOut(window.innerWidth > 1000 ? selectedWallet : null); // the mobile layout has its own charts
   const walletCurrency = selectedWallet?.currency?.code ?? "";
   const thisMonth = moneyData[moneyData.length - 1];
 
@@ -141,6 +148,8 @@ const HomeNewUpdated = () => {
     () => (userWallets ?? []).filter((w) => w?.wallet_type !== "crypto").length,
     [userWallets],
   );
+  const moneyLoading =
+    moneyRequestLoading && (walletsLoading || (walletCount > 0 && can("wallet.list.view")));
 
   const firstName =
     userDetails?.account_type?.toLowerCase() === "individual"
@@ -204,6 +213,7 @@ const HomeNewUpdated = () => {
                 hidden={hideBalances}
                 onToggleHidden={() => setHideBalances((prev) => !prev)}
                 walletCount={walletCount}
+                activityLoading={moneyLoading}
                 activity={
                   can("dashboard.insights.view") && selectedWallet && !moneyLoading
                     ? { code: walletCurrency, net: thisMonth.in - thisMonth.out }
@@ -226,7 +236,11 @@ const HomeNewUpdated = () => {
               )}
             </div>
 
-            <CryptoBalances tickers={currenciesData} hidden={hideBalances} />
+            <CryptoBalances
+              tickers={currenciesData}
+              hidden={hideBalances}
+              pricesLoading={pricesLoading}
+            />
 
             <div className={`${u.row} ${u.rowDash}`}>
               {can("dashboard.insights.view") && (

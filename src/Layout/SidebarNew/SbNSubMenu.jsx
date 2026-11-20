@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { Fragment, useContext, useEffect } from "react";
 import { Href } from "../../Constant";
 import { ActiveNavLinkUrl } from "../../Helper/ActioveNavUrl";
 import { Link, useNavigate } from "react-router-dom";
@@ -21,7 +21,6 @@ const SidebarSubMenu = ({
   showModal,
   setShowModal,
   profileCompletedPercentage,
-  inheritSize,
 }) => {
   const { togglSidebar } = useContext(CustomizerContext);
   const { logout, userDetails } = useContext(UserContext);
@@ -110,33 +109,30 @@ const SidebarSubMenu = ({
     >
       {filteredMenu?.map((item, i) => {
         return (
-          <>
+          <Fragment key={`${item.title}-${i}`}>
             {item.type === "text" ? (
-              <li
-                style={{
-                  background:
-                    "linear-gradient(277.06deg, rgb(230, 64, 103) 9.52%, rgb(89, 38, 240) 62.22%, rgb(72, 40, 160) 119.38%)",
-                  backgroundClip: "text",
-                  WebkitTextFillColor: /*togglSidebar ? "white" :*/ "transparent",
-                  WebkitBackgroundClip: "text",
-                  width: "100%",
-                  padding: !inheritSize && togglSidebar ? "0rem" : "1rem 1.5rem .5rem 1.5rem",
-                  fontWeight: 600,
-                  textTransform: "uppercase",
-                  letterSpacing: "2px",
-                  fontSize: !inheritSize && togglSidebar ? ".5rem" : ".7rem",
-                  whiteSpace: !inheritSize && togglSidebar ? "normal" : "nowrap",
-                  marginBottom: inheritSize && togglSidebar ? ".1rem" : "0",
-                  marginRight: !inheritSize && togglSidebar ? "13px" : "0",
-                  // opacity: togglSidebar ? 0 : 1
-                }}
-              >
-                {t(
-                  !togglSidebar || (togglSidebar && inheritSize)
-                    ? item.title
-                    : `${item?.title.slice(0, 4)}${item?.title.length > 4 ? "..." : ""}`,
-                )}
-              </li>
+              !togglSidebar && (
+                <li
+                  key={`${item.title}-${i}`}
+                  style={{
+                    background:
+                      "linear-gradient(277.06deg, rgb(230, 64, 103) 9.52%, rgb(89, 38, 240) 62.22%, rgb(72, 40, 160) 119.38%)",
+                    backgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    WebkitBackgroundClip: "text",
+                    width: "100%",
+                    padding: "1rem 1.5rem .5rem 1.5rem",
+                    fontWeight: 600,
+                    textTransform: "uppercase",
+                    letterSpacing: "2px",
+                    fontSize: ".7rem",
+                    whiteSpace: "nowrap",
+                    marginBottom: 0,
+                  }}
+                >
+                  {t(item.title)}
+                </li>
+              )
             ) : checkPermission(item?.permission) ? (
               <li
                 key={i}
@@ -169,6 +165,8 @@ const SidebarSubMenu = ({
                     textOverflow: "clip",
                     whiteSpace: "nowrap",
                   }}
+                  aria-label={t(item.title)}
+                  title={togglSidebar ? t(item.title) : undefined}
                   to={item?.type === "external_eshop" ? "#" : item.url ? item.url : Href}
                   onClick={(e) => {
                     // logout() navigates to the correct login page itself
@@ -206,7 +204,7 @@ const SidebarSubMenu = ({
                 )}
               </li>
             ) : null}
-          </>
+          </Fragment>
         );
       })}
       {!togglSidebar && (

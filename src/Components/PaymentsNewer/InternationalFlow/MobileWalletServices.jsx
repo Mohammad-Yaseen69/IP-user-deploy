@@ -1,4 +1,3 @@
-import React from "react";
 import { Check } from "react-feather";
 import i from "../files/i.svg";
 import styles from "./styles/stepfour.module.css";

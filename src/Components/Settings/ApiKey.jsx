@@ -1,17 +1,6 @@
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Col,
-  Input,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-} from "reactstrap";
+import { Card, CardBody, CardHeader, Col, Input } from "reactstrap";
 import { toast } from "react-toastify";
 import { UserContext } from "../../Context/UserContext";
 import {
@@ -56,8 +45,9 @@ const ApiKey = () => {
   const [features, setFeatures] = useState(defaultFeatures);
   const [adminFeatures, setAdminFeatures] = useState(defaultFeatures);
   const [confirmModal, setConfirmModal] = useState(false);
-  const [isCopied, setIsCopied] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [isCopied, setIsCopied] = useState("");
+
   const timerRef = useRef();
 
   const accountId = userDetails?._id;
