@@ -734,7 +734,8 @@ const WalletFundsFlow = ({ setAction }) => {
           data.channel?.value === "paypal" ||
           data?.channel?.value === "crypto" ||
           data?.channel?.value === "mobile_wallet" ||
-          data?.channel?.value === "virtual_iban"(usePaytently && data?.channel?.value === "card")
+          data?.channel?.value === "virtual_iban" ||
+          (usePaytently && data?.channel?.value === "card")
         ) {
           dataHandler("show_confirmation", true);
         } else {
