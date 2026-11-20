@@ -117,6 +117,7 @@ const TransactionSheet = ({
   const canEdit = can("transactions.category.add");
   const walletLabelFirst =
     item?.payment_type === "conversion" || item?.service_type === "withdrawal";
+  const fees = formatCurrency(item?.fee + (item?.metadata?.crypto?.network_fee ?? 0), true);
 
   const rows = [
     [
@@ -155,11 +156,7 @@ const TransactionSheet = ({
       isDebit ? t("Amount To Send") : t("Received Amount"),
       `${formatCurrency(item?.amount || item?.txAmount, true)} ${item?.currency?.code || item?.currency}`,
     ],
-    [t("Fees"), `${formatCurrency(item?.fee, true)} ${billCode}`],
-    item?.metadata?.crypto?.network_fee && [
-      t("Network Fee"),
-      `${item?.metadata?.crypto?.network_fee} ${item?.metadata?.crypto?.currency ?? ""}`,
-    ],
+    [t("Fees"), `${fees} ${billCode}`],
     item?.payment_type?.toLowerCase() === "commission" &&
       item?.replacement_currency?.value && [
         t("Withdrawal Received"),
@@ -325,7 +322,6 @@ const TransactionSheet = ({
             ["Description", descEn],
             ["Your reference", item?.client_reference],
             ["Crypto transaction hash", item?.metadata?.crypto_tx_hash],
-            ["Network Fee", item?.metadata?.network_fee],
             ["Reason", item?.reason],
           ],
         ],
@@ -355,7 +351,7 @@ const TransactionSheet = ({
           isDebit ? "Transfer amount" : "Amount received",
           money(item?.amount || item?.txAmount, sendCode),
         ],
-        ["InstaPay fee", money(item?.fee, billCode)],
+        ["InstaPay fee", money(fees, billCode)],
         item?.payment_type?.toLowerCase() === "commission" &&
           item?.replacement_currency?.value && [
             "Withdrawal received",
