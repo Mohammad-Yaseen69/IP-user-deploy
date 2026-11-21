@@ -1068,7 +1068,9 @@ a.stat:hover b {
   .hero {
     grid-template-columns: minmax(0, 1fr);
   }
-
+  .wallet_card {
+    display: none;
+  }
   .side {
     border-top: 1px solid $border;
     border-left: 0;
@@ -1488,4 +1490,169 @@ a.stat:hover b {
   align-items: center;
   gap: 8px;
   width: 86px;
+}
+@media screen and (max-width: 480px) {
+  .hero {
+    background: none;
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
+  }
+
+  .heroMain {
+    padding: 16px;
+    overflow: visible;
+    background: linear-gradient(180deg, #f5f2ff 0%, #ffffff 100%);
+    border: 1px solid $border;
+    border-radius: 16px;
+
+    &::before {
+      display: none;
+    }
+  }
+
+  .heroTop {
+    min-height: 0;
+    padding: 0 0 8px;
+  }
+
+  .ghost {
+    display: none;
+  }
+
+  .balance {
+    position: static;
+    min-height: 0;
+    padding: 0;
+    gap: 0;
+    overflow: visible;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+
+    &::before {
+      display: none;
+    }
+  }
+
+  .balanceMain {
+    justify-content: center;
+    min-height: 0;
+    padding: 8px 0 12px;
+  }
+
+  .eye {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    background: #fff;
+    border: 1px solid $border;
+    box-shadow: 0 1px 2px rgba(27, 31, 42, 0.08);
+    color: $primary;
+  }
+
+  .balanceValue {
+    color: $text;
+
+    small {
+      color: $text-2;
+    }
+
+    b {
+      font-size: 40px;
+      letter-spacing: -1px;
+    }
+
+    span {
+      font-size: 26px;
+      color: $text-2;
+    }
+  }
+
+  .balanceMeta {
+    justify-content: center;
+    gap: 12px;
+    font-size: 12px;
+    line-height: 16px;
+    color: $text-2;
+
+    > span:last-of-type {
+      display: none;
+    }
+
+    > span:first-of-type {
+      color: $green;
+    }
+
+    small {
+      margin-left: 0;
+      font-size: 12px;
+      color: $muted;
+    }
+  }
+
+  .stats {
+    display: none;
+  }
+
+  .actions {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 16px;
+
+    > a:nth-child(n + 5) {
+      display: none;
+    }
+  }
+
+  .action {
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    height: auto;
+    padding: 0;
+    background: none;
+    border: 0;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0;
+    text-align: center;
+    white-space: normal;
+    color: $text;
+
+    i {
+      width: 44px;
+      height: 44px;
+      border: 1px solid $input-border;
+      border-radius: 14px;
+      background: #fff;
+      color: $primary;
+    }
+
+    span {
+      overflow: visible;
+      text-overflow: clip;
+    }
+  }
+
+  .actionPrimary {
+    background: none;
+    box-shadow: none;
+    color: $text;
+
+    i {
+      background: $primary;
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 8px 18px -8px rgba(89, 38, 240, 0.6);
+    }
+
+    &:hover {
+      background: none;
+      color: $text;
+    }
+  }
 }

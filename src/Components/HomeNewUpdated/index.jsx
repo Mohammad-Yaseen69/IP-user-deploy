@@ -140,7 +140,7 @@ const HomeNewUpdated = () => {
     data: moneyData,
     transactions: walletTransactions,
     loading: moneyRequestLoading,
-  } = useMoneyInOut(window.innerWidth > 1000 ? selectedWallet : null); // the mobile layout has its own charts
+  } = useMoneyInOut(selectedWallet);
   const walletCurrency = selectedWallet?.currency?.code ?? "";
   const thisMonth = moneyData[moneyData.length - 1];
 
@@ -307,15 +307,18 @@ const HomeNewUpdated = () => {
               hidden={hideBalances}
               onToggleHidden={() => setHideBalances((prev) => !prev)}
               walletCount={walletCount}
+              activityLoading={moneyLoading}
               activity={
                 can("dashboard.insights.view") && selectedWallet && !moneyLoading
                   ? { code: walletCurrency, net: thisMonth.in - thisMonth.out }
                   : null
               }
             />
-            {can("wallet.list.view") && (
-              <WalletPanel setCurrentWallet={setSelectedWallet} hidden={hideBalances} />
-            )}
+            <div className={d.wallet_card}>
+              {can("wallet.list.view") && (
+                <WalletPanel setCurrentWallet={setSelectedWallet} hidden={hideBalances} />
+              )}
+            </div>
           </section>
           <QuickTransfer />
           <div className={`${u.row} ${u.rowDash}`}>
