@@ -31,6 +31,7 @@ const PartnerVerificationPage = lazy(() => import("../Components/PartnerVerifica
 const PaymentAddress = lazy(() => import("../Components/PaymentAddress"));
 const PaymentAddressPublic = lazy(() => import("../Components/PaymentAddressPublic"));
 const PaymentsNewer = lazy(() => import("../Components/PaymentsNewer"));
+const BillPayments = lazy(() => import("../Components/BillPayments"));
 const PendingNew = lazy(() => import("../Components/PendingNew"));
 const Portfolio = lazy(() => import("../Components/Portfolio"));
 const ProfileTest = lazy(() => import("../Components/Profile"));
@@ -184,6 +185,14 @@ export const routes = [
     component: (
       <PermissionRoute permission="payments.view">
         <PaymentsNewer />
+      </PermissionRoute>
+    ),
+  },
+  {
+    path: "/pay-bills",
+    component: (
+      <PermissionRoute permission="payments.view">
+        <BillPayments />
       </PermissionRoute>
     ),
   },

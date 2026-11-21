@@ -1431,8 +1431,9 @@
 /* The rail scrolls on its own once the payout form outgrows the viewport. */
 
 .rail {
-  max-height: calc(100vh - 32px);
+  max-height: var(--rail-max, calc(100vh - 32px));
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 @media (max-width: 1180px) {
@@ -1546,4 +1547,18 @@
   &:hover:not(:disabled) {
     background: linear-gradient(134deg, #4a1fcc 18%, #3d2288 91%);
   }
+}
+
+.railMenuSearch {
+  position: sticky;
+  top: -6px;
+  width: 100%;
+  margin-bottom: 4px;
+  padding: 8px 10px;
+  border: 1px solid var(--cw-border);
+  border-radius: 8px;
+  background: var(--cw-surface);
+  font-size: 13px;
+  color: var(--cw-text);
+  outline: none;
 }

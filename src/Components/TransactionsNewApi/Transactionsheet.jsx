@@ -21,6 +21,7 @@ import { service_name_formatter } from "./TransactionItem";
 import statuses from "./files/thunesTransactionStatus.json";
 import { downloadTransactionPdf, getPayoutRows } from "./txutils";
 import useCopyToClipboard from "../../hooks/useCopyToClipboard";
+import { truncateHash } from "../../utils/Functions/transactionHelpers";
 
 const TransactionSheet = ({
   onClose,
@@ -116,6 +117,7 @@ const TransactionSheet = ({
   const canEdit = can("transactions.category.add");
   const walletLabelFirst =
     item?.payment_type === "conversion" || item?.service_type === "withdrawal";
+  const fees = formatCurrency(item?.fee + (item?.metadata?.crypto?.network_fee ?? 0), true);
 
   const rows = [
     [
@@ -154,7 +156,7 @@ const TransactionSheet = ({
       isDebit ? t("Amount To Send") : t("Received Amount"),
       `${formatCurrency(item?.amount || item?.txAmount, true)} ${item?.currency?.code || item?.currency}`,
     ],
-    [t("Fees"), `${formatCurrency(item?.fee, true)} ${billCode}`],
+    [t("Fees"), `${fees} ${billCode}`],
     item?.payment_type?.toLowerCase() === "commission" &&
       item?.replacement_currency?.value && [
         t("Withdrawal Received"),
@@ -195,7 +197,10 @@ const TransactionSheet = ({
     item?.service_type &&
       item?.metadata?.crypto_tx_hash && [
         t("Crypto Transaction Hash"),
-        <Copyable key={item.metadata.crypto_tx_hash} text={item.metadata.crypto_tx_hash} />,
+        <Copyable
+          key={item.metadata.crypto_tx_hash}
+          text={truncateHash(item.metadata.crypto_tx_hash)}
+        />,
       ],
     [t("Sender Email"), item?.guest_details?.email],
     [t("Sender Phone"), item?.guest_details?.phone],
@@ -346,7 +351,7 @@ const TransactionSheet = ({
           isDebit ? "Transfer amount" : "Amount received",
           money(item?.amount || item?.txAmount, sendCode),
         ],
-        ["InstaPay fee", money(item?.fee, billCode)],
+        ["InstaPay fee", money(fees, billCode)],
         item?.payment_type?.toLowerCase() === "commission" &&
           item?.replacement_currency?.value && [
             "Withdrawal received",
