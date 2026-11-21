@@ -2,8 +2,6 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { UserContext } from "../../Context/UserContext";
-import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
-import { toast } from "react-toastify";
 
 const neemaMethodIDs = {
   cash: 1,

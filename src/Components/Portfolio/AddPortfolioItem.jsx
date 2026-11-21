@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { Input, Label, Modal, ModalBody, ModalHeader, Progress } from "reactstrap";
+import { useContext, useState } from "react";
+import { Input, Label, Modal, ModalBody, ModalHeader } from "reactstrap";
 import modal from "./files/modal.png";
 import Dropzone from "./CustomDropZone";
 import axios from "axios";

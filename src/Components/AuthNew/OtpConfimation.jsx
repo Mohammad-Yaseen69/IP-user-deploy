@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AlertTriangle, ChevronRight } from "react-feather";
 import otp from "./files/otp.svg";
 import styles from "./styles/index.module.css";

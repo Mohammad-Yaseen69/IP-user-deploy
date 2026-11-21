@@ -1,5 +1,4 @@
 import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import InstapayLogo from "../../../assets/images/logo/logo_white.png";
 import InstapayLogo2 from "../../../assets/images/logo/logo2.webp";

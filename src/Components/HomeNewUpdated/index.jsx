@@ -6,7 +6,26 @@ import { BsFillPlayFill } from "react-icons/bs";
 import { MessageCircle } from "lucide-react";
 import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
-import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
+import { service_name_formatter } from "../../utils/Functions/serviceNameFormatter";
+import RenderWhenVisible from "./RenderWhenVisible";
+import {
+  loadBalanceCard,
+  loadBusinessModal,
+  loadCryptoCard,
+  loadCurConversion,
+  loadEarnMoneyBanner,
+  loadOtherBalance,
+  loadQuickLinksMobile,
+  loadQuickLinksNew,
+  loadRecentBeneficiaries,
+  loadRecentTrans,
+  loadReferalRewards,
+  loadRightContainer,
+  loadSearch,
+  loadTopBar,
+  loadTransDetails,
+  loadWalletsMobile,
+} from "./dashboardChunks";
 
 const EarnMoneyBanner = lazy(() => import("./EarnMoneyBanner"));
 const TransDetails = lazy(() => import("./TransDetails"));
@@ -317,8 +336,16 @@ const HomeNewUpdated = () => {
             )}
           </div>
           <QuickLinksMobile />
-          {can("dashboard.insights.view") && <Stats currentWallet={selectedWallet} />}
-          {can("dashboard.insights.view") && <TransDetails selectedWallet={selectedWallet} />}
+          {can("dashboard.insights.view") && (
+            <RenderWhenVisible minHeight={300}>
+              <Stats currentWallet={selectedWallet} />
+            </RenderWhenVisible>
+          )}
+          {can("dashboard.insights.view") && (
+            <RenderWhenVisible minHeight={300}>
+              <TransDetails selectedWallet={selectedWallet} />
+            </RenderWhenVisible>
+          )}
           <CurConversion />
         </div>
       )}

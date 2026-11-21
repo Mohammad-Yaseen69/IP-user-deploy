@@ -1,6 +1,5 @@
 import { Card, CardBody, Modal, ModalHeader, ModalBody } from "reactstrap";
 import QRCard from "./QRCard.jsx";
-import { ChevronDown } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { useContext, useState } from "react";
 import { UserContext } from "../../Context/UserContext.jsx";

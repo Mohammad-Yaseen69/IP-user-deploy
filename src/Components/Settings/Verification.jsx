@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -10,8 +10,6 @@ import {
   Modal,
   ModalBody,
   ModalHeader,
-  Table,
-  Badge,
 } from "reactstrap";
 import { H4 } from "../../AbstractElements";
 import { UserContext } from "../../Context/UserContext";
@@ -32,6 +30,7 @@ import { useMutation } from "@tanstack/react-query";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import AdditionalFilesSection from "./AdditionalFilesSection";
 import { useIdempotency } from "../../hooks/Payments/useIdempotency";
+import { sourceOfFunds } from "./sourceOfFunds";
 
 const industries = [
   "Arts & Entertainment",
@@ -53,7 +52,7 @@ const industries = [
   "Other",
 ];
 
-export const sourceOfFunds = ["Cash", "Business", "Gift", "Salary", "Lottery", "Savings", "Other"];
+export { sourceOfFunds };
 
 const getApiErrorMessage = (error) => {
   try {

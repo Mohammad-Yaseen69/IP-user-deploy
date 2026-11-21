@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import styles from "./styles/TransactionItemDetails.module.css";
-import React, { useContext, useMemo, useState, useRef, useEffect, useCallback } from "react";
+import React, { useContext, useMemo, useState, useRef, useEffect } from "react";
 import countries from "../PaymentsNewer/CountriesData.json";
 import { service_name_formatter } from "./TransactionItem";
 import CatDown from "./CatDown";
@@ -9,7 +9,7 @@ import file from "./files/file.svg";
 import location from "./files/location.svg";
 import status_styles from "../PaymentsNewer/InternationalFlow/styles/receipt.module.css";
 import { Check } from "react-feather";
-import { Badge, Button } from "reactstrap";
+import { Button } from "reactstrap";
 import ImageSwiperView from "../ImageSwiperView";
 import { UserContext } from "../../Context/UserContext";
 import { formatCurrency } from "../../Helper/AmountFormat";

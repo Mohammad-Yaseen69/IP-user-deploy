@@ -319,7 +319,7 @@ const ConfirmRequest = ({
             }}
             ref={svgRef}
           />
-          <Draggable axis="x" bounds="parent" onDrag={handleDrag}>
+          <Draggable axis="x" bounds="parent" onDrag={handleDrag} nodeRef={chevRef}>
             <div
               style={{
                 position: "absolute",

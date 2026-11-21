@@ -2,7 +2,6 @@ import { useRef, useState, useContext, useEffect } from "react";
 import styles from "./styles/index.module.scss";
 import PinFields from "./PinFields";
 import axios from "axios";
-import { toast } from "react-toastify";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";

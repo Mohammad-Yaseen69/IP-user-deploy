@@ -1,6 +1,6 @@
 import { Modal, ModalBody } from "reactstrap";
 import styles from "./styles/BargainQuotation.module.css";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../Context/UserContext";
 import bargain from "./files/bargain.svg";
@@ -9,7 +9,6 @@ import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import ins from "./files/ins.svg";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import axios from "axios";
-import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 import { Link } from "react-router-dom";
 import int_styles from "../PaymentsNewer/Mobile/styles/International.module.css";
 import paym_styles from "../PaymentsNewer/InternationalFlow/styles/index.module.css";

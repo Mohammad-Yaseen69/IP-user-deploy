@@ -16,7 +16,6 @@ import { UserContext } from "../../Context/UserContext";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
 import InstaPayLoader from "../Loader";
 import { handlePaymentApiError } from "../../utils/Functions/handlePaymentApiError";
 
@@ -402,6 +401,7 @@ const ConfirmSend = ({
                   if (!isMounted.current) return;
                 }}
                 disabled={!isDraggable}
+                nodeRef={chevRef}
               >
                 <div
                   style={{

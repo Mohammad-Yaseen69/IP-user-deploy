@@ -1,5 +1,4 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { MapPin, X } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";

@@ -11,7 +11,6 @@ import SidebarIcon from "./SbNIcon";
 import { MENU } from "./SbNMenu";
 import SidebarSubMenu from "./SbNSubMenu";
 import "./sm.css";
-import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 const SidebarNew = ({ setShowModal, showModal }) => {
   const { t } = useTranslation();
