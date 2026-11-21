@@ -4,6 +4,15 @@ import { CardText } from "reactstrap";
 import { UserContext } from "../../Context/UserContext";
 import { renderAccountName } from "../../utils/Functions/transactionHelpers";
 import styles from "./styles/Recents.module.css";
+import {
+  ArrowUpRight,
+  ArrowDownLeft,
+  Plus,
+  Zap,
+  Bitcoin,
+  FileText,
+  Smartphone,
+} from "lucide-react";
 
 function formatTime(createdAt) {
   const date = new Date(createdAt);
@@ -20,10 +29,35 @@ function formatTime(createdAt) {
   }
 }
 
+const getTxnIcon = (transaction) => {
+  const key = (transaction?.service_type || transaction?.payment_type || "").toLowerCase();
+  const isCredit = transaction?.transaction_type?.toLowerCase() === "credit";
+
+  if (key.includes("topup") || key.includes("top_up") || key.includes("top-up")) return Plus;
+  if (key.includes("bill")) return Zap;
+  if (key.includes("crypto")) return Bitcoin;
+  if (key.includes("quot")) return FileText;
+  if (key.includes("mobile")) return Smartphone;
+
+  return isCredit ? ArrowDownLeft : ArrowUpRight;
+};
+
 const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
   const { beneficiaries } = useContext(UserContext);
   const { t } = useTranslation();
   // console.log("sender", transaction)
+
+  const getIconTheme = (type) =>
+    type?.toLowerCase() === "credit"
+      ? { bg: "#F0ECFF", color: "#5926F0" }
+      : { bg: "#F3F4F6", color: "#6B7280" };
+
+  const isCredit = transaction?.transaction_type?.toLowerCase() === "credit";
+  const Icon = getTxnIcon(transaction);
+  const iconTheme = getIconTheme(transaction?.transaction_type);
+
+  const getAmountColor = (type) => (type?.toLowerCase() === "credit" ? "#1CB234" : "#1D1535");
+  const capitalize = (str = "") => str.charAt(0).toUpperCase() + str.slice(1);
 
   const badgeColor = useMemo(() => {
     switch (transaction?.status?.toLowerCase()) {
@@ -77,16 +111,10 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
           {t(transaction?.headerText)}:
         </CardText>
       )}
-      <div
-        key={transaction?._id}
-        className={styles.recent_item}
-        style={{ /*overflowX: "auto",*/ scrollbarWidth: "none" }}
-      >
+      <div key={transaction?._id} className={styles.recent_item} style={{ scrollbarWidth: "none" }}>
         <div className="d-flex gap-2 align-items-center">
-          <div className={styles.left}>
-            <span className={styles.icon} style={{ fontSize: "1rem", fontWeight: 700 }}>
-              {renderAccountName(transaction, internationalReceiver)?.slice(0, 20)?.[0]}
-            </span>
+          <div className={styles.left} style={{ background: iconTheme.bg }}>
+            <Icon size={14} color={iconTheme.color} />
           </div>
           <div
             style={{
@@ -97,31 +125,48 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
             }}
           >
             {/* <h4 className={styles.head} style={{ marginBottom: 0 }}>{transaction?.receiver?.user?.first_name} {transaction?.receiver?.user?.last_name}</h4> */}
-            <h4 className={styles.head} style={{ marginBottom: 0 }}>
+            <h3
+              className={styles.head}
+              style={{
+                marginBottom: 0,
+              }}
+            >
               {renderAccountName(transaction, internationalReceiver)?.slice(0, 20)}
-            </h4>
+            </h3>
+
             <p
               className="text-muted"
               style={{
                 marginBottom: 0,
-                color: "rgba(128,128,128,.7)",
-                fontSize: ".5rem",
+                color: "#9AA3B2",
+                fontSize: ".7rem",
+                fontWeight: 500,
                 display: "flex",
-                gap: ".3rem",
                 alignItems: "center",
+                gap: 6,
                 whiteSpace: "nowrap",
-                fontWeight: 600,
               }}
             >
-              {/* {formatTime(transaction?.createdAt)} */}
-              {new Date(transaction?.createdAt).toLocaleString("en-US", {
-                month: "2-digit",
-                day: "2-digit",
-                year: "2-digit",
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: badgeColor || "#9AA3B2",
+                  display: "inline-block",
+                  flexShrink: 0,
+                }}
+              />
+              {capitalize(transaction.payment_type?.split("_")[0])},{" "}
+              {formatTime(transaction.createdAt)}
+              {/* {new Date(transaction?.createdAt).toLocaleString("en-US", {
+                // month: "2-digit",
+                // day: "2-digit",
+                // year: "2-digit",
                 hour: "2-digit",
                 minute: "2-digit",
                 hour12: true,
-              })}
+              })} */}
             </p>
           </div>
         </div>
@@ -135,22 +180,29 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
           <div
             className={`ml-auto ${styles.head}`}
             style={{
-              fontWeight: "700",
-              color:
-                transaction?.transaction_type?.toLowerCase() === "debit" ? "#FF7293" : "#1CB234",
+              color: getAmountColor(transaction?.transaction_type),
               whiteSpace: "nowrap",
             }}
           >
             {transaction?.transaction_type?.toLowerCase() === "debit" ? "-" : "+"}
-            {transaction?.currency?.code}{" "}
             {transaction?.total
               ? transaction?.total?.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })
               : ""}
+            <span
+              style={{
+                fontSize: "12px",
+                color: "#9AA3B2",
+                display: "inline-block",
+                padding: "0 5px",
+              }}
+            >
+              {transaction?.currency?.code}{" "}
+            </span>
           </div>
-          <div
+          {/* <div
             style={{
               marginBottom: 0,
               color: "rgba(128,128,128,.7)",
@@ -161,10 +213,27 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
               whiteSpace: "nowrap",
             }}
           >
-            <span style={{ color: badgeColor, fontWeight: 600, textAlign: "right" }}>
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
+                color: badgeColor,
+                fontWeight: 600,
+              }}
+            >
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: badgeColor,
+                  display: "inline-block",
+                }}
+              />
               {t(transaction?.status?.toUpperCase())}
             </span>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

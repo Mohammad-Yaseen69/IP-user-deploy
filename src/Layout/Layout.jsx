@@ -1,3 +1,4 @@
+import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   Fragment,
   Suspense,
@@ -9,7 +10,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import TapTop from "./TapTop/index";
 import CheckContext from "../Helper/Customizer";
@@ -25,7 +25,7 @@ import MobileSidebar from "./MobileSidebar";
 import InactivityLogoutModal from "../Components/InactivityLogoutModal";
 import ThreeDaysModal from "../Components/SecurityQuestionsModals/ThreeDaysModal";
 import ThirtyDaysModal from "../Components/SecurityQuestionsModals/ThirtyDaysModal";
-import { InactivityCountdownContext } from "../InactivityWrapper";
+import { InactivityContext, InactivityCountdownContext } from "../InactivityWrapper";
 import "swiper/css";
 import "../Components/MyMasterCard/styles/modal.reset.css";
 import "./globalElementStyles.css";
@@ -43,6 +43,8 @@ import NewMenu from "../Common/NewMenu";
 import { useVirtualIbans } from "../hooks/useVirtualIban";
 import PushConsentModal from "../Components/PushConsentModal";
 import { isPushSupported, getPushPermissionState } from "../Services/PushNotificationService";
+import InstaPayLoader from "../Components/Loader";
+import { getLoginPath } from "../utils/Functions/loginPage";
 import useWindowWidth from "../utils/useWindowWidth";
 
 const loadAddBeneficiaryAddressModal = () => import("../Components/AddBeneficiaryAddressModal");
@@ -78,7 +80,7 @@ const MobileSbContextProvider = ({ children }) => {
   );
 };
 
-const Layout = ({ children, classNames, ...rest }) => {
+const LayoutContent = ({ children, classNames, ...rest }) => {
   const { setTogglSidebar, sidebar_types } = useContext(CheckContext);
   const { t } = useTranslation();
   const location = useLocation();
@@ -351,21 +353,7 @@ const Layout = ({ children, classNames, ...rest }) => {
     return () => clearTimeout(timer);
   }, [userDetails?._id]);
 
-  useEffect(() => {
-    const path = location.pathname.toLowerCase();
-    if (
-      path === "/" ||
-      path === "/dashboard/default" ||
-      path === "/my-mastercard" ||
-      path === "/payments"
-    ) {
-      setTogglSidebar(true);
-    } else {
-      setTogglSidebar(false);
-    }
-  }, [location]);
-
-  const showTimerCountdown = useContext(InactivityCountdownContext);
+  const { showTimerCountdown } = useContext(InactivityContext);
 
   useEffect(() => {
     verifyToken();
@@ -632,4 +620,35 @@ const Layout = ({ children, classNames, ...rest }) => {
     </Fragment>
   );
 };
+const Layout = (props) => {
+  const { userDetails, verifyToken, tokenCheckFailures } = useContext(UserContext);
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (token && !userDetails) {
+      verifyToken();
+    }
+  }, [token]);
+
+  useEffect(() => {
+    if (!tokenCheckFailures || !token || userDetails) return undefined;
+    const timer = setTimeout(() => verifyToken(), 3000);
+    return () => clearTimeout(timer);
+  }, [tokenCheckFailures]);
+
+  if (!token) {
+    const currentPath = window.location.pathname + window.location.search;
+    if (currentPath !== "/") {
+      sessionStorage.setItem("path", currentPath);
+    }
+    return <Navigate to={getLoginPath()} replace />;
+  }
+
+  if (!userDetails) {
+    return <InstaPayLoader fallback />;
+  }
+
+  return <LayoutContent {...props} />;
+};
+
 export default Layout;

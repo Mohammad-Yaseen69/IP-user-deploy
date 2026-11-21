@@ -56,6 +56,10 @@ const UserState = ({ children }) => {
   const token = localStorage.getItem("token");
   const [userDetails, setUserDetails] = useState(null);
   const [userWallets, setUserWallets] = useState([]);
+  const [beneficiariesLoading, setBeneficiariesLoading] = useState(true);
+  const [referralLoading, setReferralLoading] = useState(true);
+  const [walletsLoading, setWalletsLoading] = useState(true);
+  const [tokenCheckFailures, setTokenCheckFailures] = useState(0);
   const [beneficiaries, setBeneficiaries] = useState([]);
   const [registeredBeneficiaries, setRegisteredBeneficiaries] = useState([]);
   const [userTransactions, setUserTransactions] = useState([]);
@@ -99,7 +103,7 @@ const UserState = ({ children }) => {
   });
   const {
     data: balances,
-    isLoading: balanceLoading,
+    isPending: balanceLoading,
     refetch: refetchBalances,
   } = useQuery({
     queryKey: ["getBalancesIUSD", userDetails?._id],
@@ -160,6 +164,9 @@ const UserState = ({ children }) => {
   const clearData = () => {
     setUserDetails(null);
     setUserWallets([]);
+    setWalletsLoading(true);
+    setReferralLoading(true);
+    setBeneficiariesLoading(true);
     setBeneficiaries([]);
     setRegisteredBeneficiaries([]);
     setUserTransactions([]);
@@ -306,6 +313,9 @@ const UserState = ({ children }) => {
           return decrypted;
         })
         .catch((err) => {
+          if (!err?.response?.data?.data) {
+            setTokenCheckFailures((count) => count + 1);
+          }
           if (err?.response?.data?.data) {
             decryptData(err.response.data.data);
             clearAuthStorage();
@@ -467,7 +477,8 @@ const UserState = ({ children }) => {
           setUserWallets(wallets);
         }
         getUserBalances();
-      });
+      })
+      .finally(() => setWalletsLoading(false));
   };
 
   const getPAddressDets = async () => {
@@ -528,6 +539,8 @@ const UserState = ({ children }) => {
       setBeneficiaries(regularBens);
     } catch {
       //
+    } finally {
+      setBeneficiariesLoading(false);
     }
   };
 
@@ -737,6 +750,8 @@ const UserState = ({ children }) => {
       console.log(data, "commision data");
     } catch {
       // console.log(decryptData(error?.response?.data?.data));
+    } finally {
+      setReferralLoading(false);
     }
   };
 
@@ -868,6 +883,9 @@ const UserState = ({ children }) => {
         setUserDetails,
         userWallets,
         setUserWallets,
+        walletsLoading,
+        referralLoading,
+        beneficiariesLoading,
         token,
         authHeader,
         beneficiaries,
@@ -883,6 +901,7 @@ const UserState = ({ children }) => {
         userSessions,
         allowedFeatures,
         verifyToken,
+        tokenCheckFailures,
         userWithdrawals,
         setUserWithdrawals,
         cryptoWithdrawals,

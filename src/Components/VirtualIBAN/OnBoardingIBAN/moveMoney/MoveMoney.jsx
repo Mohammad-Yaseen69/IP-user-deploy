@@ -78,16 +78,15 @@ const MoveMoney = () => {
         <div className={styles.mainContent}>
           {showSepaPage ? (
             <>
-              <IbanBreadcrumb
-                items={[
-                  { label: "My virtual bank", path: "/virtual-IBAN" },
-                  {
-                    label: "Move money",
-                    onClick: () => setShowSepaPage(false),
-                  },
-                  { label: "SEPA Transfer" },
-                ]}
-              />
+              {width > 600 && (
+                <IbanBreadcrumb
+                  items={[
+                    { label: "My virtual bank", path: "/virtual-IBAN" },
+                    { label: "Move money", onClick: handleClose },
+                    { label: "SEPA Transfer" },
+                  ]}
+                />
+              )}
               <SepaTransfer
                 isPage={true}
                 selectedIban={selectedIban}
@@ -97,21 +96,18 @@ const MoveMoney = () => {
             </>
           ) : showSwiftPage ? (
             <>
-              {width > 600 && (
-                <IbanBreadcrumb
-                  items={[
-                    { label: "My virtual bank", path: "/virtual-IBAN" },
-                    { label: "Move money", onClick: handleClose },
-                    { label: "SWIFT Transfer" },
-                  ]}
-                />
-              )}
+              <IbanBreadcrumb
+                items={[
+                  { label: "My virtual bank", path: "/virtual-IBAN" },
+                  { label: "Move money", onClick: () => setShowSwiftPage(false) },
+                  { label: "SWIFT Transfer" },
+                ]}
+              />
               <SwiftTransfer
                 isPage={true}
                 selectedIban={selectedIban}
                 availableBalance={currentBalance}
-                toggle={handleClose}
-                ref={btnRef}
+                toggle={() => setShowSwiftPage(false)}
               />
             </>
           ) : (
@@ -138,9 +134,7 @@ const MoveMoney = () => {
                     <div
                       className={`${styles.card} ${isOutboundBlocked ? styles.cardDisabled : ""}`}
                       onClick={isOutboundBlocked ? undefined : () => setShowSepaPage(true)}
-                      style={{
-                        cursor: isOutboundBlocked ? "not-allowed" : "pointer",
-                      }}
+                      style={{ cursor: isOutboundBlocked ? "not-allowed" : "pointer" }}
                     >
                       <div className={`${styles.iconBox} ${styles.bgBlue}`}>
                         <Compass size={20} />
@@ -164,9 +158,7 @@ const MoveMoney = () => {
                     <div
                       className={`${styles.card} ${isOutboundBlocked ? styles.cardDisabled : ""}`}
                       onClick={isOutboundBlocked ? undefined : () => setShowSwiftPage(true)}
-                      style={{
-                        cursor: isOutboundBlocked ? "not-allowed" : "pointer",
-                      }}
+                      style={{ cursor: isOutboundBlocked ? "not-allowed" : "pointer" }}
                     >
                       <div className={`${styles.iconBox} ${styles.bgYellow}`}>
                         <Globe size={20} />
