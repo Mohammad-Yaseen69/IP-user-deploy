@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -88,6 +89,7 @@ const Layout = ({ children, classNames, ...rest }) => {
   const [showOfflineModal, setShowOfflineModal] = useState();
   const queryData = location?.search?.split("=")[1]?.toString();
   const { animation } = useContext(AnimationThemeContext);
+  const pageTransitionRef = useRef(null);
   const animationTheme =
     localStorage.getItem("animation") || animation || ConfigDB.data.router_animation;
   let sidebar_types1 =
@@ -554,7 +556,12 @@ const Layout = ({ children, classNames, ...rest }) => {
                 <SidebarNew setShowModal={setShowModal} showModal={showModal} />
                 <div className="page-body" style={{ marginTop: 0, paddingTop: 0 }}>
                   <TransitionGroup {...rest}>
-                    <CSSTransition timeout={100} classNames={animationTheme} unmountOnExit>
+                    <CSSTransition
+                      nodeRef={pageTransitionRef}
+                      timeout={100}
+                      classNames={animationTheme}
+                      unmountOnExit
+                    >
                       <Suspense fallback={<Loader />}>
                         <Outlet />
                       </Suspense>
