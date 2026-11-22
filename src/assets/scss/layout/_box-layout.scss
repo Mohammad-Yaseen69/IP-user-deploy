@@ -1166,42 +1166,6 @@
       &.compact-wrapper {
         .page-body-wrapper {
           div.sidebar-wrapper.close_icon {
-            &:hover {
-              width: 255px;
-
-              .sidebar-main {
-                .sidebar-links {
-                  .simplebar-wrapper {
-                    .simplebar-mask {
-                      .simplebar-content-wrapper {
-                        .simplebar-content {
-                          .menu-box {
-                            > ul {
-                              > li {
-                                .sidebar-link {
-                                  padding: 12px 22px;
-
-                                  &::before {
-                                    left: 13px;
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-
-              .sidebar-main {
-                .sidebar-links {
-                  padding: 24px 20px !important;
-                }
-              }
-            }
-
             .sidebar-main {
               .sidebar-links {
                 .simplebar-mask {

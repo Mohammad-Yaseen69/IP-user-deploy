@@ -6675,11 +6675,6 @@ html[dir="rtl"] {
         }
         .page-body-wrapper {
           div.sidebar-wrapper {
-            &.close_icon {
-              &:hover {
-                transform: translate(285px);
-              }
-            }
             .sidebar-main {
               .sidebar-links {
                 height: calc(100vh - 95px);
