@@ -7,6 +7,7 @@ import u from "../../../Common/WalletUI/ui.module.scss";
 import { UserContext } from "../../../Context/UserContext";
 import BenefCard from "../BenefCard";
 import d from "./dashboard.module.scss";
+import { useBeneficiariesPage } from "../../../hooks/BeneficiaryHooks/useBeneficiariesPage";
 
 const COLORS = [
   ["#f2eeff", "#5926f0"],
@@ -19,7 +20,8 @@ const COLORS = [
 
 const QuickTransfer = () => {
   const { t } = useTranslation();
-  const { userDetails, beneficiaries, getUserBeneficiaries } = useContext(UserContext);
+  const { userDetails, getUserBeneficiaries } = useContext(UserContext);
+  const { beneficiaries } = useBeneficiariesPage({ limit: 10, sort: "date_desc" });
 
   useEffect(() => {
     if (userDetails) {
