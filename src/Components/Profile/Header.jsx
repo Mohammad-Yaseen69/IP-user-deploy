@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import countries from "../PaymentsNewer/CountriesData.json";

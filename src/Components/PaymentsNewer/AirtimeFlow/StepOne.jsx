@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "./styles/stepone.module.css";
 import { useTranslation } from "react-i18next";
 import airtime from "./files/airtime.svg";
