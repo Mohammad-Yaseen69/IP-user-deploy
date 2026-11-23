@@ -324,14 +324,7 @@ const ReferralsNew = () => {
             </ModalBody>
           </Modal>
           <div className={styles.banner_con}>
-            <EarnMoneyBanner
-              height="100%"
-              showLink={false}
-              headSize={"4cqi"}
-              textSize={"2cqi"}
-              radius={"30px"}
-              minWidth="40vw"
-            />
+            <EarnMoneyBanner showLink={false} minWidth="40vw" />
             <div style={{ display: "flex", gap: "1.5rem", flex: 1 }}>
               <div className={styles.total_refs}>
                 <div>

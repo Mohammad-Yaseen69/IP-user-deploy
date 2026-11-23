@@ -477,13 +477,13 @@ const Layout = ({ children, classNames, ...rest }) => {
                 <NewMenu />
                 <SidebarNew setShowModal={setShowModal} showModal={showModal} />
                 <div className="page-body" style={{ marginTop: 0, paddingTop: 0 }}>
-                  <TransitionGroup {...rest}>
-                    <CSSTransition timeout={100} classNames={animationTheme} unmountOnExit>
-                      {/* <div> */}
-                      <Outlet />
-                      {/* </div> */}
-                    </CSSTransition>
-                  </TransitionGroup>
+                  <div className={styles.page_content}>
+                    <TransitionGroup {...rest}>
+                      <CSSTransition timeout={100} classNames={animationTheme} unmountOnExit>
+                        <Outlet />
+                      </CSSTransition>
+                    </TransitionGroup>
+                  </div>
                 </div>
                 {/* <Footer /> */}
               </div>
