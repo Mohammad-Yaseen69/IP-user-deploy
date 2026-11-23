@@ -74,9 +74,10 @@ const useChannels = ({
 
       const getChannels = async () => {
         setFieldsInfo(null);
+        const txType = `${userDetails?.account_type === "individual" ? "C" : "B"}2${isBusiness ? "B" : "C"}`;
         axios
           .get(
-            `${import.meta.env.VITE_IP_DEV_API}/api/payment/services/${countryIsoCode}/${userDetails?.country?.country_iso_code}`,
+            `${import.meta.env.VITE_IP_DEV_API}/api/payment/services/${countryIsoCode}/${userDetails?.country?.country_iso_code}?transaction_type=${txType}`,
             { headers: authHeader },
           )
           .then(async (res) => {

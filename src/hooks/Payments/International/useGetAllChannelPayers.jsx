@@ -25,7 +25,8 @@ const useGetAllChannelPayers = ({ data, payoutChannelData, toggleModalHandler })
       }
 
       const decrypted = await apiWrapper({
-        endpoint: `/api/payment/services/${data.country.alpha3}/${data?.userCountryCode}`,
+        // Backend drops C2C-only vendors
+        endpoint: `/api/payment/services/${data.country.alpha3}/${data?.userCountryCode}?transaction_type=${data.flow}`,
       });
 
       const mappedServices =
