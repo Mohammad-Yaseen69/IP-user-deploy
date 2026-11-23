@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./styles/index.module.scss";
 import TopRight from "../topRight";
 import { useTranslation } from "react-i18next";
@@ -11,6 +11,11 @@ import add_ben from "./add_ben.svg";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import AddBeneficiaryFlowV2 from "../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2";
 import { USE_NEW_BENEFICIARY_FLOW } from "../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/constants";
+import Paginations from "../../Common/Component/Paginations";
+import {
+  useBeneficiariesPage,
+  useInvalidateBeneficiaryPages,
+} from "../../hooks/BeneficiaryHooks/useBeneficiariesPage";
 
 const TYPE_OPTIONS = [
   { value: "all", label: "All" },
@@ -26,18 +31,11 @@ const SORT_OPTIONS = [
   { value: "type", label: "Type" },
 ];
 
-const getDisplayName = (b) =>
-  b?.beneficiary_type === "business"
-    ? b?.company_name || ""
-    : `${b?.first_name || ""} ${b?.last_name || ""}`.trim();
-
-const getCreatedAt = (b) => new Date(b?.createdAt || 0).getTime();
-
 const Beneficiaries = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const { beneficiaries, verifyToken, getUserBeneficiaries, userDetails } = useContext(UserContext);
+  const { verifyToken, getUserBeneficiaries, userDetails } = useContext(UserContext);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
@@ -76,37 +74,35 @@ const Beneficiaries = () => {
 
   const activeFilterCount = typeFilter !== "all" ? 1 : 0;
 
-  const filtered = useMemo(() => {
-    const q = searchTerm.trim().toLowerCase();
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(20);
+  useEffect(() => setPage(1), [searchTerm, typeFilter, sortBy, limit]);
 
-    const list = (beneficiaries || []).filter((item) => {
-      if (typeFilter === "business" && item?.beneficiary_type !== "business") return false;
-      if (typeFilter === "individual" && item?.beneficiary_type === "business") return false;
+  const {
+    beneficiaries: filtered,
+    totalPages,
+    isLoading,
+  } = useBeneficiariesPage({ page, limit, search: searchTerm, type: typeFilter, sort: sortBy });
+  const invalidateBeneficiaryPages = useInvalidateBeneficiaryPages();
+  useEffect(() => {
+    if (totalPages && page > totalPages) setPage(totalPages);
+  }, [totalPages, page]);
 
-      if (!q) return true;
-      return [
-        item?.first_name,
-        item?.last_name,
-        item?.company_name,
-        item?.email,
-        item?.phone,
-        item?.country_name,
-        item?.city,
-      ].some((v) => v?.toLowerCase().includes(q));
-    });
+  const onBeneficiarySaved = () => {
+    getUserBeneficiaries();
+    invalidateBeneficiaryPages();
+  };
 
-    return [...list].sort((a, b) => {
-      if (sortBy === "date_desc" || sortBy === "date_asc") {
-        const diff = getCreatedAt(a) - getCreatedAt(b);
-        return sortBy === "date_desc" ? -diff : diff;
-      }
-      if (sortBy === "type") {
-        return (a?.beneficiary_type || "").localeCompare(b?.beneficiary_type || "");
-      }
-      const cmp = getDisplayName(a).localeCompare(getDisplayName(b));
-      return sortBy === "name_desc" ? -cmp : cmp;
-    });
-  }, [beneficiaries, searchTerm, typeFilter, sortBy]);
+  const emptyText = isLoading ? t("Loading beneficiaries...") : t("No Beneficiaries");
+  const pagination = totalPages > 1 && (
+    <Paginations
+      page={page}
+      totalPages={totalPages}
+      setPage={setPage}
+      limit={limit}
+      setLimit={setLimit}
+    />
+  );
 
   const toggleMenu = (name) => setOpenMenu((prev) => (prev === name ? null : name));
 
@@ -239,8 +235,9 @@ const Beneficiaries = () => {
                   onView={(ben) => openBeneficiary(ben, "view")}
                 />
               ))
-            : t("No Beneficiaries")}
+            : emptyText}
         </div>
+        {pagination}
       </div>
 
       <div className={styles.mobile}>
@@ -296,8 +293,9 @@ const Beneficiaries = () => {
                     onView={(ben) => openBeneficiary(ben, "view")}
                   />
                 ))
-              : t("No Beneficiaries")}
+              : emptyText}
           </div>
+          {pagination}
         </div>
       </div>
 
@@ -305,7 +303,7 @@ const Beneficiaries = () => {
         <AddBeneficiaryFlowV2
           open={isAddOpen}
           handleClose={() => setIsAddOpen(false)}
-          onSaveSuccess={() => getUserBeneficiaries()}
+          onSaveSuccess={onBeneficiarySaved}
         />
       )}
 
@@ -315,7 +313,7 @@ const Beneficiaries = () => {
           mode={beneficiaryMode}
           existingBeneficiary={activeBeneficiary}
           handleClose={() => setActiveBeneficiary(null)}
-          onSaveSuccess={() => getUserBeneficiaries()}
+          onSaveSuccess={onBeneficiarySaved}
         />
       )}
     </>

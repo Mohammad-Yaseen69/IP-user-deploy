@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Copy,
   Plus,
@@ -25,10 +25,10 @@ import AddBeneficiaryFlowV2 from "./AddBeneficiaryFlowV2";
 import DeleteBeneficiary from "../../Beneficiaries/DeleteBeneficiary";
 import { USE_NEW_BENEFICIARY_FLOW } from "./AddBeneficiaryFlowV2/constants";
 import { useNavigate } from "react-router";
-import { useQuery } from "@tanstack/react-query";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError";
-import { UserContext } from "../../../Context/UserContext";
+import Paginations from "../../../Common/Component/Paginations";
+import { useBeneficiariesPage } from "../../../hooks/BeneficiaryHooks/useBeneficiariesPage";
 import { toast } from "react-toastify";
 
 const TYPE_OPTIONS = [
@@ -45,20 +45,11 @@ const SORT_OPTIONS = [
   { value: "type", label: "Type" },
 ];
 
-const getDisplayName = (b) =>
-  b.beneficiary_type === "business"
-    ? b.company_name || ""
-    : `${b.first_name || ""} ${b.last_name || ""}`.trim();
-
-const getCreatedAt = (b) => new Date(b.createdAt || 0).getTime();
-
 const BeneficiariesVirtual = () => {
   const { t } = useTranslation();
   const width = useWindowWidth();
   const navigate = useNavigate();
-  const { userDetails } = useContext(UserContext);
   const isMobile = width <= 600;
-  const accountId = userDetails?._id || userDetails?.account_id;
 
   const [searchQuery, setSearchQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
@@ -72,60 +63,22 @@ const BeneficiariesVirtual = () => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [beneficiaryToDelete, setBeneficiaryToDelete] = useState(null);
 
-  const {
-    data: rawData,
-    refetch,
-    isFetching,
-  } = useQuery({
-    queryKey: ["userBeneficiaries", accountId],
-    queryFn: () => {
-      return apiWrapper({
-        endpoint: `/api/beneficiary/get-user-beneficiaries/${accountId}`,
-        method: "GET",
-        isDecrypted: true,
-      });
-    },
-    enabled: !!accountId,
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(20);
+  useEffect(() => setPage(1), [searchQuery, typeFilter, sortBy, limit]);
+
+  const { beneficiaries, totalPages, refetch, isFetching } = useBeneficiariesPage({
+    page,
+    limit,
+    search: searchQuery,
+    type: typeFilter,
+    sort: sortBy,
   });
-
-  const allBeneficiaries =
-    rawData?.beneficiaryList ||
-    rawData?.data?.beneficiaryList ||
-    (Array.isArray(rawData?.data) ? rawData.data : []);
-  const beneficiaries = allBeneficiaries;
-
-  const filteredBeneficiaries = beneficiaries
-    .filter((b) => {
-      if (typeFilter === "business" && b.beneficiary_type !== "business") return false;
-      if (typeFilter === "individual" && b.beneficiary_type === "business") return false;
-
-      const query = searchQuery.trim().toLowerCase();
-      if (!query) return true;
-
-      const fullName = `${b.first_name || ""} ${b.last_name || ""}`.toLowerCase();
-      const company = (b.company_name || "").toLowerCase();
-      const email = (b.email || "").toLowerCase();
-      const phone = (b.phone || "").toLowerCase();
-      const country = (b.country_name || b.country_iso_code || "").toLowerCase();
-      return (
-        fullName.includes(query) ||
-        company.includes(query) ||
-        email.includes(query) ||
-        phone.includes(query) ||
-        country.includes(query)
-      );
-    })
-    .sort((a, b) => {
-      if (sortBy === "date_desc" || sortBy === "date_asc") {
-        const diff = getCreatedAt(a) - getCreatedAt(b);
-        return sortBy === "date_desc" ? -diff : diff;
-      }
-      if (sortBy === "type") {
-        return (a.beneficiary_type || "").localeCompare(b.beneficiary_type || "");
-      }
-      const cmp = getDisplayName(a).localeCompare(getDisplayName(b));
-      return sortBy === "name_desc" ? -cmp : cmp;
-    });
+  const filteredBeneficiaries = beneficiaries;
+  useEffect(() => {
+    if (totalPages && page > totalPages) setPage(totalPages);
+  }, [totalPages, page]);
+  const [savedBeneficiary, setSavedBeneficiary] = useState(null);
 
   const activeFilterCount = typeFilter !== "all" ? 1 : 0;
 
@@ -133,7 +86,7 @@ const BeneficiariesVirtual = () => {
 
   const activeBeneficiary =
     beneficiaries.find((b) => b._id === selectedBeneficiaryId) ||
-    filteredBeneficiaries[0] ||
+    (savedBeneficiary?._id === selectedBeneficiaryId ? savedBeneficiary : null) ||
     beneficiaries[0];
 
   const openDeleteBeneficiary = (beneficiary) => {
@@ -177,9 +130,10 @@ const BeneficiariesVirtual = () => {
     }
   };
 
-  const handleBeneficiarySaved = async (savedBeneficiary) => {
-    if (savedBeneficiary?._id) {
-      setSelectedBeneficiaryId(savedBeneficiary._id);
+  const handleBeneficiarySaved = async (saved) => {
+    if (saved?._id) {
+      setSavedBeneficiary(saved);
+      setSelectedBeneficiaryId(saved._id);
     }
     await refetch();
     // The DS 2.0 flow creates the payout channel as part of the same journey,
@@ -403,6 +357,15 @@ const BeneficiariesVirtual = () => {
                   })
                 )}
               </div>
+              {totalPages > 1 && (
+                <Paginations
+                  page={page}
+                  totalPages={totalPages}
+                  setPage={setPage}
+                  limit={limit}
+                  setLimit={setLimit}
+                />
+              )}
             </div>
 
             <div className={styles.rightColumn}>
