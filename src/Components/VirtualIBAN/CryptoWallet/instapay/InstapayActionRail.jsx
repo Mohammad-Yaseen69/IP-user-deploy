@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "../cryptoPage.module.scss";
 import SendCryptoPanel from "./SendCryptoPanel";
@@ -16,9 +16,26 @@ const InstapayActionRail = ({ wallets = [], wallet, onSelectWallet }) => {
   const hasPermission = useEffectivePermission();
   const canWithdrawCrypto = hasPermission(PERMISSIONS.CRYPTO_WITHDRAWAL);
   const canConvert = hasPermission(PERMISSIONS.WALLET_TO_CRYPTO_CONVERSION);
+  const railRef = useRef(null);
+
+  useEffect(() => {
+    const fit = () => {
+      const rail = railRef.current;
+      if (!rail) return;
+      const top = Math.max(rail.getBoundingClientRect().top, 16);
+      rail.style.setProperty("--rail-max", `${window.innerHeight - top - 16}px`);
+    };
+    fit();
+    window.addEventListener("resize", fit);
+    document.addEventListener("scroll", fit, { capture: true, passive: true });
+    return () => {
+      window.removeEventListener("resize", fit);
+      document.removeEventListener("scroll", fit, { capture: true });
+    };
+  }, []);
 
   return (
-    <aside className={styles.rail}>
+    <aside ref={railRef} className={styles.rail}>
       <div className={styles.railTabs}>
         {TABS.map((item) => {
           if (!canWithdrawCrypto && item === "Withdraw") return;

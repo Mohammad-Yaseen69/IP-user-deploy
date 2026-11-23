@@ -380,7 +380,7 @@ const WithdrawOldFlow = ({
       setCreatedQuotation(decryptData(res.data.data));
       setStep((prev) => prev + 1);
     } catch (err) {
-      const dec = decryptData(err.response.data.data);
+      const dec = err?.response?.data?.data ? decryptData(err.response.data.data) : null;
       setAmountError(
         dec?.message ?? "We cannot process your request at the moment, please try again later.",
       );

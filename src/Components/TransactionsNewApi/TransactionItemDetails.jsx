@@ -365,6 +365,14 @@ const TransactionItemDetails = ({
           </div>
         )}
 
+        {item?.metadata?.crypto?.network_fee ? (
+          <div className={styles.er_item}>
+            <span>
+              {t("Network Fee")}: {formatCurrency(item?.metadata?.crypto?.network_fee, true)}{" "}
+              {item?.metadata?.crypto?.currency}{" "}
+            </span>
+          </div>
+        ) : null}
         {item?.service_type && item?.metadata?.crypto_tx_hash && (
           <div className={styles.er_item}>
             <div
