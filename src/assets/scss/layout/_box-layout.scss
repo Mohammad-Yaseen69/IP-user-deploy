@@ -1199,38 +1199,6 @@
             }
           }
 
-          .sidebar-wrapper {
-            &.close_icon {
-              &:hover {
-                .sidebar-main {
-                  .sidebar-links {
-                    .simplebar-wrapper {
-                      .simplebar-mask {
-                        .simplebar-content-wrapper {
-                          .simplebar-content {
-                            .menu-box {
-                              > ul {
-                                > li {
-                                  ul.sidebar-submenu {
-                                    li {
-                                      a {
-                                        padding: 7px 22px;
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-
           .according-menu {
             right: 15px;
           }

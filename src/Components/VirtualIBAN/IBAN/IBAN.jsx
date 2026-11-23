@@ -1,4 +1,4 @@
-import { ArrowRight, Clock, EyeOff, Globe, Shield } from "react-feather";
+import { ArrowRight, Clock, EyeOff, Shield } from "react-feather";
 import styles from "../styles/IBAN.module.css";
 import VirtualIbanModal from "../VirtualIbanModal";
 import { useContext, useState } from "react";

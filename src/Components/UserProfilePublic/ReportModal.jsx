@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { Button, Col, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { UserContext } from "../../Context/UserContext";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";

@@ -196,6 +196,8 @@ const SidebarSubMenu = ({
                     textOverflow: "clip",
                     whiteSpace: "nowrap",
                   }}
+                  aria-label={t(item.title)}
+                  title={togglSidebar ? t(item.title) : undefined}
                   to={item?.type === "external_eshop" ? "#" : item.url ? item.url : Href}
                   onClick={(e) => {
                     // logout() navigates to the correct login page itself

@@ -1,5 +1,3 @@
-import React from "react";
-
 const BusinessSVG = ({ size, color, isActive }) => {
   return isActive ? (
     <svg

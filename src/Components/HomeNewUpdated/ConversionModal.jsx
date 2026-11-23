@@ -302,7 +302,9 @@ const ConversionModal = ({
     <Modal
       isOpen={isOpen}
       toggle={() => {
-        toggleModal();
+        if (!saving) {
+          toggleModal();
+        }
         setError(null);
       }}
       style={{ maxWidth: "500px", margin: "0 auto", height: "600px" }}
@@ -504,7 +506,7 @@ const ConversionModal = ({
                   }}
                   ref={svgRef}
                 />
-                <Draggable axis="x" bounds="parent" onDrag={handleDrag}>
+                <Draggable axis="x" bounds="parent" onDrag={handleDrag} nodeRef={chevRef}>
                   <div
                     style={{
                       position: "absolute",

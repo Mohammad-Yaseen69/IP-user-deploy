@@ -1,5 +1,5 @@
 import styles from "./styles/VerificationGuide.module.css";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Card, CardBody } from "reactstrap";
 import PWizard from "../PaymentsNewer/PWizard";

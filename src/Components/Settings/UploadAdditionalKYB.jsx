@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useContext, useMemo } from "react";
-import { Badge, Col, Modal, ModalBody, ModalFooter, ModalHeader, Row } from "reactstrap";
+import { useState, useEffect, useContext, useMemo } from "react";
+import { Badge, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
-import { FileText, Info, ChevronRight, UploadCloud, X, Video, Image } from "react-feather";
+import { FileText, ChevronRight, UploadCloud, X, Video } from "react-feather";
 import { toast } from "react-toastify";
 
 const UploadAdditionalKYB = ({ isOpen, toggle, files, user_id, type = "kyb", partner_id = "" }) => {

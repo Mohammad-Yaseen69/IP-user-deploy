@@ -1,7 +1,7 @@
 import { getCroppedImg, UserContext } from "./UserContext";
 import axios from "axios";
 import { decryptData } from "../Helper/EssentilaMethods/Decryption";
-import { lazy, useEffect, useState } from "react";
+import { lazy, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { publicRoutes } from "../RouteNew/Routes";
 import { useNavigate } from "react-router";
@@ -56,6 +56,10 @@ const UserState = ({ children }) => {
   const token = localStorage.getItem("token");
   const [userDetails, setUserDetails] = useState(null);
   const [userWallets, setUserWallets] = useState([]);
+  const [beneficiariesLoading, setBeneficiariesLoading] = useState(true);
+  const [referralLoading, setReferralLoading] = useState(true);
+  const [walletsLoading, setWalletsLoading] = useState(true);
+  const [tokenCheckFailures, setTokenCheckFailures] = useState(0);
   const [beneficiaries, setBeneficiaries] = useState([]);
   const [registeredBeneficiaries, setRegisteredBeneficiaries] = useState([]);
   const [userTransactions, setUserTransactions] = useState([]);
@@ -99,7 +103,7 @@ const UserState = ({ children }) => {
   });
   const {
     data: balances,
-    isLoading: balanceLoading,
+    isPending: balanceLoading,
     refetch: refetchBalances,
   } = useQuery({
     queryKey: ["getBalancesIUSD", userDetails?._id],
@@ -160,6 +164,9 @@ const UserState = ({ children }) => {
   const clearData = () => {
     setUserDetails(null);
     setUserWallets([]);
+    setWalletsLoading(true);
+    setReferralLoading(true);
+    setBeneficiariesLoading(true);
     setBeneficiaries([]);
     setRegisteredBeneficiaries([]);
     setUserTransactions([]);
@@ -227,6 +234,11 @@ const UserState = ({ children }) => {
     }
   };
 
+  // The app shell and Layout both call verifyToken on mount, before the first
+  // response has set userDetails. Share the in-flight request so only one goes
+  // out; a second response would also re-run every [userDetails] effect.
+  const verifyTokenRequestRef = useRef(null);
+
   const verifyToken = (isFetchRequired = false) => {
     if (
       (!window.location.pathname.includes("auth") &&
@@ -234,12 +246,13 @@ const UserState = ({ children }) => {
         Object.keys(userDetails || {}).length === 0) ||
       isFetchRequired
     ) {
+      if (!isFetchRequired && verifyTokenRequestRef.current) return;
       const isAgentLoginCheck = localStorage.getItem("isAgentLogin");
       const url = isAgentLoginCheck
         ? `/api/business-agents/agents/auth/${token}`
         : `/api/account/auth/${token}`;
 
-      axios
+      const request = axios
         .get(`${import.meta.env.VITE_IP_DEV_API}${url}`)
         .then((res) => {
           const decrypted = decryptData(res.data.data);
@@ -300,6 +313,9 @@ const UserState = ({ children }) => {
           return decrypted;
         })
         .catch((err) => {
+          if (!err?.response?.data?.data) {
+            setTokenCheckFailures((count) => count + 1);
+          }
           if (err?.response?.data?.data) {
             decryptData(err.response.data.data);
             clearAuthStorage();
@@ -330,7 +346,11 @@ const UserState = ({ children }) => {
               }
             }
           }
+        })
+        .finally(() => {
+          if (verifyTokenRequestRef.current === request) verifyTokenRequestRef.current = null;
         });
+      verifyTokenRequestRef.current = request;
     }
   };
 
@@ -457,7 +477,8 @@ const UserState = ({ children }) => {
           setUserWallets(wallets);
         }
         getUserBalances();
-      });
+      })
+      .finally(() => setWalletsLoading(false));
   };
 
   const getPAddressDets = async () => {
@@ -518,6 +539,8 @@ const UserState = ({ children }) => {
       setBeneficiaries(regularBens);
     } catch {
       //
+    } finally {
+      setBeneficiariesLoading(false);
     }
   };
 
@@ -727,6 +750,8 @@ const UserState = ({ children }) => {
       console.log(data, "commision data");
     } catch {
       // console.log(decryptData(error?.response?.data?.data));
+    } finally {
+      setReferralLoading(false);
     }
   };
 
@@ -858,6 +883,9 @@ const UserState = ({ children }) => {
         setUserDetails,
         userWallets,
         setUserWallets,
+        walletsLoading,
+        referralLoading,
+        beneficiariesLoading,
         token,
         authHeader,
         beneficiaries,
@@ -873,6 +901,7 @@ const UserState = ({ children }) => {
         userSessions,
         allowedFeatures,
         verifyToken,
+        tokenCheckFailures,
         userWithdrawals,
         setUserWithdrawals,
         cryptoWithdrawals,

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Rating from "react-rating";
 import { Card, CardBody } from "reactstrap";
 import styles from "./styles/index.module.scss";

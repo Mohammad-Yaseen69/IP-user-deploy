@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import QRCodeStyling from "qr-code-styling";
 import axios from "axios";
 import logo from "../../assets/images/logo/logo.webp";
