@@ -4,7 +4,7 @@
   justify-content: start;
   align-items: start;
   box-sizing: border-box;
-  padding: 16px;
+  padding: 16px var(--page-gutter);
   min-height: 100vh;
   flex-direction: column;
   height: auto;

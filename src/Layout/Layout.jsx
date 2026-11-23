@@ -476,7 +476,10 @@ const Layout = ({ children, classNames, ...rest }) => {
                 {/* <SideBar /> */}
                 <NewMenu />
                 <SidebarNew setShowModal={setShowModal} showModal={showModal} />
-                <div className="page-body" style={{ marginTop: 0, paddingTop: 0 }}>
+                <div
+                  className="page-body"
+                  style={{ marginTop: 0, paddingTop: 0, paddingInline: 0 }}
+                >
                   <div className={styles.page_content}>
                     <TransitionGroup {...rest}>
                       <CSSTransition timeout={100} classNames={animationTheme} unmountOnExit>

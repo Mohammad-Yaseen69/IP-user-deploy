@@ -975,7 +975,7 @@
 /* ---------- route page wrapper ---------- */
 
 .routePage {
-  padding: 32px 40px 48px;
+  padding: 32px var(--page-gutter) 48px;
   min-height: 100vh;
   background: #f8f9fc;
   font-family: "DM Sans", Inter, "Segoe UI", sans-serif;

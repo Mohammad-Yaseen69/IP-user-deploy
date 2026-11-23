@@ -1,5 +1,9 @@
 @import "./assets/scss/app.scss";
 
+:root {
+  --page-gutter: 24px;
+}
+
 .wrong input {
   border: 1px solid red !important;
 }

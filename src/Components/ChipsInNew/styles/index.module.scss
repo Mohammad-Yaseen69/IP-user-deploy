@@ -1,5 +1,5 @@
 .container {
-  padding: 3rem;
+  padding: 3rem var(--page-gutter);
   background: linear-gradient(to right, transparent, white);
   min-height: 100vh;
 
@@ -31,7 +31,7 @@
 
 @media screen and (max-width: 1500px) {
   .container {
-    padding: 1rem 2rem 0;
+    padding: 1rem var(--page-gutter) 0;
 
     .top {
       margin-bottom: 3rem;

@@ -54,7 +54,7 @@ $mobile: 1000px;
   justify-content: flex-end;
   gap: 12px;
   min-height: 86px;
-  padding: 16px;
+  padding: 16px var(--page-gutter);
   border-bottom: 1px solid $border;
 }
 
@@ -64,7 +64,6 @@ $mobile: 1000px;
   flex-direction: column;
   gap: 4px;
   min-width: 0;
-  padding-left: 8px;
   color: #141414;
 
   h1 {
@@ -96,7 +95,7 @@ $mobile: 1000px;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  padding: 32px;
+  padding: 32px var(--page-gutter);
 }
 
 .row {
@@ -872,12 +871,8 @@ button.wcardChip {
     border-bottom: 0;
   }
 
-  .headerText {
-    padding-left: 0;
-
-    p {
-      white-space: normal;
-    }
+  .headerText p {
+    white-space: normal;
   }
 
   .headerRight {
