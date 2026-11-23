@@ -980,6 +980,7 @@ const InternationFlow = ({
       const data = {
         token: internationalData.quotation_details?.token,
         payerId: internationalData.payer?.id,
+        payerName: internationalData.payer?.name,
         wallet_id: internationalData.wallet?._id ?? internationalData.currency_wallet?._id,
         transaction_type: internationalData.flow,
         payment_method: internationalData.payment_type?.value,
