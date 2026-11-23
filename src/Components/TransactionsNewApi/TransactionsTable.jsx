@@ -17,6 +17,7 @@ import s from "../../Common/Ledger/ledger.module.scss";
 import InstaPayLoader from "../Loader";
 import DownloadStatement from "../WalletsNew/DownloadStatement";
 import TransactionRow from "./Transactionrow";
+import useWindowWidth from "../../utils/useWindowWidth";
 
 const TABS = ["All", "Sent", "Received", "Requests", "Quotes"].map((key) => ({ key, label: key }));
 
@@ -117,7 +118,7 @@ const useTransactions = (search, apiDates, filters) => {
   });
 };
 
-const TransactionsTable = () => {
+const TransactionsTable = ({ title, description }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
@@ -235,84 +236,90 @@ const TransactionsTable = () => {
   const dateLabel = apiDates
     ? `${dayjs(dateRange.startDate).format("MMM D")} - ${dayjs(dateRange.endDate).format("MMM D, YYYY")}`
     : t("All dates");
-
+  const iswidth = useWindowWidth();
   return (
     <>
-      <Ledger
-        tabs={TABS}
-        active={active}
-        onTab={setActive}
-        search={{
-          value: searchQuery,
-          onChange: changeSearch,
-          placeholder: t("Search transactions, names or IDs"),
-        }}
-        dateRange={dateRange}
-        onDateChange={handleChange}
-        dateLabel={dateLabel}
-        filters={
-          <FilterPanel
-            groups={FILTER_GROUPS}
-            filters={filters}
-            count={Object.keys(filters).length + (apiDates ? 1 : 0)}
-            onApply={applyFilters}
-          />
-        }
-        activeFilters={
-          <ActiveFilters
-            groups={FILTER_GROUPS}
-            filters={filters}
-            dateLabel={apiDates && dateLabel}
-            onApply={applyFilters}
-            onClearDate={clearDates}
-            onClearAll={clearChips}
-          />
-        }
-        hideDownload={!can("transactions.main.export")}
-        onDownload={() => setShowStatementModal(!showStatementModal)}
-        columns={["Transaction", "Recipient", "Status", "Time", "Amount", ""]}
-        template="2.2fr 1.6fr 112px 90px 1.3fr 16px"
-      >
-        {isLoading ? (
-          <div className={s.loader}>
-            <InstaPayLoader />
-          </div>
-        ) : groups.length > 0 ? (
-          groups.map(([day, rows]) => (
-            <div key={day}>
-              <DateGroup label={day} />
-              {rows.map(({ item, index }) => (
-                <TransactionRow
-                  key={item._id ?? item.id}
-                  item={item}
-                  index={index}
-                  activeItem={activeItem}
-                  setActiveItem={setActiveItem}
-                />
-              ))}
+      {iswidth > 1000 ? (
+        <Ledger
+          title={title}
+          description={description}
+          tabs={TABS}
+          active={active}
+          onTab={setActive}
+          search={{
+            value: searchQuery,
+            onChange: changeSearch,
+            placeholder: t("Search transactions, names or IDs"),
+          }}
+          dateRange={dateRange}
+          onDateChange={handleChange}
+          dateLabel={dateLabel}
+          filters={
+            <FilterPanel
+              groups={FILTER_GROUPS}
+              filters={filters}
+              count={Object.keys(filters).length + (apiDates ? 1 : 0)}
+              onApply={applyFilters}
+            />
+          }
+          activeFilters={
+            <ActiveFilters
+              groups={FILTER_GROUPS}
+              filters={filters}
+              dateLabel={apiDates && dateLabel}
+              onApply={applyFilters}
+              onClearDate={clearDates}
+              onClearAll={clearChips}
+            />
+          }
+          hideDownload={!can("transactions.main.export")}
+          onDownload={() => setShowStatementModal(!showStatementModal)}
+          columns={["Transaction", "Recipient", "Status", "Time", "Amount", ""]}
+          template="2.2fr 1.6fr 112px 90px 1.3fr 16px"
+        >
+          {isLoading ? (
+            <div className={s.loader}>
+              <InstaPayLoader />
             </div>
-          ))
-        ) : (
-          <EmptyState
-            Icon={Receipt}
-            title={t("No transactions yet")}
-            text={t("Money you send and receive will appear here, grouped by day.")}
-          >
-            <button type="button" className={s.btnPrimary} onClick={() => navigate("/wallets")}>
-              {t("Add funds")}
-            </button>
-            <button type="button" className={s.btn} onClick={clearFilters}>
-              {t("Clear search")}
-            </button>
-          </EmptyState>
-        )}
+          ) : groups.length > 0 ? (
+            groups.map(([day, rows]) => (
+              <div key={day}>
+                <DateGroup label={day} />
+                {rows.map(({ item, index }) => (
+                  <TransactionRow
+                    key={item._id ?? item.id}
+                    item={item}
+                    index={index}
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                ))}
+              </div>
+            ))
+          ) : (
+            <EmptyState
+              Icon={Receipt}
+              title={t("No transactions yet")}
+              text={t("Money you send and receive will appear here, grouped by day.")}
+            >
+              <button type="button" className={s.btnPrimary} onClick={() => navigate("/wallets")}>
+                {t("Add funds")}
+              </button>
+              <button type="button" className={s.btn} onClick={clearFilters}>
+                {t("Clear search")}
+              </button>
+            </EmptyState>
+          )}
 
-        {!isLoading && canLoadMore && (
-          <div ref={loaderRef} className={s.loader}>
-            <InstaPayLoader />
-          </div>
-        )}
-      </Ledger>
+          {!isLoading && (
+            <div ref={loaderRef} className={s.loader}>
+              <InstaPayLoader />
+            </div>
+          )}
+        </Ledger>
+      ) : (
+        <div className="addYourMobile layout"></div>
+      )}
 
       {showStatementModal && (
         <DownloadStatement

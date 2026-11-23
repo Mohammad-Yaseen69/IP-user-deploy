@@ -1,4 +1,3 @@
-import { saveAs } from "file-saver";
 import { service_name_formatter } from "../../TransactionsNewApi/TransactionItem";
 
 export const renderRecipientName = (tx) => {
@@ -101,9 +100,10 @@ export const buildIbanStatementCsv = (transactions) => {
   return lines.join("\r\n");
 };
 
-export const downloadIbanStatementCsv = (transactions, filename) => {
+export const downloadIbanStatementCsv = async (transactions, filename) => {
   const csv = buildIbanStatementCsv(transactions);
   // BOM so Excel opens UTF-8 names (e.g. accented beneficiaries) correctly.
   const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
+  const { saveAs } = await import("file-saver");
   saveAs(blob, filename);
 };

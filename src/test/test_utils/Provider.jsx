@@ -3,8 +3,6 @@ import AnimationThemeProvider from "./Helper/AnimationTheme/AnimationThemeProvid
 import UserState from "./Context/UserContextState";
 import { TimezonesProvider } from "./Context/TimezoneContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
-import DateMomentUtils from "@date-io/moment";
 
 const TestProvider = ({ children }) => {
   const client = new QueryClient({
@@ -23,9 +21,7 @@ const TestProvider = ({ children }) => {
           <UserState>
             <CustomizerProvider>
               <AnimationThemeProvider>
-                <MuiPickersUtilsProvider utils={DateMomentUtils}>
-                  {children}
-                </MuiPickersUtilsProvider>
+                <>{children}</>
               </AnimationThemeProvider>
             </CustomizerProvider>
           </UserState>

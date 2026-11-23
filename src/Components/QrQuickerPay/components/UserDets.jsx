@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "../styles/index.module.scss";
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";

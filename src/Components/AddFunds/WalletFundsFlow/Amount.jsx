@@ -5,7 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../../Context/UserContext";
 import { formatCurrency } from "../../../Helper/AmountFormat";
 import { useLocation } from "react-router";
-import { getLimits } from "../../WalletsNew";
+import { getLimits } from "../../WalletsNew/getLimits";
 import InstaPayLoader from "../../Loader";
 
 export function formatCurrencyLocal(value) {
@@ -42,7 +42,9 @@ const Amount = ({ data, dataHandler }) => {
   const queryParams = new URLSearchParams(location.search);
   const wallet_address = queryParams.get("wallet_address") || "something";
   const [walletData, setWalletData] = useState({});
-  const [loading, setLoading] = useState(false);
+  // Kept in flow state so the Next button stays disabled until the wallet limits arrive.
+  const loading = data.limitsLoading;
+  const setLoading = (value) => dataHandler("limitsLoading", value);
 
   useEffect(() => {
     if (wallet_address && _wallet?._id) {

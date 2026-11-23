@@ -10,6 +10,9 @@ import InstaPayLoader from "../../Loader";
 import Fuse from "fuse.js";
 import PayerTransactionTypePills from "./PayerTransactionTypePills";
 
+// names not unique
+const keyOf = (item) => item?.channelKey ?? item?.name;
+
 const ListModal = ({
   isOpen,
   toggle,
@@ -155,7 +158,7 @@ const ListModal = ({
                   <div
                     onClick={() => setCurrent(item)}
                     className={styles.list_item}
-                    key={item?.name}
+                    key={keyOf(item)}
                   >
                     {item?.icon && (
                       <div className={styles.grad_icon}>
@@ -163,7 +166,7 @@ const ListModal = ({
                       </div>
                     )}
                     <span>{t(service_name_formatter(item?.name))}</span>
-                    {current?.name === item?.name ? (
+                    {keyOf(current) === keyOf(item) ? (
                       <Check color="green" size={24} style={{ marginLeft: "auto" }} />
                     ) : (
                       <img
