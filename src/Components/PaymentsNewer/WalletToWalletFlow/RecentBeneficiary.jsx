@@ -4,11 +4,13 @@ import styles from "./styles/recentBen.module.css";
 import { useTranslation } from "react-i18next";
 import { BeneficiaryCard } from "./StepOne";
 import useWindowWidth from "../../../utils/useWindowWidth";
+import { useAllBeneficiaries } from "../../../hooks/BeneficiaryHooks/useBeneficiariesPage";
 
 const RecentBeneficiary = ({ data, dataHandler, setExpandRecent, expandRecent }) => {
   const { registeredBeneficiaries } = useContext(UserContext);
   const [benWalletsFound, setBenWalletsFound] = useState([]);
-  const { beneficiaries, userDetails } = useContext(UserContext);
+  const { userDetails } = useContext(UserContext);
+  const { beneficiaries } = useAllBeneficiaries({ filters: { account_type: "wallet" } });
   const { t } = useTranslation();
   const width = useWindowWidth();
 
@@ -61,7 +63,7 @@ const RecentBeneficiary = ({ data, dataHandler, setExpandRecent, expandRecent })
 
       return ownAccountFilteration;
     }
-  }, [registeredBeneficiaries]);
+  }, [registeredBeneficiaries, beneficiaries, userDetails]);
 
   return uniqueBeneficiaries?.length ? (
     <div

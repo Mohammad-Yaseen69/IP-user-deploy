@@ -64,6 +64,11 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { isValidDescription } from "../../utils/swiftValidation";
 import BeneficiaryStep from "../Common/BeneficiaryStep";
+import {
+  fetchBeneficiaryMatch,
+  useBeneficiaryPicker,
+  useInvalidateBeneficiaryPages,
+} from "../../../../hooks/BeneficiaryHooks/useBeneficiariesPage";
 import AddressTooLongBanner from "../Common/AddressTooLongBanner";
 import {
   getBeneficiaryName,
@@ -839,6 +844,8 @@ const isInstantNotSupportedError = (errorOrMsg) => {
   });
 };
 
+const SEPA_BENEFICIARY_FILTERS = { account_type: "bank", bank_countries: sepaCountries.join(",") };
+
 const SepaTransfer = ({
   isOpen = true,
   toggle,
@@ -850,8 +857,15 @@ const SepaTransfer = ({
   const width = useWindowWidth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { beneficiaries, userDetails, setProfileLockTime, getUserBeneficiaries } =
-    useContext(UserContext);
+  const { userDetails, setProfileLockTime, getUserBeneficiaries } = useContext(UserContext);
+  const invalidateBeneficiaryPages = useInvalidateBeneficiaryPages();
+  const refreshBeneficiaries = () => {
+    invalidateBeneficiaryPages();
+    return getUserBeneficiaries();
+  };
+  const picker = useBeneficiaryPicker({ filters: SEPA_BENEFICIARY_FILTERS });
+  const [addedBeneficiaries, setAddedBeneficiaries] = useState([]);
+  const beneficiaryList = [...addedBeneficiaries, ...picker.beneficiaries];
 
   const ibanId = selectedIban?._id || selectedIban?.id;
   const { data: syncedBalance } = useSyncVirtualIbanBalance(ibanId);
@@ -869,7 +883,6 @@ const SepaTransfer = ({
   const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT);
   const [amount, setAmount] = useState("");
   const [transferSpeed, setTransferSpeed] = useState("standard");
-  const [beneficiaryList, setBeneficiaryList] = useState([]);
   const [selectedBeneficiary, setSelectedBeneficiary] = useState(null);
   const [beneficiaryForm, setBeneficiaryForm] = useState(DEFAULT_BENEFICIARY_FORM);
   const [isAddingBeneficiary, setIsAddingBeneficiary] = useState(false);
@@ -948,11 +961,6 @@ const SepaTransfer = ({
   const showFooter =
     !showInstantFallback && currentStep !== STEPS.OTP && currentStep !== STEPS.DONE;
 
-  const [savedBeneficiaryId, setSavedBeneficiaryId] = useState("");
-
-  /* The new flow saves the recipient and the bank details together, so there is no
-       second modal to chain into - the saved record is picked up once the refreshed
-       list carries its channel. */
   const handleBeneficiarySaved = async (savedBeneficiary, isNew) => {
     if (!USE_NEW_BENEFICIARY_FLOW) {
       if (isNew && savedBeneficiary) {
@@ -965,22 +973,18 @@ const SepaTransfer = ({
     setIsAddModalOpen(false);
     setIsChannelModalOpen(false);
     setChannelModalBeneficiary(null);
-    setSavedBeneficiaryId(savedBeneficiary?._id || savedBeneficiary?.id || "");
-    await getUserBeneficiaries();
+    const savedId = savedBeneficiary?._id || savedBeneficiary?.id;
+    refreshBeneficiaries();
+    const saved =
+      savedId &&
+      (await fetchBeneficiaryMatch(userDetails?._id, SEPA_BENEFICIARY_FILTERS, savedId).catch(
+        () => null,
+      ));
+    if (saved) setSelectedBeneficiary(saved);
   };
 
-  useEffect(() => {
-    if (!savedBeneficiaryId) return;
-
-    const saved = beneficiaryList.find((item) => (item?._id || item?.id) === savedBeneficiaryId);
-    if (!saved) return;
-
-    setSelectedBeneficiary(saved);
-    setSavedBeneficiaryId("");
-  }, [beneficiaryList, savedBeneficiaryId]);
-
   const handleChannelSaved = async (updatedBeneficiary) => {
-    await getUserBeneficiaries();
+    await refreshBeneficiaries();
     if (updatedBeneficiary) {
       const hasBank =
         (Array.isArray(updatedBeneficiary.account_type) &&
@@ -1035,26 +1039,6 @@ const SepaTransfer = ({
     else if (userDetails?.email_verification) setAuthType("email");
     else if (userDetails?.whatsapp_verification) setAuthType("whatsapp");
   }, [userDetails?.tfa, userDetails?.email_verification, userDetails?.whatsapp_verification]);
-
-  useEffect(() => {
-    if (beneficiaries && beneficiaries.length > 0) {
-      const europeanCountries = sepaCountries;
-      const europeanBeneficiaries = beneficiaries.filter((beneficiary) => {
-        if (beneficiary?.account_type?.includes("bank")) {
-          const bankCountry = beneficiary?.bank_details?.[0]?.extras?.country_iso_code;
-          return europeanCountries.includes(bankCountry);
-        }
-        return false;
-      });
-      setBeneficiaryList(europeanBeneficiaries);
-    }
-  }, [beneficiaries]);
-
-  useEffect(() => {
-    if (userDetails?._id) {
-      getUserBeneficiaries();
-    }
-  }, [userDetails]);
 
   const handleClose = () => {
     resetState();
@@ -1133,7 +1117,8 @@ const SepaTransfer = ({
     if (currentStep === STEPS.ADD_BENEFICIARY) {
       const nextBeneficiary = buildBeneficiaryFromForm(beneficiaryForm);
       setSelectedBeneficiary(nextBeneficiary);
-      if (beneficiaryForm.saveBeneficiary) setBeneficiaryList((prev) => [nextBeneficiary, ...prev]);
+      if (beneficiaryForm.saveBeneficiary)
+        setAddedBeneficiaries((prev) => [nextBeneficiary, ...prev]);
       setCurrentStep(STEPS.PURPOSE);
       return;
     }
@@ -1227,6 +1212,7 @@ const SepaTransfer = ({
         return (
           <BeneficiaryStep
             beneficiaries={beneficiaryList}
+            server={picker.server}
             selectedBeneficiary={selectedBeneficiary}
             setSelectedBeneficiary={setSelectedBeneficiary}
             onAddBeneficiary={() => setIsAddModalOpen(true)}
@@ -1237,7 +1223,7 @@ const SepaTransfer = ({
                 beneficiary={selectedBeneficiary}
                 onAddressSaved={async (updatedBeneficiary) => {
                   setSelectedBeneficiary(updatedBeneficiary);
-                  await getUserBeneficiaries();
+                  await refreshBeneficiaries();
                 }}
               />
             )}

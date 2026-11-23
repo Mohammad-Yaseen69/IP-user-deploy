@@ -8,6 +8,7 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { UserContext } from "../../Context/UserContext";
 import WalletBeneficiaryCard from "./WalletBeneficiaryCard";
 import { useLocation } from "react-router";
+import { apiWrapper } from "../../utils/Functions/apiWrapper";
 
 // let timeout;
 
@@ -16,7 +17,7 @@ const WalletDetails = ({ setWallet, setSubStep, wallet }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
   const [walletError, setWalletError] = useState("");
-  const { authHeader, beneficiaries } = useContext(UserContext);
+  const { authHeader } = useContext(UserContext);
   const [searchedBeneficiaries, setSearchedBeneficiaries] = useState([]);
   const [searchUser, setSearchUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -62,19 +63,16 @@ const WalletDetails = ({ setWallet, setSubStep, wallet }) => {
       });
   };
 
-  const searchBeneficiaries = () => {
-    const wallet_ben = beneficiaries.filter((item) => item.wallet.length > 0);
-    if (wallet_ben.length > 0) {
-      const filtered = wallet_ben.filter((item) => {
-        return (
-          item.first_name.includes(searchQuery) ||
-          item.company_name.includes(searchQuery) ||
-          item.last_name.includes(searchQuery) ||
-          item.wallet?.join("")?.includes(searchQuery)
-        );
+  const searchBeneficiaries = async () => {
+    if (!userDetails?._id) return;
+    const params = new URLSearchParams({ page: 1, limit: 100, has_wallet: 1, search: searchQuery });
+    try {
+      const res = await apiWrapper({
+        endpoint: `/api/beneficiary/get-user-beneficiaries/${userDetails._id}?${params.toString()}`,
       });
-
-      setSearchedBeneficiaries(filtered);
+      setSearchedBeneficiaries((res?.beneficiaryList ?? []).filter((b) => b?.wallet?.length > 0));
+    } catch {
+      // The wallet lookup above still runs; beneficiary matches are optional.
     }
   };
   // useEffect(() => {
