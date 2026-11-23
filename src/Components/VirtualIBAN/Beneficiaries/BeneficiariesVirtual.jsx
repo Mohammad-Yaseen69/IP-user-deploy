@@ -348,7 +348,7 @@ const BeneficiariesVirtual = () => {
                   })
                 )}
                 {hasNextPage && (
-                  <div ref={loaderRef} style={{ padding: "1rem", textAlign: "center" }}>
+                  <div ref={loaderRef} style={{ height: 60, flexShrink: 0 }}>
                     <InstaPayLoader />
                   </div>
                 )}

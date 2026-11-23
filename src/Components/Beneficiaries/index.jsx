@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Search, Filter, Sliders } from "react-feather";
 import { Button, Input } from "reactstrap";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import BeneficiaryCard from "./BeneficiaryCard";
 import { UserContext } from "../../Context/UserContext";
 import add_ben from "./add_ben.svg";
@@ -88,8 +89,9 @@ const Beneficiaries = () => {
   };
 
   const emptyText = isLoading ? t("Loading beneficiaries...") : t("No Beneficiaries");
+  const isMobile = useMediaQuery("(max-width:1000px)");
   const loadMore = hasNextPage && (
-    <div ref={loaderRef} style={{ padding: "1rem", textAlign: "center" }}>
+    <div ref={loaderRef} style={{ height: 60, flexShrink: 0 }}>
       <InstaPayLoader />
     </div>
   );
@@ -226,7 +228,7 @@ const Beneficiaries = () => {
                 />
               ))
             : emptyText}
-          {loadMore}
+          {!isMobile && loadMore}
         </div>
       </div>
 
@@ -284,7 +286,7 @@ const Beneficiaries = () => {
                   />
                 ))
               : emptyText}
-            {loadMore}
+            {isMobile && loadMore}
           </div>
         </div>
       </div>

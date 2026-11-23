@@ -7,7 +7,7 @@ import { useInfiniteScroll } from "../useInfiniteScroll";
 
 export const BENEFICIARIES_PAGE_KEY = ["beneficiaries", "page"];
 
-export const useBeneficiariesPage = ({ limit = 20, search = "", type = "all", sort }) => {
+export const useBeneficiariesPage = ({ limit = 10, search = "", type = "all", sort }) => {
   const { userDetails } = useContext(UserContext);
   const accountId = userDetails?._id;
   const debouncedSearch = useDebounce(search.trim(), 400);
