@@ -128,7 +128,7 @@ const TransactionsTable = () => {
   const [searchQuery, setSearchQuery] = useState(search);
   const [apiDates, setApiDates] = useState(null);
   const [filters, setFilters] = useState({});
-  const { userDetails, verifyToken, getUserBeneficiaries } = useContext(UserContext);
+  const { userDetails, verifyToken } = useContext(UserContext);
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(search);
   const [showStatementModal, setShowStatementModal] = useState(false);
   const can = usePermission();
@@ -143,10 +143,6 @@ const TransactionsTable = () => {
   const canLoadMore = hasNextPage && !isFetchNextPageError;
 
   const loaderRef = useInfiniteScroll({ hasNextPage: canLoadMore, isFetching, fetchNextPage });
-
-  useEffect(() => {
-    getUserBeneficiaries();
-  }, []);
 
   useEffect(() => {
     if (searchQuery === debouncedSearchQuery) return;

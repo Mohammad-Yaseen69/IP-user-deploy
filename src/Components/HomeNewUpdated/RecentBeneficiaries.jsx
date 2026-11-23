@@ -1,6 +1,5 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import { Card, CardBody } from "reactstrap";
-import { UserContext } from "../../Context/UserContext";
 import BenefCard from "./BenefCard";
 import { useTranslation } from "react-i18next";
 import styles from "./styles/RecentBenef.module.css";
@@ -8,14 +7,7 @@ import { useBeneficiariesPage } from "../../hooks/BeneficiaryHooks/useBeneficiar
 
 const RecentBeneficiaries = () => {
   const { t } = useTranslation();
-  const { userDetails, getUserBeneficiaries } = useContext(UserContext);
   const { beneficiaries } = useBeneficiariesPage({ limit: 10, sort: "date_desc" });
-
-  useEffect(() => {
-    if (userDetails) {
-      getUserBeneficiaries();
-    }
-  }, [userDetails]);
 
   return (
     <>
