@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Copy,
   Plus,
@@ -27,7 +27,7 @@ import { USE_NEW_BENEFICIARY_FLOW } from "./AddBeneficiaryFlowV2/constants";
 import { useNavigate } from "react-router";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError";
-import Paginations from "../../../Common/Component/Paginations";
+import InstaPayLoader from "../../Loader";
 import { useBeneficiariesPage } from "../../../hooks/BeneficiaryHooks/useBeneficiariesPage";
 import { toast } from "react-toastify";
 
@@ -63,21 +63,12 @@ const BeneficiariesVirtual = () => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [beneficiaryToDelete, setBeneficiaryToDelete] = useState(null);
 
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(20);
-  useEffect(() => setPage(1), [searchQuery, typeFilter, sortBy, limit]);
-
-  const { beneficiaries, totalPages, refetch, isFetching } = useBeneficiariesPage({
-    page,
-    limit,
+  const { beneficiaries, refetch, isFetching, hasNextPage, loaderRef } = useBeneficiariesPage({
     search: searchQuery,
     type: typeFilter,
     sort: sortBy,
   });
   const filteredBeneficiaries = beneficiaries;
-  useEffect(() => {
-    if (totalPages && page > totalPages) setPage(totalPages);
-  }, [totalPages, page]);
   const [savedBeneficiary, setSavedBeneficiary] = useState(null);
 
   const activeFilterCount = typeFilter !== "all" ? 1 : 0;
@@ -356,16 +347,12 @@ const BeneficiariesVirtual = () => {
                     );
                   })
                 )}
+                {hasNextPage && (
+                  <div ref={loaderRef} style={{ padding: "1rem", textAlign: "center" }}>
+                    <InstaPayLoader />
+                  </div>
+                )}
               </div>
-              {totalPages > 1 && (
-                <Paginations
-                  page={page}
-                  totalPages={totalPages}
-                  setPage={setPage}
-                  limit={limit}
-                  setLimit={setLimit}
-                />
-              )}
             </div>
 
             <div className={styles.rightColumn}>

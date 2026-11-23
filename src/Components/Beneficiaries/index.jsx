@@ -11,7 +11,7 @@ import add_ben from "./add_ben.svg";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import AddBeneficiaryFlowV2 from "../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2";
 import { USE_NEW_BENEFICIARY_FLOW } from "../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/constants";
-import Paginations from "../../Common/Component/Paginations";
+import InstaPayLoader from "../Loader";
 import {
   useBeneficiariesPage,
   useInvalidateBeneficiaryPages,
@@ -74,19 +74,13 @@ const Beneficiaries = () => {
 
   const activeFilterCount = typeFilter !== "all" ? 1 : 0;
 
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(20);
-  useEffect(() => setPage(1), [searchTerm, typeFilter, sortBy, limit]);
-
   const {
     beneficiaries: filtered,
-    totalPages,
     isLoading,
-  } = useBeneficiariesPage({ page, limit, search: searchTerm, type: typeFilter, sort: sortBy });
+    hasNextPage,
+    loaderRef,
+  } = useBeneficiariesPage({ search: searchTerm, type: typeFilter, sort: sortBy });
   const invalidateBeneficiaryPages = useInvalidateBeneficiaryPages();
-  useEffect(() => {
-    if (totalPages && page > totalPages) setPage(totalPages);
-  }, [totalPages, page]);
 
   const onBeneficiarySaved = () => {
     getUserBeneficiaries();
@@ -94,14 +88,10 @@ const Beneficiaries = () => {
   };
 
   const emptyText = isLoading ? t("Loading beneficiaries...") : t("No Beneficiaries");
-  const pagination = totalPages > 1 && (
-    <Paginations
-      page={page}
-      totalPages={totalPages}
-      setPage={setPage}
-      limit={limit}
-      setLimit={setLimit}
-    />
+  const loadMore = hasNextPage && (
+    <div ref={loaderRef} style={{ padding: "1rem", textAlign: "center" }}>
+      <InstaPayLoader />
+    </div>
   );
 
   const toggleMenu = (name) => setOpenMenu((prev) => (prev === name ? null : name));
@@ -236,8 +226,8 @@ const Beneficiaries = () => {
                 />
               ))
             : emptyText}
+          {loadMore}
         </div>
-        {pagination}
       </div>
 
       <div className={styles.mobile}>
@@ -294,8 +284,8 @@ const Beneficiaries = () => {
                   />
                 ))
               : emptyText}
+            {loadMore}
           </div>
-          {pagination}
         </div>
       </div>
 
