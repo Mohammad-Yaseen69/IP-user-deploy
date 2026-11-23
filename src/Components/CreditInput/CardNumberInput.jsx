@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import styles from "./styles/card_number.module.css";
 import { creditCardImages } from "./CreditCardImages";
 import { useTranslation } from "react-i18next";
-import { cancelSubscriptionOrSchedulePayment } from "../OtherTransactions/ReceivedTransactionItem";
 
 const CardNumberInput = ({
   content,

@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { useLocation } from "react-router";
 import { jwtDecode } from "jwt-decode";
 import QrGenerate from "../Settings/QrGenerate";

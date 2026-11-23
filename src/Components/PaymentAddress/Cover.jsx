@@ -4,14 +4,9 @@ import { useContext, useRef, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import coverPlaceHolder from "../UserProfilePublic/files/cover_1.png";
-import { Camera, Trash } from "react-feather";
 import { Button } from "reactstrap";
 import { toast } from "react-toastify";
-import { BsCrop } from "react-icons/bs";
 import AdjustModal from "../Settings/AdjustModal";
-import crop from "./files/icons/crop.svg";
-import upload from "./files/icons/upload.svg";
-import del from "./files/icons/delete.svg";
 import { t } from "i18next";
 
 const Cover = ({ cover, setCover, dets, canUploadPaymentBanner }) => {

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import chev_up from "./files/chev_up.png";
 import chev_right from "./files/chev_right.png";
 import styles from "./styles/CryptoCard.module.css";

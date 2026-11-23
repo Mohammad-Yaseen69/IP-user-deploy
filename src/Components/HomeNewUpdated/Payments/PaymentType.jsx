@@ -1,4 +1,3 @@
-import React from "react";
 import { Check, ChevronRight } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { Button, Card, CardBody } from "reactstrap";

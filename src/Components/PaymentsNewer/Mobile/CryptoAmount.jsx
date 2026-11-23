@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AiFillInfoCircle } from "react-icons/ai";
 import { IoWarningOutline } from "react-icons/io5";
 import { Button } from "reactstrap";

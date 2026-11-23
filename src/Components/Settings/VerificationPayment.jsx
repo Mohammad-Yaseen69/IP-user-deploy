@@ -1,14 +1,5 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
-import {
-  Button,
-  Card,
-  CardBody,
-  Input,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-} from "reactstrap";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { Button, Card, CardBody, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import pc from "../PaymentsNewer/files/pc.png";
 import i from "../PaymentsNewer/files/i.svg";
 import bd from "../../assets/images/logo/logo_white.png";
@@ -19,7 +10,6 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import axios from "axios";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import OTPConfirmation from "../../Common/Component/OtpVerification";
-import SuccessModal from "../AddBeneficiary/SuccessModal";
 import { toast } from "react-toastify";
 import CardDetails from "../AddFunds/WalletFund/CardDetails";
 import ConfirmWalletFund from "../AddFunds/ConfirmWalletFund";
@@ -269,16 +259,23 @@ const VerificationPayment = ({
     }
   };
 
+  const feeRoute = partnerId ? "partner-kyc" : isKYB ? "kyb" : "kyc";
+  const partnerPayload = partnerId ? { partner_id: partnerId } : {};
+
   const initiatePaypal = async () => {
     setSaving(true);
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_IP_DEV_API}/api/paypal/initiate-kyc-payment`,
-        { data: encryptData({}) },
+        `${import.meta.env.VITE_IP_DEV_API}/api/paypal/initiate-${feeRoute}-payment`,
+        { data: encryptData(partnerPayload) },
         { headers: authHeader },
       );
       const dec = decryptData(res.data.data);
-      window.location.href = dec?.url;
+      if (dec?.url) {
+        window.location.href = dec?.url;
+      } else if (dec?.message) {
+        toast.info(dec?.message);
+      }
     } catch (err) {
       const decrypted = decryptData(err.response.data.data);
       toast.error(decrypted?.message);
@@ -356,8 +353,7 @@ const VerificationPayment = ({
                         : methods?.includes(item?.value),
                     )
                     .map((item) => {
-                      const isPaypalDisabled =
-                        (isKYB && item?.value === "paypal") || item.value === "card";
+                      const isPaypalDisabled = item.value === "card";
                       return (
                         <Card
                           key={item.name}
@@ -625,8 +621,8 @@ const VerificationPayment = ({
               <PlaidBankTransfer
                 closeBtnText={t("Close Modal")}
                 type="verification_payment"
-                initiatePayload={() => ({})}
-                endpoint="/api/plaid/kyc"
+                initiatePayload={() => partnerPayload}
+                endpoint={`/api/plaid/${feeRoute}`}
                 dataHandler={(type, data) => {
                   if (type === "error") {
                     setError(data);

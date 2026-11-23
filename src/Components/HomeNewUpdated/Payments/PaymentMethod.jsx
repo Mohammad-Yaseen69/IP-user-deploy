@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Card, CardBody } from "reactstrap";
+import { useContext, useEffect, useState } from "react";
+import { CardBody } from "reactstrap";
 import { payoutChannelData } from "../../PaymentsNewer/PayoutChannel";
 import iw from "../../../assets/images/logo/logo_white.png";
 import { useTranslation } from "react-i18next";

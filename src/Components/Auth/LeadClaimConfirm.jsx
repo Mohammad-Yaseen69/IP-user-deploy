@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import { CheckCircle, XCircle, UserCheck, Shield } from "react-feather";
-import logo from "../../logo.svg";
 
 const LeadClaimConfirm = () => {
   const [searchParams] = useSearchParams();

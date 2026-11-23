@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Modal, ModalBody, Spinner } from "reactstrap";
 import { X, Check, Shield } from "react-feather";

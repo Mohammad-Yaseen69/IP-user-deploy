@@ -1,81 +1,100 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Grid } from "react-feather";
+import { useContext } from "react";
+import { Maximize2, Minimize2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import CustomizerContext from "../../Helper/Customizer";
-import cubaimg from "../../assets/images/logo/logo.svg";
+import cubaimg from "../../assets/images/logo/logo2.png";
+import logo from "../../assets/images/logo/logo.webp";
 import { Image } from "../../AbstractElements";
-// import dot from "./files/dot.png"
-// import dot_a from "./files/dot_a.png"
-import dot from "./files/closed_hamburger.png";
-import dot_a from "./files/opened_hamburger.png";
 
 const SidebarLogo = () => {
   const { togglSidebar, setTogglSidebar } = useContext(CustomizerContext);
-  const [winWidth, setWinWidth] = useState(window?.innerWidth);
+  const { t } = useTranslation();
 
-  const resizeHandler = () => setWinWidth(window?.innerWidth);
+  const toggleButton = (
+    <button
+      type="button"
+      onClick={() => setTogglSidebar((collapsed) => !collapsed)}
+      aria-label={togglSidebar ? t("Expand navigation") : t("Collapse navigation")}
+      aria-expanded={!togglSidebar}
+      aria-controls="sidebar-menu"
+      title={togglSidebar ? t("Expand navigation") : t("Collapse navigation")}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flex: "0 0 24px",
+        width: "24px",
+        height: "28px",
+        padding: 0,
+        border: 0,
+        background: "transparent",
+        color: "#1a1617",
+        cursor: "pointer",
+      }}
+    >
+      {togglSidebar ? <Maximize2 size={18} /> : <Minimize2 size={18} />}
+    </button>
+  );
 
-  useEffect(() => {
-    window.addEventListener("resize", resizeHandler);
-    return () => window.removeEventListener("resize", resizeHandler);
-  }, []);
-
-  return (
-    <>
+  if (togglSidebar) {
+    return (
       <div
         style={{
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
+          gap: "12px",
           margin: ".75rem 0",
-          justifyContent: "space-between",
         }}
       >
-        <img
-          src={!togglSidebar ? dot_a : dot}
-          alt=""
-          onClick={() => {
-            if (
-              window.location.pathname === "/" ||
-              window.location.pathname === "/dashboard/default"
-            )
-              return;
-            setTogglSidebar(!togglSidebar);
-          }}
-          style={{
-            height: winWidth > 1400 ? "17px" : "14px",
-            width: winWidth > 1400 ? "20px" : "17px",
-          }}
-        />
         <Link
           to={`${window.location.origin}/dashboard/default`}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: ".6rem",
-            justifyContent: "center",
-          }}
+          style={{ display: "flex", justifyContent: "center" }}
         >
           <Image
             attrImage={{
               className: "img-fluid for-light",
-              src: cubaimg,
-              alt: "",
-              style: { height: "32px" },
+              src: logo,
+              alt: "InstaPay",
+              style: { height: "32px", width: "auto", objectFit: "contain" },
             }}
           />
-          {/* <span style={{ fontSize: "1.2rem", color: "black", fontWeight: 600 }}>InstaPay</span> */}
         </Link>
-        <span style={{ opacity: 0 }}>.</span>
-        {/* <div style={{ height: "10px", width: "10px", background: "black", position: "absolute", top: "30px", right: "10px", borderRadius: "10px" }} > */}
-        {/* </div> */}
+        {toggleButton}
       </div>
-      {/* <div className="back-btn" onClick={() => setTogglSidebar(!togglSidebar)}>
-                <Grid style={{ stroke: "black" }} />
-            </div>
-            <div className="toggle-sidebar" onClick={() => setTogglSidebar(!togglSidebar)}>
-                <Grid style={{ stroke: "black" }} />
-            </div> */}
-    </>
+    );
+  }
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        margin: ".75rem 0",
+        justifyContent: "space-between",
+      }}
+    >
+      <Link
+        to={`${window.location.origin}/dashboard/default`}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: ".6rem",
+          justifyContent: "center",
+        }}
+      >
+        <Image
+          attrImage={{
+            className: "img-fluid for-light",
+            src: cubaimg,
+            alt: "",
+            style: { height: "32px" },
+          }}
+        />
+      </Link>
+      {toggleButton}
+    </div>
   );
 };
 

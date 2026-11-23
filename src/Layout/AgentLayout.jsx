@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Outlet, Navigate, useLocation } from "react-router-dom";
 import styles from "./AgentLayout.module.css";
 import NewMenu from "../Common/NewMenu";

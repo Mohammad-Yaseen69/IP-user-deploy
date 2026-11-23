@@ -6,7 +6,6 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../../Context/UserContext";
 import er_icon from "../InternationalFlow/files/exchange_rate.svg";
 import { Info } from "react-feather";
-import { cleanString } from "../../../Helper/cleanString";
 import { formatCurrency } from "../../../Helper/AmountFormat";
 
 const StepFive = ({ data, sending_currency = "", showMid = true }) => {
