@@ -7,7 +7,15 @@ import { useInfiniteScroll } from "../useInfiniteScroll";
 
 export const BENEFICIARIES_PAGE_KEY = ["beneficiaries", "page"];
 
-export const useBeneficiariesPage = ({ limit = 10, search = "", type = "all", sort }) => {
+// `filters` are the payment-picker filters the API understands: channel, country, payer, beneficiary_type, id.
+export const useBeneficiariesPage = ({
+  limit = 10,
+  search = "",
+  type = "all",
+  sort,
+  filters = {},
+  enabled = true,
+}) => {
   const { userDetails } = useContext(UserContext);
   const accountId = userDetails?._id;
   const debouncedSearch = useDebounce(search.trim(), 400);
@@ -16,11 +24,14 @@ export const useBeneficiariesPage = ({ limit = 10, search = "", type = "all", so
     queryKey: [
       ...BENEFICIARIES_PAGE_KEY,
       accountId,
-      { limit, search: debouncedSearch, type, sort },
+      { limit, search: debouncedSearch, type, sort, filters },
     ],
     queryFn: ({ pageParam }) => {
       const params = new URLSearchParams({ page: pageParam, limit, type, sort });
       if (debouncedSearch) params.set("search", debouncedSearch);
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== "") params.set(key, value);
+      });
       return apiWrapper({
         endpoint: `/api/beneficiary/get-user-beneficiaries/${accountId}?${params.toString()}`,
       });
@@ -30,7 +41,7 @@ export const useBeneficiariesPage = ({ limit = 10, search = "", type = "all", so
       const { page, totalPages } = lastPage?.pagination || {};
       return page < totalPages ? page + 1 : undefined;
     },
-    enabled: !!accountId,
+    enabled: !!accountId && enabled,
   });
 
   const loaderRef = useInfiniteScroll({
