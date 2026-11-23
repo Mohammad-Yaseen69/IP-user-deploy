@@ -1,23 +1,13 @@
 .container {
-  padding: 24px var(--page-gutter);
+  padding: 0 var(--page-gutter);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   height: auto;
-  margin: 1rem 0;
+  margin: 0 0 1rem;
   box-sizing: border-box;
   overflow-y: auto !important;
   padding-bottom: 40px;
-}
-
-.top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  position: relative;
-  margin: 0px;
-  padding: 0px;
-  gap: 16px;
 }
 
 .headerTitle {
@@ -43,10 +33,6 @@
   line-height: 20px;
   margin: 0 0 20px 0;
   padding: 0px;
-}
-
-.topright {
-  margin-top: 0px;
 }
 
 .mainContent {
@@ -342,9 +328,12 @@
   }
 
   .headerTitle h1 {
+    font-family: Inter, sans-serif;
     font-size: 22px;
+    font-weight: 600;
     line-height: 30px;
-    letter-spacing: -0.6px;
+    letter-spacing: -0.72px;
+    color: #141414;
   }
 
   .headerTitle p {

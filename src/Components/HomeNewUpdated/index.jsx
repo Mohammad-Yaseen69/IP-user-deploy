@@ -4,7 +4,6 @@ import cardsStyle from "./styles/CardsContainer.module.css";
 import { useTranslation } from "react-i18next";
 import { BsFillPlayFill } from "react-icons/bs";
 import { MessageCircle } from "lucide-react";
-import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 
@@ -25,7 +24,7 @@ import eth from "../PaymentsNewer/files/eth.webp";
 import usdt from "../PaymentsNewer/files/usdt.webp";
 import crown from "./files/crown.svg";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import MoneyInOut from "../../Common/WalletUI/MoneyInOut";
 import { useMoneyInOut } from "../../Common/WalletUI/useMoneyInOut";
 import u from "../../Common/WalletUI/ui.module.scss";
@@ -171,15 +170,10 @@ const HomeNewUpdated = () => {
             }
           }}
         >
-          <header className={u.header}>
-            <div className={u.headerText}>
-              <h1>{t("Dashboard")}</h1>
-              <p>{t("Manage and monitor your InstaPay Wallet")}</p>
-            </div>
-            <div className={u.headerRight}>
-              <TopRight position="static" />
-            </div>
-          </header>
+          <PageHeader
+            title={t("Dashboard")}
+            subtitle={t("Manage and monitor your InstaPay Wallet")}
+          />
 
           <div className={u.content}>
             <div className={d.greeting}>

@@ -1,6 +1,6 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import styles from "./styles/index.module.scss";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import { useTranslation } from "react-i18next";
 import money from "./files/money.png";
 import crypto from "./files/crypto.png";
@@ -203,10 +203,7 @@ const AddFunds = () => {
   ) : (
     <>
       <div className={styles.container}>
-        <div className={styles.top}>
-          <h4 style={{ marginBottom: ".2rem" }}>{t("Add Funds")}</h4>
-          <TopRight />
-        </div>
+        <PageHeader title={t("Add Funds")} />
         {!action && (
           <div
             style={{

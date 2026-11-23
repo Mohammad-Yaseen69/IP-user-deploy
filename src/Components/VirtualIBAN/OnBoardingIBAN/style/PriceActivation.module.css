@@ -2,9 +2,9 @@
   width: 100%;
   display: flex;
   justify-content: start;
-  align-items: start;
+  align-items: stretch;
   box-sizing: border-box;
-  padding: 16px var(--page-gutter);
+  padding: 0 var(--page-gutter) 16px;
   min-height: 100vh;
   flex-direction: column;
   height: auto;

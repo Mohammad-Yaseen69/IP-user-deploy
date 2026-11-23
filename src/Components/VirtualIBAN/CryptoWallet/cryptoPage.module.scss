@@ -975,42 +975,15 @@
 /* ---------- route page wrapper ---------- */
 
 .routePage {
-  padding: 32px var(--page-gutter) 48px;
+  padding: 0 var(--page-gutter) 48px;
   min-height: 100vh;
   background: #f8f9fc;
   font-family: "DM Sans", Inter, "Segoe UI", sans-serif;
 }
 
-.routeTop {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-
-.routeTitle {
-  margin: 0;
-  font-size: 40px;
-  font-weight: 700;
-  letter-spacing: -0.6px;
-  color: #5626e6;
-}
-
-.routeSub {
-  margin: 4px 0 0;
-  font-size: 14px;
-  color: #868686;
-}
-
 @media (max-width: 600px) {
   .routePage {
-    padding: 20px 16px 32px;
-  }
-
-  .routeTitle {
-    font-size: 28px;
+    padding: 0 16px 32px;
   }
 }
 

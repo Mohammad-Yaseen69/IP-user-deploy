@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import styles from "./styles/index.module.scss";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import EarnMoneyBanner from "../HomeNewUpdated/EarnMoneyBanner";
 import { Check, ChevronDown, ChevronRight, MoreHorizontal } from "react-feather";
 import copy_ic from "../ChipsInNew/copy.png";
@@ -227,10 +227,7 @@ const ReferralsNew = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.top}>
-        <h4>{t("Referrals")}</h4>
-        {window.innerWidth > 1000 && <TopRight />}
-      </div>
+      <PageHeader title={t("Referrals")} />
       {userDetails?.username ? (
         <>
           {convertModal && (

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import styles from "./styles/index.module.css";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import plus from "./files/plus.svg";
 import PortfolioCard from "./PortfolioCard";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -68,18 +68,19 @@ const Portfolio = () => {
         {showAddModal && (
           <AddPortfolioItem isOpen={showAddModal} toggle={() => setShowAddModal(!showAddModal)} />
         )}
-        <div className={styles.top}>
-          <h4 style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-            {t("My Portfolio")}{" "}
-            <Info
-              color="#5926f0"
-              style={{ cursor: "pointer" }}
-              onClick={() => setIsOpen(!isOpen)}
-              size={16}
-            />
-          </h4>
-          <TopRight />
-        </div>
+        <PageHeader
+          title={
+            <>
+              {t("My Portfolio")}
+              <Info
+                color="#5926f0"
+                style={{ cursor: "pointer" }}
+                onClick={() => setIsOpen(!isOpen)}
+                size={16}
+              />
+            </>
+          }
+        />
         <p className={styles.desc}>
           {t(
             "Showcase Your Work, Amplify Your Reach. 'My Portfolio' is your digital canvas on \nInstaPay. Upload and display a diverse range of content – from captivating images \nand videos to informative PDFs. Whether you're an artist, freelancer, or \nentrepreneur, this feature lets you present your work or projects in a visually \nengaging way.",

@@ -1,16 +1,7 @@
 .container {
-  padding: 24px var(--page-gutter);
+  padding: 0 var(--page-gutter) 24px;
   min-height: 100vh;
   font-family: "Inter", sans-serif;
-}
-
-.top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  position: relative;
-  margin: 0px;
-  padding: 0px;
 }
 
 .mobileTop {
@@ -23,24 +14,8 @@
 }
 
 .headerTitle h1 {
-  color: #5626e6;
-  font-size: 40px;
-  font-style: normal;
-  font-weight: 700;
   margin: 0px;
   padding: 0px;
-}
-
-.headerTitle p {
-  color: #868686;
-  font-size: 14px;
-  font-weight: 400;
-  margin: 0px;
-  padding: 0px;
-}
-
-.topright {
-  margin-top: 100px;
 }
 
 .main {
@@ -79,7 +54,7 @@
 
 @media (max-width: 900px) {
   .container {
-    padding: 16px 16px;
+    padding: 0 16px 16px;
   }
 
   .topPanel {
@@ -143,9 +118,5 @@
       align-items: center;
       gap: 10px;
     }
-  }
-
-  .top {
-    display: none;
   }
 }
