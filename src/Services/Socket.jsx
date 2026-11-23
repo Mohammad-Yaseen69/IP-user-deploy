@@ -119,6 +119,11 @@ class SocketsService {
     });
   }
 
+  setHandlers({ onPrivateMessage, onNewNotification }) {
+    this.onPrivateMessage = onPrivateMessage;
+    this.onNewNotification = onNewNotification;
+  }
+
   disconnect() {
     this.socket.disconnect();
   }

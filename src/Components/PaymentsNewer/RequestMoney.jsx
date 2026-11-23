@@ -197,7 +197,7 @@ const RequestMoney = ({ setAction, setStep }) => {
     }
   };
 
-  const NoAccessWarning = () => (
+  const noAccessWarning = (
     <Modal
       isOpen={isPreferencesCheck && (preferences.live || preferences.origin)}
       backdrop="static"
@@ -271,7 +271,7 @@ const RequestMoney = ({ setAction, setStep }) => {
 
   return (
     <>
-      <NoAccessWarning />
+      {noAccessWarning}
       {showStatus ? (
         <div style={{ display: "flex", height: "100%", width: "100%" }}>
           <SendActionCard

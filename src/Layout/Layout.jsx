@@ -312,15 +312,17 @@ const Layout = ({ children, classNames, ...rest }) => {
       socketsService.connectToServer(userId, false, null, null, () =>
         setShowAnotherLoginModal(true),
       );
-      socketsService.onPrivateMessage = () => {
-        queryClient.invalidateQueries({ queryKey: ["receivedQuotations"] });
-        queryClient.invalidateQueries({ queryKey: ["sentQuotations"] });
-      };
-      socketsService.onNewNotification = () => {
-        queryClient.invalidateQueries({ queryKey: ["notifications"] });
-        queryClient.invalidateQueries({ queryKey: ["userWallets"] });
-        queryClient.invalidateQueries({ queryKey: ["userTransactions"] });
-      };
+      socketsService.setHandlers({
+        onPrivateMessage: () => {
+          queryClient.invalidateQueries({ queryKey: ["receivedQuotations"] });
+          queryClient.invalidateQueries({ queryKey: ["sentQuotations"] });
+        },
+        onNewNotification: () => {
+          queryClient.invalidateQueries({ queryKey: ["notifications"] });
+          queryClient.invalidateQueries({ queryKey: ["userWallets"] });
+          queryClient.invalidateQueries({ queryKey: ["userTransactions"] });
+        },
+      });
       return () => {
         socketsService.disconnect();
       };
@@ -401,10 +403,7 @@ const Layout = ({ children, classNames, ...rest }) => {
             <AddBeneficiaryAddressModal
               isOpen={beneficiaryWithoutAddresses.length > 0}
               toggle={getUserBeneficiaries}
-              close={() => {
-                beneficiaryWithoutAddresses.length = 0;
-                setDismissedBeneficiaries(beneficiaryWithoutAddresses);
-              }}
+              close={() => setDismissedBeneficiaries(beneficiaryWithoutAddresses)}
               beneficiaries={beneficiaryWithoutAddresses}
             />
           </Suspense>

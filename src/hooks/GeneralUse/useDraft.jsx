@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 
@@ -35,7 +35,10 @@ const useDraft = (scope, { enabled = true, debounceMs = DEFAULT_DEBOUNCE_MS } = 
   const isLoadedRef = useRef(false);
   const slotQueuesRef = useRef({});
   const enabledRef = useRef(enabled);
-  enabledRef.current = enabled;
+
+  useLayoutEffect(() => {
+    enabledRef.current = enabled;
+  }, [enabled]);
 
   const load = useCallback(async () => {
     try {

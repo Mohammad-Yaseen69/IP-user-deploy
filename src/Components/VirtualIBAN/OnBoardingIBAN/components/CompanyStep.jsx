@@ -140,7 +140,7 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
     { num: "06", label: t("Review"), active: false, key: "review" },
   ];
 
-  const DateField = ({ isMobile }) => (
+  const renderDateField = (isMobile) => (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
         value={form?.dateOfIncorporation ? dayjs(form?.dateOfIncorporation) : null}
@@ -348,7 +348,7 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
 
               <div className={`${styles.inputGroup} ${styles.dateIncoField1}`}>
                 <label className={styles.inputLabel}>{t("DATE OF INCORPORATION")}</label>
-                <DateField />
+                {renderDateField()}
               </div>
 
               <div className={styles.twoInputRow}>
@@ -368,7 +368,7 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
 
                 <div className={styles.inputGroup}>
                   <label className={styles.inputLabel}>{t("Incorporated")}</label>
-                  <DateField isMobile={true} />
+                  {renderDateField(true)}
                 </div>
               </div>
               <div className={styles.inputGroup}>

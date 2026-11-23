@@ -2,12 +2,9 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Badge, Row, Col } f
 import { useTranslation } from "react-i18next";
 import styles from "../styles/ViewDetailModal.module.css";
 
-const ViewDetailModal = ({ isOpen, toggle, item, isRole }) => {
+const DetailItem = ({ label, value }) => {
   const { t } = useTranslation();
-
-  if (!item) return null;
-
-  const DetailItem = ({ label, value }) => (
+  return (
     <Col xs={12} md={6} className="mb-3">
       <div className={styles.detailCard}>
         <span className={styles.detailLabel}>{t(label)}</span>
@@ -15,6 +12,12 @@ const ViewDetailModal = ({ isOpen, toggle, item, isRole }) => {
       </div>
     </Col>
   );
+};
+
+const ViewDetailModal = ({ isOpen, toggle, item, isRole }) => {
+  const { t } = useTranslation();
+
+  if (!item) return null;
 
   return (
     <Modal isOpen={isOpen} toggle={toggle} centered size="lg">

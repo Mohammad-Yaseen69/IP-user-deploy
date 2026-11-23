@@ -35,6 +35,8 @@ export default defineConfig([
       "react/react-in-jsx-scope": "off", // same issue
       "no-unused-vars": ["warn"], // unused vars warning
       "react-hooks/exhaustive-deps": "off",
+      // Style rule, not a React Compiler bail-out; 431 existing hits would bury the ones that matter.
+      "react-hooks/set-state-in-effect": "off",
       "no-dupe-keys": "off",
       "react/prop-types": "off",
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],

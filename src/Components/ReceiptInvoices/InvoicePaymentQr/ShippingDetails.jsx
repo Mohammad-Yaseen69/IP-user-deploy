@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import CountryDropDown from "../../AddBeneficiary/CountryDropDown";
 import CitiesDropDown from "../../CitiesDropDown";
 import iso2 from "../../AddFunds/WalletFund/countries_iso2.json";
@@ -14,9 +13,7 @@ const getStates = async (iso2) => {
 
 const ShippingDetails = ({ data, dataHandler }) => {
   const { t } = useTranslation();
-  const iso2Value = useMemo(() => {
-    return iso2[data.shippingDetails?.country?.iso?.toUpperCase()];
-  }, [iso2, data.shippingDetails?.country?.iso?.toUpperCase()]);
+  const iso2Value = iso2?.[data.shippingDetails?.country?.iso?.toUpperCase()];
 
   const { data: stateData } = useQuery({
     queryKey: ["GetStates", iso2Value],

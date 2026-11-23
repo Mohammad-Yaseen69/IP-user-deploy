@@ -93,7 +93,9 @@ const StepTwo = ({ data, dataHandler }) => {
 
   const draftBeneficiary = data.beneficiary?.isNew ? data.beneficiary : null;
 
-  const bens = useMemo(() => {
+  const bensResult = useMemo(() => {
+    let emptyMessage = null;
+    let noBankMatch = false;
     let fil = beneficiaries.filter((item) =>
       item.account_type.some((item) =>
         item.toLowerCase().includes(data.payoutChannel?.value?.toLowerCase()),
@@ -114,22 +116,18 @@ const StepTwo = ({ data, dataHandler }) => {
         }
         return false;
       });
-      setMessage(
-        t(`No beneficiary found from {{country}} having {{value}} details.`, {
-          value: data.payoutChannel?.value,
-          country: data.country?.name,
-        }),
-      );
+      emptyMessage = t(`No beneficiary found from {{country}} having {{value}} details.`, {
+        value: data.payoutChannel?.value,
+        country: data.country?.name,
+      });
     }
 
     if (data.payoutChannel?.value === "mobile") {
       fil = fil.filter((item) => +item?.mobile_wallet?.[0]?.money_provider === +data.payer?.id);
-      setMessage(
-        t(`No beneficiary found from {{country}} having {{value}} details.`, {
-          value: data.payer?.name,
-          country: data.country?.name,
-        }),
-      );
+      emptyMessage = t(`No beneficiary found from {{country}} having {{value}} details.`, {
+        value: data.payer?.name,
+        country: data.country?.name,
+      });
     }
 
     if (data.payoutChannel?.value === "bank") {
@@ -157,20 +155,24 @@ const StepTwo = ({ data, dataHandler }) => {
         60,
       );
 
-      if (fil.length === 0) setShowOthers(true);
-      setMessage(
-        t(`No beneficiary found from {{country}} having {{value}} details.`, {
-          value: data.payer?.name,
-          country: data.country?.name,
-        }),
-      );
+      if (fil.length === 0) noBankMatch = true;
+      emptyMessage = t(`No beneficiary found from {{country}} having {{value}} details.`, {
+        value: data.payer?.name,
+        country: data.country?.name,
+      });
     }
 
     const type = data.transactionType === "C" ? "individual" : "business";
     fil = fil.filter((ben) => ben.beneficiary_type === type);
 
-    return fil;
+    return { list: fil, emptyMessage, noBankMatch };
   }, [beneficiaries, i18next.language]);
+  const bens = bensResult.list;
+
+  useEffect(() => {
+    if (bensResult.noBankMatch) setShowOthers(true);
+    if (bensResult.emptyMessage !== null) setMessage(bensResult.emptyMessage);
+  }, [bensResult]);
 
   const bankBens = useMemo(() => {
     let fil = beneficiaries.filter((item) =>

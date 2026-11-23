@@ -168,7 +168,7 @@ const RequestMoneyMobile = ({ step, setStep, setCurrentFlow, setAction }) => {
     }
   };
 
-  const NoAccessWarning = () => (
+  const noAccessWarning = (
     <Modal
       isOpen={isPreferencesCheck && (preferences.live || preferences.origin)}
       backdrop="static"
@@ -247,7 +247,7 @@ const RequestMoneyMobile = ({ step, setStep, setCurrentFlow, setAction }) => {
 
   return (
     <div className={styles.container}>
-      <NoAccessWarning />
+      {noAccessWarning}
       <div className={styles.top}>
         <button
           className={styles.back_btn}
