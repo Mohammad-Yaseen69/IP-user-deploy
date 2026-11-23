@@ -6,7 +6,7 @@ import CheckContext from "../Helper/Customizer";
 import AnimationThemeContext from "../Helper/AnimationTheme";
 import ConfigDB from "../Config/ThemeConfig";
 import Loader from "./Loader";
-import SidebarNew from "./SidebarNew/SidebarNew";
+import Sidebar from "./Sidebar";
 import ProfileCompletionModal from "../Components/ProfileCompletionModal";
 import ForcedAuthenticatorModal from "../Components/ForcedAuthenticatorModal";
 import { UserContext } from "../Context/UserContext";
@@ -30,7 +30,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import AdditionalDocumentModal from "./AdditionalDocumentModal";
 import ForcedAdditionalFilesModal from "../Components/ForcedAdditionalFilesModal";
 import { getPendingAdditionalFiles, MASTERCARD_PURPOSE } from "../utils/Functions/additionalFiles";
-import NewMenu from "../Common/NewMenu";
 import AssistantWidget from "../Components/AssistantWidget";
 import { useVirtualIbans } from "../hooks/useVirtualIban";
 import PushConsentModal from "../Components/PushConsentModal";
@@ -474,8 +473,7 @@ const Layout = ({ children, classNames, ...rest }) => {
               {/* <Header /> */}
               <div className="page-body-wrapper">
                 {/* <SideBar /> */}
-                <NewMenu />
-                <SidebarNew setShowModal={setShowModal} showModal={showModal} />
+                <Sidebar setShowModal={setShowModal} showModal={showModal} />
                 <div
                   className="page-body"
                   style={{ marginTop: 0, paddingTop: 0, paddingInline: 0 }}
