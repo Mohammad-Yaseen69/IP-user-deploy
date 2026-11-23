@@ -701,73 +701,71 @@ const AddBeneficiaryFlowV2 = ({
 
   return (
     <Modal open={open} onClose={handleClose} aria-labelledby="add-beneficiary-v2">
-      <>
-        <div className={styles.root}>
-          <div className={styles.modal}>
-            <div className={styles.header}>
-              <div className={styles.titleRow}>
-                <div className={styles.titleText}>
-                  <h2 className={styles.title} id="add-beneficiary-v2">
-                    {MODE_TITLES[mode] || MODE_TITLES.create}
-                  </h2>
-                  <p className={styles.subtitle}>{subtitle()}</p>
-                </div>
-                <button type="button" className={styles.closeBtn} onClick={handleClose}>
-                  <X size={16} />
-                </button>
+      <div className={styles.root}>
+        <div className={styles.modal}>
+          <div className={styles.header}>
+            <div className={styles.titleRow}>
+              <div className={styles.titleText}>
+                <h2 className={styles.title} id="add-beneficiary-v2">
+                  {MODE_TITLES[mode] || MODE_TITLES.create}
+                </h2>
+                <p className={styles.subtitle}>{subtitle()}</p>
               </div>
+              <button type="button" className={styles.closeBtn} onClick={handleClose}>
+                <X size={16} />
+              </button>
+            </div>
 
-              {stages.length > 1 && (
-                <Stepper
-                  steps={stages.map((item) => STAGE_LABELS[item])}
-                  current={stages.indexOf(stage) + 1}
-                />
+            {stages.length > 1 && (
+              <Stepper
+                steps={stages.map((item) => STAGE_LABELS[item])}
+                current={stages.indexOf(stage) + 1}
+              />
+            )}
+          </div>
+
+          <div className={styles.body} ref={bodyRef}>
+            {renderBody()}
+          </div>
+
+          <div className={styles.footer}>
+            <div className={styles.footerSide}>
+              {stage === stages[0] ? (
+                <button
+                  type="button"
+                  className={`${styles.btn} ${styles.btnGhost}`}
+                  onClick={handleClose}
+                >
+                  {isViewMode ? "Close" : "Cancel"}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className={`${styles.btn} ${styles.btnGhost}`}
+                  onClick={goBack}
+                  disabled={saving}
+                >
+                  <ArrowLeft size={20} />
+                  Back
+                </button>
               )}
             </div>
 
-            <div className={styles.body} ref={bodyRef}>
-              {renderBody()}
-            </div>
-
-            <div className={styles.footer}>
-              <div className={styles.footerSide}>
-                {stage === stages[0] ? (
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnGhost}`}
-                    onClick={handleClose}
-                  >
-                    {isViewMode ? "Close" : "Cancel"}
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnGhost}`}
-                    onClick={goBack}
-                    disabled={saving}
-                  >
-                    <ArrowLeft size={20} />
-                    Back
-                  </button>
-                )}
-              </div>
-
-              <div className={styles.footerSide}>
-                {!isViewMode && (
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnPrimary}`}
-                    onClick={goNext}
-                    disabled={primaryDisabled()}
-                  >
-                    {primaryLabel()}
-                  </button>
-                )}
-              </div>
+            <div className={styles.footerSide}>
+              {!isViewMode && (
+                <button
+                  type="button"
+                  className={`${styles.btn} ${styles.btnPrimary}`}
+                  onClick={goNext}
+                  disabled={primaryDisabled()}
+                >
+                  {primaryLabel()}
+                </button>
+              )}
             </div>
           </div>
         </div>
-      </>
+      </div>
     </Modal>
   );
 };

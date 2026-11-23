@@ -10,6 +10,7 @@ import { getLimits } from "./getLimits";
 import { UserContext } from "../../Context/UserContext";
 import QrGenerate from "../Settings/QrGenerate";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
+// import { useLocation } from "react-router"
 import CurConversion from "../HomeNewUpdated/CurConversion";
 import MoneyInOut from "../../Common/WalletUI/MoneyInOut";
 import { useMoneyInOut } from "../../Common/WalletUI/useMoneyInOut";

@@ -54,7 +54,18 @@ if (!import.meta.env.DEV) {
 }
 
 const container = document.getElementById("root");
-const root = createRoot(container);
+const reportToWindow = (error) => {
+  if (typeof window.reportError === "function") {
+    window.reportError(error);
+  } else {
+    console.error(error);
+  }
+};
+
+const root = createRoot(container, {
+  onUncaughtError: Sentry.reactErrorHandler(reportToWindow),
+  onRecoverableError: Sentry.reactErrorHandler(reportToWindow),
+});
 
 const preloadAuthPage = () => {
   const isAuthPage = /^\/(login|signup)(\/|$)/i.test(window.location.pathname);
