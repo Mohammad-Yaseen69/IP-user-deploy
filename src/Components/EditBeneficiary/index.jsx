@@ -37,6 +37,7 @@ import useBenEditFunc from "../../hooks/BeneficiaryHooks/useBenEditFunc";
 import NeemaBenExtrasFields from "../AddBeneficiary/NeemaBenExtrasFields";
 import citiesData from "../CitiesDropDown/CitiesData.json";
 import { getMaxDate } from "../../utils/Functions/validations";
+import { useBeneficiaryDetails } from "../../hooks/BeneficiaryHooks/useBeneficiaryDetails";
 
 const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
   const { t } = useTranslation();
@@ -227,14 +228,8 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
     }
   };
 
-  const { authHeader, beneficiaries, userDetails, allowedCountries, getUserBeneficiaries } =
-    useContext(UserContext);
-
-  useEffect(() => {
-    if (userDetails) {
-      getUserBeneficiaries();
-    }
-  }, [userDetails]);
+  const { authHeader, userDetails, allowedCountries } = useContext(UserContext);
+  const { data: beneficiary } = useBeneficiaryDetails(user_id);
 
   const inputChangeHandler = (e) => {
     setClicked(false);
@@ -505,9 +500,8 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
   };
 
   useEffect(() => {
-    const filtered = beneficiaries.filter((ben) => ben._id === user_id)[0];
-    setUser(filtered);
-  }, [beneficiaries, user_id]);
+    setUser(beneficiary);
+  }, [beneficiary]);
 
   useEffect(() => {
     if (user && initializedUserId.current !== user._id) {

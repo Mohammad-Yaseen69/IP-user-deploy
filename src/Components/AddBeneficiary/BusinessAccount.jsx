@@ -44,6 +44,7 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import SuccessModal from "./SuccessModal";
 import NestedDropdown from "../NestedDropdown";
 import { handleNameInput, preventEdgeSpaces, preventEmailSpaces } from "../../hooks/useTrimInput";
+import { useBeneficiaryDetails } from "../../hooks/BeneficiaryHooks/useBeneficiaryDetails";
 
 const BusinessAccount = ({
   isInternational,
@@ -174,7 +175,8 @@ const BusinessAccount = ({
   const [user, setUser] = useState(null);
   const [clicked, setClicked] = useState(false);
   const [missingFields, setMissingFields] = useState([]);
-  const { allowedCountries, authHeader, beneficiaries, userDetails } = useContext(UserContext);
+  const { allowedCountries, authHeader, userDetails } = useContext(UserContext);
+  const { data: beneficiary } = useBeneficiaryDetails(user_id, { enabled: !isAddBeneficiary });
   const {
     getBankDetails,
     bankCountry,
@@ -219,10 +221,9 @@ const BusinessAccount = ({
 
   useEffect(() => {
     if (!isAddBeneficiary) {
-      const filtered = beneficiaries.filter((ben) => ben._id === user_id)[0];
-      setUser(filtered);
+      setUser(beneficiary);
     }
-  }, [beneficiaries, isAddBeneficiary, user_id]);
+  }, [beneficiary, isAddBeneficiary]);
 
   useEffect(() => {
     setFormData((prev) => ({
