@@ -10,10 +10,7 @@ import BackBtn from "./SbNBackBtn";
 import SidebarIcon from "./SbNIcon";
 import { MENU } from "./SbNMenu";
 import SidebarSubMenu from "./SbNSubMenu";
-import { filterNavigationMenu } from "./filterNavigationMenu";
 import "./sm.css";
-import styles from "./SidebarNew.module.css";
-import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 const SidebarNew = ({ setShowModal, showModal, newMenuExpanded = false }) => {
   const { t } = useTranslation();
@@ -71,7 +68,6 @@ const SidebarNew = ({ setShowModal, showModal, newMenuExpanded = false }) => {
   };
 
   const { userDetails, profileCompletedPercentage } = useContext(UserContext);
-  const checkPermission = usePermission();
 
   const location = useLocation();
 
@@ -120,7 +116,7 @@ const SidebarNew = ({ setShowModal, showModal, newMenuExpanded = false }) => {
 
   return (
     <div
-      className={`sidebar-wrapper ${styles.sidebar} ${togglSidebar ? "close_icon" : ""}`}
+      className={`sidebar-wrapper ${togglSidebar ? "close_icon" : ""} `}
       id="sidebar-wrapper"
       style={{
         background: "white",
