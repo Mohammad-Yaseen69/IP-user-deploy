@@ -408,7 +408,7 @@ const ALERT_VARIANTS = {
   },
 };
 
-export const Alert = ({ variant = "info", title, icon, children }) => {
+export const Alert = ({ variant = "info", title, icon, children, actionLabel, onAction }) => {
   const tone = ALERT_VARIANTS[variant] || ALERT_VARIANTS.info;
 
   return (
@@ -418,6 +418,11 @@ export const Alert = ({ variant = "info", title, icon, children }) => {
         {title && <p className={styles.alertTitle}>{title}</p>}
         {children && <p className={styles.alertBody}>{children}</p>}
       </div>
+      {onAction && (
+        <button type="button" className={styles.btnSmall} onClick={onAction}>
+          {actionLabel}
+        </button>
+      )}
     </div>
   );
 };

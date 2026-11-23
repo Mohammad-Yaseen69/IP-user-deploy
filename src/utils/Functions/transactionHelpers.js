@@ -48,3 +48,6 @@ export const renderAccountName = (item, internationalReceiver) => {
   const last = item?.sender?.user?.last_name ?? item?.mastercard?.account?.last_name ?? "";
   return [first, last].filter(Boolean).join(" ");
 };
+
+export const truncateHash = (hash = "") =>
+  hash.length > 40 ? `${hash.slice(0, 25)}.....${hash.slice(-30)}` : hash;

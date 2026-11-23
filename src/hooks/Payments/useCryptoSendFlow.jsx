@@ -6,9 +6,20 @@ import { UserContext } from "../../Context/UserContext";
 import { useDebounce } from "../useDebounce/useDebounce";
 import useSendOtp from "../GeneralUse/useSendOtp";
 import { useIdempotency } from "./useIdempotency";
-import { useCryptoPayout, useCryptoPayoutFee, useValidateCryptoAddress } from "./useCryptoPayout";
+import {
+  toPayoutResult,
+  useCryptoPayout,
+  useCryptoPayoutFee,
+  useValidateCryptoAddress,
+} from "./useCryptoPayout";
 import { handlePaymentApiError } from "../../utils/Functions/handlePaymentApiError";
-import { getAmountError, getAmountNumber } from "../../stateMachines/cryptoPayout";
+import {
+  buildPayoutConfirmPayload,
+  DEFAULT_PAYOUT_PURPOSE,
+  getAmountError,
+  getAmountNumber,
+  isVerbatimPayoutError,
+} from "../../stateMachines/cryptoPayout";
 import {
   filterProtocolsForAddress,
   getBeneficiaryCryptoChannels,
@@ -84,6 +95,8 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
   const [otpMethods, setOtpMethods] = useState(null);
   const [payoutResult, setPayoutResult] = useState(null);
   const [savedBeneficiaryId, setSavedBeneficiaryId] = useState("");
+  const [purpose, setPurpose] = useState(DEFAULT_PAYOUT_PURPOSE);
+  const [documentReference, setDocumentReference] = useState("");
 
   const feeMutation = useCryptoPayoutFee();
   const payoutMutation = useCryptoPayout();
@@ -118,6 +131,8 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
   }, [selectedBeneficiary, cryptoCurrency]);
 
   const address = getChannelAddress(selectedChannel);
+
+  const payoutAsset = getChannelAsset(selectedChannel) || cryptoCurrency;
 
   const savedProtocol = useMemo(() => getChannelProtocol(selectedChannel), [selectedChannel]);
 
@@ -252,6 +267,8 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
     setOtpMethods(null);
     setPayoutResult(null);
     setSavedBeneficiaryId("");
+    setPurpose(DEFAULT_PAYOUT_PURPOSE);
+    setDocumentReference("");
     resetIdempotencyKey();
   };
 
@@ -269,7 +286,7 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
     wallet_id: walletId,
     beneficiary_id: getBeneficiaryId(selectedBeneficiary),
     amount: getAmountNumber(amount),
-    crypto_currency: cryptoCurrency,
+    crypto_currency: payoutAsset,
     protocol,
     address,
   });
@@ -302,6 +319,7 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
       error,
       navigate,
       setProfileLockTime,
+      keepVerbatim: isVerbatimPayoutError,
       setError: (message) => {
         if (isQuoteError(message)) {
           setIsQuoteExpired(true);
@@ -344,13 +362,20 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
   const confirmPayout = async (setVerified, type, otp, setOtpError) => {
     try {
       const res = await payoutMutation.mutateAsync({
-        token: otpToken,
-        otp,
-        type: type || authType,
+        ...buildPayoutConfirmPayload({
+          token: otpToken,
+          otp,
+          type: type || authType,
+          cryptoCurrency: payoutAsset,
+          protocol,
+          address,
+          purpose,
+          documentReference,
+        }),
         idempotencyKey: getKey(),
       });
 
-      setPayoutResult(res?.data || res || null);
+      setPayoutResult(toPayoutResult(res));
       setVerified(true);
     } catch (error) {
       resetIdempotencyKey();
@@ -358,6 +383,7 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
         error,
         navigate,
         setProfileLockTime,
+        keepVerbatim: isVerbatimPayoutError,
         setError: (message) => {
           if (isQuoteError(message)) {
             setIsQuoteExpired(true);
@@ -434,6 +460,10 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
     setAuthType,
     otpMethods,
     payoutResult,
+    purpose,
+    setPurpose,
+    documentReference,
+    setDocumentReference,
     canGetQuote,
     canConfirm,
     getQuote,

@@ -19,6 +19,7 @@ const StepDetails = ({
   setChannelField,
   errors = {},
   providerError,
+  onRetry,
   recipientName,
   onChangeMethod,
   channelCheck = null,
@@ -131,7 +132,12 @@ const StepDetails = ({
       )}
 
       {providerError && (
-        <Alert variant="error" title={providerError.title}>
+        <Alert
+          variant="error"
+          title={providerError.title}
+          actionLabel="Try again"
+          onAction={providerError.canRetry ? onRetry : undefined}
+        >
           {providerError.body}
         </Alert>
       )}

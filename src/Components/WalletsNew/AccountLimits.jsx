@@ -84,14 +84,19 @@ const AccountLimits = ({ currentWallet, data, loading, error }) => {
             <strong>{data?.balance_limits?.remaining}</strong>
           </div>
         </div>
-        <div className={styles.limits_card}>
-          <span>{t("Allowed Minimum Topup Amount")}</span>
-          <h4>{data?.min_topup_amount}</h4>
-        </div>
-        <div className={styles.limits_card}>
-          <span>{t("Allowed Maximum Topup Amount")}</span>
-          <h4>{data?.max_topup_amount}</h4>
-        </div>
+        {/* Crypto limits have no top-up caps to show. */}
+        {data?.min_topup_amount && (
+          <>
+            <div className={styles.limits_card}>
+              <span>{t("Allowed Minimum Topup Amount")}</span>
+              <h4>{data?.min_topup_amount}</h4>
+            </div>
+            <div className={styles.limits_card}>
+              <span>{t("Allowed Maximum Topup Amount")}</span>
+              <h4>{data?.max_topup_amount}</h4>
+            </div>
+          </>
+        )}
         <div className={styles.limits_card}>
           <span>{t("Allowed Maximum Amount Per Transaction")}</span>
           <h4>{data?.transaction_amount_limit}</h4>
@@ -105,6 +110,7 @@ const AccountLimits = ({ currentWallet, data, loading, error }) => {
         ) : (
           <RightItem
             setCurrent={setCurrent}
+            count={data?.others?.length}
             item={data?.others?.[current]}
             key={data?.others?.[current]?.title}
           />
@@ -116,7 +122,7 @@ const AccountLimits = ({ currentWallet, data, loading, error }) => {
 
 export default AccountLimits;
 
-const RightItem = ({ item, setCurrent }) => {
+const RightItem = ({ item, setCurrent, count = 3 }) => {
   const { t } = useTranslation();
 
   return (
@@ -136,13 +142,13 @@ const RightItem = ({ item, setCurrent }) => {
           <div style={{ display: "flex", alignItems: "center", gap: "2rem" }}>
             <div
               className={`${styles.chev} ${styles.chev_left}`}
-              onClick={() => setCurrent((prev) => (prev === 0 ? 2 : prev - 1))}
+              onClick={() => setCurrent((prev) => (prev === 0 ? count - 1 : prev - 1))}
             >
               <ChevronLeft size={16} color="#5926f0" />
             </div>
             <div
               className={`${styles.chev} ${styles.chev_right}`}
-              onClick={() => setCurrent((prev) => (prev === 2 ? 0 : prev + 1))}
+              onClick={() => setCurrent((prev) => (prev === count - 1 ? 0 : prev + 1))}
             >
               <ChevronRight size={16} color="#5926f0" />
             </div>

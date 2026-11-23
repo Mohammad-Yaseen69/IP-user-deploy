@@ -36,6 +36,7 @@ import { getExtractedPhone, serviceFieldInfoValidate } from "../../utils/Functio
 import useBenEditFunc from "../../hooks/BeneficiaryHooks/useBenEditFunc";
 import NeemaBenExtrasFields from "../AddBeneficiary/NeemaBenExtrasFields";
 import citiesData from "../CitiesDropDown/CitiesData.json";
+import { getMaxDate } from "../../utils/Functions/validations";
 
 const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
   const { t } = useTranslation();
@@ -1142,6 +1143,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                               }
                               placeholder="DD/MM/YYYY"
                               disabled={!isEditMode}
+                              maxDate={getMaxDate()}
                               InputProps={{
                                 disableUnderline: true,
                                 style: {
