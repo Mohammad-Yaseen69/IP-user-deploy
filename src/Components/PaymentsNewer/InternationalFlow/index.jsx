@@ -48,6 +48,13 @@ import SelectSender from "./SelectSender";
 import { getBeneficiaryDisplayName } from "./beneficiaryHelpers";
 import { usePermission } from "../../../hooks/GeneralUse/usePermission";
 import {
+  isOnafriq,
+  onafriqConfirmError,
+  onafriqQuoteError,
+  onafriqServiceId,
+  onafriqServiceName,
+} from "./onafriq";
+import {
   appendThunesDocuments,
   getThunesDocumentEntries,
   hasThunesRequiredDocuments,
@@ -60,13 +67,6 @@ import useEffectivePermission, {
   PERMISSIONS,
 } from "../../../hooks/GeneralUse/useEffectivePermission";
 import { apiErrorMessage } from "./apiErrorMessage";
-import {
-  isOnafriq,
-  onafriqConfirmError,
-  onafriqQuoteError,
-  onafriqServiceId,
-  onafriqServiceName,
-} from "./onafriq";
 
 const leftSideContent = [
   "Select Transaction Type",
@@ -1079,51 +1079,32 @@ const InternationFlow = ({
     }
   };
 
-  const getTransactionData = () => ({
-    additional_information: internationalData.comment,
-    purpose_of_remittance: internationalData.reason,
-    user_id:
-      userDetails?.account_type === "business" ? userDetails?.company?._id : userDetails?.user?._id,
-    ...(internationalData.beneficiary?.isNew
-      ? { beneficiaryDetails: internationalData.beneficiary.draftDetails }
-      : { beneficiary_id: internationalData.beneficiary?._id }),
-    ...(internationalData.senderType === "third-party" && internationalData.selectedSender?._id
-      ? {
-          sender_id: internationalData.selectedSender._id,
-        }
-      : {}),
-    ...(internationalData?.recipient_iban
-      ? {
-          recipient_iban: internationalData.recipient_iban,
-          saveForFutureUse: true,
-        }
-      : {}),
-    ...(internationalData?.recipient_bank_id
-      ? {
-          savedBankId: internationalData.recipient_bank_id,
-          isSaveBank: true,
-        }
-      : {}),
-    service: { id: internationalData.payoutChannel?.id },
-    transaction_type: internationalData.flow,
-    wallet_id: internationalData.wallet?._id ?? internationalData.currency_wallet?._id,
-    token: internationalData.quotation_details?.token,
-    vendor: internationalData.payoutChannel?.vendor,
-  });
-
   const createTransaction = async (codeType = "", isResend = true) => {
     setLoading(true);
     try {
       let payload = {};
       const isNewBeneficiary = !!internationalData.beneficiary?.isNew;
-      const transaction_data = getTransactionData();
-
-      if (isOnafriq(internationalData.payoutChannel?.vendor)) {
-        // must match quote
-        transaction_data.wallet_id =
-          internationalData.quoted_wallet_id || transaction_data.wallet_id;
-        transaction_data.payment_type = internationalData.payment_type?.value;
-      }
+      const transaction_data = {
+        additional_information: internationalData.comment,
+        purpose_of_remittance: internationalData.reason,
+        user_id:
+          userDetails?.account_type === "business"
+            ? userDetails?.company?._id
+            : userDetails?.user?._id,
+        ...(isNewBeneficiary
+          ? { beneficiaryDetails: internationalData.beneficiary.draftDetails }
+          : { beneficiary_id: internationalData.beneficiary?._id }),
+        ...(internationalData.senderType === "third-party" && internationalData.selectedSender?._id
+          ? {
+              sender_id: internationalData.selectedSender._id,
+            }
+          : {}),
+        service: { id: internationalData.payoutChannel?.id },
+        transaction_type: internationalData.flow,
+        wallet_id: internationalData.wallet?._id ?? internationalData.currency_wallet?._id,
+        token: internationalData.quotation_details?.token,
+        vendor: internationalData.payoutChannel?.vendor,
+      };
 
       if (internationalData.payoutChannel?.vendor === "thunes") {
         if (isResend) {
@@ -1155,12 +1136,10 @@ const InternationFlow = ({
         const channel = internationalData.payoutChannel?.value?.toLowerCase();
 
         if (!isNewBeneficiary) {
-          if (channel?.includes("bank")) {
-            payload.data.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id;
-          } else if (!(isOnafriq(internationalData.payoutChannel?.vendor) && channel === "cash")) {
-            // voucher, no account
-            payload.data.mobile_wallet_id = internationalData.beneficiary?.mobile_wallet?.[0]?._id;
-          }
+          internationalData.payoutChannel?.value?.toLowerCase()?.includes("bank")
+            ? (payload.data.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id)
+            : (payload.data.mobile_wallet_id =
+                internationalData.beneficiary?.mobile_wallet?.[0]?._id);
         }
       }
       const enc = encryptData(payload);
