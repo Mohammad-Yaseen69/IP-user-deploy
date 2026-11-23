@@ -1,11 +1,12 @@
-import { useState } from "react";
-import cubaimg from "../../assets/images/logo/logo.webp";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import cubaimg from "../../assets/images/logo/logo.webp";
 import SidebarLogo from "./SbNLogo";
 import dot from "./files/closed_hamburger.png";
 
-const SidebarIconNew = () => {
-  const [sidebartoogle, setSidebartoogle] = useState(true);
+const SidebarIconNew = ({ onToggle }) => {
+  const { t } = useTranslation();
+
   return (
     <>
       <div
@@ -16,11 +17,10 @@ const SidebarIconNew = () => {
           zIndex: 10000,
         }}
       >
-        <SidebarLogo sidebartoogle={sidebartoogle} setSidebartoogle={setSidebartoogle} />
+        <SidebarLogo onToggle={onToggle} />
       </div>
       <div className="logo-icon-wrapper">
-        <Link
-          to={"/dashboard/default"}
+        <div
           style={{
             display: "flex",
             flexDirection: "column",
@@ -28,16 +28,26 @@ const SidebarIconNew = () => {
             alignItems: "center",
           }}
         >
-          <img src={dot} alt="" style={{ height: "17px", width: "20px" }} />
-          <div className="icon-box-sidebar" style={{ background: "transparent" }}>
+          <button
+            type="button"
+            aria-label={t("Open menu")}
+            onClick={onToggle}
+            style={{ padding: 0, border: "none", background: "none", cursor: "pointer" }}
+          >
+            <img src={dot} alt="" style={{ height: "17px", width: "20px" }} />
+          </button>
+          <Link
+            to="/dashboard/default"
+            className="icon-box-sidebar"
+            style={{ background: "transparent" }}
+          >
             <img
               src={cubaimg}
               alt=""
               style={{ width: "30px", height: "30px", objectFit: "contain" }}
             />
-            a
-          </div>
-        </Link>
+          </Link>
+        </div>
       </div>
     </>
   );

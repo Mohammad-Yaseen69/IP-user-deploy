@@ -4,7 +4,6 @@ import { ActiveNavLinkUrl } from "../../Helper/ActioveNavUrl";
 import { Link, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import CustomizerContext from "../../Helper/Customizer";
 import { UserContext } from "../../Context/UserContext";
 import { useQuery } from "@tanstack/react-query";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
@@ -21,9 +20,8 @@ const SidebarSubMenu = ({
   showModal,
   setShowModal,
   profileCompletedPercentage,
-  inheritSize,
+  collapsed,
 }) => {
-  const { togglSidebar } = useContext(CustomizerContext);
   const { logout, userDetails } = useContext(UserContext);
   const { pathname, search } = useLocation();
   const navigate = useNavigate();
@@ -100,7 +98,7 @@ const SidebarSubMenu = ({
     // <ul className={`${className ? className : ""}`} onClick={verifyToken}>
     <ul
       style={{
-        width: togglSidebar ? "100%" : "auto",
+        width: collapsed ? "100%" : "auto",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -120,21 +118,20 @@ const SidebarSubMenu = ({
                   WebkitTextFillColor: /*togglSidebar ? "white" :*/ "transparent",
                   WebkitBackgroundClip: "text",
                   width: "100%",
-                  padding: !inheritSize && togglSidebar ? "0rem" : "1rem 1.5rem .5rem 1.5rem",
+                  padding: collapsed ? "0rem" : "1rem 1.5rem .5rem 1.5rem",
                   fontWeight: 600,
                   textTransform: "uppercase",
                   letterSpacing: "2px",
-                  fontSize: !inheritSize && togglSidebar ? ".5rem" : ".7rem",
-                  whiteSpace: !inheritSize && togglSidebar ? "normal" : "nowrap",
-                  marginBottom: inheritSize && togglSidebar ? ".1rem" : "0",
-                  marginRight: !inheritSize && togglSidebar ? "13px" : "0",
+                  fontSize: collapsed ? ".5rem" : ".7rem",
+                  whiteSpace: collapsed ? "normal" : "nowrap",
+                  marginRight: collapsed ? "13px" : "0",
                   // opacity: togglSidebar ? 0 : 1
                 }}
               >
                 {t(
-                  !togglSidebar || (togglSidebar && inheritSize)
-                    ? item.title
-                    : `${item?.title.slice(0, 4)}${item?.title.length > 4 ? "..." : ""}`,
+                  collapsed
+                    ? `${item?.title.slice(0, 4)}${item?.title.length > 4 ? "..." : ""}`
+                    : item.title,
                 )}
               </li>
             ) : checkPermission(item?.permission) ? (
@@ -201,6 +198,7 @@ const SidebarSubMenu = ({
                     isOpen={isOpen}
                     setIsOpen={setIsOpen}
                     level={level + 1}
+                    collapsed={collapsed}
                     className="sidebar-submenu "
                   />
                 )}
@@ -209,7 +207,7 @@ const SidebarSubMenu = ({
           </>
         );
       })}
-      {!togglSidebar && (
+      {!collapsed && (
         <div
           style={{
             marginTop: "2rem",

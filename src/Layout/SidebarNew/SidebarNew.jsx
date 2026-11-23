@@ -24,6 +24,12 @@ const SidebarNew = ({ setShowModal, showModal }) => {
   const [rightArrow, setRightArrow] = useState(false);
   const [width, setWidth] = useState(0);
   const [mobileView, setMobileView] = useState(window.innerWidth <= 670);
+  const [hovered, setHovered] = useState(false);
+  const collapsed = togglSidebar && !hovered;
+  const toggleMenu = () => {
+    setHovered(false);
+    setTogglSidebar(!togglSidebar);
+  };
   const sidebarRef = useRef(null);
   const handleResize = () => {
     setWidth(window.innerWidth - 500);
@@ -94,7 +100,6 @@ const SidebarNew = ({ setShowModal, showModal }) => {
 
   const location = useLocation();
 
-  const [inheritSize, setInheritSize] = useState(false);
   const filteredMenu = MENU?.filter((item) => {
     if (item.showOnly === "business") {
       return userDetails?.account_type === "business";
@@ -103,9 +108,11 @@ const SidebarNew = ({ setShowModal, showModal }) => {
   });
   return (
     <div
-      className={`sidebar-wrapper ${togglSidebar ? "close_icon" : ""} `}
+      className={`sidebar-wrapper ${collapsed ? "close_icon" : ""} `}
       id="sidebar-wrapper"
       ref={sidebarRef}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       style={{
         background: "white",
         margin: "1rem",
@@ -115,11 +122,9 @@ const SidebarNew = ({ setShowModal, showModal }) => {
         display:
           (location.pathname === "/create-pin" || location.pathname === "/update-pin") && "none",
       }}
-      onMouseEnter={() => setInheritSize(true)}
-      onMouseLeave={() => setInheritSize(false)}
     >
       <div>
-        <SidebarIcon /> {(!togglSidebar && userDetails?._id) || inheritSize ? "" : ""}
+        <SidebarIcon onToggle={toggleMenu} />
         <nav className="sidebar-main">
           <div
             className={`left-arrow ${leftArrow ? "d-none" : ""}`}
@@ -139,7 +144,7 @@ const SidebarNew = ({ setShowModal, showModal }) => {
             <ul className="sidebar-links" style={{ display: "block" }} id="simple-bar">
               <SimpleBar
                 style={{
-                  height: window.innerWidth > 1200 ? "300px" : !togglSidebar ? "300px" : "550px",
+                  height: window.innerWidth > 1200 ? "300px" : !collapsed ? "300px" : "550px",
                 }}
               >
                 <BackBtn />
@@ -148,7 +153,7 @@ const SidebarNew = ({ setShowModal, showModal }) => {
                     {filteredMenu.map((item, i) => (
                       <Fragment key={i}>
                         <li
-                          style={{ width: togglSidebar ? "100%" : "auto" }}
+                          style={{ width: collapsed ? "100%" : "auto" }}
                           className={item.className}
                         >
                           <SidebarSubMenu
@@ -161,7 +166,7 @@ const SidebarNew = ({ setShowModal, showModal }) => {
                             setShowModal={setShowModal}
                             profileCompletedPercentage={profileCompletedPercentage}
                             showModal={showModal}
-                            inheritSize={inheritSize}
+                            collapsed={collapsed}
                           />
                         </li>
                       </Fragment>

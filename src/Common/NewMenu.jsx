@@ -87,9 +87,10 @@ const NewMenu = () => {
     borderRadius: "12px",
     background: `url(${bgImg}), #000`,
     boxShadow: "0 4px 15.9px 0 rgba(89, 38, 240, 0.38)",
-    position: "fixed",
-    left: "8px",
+    position: "sticky",
     top: "18px",
+    flexShrink: 0,
+    margin: "18px 0 0 8px",
     zIndex: 10,
   };
 

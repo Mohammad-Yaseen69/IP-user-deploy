@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Grid } from "react-feather";
 import { Link } from "react-router-dom";
 import CustomizerContext from "../../Helper/Customizer";
 import cubaimg from "../../assets/images/logo/logo.svg";
@@ -9,8 +8,8 @@ import { Image } from "../../AbstractElements";
 import dot from "./files/closed_hamburger.png";
 import dot_a from "./files/opened_hamburger.png";
 
-const SidebarLogo = () => {
-  const { togglSidebar, setTogglSidebar } = useContext(CustomizerContext);
+const SidebarLogo = ({ onToggle }) => {
+  const { togglSidebar } = useContext(CustomizerContext);
   const [winWidth, setWinWidth] = useState(window?.innerWidth);
 
   const resizeHandler = () => setWinWidth(window?.innerWidth);
@@ -33,14 +32,7 @@ const SidebarLogo = () => {
         <img
           src={!togglSidebar ? dot_a : dot}
           alt=""
-          onClick={() => {
-            if (
-              window.location.pathname === "/" ||
-              window.location.pathname === "/dashboard/default"
-            )
-              return;
-            setTogglSidebar(!togglSidebar);
-          }}
+          onClick={onToggle}
           style={{
             height: winWidth > 1400 ? "17px" : "14px",
             width: winWidth > 1400 ? "20px" : "17px",
