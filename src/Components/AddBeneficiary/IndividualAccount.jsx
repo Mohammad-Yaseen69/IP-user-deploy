@@ -10,8 +10,7 @@ import NestedDropdown from "../NestedDropdown";
 import InstaPayLoader from "../Loader";
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 import PhoneInput from "../PhoneInput";
-import DateMomentUtils from "@date-io/moment";
-import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
+import DatePicker from "../../CommonElements/DatePicker";
 import useChannels from "../../hooks/BeneficiaryHooks/useChannels";
 import useBankDetails from "../../hooks/BeneficiaryHooks/useBankDetails";
 import useAddress from "../../hooks/BeneficiaryHooks/useAddress";
@@ -389,7 +388,7 @@ const IndividualAccount = ({
         </div>
       ) : (
         <>
-          <MuiPickersUtilsProvider utils={DateMomentUtils}>
+          <>
             <Form onSubmit={(e) => e.preventDefault()}>
               <CardBody>
                 <FormGroup onSubmit={(e) => e.preventDefault()} className="mb-3">
@@ -1168,7 +1167,7 @@ const IndividualAccount = ({
                 {/* <ConfirmationModal isOpen={showConfirmation} toggle={() => setShowConfirmation(!showConfirmation)} onConfirm={changeUserDetailsAsPerBankDetails} onCancel={onCancelHandler} /> */}
               </CardFooter>
             </Form>
-          </MuiPickersUtilsProvider>
+          </>
         </>
       )}
     </>

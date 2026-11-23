@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import InstaPayLoader from "../../Loader";
 
 const DefaultWithdrawal = ({ withdrawals, setCurrent, setStep, setCurrentWithdrawal }) => {

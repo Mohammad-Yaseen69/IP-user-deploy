@@ -2,7 +2,6 @@ import { Button, Card, CardBody } from "reactstrap";
 import { ChevronRight, HelpCircle } from "react-feather";
 import { useTranslation } from "react-i18next";
 import instalment from "./files/instalment.png";
-import { NumberInputValidator } from "../../Helper/NumberInput";
 
 const SplitPayment = (props) => {
   const { amount, currency, splitAmount, setSplitAmount, numOfSplits, setNumOfSplits, setSubStep } =

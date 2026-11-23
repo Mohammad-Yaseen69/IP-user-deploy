@@ -12,6 +12,8 @@ import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
 import useVendorBalance from "../../../hooks/Payments/useVendorBalance";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
+import { initiatePaytentlyPayment, usePaytently } from "../../../utils/Functions/paytently";
+import PaytentlyHostedModal from "../../AddFunds/PaytentlyHostedModal";
 import AddBeneficiaryAddressModal from "../../AddBeneficiaryAddressModal";
 import AddBeneficiaryRequiredFields from "../../AddBeneficiaryRequiredFields";
 import errors from "../../AddFunds/TrustPaymentErrors.json";
@@ -59,9 +61,12 @@ import {
   isThunesDocumentType,
 } from "./thunesDocuments";
 import { formatCurrency } from "../../../Helper/AmountFormat";
+import PlaidBankTransfer from "../../AddFunds/WalletFundsFlow/PlaidBankTransfer";
+import PlaidLinkHandler from "./PlaidLinkHandler";
 import useEffectivePermission, {
   PERMISSIONS,
 } from "../../../hooks/GeneralUse/useEffectivePermission";
+import { apiErrorMessage } from "./apiErrorMessage";
 
 const leftSideContent = [
   "Select Transaction Type",
@@ -71,46 +76,7 @@ const leftSideContent = [
   "Review transfer",
 ];
 
-const apiErrors = {
-  internal_server_error:
-    "We are unable to process your request at the moment please try again later.",
-  invalid_token:
-    "You took too long to initiate the payment and for security reasons we have terminated the process. Please start again",
-  token_expired:
-    "You took too long to initiate the payment and for security reasons we have terminated the process. Please start again",
-  invalid_card_details: "The card details you entered don't match your selected country.",
-  incorrect_card: "This card does not belong to your account. Please use a valid card.",
-  transaction_failed:
-    "The transaction couldn't be completed. Please try again or use a different method.",
-  feature_not_allowed:
-    "This feature is currently disabled for your account. Contact support for assistance.",
-  beneficiary_details_missing:
-    "It appears that some required beneficiary details are either missing or incorrect. Please review and update the beneficiary information, ensuring all fields are properly filled, and try again.",
-  insufficient_funds: "You don't have enough funds for this transaction.",
-  invoice_not_found_or_inactive:
-    "The invoice you're trying to pay is either inactive or the invoice id is not correct!",
-  invoice_not_found:
-    "The invoice you're trying to pay is either inactive or the invoice id is not correct!",
-  invoice_already_paid: "This invoice is already paid!",
-  receiver_wallet_not_found: "Recipient wallet is either disabled, blocked or does not exists.",
-  shipping_details_required:
-    "Please fill all the required shipping details before proceeding with the transaction.",
-  "Onafriq API failed":
-    "Mobile wallet payment method is currently not available for your account. please select a different method.",
-};
-
-export const apiErrorMessage = (code) => {
-  let error;
-  // console.log(code, "lololo")
-  for (const key in apiErrors) {
-    if (code?.includes(key)) {
-      error = apiErrors[key];
-      break;
-    }
-  }
-
-  return error ?? false;
-};
+export { apiErrorMessage };
 
 // 502 arrives unencrypted
 const decryptError = (err) => {
@@ -186,6 +152,7 @@ const initialState = {
   showSenderSelection: false,
   selectedSender: null,
   senderType: "account", //"account" || "third-party"
+  plaidLink: null,
 };
 
 const beneficiaryRequiredFields = [
@@ -267,6 +234,7 @@ const InternationFlow = ({
   const [loading, setLoading] = useState(false);
   const { getKey, reset } = useIdempotency();
   const can = usePermission();
+  const isBankTransfer = internationalData?.payment_type?.value === "bank_transfer";
   const hasPermission = useEffectivePermission();
   const canInternationTransfer = hasPermission(PERMISSIONS.INTERNATIONAL_TRANSFER);
 
@@ -472,7 +440,8 @@ const InternationFlow = ({
         );
 
       case 5:
-        if (internationalData.payment_type?.value === "card") {
+        // Paytently collects the card on its own page, so there is nothing to validate here.
+        if (internationalData.payment_type?.value === "card" && !usePaytently) {
           const [contentMonth, contentYear] = internationalData.expiry.split("/").map(Number);
           const currentDate = new Date();
           const currentMonth = currentDate.getMonth() + 1;
@@ -492,6 +461,8 @@ const InternationFlow = ({
           );
         }
         return false;
+      case 6:
+        return !!internationalData.plaidLink;
       default:
         return false;
     }
@@ -560,10 +531,8 @@ const InternationFlow = ({
         const decrypted = decryptData(res.data.data);
         const exchange_rate_details = {
           exchange_rate: decrypted?.data?.exchangeRate,
-          receiver: {
-            currency: destinationCurrency,
-            amount: decrypted?.data?.recipientAmount,
-          },
+          markupValue: decrypted?.data?.markupValue,
+          receiver: { currency: destinationCurrency, amount: decrypted?.data?.recipientAmount },
           fee: { amount: decrypted?.data?.result?.fee?.value },
           total: decrypted?.data?.result?.total?.value,
           limits_used: {
@@ -924,11 +893,11 @@ const InternationFlow = ({
     }
   };
 
-  const getPlainExchangeRate = async (from, to, amount) => {
+  const getPlainExchangeRate = async (from, to, amount, markup = false) => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`,
+        `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}&markupValue=${markup}`,
         {
           headers: authHeader,
         },
@@ -991,6 +960,11 @@ const InternationFlow = ({
     }
   }, [internationalData.payment_type]);
 
+  console.log(
+    internationalData?.exchange_rate,
+    "exchange rate for check",
+    internationalData.amount,
+  );
   useEffect(() => {
     let timeout;
     if (internationalData.payment_type?.value && subStep === 4) {
@@ -1005,17 +979,26 @@ const InternationFlow = ({
       const getAmount = async () => {
         try {
           let amount;
+          const receivingCurrency =
+            internationalData?.recipient_currency ||
+            internationalData?.exchange_rate?.receiver?.currency;
+          const walletCurrency = internationalData?.wallet?.currency?.code;
+
           if (
             internationalData.payment_type?.value === "wallet" &&
             internationalData?.wallet?.currency &&
-            internationalData?.currency_wallet?.currency
-              ?.code /*&& internationalData?.wallet?.currency?.code !== internationalData?.currency_wallet?.currency?.code*/
+            internationalData?.currency_wallet?.currency?.code
           ) {
-            amount = await getPlainExchangeRate(
-              internationalData?.currency_wallet?.currency?.code,
-              internationalData?.wallet?.currency?.code,
-              Number(String(internationalData.amount)?.replaceAll(",", "")),
-            );
+            if (receivingCurrency && walletCurrency && receivingCurrency === walletCurrency) {
+              amount = Number(String(internationalData.receiving_amount)?.replaceAll(",", ""));
+            } else {
+              amount = await getPlainExchangeRate(
+                internationalData?.currency_wallet?.currency?.code,
+                walletCurrency,
+                Number(String(internationalData.amount)?.replaceAll(",", "")),
+                internationalData?.exchange_rate?.markupValue,
+              );
+            }
           } else {
             amount = Number(String(internationalData.amount)?.replaceAll(",", ""));
           }
@@ -1030,10 +1013,21 @@ const InternationFlow = ({
           internationalData.payment_type?.value === "wallet"
             ? (internationalData.wallet?._id ?? internationalData?.currency_wallet?._id)
             : internationalData?.currency_wallet?._id;
+
+        const receivingCurrency =
+          internationalData?.recipient_currency ||
+          internationalData?.exchange_rate?.receiver?.currency;
+        const walletCurrency = internationalData?.wallet?.currency?.code;
+        const isSameCurrency =
+          receivingCurrency && walletCurrency && receivingCurrency === walletCurrency;
+
         const currency_code =
           internationalData.payment_type?.value === "wallet"
-            ? (internationalData?.wallet?.currency?.code ?? internationalData?.currency)
+            ? isSameCurrency
+              ? receivingCurrency
+              : (walletCurrency ?? internationalData?.currency)
             : internationalData?.currency;
+
         getAmount().then((res) => {
           if (wallet_id) {
             getExchangeRateNew(res, () => {}, wallet_id, currency_code, false, setLoading);
@@ -1112,13 +1106,6 @@ const InternationFlow = ({
         vendor: internationalData.payoutChannel?.vendor,
       };
 
-      if (isOnafriq(internationalData.payoutChannel?.vendor)) {
-        // must match quote
-        transaction_data.wallet_id =
-          internationalData.quoted_wallet_id || transaction_data.wallet_id;
-        transaction_data.payment_type = internationalData.payment_type?.value;
-      }
-
       if (internationalData.payoutChannel?.vendor === "thunes") {
         if (isResend) {
           payload = {
@@ -1146,15 +1133,13 @@ const InternationFlow = ({
           },
           type: codeType || internationalData.codeType,
         };
-        if (!isNewBeneficiary) {
-          const channel = internationalData.payoutChannel?.value?.toLowerCase();
+        const channel = internationalData.payoutChannel?.value?.toLowerCase();
 
-          if (channel?.includes("bank")) {
-            payload.data.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id;
-          } else if (!(isOnafriq(internationalData.payoutChannel?.vendor) && channel === "cash")) {
-            // voucher, no account
-            payload.data.mobile_wallet_id = internationalData.beneficiary?.mobile_wallet?.[0]?._id;
-          }
+        if (!isNewBeneficiary) {
+          internationalData.payoutChannel?.value?.toLowerCase()?.includes("bank")
+            ? (payload.data.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id)
+            : (payload.data.mobile_wallet_id =
+                internationalData.beneficiary?.mobile_wallet?.[0]?._id);
         }
       }
       const enc = encryptData(payload);
@@ -1214,6 +1199,7 @@ const InternationFlow = ({
   };
 
   const [showCardModal, setShowCardModal] = useState(false);
+  const [paytentlyHosted, setPaytentlyHosted] = useState(null);
 
   const initiateCardPayment = async (otp) => {
     setLoading(true);
@@ -1227,10 +1213,40 @@ const InternationFlow = ({
         return;
       }
 
-      const data = {
+      const otpFields = {
         token: internationalData.created_transaction?.token,
         otp: otp,
         type: internationalData.codeType,
+      };
+
+      // Paytently collects the card itself, so no card data is built here. The intl
+      // payload rides inside the OTP token, so only the wallet is sent.
+      if (usePaytently) {
+        const dec = await initiatePaytentlyPayment({
+          walletId: internationalData.currency_wallet?._id,
+          flow: "international",
+          otp: otpFields,
+          idempotencyKey: getKey(),
+        });
+
+        if (!dec?.hosted_forms_url) {
+          updateInternationalData(
+            "otpError",
+            apiErrorMessage(dec?.message)
+              ? t(apiErrorMessage(dec?.message))
+              : (dec?.message ??
+                  "We cannot process your request at the moment, please try again later."),
+          );
+          return;
+        }
+
+        setPaytentlyHosted({ hostedUrl: dec.hosted_forms_url, authorizeUrl: dec.authorize_url });
+        updateInternationalData("showOtpModal", false);
+        return;
+      }
+
+      const data = {
+        ...otpFields,
         panData: {
           wallet_id: internationalData.currency_wallet?._id,
           amount: internationalData.exchange_rate?.total * 100,
@@ -1548,7 +1564,8 @@ const InternationFlow = ({
         break;
       case 4:
         if (internationalData.payment_type?.value === "card") {
-          updateInternationalData("showCard", true);
+          // Paytently collects the card on its own hosted form, so our card step is skipped.
+          if (!usePaytently) updateInternationalData("showCard", true);
 
           if (internationalData.payoutChannel?.vendor === "thunes") {
             createQuotation(Number(String(internationalData.amount)?.replaceAll(",", "")));
@@ -1658,7 +1675,16 @@ const InternationFlow = ({
 
       let res;
 
-      if (internationalData.payoutChannel?.vendor === "thunes") {
+      if (isBankTransfer) {
+        res = await axios.post(
+          `${import.meta.env.VITE_IP_DEV_API}/api/plaid/initiate-international-payment`,
+          data,
+          {
+            headers: { ...authHeader, "idempotency-key": getKey() },
+            timeout: 50000,
+          },
+        );
+      } else if (internationalData.payoutChannel?.vendor === "thunes") {
         res = await axios.post(`${import.meta.env.VITE_THUNES_API}/confirmTransaction`, data, {
           headers: { ...authHeader, "idempotency-key": getKey() },
           timeout: 50000,
@@ -1678,7 +1704,14 @@ const InternationFlow = ({
       }
       const decrypted = decryptData(res.data.data);
       console.log(decrypted);
-      updateInternationalData("transaction_details", decrypted?.data ?? decrypted);
+      const details = decrypted?.data ?? decrypted;
+      if (isBankTransfer && details?.linkToken) {
+        updateInternationalData("plaidLink", details);
+        updateInternationalData("otpError", "");
+        updateInternationalData("showOtpModal", false);
+        return;
+      }
+      updateInternationalData("transaction_details", details);
       updateInternationalData("transactionStatus", true);
       updateInternationalData("otpError", "");
       setSubStep((prev) => prev + 1);
@@ -1713,6 +1746,22 @@ const InternationFlow = ({
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePlaidAuthorized = () => {
+    updateInternationalData("transaction_details", internationalData.plaidLink);
+    updateInternationalData("transactionStatus", true);
+    updateInternationalData("plaidLink", null);
+    setLoading(false);
+    setSubStep((prev) => prev + 1);
+  };
+
+  const handlePlaidCancelled = () => {
+    reset();
+    updateInternationalData("plaidLink", null);
+    updateInternationalData("showSummary", false);
+    setLoading(false);
+    setSubStep(5);
   };
 
   const location = useLocation();
@@ -1792,6 +1841,21 @@ const InternationFlow = ({
   // console.log("international.otpError",internationalData)
   return (
     <>
+      {internationalData.plaidLink?.linkToken && (
+        <PlaidLinkHandler
+          link={internationalData.plaidLink}
+          data={{ ...internationalData, wallet: internationalData.currency_wallet }}
+          onProcessing={() => setLoading(true)}
+          onAuthorized={handlePlaidAuthorized}
+          onCancelled={handlePlaidCancelled}
+        />
+      )}
+      <PaytentlyHostedModal
+        isOpen={!!paytentlyHosted?.hostedUrl}
+        hostedUrl={paytentlyHosted?.hostedUrl}
+        authorizeUrl={paytentlyHosted?.authorizeUrl}
+        onClose={() => setPaytentlyHosted(null)}
+      />
       {showCardModal && (
         <NotFoundModal
           isOpen={showCardModal}
@@ -1986,9 +2050,7 @@ const InternationFlow = ({
                             <SelectedCard
                               title="Name"
                               list={[
-                                {
-                                  text: getBeneficiaryDisplayName(internationalData.beneficiary),
-                                },
+                                { text: getBeneficiaryDisplayName(internationalData.beneficiary) },
                               ]}
                               changeHandler={() => setSubStep(2)}
                             />
@@ -2083,12 +2145,18 @@ const InternationFlow = ({
                       loading={loading}
                       data={internationalData}
                       dataHandler={updateInternationalData}
-                      bankComingSoon={true}
                     />
                   )}
                   {subStep === 5 && (
                     <>
-                      {!internationalData.showCard ? (
+                      {isBankTransfer && !internationalData?.showSummary ? (
+                        <PlaidBankTransfer
+                          data={{}}
+                          dataHandler={updateInternationalData}
+                          type="international"
+                          handleBackClick={() => setSubStep(4)}
+                        />
+                      ) : !internationalData.showCard ? (
                         <StepFive data={internationalData} dataHandler={updateInternationalData} />
                       ) : (
                         <CreditCard
@@ -2171,90 +2239,98 @@ const InternationFlow = ({
                       )}
                     </div>
                   )}
-
-                  <div className={styles.bottom}>
-                    <Link
-                      to={"https://insta-pay.ch/faqs"}
-                      target="_blank"
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: ".7rem",
-                      }}
-                    >
-                      <HelpCircle size={16} />
-                      {t("Trouble Sending Money")}
-                    </Link>
-                    <div className={styles?.buttons}>
-                      {(internationalData.transactionTypeSelected ||
-                        (internationalData.isThirdPartyAllowed &&
-                          internationalData.isRecipientTypeSelected)) && (
-                        <button
-                          className={styles.transparent}
-                          disabled={loading}
-                          onClick={() => {
-                            reset();
-                            if (subStep === 4 && internationalData.payment_type?.value) {
-                              updateInternationalData("payment_type", {});
-                            } else if (
-                              subStep === 4 &&
-                              internationalData.payment_type?.value === "card"
-                            ) {
-                              updateInternationalData("payment_type", {});
-                              updateInternationalData("showCard", false);
-                              setSubStep((prev) => prev - 1);
-                            } else if (
-                              subStep === 5 &&
-                              internationalData.payment_type?.value === "card" &&
-                              !internationalData.showCard
-                            ) {
-                              updateInternationalData("showCard", true);
-                            } else if (internationalData.transactionTypeSelected && subStep === 1) {
-                              if (internationalData.isThirdPartyAllowed) {
-                                updateInternationalData("transactionTypeSelected", false);
-                                updateInternationalData("isSendingTypeSelected", false);
+                  {isBankTransfer && subStep === 5 && !internationalData?.showSummary ? null : (
+                    <div className={styles.bottom}>
+                      <Link
+                        to={"https://insta-pay.ch/faqs"}
+                        target="_blank"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: ".7rem",
+                        }}
+                      >
+                        <HelpCircle size={16} />
+                        {t("Trouble Sending Money")}
+                      </Link>
+                      <div className={styles?.buttons}>
+                        {(internationalData.transactionTypeSelected ||
+                          (internationalData.isThirdPartyAllowed &&
+                            internationalData.isRecipientTypeSelected)) && (
+                          <button
+                            className={styles.transparent}
+                            disabled={loading}
+                            onClick={() => {
+                              reset();
+                              if (subStep === 4 && internationalData.payment_type?.value) {
+                                updateInternationalData("payment_type", {});
+                              } else if (
+                                subStep === 4 &&
+                                internationalData.payment_type?.value === "card"
+                              ) {
+                                updateInternationalData("payment_type", {});
+                                updateInternationalData("showCard", false);
+                                setSubStep((prev) => prev - 1);
+                              } else if (
+                                subStep === 5 &&
+                                internationalData.payment_type?.value === "card" &&
+                                !internationalData.showCard
+                              ) {
+                                updateInternationalData("showCard", true);
+                              } else if (
+                                internationalData.transactionTypeSelected &&
+                                subStep === 1
+                              ) {
+                                if (internationalData.isThirdPartyAllowed) {
+                                  updateInternationalData("transactionTypeSelected", false);
+                                  updateInternationalData("isSendingTypeSelected", false);
+                                } else {
+                                  dispatch({ type: "RESET_FIRST_STEP_DATA" });
+                                }
+                              } else if (
+                                !internationalData.transactionTypeSelected &&
+                                internationalData.isThirdPartyAllowed &&
+                                internationalData.isRecipientTypeSelected
+                              ) {
+                                updateInternationalData("isRecipientTypeSelected", false);
+                              } else if (internationalData.showSenderSelection && subStep === 2) {
+                                updateInternationalData("showSenderSelection", false);
+                              } else if (internationalData.showSummary && subStep === 5) {
+                                updateInternationalData("showSummary", false);
                               } else {
-                                dispatch({ type: "RESET_FIRST_STEP_DATA" });
+                                setSubStep((prev) => prev - 1);
                               }
-                            } else if (
-                              !internationalData.transactionTypeSelected &&
-                              internationalData.isThirdPartyAllowed &&
-                              internationalData.isRecipientTypeSelected
-                            ) {
-                              updateInternationalData("isRecipientTypeSelected", false);
-                            } else if (internationalData.showSenderSelection && subStep === 2) {
-                              updateInternationalData("showSenderSelection", false);
-                            } else {
-                              setSubStep((prev) => prev - 1);
-                            }
-                          }}
-                        >
-                          {t("Back")}
+                            }}
+                          >
+                            {t("Back")}
+                          </button>
+                        )}
+                        <button disabled={disabledButton || loading} onClick={handleClick}>
+                          {!internationalData.transactionTypeSelected ||
+                          (userDetails?.account_type === "individual"
+                            ? userDetails?.user?.kyc_status === "approved"
+                            : userDetails?.company?.kyb_status === "approved")
+                            ? subStep === 5
+                              ? t("Confirm")
+                              : subStep === 6
+                                ? t("Confirm and Proceed")
+                                : t("Next")
+                            : t(
+                                `${userDetails?.account_type === "individual" ? "Identity" : "Business"} verification required`,
+                              )}
+                          <ChevronRight size={18} />
                         </button>
-                      )}
-                      <button disabled={disabledButton || loading} onClick={handleClick}>
-                        {!internationalData.transactionTypeSelected ||
-                        (userDetails?.account_type === "individual"
-                          ? userDetails?.user?.kyc_status === "approved"
-                          : userDetails?.company?.kyb_status === "approved")
-                          ? subStep === 5
-                            ? t("Confirm")
-                            : subStep === 6
-                              ? t("Confirm and Proceed")
-                              : t("Next")
-                          : t(
-                              `${userDetails?.account_type === "individual" ? "Identity" : "Business"} verification required`,
-                            )}
-                        <ChevronRight size={18} />
-                      </button>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
                 {subStep === 4 && internationalData.payment_type?.value === "wallet" ? (
                   <WalletsComponent
                     loading={loading}
                     data={internationalData}
                     dataHandler={updateInternationalData}
+                    markupValue={internationalData?.exchange_rate?.markupValue}
+                    skipSameCurrencyConversion
                   />
                 ) : (
                   ""
@@ -2330,6 +2406,7 @@ const InternationFlow = ({
                             loading={loading}
                             data={internationalData}
                             dataHandler={updateInternationalData}
+                            skipSameCurrencyConversion
                           />
                         ) : internationalData.payment_type?.sub_name ? (
                           <MobileWalletServices
@@ -2378,12 +2455,18 @@ const InternationFlow = ({
                               loading={loading}
                               data={internationalData}
                               dataHandler={updateInternationalData}
-                              bankComingSoon={true}
                             />
                           )}
                           {subStep === 5 && (
                             <>
-                              {!internationalData.showCard ? (
+                              {isBankTransfer && !internationalData?.showSummary ? (
+                                <PlaidBankTransfer
+                                  data={{}}
+                                  handleBackClick={() => setSubStep(4)}
+                                  dataHandler={updateInternationalData}
+                                  type="international"
+                                />
+                              ) : !internationalData.showCard ? (
                                 <StepFive
                                   data={internationalData}
                                   dataHandler={updateInternationalData}
@@ -2473,90 +2556,94 @@ const InternationFlow = ({
                         </>
                       )}
                     </div>
-                    <div className={styles.bottom}>
-                      <Link
-                        to={"https://insta-pay.ch/faqs"}
-                        target="_blank"
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: ".7rem",
-                        }}
-                      >
-                        <HelpCircle size={16} />
-                        {t("Trouble Sending Money")}
-                      </Link>
-                      <div className={styles?.buttons}>
-                        {(internationalData.transactionTypeSelected ||
-                          (internationalData.isThirdPartyAllowed &&
-                            internationalData.isRecipientTypeSelected)) && (
-                          <button
-                            className={styles.transparent}
-                            disabled={loading}
-                            onClick={() => {
-                              reset();
-                              if (subStep === 4 && internationalData.payment_type?.value) {
-                                updateInternationalData("payment_type", {});
-                              } else if (
-                                subStep === 4 &&
-                                internationalData.payment_type?.value === "card"
-                              ) {
-                                updateInternationalData("payment_type", {});
-                                updateInternationalData("showCard", false);
-                                setSubStep((prev) => prev - 1);
-                              } else if (
-                                subStep === 5 &&
-                                internationalData.payment_type?.value === "card" &&
-                                !internationalData.showCard
-                              ) {
-                                updateInternationalData("showCard", true);
-                              } else if (
-                                internationalData.transactionTypeSelected &&
-                                subStep === 1
-                              ) {
-                                if (internationalData.isThirdPartyAllowed) {
-                                  updateInternationalData("isSendingTypeSelected", false);
-                                  updateInternationalData("transactionTypeSelected", false);
-                                } else {
-                                  dispatch({ type: "RESET_FIRST_STEP_DATA" });
-                                  updateInternationalData("transactionTypeSelected", false);
-                                }
-                              } else if (
-                                !internationalData.transactionTypeSelected &&
-                                internationalData.isThirdPartyAllowed &&
-                                internationalData.isRecipientTypeSelected
-                              ) {
-                                updateInternationalData("isRecipientTypeSelected", false);
-                              } else if (internationalData.showSenderSelection && subStep === 2) {
-                                updateInternationalData("showSenderSelection", false);
-                              } else {
-                                setSubStep((prev) => prev - 1);
-                              }
-                            }}
-                          >
-                            <ChevronLeft />
-                          </button>
-                        )}
-                        <button
-                          disabled={disabledButton || loading}
-                          className={styles.full}
-                          onClick={handleClick}
+                    {isBankTransfer && subStep === 5 && !internationalData?.showSummary ? null : (
+                      <div className={styles.bottom}>
+                        <Link
+                          to={"https://insta-pay.ch/faqs"}
+                          target="_blank"
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: ".7rem",
+                          }}
                         >
-                          {!internationalData.transactionTypeSelected ||
-                          (userDetails?.account_type === "individual"
-                            ? userDetails?.user?.kyc_status === "approved"
-                            : userDetails?.company?.kyb_status === "approved")
-                            ? subStep === 5
-                              ? t("Confirm")
-                              : subStep === 6
-                                ? t("Confirm and Proceed")
-                                : t("Continue")
-                            : t(
-                                `${userDetails?.account_type === "individual" ? "Identity" : "Business"} verification required`,
-                              )}
-                        </button>
+                          <HelpCircle size={16} />
+                          {t("Trouble Sending Money")}
+                        </Link>
+                        <div className={styles?.buttons}>
+                          {(internationalData.transactionTypeSelected ||
+                            (internationalData.isThirdPartyAllowed &&
+                              internationalData.isRecipientTypeSelected)) && (
+                            <button
+                              className={styles.transparent}
+                              disabled={loading}
+                              onClick={() => {
+                                reset();
+                                if (subStep === 4 && internationalData.payment_type?.value) {
+                                  updateInternationalData("payment_type", {});
+                                } else if (
+                                  subStep === 4 &&
+                                  internationalData.payment_type?.value === "card"
+                                ) {
+                                  updateInternationalData("payment_type", {});
+                                  updateInternationalData("showCard", false);
+                                  setSubStep((prev) => prev - 1);
+                                } else if (
+                                  subStep === 5 &&
+                                  internationalData.payment_type?.value === "card" &&
+                                  !internationalData.showCard
+                                ) {
+                                  updateInternationalData("showCard", true);
+                                } else if (
+                                  internationalData.transactionTypeSelected &&
+                                  subStep === 1
+                                ) {
+                                  if (internationalData.isThirdPartyAllowed) {
+                                    updateInternationalData("isSendingTypeSelected", false);
+                                    updateInternationalData("transactionTypeSelected", false);
+                                  } else {
+                                    dispatch({ type: "RESET_FIRST_STEP_DATA" });
+                                    updateInternationalData("transactionTypeSelected", false);
+                                  }
+                                } else if (
+                                  !internationalData.transactionTypeSelected &&
+                                  internationalData.isThirdPartyAllowed &&
+                                  internationalData.isRecipientTypeSelected
+                                ) {
+                                  updateInternationalData("isRecipientTypeSelected", false);
+                                } else if (internationalData.showSenderSelection && subStep === 2) {
+                                  updateInternationalData("showSenderSelection", false);
+                                } else if (internationalData.showSummary && subStep === 5) {
+                                  updateInternationalData("showSummary", false);
+                                } else {
+                                  setSubStep((prev) => prev - 1);
+                                }
+                              }}
+                            >
+                              <ChevronLeft />
+                            </button>
+                          )}
+                          <button
+                            disabled={disabledButton || loading}
+                            className={styles.full}
+                            onClick={handleClick}
+                          >
+                            {!internationalData.transactionTypeSelected ||
+                            (userDetails?.account_type === "individual"
+                              ? userDetails?.user?.kyc_status === "approved"
+                              : userDetails?.company?.kyb_status === "approved")
+                              ? subStep === 5
+                                ? t("Confirm")
+                                : subStep === 6
+                                  ? t("Confirm and Proceed")
+                                  : t("Continue")
+                              : t(
+                                  `${userDetails?.account_type === "individual" ? "Identity" : "Business"} verification required`,
+                                )}
+                          </button>
+                        </div>
                       </div>
-                    </div>
+                    )}
                     {sendPaymentType === "international" ? (
                       // internationalData.payer?.id
                       // &&

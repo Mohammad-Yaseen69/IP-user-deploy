@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from "reactstrap";
 import styles from "./styles/doctype.module.css";
 import { CheckCircle, Info } from "react-feather";

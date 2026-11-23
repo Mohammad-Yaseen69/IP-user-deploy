@@ -1,6 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 import { useContext } from "react";
 import { UserContext } from "../../../Context/UserContext";

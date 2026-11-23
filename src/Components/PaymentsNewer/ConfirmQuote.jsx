@@ -5,7 +5,6 @@ import Draggable from "react-draggable";
 import { useTranslation } from "react-i18next";
 import SelectedRecipient from "./SelectedRecipient";
 import SelectedAmountAndCurrency from "./SelectedAmountAndCurrency";
-import SelectedPaymentType from "./SelectedPaymentType";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import faded_lines from "./files/faded_lines.png";
@@ -387,7 +386,7 @@ const ConfirmQuote = ({
             }}
             ref={svgRef}
           />
-          <Draggable axis="x" bounds="parent" onDrag={handleDrag}>
+          <Draggable axis="x" bounds="parent" onDrag={handleDrag} nodeRef={chevRef}>
             <div
               style={{
                 position: "absolute",

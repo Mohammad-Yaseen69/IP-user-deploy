@@ -1,4 +1,3 @@
-import React from "react";
 import { Popover, PopoverBody, PopoverHeader } from "reactstrap";
 
 const Popovers = (props) => (

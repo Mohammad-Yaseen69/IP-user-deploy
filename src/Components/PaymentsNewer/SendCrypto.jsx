@@ -12,7 +12,6 @@ import CryptoCurrency from "./CryptoCurrency";
 import CryptoAmount from "./CryptoAmount";
 import CryptoWalletDetails from "./CryptoWalletDetails";
 import SelectedCryptoCurrency from "./SelectedCryptoCurrency";
-import ConfirmCryptoFiat from "./ConfirmCryptoFiat";
 import clock from "./files/clock.gif";
 import CryptoWalletAddress from "./CryptoWalletAddress";
 import SelectedCryptoAmount from "./SelectedCryptoAmount";

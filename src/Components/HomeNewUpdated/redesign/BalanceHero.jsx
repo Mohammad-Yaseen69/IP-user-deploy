@@ -13,6 +13,7 @@ import {
 import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import Skeleton from "../../../Common/WalletUI/Skeleton";
 import { splitAmount } from "../../../Common/WalletUI/utils";
 import { UserContext } from "../../../Context/UserContext";
 import { usePermission } from "../../../hooks/GeneralUse/usePermission";
@@ -33,16 +34,18 @@ const LINKS = [
 
 const MASK = "••••••";
 
-const BalanceHero = ({ hidden, onToggleHidden, activity, walletCount }) => {
+const BalanceHero = ({ hidden, onToggleHidden, activity, walletCount, activityLoading }) => {
   const { t } = useTranslation();
   const can = usePermission();
   const {
     available = 0,
     blocked = 0,
     balanceLoading,
+    walletsLoading,
     totalReferralAmount,
     getReferralCommission,
     userDetails,
+    referralLoading,
   } = useContext(UserContext);
 
   useEffect(() => {
@@ -54,7 +57,14 @@ const BalanceHero = ({ hidden, onToggleHidden, activity, walletCount }) => {
   const showBalance = can("dashboard.balance.view");
   const [whole, decimals] = splitAmount(usd(available - blocked));
   const HideIcon = hidden ? EyeOff : Eye;
-  const amount = (value) => (hidden ? MASK : balanceLoading ? "…" : usd(value));
+  const amount = (value) =>
+    hidden ? (
+      MASK
+    ) : balanceLoading ? (
+      <Skeleton width={72} height={20} sx={{ display: "inline-block", verticalAlign: "middle" }} />
+    ) : (
+      usd(value)
+    );
 
   return (
     <div className={d.heroMain}>
@@ -71,8 +81,14 @@ const BalanceHero = ({ hidden, onToggleHidden, activity, walletCount }) => {
             <div className={d.balanceMain}>
               <p className={d.balanceValue}>
                 <small>USD</small>
-                {hidden || balanceLoading ? (
-                  <b>{hidden ? MASK : "…"}</b>
+                {hidden ? (
+                  <b>{MASK}</b>
+                ) : balanceLoading ? (
+                  <Skeleton
+                    width={180}
+                    height={56}
+                    sx={{ alignSelf: "center", borderRadius: "10px" }}
+                  />
                 ) : (
                   <>
                     <b>{whole}</b>
@@ -90,18 +106,37 @@ const BalanceHero = ({ hidden, onToggleHidden, activity, walletCount }) => {
               </button>
             </div>
             <p className={d.balanceMeta}>
-              {activity && !hidden && (
-                <span>
-                  <CircleCheck size={16} />
-                  {t("{{currency}} activity: {{amount}} this month", {
-                    currency: activity.code,
-                    amount: `${activity.net >= 0 ? "+" : "−"}${usd(Math.abs(activity.net))}`,
-                  })}
-                </span>
+              {activityLoading && !activity ? (
+                <Skeleton
+                  width={250}
+                  height={14}
+                  sx={{ display: "inline-block", verticalAlign: "middle" }}
+                />
+              ) : (
+                activity &&
+                !hidden && (
+                  <span>
+                    <CircleCheck size={16} />
+                    {t("{{currency}} activity: {{amount}} this month", {
+                      currency: activity.code,
+                      amount: `${activity.net >= 0 ? "+" : "−"}${usd(Math.abs(activity.net))}`,
+                    })}
+                  </span>
+                )
               )}
               <span>
                 <WalletCards size={16} />
-                {walletCount === 1 ? t("1 wallet") : t("{{n}} wallets", { n: walletCount })}
+                {walletsLoading && !walletCount ? (
+                  <Skeleton
+                    width={56}
+                    height={14}
+                    sx={{ display: "inline-block", verticalAlign: "middle" }}
+                  />
+                ) : walletCount === 1 ? (
+                  t("1 wallet")
+                ) : (
+                  t("{{n}} wallets", { n: walletCount })
+                )}
               </span>
               <small>{t("Estimated total value in USD")}</small>
             </p>
@@ -131,7 +166,19 @@ const BalanceHero = ({ hidden, onToggleHidden, activity, walletCount }) => {
         <Link to="/referrals" className={d.stat}>
           {t("Referral Rewards")}
           <span>
-            <b>{hidden ? MASK : usd(totalReferralAmount)}</b>
+            <b>
+              {hidden ? (
+                MASK
+              ) : referralLoading ? (
+                <Skeleton
+                  width={72}
+                  height={20}
+                  sx={{ display: "inline-block", verticalAlign: "middle" }}
+                />
+              ) : (
+                usd(totalReferralAmount)
+              )}
+            </b>
             <small>USD</small>
           </span>
         </Link>

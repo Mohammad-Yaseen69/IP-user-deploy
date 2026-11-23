@@ -1,17 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Modal, ModalBody, ModalHeader, Spinner, Button } from "reactstrap";
 import {
   CheckCircle,
   XCircle,
-  X,
   ChevronRight,
   Plus,
-  User,
   Settings,
   CheckSquare,
   HelpCircle,
-  ChevronsLeft,
 } from "react-feather";
 import permissionsData from "../../../utils/Data/permissionsData.json";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";

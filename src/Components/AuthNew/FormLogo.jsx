@@ -1,5 +1,3 @@
-import React from "react";
-
 const FormLogo = () => {
   return (
     <svg width="35" height="52" viewBox="0 0 35 52" fill="none" xmlns="http://www.w3.org/2000/svg">
