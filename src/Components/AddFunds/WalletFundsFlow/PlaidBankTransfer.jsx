@@ -37,6 +37,8 @@ const PlaidBankTransfer = ({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [plaidStep, setPlaidStep] = useState(1);
+  const requiresOtp = type === "wallet_to_wallet" || type === "verification_payment";
+  const [otpForSavedBank, setOtpForSavedBank] = useState(false);
   const [savedBanks, setSavedBanks] = useState([]);
   const [selectedBankId, setSelectedBankId] = useState(null);
   const [recipientData, setRecipientData] = useState({
@@ -132,17 +134,18 @@ const PlaidBankTransfer = ({
       setSelectedBankId(null);
     }
   };
+  const buildInitiatePayload = (extra = {}) => ({
+    ...initiatePayload?.(true),
+    recipient_iban: recipientData.iban,
+    recipientIban: recipientData.iban,
+    saveForFutureUse: recipientData.saveForFutureUse,
+    ...extra,
+  });
+  const savedBankFields = () => ({ isSaveBank: true, savedBankId: selectedBankId });
+
   const { mutateAsync: initiatePlaidPayment, isPending: isInitiatingPlaid } = useMutation({
     mutationFn: async ({ otp }) => {
-      const initiatePayloadResponse = {
-        ...initiatePayload(true),
-        recipient_iban: recipientData.iban,
-        saveForFutureUse: recipientData.saveForFutureUse,
-      };
-
-      if (type === "add_funds") {
-        initiatePayloadResponse.recipientIban = recipientData.iban;
-      }
+      const initiatePayloadResponse = buildInitiatePayload();
 
       console.log(otp, otpToken);
       if (otp && otpToken) {
@@ -195,21 +198,15 @@ const PlaidBankTransfer = ({
   });
 
   const sendOtpHandler = async (otpCodeType) => {
-    const initiatePayloadResponse = {
-      ...initiatePayload(true),
-      recipient_iban: recipientData.iban,
-      saveForFutureUse: recipientData.saveForFutureUse,
-    };
-
-    if (otpCodeType === "add_funds") {
-      initiatePayloadResponse.recipientIban = recipientData.iban;
-    }
-
-    await sendOtp(initiatePayloadResponse, otpCodeType || codeType);
+    await sendOtp(
+      buildInitiatePayload(otpForSavedBank ? savedBankFields() : {}),
+      otpCodeType || codeType,
+    );
   };
 
   const initiateCallback = (setter, _, otp) => {
-    initiatePlaidPayment({ otp });
+    if (otpForSavedBank) performSavedBankPayment({ otp });
+    else initiatePlaidPayment({ otp });
   };
 
   const { mutateAsync: exchangePlaidToken, isPending: isExchangingToken } = useMutation({
@@ -258,7 +255,7 @@ const PlaidBankTransfer = ({
   });
 
   const { mutateAsync: performSavedBankPayment, isPending: isUsingSavedBank } = useMutation({
-    mutationFn: async () => {
+    mutationFn: async ({ otp } = {}) => {
       if (!selectedBankId) {
         throw new Error("No bank selected");
       }
@@ -269,11 +266,12 @@ const PlaidBankTransfer = ({
         savedBankId: selectedBankId,
       };
 
-      const payload = {
-        ...initiatePayload(true),
-        recipient_iban: recipientData.iban,
-        saveForFutureUse: recipientData.saveForFutureUse,
-      };
+      const payload = buildInitiatePayload(savedBankFields());
+      if (otp && otpToken) {
+        payload.otp = otp;
+        payload.token = otpToken;
+        payload.type = codeType;
+      }
 
       console.log("Using saved bank with payload:", payload);
 
@@ -289,6 +287,8 @@ const PlaidBankTransfer = ({
       return response;
     },
     onSuccess: () => {
+      setShowOtp(false);
+      setOtpToken(null);
       setPlaidStep(4);
       toast.success("Payment initiated successfully!");
     },
@@ -563,17 +563,17 @@ const PlaidBankTransfer = ({
               onClick={async () => {
                 console.log("clicked");
                 try {
-                  if (selectedBankId) {
-                    console.log("Using saved bank:", selectedBankId);
-                    const result = await performSavedBankPayment();
-                    console.log("Saved bank payment result:", result);
+                  const useSavedBank = !!selectedBankId;
+                  if (requiresOtp) {
+                    setOtpForSavedBank(useSavedBank);
+                    await sendOtp(
+                      buildInitiatePayload(useSavedBank ? savedBankFields() : {}),
+                      codeType,
+                    );
+                  } else if (useSavedBank) {
+                    await performSavedBankPayment();
                   } else {
-                    console.log("Adding new bank");
-                    if (type === "verification_payment") {
-                      await sendOtpHandler();
-                    } else {
-                      await initiatePlaidPayment({});
-                    }
+                    await initiatePlaidPayment({});
                   }
                 } catch (error) {
                   console.error("Button click error:", error);
