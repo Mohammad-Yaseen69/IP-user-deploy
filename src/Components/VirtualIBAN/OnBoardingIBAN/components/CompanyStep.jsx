@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Briefcase, ChevronUp, Globe, Hash, MapPin, Plus, Search } from "react-feather";
+import { Briefcase, Globe, Hash, MapPin } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../../../Context/UserContext";
 import Magicsvg from "../magicsvg";

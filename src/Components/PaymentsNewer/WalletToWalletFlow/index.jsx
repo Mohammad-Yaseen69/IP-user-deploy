@@ -12,6 +12,8 @@ import { getDecimalPointIndex } from "../../../Helper/getDecimalIndex";
 import useTopupLimitCheck from "../../../hooks/Payments/useTopupLimitCheck";
 import errors from "../../AddFunds/TrustPaymentErrors.json";
 import TrustpaymentPage from "../../AddFunds/WalletFund/CreditTransaction";
+import PaytentlyHostedModal from "../../AddFunds/PaytentlyHostedModal";
+import { initiatePaytentlyPayment, usePaytently } from "../../../utils/Functions/paytently";
 import PlaidBankTransfer from "../../AddFunds/WalletFundsFlow/PlaidBankTransfer";
 import InstaPayLoader from "../../Loader";
 import NotFoundModal from "../../NotFound/NotFoundModal";
@@ -20,7 +22,7 @@ import SendActionCard from "../Common/SendActionCard";
 import w2w from "../files/w2w.png";
 import wallet_ic from "../files/wallet.svg";
 import GeneralNoticeModal from "../GeneralNoticeModal";
-import { apiErrorMessage } from "../InternationalFlow";
+import { apiErrorMessage } from "../InternationalFlow/apiErrorMessage";
 import CreditCard from "../InternationalFlow/CreditCard";
 import ErrorModal from "../InternationalFlow/ErrorModal";
 import FeesComponent from "../InternationalFlow/FeesComponent";
@@ -41,6 +43,7 @@ import StepFive from "./StepFive";
 import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
+import { getDefaultSenderWallet } from "../../../utils/Functions/senderWallet";
 
 const initialState = {
   loading: false,
@@ -146,9 +149,10 @@ const WalletToWalletFlow = ({
   const navigate = useNavigate();
   const { userDetails, authHeader, setProfileLockTime, userWallets } = useContext(UserContext);
   const [data, dispatch] = useReducer(reducer, initialState);
+  // The quoted sending amount, not data.amount: typing in "They Receive" leaves that stale.
   const { limitStatus, clearStatus } = useTopupLimitCheck(
     data?.currency?.currency?.code,
-    +String(data?.amount)?.replaceAll(",", ""),
+    +String(data?.exchange_rate?.sending?.amount ?? data?.amount)?.replaceAll(",", ""),
     data?.payment_type?.value,
   );
   const { getKey, reset } = useIdempotency();
@@ -199,18 +203,12 @@ const WalletToWalletFlow = ({
       // dataHandler("currency", data.wallet)
     } else {
       if (userWallets?.length > 0 && !data.currency?._id) {
-        const def =
-          userWallets?.[0]?.wallet_type === "insta" &&
-          !userWallets?.[0]?.blocked &&
-          !userWallets?.[0]?.admin_blocked &&
-          userWallets?.[0]?.status?.toLowerCase() === "active"
-            ? userWallets?.[0]
-            : userWallets?.find((item) => item?.default);
+        const def = getDefaultSenderWallet(userWallets);
         const wallet = {
           ...def,
           ...currencies.find((item) => item.currency_code === def?.currency?.code),
         };
-
+        console.log("wallet", wallet);
         dataHandler("currency", wallet);
         dataHandler("currency_wallet", wallet);
       }
@@ -250,7 +248,8 @@ const WalletToWalletFlow = ({
               ? !data.payment_duration?.scheduleDate || !data.payment_duration?.scheduleTime
               : false) || !isShippingValid;
       case 5:
-        if (data.payment_type?.value === "card") {
+        // Paytently collects the card on its own page, so there is nothing to validate here.
+        if (data.payment_type?.value === "card" && !usePaytently) {
           const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
           const currentDate = new Date();
           const currentMonth = currentDate.getMonth() + 1;
@@ -524,9 +523,40 @@ const WalletToWalletFlow = ({
     }
   };
   const [showCardModal, setShowCardModal] = useState(false);
+  const [paytentlyHosted, setPaytentlyHosted] = useState(null);
+
   const initiateCardPayment = async (otp) => {
     dataHandler("loading", true);
     try {
+      // Paytently collects the card on its hosted form, so no card data is built here.
+      // The transfer itself rides inside the OTP token, keyed by w2w_data.body.
+      if (usePaytently) {
+        const dec = await initiatePaytentlyPayment({
+          walletId: data.currency?._id,
+          flow: "wallet_to_wallet",
+          fields: {
+            type: data.codeType,
+            rates_token: data.exchange_rate?.token,
+            w2w_data: { type: "instant", body: { otp, token: data.otp_token } },
+          },
+          idempotencyKey: getKey(),
+        });
+
+        if (!dec?.hosted_forms_url) {
+          dataHandler(
+            "otpError",
+            apiErrorMessage(dec?.message)
+              ? t(apiErrorMessage(dec?.message))
+              : (dec?.message ??
+                  "We cannot process your request at the moment, please try again later."),
+          );
+          return;
+        }
+
+        setPaytentlyHosted({ hostedUrl: dec.hosted_forms_url, authorizeUrl: dec.authorize_url });
+        return;
+      }
+
       let payload;
       if (data.selectedSavedCard?._id) {
         payload = {
@@ -1093,7 +1123,9 @@ const WalletToWalletFlow = ({
           dataHandler("showShippingAddress", false);
           dataHandler("step", 5);
         } else {
-          dataHandler("showCard", true);
+          // This is the fallback for card and bank_transfer both. Only card changes:
+          // Paytently collects it on its own hosted form.
+          if (!(usePaytently && data.payment_type?.value === "card")) dataHandler("showCard", true);
           dataHandler("showShippingAddress", false);
           dataHandler("step", 5);
         }
@@ -1153,13 +1185,7 @@ const WalletToWalletFlow = ({
         leftSideContent.map((c, i) => (i === 0 ? "Fetching beneficiary details" : c)),
       );
       if (userWallets?.length > 0) {
-        const wallet =
-          userWallets?.[0]?.wallet_type === "insta" &&
-          !userWallets?.[0]?.blocked &&
-          !userWallets?.[0]?.admin_blocked &&
-          userWallets?.[0]?.status?.toLowerCase() === "active"
-            ? userWallets?.[0]
-            : userWallets?.find((item) => item?.default);
+        const wallet = getDefaultSenderWallet(userWallets);
         getPlainExchangeRate(currency, wallet?.currency?.code, amount).then((res) => {
           dataHandler(
             "amount",
@@ -1246,6 +1272,12 @@ const WalletToWalletFlow = ({
   console.log(limitStatus);
   return (
     <>
+      <PaytentlyHostedModal
+        isOpen={!!paytentlyHosted?.hostedUrl}
+        hostedUrl={paytentlyHosted?.hostedUrl}
+        authorizeUrl={paytentlyHosted?.authorizeUrl}
+        onClose={() => setPaytentlyHosted(null)}
+      />
       {showCardModal && (
         <NotFoundModal
           isOpen={showCardModal}

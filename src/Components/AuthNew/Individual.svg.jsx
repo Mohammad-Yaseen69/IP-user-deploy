@@ -1,5 +1,3 @@
-import React from "react";
-
 const IndividualSVG = ({ size, color, isActive }) => {
   return isActive ? (
     <svg

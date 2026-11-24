@@ -1,5 +1,4 @@
-import DateMomentUtils from "@date-io/moment";
-import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DatePicker from "../../CommonElements/DatePicker";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -200,7 +199,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
   const requiredMark = <span className={styles.required}>*</span>;
 
   return (
-    <MuiPickersUtilsProvider utils={DateMomentUtils}>
+    <>
       <section className={styles.card}>
         <div className={styles.cardBody}>
           <NoNomineeNote />
@@ -427,7 +426,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
         </div>
       </section>
       <SuccessModal isOpen={showSuccess} toggle={() => setShowSuccess(!showSuccess)} />
-    </MuiPickersUtilsProvider>
+    </>
   );
 };
 

@@ -7,16 +7,14 @@ import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { UserContext } from "../../Context/UserContext";
 import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
-import jsPDF from "jspdf";
 import img from "../../assets/images/logo/logo2.png";
 import { toast } from "react-toastify";
-import "jspdf-autotable";
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 import { exportToExcel } from "../../utils/Functions/csvExport";
 import { formatCurrency } from "../../Helper/AmountFormat";
 
 const DownloadStatement = ({ showModal, setShowModal, wallet, isTransection }) => {
-  const { userDetails, authHeader, beneficiaries } = useContext(UserContext);
+  const { userDetails, authHeader } = useContext(UserContext);
   const { t } = useTranslation();
   const [dateString, setDateString] = useState("");
   const [fileType, setFileType] = useState("");
@@ -90,9 +88,9 @@ const DownloadStatement = ({ showModal, setShowModal, wallet, isTransection }) =
     }
 
     request
-      .then((res) => {
+      .then(async (res) => {
         const decrypted = decryptData(res.data.data);
-        callback(decrypted.transactionList, userDetails, () => {}, false);
+        await callback(decrypted.transactionList, userDetails, () => {}, false);
         setShowModal(false);
         setApiDates(null);
         setFileType("");
@@ -173,7 +171,7 @@ const DownloadStatement = ({ showModal, setShowModal, wallet, isTransection }) =
     return service_name_formatter(item?.payment_type);
   };
 
-  const generatePDF = () => {
+  const generatePDF = async () => {
     setDownloading(true);
     const tableStyles = {
       fontSize: 5.5,
@@ -185,6 +183,7 @@ const DownloadStatement = ({ showModal, setShowModal, wallet, isTransection }) =
     };
 
     // Set landscape orientation by passing parameters to jsPDF
+    const [{ default: jsPDF }] = await Promise.all([import("jspdf"), import("jspdf-autotable")]);
     const doc = new jsPDF({ orientation: "landscape" });
 
     doc.addImage(img, "png", 14, 10, 40, 11);
@@ -245,9 +244,7 @@ const DownloadStatement = ({ showModal, setShowModal, wallet, isTransection }) =
           ],
         ],
         body: arr.map((item) => {
-          const internationalReceiver =
-            beneficiaries.filter((benef) => benef?._id === item?.beneficiary)?.[0] ||
-            item?.beneficiaryDetails;
+          const internationalReceiver = item?.beneficiaryDetails;
 
           return [
             new Date(item?.createdAt)?.toLocaleString(),

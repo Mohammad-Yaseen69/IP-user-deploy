@@ -1,4 +1,3 @@
-import React from "react";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 
 const SuccessModal = ({ isOpen, toggle }) => {

@@ -1,12 +1,13 @@
 import { ChevronRight, Plus } from "lucide-react";
-import { useContext, useEffect } from "react";
+
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { initials } from "../../../Common/Ledger/utils";
+import Skeleton from "../../../Common/WalletUI/Skeleton";
 import u from "../../../Common/WalletUI/ui.module.scss";
-import { UserContext } from "../../../Context/UserContext";
 import BenefCard from "../BenefCard";
 import d from "./dashboard.module.scss";
+import { useBeneficiariesPage } from "../../../hooks/BeneficiaryHooks/useBeneficiariesPage";
 
 const COLORS = [
   ["#f2eeff", "#5926f0"],
@@ -19,13 +20,12 @@ const COLORS = [
 
 const QuickTransfer = () => {
   const { t } = useTranslation();
-  const { userDetails, beneficiaries, getUserBeneficiaries } = useContext(UserContext);
+  const { beneficiaries, isLoading: beneficiariesLoading } = useBeneficiariesPage({
+    limit: 10,
+    sort: "date_desc",
+  });
 
-  useEffect(() => {
-    if (userDetails) {
-      getUserBeneficiaries();
-    }
-  }, [userDetails]);
+  const showSkeleton = beneficiariesLoading && beneficiaries.length === 0;
 
   return (
     <section className={`${u.panel} ${d.quick}`}>
@@ -38,6 +38,13 @@ const QuickTransfer = () => {
         </Link>
       </div>
       <div className={d.contacts}>
+        {showSkeleton &&
+          Array.from({ length: 5 }, (_, index) => (
+            <div key={index} className={d.skeletonContact}>
+              <Skeleton variant="circular" width={48} height={48} />
+              <Skeleton width={48} height={12} />
+            </div>
+          ))}
         {beneficiaries.map((item, index) => {
           const isPerson = item?.beneficiary_type === "individual";
           const fullName = isPerson
