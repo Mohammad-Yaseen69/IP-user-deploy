@@ -90,15 +90,6 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep }) => {
     onChange?.(form);
   }, [form]);
 
-  const { data: rhubIdtypes, isLoading } = useQuery({
-    queryKey: ["rhub", "id-types"],
-    queryFn: () =>
-      apiWrapper({
-        endpoint: `/api/rhub/customer-legal-status`,
-      }).then((dec) => dec?.data),
-  });
-  console.log("rhubIdtypes", rhubIdtypes);
-
   const industryOptions = useMemo(() => {
     return bvnkIndustryReference.map((group) => ({
       name: group.name,

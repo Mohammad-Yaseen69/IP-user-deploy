@@ -13,6 +13,8 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import useCountryStates from "../../Beneficiaries/AddBeneficiaryFlowV2/useCountryStates";
+import { useQuery } from "@tanstack/react-query";
+import { apiWrapper } from "../../../../utils/Functions/apiWrapper";
 
 const formatDateForInput = (val) => {
   if (!val) return "";
@@ -75,7 +77,14 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
     taxNumber: userDetails?.company?.tax_id || data.taxNumber || "",
     mainContact: data.mainContact || "",
     agent: agentDefault,
-    idExpiryDate: data?.idExpiryDate || "",
+    ...(data?.isRhub
+      ? {
+          idExpiryDate: data?.idExpiryDate || "",
+          state: data?.state || "",
+          idTypeCode: data?.idTypeCode || "",
+          legalStatusCode: data?.legalStatusCode || "",
+        }
+      : {}),
   });
 
   const COMPANY_RULES = {
@@ -86,6 +95,8 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
     dateOfIncorporation: required.list("dateOfIncorporation"),
     ...(data.isRhub && {
       idExpiryDate: required.list("idExpiryDate"),
+      idTypeCode: required.list("idTypeCode"),
+      legalStatusCode: required.list("legalStatusCode"),
       state: required.list("state"),
     }),
   };
@@ -93,8 +104,26 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
   const { err, validate } = useStepValidation(form, COMPANY_RULES);
 
   const { data: states = [], isLoading: statesLoading } = useCountryStates(
-    userDetails?.country_iso_code,
+    data?.isRhub ? userDetails?.country_iso_code : undefined,
   );
+
+  const { data: rhubIdtypes, isLoading } = useQuery({
+    queryKey: ["rhub", "id-types"],
+    queryFn: () =>
+      apiWrapper({
+        endpoint: `/api/rhub/id-types`,
+      }).then((dec) => dec?.data),
+    enabled: !!data?.isRhub,
+  });
+
+  const { data: legalStatus, isLoading: legalStatusLoading } = useQuery({
+    queryKey: ["rhub", "customer-legal-status"],
+    queryFn: () =>
+      apiWrapper({
+        endpoint: `/api/rhub/customer-legal-status`,
+      }).then((dec) => dec?.data),
+    enabled: !!data?.isRhub,
+  });
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
@@ -117,7 +146,13 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
   }, [form]);
 
   const isFormValid =
-    (!data.isRhub || (!!form.idExpiryDate?.trim() && !!form.state?.trim())) &&
+    (!data.isRhub ||
+      Boolean(
+        form.idExpiryDate?.trim() &&
+        form.state?.trim() &&
+        form.idTypeCode?.trim() &&
+        form.legalStatusCode?.trim(),
+      )) &&
     Boolean(
       form.countryOfIncorporation?.trim() &&
       form.registrationNumber?.trim() &&
@@ -184,7 +219,8 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
           },
           "& svg": { width: 18, height: 18 },
         }}
-        disableFuture={true}
+        disableFuture={field !== "idExpiryDate"}
+        disablePast={field === "idExpiryDate"}
         onChange={(value) =>
           set(field)({
             target: { value: dayjs(value).format("YYYY-MM-DD") },
@@ -469,8 +505,60 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
               {data.isRhub && (
                 <>
                   <div className={styles.inputGroup}>
-                    <label className={styles.inputLabel}>{t("ID EXPIRY DATE")}</label>
+                    <label className={styles.inputLabel}>
+                      {t("ID EXPIRY DATE")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
+                    </label>
                     <DateField field="idExpiryDate" />
+                  </div>
+                  <div className={styles.inputGroup}>
+                    <label className={styles.inputLabel}>
+                      {t("ID Type")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
+                    </label>
+                    <select
+                      className={styles.textInput}
+                      style={{
+                        height: "auto",
+                        padding: "12px",
+                        ...err("idTypeCode"),
+                      }}
+                      value={form.idTypeCode}
+                      onChange={set("idTypeCode")}
+                    >
+                      <option value="" disabled>
+                        {isLoading ? t("Loading...") : t("Select ID Type")}
+                      </option>
+                      {!isLoading &&
+                        rhubIdtypes?.idTypeList?.map((item) => (
+                          <option key={item.code} value={item.code}>
+                            {t(item.name)}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+                  <div className={styles.inputGroup}>
+                    <label className={styles.inputLabel}>
+                      {t("Legal Status")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
+                    </label>
+                    <select
+                      className={styles.textInput}
+                      style={{
+                        height: "auto",
+                        padding: "12px",
+                        ...err("legalStatusCode"),
+                      }}
+                      value={form.legalStatusCode}
+                      onChange={set("legalStatusCode")}
+                    >
+                      <option value="" disabled>
+                        {legalStatusLoading ? t("Loading...") : t("Select Legal Status")}
+                      </option>
+                      {!legalStatusLoading &&
+                        legalStatus?.customerLegalStatusList?.map((item) => (
+                          <option key={item.code} value={item.code}>
+                            {t(item.name)}
+                          </option>
+                        ))}
+                    </select>
                   </div>
                   <div className={styles.inputGroup}>
                     <label className={styles.inputLabel}>
@@ -490,11 +578,12 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
                       <option value="">
                         {statesLoading ? t("Loading...") : t("--Select-State--")}
                       </option>
-                      {states.map((item) => (
-                        <option key={item.value} value={item.value}>
-                          {item.name}
-                        </option>
-                      ))}
+                      {!statesLoading &&
+                        states.map((item) => (
+                          <option key={item.value} value={item.value}>
+                            {item.name}
+                          </option>
+                        ))}
                     </select>
                   </div>
                 </>
