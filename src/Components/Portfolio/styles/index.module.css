@@ -3,7 +3,6 @@
   background: linear-gradient(to right, transparent, white);
   min-height: 100vh;
   font-family: "Manrope";
-  overflow-y: auto;
 }
 
 .container > p {

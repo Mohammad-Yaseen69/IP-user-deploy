@@ -422,7 +422,7 @@
   background: var(--cw-surface);
   overflow: hidden;
   position: sticky;
-  top: 16px;
+  top: calc(var(--page-header-height) + 16px);
 }
 
 .railTabs {

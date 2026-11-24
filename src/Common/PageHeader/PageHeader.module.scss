@@ -1,10 +1,13 @@
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 6;
   display: flex;
-  align-items: center;
   gap: 12px;
-  min-height: 86px;
+  min-height: calc(var(--page-header-height) - 1px);
   margin: 0 calc(var(--page-gutter) * -1) 32px;
   padding: 16px var(--page-gutter);
+  background: #f8f9fc;
   border-bottom: 1px solid #eff1f6;
   font-family: "Inter", sans-serif;
 }
@@ -55,6 +58,7 @@
 
 @media screen and (max-width: 1000px) {
   .header {
+    position: static;
     min-height: 0;
     margin: 0 0 12px;
     padding: 16px 0 12px;

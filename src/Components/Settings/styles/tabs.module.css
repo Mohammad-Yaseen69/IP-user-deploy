@@ -3,7 +3,7 @@
   min-width: 250px;
   flex-direction: column;
   position: sticky;
-  top: 1rem;
+  top: calc(var(--page-header-height) + 16px);
   align-self: flex-start;
   max-height: calc(100vh - 2rem);
   overflow-y: auto;
