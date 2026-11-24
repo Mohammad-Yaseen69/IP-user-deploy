@@ -1,7 +1,6 @@
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { CardText } from "reactstrap";
-import { UserContext } from "../../Context/UserContext";
 import { renderAccountName } from "../../utils/Functions/transactionHelpers";
 import styles from "./styles/Recents.module.css";
 import {
@@ -43,7 +42,6 @@ const getTxnIcon = (transaction) => {
 };
 
 const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
-  const { beneficiaries } = useContext(UserContext);
   const { t } = useTranslation();
   // console.log("sender", transaction)
 
@@ -94,11 +92,8 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
   }, [transaction]);
   const internationalReceiver = useMemo(() => {
     if (!transaction?.beneficiary) return null;
-    return (
-      beneficiaries.filter((benef) => benef?._id === transaction?.beneficiary)?.[0] ||
-      transaction?.beneficiaryDetails
-    );
-  }, [transaction, beneficiaries]);
+    return transaction?.beneficiaryDetails;
+  }, [transaction]);
   return (
     <>
       {transactions?.[i - 1]?.headerText === transaction?.headerText ? (

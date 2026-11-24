@@ -36,18 +36,12 @@ const Beneficiaries = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const { verifyToken, getUserBeneficiaries, userDetails } = useContext(UserContext);
+  const { verifyToken, getUserBeneficiaries } = useContext(UserContext);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [sortBy, setSortBy] = useState("name_asc");
   const [openMenu, setOpenMenu] = useState(null); // "filter" | "sort" | null
-
-  useEffect(() => {
-    if (userDetails) {
-      getUserBeneficiaries();
-    }
-  }, [userDetails]);
 
   const can = usePermission();
   const [isAddOpen, setIsAddOpen] = useState(false);

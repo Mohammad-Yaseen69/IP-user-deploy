@@ -9,8 +9,7 @@ import { useInvalidateBeneficiaryPages } from "../../hooks/BeneficiaryHooks/useB
 const DeleteBeneficiary = ({ isOpen, toggle, benef, onDeleted }) => {
   const { t } = useTranslation();
   const [isDeleting, setIsDeleting] = useState(false);
-  const { userDetails, authHeader, getUserBeneficiaries, setBeneficiaries } =
-    useContext(UserContext);
+  const { userDetails, authHeader, getUserBeneficiaries } = useContext(UserContext);
   const invalidateBeneficiaryPages = useInvalidateBeneficiaryPages();
 
   const deleteBeneficiary = async () => {
@@ -24,7 +23,6 @@ const DeleteBeneficiary = ({ isOpen, toggle, benef, onDeleted }) => {
         },
       );
       // console.log(decryptData(res.data.data))
-      setBeneficiaries?.((prev) => prev.filter((i) => i._id !== benef._id));
       onDeleted?.(benef._id);
       toggle();
     } catch (error) {

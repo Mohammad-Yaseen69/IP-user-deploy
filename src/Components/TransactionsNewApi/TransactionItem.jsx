@@ -20,7 +20,7 @@ export { service_name_formatter };
 const TransactionItem = ({ item, index, activeItem, setActiveItem, fromReferral = false }) => {
   const { t, i18n } = useTranslation();
   const can = usePermission();
-  const { authHeader, beneficiaries, userDetails } = useContext(UserContext);
+  const { authHeader, userDetails } = useContext(UserContext);
 
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [note, setNote] = useState(item?.note);
@@ -65,10 +65,8 @@ const TransactionItem = ({ item, index, activeItem, setActiveItem, fromReferral 
 
   const internationalReceiver = useMemo(() => {
     if (!item?.beneficiary) return null;
-    return (
-      beneficiaries?.find((b) => b?._id === item?.beneficiary) || item?.beneficiaryDetails || null
-    );
-  }, [beneficiaries, item]);
+    return item?.beneficiaryDetails;
+  }, [item]);
 
   const externalStatusDescription = useMemo(() => {
     if (item?.payment_type === "non_instapay") {

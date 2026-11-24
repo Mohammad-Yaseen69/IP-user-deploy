@@ -43,6 +43,7 @@ import StepFive from "./StepFive";
 import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
+import { getDefaultSenderWallet } from "../../../utils/Functions/senderWallet";
 
 const initialState = {
   loading: false,
@@ -202,13 +203,7 @@ const WalletToWalletFlow = ({
       // dataHandler("currency", data.wallet)
     } else {
       if (userWallets?.length > 0 && !data.currency?._id) {
-        const def =
-          userWallets?.[0]?.wallet_type === "insta" &&
-          !userWallets?.[0]?.blocked &&
-          !userWallets?.[0]?.admin_blocked &&
-          userWallets?.[0]?.status?.toLowerCase() === "active"
-            ? userWallets?.[0]
-            : userWallets?.find((item) => item?.default);
+        const def = getDefaultSenderWallet(userWallets);
         const wallet = {
           ...def,
           ...currencies.find((item) => item.currency_code === def?.currency?.code),
@@ -1190,13 +1185,7 @@ const WalletToWalletFlow = ({
         leftSideContent.map((c, i) => (i === 0 ? "Fetching beneficiary details" : c)),
       );
       if (userWallets?.length > 0) {
-        const wallet =
-          userWallets?.[0]?.wallet_type === "insta" &&
-          !userWallets?.[0]?.blocked &&
-          !userWallets?.[0]?.admin_blocked &&
-          userWallets?.[0]?.status?.toLowerCase() === "active"
-            ? userWallets?.[0]
-            : userWallets?.find((item) => item?.default);
+        const wallet = getDefaultSenderWallet(userWallets);
         getPlainExchangeRate(currency, wallet?.currency?.code, amount).then((res) => {
           dataHandler(
             "amount",

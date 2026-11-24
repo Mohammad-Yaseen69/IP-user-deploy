@@ -49,8 +49,11 @@ import {
   getChannelProtocol,
   getInitialProtocol,
   getProtocolsForAddress,
-  hasCryptoChannel,
 } from "./cryptoProtocols";
+import {
+  useAllBeneficiaries,
+  useInvalidateBeneficiaryPages,
+} from "../../../hooks/BeneficiaryHooks/useBeneficiariesPage";
 
 const QUOTE_TTL_MS = 2 * 60 * 1000;
 
@@ -189,8 +192,8 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
   const { t } = useTranslation();
   const width = useWindowWidth();
   const navigate = useNavigate();
-  const { userDetails, beneficiaries, getUserBeneficiaries, setProfileLockTime } =
-    useContext(UserContext);
+  const { userDetails, getUserBeneficiaries, setProfileLockTime } = useContext(UserContext);
+  const invalidateBeneficiaryPages = useInvalidateBeneficiaryPages();
 
   const walletId = wallet?._id;
   const cryptoCurrency = String(wallet?.currency?.code || "").toUpperCase();
@@ -246,11 +249,10 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
     },
   });
 
-  const cryptoBeneficiaries = useMemo(
-    () =>
-      (beneficiaries || []).filter((beneficiary) => hasCryptoChannel(beneficiary, cryptoCurrency)),
-    [beneficiaries, cryptoCurrency],
-  );
+  const { beneficiaries: cryptoBeneficiaries } = useAllBeneficiaries({
+    filters: { crypto: cryptoCurrency || "any" },
+    enabled: !!isOpen,
+  });
 
   const cryptoChannels = useMemo(() => {
     const channels = getBeneficiaryCryptoChannels(selectedBeneficiary);
@@ -309,10 +311,6 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
   const isProcessing = feeMutation.isPending || isSendingOtp;
   const disabled = getDisabledState(currentStep, machineData) || isProcessing;
   const showFooter = currentStep !== STEPS.OTP && currentStep !== STEPS.DONE;
-
-  useEffect(() => {
-    if (isOpen && userDetails?._id) getUserBeneficiaries?.();
-  }, [isOpen, userDetails?._id]);
 
   useEffect(() => {
     if (userDetails?.tfa) setAuthType("authenticator");
@@ -436,6 +434,7 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
   const handleBeneficiarySaved = async (savedBeneficiary) => {
     setIsAddBeneficiaryOpen(false);
     setSavedBeneficiaryId(getBeneficiaryId(savedBeneficiary) || "");
+    invalidateBeneficiaryPages();
     await getUserBeneficiaries?.();
   };
 
