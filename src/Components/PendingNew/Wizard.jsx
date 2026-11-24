@@ -34,7 +34,7 @@ const Wizard = ({ subStep }) => {
               color: "white",
               fontWeight: "700",
               fontSize: ".7rem",
-              fontFamily: "Manrope",
+              fontFamily: "Inter, sans-serif",
             }}
           >
             !
@@ -62,7 +62,7 @@ const Wizard = ({ subStep }) => {
               color: "white",
               fontWeight: "700",
               fontSize: ".7rem",
-              fontFamily: "Manrope",
+              fontFamily: "Inter, sans-serif",
             }}
           >
             !

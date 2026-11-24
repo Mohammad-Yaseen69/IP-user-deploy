@@ -2,7 +2,7 @@
   padding: 0 var(--page-gutter);
   background: linear-gradient(to right, transparent, white);
   min-height: 100vh;
-  font-family: "Manrope";
+  font-family: "Inter", sans-serif;
 }
 
 @media screen and (max-width: 1530px) {

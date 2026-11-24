@@ -21,7 +21,7 @@
 }
 
 .banner h2 {
-  font-family: "Clash Display";
+  font-family: "Inter", sans-serif;
   font-size: min(5cqi, 36px);
   font-style: normal;
   font-weight: 600;
@@ -55,7 +55,7 @@
   color: #fff;
   leading-trim: both;
   text-edge: cap;
-  font-family: "Clash Display";
+  font-family: "Inter", sans-serif;
   font-size: min(3cqi, 16px);
   font-style: normal;
   font-weight: 600;
@@ -94,7 +94,7 @@
 
   .m_card h4 {
     font-size: 1rem;
-    font-family: "Clash Display", sans-serif;
+    font-family: "Inter", sans-serif;
     font-weight: 700;
   }
 
@@ -104,7 +104,7 @@
   }
 
   .m_card a {
-    font-family: "Clash Display", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 0.7rem;
     color: white;
   }

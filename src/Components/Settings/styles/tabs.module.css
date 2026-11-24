@@ -240,7 +240,7 @@
 
 .missingTabs span {
   color: var(--COLORS-Neutral-1000, #333);
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;

@@ -121,7 +121,7 @@
     }
     .icon-last {
       input {
-        font-family: $font-Montserrat;
+        font-family: "Inter", sans-serif;
       }
     }
   }
@@ -129,7 +129,7 @@
     display: block;
     color: $dark-color;
     text-transform: uppercase;
-    font-family: $font-Montserrat;
+    font-family: "Inter", sans-serif;
     font-weight: 600;
   }
   .form-group {
@@ -139,7 +139,7 @@
     }
     button.btn {
       min-width: 128px;
-      font-family: $font-Montserrat;
+      font-family: "Inter", sans-serif;
     }
   }
 }

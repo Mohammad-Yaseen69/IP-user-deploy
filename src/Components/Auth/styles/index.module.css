@@ -37,7 +37,7 @@
   }
 
   > h2 {
-    font-family: Manrope;
+    font-family: "Inter", sans-serif;
     font-size: 48px;
     font-weight: 600;
     line-height: 56px;
@@ -339,7 +339,7 @@
 
 .footerText {
   color: #777;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
@@ -361,7 +361,7 @@
 .form_details .left h1,
 .otp .left h1 {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 36px;
   font-weight: 800;
   line-height: 130%;
@@ -377,7 +377,7 @@
 .otp .left p {
   color: #808080;
   font-size: 14px;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-style: normal;
   font-weight: 600;
   margin-bottom: 0;
@@ -423,7 +423,7 @@
   font-style: normal;
   font-weight: 600;
   line-height: 150%;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
 }
 
 .loginWith {
@@ -433,7 +433,7 @@
   color: white;
   font-size: 12px;
   font-weight: 600;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   line-height: normal;
   letter-spacing: -0.24px;
   cursor: pointer;
@@ -530,7 +530,7 @@
 
 .input_error span {
   color: #f32d2d;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 12.232px;
   font-style: normal;
   font-weight: 600;
@@ -565,7 +565,7 @@
 
 .location_status span {
   color: #5926f0;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: -0.2px;
@@ -660,7 +660,7 @@
   border: none;
   width: 100%;
   color: #fff;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-weight: 600;
   line-height: 24px;
@@ -675,7 +675,7 @@
 
 .toggleLoginBtn {
   color: #5926f0;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-weight: 600;
   line-height: 20px;
@@ -702,7 +702,7 @@
 .auth_details .left h5 {
   margin-bottom: 0;
   color: #545454;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;
@@ -712,7 +712,7 @@
 .auth_details .left p {
   margin-bottom: 0;
   color: #808080;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -832,7 +832,7 @@
 .auth_details .right h4 {
   color: #000;
   text-align: center;
-  font-family: "Open Sans";
+  font-family: "Inter", sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 400;
@@ -952,7 +952,7 @@
   font-style: normal;
   font-weight: 600;
   line-height: 150%;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
 }
 
 .otp_inputs {
@@ -1019,7 +1019,7 @@
   color: #5926f0;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 600;

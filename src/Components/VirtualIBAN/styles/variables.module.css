@@ -15,7 +15,7 @@
   --text-secondary: #374151;
   --text-muted: #9ca3af;
 
-  font-family: "DM Sans", "Segoe UI", sans-serif;
+  font-family: "Inter", sans-serif;
   background: var(--bg-main);
   color: var(--text-primary);
   min-height: 100vh;

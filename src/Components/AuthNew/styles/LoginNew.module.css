@@ -43,7 +43,7 @@
 
 .center .left h1 {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 36px;
   font-style: normal;
   font-weight: 800;
@@ -53,7 +53,7 @@
 
 .center .left p {
   color: #808080;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -93,7 +93,7 @@
 .auth_details .left h5 {
   margin-bottom: 0;
   color: #545454;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;
@@ -103,7 +103,7 @@
 .auth_details .left p {
   margin-bottom: 0;
   color: #808080;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -137,7 +137,7 @@
 .auth_details .right h4 {
   color: #000;
   text-align: center;
-  font-family: "Open Sans";
+  font-family: "Inter", sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 400;
@@ -151,7 +151,7 @@
 
 .footer span {
   color: #bfbfbf;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
@@ -174,7 +174,7 @@
 
 .input_container label {
   color: #545454;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -217,7 +217,7 @@
 
 .input_container .input_error span {
   color: #f32d2d;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 12.232px;
   font-style: normal;
   font-weight: 600;
@@ -321,7 +321,7 @@
 
 .form_btn span {
   color: #fff;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;

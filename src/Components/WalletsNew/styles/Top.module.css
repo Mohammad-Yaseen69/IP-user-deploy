@@ -22,7 +22,7 @@
 
 .left .top h2 {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 700;
@@ -82,7 +82,7 @@
 
 .default span {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 13.141px;
   font-style: normal;
   font-weight: 600;
@@ -111,7 +111,7 @@
 
 .add_cur span {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 13.141px;
   font-style: normal;
   font-weight: 600;
@@ -134,7 +134,7 @@
 
 .right .top h2 {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 700;
@@ -147,7 +147,7 @@
   background: rgba(89, 38, 240, 0.08);
   padding: 0.3rem 1em;
   color: #5926f0;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 13.141px;
   font-style: normal;
   font-weight: 700;
@@ -171,7 +171,7 @@
   border: none;
   outline: none;
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 13.141px;
   font-style: normal;
   font-weight: 600;

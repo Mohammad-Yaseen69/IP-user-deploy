@@ -1,4 +1,31 @@
-import { CreditCard, DollarSign, Home, User } from "react-feather";
+import { CreditCard as CreditCardIcon, DollarSign, Home, User } from "react-feather";
+import {
+  Activity,
+  Banknote,
+  CalendarCheck,
+  ChartColumn,
+  CircleUser,
+  CreditCard,
+  FileChartColumn,
+  FileText,
+  Hash,
+  Landmark,
+  LayoutGrid,
+  LifeBuoy,
+  LogOut,
+  MapPin,
+  MessageSquareHeart,
+  QrCode,
+  Receipt,
+  ReceiptText,
+  Settings,
+  Share2,
+  ShoppingBag,
+  UserCog,
+  Users,
+  UsersRound,
+  Wallet,
+} from "lucide-react";
 import acc from "./files/acc.svg";
 import acc_a from "./files/acc_a.svg";
 import analytics from "./files/analytics.svg";
@@ -49,6 +76,7 @@ import v_bank_a from "./files/v_bank_a.svg";
 import v_bank from "./files/v_bank.svg";
 import payviasocial from "./files/payviasocial.svg";
 import payviasocial_unactive from "./files/payviasocial_unactive.svg";
+import { Analytics, Bank, Basket, Bitcoin, PayBills, Payments, Send, Wallets } from "../NavIcons";
 
 export const MENU = [
   {
@@ -60,6 +88,7 @@ export const MENU = [
       },
       {
         title: "Dashboard",
+        Icon: LayoutGrid,
         icon: <img loading="lazy" src={dash} />,
         activeIcon: <img loading="lazy" src={dash_a} />,
         type: "link",
@@ -68,6 +97,7 @@ export const MENU = [
       },
       {
         title: "Analytics",
+        Icon: Analytics,
         url: "/store",
         icon: <img loading="lazy" src={analytics} />,
         activeIcon: <img loading="lazy" src={analytics_a} />,
@@ -81,6 +111,7 @@ export const MENU = [
       },
       {
         title: "My Wallets",
+        Icon: Wallets,
         icon: <img loading="lazy" src={wallets} />,
         activeIcon: <img loading="lazy" src={wallets_a} />,
         type: "link",
@@ -89,6 +120,7 @@ export const MENU = [
       },
       {
         title: "Crypto Hub",
+        Icon: Bitcoin,
         icon: <img loading="lazy" src={crypto_icon} />,
         activeIcon: <img loading="lazy" src={crypto_icon_a} />,
         type: "link",
@@ -97,6 +129,7 @@ export const MENU = [
       },
       {
         title: "My virtual IBAN",
+        Icon: Bank,
         url: "/virtual-IBAN",
 
         icon: (
@@ -125,6 +158,7 @@ export const MENU = [
       },
       {
         title: "My Mastercard",
+        Icon: CreditCard,
         icon: <img loading="lazy" src={mastercard} />,
         activeIcon: <img loading="lazy" src={mastercard_a} />,
         type: "link",
@@ -133,6 +167,7 @@ export const MENU = [
       },
       {
         title: "My Portfolio",
+        Icon: Basket,
         icon: <img loading="lazy" src={portfolio} />,
         activeIcon: <img loading="lazy" src={portfolio_a} />,
         type: "link",
@@ -145,6 +180,7 @@ export const MENU = [
       },
       {
         title: "Payments",
+        Icon: Payments,
         icon: <img loading="lazy" src={paym} />,
         activeIcon: <img loading="lazy" src={paym_a} />,
         type: "link",
@@ -153,6 +189,7 @@ export const MENU = [
       },
       {
         title: "Pay Bills",
+        Icon: PayBills,
         icon: <img loading="lazy" src={paym} />,
         activeIcon: <img loading="lazy" src={paym_a} />,
         type: "link",
@@ -161,6 +198,7 @@ export const MENU = [
       },
       {
         title: "Beneficiaries",
+        Icon: Users,
         icon: <img loading="lazy" src={ben} />,
         activeIcon: <img loading="lazy" src={ben_a} />,
         type: "link",
@@ -169,6 +207,7 @@ export const MENU = [
       },
       {
         title: "Transactions",
+        Icon: FileChartColumn,
         icon: <img loading="lazy" src={tran} />,
         activeIcon: <img loading="lazy" src={tran_a} />,
         type: "link",
@@ -177,6 +216,7 @@ export const MENU = [
       },
       {
         title: "Payment Requests",
+        Icon: Send,
         icon: <img loading="lazy" src={pen} />,
         activeIcon: <img loading="lazy" src={pen_a} />,
         type: "link",
@@ -185,6 +225,7 @@ export const MENU = [
       },
       {
         title: "Schedules",
+        Icon: CalendarCheck,
         icon: <img loading="lazy" src={schedules} />,
         activeIcon: <img loading="lazy" src={schedules_a} />,
         type: "link",
@@ -193,6 +234,7 @@ export const MENU = [
       },
       {
         title: "Pay Via Social",
+        Icon: Share2,
         icon: <img loading="lazy" src={payviasocial_unactive} />,
         activeIcon: <img loading="lazy" src={payviasocial} />,
         type: "link",
@@ -205,6 +247,7 @@ export const MENU = [
       },
       {
         title: "My Payment Address",
+        Icon: Hash,
         icon: <img loading="lazy" src={pa} />,
         activeIcon: <img loading="lazy" src={pa_a} />,
         type: "link",
@@ -213,6 +256,7 @@ export const MENU = [
       },
       {
         title: "My QR Code Sticker",
+        Icon: QrCode,
         icon: <img loading="lazy" src={qr_s} />,
         activeIcon: <img loading="lazy" src={qr_s_a} />,
         type: "link",
@@ -221,6 +265,7 @@ export const MENU = [
       },
       {
         title: "My Invoices",
+        Icon: FileText,
         icon: <img loading="lazy" src={rec} />,
         activeIcon: <img loading="lazy" src={rec_a} />,
         type: "link",
@@ -229,6 +274,7 @@ export const MENU = [
       },
       {
         title: "Quotations",
+        Icon: ReceiptText,
         icon: <img loading="lazy" src={quotations} />,
         activeIcon: <img loading="lazy" src={quotations_a} />,
         type: "link",
@@ -241,6 +287,7 @@ export const MENU = [
       },
       {
         title: "Referrals",
+        Icon: MessageSquareHeart,
         icon: <img loading="lazy" src={ref} />,
         activeIcon: <img loading="lazy" src={ref_a} />,
         type: "link",
@@ -253,6 +300,7 @@ export const MENU = [
       },
       {
         title: "Profile",
+        Icon: CircleUser,
         icon: <img loading="lazy" src={acc} />,
         activeIcon: <img loading="lazy" src={acc_a} />,
         type: "link",
@@ -261,6 +309,7 @@ export const MENU = [
       },
       {
         title: "Geo Fencing",
+        Icon: MapPin,
         icon: <img loading="lazy" src={location} />,
         activeIcon: <img loading="lazy" src={location_a} />,
         type: "link",
@@ -269,6 +318,7 @@ export const MENU = [
       },
       {
         title: "Third-Party senders",
+        Icon: UsersRound,
         icon: <img loading="lazy" src={paym} />,
         activeIcon: <img loading="lazy" src={paym_a} />,
         type: "link",
@@ -325,6 +375,7 @@ export const MENU = [
       },
       {
         title: "Settings",
+        Icon: Settings,
         icon: <img loading="lazy" src={settings} />,
         activeIcon: <img loading="lazy" src={settings_a} />,
         type: "link",
@@ -333,6 +384,7 @@ export const MENU = [
       },
       {
         title: "Delegate Access",
+        Icon: UserCog,
         icon: <img loading="lazy" src={delegate} />,
         activeIcon: <img loading="lazy" src={delegate_a} />,
         type: "link",
@@ -343,6 +395,7 @@ export const MENU = [
       },
       {
         title: "Activity Feed",
+        Icon: Activity,
         icon: <img loading="lazy" src={Feed} />,
         activeIcon: <img loading="lazy" src={Feed_a} />,
         type: "link",
@@ -359,6 +412,7 @@ export const MENU = [
       // },
       {
         title: "Support",
+        Icon: LifeBuoy,
         icon: <img loading="lazy" src={support} />,
         activeIcon: <img loading="lazy" src={support_a} />,
         type: "link",
@@ -366,6 +420,7 @@ export const MENU = [
       },
       {
         title: "Logout",
+        Icon: LogOut,
         icon: <img loading="lazy" src={logout} />,
         activeIcon: <img loading="lazy" src={logout_a} />,
         type: "link",
@@ -387,7 +442,7 @@ export const SEARCHMENU = [
       },
       {
         title: "Transactions",
-        icon: <CreditCard />,
+        icon: <CreditCardIcon />,
         type: "link",
         url: `${window.location.origin}/transactions`,
         permission: "transactions.main.view",

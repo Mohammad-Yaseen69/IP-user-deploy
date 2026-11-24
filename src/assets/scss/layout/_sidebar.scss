@@ -301,7 +301,7 @@
             }
 
             span {
-              font-family: $font-roboto;
+              font-family: "Inter", sans-serif;
               font-size: 13px;
               font-weight: 400;
               letter-spacing: 0.5px;
@@ -363,7 +363,7 @@
                 background-color: $transparent-color;
                 color: $white;
                 border: none;
-                font-family: "Roboto", sans-serif, sans-serif;
+                font-family: "Inter", sans-serif;
 
                 &:focus {
                   outline: $transparent-color;
@@ -1815,7 +1815,7 @@
               overflow: auto;
               color: rgba(0, 0, 0, 0);
               padding: 24px 20px;
-              font-family: $font-Montserrat;
+              font-family: "Inter", sans-serif;
 
               li {
                 a {

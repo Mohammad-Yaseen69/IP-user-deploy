@@ -23,7 +23,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 2rem;
   font-style: normal;
   font-weight: 800;
@@ -56,7 +56,7 @@
   color: #848484;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.9rem;
   font-style: normal;
   font-weight: 700;
@@ -71,7 +71,7 @@
   color: #fff;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.45rem;
   font-style: normal;
   font-weight: 800;
@@ -83,7 +83,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 2rem;
   font-style: normal;
   font-weight: 700;
@@ -109,7 +109,7 @@
   color: #848484;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.9rem;
   font-style: normal;
   font-weight: 700;
@@ -124,7 +124,7 @@
   color: #fff;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.45rem;
   font-style: normal;
   font-weight: 800;
@@ -136,7 +136,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 2.5rem;
   font-style: normal;
   font-weight: 700;
@@ -165,7 +165,7 @@
   color: #909090;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.9rem;
   font-style: normal;
   font-weight: 600;
@@ -215,7 +215,7 @@
   color: #808080;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 1rem;
   font-style: normal;
   font-weight: 600;
@@ -239,7 +239,7 @@
   color: #fff;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 1.1rem;
   font-style: normal;
   font-weight: 600;
@@ -310,7 +310,7 @@
     text-align: center;
     leading-trim: both;
     text-edge: cap;
-    font-family: Manrope;
+    font-family: "Inter", sans-serif;
     font-size: 1.3rem;
     font-style: normal;
     font-weight: 800;
