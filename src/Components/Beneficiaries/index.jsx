@@ -24,6 +24,18 @@ const TYPE_OPTIONS = [
   { value: "business", label: "Business" },
 ];
 
+// `channel` is a case-insensitive contains match, so "mobile" also covers stored "mobile_wallet"
+// and "cash" covers "cash_pickup". InstaPay wallet needs the exact match so it skips "mobile_wallet".
+const ACCOUNT_TYPE_OPTIONS = [
+  { value: "all", label: "All", filters: {} },
+  { value: "bank", label: "Bank Account", filters: { channel: "bank" } },
+  { value: "mobile", label: "Mobile Wallet", filters: { channel: "mobile" } },
+  { value: "wallet", label: "InstaPay Wallet", filters: { account_type: "wallet" } },
+  { value: "crypto", label: "Crypto", filters: { channel: "crypto" } },
+  { value: "card", label: "Card", filters: { channel: "card" } },
+  { value: "cash", label: "Cash Pickup", filters: { channel: "cash" } },
+];
+
 const SORT_OPTIONS = [
   { value: "name_asc", label: "Name (A–Z)" },
   { value: "name_desc", label: "Name (Z–A)" },
@@ -40,6 +52,7 @@ const Beneficiaries = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
+  const [accountTypeFilter, setAccountTypeFilter] = useState("all");
   const [sortBy, setSortBy] = useState("name_asc");
   const [openMenu, setOpenMenu] = useState(null); // "filter" | "sort" | null
 
@@ -67,14 +80,22 @@ const Beneficiaries = () => {
     setBeneficiaryMode(mode);
   };
 
-  const activeFilterCount = typeFilter !== "all" ? 1 : 0;
+  const activeFilterCount = (typeFilter !== "all") + (accountTypeFilter !== "all");
+  const accountTypeFilters = ACCOUNT_TYPE_OPTIONS.find(
+    (o) => o.value === accountTypeFilter,
+  ).filters;
 
   const {
     beneficiaries: filtered,
     isLoading,
     hasNextPage,
     loaderRef,
-  } = useBeneficiariesPage({ search: searchTerm, type: typeFilter, sort: sortBy });
+  } = useBeneficiariesPage({
+    search: searchTerm,
+    type: typeFilter,
+    sort: sortBy,
+    filters: accountTypeFilters,
+  });
   const invalidateBeneficiaryPages = useInvalidateBeneficiaryPages();
 
   const onBeneficiarySaved = () => {
@@ -105,6 +126,7 @@ const Beneficiaries = () => {
         </Button>
         {openMenu === "filter" && (
           <div className={styles.menu}>
+            <div className={styles.menu_title}>{t("Type")}</div>
             {TYPE_OPTIONS.map((o) => (
               <button
                 key={o.value}
@@ -112,6 +134,20 @@ const Beneficiaries = () => {
                 className={`${styles.menu_item} ${typeFilter === o.value ? styles.menu_item_active : ""}`}
                 onClick={() => {
                   setTypeFilter(o.value);
+                  setOpenMenu(null);
+                }}
+              >
+                {t(o.label)}
+              </button>
+            ))}
+            <div className={styles.menu_title}>{t("Account Type")}</div>
+            {ACCOUNT_TYPE_OPTIONS.map((o) => (
+              <button
+                key={o.value}
+                type="button"
+                className={`${styles.menu_item} ${accountTypeFilter === o.value ? styles.menu_item_active : ""}`}
+                onClick={() => {
+                  setAccountTypeFilter(o.value);
                   setOpenMenu(null);
                 }}
               >
