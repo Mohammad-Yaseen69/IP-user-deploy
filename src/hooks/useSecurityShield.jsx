@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback, useState } from "react";
+import { useRef, useEffect, useCallback, useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import {
   registerRecaptchaHandler,
@@ -7,7 +7,6 @@ import {
   recordTelemetryFocus,
   isHoneypotTriggered,
   getBotSignals,
-  logHoneypotToSentry,
   logRecaptchaFailureToSentry,
 } from "../utils/Functions/securityUtils";
 

@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styles from "./styles/index.module.scss";
 import InstaPayLoader from "../Loader";
 import { UserContext } from "../../Context/UserContext";
-import { MoreHorizontal } from "react-feather";
 import Rating from "react-rating";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import axios from "axios";

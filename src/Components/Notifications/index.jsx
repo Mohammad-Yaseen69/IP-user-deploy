@@ -1,5 +1,4 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import notf from "../topRight/notf.svg";
 import { Col } from "reactstrap";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";

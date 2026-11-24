@@ -1,4 +1,3 @@
-import React from "react";
 import { AlertTriangle } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router";

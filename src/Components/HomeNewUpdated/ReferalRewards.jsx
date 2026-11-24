@@ -1,8 +1,7 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardBody } from "reactstrap";
 import { IoMdArrowDropright } from "react-icons/io";
-import { BsThreeDots } from "react-icons/bs";
 import { UserContext } from "../../Context/UserContext";
 import { Link } from "react-router-dom";
 

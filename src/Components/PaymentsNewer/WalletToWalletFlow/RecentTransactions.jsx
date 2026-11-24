@@ -2,7 +2,7 @@ import axios from "axios";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useContext, useState } from "react";
-import { Modal, ModalBody, ModalFooter, Button, Input, ModalHeader } from "reactstrap";
+import { Modal, ModalBody, Button, ModalHeader } from "reactstrap";
 import { UserContext } from "../../../Context/UserContext";
 import styles from "./styles/recentTrans.module.scss";
 import { useTranslation } from "react-i18next";
@@ -12,7 +12,6 @@ import useWindowWidth from "../../../utils/useWindowWidth";
 import countriesData from "../CountriesData.json";
 import repeat from "./repeat.svg";
 import { capitalizeStatus } from "../../PendingNew/ItemMobile";
-import { X } from "react-feather";
 import { formatCurrency } from "../../../Helper/AmountFormat";
 import { useAllBeneficiaries } from "../../../hooks/BeneficiaryHooks/useBeneficiariesPage";
 
