@@ -12,11 +12,11 @@ const Socials = () => {
   const [socials_data, setSocialData] = useState([
     {
       name: "Instagram",
-      followers: "0" + t("Followers"),
+      followers: "0 " + t("Followers").toLowerCase(),
     },
     {
       name: "Telegram",
-      followers: "0" + t("Followers"),
+      followers: "0 " + t("Followers").toLowerCase(),
     },
     {
       name: "Whatsapp",
@@ -40,7 +40,7 @@ const Socials = () => {
             name: `${service_name_formatter(item)}`,
             followers:
               typeof dec?.data?.[item] === "number"
-                ? dec?.data?.[item] + " " + t("Followers")
+                ? dec?.data?.[item] + " " + t("Followers").toLowerCase()
                 : dec?.data?.[item],
           };
         });
@@ -83,6 +83,7 @@ const Socials = () => {
                       color: "#5926f0",
                       fontSize: ".65rem",
                     }}
+                    rel="noreferrer"
                   >
                     @{userDetails?.insta_username}
                   </a>
@@ -133,6 +134,7 @@ const Socials = () => {
                     color: "#5926f0",
                     fontSize: ".65rem",
                   }}
+                  rel="noreferrer"
                 >
                   @{userDetails?.insta_username}
                 </a>

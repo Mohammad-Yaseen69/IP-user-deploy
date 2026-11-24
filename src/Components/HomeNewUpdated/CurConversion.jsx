@@ -284,7 +284,7 @@ const CurConversion = ({
       ?.map((item) => ({ name: item?.currency?.code, ...item }));
   }, [userWallets]);
 
-  const [formattedAmount, setFormattedAmount] = useState("1.00");
+  const [formattedAmount, setFormattedAmount] = useState("");
   const handleKeyUp = (e) => {
     const cursor = e.target.selectionStart;
     const prevLen = e.target.value.length;

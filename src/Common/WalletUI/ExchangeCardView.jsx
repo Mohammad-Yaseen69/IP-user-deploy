@@ -83,13 +83,15 @@ const ExchangeCardView = ({
                   onChange={setFrom}
                 />
               </div>
+
+              {insufficient && (
+                <p className={s.exError} role="alert">
+                  {t("Insufficient Balance in {{from}}", { from })}
+                </p>
+              )}
             </div>
             <div className={s.exBox}>
               <div className={s.exBoxTop}>
-                <span>{t("You get")}</span>
-                <Balance wallet={receiverWallet} />
-              </div>
-              <div className={s.exBoxMain}>
                 <output className={`${s.exAmount} ${s.exAmountOut}`}>{received || "0.00"}</output>
                 <CurrencyPill
                   label={t("Currency to receive")}
@@ -118,14 +120,8 @@ const ExchangeCardView = ({
           </p>
           {error && <p className={s.exError}>{error}</p>}
           <button type="submit" className={s.exCta} disabled={disabled}>
-            {insufficient ? (
-              t(`Insufficient Balance in PKR`).replace("PKR", from)
-            ) : (
-              <>
-                <ArrowLeftRight size={16} />
-                {loading ? t("Fetching Rates...") : t("Exchange {{from}} to {{to}}", { from, to })}
-              </>
-            )}
+            <ArrowLeftRight size={16} />
+            {loading ? t("Fetching Rates...") : t("Exchange {{from}} to {{to}}", { from, to })}
           </button>
         </form>
       ) : (

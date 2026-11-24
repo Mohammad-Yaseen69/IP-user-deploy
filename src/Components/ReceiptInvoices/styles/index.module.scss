@@ -33,18 +33,18 @@
       button {
         border: none;
         outline: none;
-        border-radius: var(--Corner-Radius-Small-Roundness, 8px);
-        background:
-          linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.5) 100%),
-          linear-gradient(259deg, #e64067 8.36%, #5926f0 54.71%, #4828a0 91.64%);
-        background-blend-mode: soft-light, normal;
+        border-radius: 9px;
+        background: #5926f0;
         display: flex;
-        padding: var(--Gaps-Gap-Large, 16px) var(--Gaps-Gap-XLarge, 20px);
+        height: 40px;
+        padding: 0 18px;
         justify-content: center;
         align-items: center;
         gap: 10px;
-        color: white;
+        color: #fff;
+        font-size: 14px;
         font-weight: 600;
+        cursor: pointer;
       }
     }
 

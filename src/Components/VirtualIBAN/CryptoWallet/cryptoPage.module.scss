@@ -13,7 +13,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  font-family: "DM Sans", Inter, "Segoe UI", sans-serif;
+  font-family: Inter, "Segoe UI", sans-serif;
   color: var(--cw-text);
 }
 
@@ -152,7 +152,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 38px;
+  height: 40px;
   padding: 0 14px;
   border-radius: 9px;
   border: 1px solid var(--cw-border);
@@ -199,7 +199,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 42px;
+  height: 40px;
   padding: 0 18px;
   border-radius: 9px;
   border: 0;
@@ -326,7 +326,7 @@
 }
 
 .walletBtnPrimary {
-  height: 34px;
+  height: 40px;
   padding: 0 16px;
   border: 0;
   border-radius: 8px;
@@ -347,7 +347,7 @@
 }
 
 .walletBtnGhost {
-  height: 34px;
+  height: 40px;
   padding: 0 16px;
   border: 0;
   border-radius: 8px;
@@ -434,7 +434,7 @@
 }
 
 .railTab {
-  height: 36px;
+  height: 40px;
   border: 0;
   border-radius: 8px;
   background: transparent;
@@ -615,7 +615,7 @@
 
 .railSubmit {
   width: 100%;
-  height: 48px;
+  height: 40px;
   border: 0;
   border-radius: 10px;
   background: var(--cw-accent);
@@ -732,8 +732,8 @@
 }
 
 .iconBtn {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 8px;
   border: 1px solid #ddd8fb;
   background: var(--cw-accent-soft);
@@ -769,6 +769,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  min-height: 40px;
   padding: 8px 14px;
   border-radius: 10px;
   border: 1px solid var(--cw-border);
@@ -978,7 +979,7 @@
   padding: 0 var(--page-gutter) 48px;
   min-height: 100vh;
   background: #f8f9fc;
-  font-family: "DM Sans", Inter, "Segoe UI", sans-serif;
+  font-family: Inter, "Segoe UI", sans-serif;
 }
 
 @media (max-width: 600px) {
@@ -1024,7 +1025,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  min-height: 48px;
+  min-height: 40px;
   padding: 8px 12px;
   border-radius: 9px;
   border: 1px solid var(--cw-border);
@@ -1372,7 +1373,7 @@
 }
 
 .railBtnGhost {
-  height: 48px;
+  height: 40px;
   padding: 0 18px;
   border-radius: 10px;
   border: 1px solid var(--cw-border);

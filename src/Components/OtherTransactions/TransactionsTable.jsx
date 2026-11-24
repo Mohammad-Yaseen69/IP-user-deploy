@@ -2,7 +2,8 @@ import { useTranslation } from "react-i18next";
 import styles from "./styles/index.module.scss";
 import calendar from "./files/calendar.png";
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { Search } from "react-feather";
+import { Search, Calendar as CalendarIcon } from "react-feather";
+import { useNavigate } from "react-router-dom";
 import { Input } from "reactstrap";
 import sent_white from "./files/sent_white.png";
 import sent_grey from "./files/sent_grey.png";
@@ -37,6 +38,7 @@ const TransactionsTable = () => {
   });
   const [showDatePicker, setShowDatePicker] = useState(false);
   const datePickerRef = useRef(null);
+  const SCHEDULE_PAYMENT_PATH = "/payments";
 
   const handleClickOutside = useCallback((event) => {
     if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
@@ -62,6 +64,27 @@ const TransactionsTable = () => {
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [debounceTimer, setDebounceTimer] = useState(null);
   const can = usePermission();
+  const navigate = useNavigate();
+
+  const renderEmpty = () => (
+    <div className={styles.empty}>
+      <span className={styles.emptyIcon}>
+        <CalendarIcon size={30} />
+      </span>
+      <h3 className={styles.emptyTitle}>{t("No scheduled payments yet")}</h3>
+      <p className={styles.emptyText}>
+        {t("Schedule a payment to send money or pay bills automatically.")}
+      </p>
+      <button
+        type="button"
+        className={styles.emptyCta}
+        onClick={() => navigate(SCHEDULE_PAYMENT_PATH)}
+      >
+        {t("Schedule a payment")}
+      </button>
+    </div>
+  );
+
   useEffect(() => {
     if (searchQuery !== debouncedSearchQuery) {
       if (debounceTimer) {
@@ -362,7 +385,7 @@ const TransactionsTable = () => {
                   );
                 })
             ) : (
-              <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No payment")}</span>
+              renderEmpty()
             )}
           </div>
 
@@ -407,7 +430,7 @@ const TransactionsTable = () => {
                   );
                 })
             ) : (
-              <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No payment")}</span>
+              renderEmpty()
             )}
           </div>
         </div>
