@@ -5,11 +5,12 @@ import secondaryFeeIcon from "./icons/moneyWavy.svg";
 import styles from "./virtualIbanModal.module.scss";
 import MT from "./icons/mt.svg";
 import GB from "./icons/uk.svg";
+import US from "../../../assets/fonts/flag-icon/us.svg";
 import { CheckCircle } from "react-feather";
 import { useContext } from "react";
 import { UserContext } from "../../../Context/UserContext";
 
-const FLAGS = { MT, GB };
+const FLAGS = { MT, GB, US };
 
 const FeesStep = ({
   jurisdiction,
@@ -32,7 +33,7 @@ const FeesStep = ({
     <div>
       <div className={styles.feesHeader}>
         <h4>
-          <img src={FLAGS[jurisdiction]} alt="" />
+          <img src={FLAGS[jurisdiction]} width={30} height={24} alt="" /> &nbsp;
           {t(info.header)}
         </h4>
         <div className={styles.badges}>

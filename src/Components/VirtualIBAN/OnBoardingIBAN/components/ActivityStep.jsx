@@ -9,8 +9,6 @@ import SidebarProgress from "./SidebarProgress";
 import StepProgress from "./StepProgress";
 import AlertBox from "./AlertBox";
 import useStepValidation, { required } from "../../../../hooks/useStepValidation";
-import { useQuery } from "@tanstack/react-query";
-import { apiWrapper } from "../../../../utils/Functions/apiWrapper";
 
 const getIndustryPayload = (industry) => ({
   name: industry?.name,
