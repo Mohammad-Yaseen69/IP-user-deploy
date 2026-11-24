@@ -53,7 +53,7 @@ const MobileSbContextProvider = ({ children }) => {
 };
 
 const Layout = ({ children, classNames, ...rest }) => {
-  const { setTogglSidebar, sidebar_types } = useContext(CheckContext);
+  const { sidebar_types } = useContext(CheckContext);
   const { t } = useTranslation();
   const location = useLocation();
   const query = new URLSearchParams(location.search);
@@ -290,20 +290,6 @@ const Layout = ({ children, classNames, ...rest }) => {
 
     return () => clearTimeout(timer);
   }, [userDetails?._id]);
-
-  useEffect(() => {
-    const path = location.pathname.toLowerCase();
-    if (
-      path === "/" ||
-      path === "/dashboard/default" ||
-      path === "/my-mastercard" ||
-      path === "/payments"
-    ) {
-      setTogglSidebar(true);
-    } else {
-      setTogglSidebar(false);
-    }
-  }, [location]);
 
   const { showTimerCountdown } = useContext(InactivityContext);
 
