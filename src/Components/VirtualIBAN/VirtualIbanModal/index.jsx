@@ -50,6 +50,7 @@ import JurisdictionStep from "./JurisdictionStep";
 import PendingStep from "./PendingStep";
 import SidebarProgress from "./SidebarProgress";
 import VerificationStep from "./VerificationStep";
+import MissingInfoModal from "../../MyMasterCard/MissingInfoModal";
 import styles from "./virtualIbanModal.module.scss";
 
 import { useNavigate } from "react-router";
@@ -151,6 +152,7 @@ const VirtualIbanModal = ({
   const [pendingTransactionId, setPendingTransactionId] = useState("");
   const [pendingTransactionRef, setPendingTransactionRef] = useState("");
   const [isResumedPending, setIsResumedPending] = useState(false);
+  const [missingEmailModal, setMissingEmailModal] = useState(false);
   const navigate = useNavigate();
   const [walletFeeFxMap, setWalletFeeFxMap] = useState({});
   const [saveCard, setSaveCard] = useState(false);
@@ -692,6 +694,7 @@ const VirtualIbanModal = ({
   const getCreatePayload = (wallet = walletState) => ({
     wallet_id: wallet?.wallet_id || wallet?._id,
     currencyCode: jurisdictionInfo.currencyCode,
+    provider: jurisdictionInfo.provider,
     name: userDetails?.full_name || userDetails?.name || userDetails?.username || "Virtual IBAN",
     activation_fee: {
       amount: parseAmount(feeDetails?.totalFee),
@@ -890,6 +893,15 @@ const VirtualIbanModal = ({
       resetState();
       toggle?.();
       navigate("/settings?tab=verification");
+      return;
+    }
+
+    if (
+      currentStep === STEPS.JURISDICTION &&
+      jurisdictionInfo.provider === "rhub" &&
+      userDetails?.email
+    ) {
+      setMissingEmailModal(true);
       return;
     }
 
@@ -1248,6 +1260,15 @@ const VirtualIbanModal = ({
           />
         </ModalBody>
       </Modal>
+      {missingEmailModal && (
+        <MissingInfoModal
+          isOpen={missingEmailModal}
+          toggle={() => setMissingEmailModal(false)}
+          missingType="email"
+          onSuccess={() => setCurrentStep(goNext(STEPS.JURISDICTION, machineData).nextStep)}
+          description={"To proceed with your IBAN activation, please provide your email."}
+        />
+      )}
     </>
   );
 };
