@@ -4,7 +4,7 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import Top from "./Top";
 import WalletLimits from "./WalletLimits";
 import WalletLedger from "./WalletLedger";
-import ComingUp from "./ComingUp";
+// import ComingUp from "./ComingUp";
 import axios from "axios";
 import { getLimits } from "./getLimits";
 import { UserContext } from "../../Context/UserContext";
@@ -113,7 +113,7 @@ const WalletsNew = () => {
                 currentWallet={currentWallet}
               />
             )}
-            {can("schedules.view") && <ComingUp />}
+            {/* {can("schedules.view") && <ComingUp />} */}
           </div>
 
           {can("transactions.wallet.list") && <WalletLedger currentWallet={currentWallet} />}

@@ -13,7 +13,7 @@ const CustomizerProvider = (props) => {
   const [mixLayout, setMixLayout] = useState(false);
   const [sidebarResponsive, setSidebarResponsive] = useState(false);
   const [IsOpen, setIsClose] = useState(false);
-  const [togglSidebar, setTogglSidebar] = useState(false);
+  const [togglSidebar, setTogglSidebar] = useState(true);
 
   useEffect(() => {
     setSettings(ConfigDB.data.settings.sidebar_setting);
