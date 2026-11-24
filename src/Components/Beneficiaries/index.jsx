@@ -7,6 +7,7 @@ import { Button, Input } from "reactstrap";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import BeneficiaryCard from "./BeneficiaryCard";
+import FilterPanel from "./FilterPanel";
 import { UserContext } from "../../Context/UserContext";
 import add_ben from "./add_ben.svg";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
@@ -17,22 +18,6 @@ import {
   useBeneficiariesPage,
   useInvalidateBeneficiaryPages,
 } from "../../hooks/BeneficiaryHooks/useBeneficiariesPage";
-
-const TYPE_OPTIONS = [
-  { value: "all", label: "All" },
-  { value: "individual", label: "Individual" },
-  { value: "business", label: "Business" },
-];
-
-const ACCOUNT_TYPE_OPTIONS = [
-  { value: "all", label: "All", filters: {} },
-  { value: "bank", label: "Bank Account", filters: { channel: "bank" } },
-  { value: "mobile", label: "Mobile Wallet", filters: { channel: "mobile" } },
-  { value: "wallet", label: "InstaPay Wallet", filters: { account_type: "wallet" } },
-  { value: "crypto", label: "Crypto", filters: { channel: "crypto" } },
-  { value: "card", label: "Card", filters: { channel: "card" } },
-  { value: "cash", label: "Cash Pickup", filters: { channel: "cash" } },
-];
 
 const SORT_OPTIONS = [
   { value: "name_asc", label: "Name (A–Z)" },
@@ -49,8 +34,7 @@ const Beneficiaries = () => {
   const { verifyToken, getUserBeneficiaries } = useContext(UserContext);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [typeFilter, setTypeFilter] = useState("all");
-  const [accountTypeFilter, setAccountTypeFilter] = useState("all");
+  const [filters, setFilters] = useState({ type: "all", accountTypes: [] });
   const [sortBy, setSortBy] = useState("name_asc");
   const [openMenu, setOpenMenu] = useState(null); // "filter" | "sort" | null
 
@@ -78,10 +62,7 @@ const Beneficiaries = () => {
     setBeneficiaryMode(mode);
   };
 
-  const activeFilterCount = (typeFilter !== "all") + (accountTypeFilter !== "all");
-  const accountTypeFilters = ACCOUNT_TYPE_OPTIONS.find(
-    (o) => o.value === accountTypeFilter,
-  ).filters;
+  const activeFilterCount = (filters.type !== "all") + filters.accountTypes.length;
 
   const {
     beneficiaries: filtered,
@@ -90,9 +71,9 @@ const Beneficiaries = () => {
     loaderRef,
   } = useBeneficiariesPage({
     search: searchTerm,
-    type: typeFilter,
+    type: filters.type,
     sort: sortBy,
-    filters: accountTypeFilters,
+    filters: { account_types: filters.accountTypes.join(",") },
   });
   const invalidateBeneficiaryPages = useInvalidateBeneficiaryPages();
 
@@ -123,36 +104,13 @@ const Beneficiaries = () => {
           {activeFilterCount > 0 && <span className={styles.badge}>{activeFilterCount}</span>}
         </Button>
         {openMenu === "filter" && (
-          <div className={styles.menu}>
-            <div className={styles.menu_title}>{t("Type")}</div>
-            {TYPE_OPTIONS.map((o) => (
-              <button
-                key={o.value}
-                type="button"
-                className={`${styles.menu_item} ${typeFilter === o.value ? styles.menu_item_active : ""}`}
-                onClick={() => {
-                  setTypeFilter(o.value);
-                  setOpenMenu(null);
-                }}
-              >
-                {t(o.label)}
-              </button>
-            ))}
-            <div className={styles.menu_title}>{t("Account Type")}</div>
-            {ACCOUNT_TYPE_OPTIONS.map((o) => (
-              <button
-                key={o.value}
-                type="button"
-                className={`${styles.menu_item} ${accountTypeFilter === o.value ? styles.menu_item_active : ""}`}
-                onClick={() => {
-                  setAccountTypeFilter(o.value);
-                  setOpenMenu(null);
-                }}
-              >
-                {t(o.label)}
-              </button>
-            ))}
-          </div>
+          <FilterPanel
+            value={filters}
+            onApply={(next) => {
+              setFilters(next);
+              setOpenMenu(null);
+            }}
+          />
         )}
       </div>
 
