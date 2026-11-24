@@ -24,8 +24,6 @@ const TYPE_OPTIONS = [
   { value: "business", label: "Business" },
 ];
 
-// `channel` is a case-insensitive contains match, so "mobile" also covers stored "mobile_wallet"
-// and "cash" covers "cash_pickup". InstaPay wallet needs the exact match so it skips "mobile_wallet".
 const ACCOUNT_TYPE_OPTIONS = [
   { value: "all", label: "All", filters: {} },
   { value: "bank", label: "Bank Account", filters: { channel: "bank" } },
