@@ -11,7 +11,6 @@ import styles from "../styles/Balanceheader.module.css";
 import { normalizeVirtualIban } from "../utils/virtualIban";
 import { useState } from "react";
 import PasswordConfirmModal from "../../../Common/Component/passwordVerifications/PasswordConfirmModal";
-import { Dollar } from "../OnBoardingIBAN/components/SvgIcons";
 
 const formatAmount = (amount, currency) => {
   const value = Number(amount || 0);
@@ -175,7 +174,7 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
               <div>
                 <div className={styles.currencyIcon}>
                   {isRhub ? (
-                    <Dollar />
+                    "$"
                   ) : (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

@@ -84,6 +84,7 @@ import { formatCurrency } from "../../../../Helper/AmountFormat";
 import { decryptData } from "../../../../Helper/EssentilaMethods/Decryption";
 import { Info } from "lucide-react";
 import img from "../../../../assets/images/logo/logo2.png";
+import US_Image from "../../files/images/US.svg";
 
 const DEFAULT_BENEFICIARY_FORM = {
   type: "individual",
@@ -178,7 +179,6 @@ const SepaAmountStep = ({
   setTransferSpeed,
 }) => {
   const { t } = useTranslation();
-  const numericAmount = getAmountNumber(amount);
   const sourceBalance = getAmountNumber(availableBalance);
   const selectedSpeed =
     SEPA_TRANSFER_SPEEDS.find((speed) => speed.id === transferSpeed) || SEPA_TRANSFER_SPEEDS[0];
@@ -199,7 +199,7 @@ const SepaAmountStep = ({
         <div className={styles.sourceCard}>
           <div className={styles.sourceLeft}>
             <div className={styles.flagBox}>
-              <img src={MT} alt="" />
+              <img src={sourceIban?.provider === "rhub" ? US_Image : MT} alt="" />
             </div>
             <div>
               <h4>{sourceIban?.title || `${currencyCode} IBAN`}</h4>
@@ -914,6 +914,7 @@ const SepaTransfer = ({
     () => ({
       title: getVirtualIbanTitle(selectedIban, currencyCode),
       iban: getVirtualIbanNumber(selectedIban),
+      provider: selectedIban?.provider,
     }),
     [selectedIban, currencyCode],
   );
