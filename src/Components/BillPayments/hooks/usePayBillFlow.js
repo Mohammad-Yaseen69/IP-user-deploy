@@ -10,6 +10,7 @@ import { getWalletAvailable } from "../../VirtualIBAN/CryptoWallet/instapay/wall
 import { usePhoneVerification } from "../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/usePhoneVerification";
 import { useQueryClient } from "@tanstack/react-query";
 import { useVirtualIbans, virtualIbanQueryKeys } from "../../../hooks/useVirtualIban";
+import { isVirtualIbanPayable } from "../../VirtualIBAN/utils/virtualIban";
 import { getPaymentMethod } from "../data/paymentMethods";
 import {
   useAddSavedBill,
@@ -20,15 +21,6 @@ import {
   useBillStatements,
   useConfirmBillPayment,
 } from "./useBillPaymentQueries";
-
-const BLOCKED_IBAN_STATUSES = ["BLOCKED", "INACTIVE", "SUSPENDED", "TERMINATED"];
-export const isIbanPayable = (iban) =>
-  iban?.currency === "EUR" &&
-  !BLOCKED_IBAN_STATUSES.includes(String(iban.status || "").toUpperCase()) &&
-  !iban.adminBlocked &&
-  !iban.freezeIban &&
-  !iban.blockOutbound &&
-  !iban.userBlocked;
 
 export const PAY_STEPS = { BILLER: "biller", PAYMENT: "payment", CONFIRM: "confirm", DONE: "done" };
 
@@ -102,7 +94,7 @@ export const usePayBillFlow = ({
   const isIban = paymentMethodId === "iban";
   const queryClient = useQueryClient();
   const { data: allIbans = [] } = useVirtualIbans(userDetails?._id);
-  const ibans = allIbans.filter(isIbanPayable);
+  const ibans = allIbans.filter(isVirtualIbanPayable);
   useEffect(() => {
     if (isIban && !ibans.some((item) => item._id === iban?._id)) setIban(ibans[0] || null);
   }, [isIban, ibans.length, iban?._id]);

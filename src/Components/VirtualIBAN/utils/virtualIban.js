@@ -140,6 +140,15 @@ export const isVirtualIbanUserBlocked = (iban) => Boolean(iban?.userBlocked);
 
 export const isVirtualIbanOutboundBlocked = (iban) => Boolean(iban?.blockOutbound);
 
+const BLOCKED_IBAN_STATUSES = ["BLOCKED", "INACTIVE", "SUSPENDED", "TERMINATED"];
+export const isVirtualIbanPayable = (iban) =>
+  iban?.currency === "EUR" &&
+  !BLOCKED_IBAN_STATUSES.includes(String(iban.status || "").toUpperCase()) &&
+  !iban.adminBlocked &&
+  !iban.freezeIban &&
+  !iban.blockOutbound &&
+  !iban.userBlocked;
+
 export const asVirtualIban = (value) => {
   const unwrapped = unwrapVirtualIbanResponse(value);
   const nestedIban = unwrapped?.iban;

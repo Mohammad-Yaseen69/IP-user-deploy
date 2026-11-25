@@ -140,6 +140,8 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
       case 1:
         if (data.payment_type?.value === "wallet") {
           return !data.wallet?._id;
+        } else if (data.payment_type?.value === "iban") {
+          return !data.iban?._id;
         } else {
           return !data.payment_type?.value;
         }
@@ -203,7 +205,8 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
     dataHandler("exchange_rate_error", "");
     dataHandler("exchange_rate", {});
     try {
-      const url = `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${data.payment_type?.value !== "wallet" ? data.currency_wallet?.currency?.code : data.wallet?.currency?.code}&to=${item?.amount_reciever_currency?.currency?.code}&amount=${item?.status?.toLowerCase()?.includes("accepted") ? item?.revised_amount : item?.amount}&type=quotation&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&receiver_wallet_id=${item?.amount_reciever_currency?._id}&sender_wallet_id=${data.payment_type?.value !== "wallet" ? data.currency_wallet?._id : data.wallet?._id}&payment_method=request`;
+      const isIban = data.payment_type?.value === "iban";
+      const url = `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${isIban ? "EUR" : data.payment_type?.value !== "wallet" ? data.currency_wallet?.currency?.code : data.wallet?.currency?.code}&to=${item?.amount_reciever_currency?.currency?.code}&amount=${item?.status?.toLowerCase()?.includes("accepted") ? item?.revised_amount : item?.amount}&type=quotation&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&iban_id=${isIban ? data.iban?._id : ""}&receiver_wallet_id=${item?.amount_reciever_currency?._id}&sender_wallet_id=${data.payment_type?.value !== "wallet" ? data.currency_wallet?._id : data.wallet?._id}&payment_method=request`;
       const res = await axios.get(url, { headers: authHeader });
 
       const decrypted = decryptData(res.data.data);
@@ -383,7 +386,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
     if (data.payment_type?.value) {
       getExchangeRate();
     }
-  }, [data.payment_type, data.wallet]);
+  }, [data.payment_type, data.wallet, data.iban?._id]);
 
   const sendOtp = async (codeType = "") => {
     dataHandler("loading", true);
@@ -393,8 +396,11 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
           receiver_wallet_id:
             data.payment_type?.value !== "wallet" ? data.currency_wallet?._id : data.wallet?._id,
           quotation_id: item?._id,
+          iban_id: data.payment_type?.value === "iban" ? data.iban?._id : undefined,
           token:
-            data.payment_type?.value === "paypal" || data?.payment_type?.value === "mobile_wallet"
+            data.payment_type?.value === "paypal" ||
+            data?.payment_type?.value === "mobile_wallet" ||
+            data.payment_type?.value === "iban"
               ? data.exchange_rate?.token
               : "",
         },
@@ -558,9 +564,11 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
       formdata.append("type", data.codeType);
 
       const url =
-        data.payment_type?.value === "mobile_wallet"
-          ? "/api/collection/wallet-to-wallet"
-          : "/api/quotation/quotation-wallet-to-wallet";
+        data.payment_type?.value === "iban"
+          ? "/api/wallet/iban-pay/w2w"
+          : data.payment_type?.value === "mobile_wallet"
+            ? "/api/collection/wallet-to-wallet"
+            : "/api/quotation/quotation-wallet-to-wallet";
 
       const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}${url}`, formdata, {
         headers: { ...authHeader, "idempotency-key": getKey() },
@@ -603,7 +611,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
   const handleClick = () => {
     switch (data.step) {
       case 1:
-        if (data.payment_type?.value === "wallet") {
+        if (data.payment_type?.value === "wallet" || data.payment_type?.value === "iban") {
           dataHandler("step", data.step + 1);
           dataHandler("show_receipt", true);
         }
@@ -888,7 +896,12 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                 </div>
                 <div className={styles.right} style={{ minWidth: "550px" }}>
                   {data.step === 1 && (
-                    <StepFour data={data} dataHandler={dataHandler} loading={data.loading} />
+                    <StepFour
+                      data={data}
+                      dataHandler={dataHandler}
+                      loading={data.loading}
+                      ibanPay
+                    />
                   )}
                   {data.step === 2 && data.show_cards ? (
                     <CreditCard
@@ -1084,7 +1097,12 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                 ) : (
                   <>
                     {data.step === 1 && (
-                      <StepFour data={data} dataHandler={dataHandler} loading={data.loading} />
+                      <StepFour
+                        data={data}
+                        dataHandler={dataHandler}
+                        loading={data.loading}
+                        ibanPay
+                      />
                     )}
                     {data.step === 2 && data.show_cards ? (
                       <CreditCard

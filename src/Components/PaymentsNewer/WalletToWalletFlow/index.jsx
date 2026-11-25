@@ -243,6 +243,7 @@ const WalletToWalletFlow = ({
         return !data.payment_type?.name ||
           data.limitReached ||
           (data.payment_type?.value === "wallet" ? !data.wallet?._id || !isShippingValid : false) ||
+          (data.payment_type?.value === "iban" && !data.iban?._id) ||
           data?.payment_duration?.value === "subscription"
           ? !data.payment_duration?.recStartDate ||
               (!data.payment_duration?.cycles && !data.payment_duration?.unlimited)
@@ -338,6 +339,7 @@ const WalletToWalletFlow = ({
                 : +String(data.amount)?.replaceAll(",", ""),
           type: data.payment_duration?.value,
           payment_type: payment_type ?? "wallet_to_wallet",
+          iban_id: data.payment_type?.value === "iban" ? data.iban?._id : undefined,
           description: data.comment,
           token: data.exchange_rate?.token || "",
           // preserved_amount=${Number(String(data.recipient_amount)?.replaceAll(",",""))}
@@ -489,9 +491,11 @@ const WalletToWalletFlow = ({
 
       console.log(data.new_amoount);
       const url =
-        data.payment_type?.value === "mobile_wallet"
-          ? "/api/collection/wallet-to-wallet"
-          : `/api/wallet/${data.payment_duration?.value === "instant" ? "insta-wallet-to-wallet" : data.payment_duration?.value === "subscription" ? "subscribe-payment-w2w" : "schedule-payment-w2w"}`;
+        data.payment_type?.value === "iban"
+          ? "/api/wallet/iban-pay/w2w"
+          : data.payment_type?.value === "mobile_wallet"
+            ? "/api/collection/wallet-to-wallet"
+            : `/api/wallet/${data.payment_duration?.value === "instant" ? "insta-wallet-to-wallet" : data.payment_duration?.value === "subscription" ? "subscribe-payment-w2w" : "schedule-payment-w2w"}`;
       const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}${url}`, payload, {
         headers: { ...authHeader, "Idempotency-Key": getKey() },
       });
@@ -714,7 +718,8 @@ const WalletToWalletFlow = ({
     console.log(data);
 
     try {
-      const url = `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from}&to=${data.beneficiary_wallet?.currency?.code}&amount=${amount}&type=${payment_type ?? "wallet_to_wallet"}&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&receiver_wallet_id=${data.beneficiary_wallet?._id}&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}${data.recipient_amount ? `&preserved_amount=${Number(String(data.recipient_amount)?.replaceAll(",", ""))}` : ""}`;
+      const isIban = data.payment_type?.value === "iban";
+      const url = `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${isIban ? "EUR" : from}&to=${data.beneficiary_wallet?.currency?.code}&amount=${amount}&type=${payment_type ?? "wallet_to_wallet"}&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&iban_id=${isIban ? data.iban?._id : ""}&receiver_wallet_id=${data.beneficiary_wallet?._id}&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}${data.recipient_amount ? `&preserved_amount=${Number(String(data.recipient_amount)?.replaceAll(",", ""))}` : ""}`;
 
       const res = await axios.get(url, { headers: authHeader });
       const decrypted = decryptData(res.data.data);
@@ -1027,6 +1032,7 @@ const WalletToWalletFlow = ({
   }, [
     data.payment_type?.value,
     data.wallet?._id,
+    data.iban?._id,
     data.payment_type,
     data.currency?._id,
     data.amount,
@@ -1089,7 +1095,7 @@ const WalletToWalletFlow = ({
             dataHandler("showShippingAddress", false);
             dataHandler("step", 5);
           }
-        } else if (data.payment_type?.value === "paypal") {
+        } else if (data.payment_type?.value === "paypal" || data.payment_type?.value === "iban") {
           dataHandler("showShippingAddress", false);
           dataHandler("step", 5);
         } else {
@@ -1615,7 +1621,12 @@ const WalletToWalletFlow = ({
                         <PaymentType data={data} dataHandler={dataHandler} />
                       )
                     ) : (
-                      <StepFour data={data} dataHandler={dataHandler} loading={data.loading} />
+                      <StepFour
+                        data={data}
+                        dataHandler={dataHandler}
+                        loading={data.loading}
+                        ibanPay
+                      />
                     ))}
                   {data.step === 5 &&
                     (data?.payment_type?.value === "bank_transfer" ? (
@@ -1908,7 +1919,7 @@ const WalletToWalletFlow = ({
                                 <PaymentType data={data} dataHandler={dataHandler} />
                               )
                             ) : (
-                              <StepFour data={data} dataHandler={dataHandler} />
+                              <StepFour data={data} dataHandler={dataHandler} ibanPay />
                             ))}
                           {data.step === 5 &&
                             (data?.payment_type?.value === "bank_transfer" ? (

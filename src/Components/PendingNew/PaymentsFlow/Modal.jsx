@@ -52,6 +52,8 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
       case 1:
         if (data.payment_type?.value === "wallet") {
           return !data.wallet?._id;
+        } else if (data.payment_type?.value === "iban") {
+          return !data.iban?._id;
         } else {
           return !data.payment_type?.value;
         }
@@ -122,8 +124,11 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
             data.payment_type?.value !== "wallet" ? data.currency_wallet?._id : data.wallet?._id,
           purpose: "xyz",
           payment_type: "payment_request",
+          iban_id: data.payment_type?.value === "iban" ? data.iban?._id : undefined,
           token:
-            data.payment_type?.value === "paypal" || data?.payment_type?.value === "mobile_wallet"
+            data.payment_type?.value === "paypal" ||
+            data?.payment_type?.value === "mobile_wallet" ||
+            data.payment_type?.value === "iban"
               ? data.exchange_rate?.token
               : "",
         },
@@ -288,9 +293,11 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
       formdata.append("type", data.codeType);
 
       const url =
-        data.payment_type?.value === "mobile_wallet"
-          ? "/api/collection/wallet-to-wallet"
-          : "/api/wallet/accept-payment-request";
+        data.payment_type?.value === "iban"
+          ? "/api/wallet/iban-pay/w2w"
+          : data.payment_type?.value === "mobile_wallet"
+            ? "/api/collection/wallet-to-wallet"
+            : "/api/wallet/accept-payment-request";
 
       const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}${url}`, formdata, {
         headers: { ...authHeader, "idempotency-key": getKey() },
@@ -334,7 +341,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
   const handleClick = () => {
     switch (data.step) {
       case 1:
-        if (data.payment_type?.value === "wallet") {
+        if (data.payment_type?.value === "wallet" || data.payment_type?.value === "iban") {
           dataHandler("step", data.step + 1);
           dataHandler("show_receipt", true);
         }
@@ -796,7 +803,12 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                 ) : (
                   <>
                     {data.step === 1 && (
-                      <StepFour data={data} dataHandler={dataHandler} loading={data.loading} />
+                      <StepFour
+                        data={data}
+                        dataHandler={dataHandler}
+                        loading={data.loading}
+                        ibanPay
+                      />
                     )}
                     {data.step === 2 && data.show_cards ? (
                       <CreditCard

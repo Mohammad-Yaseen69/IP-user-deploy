@@ -126,7 +126,8 @@ const PaymentsFlow = ({ item }) => {
     updateData("exchange_rate_error", "");
     updateData("exchange_rate", {});
     try {
-      const url = `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${data.payment_type?.value !== "wallet" ? data.currency_wallet?.currency?.code : data.wallet?.currency?.code}&to=${item?.currency?.code}&amount=${item?.amount}&type=payment_request&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&receiver_wallet_id=${item?.wallet}&sender_wallet_id=${data.payment_type?.value !== "wallet" ? data.currency_wallet?._id : data.wallet?._id}&payment_method=request`;
+      const isIban = data.payment_type?.value === "iban";
+      const url = `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${isIban ? "EUR" : data.payment_type?.value !== "wallet" ? data.currency_wallet?.currency?.code : data.wallet?.currency?.code}&to=${item?.currency?.code}&amount=${item?.amount}&type=payment_request&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&iban_id=${isIban ? data.iban?._id : ""}&receiver_wallet_id=${item?.wallet}&sender_wallet_id=${data.payment_type?.value !== "wallet" ? data.currency_wallet?._id : data.wallet?._id}&payment_method=request`;
       console.log(url);
       const res = await axios.get(url, { headers: authHeader });
 
@@ -313,7 +314,7 @@ const PaymentsFlow = ({ item }) => {
         getExchangeRate();
       }
     }
-  }, [data.payment_type, data.wallet, data.currency_wallet]);
+  }, [data.payment_type, data.wallet, data.currency_wallet, data.iban?._id]);
 
   return (
     <div className={styles.container}>

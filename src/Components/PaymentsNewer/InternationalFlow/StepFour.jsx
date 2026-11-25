@@ -17,6 +17,47 @@ import TypingSpan from "../../TypingSpan";
 import { UserContext } from "../../../Context/UserContext";
 import { useQuery } from "@tanstack/react-query";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
+import { useVirtualIbans } from "../../../hooks/useVirtualIban";
+import { isVirtualIbanPayable } from "../../VirtualIBAN/utils/virtualIban";
+import { formatWalletAmount } from "../../VirtualIBAN/CryptoWallet/instapay/wallets";
+
+export const IBAN_PAY_TYPE = { name: "Virtual IBAN", value: "iban", icon: bank, status: "Active" };
+
+const IbanPicker = ({ data, dataHandler }) => {
+  const { t } = useTranslation();
+  const { userDetails } = useContext(UserContext);
+  const { data: ibans = [] } = useVirtualIbans(userDetails?._id);
+  const payable = ibans.filter(isVirtualIbanPayable);
+  useEffect(() => {
+    if (!payable.some((item) => item._id === data.iban?._id)) dataHandler("iban", payable[0] || {});
+  }, [payable.length]);
+
+  return (
+    <div className={styles.container}>
+      {payable.map((item) => (
+        <div
+          key={item._id}
+          className={styles.item}
+          onClick={() => dataHandler("iban", item)}
+          aria-pressed={data.iban?._id === item._id}
+        >
+          <img src={bank} alt="" className={styles.icon} loading="lazy" />
+          <span>
+            {item.currency} {t("IBAN")} ·· {String(item.iban || "").slice(-4)}
+            <br />
+            <small>
+              {formatWalletAmount(item.balance)} {item.currency} {t("available")}
+            </small>
+          </span>
+          {data.iban?._id === item._id && (
+            <Check color="green" size={24} style={{ marginLeft: "auto" }} />
+          )}
+        </div>
+      ))}
+      {!payable.length && <div>{t("You need an active EUR virtual IBAN to pay this way.")}</div>}
+    </div>
+  );
+};
 
 export const typesData = [
   {
@@ -69,7 +110,8 @@ const StepFour = ({
   filteringValue = "dummy",
   customStyles = {},
   isAirtime,
-  bankComingSoon = false, // international transfer has no Plaid backend yet (Phase 4)
+  bankComingSoon = false,
+  ibanPay = false, // W2W family: pay from a EUR virtual IBAN
 }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
@@ -85,11 +127,12 @@ const StepFour = ({
 
   console.log(data?.mobile_wallet_services);
   const types = useMemo(() => {
-    const baseTypes = bankComingSoon
+    const withBank = bankComingSoon
       ? typesData.map((item) =>
           item.value === "bank_transfer" ? { ...item, status: "Coming Soon" } : item,
         )
       : typesData;
+    const baseTypes = ibanPay ? [...withBank, IBAN_PAY_TYPE] : withBank;
     if (data?.mobile_wallet_services?.length > 0) {
       console.log(typesData, data.mobile_wallet_services);
       const others = baseTypes.filter((item) => !item?.sub_name);
@@ -108,7 +151,7 @@ const StepFour = ({
     } else {
       return baseTypes;
     }
-  }, [typesData, data.mobile_wallet_services, bankComingSoon]);
+  }, [typesData, data.mobile_wallet_services, bankComingSoon, ibanPay]);
 
   // console.log(types, 'dsafsadffsad')
   useEffect(() => {
@@ -302,7 +345,8 @@ const StepFour = ({
                 i.value !== filteringValue &&
                 (methods?.includes(i.value) ||
                   methods?.includes(i?.api_val) ||
-                  i.value === "wallet"),
+                  i.value === "wallet" ||
+                  i.value === "iban"),
             )
             .map((item) => (
               <div
@@ -361,6 +405,9 @@ const StepFour = ({
             ))
         )}
       </div>
+      {ibanPay && data.payment_type?.value === "iban" && (
+        <IbanPicker data={data} dataHandler={dataHandler} />
+      )}
     </>
   );
 };

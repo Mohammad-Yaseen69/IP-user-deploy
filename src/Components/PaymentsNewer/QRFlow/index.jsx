@@ -179,6 +179,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
       case 3:
         return !data.reason;
       case 4:
+        if (data.payment_type?.value === "iban") return !data.iban?._id;
         return !data.payment_type?.name || data.payment_type?.value === "wallet"
           ? !data.wallet?._id
           : data?.payment_duration?.value == "subscription"
@@ -275,6 +276,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
           amount: Number(cleanString(data.recipient_amount)),
           type: "instant",
           payment_type: "qr_pay",
+          iban_id: data.payment_type?.value === "iban" ? data.iban?._id : undefined,
           description: data.comment,
           token: data.exchange_rate?.token,
         },
@@ -329,9 +331,11 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
 
       console.log(data.new_amoount);
       const url =
-        data.payment_type?.value === "mobile_wallet"
-          ? "/api/collection/wallet-to-wallet"
-          : `/api/wallet/${data.payment_duration?.value === "instant" ? "insta-wallet-to-wallet" : data.payment_duration?.value === "subscription" ? "subscribe-payment-w2w" : "schedule-payment-w2w"}`;
+        data.payment_type?.value === "iban"
+          ? "/api/wallet/iban-pay/w2w"
+          : data.payment_type?.value === "mobile_wallet"
+            ? "/api/collection/wallet-to-wallet"
+            : `/api/wallet/${data.payment_duration?.value === "instant" ? "insta-wallet-to-wallet" : data.payment_duration?.value === "subscription" ? "subscribe-payment-w2w" : "schedule-payment-w2w"}`;
       const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}${url}`, payload, {
         headers: { ...authHeader, "idempotency-key": getKey() },
       });
@@ -573,7 +577,8 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
     dataHandler("exchange_rate_error", "");
     dataHandler("exchange_rate", {});
     try {
-      const url = `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from}&to=${data.beneficiary_wallet?.currency?.code}&amount=${amount}&type=qr_pay&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&receiver_wallet_id=${data.beneficiary_wallet?._id}&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}`;
+      const isIban = data.payment_type?.value === "iban";
+      const url = `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${isIban ? "EUR" : from}&to=${data.beneficiary_wallet?.currency?.code}&amount=${amount}&type=qr_pay&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&iban_id=${isIban ? data.iban?._id : ""}&receiver_wallet_id=${data.beneficiary_wallet?._id}&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}`;
       // console.log(url)
       const res = await axios.get(url, { headers: authHeader, signal });
 
@@ -752,6 +757,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
   }, [
     data.payment_type?.value,
     data.wallet?._id,
+    data.iban?._id,
     userDetails,
     userWallets,
     currencies,
@@ -778,7 +784,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
           // if (data.show_payment_type) {
           dataHandler("step", 5);
           // }
-        } else if (data.payment_type?.value === "paypal") {
+        } else if (data.payment_type?.value === "paypal" || data.payment_type?.value === "iban") {
           dataHandler("step", 5);
         } else {
           dataHandler("showCard", true);
@@ -1170,7 +1176,12 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                         <PaymentType data={data} dataHandler={dataHandler} />
                       )
                     ) : (
-                      <StepFour data={data} dataHandler={dataHandler} loading={data.loading} />
+                      <StepFour
+                        data={data}
+                        dataHandler={dataHandler}
+                        loading={data.loading}
+                        ibanPay
+                      />
                     ))}
                   {data.step === 5 &&
                     (data?.payment_type?.value === "bank_transfer" ? (
@@ -1450,7 +1461,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                             <PaymentType data={data} dataHandler={dataHandler} />
                           )
                         ) : (
-                          <StepFour data={data} dataHandler={dataHandler} />
+                          <StepFour data={data} dataHandler={dataHandler} ibanPay />
                         ))}
                       {data.step === 5 &&
                         (data?.payment_type?.value === "bank_transfer" ? (
