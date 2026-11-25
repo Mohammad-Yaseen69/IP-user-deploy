@@ -1,6 +1,5 @@
 import styles from "./styles/index.module.css";
 import FormLogo from "./FormLogo";
-import InstaIcon from "./InstaIcon";
 import { Link } from "react-router-dom";
 import ev_left from "./files/ev_left.png";
 import { AlertTriangle, ChevronRight, Eye, EyeOff, XCircle } from "react-feather";
@@ -12,7 +11,6 @@ import OtpConfimation from "./OtpConfimation";
 import { Modal, ModalBody } from "reactstrap";
 // import PhoneInput from "react-phone-input-2"
 import { UserContext } from "../../Context/UserContext";
-import { countries } from "country-list-json";
 import PhoneInput from "../PhoneInput";
 import { useTranslation } from "react-i18next";
 

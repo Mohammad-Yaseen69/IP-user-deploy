@@ -1,4 +1,3 @@
-import React from "react";
 import { ChevronLeft } from "react-feather";
 import styles from "./styles.module.css";
 

@@ -27,7 +27,7 @@ import { formatCurrency } from "../../../Helper/AmountFormat";
 import localforage from "localforage";
 import { UserContext } from "../../../Context/UserContext";
 import ShippingDetails from "./ShippingDetails";
-import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow";
+import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow/apiErrorMessage";
 import { isInIframe, openInNewTab } from "../../../utils/Functions";
 import { usePermission } from "../../../hooks/GeneralUse/usePermission";
 

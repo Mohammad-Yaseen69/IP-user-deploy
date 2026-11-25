@@ -24,9 +24,7 @@ import {
   Globe,
   Home,
   List,
-  Plus,
   RefreshCw,
-  Search,
   Send,
   User,
 } from "react-feather";
@@ -39,7 +37,6 @@ import ContactBox from "../../../MyMasterCard/PaymentModal/ContactBox";
 import { getAmountNumber } from "../../utils/amount";
 import { getVirtualIbanId } from "../../utils/virtualIban";
 import {
-  CHARGE_BEARER_OPTIONS,
   getContinueLabel,
   getDisabledState,
   getPurposeCode,
@@ -47,7 +44,6 @@ import {
   goNext,
   isSidebarStepActive,
   isSidebarStepCompleted,
-  MIN_AMOUNT,
   MAX_AMOUNT,
   PURPOSE_OPTIONS,
   SIDEBAR_STEPS,
@@ -72,9 +68,6 @@ import {
 } from "../../../../hooks/useVirtualIban";
 import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError";
 import OTPConfirmation from "../../../../Common/Component/OtpVerification";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
-import AddBeneficiary from "../../../AddBeneficiary";
 import {
   validateSwiftBeneficiary,
   isValidDescription,
@@ -91,13 +84,9 @@ import {
   getBeneficiaryName,
   getBeneficiaryTypeLabel,
   getBeneficiaryCountry,
-  getBeneficiaryBankDetail,
   getBeneficiaryBic,
   getBeneficiaryBankName,
-  getBeneficiaryInitial,
   getBeneficiaryId,
-  getBeneficiaryAccountCount,
-  getBeneficiarySubtitle,
   getRawSwiftCode,
   hasBeneficiarySwiftCode,
   isBeneficiaryAddressTooLong,
@@ -796,7 +785,7 @@ const ReviewStep = ({
   );
 };
 
-const downloadSwiftReceipt = ({
+const downloadSwiftReceipt = async ({
   amount,
   currencyCode,
   selectedBeneficiary,
@@ -806,6 +795,10 @@ const downloadSwiftReceipt = ({
   payoutResult,
   t,
 }) => {
+  const [{ default: jsPDF }, { default: autoTable }] = await Promise.all([
+    import("jspdf"),
+    import("jspdf-autotable"),
+  ]);
   const doc = new jsPDF();
 
   const feeAmount = feeDetails?.fee;
@@ -1024,7 +1017,6 @@ const SwiftTransfer = forwardRef(
           : userDetails?.whatsapp_verification
             ? "whatsapp"
             : "sms";
-
     const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT);
     const [amount, setAmount] = useState("");
     const [selectedBeneficiary, setSelectedBeneficiary] = useState(null);

@@ -1,9 +1,8 @@
-import html2canvas from "html2canvas";
-
 export const takeScreenshot = (classname = "App", setLoading) => {
   setLoading(true);
 
-  html2canvas(document.querySelector(`.${classname}`))
+  import("html2canvas")
+    .then(({ default: html2canvas }) => html2canvas(document.querySelector(`.${classname}`)))
     .then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
       const aTag = document.createElement("a");
@@ -19,7 +18,10 @@ export const takeScreenshot = (classname = "App", setLoading) => {
 export const captureScreenShot = async (wallet_id) => {
   // Add a delay to ensure the QR code is rendered
   setTimeout(() => {
-    html2canvas(document.querySelector(`.App`), { useCORS: true })
+    import("html2canvas")
+      .then(({ default: html2canvas }) =>
+        html2canvas(document.querySelector(`.App`), { useCORS: true }),
+      )
       .then((canvas) => {
         const imgData = canvas.toDataURL("image/png");
         const aTag = document.createElement("a");

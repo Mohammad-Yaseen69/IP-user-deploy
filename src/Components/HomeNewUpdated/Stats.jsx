@@ -8,7 +8,7 @@ import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import InstaPayLoader from "../Loader";
 import styles from "./styles/Stats.module.css";
-import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
+import { service_name_formatter } from "../../utils/Functions/serviceNameFormatter";
 import i18next from "i18next";
 
 export function getMonthName(dateString) {
@@ -156,10 +156,10 @@ const Stats = ({ currentWallet }) => {
     setIsLoading(false);
   };
   useEffect(() => {
-    if (currentWallet) {
+    if (currentWallet?.wallet_id) {
       fetchData();
     }
-  }, [currentWallet]);
+  }, [currentWallet?.wallet_id]);
 
   useEffect(() => {
     if (isLoading) return;

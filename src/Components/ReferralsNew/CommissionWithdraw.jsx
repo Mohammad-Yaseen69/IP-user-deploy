@@ -1,13 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
 import { Button, Input, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { useTranslation } from "react-i18next";
-import { NumberInputValidator } from "../../Helper/NumberInput";
 import { Link, useNavigate } from "react-router-dom";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import axios from "axios";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
-import { toast } from "react-toastify";
 import OTPConfirmation from "../../Common/Component/OtpVerification";
 
 const CommissionWithdraw = ({

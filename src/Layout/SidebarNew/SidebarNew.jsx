@@ -1,5 +1,5 @@
 import { Fragment, useContext, useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, ChevronRight } from "react-feather";
+import { ArrowLeft, ArrowRight, ChevronRight, Search } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import SimpleBar from "simplebar-react";
@@ -11,23 +11,22 @@ import SidebarIcon from "./SbNIcon";
 import { MENU } from "./SbNMenu";
 import SidebarSubMenu from "./SbNSubMenu";
 import "./sm.css";
-import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
-const SidebarNew = ({ setShowModal, showModal }) => {
+const SidebarNew = ({ setShowModal, showModal, newMenuExpanded = false }) => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState([]);
-  const { togglSidebar, setTogglSidebar } = useContext(CustomizerContext);
+  const { togglSidebar } = useContext(CustomizerContext);
   const sidebar_types = localStorage.getItem("sidebar_types");
   const wrapper = sidebar_types || ConfigDB.data.settings.sidebar.type;
   const [margin, setMargin] = useState(0);
   const [leftArrow, setLeftArrow] = useState(false);
   const [rightArrow, setRightArrow] = useState(false);
   const [width, setWidth] = useState(0);
-  const [mobileView, setMobileView] = useState(window.innerWidth <= 670);
-  const sidebarRef = useRef(null);
+  const searchRef = useRef(null);
+  const searchWrapperRef = useRef(null);
+  const [compactSearchOpen, setCompactSearchOpen] = useState(false);
   const handleResize = () => {
     setWidth(window.innerWidth - 500);
-    setMobileView(window.innerWidth <= 670);
   };
   const id = window.location.pathname.split("/")?.pop();
   const layout = id;
@@ -68,58 +67,95 @@ const SidebarNew = ({ setShowModal, showModal }) => {
     }
   };
 
-  useEffect(() => {
-    const handleClick = (event) => {
-      const logo = document.querySelector("[data-testid='logo']");
-      if (
-        sidebarRef.current &&
-        !sidebarRef.current.contains(event.target) &&
-        (!logo || !logo.contains(event.target))
-      ) {
-        setTogglSidebar(true);
-      }
-    };
-
-    if (mobileView) {
-      document.addEventListener("click", handleClick);
-    }
-
-    return () => {
-      if (mobileView) {
-        document.removeEventListener("click", handleClick);
-      }
-    };
-  }, [setTogglSidebar, mobileView]);
   const { userDetails, profileCompletedPercentage } = useContext(UserContext);
 
   const location = useLocation();
 
-  const [inheritSize, setInheritSize] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const filteredMenu = MENU?.filter((item) => {
     if (item.showOnly === "business") {
       return userDetails?.account_type === "business";
     }
     return true;
   });
+  const focusSearch = () => {
+    if (togglSidebar) {
+      const shouldOpen = !compactSearchOpen;
+      setCompactSearchOpen(shouldOpen);
+      if (!shouldOpen) {
+        searchRef.current?.blur();
+        return;
+      }
+    }
+    window.requestAnimationFrame(() => searchRef.current?.focus());
+  };
+
+  useEffect(() => {
+    if (togglSidebar) setCompactSearchOpen(false);
+  }, [togglSidebar]);
+
+  useEffect(() => {
+    if (!compactSearchOpen) return undefined;
+
+    const handleMouseDown = (event) => {
+      if (!searchWrapperRef.current?.contains(event.target)) {
+        setCompactSearchOpen(false);
+      }
+    };
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") setCompactSearchOpen(false);
+    };
+
+    document.addEventListener("mousedown", handleMouseDown, true);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleMouseDown, true);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [compactSearchOpen]);
+
   return (
     <div
       className={`sidebar-wrapper ${togglSidebar ? "close_icon" : ""} `}
       id="sidebar-wrapper"
-      ref={sidebarRef}
       style={{
         background: "white",
-        margin: "1rem",
-        borderRadius: "16px",
-        height: "calc(100vh - 2rem)",
+        margin: "0 .5rem",
+        marginLeft: newMenuExpanded ? "12px" : "0.5rem",
+        // borderRadius: "16px",
+        height: "100%",
         boxShadow: "15.1463px 4.32752px 242.341px rgba(0, 0, 0, 0.07)",
+        zIndex: compactSearchOpen ? 11 : undefined,
         display:
           (location.pathname === "/create-pin" || location.pathname === "/update-pin") && "none",
       }}
-      onMouseEnter={() => setInheritSize(true)}
-      onMouseLeave={() => setInheritSize(false)}
     >
       <div>
-        <SidebarIcon /> {(!togglSidebar && userDetails?._id) || inheritSize ? "" : ""}
+        <SidebarIcon />
+        <div
+          ref={searchWrapperRef}
+          className={`sidebar-search ${togglSidebar ? "is-collapsed" : ""} ${compactSearchOpen ? "is-open" : ""}`}
+          role="search"
+        >
+          <button
+            type="button"
+            className="sidebar-search-action"
+            aria-label={t("Search navigation")}
+            aria-expanded={togglSidebar ? compactSearchOpen : undefined}
+            onClick={focusSearch}
+          >
+            <Search size={14} />
+          </button>
+          <input
+            ref={searchRef}
+            type="search"
+            aria-label={t("Search navigation")}
+            placeholder={t("Search")}
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+          />
+          <kbd>/</kbd>
+        </div>
         <nav className="sidebar-main">
           <div
             className={`left-arrow ${leftArrow ? "d-none" : ""}`}
@@ -157,11 +193,11 @@ const SidebarNew = ({ setShowModal, showModal }) => {
                             menu={item.menu}
                             isOpen={isOpen}
                             setIsOpen={setIsOpen}
+                            searchQuery={searchQuery}
                             level={0}
                             setShowModal={setShowModal}
                             profileCompletedPercentage={profileCompletedPercentage}
                             showModal={showModal}
-                            inheritSize={inheritSize}
                           />
                         </li>
                       </Fragment>

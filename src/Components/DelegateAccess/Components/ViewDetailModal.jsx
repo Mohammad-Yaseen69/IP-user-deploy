@@ -1,4 +1,3 @@
-import React from "react";
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Badge, Row, Col } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import styles from "../styles/ViewDetailModal.module.css";

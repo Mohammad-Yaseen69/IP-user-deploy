@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "./styles/receipt.module.scss";
 import ipLogo from "./files/iplogo.svg";
 import eSimBanner from "./files/eSimBanner.svg";
