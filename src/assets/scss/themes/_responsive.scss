@@ -885,26 +885,6 @@
         div.sidebar-wrapper {
           width: 220px;
 
-          &.close_icon {
-            &:hover {
-              width: 255px;
-
-              .sidebar-main {
-                .sidebar-links {
-                  .simplebar-wrapper {
-                    .simplebar-mask {
-                      .simplebar-content-wrapper {
-                        .simplebar-content {
-                          padding: 24px 12px !important;
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-
           &:not(.close_icon) {
             .sidebar-main {
               .sidebar-links {
@@ -2255,12 +2235,6 @@
       .page-body-wrapper {
         div.sidebar-wrapper {
           top: 0;
-
-          &.close_icon {
-            &:hover {
-              transform: translate(0px);
-            }
-          }
 
           .logo-wrapper {
             padding: 17px 30px;

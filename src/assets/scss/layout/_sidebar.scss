@@ -152,40 +152,6 @@
     }
 
     div.sidebar-wrapper.close_icon {
-      &:hover {
-        .sidebar-main {
-          .sidebar-links {
-            .simplebar-wrapper {
-              .simplebar-mask {
-                .simplebar-content-wrapper {
-                  .simplebar-content {
-                    .menu-box {
-                      > ul {
-                        > li {
-                          .sidebar-link {
-                            padding: 12px 22px;
-
-                            &::before {
-                              left: 13px;
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        .sidebar-main {
-          .sidebar-links {
-            padding: 24px 20px !important;
-          }
-        }
-      }
-
       .sidebar-main {
         .sidebar-links {
           padding: 0 !important;
@@ -1779,79 +1745,6 @@
             .logo-icon-wrapper {
               text-align: right;
               display: block;
-            }
-
-            &:hover {
-              width: 280px;
-              transition: all 0.3s ease;
-
-              .badge {
-                opacity: 1;
-                width: auto;
-                transition: all 0.3s ease;
-              }
-
-              .sidebar-main {
-                .sidebar-links {
-                  padding: 24px 20px;
-
-                  .simplebar-wrapper {
-                    .simplebar-mask {
-                      .simplebar-content-wrapper {
-                        .simplebar-content {
-                          .menu-box {
-                            margin-right: unset;
-                            margin-left: unset;
-
-                            > ul {
-                              > li {
-                                .sidebar-submenu {
-                                  a {
-                                    display: block;
-                                  }
-                                }
-                              }
-                            }
-                          }
-
-                          > li {
-                            transition: all 0.3s ease;
-
-                            .sidebar-submenu {
-                              a {
-                                display: block;
-                              }
-                            }
-
-                            > a {
-                              padding: 12px 15px;
-                              transition: all 0.3s ease;
-
-                              span {
-                                display: inline-block;
-                              }
-                            }
-
-                            a {
-                              span {
-                                display: inline-block;
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-
-              .logo-wrapper {
-                display: block;
-              }
-
-              .logo-icon-wrapper {
-                display: none;
-              }
             }
 
             .mobile-sidebar {

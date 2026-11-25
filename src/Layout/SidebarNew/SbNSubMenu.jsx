@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { Fragment, useContext, useEffect } from "react";
 import { Href } from "../../Constant";
 import { ActiveNavLinkUrl } from "../../Helper/ActioveNavUrl";
 import { Link, useNavigate } from "react-router-dom";
@@ -21,7 +21,7 @@ const SidebarSubMenu = ({
   showModal,
   setShowModal,
   profileCompletedPercentage,
-  inheritSize,
+  searchQuery = "",
 }) => {
   const { togglSidebar } = useContext(CustomizerContext);
   const { logout, userDetails } = useContext(UserContext);
@@ -85,16 +85,44 @@ const SidebarSubMenu = ({
     }
   };
 
-  const filteredMenu = menu?.filter((item) => {
-    if (item.showOnly === "business") {
-      return userDetails?.account_type === "business";
+  const normalizedSearch = searchQuery.trim().toLocaleLowerCase();
+  const hasVisibleMatch = (item) => {
+    if (item.type === "text") return false;
+    if (item.showOnly === "business" && userDetails?.account_type !== "business") return false;
+    if (
+      item.permission === "payments.send-as-third-party.view" &&
+      !userDetails?.isThirdPartyAllowed
+    ) {
+      return false;
+    }
+    if (!checkPermission(item.permission)) return false;
+
+    return (
+      t(item.title).toLocaleLowerCase().includes(normalizedSearch) ||
+      item.menu?.some(hasVisibleMatch)
+    );
+  };
+  const filteredMenu = menu?.filter((item, index) => {
+    if (!normalizedSearch) {
+      if (item.showOnly === "business") {
+        return userDetails?.account_type === "business";
+      }
+
+      if (item?.permission === "payments.send-as-third-party.view") {
+        return userDetails?.isThirdPartyAllowed;
+      }
+
+      return true;
     }
 
-    if (item?.permission === "payments.send-as-third-party.view") {
-      return userDetails?.isThirdPartyAllowed;
+    if (item.type !== "text") return hasVisibleMatch(item);
+
+    for (let nextIndex = index + 1; nextIndex < menu.length; nextIndex += 1) {
+      if (menu[nextIndex].type === "text") break;
+      if (hasVisibleMatch(menu[nextIndex])) return true;
     }
 
-    return true;
+    return false;
   });
   return (
     // <ul className={`${className ? className : ""}`} onClick={verifyToken}>
@@ -110,31 +138,30 @@ const SidebarSubMenu = ({
     >
       {filteredMenu?.map((item, i) => {
         return (
-          <>
+          <Fragment key={item.title}>
             {item.type === "text" ? (
               <li
                 style={{
-                  background:
-                    "linear-gradient(277.06deg, rgb(230, 64, 103) 9.52%, rgb(89, 38, 240) 62.22%, rgb(72, 40, 160) 119.38%)",
+                  background: "#5926F0",
                   backgroundClip: "text",
                   WebkitTextFillColor: /*togglSidebar ? "white" :*/ "transparent",
                   WebkitBackgroundClip: "text",
                   width: "100%",
-                  padding: !inheritSize && togglSidebar ? "0rem" : "1rem 1.5rem .5rem 1.5rem",
+                  padding: togglSidebar ? "0rem" : "1rem 1.5rem .5rem 1.5rem",
                   fontWeight: 600,
                   textTransform: "uppercase",
                   letterSpacing: "2px",
-                  fontSize: !inheritSize && togglSidebar ? ".5rem" : ".7rem",
-                  whiteSpace: !inheritSize && togglSidebar ? "normal" : "nowrap",
-                  marginBottom: inheritSize && togglSidebar ? ".1rem" : "0",
-                  marginRight: !inheritSize && togglSidebar ? "13px" : "0",
+                  fontSize: togglSidebar ? ".5rem" : ".7rem",
+                  whiteSpace: togglSidebar ? "normal" : "nowrap",
+                  marginBottom: "0",
+                  marginRight: togglSidebar ? "13px" : "0",
                   // opacity: togglSidebar ? 0 : 1
                 }}
               >
                 {t(
-                  !togglSidebar || (togglSidebar && inheritSize)
-                    ? item.title
-                    : `${item?.title.slice(0, 4)}${item?.title.length > 4 ? "..." : ""}`,
+                  togglSidebar
+                    ? `${item?.title.slice(0, 4)}${item?.title.length > 4 ? "..." : ""}`
+                    : item.title,
                 )}
               </li>
             ) : checkPermission(item?.permission) ? (
@@ -200,13 +227,14 @@ const SidebarSubMenu = ({
                     menu={item.menu}
                     isOpen={isOpen}
                     setIsOpen={setIsOpen}
+                    searchQuery={searchQuery}
                     level={level + 1}
                     className="sidebar-submenu "
                   />
                 )}
               </li>
             ) : null}
-          </>
+          </Fragment>
         );
       })}
       {!togglSidebar && (

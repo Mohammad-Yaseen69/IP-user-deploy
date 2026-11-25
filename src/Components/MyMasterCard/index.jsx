@@ -4,7 +4,6 @@ import OnBoarding from "./OnBoarding";
 import CardPurchased from "./CardPurchased";
 import styles from "./styles/index.module.scss";
 import TransactionsTable from "./TransactionTable";
-import CustomizerContext from "../../Helper/Customizer";
 import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
 import InstaPayLoader from "../Loader";
@@ -18,7 +17,6 @@ import Error from "../AddFunds/ResponseModals/Error";
 
 const MyMasterCard = () => {
   const [cardPurchased, setCardPurchased] = useState(false);
-  const { setTogglSidebar } = useContext(CustomizerContext);
   const [currentCardDetails, setCurrentCardDetails] = useState({});
   const { userDetails, authHeader } = useContext(UserContext);
   const [cards, setCards] = useState([]);
@@ -38,12 +36,6 @@ const MyMasterCard = () => {
   const paymentThrough = queryParams.get("payment_through");
   const ref = useRef(null);
   const { t } = useTranslation();
-
-  useEffect(() => {
-    if (cardPurchased) {
-      setTogglSidebar(true);
-    }
-  }, [userDetails, cardPurchased]);
 
   useEffect(() => {
     if (showT) {
