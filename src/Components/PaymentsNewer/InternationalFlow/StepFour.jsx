@@ -132,7 +132,13 @@ const StepFour = ({
           item.value === "bank_transfer" ? { ...item, status: "Coming Soon" } : item,
         )
       : typesData;
-    const baseTypes = ibanPay ? [...withBank, IBAN_PAY_TYPE] : withBank;
+    const baseTypes = ibanPay
+      ? [
+          ...withBank.filter((t) => t.status === "Active"),
+          IBAN_PAY_TYPE,
+          ...withBank.filter((t) => t.status !== "Active"),
+        ]
+      : withBank;
     if (data?.mobile_wallet_services?.length > 0) {
       console.log(typesData, data.mobile_wallet_services);
       const others = baseTypes.filter((item) => !item?.sub_name);

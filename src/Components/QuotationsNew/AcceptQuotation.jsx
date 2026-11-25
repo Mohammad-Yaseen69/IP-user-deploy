@@ -382,6 +382,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
   }, [data.payment_type]);
 
   useEffect(() => {
+    if (data.payment_type?.value === "iban" && !data.iban?._id) return;
     if (data.payment_type?.value) {
       getExchangeRate();
     }

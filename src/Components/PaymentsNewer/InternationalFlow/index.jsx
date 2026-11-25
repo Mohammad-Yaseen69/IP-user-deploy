@@ -406,6 +406,7 @@ const InternationFlow = ({
           (internationalData.payment_type.value !== "wallet"
             ? false
             : !internationalData?.wallet?._id) ||
+          (internationalData.payment_type.value === "iban" && !internationalData?.iban?._id) ||
           internationalData.ex_extra_error
         );
 
@@ -669,6 +670,10 @@ const InternationFlow = ({
         avoid_balance: avoid_balance,
         avoid_top_up_fee: internationalData.payment_type?.value === "card",
         payment_method: internationalData.payment_type?.value,
+        iban_id:
+          internationalData.payment_type?.value === "iban"
+            ? internationalData.iban?._id
+            : undefined,
         vendor: internationalData.payoutChannel?.vendor,
         token: internationalData?.exchange_rate?.token,
         transaction_type: internationalData.flow,
@@ -884,6 +889,7 @@ const InternationFlow = ({
         updateInternationalData("showCard", false);
       if (internationalData.payment_type?.value === "wallet" && !internationalData?.wallet?._id)
         return;
+      if (internationalData.payment_type?.value === "iban" && !internationalData?.iban?._id) return;
       if (internationalData?.payment_type?.value !== "wallet") {
         updateInternationalData("wallet", {});
       }
@@ -919,7 +925,9 @@ const InternationFlow = ({
         const currency_code =
           internationalData.payment_type?.value === "wallet"
             ? (internationalData?.wallet?.currency?.code ?? internationalData?.currency)
-            : internationalData?.currency;
+            : internationalData.payment_type?.value === "iban"
+              ? "EUR"
+              : internationalData?.currency;
         getAmount().then((res) => {
           if (wallet_id) {
             getExchangeRateNew(res, () => {}, wallet_id, currency_code, false, setLoading);
@@ -928,7 +936,12 @@ const InternationFlow = ({
       }, 100);
     }
     return () => clearTimeout(timeout);
-  }, [internationalData.payment_type?.value, internationalData.wallet?._id, subStep]);
+  }, [
+    internationalData.payment_type?.value,
+    internationalData.wallet?._id,
+    internationalData.iban?._id,
+    subStep,
+  ]);
 
   const createQuotation = async () => {
     setLoading(true);
@@ -939,6 +952,10 @@ const InternationFlow = ({
         wallet_id: internationalData.wallet?._id ?? internationalData.currency_wallet?._id,
         transaction_type: internationalData.flow,
         payment_method: internationalData.payment_type?.value,
+        iban_id:
+          internationalData.payment_type?.value === "iban"
+            ? internationalData.iban?._id
+            : undefined,
       };
       console.log(data);
       const encrypted = encryptData(data);
@@ -996,6 +1013,10 @@ const InternationFlow = ({
         wallet_id: internationalData.wallet?._id ?? internationalData.currency_wallet?._id,
         token: internationalData.quotation_details?.token,
         vendor: internationalData.payoutChannel?.vendor,
+        iban_id:
+          internationalData.payment_type?.value === "iban"
+            ? internationalData.iban?._id
+            : undefined,
       };
 
       if (internationalData.payoutChannel?.vendor === "thunes") {
@@ -1950,6 +1971,7 @@ const InternationFlow = ({
                       data={internationalData}
                       dataHandler={updateInternationalData}
                       bankComingSoon={true}
+                      ibanPay
                     />
                   )}
                   {subStep === 5 && (
@@ -2245,6 +2267,7 @@ const InternationFlow = ({
                               data={internationalData}
                               dataHandler={updateInternationalData}
                               bankComingSoon={true}
+                              ibanPay
                             />
                           )}
                           {subStep === 5 && (

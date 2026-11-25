@@ -993,6 +993,7 @@ const WalletToWalletFlow = ({
     }
     if (
       data.payment_type?.value &&
+      (data.payment_type?.value !== "iban" || data.iban?._id) &&
       data.currency?._id &&
       (data.recipient_amount || data.recipient_amount === null) &&
       data.beneficiary_wallet?.wallet_id

@@ -717,6 +717,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
   useEffect(() => {
     let timeout;
     console.log(data.payment_type, "payment type qr hello");
+    if (data.payment_type?.value === "iban" && !data.iban?._id) return;
     if (data.payment_type?.value && sendPaymentType === "qr_pay") {
       const getAmount = async () => {
         let amount;
