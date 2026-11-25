@@ -528,7 +528,7 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
                         {isLoading ? t("Loading...") : t("Select ID Type")}
                       </option>
                       {!isLoading &&
-                        rhubIdtypes?.idTypeList?.map((item) => (
+                        rhubIdtypes?.customerDocumentTypeList?.map((item) => (
                           <option key={item.code} value={item.code}>
                             {t(item.name)}
                           </option>

@@ -26,12 +26,13 @@ import Pricing from "./components/Pricing";
 import ReviewStep from "./components/ReviewStep";
 import StatusScreen from "./components/StatusScreen";
 
-import { Modal, ModalBody, ModalFooter, ModalHeader, Spinner } from "reactstrap";
+import { Modal, ModalBody, Spinner } from "reactstrap";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
 import useSendOtp from "../../../hooks/GeneralUse/useSendOtp";
 import OTPConfirmation from "../../../Common/Component/OtpVerification";
-import { FormControlLabel, FormLabel, Radio, RadioGroup, useMediaQuery } from "@mui/material";
+import { useMediaQuery } from "@mui/material";
+import ProviderSelectModal from "./components/ProviderSelectModal";
 import useDraft from "../../../hooks/GeneralUse/useDraft";
 import {
   BUSINESS_PROFILE_SCOPE,
@@ -185,7 +186,9 @@ function onboardingReducer(state, action) {
   }
 }
 
-const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
+const OPEN_REQUEST_STATUSES = ["pending", "submitted", "in_review", "under_review"];
+
+const OnboardingIBAN = forwardRef(({ onCreated, onStepChange, addNew = false, onCancel }, ref) => {
   const { t } = useTranslation();
   const can = usePermission();
   const isMobile = useMediaQuery("(max-width:600px)");
@@ -223,7 +226,9 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         { headers: authHeader },
       );
       const dec = decryptData(res.data?.data);
-      if (dec?.hasRequest && dec?.requestStatus && dec.requestStatus !== "none") {
+      const hasRequest = dec?.hasRequest && dec?.requestStatus && dec.requestStatus !== "none";
+      const blocksNewRequest = !addNew || OPEN_REQUEST_STATUSES.includes(dec?.requestStatus);
+      if (hasRequest && blocksNewRequest) {
         dispatch({ type: "SET_STATUS", payload: dec.requestStatus });
         dispatch({ type: "SET_STEP", payload: "status" });
         if (dec?.data) {
@@ -569,15 +574,23 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     ref,
     () => ({
       back() {
+        if (addNew && ["landing", "status"].includes(state.step)) return onCancel?.();
         return goBack();
       },
     }),
-    [state.step],
+    [state.step, addNew, onCancel],
   );
 
   useEffect(() => {
     onStepChange?.(state.step);
   }, [state.step, onStepChange]);
+
+  const isOnboardingReady = !loadingStatus && (!draftEnabled || draftHydrated);
+  useEffect(() => {
+    if (addNew && isOnboardingReady && state.step === "landing") {
+      setProviderModal(true);
+    }
+  }, [addNew, isOnboardingReady]);
 
   const riskPayload = useMemo(
     () => ({
@@ -609,6 +622,11 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
 
   const toggleProvideModal = () => {
     setProviderModal((prev) => !prev);
+  };
+
+  const closeProviderModal = () => {
+    setProviderModal(false);
+    if (addNew) onCancel?.();
   };
 
   const startBusinessFlow = () => {
@@ -891,34 +909,13 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         </ModalBody>
       </Modal>
       {providerModal && (
-        <Modal
-          style={{ maxWidth: isMobile ? "90%" : "auto" }}
+        <ProviderSelectModal
           isOpen={providerModal}
-          toggle={toggleProvideModal}
-          centered
-        >
-          <ModalHeader>{t("IBAN Type")}</ModalHeader>
-          <ModalBody>
-            <FormLabel>{t("Select IBAN type")}</FormLabel>
-            <RadioGroup
-              onChange={(_, val) => dispatch({ type: "SET_PROVIDER", payload: val })}
-              row
-              value={state.provider}
-              name="radio-buttons-group"
-            >
-              <FormControlLabel value="bvnk" control={<Radio />} label={t("EUR")} />
-              <FormControlLabel value="rhub" control={<Radio />} label={t("USD")} />
-            </RadioGroup>
-          </ModalBody>
-          <ModalFooter>
-            <button className={styles.secondaryBtn} onClick={toggleProvideModal}>
-              {t("Close")}
-            </button>
-            <button className={styles.primaryBtn} onClick={handleNext}>
-              {t("Next")}
-            </button>
-          </ModalFooter>
-        </Modal>
+          value={state.provider}
+          onChange={(val) => dispatch({ type: "SET_PROVIDER", payload: val })}
+          onClose={closeProviderModal}
+          onNext={handleNext}
+        />
       )}
       {missingPhoneModal && (
         <MissingInfoModal
