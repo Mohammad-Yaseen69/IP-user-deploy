@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
+import MarqueeText from "../../Common/MarqueeText";
 import { isPathActive, toAppPath } from "./menuSections";
 import styles from "./Sidebar.module.scss";
 
@@ -21,7 +22,7 @@ const MenuItem = ({ item, open, onSelect }) => {
       <span className={styles.itemIcon}>
         <Icon size={18} strokeWidth={1.6} />
       </span>
-      {open && <span className={styles.itemLabel}>{label}</span>}
+      {open && <MarqueeText text={label} className={styles.itemLabel} />}
     </>
   );
 

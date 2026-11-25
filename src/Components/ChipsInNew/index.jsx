@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { Card, CardBody, CardText } from "reactstrap";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { UserContext } from "../../Context/UserContext";
+import { useShowOnce } from "../../hooks/GeneralUse/useShowOnce";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import QrGenerate from "../Settings/QrGenerate";
 import PageHeader from "../../Common/PageHeader";
@@ -69,11 +70,7 @@ const ChipsInNew = () => {
     }
   }, []);
 
-  const [showTooltip, setShowTooltip] = useState(!sessionStorage.getItem("show_qr_modal"));
-
-  useEffect(() => {
-    sessionStorage.setItem("show_qr_modal", true);
-  }, []);
+  const [showTooltip, setShowTooltip] = useShowOnce("qr_sticker_intro");
 
   const { t } = useTranslation();
 

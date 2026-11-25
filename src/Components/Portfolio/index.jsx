@@ -6,6 +6,7 @@ import PortfolioCard from "./PortfolioCard";
 import { useContext, useEffect, useRef, useState } from "react";
 import AddPortfolioItem from "./AddPortfolioItem";
 import { UserContext } from "../../Context/UserContext";
+import { useShowOnce } from "../../hooks/GeneralUse/useShowOnce";
 import InstructionsModal from "./InstructionModal";
 import { Info } from "react-feather";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
@@ -55,11 +56,7 @@ const Portfolio = () => {
     dragOverRef.current = null;
   };
 
-  const [isOpen, setIsOpen] = useState(!sessionStorage.getItem("show_port_modal"));
-
-  useEffect(() => {
-    sessionStorage.setItem("show_port_modal", true);
-  }, []);
+  const [isOpen, setIsOpen] = useShowOnce("portfolio_intro");
 
   return (
     <>
