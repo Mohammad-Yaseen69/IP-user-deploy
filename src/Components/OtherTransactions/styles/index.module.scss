@@ -7,9 +7,9 @@
   .table {
     .menu {
       background-color: #fff;
-      box-shadow: 0.146323204040527px 25px 67px rgba(0, 0, 0, 0.07);
       padding: 16px 19px;
       border-radius: 12px;
+      border: 1px solid #eff1f6;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -86,9 +86,9 @@
 
       .table_header {
         background-color: #fff;
-        box-shadow: 0.146323204040527px 25px 67px rgba(0, 0, 0, 0.07);
         padding: 16px 19px;
         border-radius: 12px;
+        border: 1px solid #eff1f6;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -155,15 +155,15 @@
 
           .rec_left {
             border-radius: 16px;
+            border: 1px solid #eff1f6;
             background: #fff;
-            box-shadow: 0px -7px 113px 0px rgba(0, 0, 0, 0.1);
             padding: 1rem;
           }
 
           .right {
             border-radius: 16px;
+            border: 1px solid #eff1f6;
             background: #fff;
-            box-shadow: 0px -7px 113px 0px rgba(0, 0, 0, 0.1);
             padding: 1.5rem;
             flex: 1;
             display: flex;
