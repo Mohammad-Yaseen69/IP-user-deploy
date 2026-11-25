@@ -386,13 +386,10 @@ $transition: 0.3s ease;
 }
 
 .itemLabel {
-  overflow: hidden;
   font-size: 14px;
   font-weight: 500;
   line-height: 18px;
   letter-spacing: -0.01em;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 
 .empty {
