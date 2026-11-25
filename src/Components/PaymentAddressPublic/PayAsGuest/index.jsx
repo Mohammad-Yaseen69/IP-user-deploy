@@ -19,7 +19,7 @@ import { createShambeToken } from "../../../Helper/CreateToken";
 import NotFoundModal from "../../NotFound/NotFoundModal";
 import logo from "../instapay_black.svg";
 import { LimitsErrorMessage } from "../../../utils/Functions/paymentLimits";
-import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow";
+import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow/apiErrorMessage";
 
 import BankDeposit from "../../AddFunds/WalletFundsFlow/BankDeposit";
 import PaymentDetails from "./PaymentDetails";

@@ -1,7 +1,5 @@
-import React from "react";
 import styles from "../styles/cardToWallet.module.scss";
-import { User, Users } from "react-feather";
-import { FaUser, FaUserAlt, FaUsers } from "react-icons/fa";
+import { FaUser, FaUsers } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
 const Stepone = ({ setOption, option }) => {

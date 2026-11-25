@@ -260,10 +260,15 @@ const PaymentStep = ({ flow, wallets, isAdding }) => {
               onChange={(event) => flow.setAmount(event.target.value)}
               placeholder={formatRange(amountLimits)}
             />
-            <span className={styles.rowSub}>
-              {isAmountLocked
-                ? t("This biller only accepts the exact bill amount.")
-                : `${t("Allowed")}: ${formatRange(amountLimits)}`}
+            {/* Out-of-range amounts are never quoted, so say why no wallet conversion shows. */}
+            <span
+              className={`${styles.rowSub} ${flow.amount && !flow.isAmountValid ? styles.walletShort : ""}`}
+            >
+              {flow.amount && !flow.isAmountValid
+                ? `${t("Enter an amount between")} ${formatRange(amountLimits)}`
+                : isAmountLocked
+                  ? t("This biller only accepts the exact bill amount.")
+                  : `${t("Allowed")}: ${formatRange(amountLimits)}`}
             </span>
           </div>
         )}
@@ -337,7 +342,7 @@ const PaymentStep = ({ flow, wallets, isAdding }) => {
                                   ? `· ${t("checking...")}`
                                   : isShort
                                     ? `· ${t("not enough")}`
-                                    : isConverted
+                                    : isConverted && flow.isAmountValid
                                       ? `· ${t("converted")}`
                                       : t("available")}
                               </span>

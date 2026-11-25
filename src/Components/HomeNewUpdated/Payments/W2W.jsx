@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import AmountAndCurrency from "./AmountAndCurrency";
 import ConfirmW2W from "./ConfirmW2W";
 import PaymentType from "./PaymentType";

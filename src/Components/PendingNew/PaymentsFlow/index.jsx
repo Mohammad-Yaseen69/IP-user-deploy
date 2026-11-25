@@ -5,8 +5,6 @@ import { Link } from "react-router-dom";
 import { ChevronRight, HelpCircle, Info } from "react-feather";
 import chev_down from "../../PaymentsNewer/InternationalFlow/files/chev_down.svg";
 import channel from "../../PaymentsNewer/InternationalFlow/files/receiving_channel.svg";
-import ListModal from "../../PaymentsNewer/InternationalFlow/ListModal";
-import { typesData } from "../../PaymentsNewer/InternationalFlow/StepFour";
 import PaymentTypesModal from "../../PaymentsNewer/InternationalFlow/PaymentTypesModal";
 import PaymentsFlowModal from "./Modal";
 import { UserContext } from "../../../Context/UserContext";

@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
-import DateMomentUtils from "@date-io/moment";
-import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DatePicker from "../../../CommonElements/DatePicker";
 import ShippingDetails from "../../ReceiptInvoices/InvoicePaymentQr/ShippingDetails";
 import PhoneInput from "../../PhoneInput";
 import styles from "./styles/index.module.css";
@@ -75,7 +74,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
   };
 
   return (
-    <MuiPickersUtilsProvider utils={DateMomentUtils}>
+    <>
       <div style={{ height: "100%", overflow: "auto" }}>
         <div className={styles.bot_top}>
           <h5>{t("Personal Details")}</h5>
@@ -251,7 +250,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
         </div>
         {isShipping && <ShippingDetails data={data} dataHandler={dataHandler} />}
       </div>
-    </MuiPickersUtilsProvider>
+    </>
   );
 };
 

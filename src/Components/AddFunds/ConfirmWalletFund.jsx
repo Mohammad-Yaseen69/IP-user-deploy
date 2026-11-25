@@ -1,5 +1,5 @@
 import { Card, CardBody, Modal, ModalBody } from "reactstrap";
-import { Check, CheckCircle, ChevronRight, XCircle } from "react-feather";
+import { Check, ChevronRight, XCircle } from "react-feather";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import Draggable from "react-draggable";
 import { useTranslation } from "react-i18next";
@@ -15,7 +15,7 @@ import TrustpaymentPage from "./WalletFund/CreditTransaction";
 import { useNavigate } from "react-router";
 import { createShambeToken } from "../../Helper/CreateToken";
 import NotFoundModal from "../NotFound/NotFoundModal";
-import { apiErrorMessage } from "../PaymentsNewer/InternationalFlow";
+import { apiErrorMessage } from "../PaymentsNewer/InternationalFlow/apiErrorMessage";
 
 import { WidgetSDK } from "@keabank/websdk";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
@@ -489,7 +489,7 @@ const ConfirmWalletFund = ({
                 }}
                 ref={svgRef}
               />
-              <Draggable axis="x" bounds="parent" onDrag={handleDrag}>
+              <Draggable axis="x" bounds="parent" onDrag={handleDrag} nodeRef={chevRef}>
                 <div
                   style={{
                     position: "absolute",

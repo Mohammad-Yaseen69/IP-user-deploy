@@ -1,6 +1,6 @@
 import { useContext, useMemo, useState } from "react";
 import styles from "./styles/index.module.scss";
-import { ChevronDown, ChevronLeft, ChevronRight, X } from "react-feather";
+import { ChevronDown, ChevronRight, X } from "react-feather";
 import ImagePreviewModal from "../ImagePreviewModal.jsx";
 import { toast } from "react-toastify";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption.jsx";

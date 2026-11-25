@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "../style/MobileProgress.module.css";
 import { useTranslation } from "react-i18next";
 import { Chip } from "@mui/material";

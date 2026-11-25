@@ -18,7 +18,6 @@ import axios from "axios";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import { toast } from "react-toastify";
 import { LimitsErrorMessage } from "../../../utils/Functions/paymentLimits";
-import recent from "../../PaymentsNewer/Mobile/files/recent.svg";
 import int_styles from "../../PaymentsNewer/Mobile/styles/International.module.css";
 
 import paym_styles from "../../PaymentsNewer/InternationalFlow/styles/index.module.css";
@@ -26,7 +25,7 @@ import MobileWalletServices from "../../PaymentsNewer/InternationalFlow/MobileWa
 import { createShambeToken } from "../../../Helper/CreateToken";
 import NotFoundModal from "../../NotFound/NotFoundModal";
 import TrustpaymentPage from "../../AddFunds/WalletFund/CreditTransaction";
-import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow";
+import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow/apiErrorMessage";
 import useTopupLimitCheck from "../../../hooks/Payments/useTopupLimitCheck";
 import GeneralNoticeModal from "../../PaymentsNewer/GeneralNoticeModal";
 import PlaidBankTransfer from "../../AddFunds/WalletFundsFlow/PlaidBankTransfer";

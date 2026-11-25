@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
-import SendActionCard from "../Common/SendActionCard";
 import styles from "./styles/index.module.css";
-import React, { useContext, useEffect, useMemo, useReducer, useState } from "react";
+import { useContext, useEffect, useMemo, useReducer, useState } from "react";
 import w3 from "../files/airtime.png";
 import airtime from "../files/airtime.svg";
 import ErrorModal from "../InternationalFlow/ErrorModal";
@@ -22,7 +21,6 @@ import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight, HelpCircle } from "react-feather";
 import WalletsComponent from "../InternationalFlow/WalletsComponent";
 import CreditCard from "../InternationalFlow/CreditCard";
-import { toast } from "react-toastify";
 import { createShambeToken } from "../../../Helper/CreateToken";
 import NotFoundModal from "../../NotFound/NotFoundModal";
 import Receipt from "../InternationalFlow/Receipt";

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Card, CardBody } from "reactstrap";
 import faded_lines from "../../PaymentsNewer/files/faded_lines.png";
 import { useTranslation } from "react-i18next";
@@ -336,7 +336,7 @@ const ConfirmSend = ({
             }}
             ref={svgRef}
           />
-          <Draggable axis="x" bounds="parent" onDrag={handleDrag}>
+          <Draggable axis="x" bounds="parent" onDrag={handleDrag} nodeRef={chevRef}>
             <div
               style={{
                 position: "absolute",
