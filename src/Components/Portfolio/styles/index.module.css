@@ -1,29 +1,9 @@
 .container {
-  padding: 3rem 3rem 0;
+  padding: 0 var(--page-gutter);
   background: linear-gradient(to right, transparent, white);
   min-height: 100vh;
   font-family: "Manrope";
   overflow-y: auto;
-}
-
-.top {
-  margin-bottom: 4rem;
-  position: relative;
-}
-
-.top h4 {
-  font-size: 3vw;
-  background: linear-gradient(3.1deg, #e64067 -102.47%, #5926f0 25.82%, #4828a0 128.05%), #ffffff;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-fill-color: transparent;
-  margin-bottom: 1rem;
-}
-
-.top p {
-  font-size: 17px;
-  font-weight: 600;
 }
 
 .container > p {
@@ -216,16 +196,12 @@
 
 @media screen and (max-width: 1530px) {
   .container {
-    padding: 1.5rem 2rem 1rem;
+    padding: 0 var(--page-gutter) 1rem;
   }
 
   .container > p {
     font-size: 14px;
     margin-top: 0;
-  }
-
-  .top {
-    margin-bottom: 3rem;
   }
 }
 
@@ -247,12 +223,11 @@
   }
 
   .top > h4 {
+    font-family: Inter, sans-serif;
     font-size: 1.4rem;
-    background: linear-gradient(3.1deg, #e64067 -102.47%, #5926f0 25.82%, #4828a0 128.05%), #ffffff;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-fill-color: transparent;
+    font-weight: 600;
+    letter-spacing: -0.72px;
+    color: #141414;
     margin-bottom: 1rem;
   }
 

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import OnBoarding from "./OnBoarding";
 import CardPurchased from "./CardPurchased";
 import styles from "./styles/index.module.scss";
@@ -116,16 +116,9 @@ const MyMasterCard = () => {
 
   return (
     <div style={{ minHeight: "100vh" }} className={styles.container}>
-      <div className={styles.top}>
-        <h4
-          style={{
-            display: width < 1000 && (addFundsMobile || ctcMobile || ctwMobile) && "none",
-          }}
-        >
-          {t("My Mastercard")}
-        </h4>
-        {width > 1000 && <TopRight />}
-      </div>
+      {!(width < 1000 && (addFundsMobile || ctcMobile || ctwMobile)) && (
+        <PageHeader title={t("My Mastercard")} />
+      )}
 
       {status ? (
         status === "success" && paymentThrough !== "paypal" ? (

@@ -1298,7 +1298,7 @@ const BusinessAccount = ({
   console.log(user);
 
   return (
-    <div style={isAddBeneficiary ? {} : { margin: "1rem 0 1rem 1rem" }}>
+    <div style={isAddBeneficiary ? {} : { margin: "1rem var(--page-gutter)" }}>
       <MuiPickersUtilsProvider utils={DateMomentUtils}>
         {isAddBeneficiary ? (
           Jsx()

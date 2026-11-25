@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router";
 import { UserContext } from "../../Context/UserContext";
 import { ChevronLeft } from "react-feather";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 
 //  Lazy-loaded components
 const PaymentAction = lazy(() => import("./PaymentAction"));
@@ -203,8 +203,12 @@ const PaymentsNewer = () => {
   return (
     <>
       <div className={styles.container}>
-        <div className={styles.top}>
-          <h4 style={{ marginBottom: ".2rem" }}>{t("Payments")}</h4>
+        <PageHeader
+          title={t("Payments")}
+          subtitle={
+            step === 1 && t("Select the option that matches your needs from the list below:")
+          }
+        >
           {step > 1 && (
             <button
               onClick={resetToMain}
@@ -219,7 +223,6 @@ const PaymentsNewer = () => {
                 background: "#fff",
                 color: "#444",
                 cursor: "pointer",
-                marginLeft: "auto",
               }}
               aria-label={t("Go back to main menu")}
             >
@@ -227,13 +230,7 @@ const PaymentsNewer = () => {
               <span style={{ fontWeight: 600 }}>{t("Go back to main menu")}</span>
             </button>
           )}
-          {step === 1 && (
-            <p style={{ marginBottom: 0 }}>
-              {t("Select the option that matches your needs from the list below:")}
-            </p>
-          )}
-          <TopRight />
-        </div>
+        </PageHeader>
 
         {step === 1 && <PaymentAction setAction={setAction} setStep={setStep} />}
 

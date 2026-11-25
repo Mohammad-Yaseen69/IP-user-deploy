@@ -612,7 +612,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div style={{ margin: "1rem 0 1rem 1rem" }}>
+      <div style={{ margin: "1rem var(--page-gutter)" }}>
         <SuccessModal
           isOpen={showSuccess}
           toggle={toggleSuccess}

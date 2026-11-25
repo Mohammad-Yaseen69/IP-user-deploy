@@ -18,19 +18,33 @@ import arrow_r from "./files/arrow_r.svg";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 
-function generateRandomArray(currentPage) {
-  const itemsPerPage = 10;
-  const startValue = currentPage * itemsPerPage + 1;
-  const endValue = startValue + itemsPerPage - 1;
+const getDay = (item) => (item?.createdAt || item?.created_at || item?.date || "").slice(0, 10);
 
-  const randomArray = [];
+const groupByDay = (list) => {
+  const map = {};
+  list.forEach((item) => {
+    const day = getDay(item);
+    if (!day) return;
+    map[day] = (map[day] || 0) + Number(item?.amount || 0);
+  });
+  return map;
+};
 
-  for (let i = startValue; i <= endValue; i++) {
-    randomArray.push(i);
+const getRangeDays = (from, to) => {
+  if (!from || !to) return [];
+  const days = [];
+  const end = new Date(`${to}T00:00:00Z`);
+  for (let d = new Date(`${from}T00:00:00Z`); d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
+    days.push(d.toISOString().slice(0, 10));
   }
+  return days;
+};
 
-  return randomArray;
-}
+const formatDay = (d) =>
+  new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
+
+const toLocalDate = (d) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 
 const TopLeft = ({
   setApiDates,
@@ -69,8 +83,8 @@ const TopLeft = ({
   });
   const handleChange = (ranges) => {
     if (ranges.selection) {
-      const startDate = ranges.selection.startDate.toISOString().split("T")[0];
-      const endDate = ranges.selection.endDate.toISOString().split("T")[0];
+      const startDate = toLocalDate(ranges.selection.startDate);
+      const endDate = toLocalDate(ranges.selection.endDate);
 
       const formattedDateRange = {
         from: startDate,
@@ -187,32 +201,31 @@ const TopLeft = ({
   // charts data
   const chartRef = useRef(null);
   const [currentChartPage, setCurrentChartPage] = useState(0);
-  const [maxData, setMaxData] = useState(0);
 
+  // useEffect(() => {
+  //   setMaxData(credited.length > debited.length ? credited.length : debited.length);
+  // }, [credited, debited]);
   useEffect(() => {
-    setMaxData(credited.length > debited.length ? credited.length : debited.length);
-  }, [credited, debited]);
-
-  useEffect(() => {
-    setCurrentChartPage(0);
-  }, [currentWallet]);
+    const total = getRangeDays(apiDates.from, apiDates.to).length;
+    setCurrentChartPage(Math.max(0, Math.ceil(total / 10) - 1));
+  }, [currentWallet, apiDates]);
 
   useLayoutEffect(() => {
-    const categories = generateRandomArray(currentChartPage);
-    const moneyInSeries = credited
-      .slice(currentChartPage * 10, (currentChartPage + 1) * 10)
-      ?.map((item) => item?.amount?.toFixed(2));
-    const moneyOutSeries = debited
-      .slice(currentChartPage * 10, (currentChartPage + 1) * 10)
-      ?.map((item) => item?.amount?.toFixed(2));
+    const creditByDay = groupByDay(credited);
+    const debitByDay = groupByDay(debited);
+    const allDays = getRangeDays(apiDates.from, apiDates.to);
+    const totalPages = Math.max(1, Math.ceil(allDays.length / 10));
+    const page = Math.min(currentChartPage, totalPages - 1);
+    const end = allDays.length - (totalPages - 1 - page) * 10;
+    const pageDays = allDays.slice(Math.max(0, end - 10), end);
 
-    while (moneyInSeries.length < 10) {
-      moneyInSeries.push("0.00");
-    }
+    const categories = pageDays.map(formatDay);
+    const moneyInSeries = pageDays.map((d) => (creditByDay[d] || 0).toFixed(2));
+    const moneyOutSeries = pageDays.map((d) => (debitByDay[d] || 0).toFixed(2));
 
-    while (moneyOutSeries.length < 10) {
-      moneyOutSeries.push("0.00");
-    }
+    while (categories.length < 10) categories.push("");
+    while (moneyInSeries.length < 10) moneyInSeries.push("0.00");
+    while (moneyOutSeries.length < 10) moneyOutSeries.push("0.00");
 
     // Chart configuration
     const options = {
@@ -262,7 +275,6 @@ const TopLeft = ({
       },
       colors: ["#13C61A", "#EB4634"],
       legend: {
-        // show: false,
         position: "top",
         horizontalAlign: "right",
       },
@@ -284,6 +296,8 @@ const TopLeft = ({
       chart.destroy();
     };
   }, [credited, debited, currentChartPage, currentWallet, i18next.language]);
+
+  const lastPage = Math.max(0, Math.ceil(getRangeDays(apiDates.from, apiDates.to).length / 10) - 1);
 
   return (
     <div className={styles.container}>
@@ -408,24 +422,24 @@ const TopLeft = ({
             src={arrow_l}
             alt="a"
             onClick={() => {
-              if (currentChartPage !== 0) {
+              if (currentChartPage > 0) {
                 setCurrentChartPage((prev) => prev - 1);
               }
             }}
             style={{
-              opacity: currentChartPage !== 0 ? 1 : 0.5,
+              opacity: currentChartPage > 0 ? 1 : 0.5,
             }}
           />
           <img
             src={arrow_r}
             alt="a"
             onClick={() => {
-              if (currentChartPage < maxData / 10 - 1) {
+              if (currentChartPage < lastPage) {
                 setCurrentChartPage((prev) => prev + 1);
               }
             }}
             style={{
-              opacity: currentChartPage < maxData / 10 - 1 ? 1 : 0.5,
+              opacity: currentChartPage < lastPage ? 1 : 0.5,
             }}
           />
         </div>

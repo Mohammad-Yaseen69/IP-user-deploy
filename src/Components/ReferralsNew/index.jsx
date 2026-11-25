@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import styles from "./styles/index.module.scss";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import EarnMoneyBanner from "../HomeNewUpdated/EarnMoneyBanner";
 import { Check, ChevronDown, ChevronRight, MoreHorizontal } from "react-feather";
 import copy_ic from "../ChipsInNew/copy.png";
@@ -227,10 +227,7 @@ const ReferralsNew = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.top}>
-        <h4>{t("Referrals")}</h4>
-        {window.innerWidth > 1000 && <TopRight />}
-      </div>
+      <PageHeader title={t("Referrals")} />
       {userDetails?.username ? (
         <>
           {convertModal && (
@@ -324,14 +321,7 @@ const ReferralsNew = () => {
             </ModalBody>
           </Modal>
           <div className={styles.banner_con}>
-            <EarnMoneyBanner
-              height="100%"
-              showLink={false}
-              headSize={"4cqi"}
-              textSize={"2cqi"}
-              radius={"30px"}
-              minWidth="40vw"
-            />
+            <EarnMoneyBanner showLink={false} minWidth="40vw" />
             <div style={{ display: "flex", gap: "1.5rem", flex: 1 }}>
               <div className={styles.total_refs}>
                 <div>
@@ -513,11 +503,11 @@ const ReferralsNew = () => {
                     style={{ borderRadius: "8px" }}
                     onClick={() =>
                       setCurrentTab(
-                        currentTab === "My Referrals" ? "my withdrawls" : "My Referrals",
+                        currentTab === "My Referrals" ? "My withdrawals" : "My Referrals",
                       )
                     }
                   >
-                    {currentTab === "My Referrals" ? t("My Withdrawls") : t("My Referrals")}
+                    {currentTab === "My Referrals" ? t("My withdrawals") : t("My Referrals")}
                   </Button>
                 </div>
                 {currentTab === "My Referrals" ? (

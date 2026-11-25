@@ -152,40 +152,6 @@
     }
 
     div.sidebar-wrapper.close_icon {
-      &:hover {
-        .sidebar-main {
-          .sidebar-links {
-            .simplebar-wrapper {
-              .simplebar-mask {
-                .simplebar-content-wrapper {
-                  .simplebar-content {
-                    .menu-box {
-                      > ul {
-                        > li {
-                          .sidebar-link {
-                            padding: 12px 22px;
-
-                            &::before {
-                              left: 13px;
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        .sidebar-main {
-          .sidebar-links {
-            padding: 24px 20px !important;
-          }
-        }
-      }
-
       .sidebar-main {
         .sidebar-links {
           padding: 0 !important;
@@ -1692,13 +1658,15 @@
     }
 
     .page-body-wrapper {
+      display: flex;
+      align-items: flex-start;
+
       div {
         &.sidebar-wrapper {
-          position: fixed;
+          position: sticky;
           top: 0;
           z-index: 9;
-          // height: 100%;
-          left: 50px;
+          flex-shrink: 0;
           line-height: inherit;
           background-color: $sidebar-color;
           width: 280px;
@@ -1781,87 +1749,8 @@
               display: block;
             }
 
-            &:hover {
-              width: 280px;
-              transition: all 0.3s ease;
-
-              .badge {
-                opacity: 1;
-                width: auto;
-                transition: all 0.3s ease;
-              }
-
-              .sidebar-main {
-                .sidebar-links {
-                  padding: 24px 20px;
-
-                  .simplebar-wrapper {
-                    .simplebar-mask {
-                      .simplebar-content-wrapper {
-                        .simplebar-content {
-                          .menu-box {
-                            margin-right: unset;
-                            margin-left: unset;
-
-                            > ul {
-                              > li {
-                                .sidebar-submenu {
-                                  a {
-                                    display: block;
-                                  }
-                                }
-                              }
-                            }
-                          }
-
-                          > li {
-                            transition: all 0.3s ease;
-
-                            .sidebar-submenu {
-                              a {
-                                display: block;
-                              }
-                            }
-
-                            > a {
-                              padding: 12px 15px;
-                              transition: all 0.3s ease;
-
-                              span {
-                                display: inline-block;
-                              }
-                            }
-
-                            a {
-                              span {
-                                display: inline-block;
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-
-              .logo-wrapper {
-                display: block;
-              }
-
-              .logo-icon-wrapper {
-                display: none;
-              }
-            }
-
             .mobile-sidebar {
               transform: translate(183px);
-            }
-
-            ~ .page-body,
-            ~ footer {
-              margin-left: 140px;
-              transition: 0.5s;
             }
 
             ~ .footer-fix {
@@ -2405,10 +2294,11 @@
       }
 
       .page-body {
+        flex: 1;
+        min-width: 0;
         min-height: calc(100vh - 95px);
         margin-top: 92px;
         padding-top: 30px;
-        margin-left: 316px;
       }
     }
   }
