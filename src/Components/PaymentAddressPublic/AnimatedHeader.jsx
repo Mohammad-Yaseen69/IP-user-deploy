@@ -2,6 +2,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+const fadeBlur = (transition) => ({
+  hidden: { opacity: 0.5, filter: "blur(3px)", transition },
+  visible: { opacity: 1, filter: "blur(0px)", transition },
+});
+const wrapperVariants = { hidden: {}, visible: {} };
+const headingVariants = fadeBlur({ duration: 0.3, ease: "easeInOut" });
+const paraVariants = fadeBlur({ duration: 0.6, ease: "linear" });
+
 const AnimatedHeader = ({ mobileUI }) => {
   const { t } = useTranslation();
   const [index, setIndex] = useState(0);
@@ -40,9 +48,13 @@ const AnimatedHeader = ({ mobileUI }) => {
         justifyContent: mobileUI ? "center" : "flex-start",
       }}
     >
-      <AnimatePresence exitBeforeEnter>
+      <AnimatePresence mode="wait">
         <motion.div
           key={index}
+          variants={wrapperVariants}
+          initial="hidden"
+          animate="visible"
+          exit="hidden"
           style={
             mobileUI && {
               display: "flex",
@@ -53,10 +65,7 @@ const AnimatedHeader = ({ mobileUI }) => {
           }
         >
           <motion.span
-            initial={{ opacity: 0.5, filter: "blur(3px)" }}
-            animate={{ opacity: 1, filter: "blur(0px)" }}
-            exit={{ opacity: 0.5, filter: "blur(3px)" }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            variants={headingVariants}
             style={{
               color: "#5926F0",
               fontWeight: 700,
@@ -66,10 +75,7 @@ const AnimatedHeader = ({ mobileUI }) => {
             {t(headerContents[index].heading)}
           </motion.span>
           <motion.p
-            initial={{ opacity: 0.5, filter: "blur(3px)" }}
-            animate={{ opacity: 1, filter: "blur(0px)" }}
-            exit={{ opacity: 0.5, filter: "blur(3px)" }}
-            transition={{ duration: 0.6, ease: "linear" }}
+            variants={paraVariants}
             style={{
               color: "#777",
               fontWeight: 600,

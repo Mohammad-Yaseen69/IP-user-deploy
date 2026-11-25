@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Modal, ModalBody } from "reactstrap";
 import styles from "../styles/cardToWallet.module.scss";
 import { ctw_white } from "../files";
@@ -20,7 +20,7 @@ import StepOne from "../../PaymentsNewer/WalletToWalletFlow/StepOne.jsx";
 import useWindowWidth from "../../../utils/useWindowWidth.jsx";
 import { useLocation, useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
-import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow";
+import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow/apiErrorMessage";
 
 const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCardDetails }) => {
   // const [sideText, setSideText] = useState("")

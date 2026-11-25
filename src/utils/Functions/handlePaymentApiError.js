@@ -1,4 +1,4 @@
-import { apiErrorMessage } from "../../Components/PaymentsNewer/InternationalFlow";
+import { apiErrorMessage } from "../../Components/PaymentsNewer/InternationalFlow/apiErrorMessage";
 import { LimitsErrorMessage } from "./paymentLimits";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { clearAuthStorage, getLoginPath } from "./loginPage";

@@ -1,18 +1,7 @@
-import React, { useContext, useState } from "react";
-import Dropzone from "react-dropzone-uploader";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-  Table,
-} from "reactstrap";
+import { useContext, useState } from "react";
+import FileDropzone from "./FileDropzone";
+import { Button, Card, CardBody, CardHeader, Table } from "reactstrap";
 import Papa from "papaparse";
-import * as XLSX from "xlsx";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
@@ -32,12 +21,12 @@ const MainContent = () => {
   const [processedUsers, setProcessedUsers] = useState([]);
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const handleChangeStatus = ({ meta, file }, status) => {
+  const handleFile = (file) => {
+    setFile(file);
     if (file) {
-      setFile(file);
       const reader = new FileReader();
 
-      reader.onload = (e) => {
+      reader.onload = async (e) => {
         const content = e.target.result;
 
         if (file.name.endsWith(".csv")) {
@@ -50,6 +39,13 @@ const MainContent = () => {
           });
         } else if (file.name.endsWith(".xlsx")) {
           // Parse XLSX file using XLSX
+          let XLSX;
+          try {
+            XLSX = await import("xlsx");
+          } catch {
+            toast.error(t("Something went wrong on our end. Please try again later."));
+            return;
+          }
           const workbook = XLSX.read(content, { type: "binary" });
           const sheetName = workbook.SheetNames[0];
           const sheet = workbook.Sheets[sheetName];
@@ -123,10 +119,17 @@ const MainContent = () => {
     );
   };
 
-  const handleExtractFailedUsers = () => {
+  const handleExtractFailedUsers = async () => {
     const failedUsers = processedUsers.filter((user) => user.status === false);
 
     // Create Excel file for failed users
+    let XLSX;
+    try {
+      XLSX = await import("xlsx");
+    } catch {
+      toast.error(t("Something went wrong on our end. Please try again later."));
+      return;
+    }
     const ws = XLSX.utils.json_to_sheet(failedUsers);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "FailedUsers");
@@ -141,17 +144,11 @@ const MainContent = () => {
       <CardBody>
         <h5>{t("Upload/Drop XLSX File Here:")}</h5>
         <div style={{ display: "flex", gap: "2rem" }}>
-          <Dropzone
-            onChangeStatus={handleChangeStatus}
-            maxFiles={1}
-            multiple={false}
-            canCancel={false}
-            inputContent={t("Upload/Drop XLSX File Here")}
-            styles={{
-              dropzone: { height: 200, flex: 1 },
-              dropzoneActive: { borderColor: "green" },
-            }}
-            disabled={file}
+          <FileDropzone
+            onFile={handleFile}
+            label={t("Upload/Drop XLSX File Here")}
+            style={{ height: 200, flex: 1 }}
+            disabled={!!file}
             accept=".xlsx, .csv"
           />
           <Card style={{ flex: 1, height: "200px" }}>

@@ -2,7 +2,6 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { AlertTriangle, ChevronRight } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../../Context/UserContext";
-import LanguagePicker from "../../LanguagePicker";
 import { smsIcon, whatsappIcon } from "../files";
 import styles from "../styles/index.module.css";
 

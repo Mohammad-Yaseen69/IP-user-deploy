@@ -1,6 +1,6 @@
 import { useParams } from "react-router";
 import QrPoster from "./QrPoster";
-import { useContext, useEffect, useLayoutEffect, useMemo } from "react";
+import { useContext, useLayoutEffect, useMemo } from "react";
 import { UserContext } from "../../Context/UserContext";
 import { captureScreenShot } from "../../Helper/takeScreenshot";
 

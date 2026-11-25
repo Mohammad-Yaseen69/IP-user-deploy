@@ -1,25 +1,29 @@
-import html2canvas from "html2canvas";
+import { toast } from "react-toastify";
+import i18n from "../i18n";
 
 export const takeScreenshot = (classname = "App", setLoading) => {
   setLoading(true);
 
-  html2canvas(document.querySelector(`.${classname}`))
+  import("html2canvas")
+    .then(({ default: html2canvas }) => html2canvas(document.querySelector(`.${classname}`)))
     .then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
       const aTag = document.createElement("a");
       aTag.href = imgData;
       aTag.download = true;
       aTag.click();
-
-      document.removeChild(aTag);
     })
+    .catch(() => toast.error(i18n.t("Something went wrong on our end. Please try again later.")))
     .finally(() => setLoading(false));
 };
 
 export const captureScreenShot = async (wallet_id) => {
   // Add a delay to ensure the QR code is rendered
   setTimeout(() => {
-    html2canvas(document.querySelector(`.App`), { useCORS: true })
+    import("html2canvas")
+      .then(({ default: html2canvas }) =>
+        html2canvas(document.querySelector(`.App`), { useCORS: true }),
+      )
       .then((canvas) => {
         const imgData = canvas.toDataURL("image/png");
         const aTag = document.createElement("a");
