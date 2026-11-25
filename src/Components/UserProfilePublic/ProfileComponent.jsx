@@ -29,6 +29,7 @@ import { Pagination } from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Rating } from "@mui/material";
+import StarRating from "../../Common/Component/StarRating";
 
 export const reviews = [
   {
@@ -680,12 +681,7 @@ const ProfileComponent = () => {
                                   </div>
                                 </div>
                                 <div className={styles.rc_rating}>
-                                  <Rating
-                                    initialRating={item?.rating}
-                                    emptySymbol="fa fa-star-o fa-2x"
-                                    fullSymbol="fa fa-star fa-2x"
-                                    readonly
-                                  ></Rating>
+                                  <StarRating value={item?.rating} readOnly />
                                 </div>
                                 <p>{item?.comment}</p>
                                 {item?.reply && (
@@ -770,12 +766,7 @@ const ProfileComponent = () => {
                                   </div>
                                 </div>
                                 <div className={styles.rc_rating}>
-                                  <Rating
-                                    initialRating={item?.rating}
-                                    emptySymbol="fa fa-star-o fa-2x"
-                                    fullSymbol="fa fa-star fa-2x"
-                                    readonly
-                                  ></Rating>
+                                  <StarRating value={item?.rating} readOnly />
                                 </div>
                                 <p>{item?.comment}</p>
                               </div>

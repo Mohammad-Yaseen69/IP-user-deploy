@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import Rating from "react-rating";
+import StarRating from "../../Common/Component/StarRating";
 import { Card, CardBody } from "reactstrap";
 import styles from "./styles/index.module.scss";
 import copy from "./files/copy.svg";
@@ -120,14 +120,10 @@ const Qr = ({
             /5.0
           </h4>
           <div>
-            <Rating
-              initialRating={
-                currentRevTab === "Seller" ? averageRatingAsSeller : averageRatingAsBuyer
-              }
-              emptySymbol="fa fa-star-o fa-2x"
-              fullSymbol="fa fa-star fa-2x"
-              readonly
-            ></Rating>
+            <StarRating
+              value={currentRevTab === "Seller" ? averageRatingAsSeller : averageRatingAsBuyer}
+              readOnly
+            />
           </div>
           <span>
             {currentRevTab === "Seller"
