@@ -1,11 +1,10 @@
-import { Check, ChevronLeft, ChevronRight, HelpCircle, Search, X, XCircle } from "react-feather";
+import { Check, ChevronLeft, ChevronRight, HelpCircle, Search, XCircle } from "react-feather";
 import { Badge, Button, Card, CardBody, Input } from "reactstrap";
 import { useTranslation } from "react-i18next";
-import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import BeneficiaryCard from "./BeneficiaryCard";
 import InviteFriendModal from "./InviteFriendModal";
 import { useLocation, useNavigate } from "react-router";
-import AddCSVModal from "../Payments/CSVModal";
 import { UserContext } from "../../Context/UserContext";
 import axios from "axios";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
@@ -16,6 +15,7 @@ import InstaPayLoader from "../Loader";
 import { Link } from "react-router-dom";
 import stylesForButtons from "./InternationalFlow/styles/index.module.css";
 import i18next from "i18next";
+import { fetchBeneficiaryDetails } from "../../hooks/BeneficiaryHooks/useBeneficiaryDetails";
 
 const PaymentsBeneficiary = ({
   beneficiary,
@@ -29,14 +29,7 @@ const PaymentsBeneficiary = ({
   backHandler = () => {},
 }) => {
   const { t } = useTranslation();
-  const {
-    beneficiaries,
-    userWallets,
-    authHeader,
-    registeredBeneficiaries,
-    userDetails,
-    getUserBeneficiaries,
-  } = useContext(UserContext);
+  const { userWallets, authHeader, registeredBeneficiaries, userDetails } = useContext(UserContext);
   const [filtered, setFiltered] = useState([]);
   const [searched, setSearched] = useState([]);
   const [isBulk, setIsBulk] = useState(false);
@@ -63,15 +56,7 @@ const PaymentsBeneficiary = ({
   // }, [country])
 
   useEffect(() => {
-    let fil = payoutChannel
-      ? beneficiaries.filter((item) =>
-          item.account_type.some((item) =>
-            item.toLowerCase().includes(payoutChannel.toLowerCase()),
-          ),
-        )
-      : registeredBeneficiaries;
-
-    fil = [];
+    let fil = [];
     if (fil?.length === 0) {
       setAddMessage(t(`You have no beneficiary.`));
     }
@@ -110,10 +95,6 @@ const PaymentsBeneficiary = ({
 
     setFiltered(fil);
   }, [registeredBeneficiaries, i18next.language]);
-
-  useEffect(() => {
-    getUserBeneficiaries();
-  }, []);
 
   const createQuotations = (ben = []) => {
     const benef = ben?.length > 0 ? ben : beneficiary;
@@ -256,12 +237,15 @@ const PaymentsBeneficiary = ({
   const url_recipient = queryParams.get("recipient");
 
   useEffect(() => {
-    if (url_recipient && beneficiaries?.length > 0) {
-      const fil = beneficiaries?.filter((item) => item?._id == url_recipient)?.[0];
-      setBeneficiary([fil]);
-      createQuotations([fil]);
-    }
-  }, [beneficiaries, url_recipient]);
+    if (!url_recipient) return;
+    fetchBeneficiaryDetails(url_recipient)
+      .then((fil) => {
+        if (!fil) return;
+        setBeneficiary([fil]);
+        createQuotations([fil]);
+      })
+      .catch(() => {});
+  }, [url_recipient]);
   return (
     <Card
       style={{

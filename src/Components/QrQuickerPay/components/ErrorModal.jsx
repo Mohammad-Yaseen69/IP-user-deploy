@@ -1,4 +1,3 @@
-import React from "react";
 import { Modal, ModalBody } from "reactstrap";
 import useWindowWidth from "../../../utils/useWindowWidth";
 import { useTranslation } from "react-i18next";

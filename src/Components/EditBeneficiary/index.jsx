@@ -27,8 +27,7 @@ import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 import PhoneInput from "../PhoneInput";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import DateMomentUtils from "@date-io/moment";
-import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
+import DatePicker from "../../CommonElements/DatePicker";
 import PaymentChannelUI from "../AddBeneficiary/PaymentChannelUI";
 import useBankDetails from "../../hooks/BeneficiaryHooks/useBankDetails";
 import useChannels from "../../hooks/BeneficiaryHooks/useChannels";
@@ -37,6 +36,7 @@ import useBenEditFunc from "../../hooks/BeneficiaryHooks/useBenEditFunc";
 import NeemaBenExtrasFields from "../AddBeneficiary/NeemaBenExtrasFields";
 import citiesData from "../CitiesDropDown/CitiesData.json";
 import { getMaxDate } from "../../utils/Functions/validations";
+import { useBeneficiaryDetails } from "../../hooks/BeneficiaryHooks/useBeneficiaryDetails";
 
 const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
   const { t } = useTranslation();
@@ -227,14 +227,8 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
     }
   };
 
-  const { authHeader, beneficiaries, userDetails, allowedCountries, getUserBeneficiaries } =
-    useContext(UserContext);
-
-  useEffect(() => {
-    if (userDetails) {
-      getUserBeneficiaries();
-    }
-  }, [userDetails]);
+  const { authHeader, userDetails, allowedCountries } = useContext(UserContext);
+  const { data: beneficiary } = useBeneficiaryDetails(user_id);
 
   const inputChangeHandler = (e) => {
     setClicked(false);
@@ -505,9 +499,8 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
   };
 
   useEffect(() => {
-    const filtered = beneficiaries.filter((ben) => ben._id === user_id)[0];
-    setUser(filtered);
-  }, [beneficiaries, user_id]);
+    setUser(beneficiary);
+  }, [beneficiary]);
 
   useEffect(() => {
     if (user && initializedUserId.current !== user._id) {
@@ -621,7 +614,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
         />
         {user && (
           <>
-            <MuiPickersUtilsProvider utils={DateMomentUtils}>
+            <>
               <Form
                 className="card"
                 style={{
@@ -1387,7 +1380,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                   </CardBody>
                 )}
               </Form>
-            </MuiPickersUtilsProvider>
+            </>
           </>
         )}
       </div>

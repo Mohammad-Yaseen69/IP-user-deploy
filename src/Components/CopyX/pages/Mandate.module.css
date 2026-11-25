@@ -1,0 +1,107 @@
+/* WEB-07 copy mandate and WEB-07b activation pending (Figma 14235:39291, 14235:39796). */
+
+.credit {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  padding: 16px 18px;
+  border-radius: 10px;
+  background: #e8f7ee;
+}
+.credit img {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.creditText {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  line-height: normal;
+  color: #17141f;
+}
+
+.section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 40px;
+  box-shadow: inset 0 1px 0 #e9e7ef;
+}
+
+.clause {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+}
+.clauseTitle {
+  line-height: 1.5;
+  font-weight: 500;
+  color: #17141f;
+}
+.clauseBody {
+  line-height: normal;
+  font-weight: 400;
+  color: #5e5a6b;
+}
+
+/* ------------------------------------ consent ------------------------------------ */
+
+.consent {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+}
+.consentDisabled {
+  cursor: default;
+}
+.checkInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.box {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 100px;
+  background: #ffffff;
+  border: 1px solid #d1d6e0;
+  box-shadow: 0 1px 1.5px rgba(27, 31, 42, 0.04);
+}
+.boxOn {
+  border: none;
+  background: #5926f0;
+  box-shadow: none;
+}
+.box img {
+  width: 12px;
+  height: 12px;
+}
+.checkInput:focus-visible + .box {
+  outline: 2px solid #5926f0;
+  outline-offset: 2px;
+}
+.consentText {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 500;
+  color: #17141f;
+}
+
+/* Disabled primary in this design is blue-300. */
+.confirm.confirm:disabled {
+  background: #a88bff;
+}

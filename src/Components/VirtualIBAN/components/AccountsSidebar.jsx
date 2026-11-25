@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { MoreHorizontal, Plus } from "react-feather";
 import styles from "../styles/AccountsSidebar.module.css";
 import VirtualIbanModal from "../VirtualIbanModal";
 import UK_Image from "../files/images/UK.svg";

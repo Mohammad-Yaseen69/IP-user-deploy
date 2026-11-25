@@ -9,7 +9,10 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="shortcut icon" href="apple-touch-icon.png" />
     <!-- <link rel="manifest" href="/manifest.json" /> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://api.fontshare.com" />
+    <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
       rel="stylesheet"
@@ -17,8 +20,7 @@
     <meta name="googlebot" content="notranslate" />
     <meta name="google" content="notranslate" />
     <!-- google analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MR0R10FSVS"></script>
-    <script defer>
+    <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
@@ -26,6 +28,27 @@
       gtag("js", new Date());
 
       gtag("config", "G-MR0R10FSVS");
+
+      (function () {
+        function loadGtag() {
+          var s = document.createElement("script");
+          s.async = true;
+          s.src = "https://www.googletagmanager.com/gtag/js?id=G-MR0R10FSVS";
+          document.head.appendChild(s);
+        }
+        function whenIdle() {
+          if ("requestIdleCallback" in window) {
+            window.requestIdleCallback(loadGtag, { timeout: 5000 });
+          } else {
+            setTimeout(loadGtag, 2000);
+          }
+        }
+        if (document.readyState === "complete") {
+          whenIdle();
+        } else {
+          window.addEventListener("load", whenIdle, { once: true });
+        }
+      })();
     </script>
     <!-- google analytics -->
     <title>InstaPay</title>

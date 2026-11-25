@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styles from "./styles/index.module.css";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import axios from "axios";

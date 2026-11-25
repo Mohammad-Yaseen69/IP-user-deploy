@@ -1,4 +1,3 @@
-import React from "react";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import styles from "./styles/PortfolioItem.module.css";
 import file_img from "../Portfolio/files/file.png";

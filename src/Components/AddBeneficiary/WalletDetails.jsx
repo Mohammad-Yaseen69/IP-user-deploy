@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FormGroup, Input, Label } from "reactstrap";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { useTranslation } from "react-i18next";

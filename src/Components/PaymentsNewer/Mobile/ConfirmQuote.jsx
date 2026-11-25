@@ -6,7 +6,6 @@ import SelectedAmountAndCurrency from "../SelectedAmountAndCurrency";
 import faded_lines from "../files/faded_lines.png";
 import { UserContext } from "../../../Context/UserContext";
 import { useNavigate } from "react-router";
-import SelectedPaymentType from "../SelectedPaymentType";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SelectedRecipient from "../SelectedRecipient";
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
@@ -291,7 +290,7 @@ const ConfirmRequest = ({
             }}
             ref={svgRef}
           />
-          <Draggable axis="x" bounds="parent" onDrag={handleDrag}>
+          <Draggable axis="x" bounds="parent" onDrag={handleDrag} nodeRef={chevRef}>
             <div
               style={{
                 position: "absolute",
