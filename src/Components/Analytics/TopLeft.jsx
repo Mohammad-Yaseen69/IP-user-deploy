@@ -427,7 +427,7 @@ const TopLeft = ({
               }
             }}
             style={{
-              opacity: currentChartPage < lastPage ? 1 : 0.5,
+              opacity: currentChartPage > 0 ? 1 : 0.5,
             }}
           />
           <img
@@ -439,7 +439,7 @@ const TopLeft = ({
               }
             }}
             style={{
-              opacity: currentChartPage < maxData ? 1 : 0.5,
+              opacity: currentChartPage < lastPage ? 1 : 0.5,
             }}
           />
         </div>
