@@ -18,7 +18,9 @@ const ConfirmStep = ({ flow }) => {
     requiredFields.includes("mobile_number") && [t("Mobile"), `+${identifiers.mobile_number}`],
     [
       t("Paying from"),
-      `${t(getPaymentMethod(flow.paymentMethodId)?.title)} · ${flow.wallet?.currency?.code}`,
+      flow.isIban
+        ? `${t(getPaymentMethod(flow.paymentMethodId)?.title)} · ${flow.iban?.currency} ·· ${String(flow.iban?.iban || "").slice(-4)}`
+        : `${t(getPaymentMethod(flow.paymentMethodId)?.title)} · ${flow.wallet?.currency?.code}`,
     ],
     identifiers.statement_reference && [t("Bill reference"), identifiers.statement_reference],
     quote?.bill_amount && [t("Biller receives"), money(quote.bill_amount)],

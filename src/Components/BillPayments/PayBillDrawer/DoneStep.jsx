@@ -27,7 +27,9 @@ const DoneStep = ({ flow, onClose }) => {
   const statusLabel = isPaid
     ? t("Paid")
     : isFailed
-      ? t("Not paid · refunded to your wallet")
+      ? flow.isIban
+        ? t("Not paid · refunded to your IBAN")
+        : t("Not paid · refunded to your wallet")
       : t("Processing with the biller");
 
   return (
@@ -87,7 +89,9 @@ const DoneStep = ({ flow, onClose }) => {
           <div className={styles.summaryRow}>
             <span>{t("Paid from")}</span>
             <strong>
-              {flow.wallet?.currency?.code} {t("Wallet")}
+              {flow.isIban
+                ? `${flow.iban?.currency} ${t("IBAN")} ·· ${String(flow.iban?.iban || "").slice(-4)}`
+                : `${flow.wallet?.currency?.code} ${t("Wallet")}`}
             </strong>
           </div>
           <div className={styles.summaryRow}>

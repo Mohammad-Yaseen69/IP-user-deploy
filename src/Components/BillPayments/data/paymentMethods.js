@@ -17,12 +17,12 @@ export const PAYMENT_METHODS = [
     comingSoon: true,
   },
   {
-    id: "viban",
+    id: "iban",
     title: "vIBAN",
-    subtitle: "Pay from your virtual IBAN balance",
+    subtitle: "Pay from your EUR virtual IBAN · no extra fee",
     Icon: Briefcase,
     isNew: true,
-    comingSoon: true,
+    confirmEndpoint: "/api/bill-payment/confirm/iban",
   },
   {
     id: "crypto",

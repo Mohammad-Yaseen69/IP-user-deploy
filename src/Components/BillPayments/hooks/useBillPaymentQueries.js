@@ -94,6 +94,15 @@ export const useBillWalletQuotes = (params, walletIds, enabled) =>
     })),
   });
 
+export const useBillIbanQuote = (params, ibanId, enabled) =>
+  useQuery({
+    queryKey: ["bill-payment", "quote-preview", { ...params, ibanId }],
+    queryFn: () => getBillQuote({ ...params, ibanId }),
+    enabled: enabled && !!ibanId,
+    staleTime: 60 * 1000,
+    retry: false,
+  });
+
 export const useConfirmBillPayment = () => {
   const queryClient = useQueryClient();
   return useMutation({

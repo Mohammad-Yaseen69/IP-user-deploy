@@ -8,15 +8,27 @@ import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApi
 import { useDebounce } from "../../../hooks/useDebounce/useDebounce";
 import { getWalletAvailable } from "../../VirtualIBAN/CryptoWallet/instapay/wallets";
 import { usePhoneVerification } from "../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/usePhoneVerification";
+import { useQueryClient } from "@tanstack/react-query";
+import { useVirtualIbans, virtualIbanQueryKeys } from "../../../hooks/useVirtualIban";
 import { getPaymentMethod } from "../data/paymentMethods";
 import {
   useAddSavedBill,
+  useBillIbanQuote,
   useBillProducts,
   useBillQuote,
   useBillWalletQuotes,
   useBillStatements,
   useConfirmBillPayment,
 } from "./useBillPaymentQueries";
+
+const BLOCKED_IBAN_STATUSES = ["BLOCKED", "INACTIVE", "SUSPENDED", "TERMINATED"];
+export const isIbanPayable = (iban) =>
+  iban?.currency === "EUR" &&
+  !BLOCKED_IBAN_STATUSES.includes(String(iban.status || "").toUpperCase()) &&
+  !iban.adminBlocked &&
+  !iban.freezeIban &&
+  !iban.blockOutbound &&
+  !iban.userBlocked;
 
 export const PAY_STEPS = { BILLER: "biller", PAYMENT: "payment", CONFIRM: "confirm", DONE: "done" };
 
@@ -86,6 +98,14 @@ export const usePayBillFlow = ({
   const [statement, setStatement] = useState(null);
   const [paymentMethodId, setPaymentMethodId] = useState("wallet");
   const [wallet, setWallet] = useState(initialWallet || null);
+  const [iban, setIban] = useState(null);
+  const isIban = paymentMethodId === "iban";
+  const queryClient = useQueryClient();
+  const { data: allIbans = [] } = useVirtualIbans(userDetails?._id);
+  const ibans = allIbans.filter(isIbanPayable);
+  useEffect(() => {
+    if (isIban && !ibans.some((item) => item._id === iban?._id)) setIban(ibans[0] || null);
+  }, [isIban, ibans.length, iban?._id]);
   const [quote, setQuote] = useState(null);
   const [receipt, setReceipt] = useState(null);
   const [error, setError] = useState("");
@@ -155,8 +175,27 @@ export const usePayBillFlow = ({
       amount: amountLimits ? Number(debouncedAmount) : undefined,
     },
     wallets.map((item) => item._id),
-    isQuoting,
+    isQuoting && !isIban,
   );
+  const ibanQuote = useBillIbanQuote(
+    {
+      productId: product?.id,
+      paymentMethod: "iban",
+      amount: amountLimits ? Number(debouncedAmount) : undefined,
+    },
+    iban?._id,
+    isQuoting && isIban,
+  );
+  const ibanTotal = ibanQuote.data?.total;
+  const ibanFunds = {
+    isChecking: isQuoting && isIban && (ibanQuote.isPending || ibanQuote.isFetching),
+    hasFunds:
+      isQuoting && isIban && ibanTotal?.value != null && ibanTotal.currency === iban?.currency
+        ? ibanTotal.value <= Number(iban?.balance || 0)
+        : false,
+    quote: isQuoting && isIban ? ibanQuote.data : undefined,
+    error: ibanQuote.error,
+  };
   const walletFunds = Object.fromEntries(
     wallets.map((item, index) => {
       const quote = walletQuotes[index];
@@ -172,13 +211,13 @@ export const usePayBillFlow = ({
       ];
     }),
   );
-  const selectedFunds = walletFunds[wallet?._id] || {};
+  const selectedFunds = isIban ? ibanFunds : walletFunds[wallet?._id] || {};
   const isChecking = wallets.some((item) => walletFunds[item._id].isChecking);
   const noWalletCanPay =
-    isQuoting && !isChecking && !wallets.some((item) => walletFunds[item._id].hasFunds);
+    isQuoting && !isIban && !isChecking && !wallets.some((item) => walletFunds[item._id].hasFunds);
 
   useEffect(() => {
-    if (!isQuoting || isChecking || selectedFunds.hasFunds) return;
+    if (isIban || !isQuoting || isChecking || selectedFunds.hasFunds) return;
     const payable = wallets.find((item) => walletFunds[item._id].hasFunds);
     if (payable) setWallet(payable);
   }, [isQuoting, isChecking, selectedFunds.hasFunds, wallet?._id]);
@@ -194,7 +233,7 @@ export const usePayBillFlow = ({
     isQuoting &&
     !!selectedFunds.hasFunds &&
     !selectedFunds.isChecking &&
-    !!wallet &&
+    (isIban ? !!iban : !!wallet) &&
     !!getPaymentMethod(paymentMethodId)?.confirmEndpoint &&
     statementFields.every((field) => !!identifiers[field]) &&
     isAmountValid;
@@ -297,7 +336,7 @@ export const usePayBillFlow = ({
 
   const otpPayload = (token) => ({
     token,
-    wallet_id: wallet._id,
+    ...(isIban ? { iban_id: iban._id } : { wallet_id: wallet._id }),
     bill_id: isPayingSavedBill ? savedBill.id : undefined,
     ...identifierPayload([...requiredFields, ...statementFields]),
   });
@@ -333,7 +372,8 @@ export const usePayBillFlow = ({
     try {
       const nextQuote = await quoteMutation.mutateAsync({
         productId: product.id,
-        walletId: wallet._id,
+        walletId: isIban ? undefined : wallet._id,
+        ibanId: isIban ? iban._id : undefined,
         paymentMethod: paymentMethodId,
         amount: amountLimits ? Number(amount) : undefined,
       });
@@ -355,7 +395,8 @@ export const usePayBillFlow = ({
         idempotencyKey: getKey(),
       });
       setReceipt(result);
-      getUserWallets?.();
+      if (isIban) queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.all });
+      else getUserWallets?.();
       setVerified(true);
     } catch (apiError) {
       resetIdempotencyKey();
@@ -409,6 +450,11 @@ export const usePayBillFlow = ({
     setPaymentMethodId,
     wallet,
     selectWallet,
+    isIban,
+    ibans,
+    iban,
+    selectIban: setIban,
+    ibanFunds,
     quote,
     receipt,
     error,

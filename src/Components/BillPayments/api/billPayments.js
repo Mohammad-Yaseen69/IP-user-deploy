@@ -72,7 +72,7 @@ export const getBillPayment = async (referenceId) => {
   return res?.data;
 };
 
-export const getBillQuote = async ({ productId, walletId, paymentMethod, amount }) => {
+export const getBillQuote = async ({ productId, walletId, ibanId, paymentMethod, amount }) => {
   const res = await apiWrapper({
     endpoint: "/api/bill-payment/quote",
     method: "POST",
@@ -80,6 +80,7 @@ export const getBillQuote = async ({ productId, walletId, paymentMethod, amount 
     payload: {
       product_id: productId,
       wallet_id: walletId,
+      iban_id: ibanId,
       payment_method: paymentMethod,
       amount,
     },

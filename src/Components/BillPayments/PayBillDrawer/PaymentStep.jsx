@@ -359,6 +359,50 @@ const PaymentStep = ({ flow, wallets, isAdding }) => {
                         )}
                       </div>
                     )}
+
+                    {isActive && method.id === "iban" && (
+                      <div className={styles.walletOptions}>
+                        {flow.ibans.map((item) => {
+                          const isSelected = flow.iban?._id === item._id;
+                          const funds = isSelected ? flow.ibanFunds : {};
+                          const isShort =
+                            flow.isQuoting && isSelected && !funds.isChecking && !funds.hasFunds;
+                          return (
+                            <button
+                              type="button"
+                              key={item._id}
+                              className={`${styles.walletOption} ${isSelected ? styles.walletOptionActive : ""}`}
+                              aria-pressed={isSelected}
+                              onClick={() => flow.selectIban(item)}
+                            >
+                              <CurrencyFlag code={item.currency} size={22} />
+                              <strong className={styles.rowMain}>
+                                {item.currency} {t("IBAN")} ·· {String(item.iban || "").slice(-4)}
+                              </strong>
+                              <span className={isShort ? styles.walletShort : ""}>
+                                {formatWalletAmount(item.balance)} {item.currency}{" "}
+                                {funds.isChecking
+                                  ? `· ${t("checking...")}`
+                                  : isShort
+                                    ? `· ${t("not enough")}`
+                                    : t("available")}
+                              </span>
+                              {isSelected && (
+                                <CheckCircle size={16} className={styles.walletCheck} />
+                              )}
+                            </button>
+                          );
+                        })}
+                        {!flow.ibans.length && (
+                          <div className={styles.walletNote}>
+                            {t("You need an active EUR virtual IBAN to pay this way.")}
+                          </div>
+                        )}
+                        {flow.quoteError && (
+                          <div className={styles.walletNote}>{flow.quoteError}</div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 );
               })}
