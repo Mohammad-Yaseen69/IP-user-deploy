@@ -396,7 +396,7 @@ const ThirdPartySenders = () => {
     <>
       <div className={styles.container}>
         <PageHeader
-          title={t("Third-party sender")}
+          title={t("Third-party senders")}
           subtitle={t("Manage saved senders for third-party international transfers.")}
         />
 
@@ -420,7 +420,7 @@ const ThirdPartySenders = () => {
 
       <div className={styles.mobile}>
         <div className={styles.top}>
-          <h4>{t("Third-party sender")}</h4>
+          <h4>{t("Third-party senders")}</h4>
         </div>
         <div className={styles.bottom}>
           {renderToolbar(true)}

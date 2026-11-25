@@ -13,7 +13,7 @@ const UserProfile = () => {
   return (
     <>
       <div className={styles.container}>
-        <PageHeader title={t("User Profile")} />
+        <PageHeader title={t("Profile")} />
         {userDetails?.username ? (
           <ProfileComponent />
         ) : (

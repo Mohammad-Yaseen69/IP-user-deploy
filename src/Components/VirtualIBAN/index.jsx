@@ -240,9 +240,7 @@ const VirtualBank = () => {
     <div className={styles.container}>
       {width > 600 && (
         <PageHeader
-          title={
-            userDetails?.account_type === "business" ? t("Business IBAN") : t("My virtual bank")
-          }
+          title={t("My virtual IBAN")}
           subtitle={
             userDetails?.account_type === "business"
               ? t("Activate a dedicated business account to receive and hold company funds.")
@@ -262,9 +260,7 @@ const VirtualBank = () => {
                   ? t("Your pricing")
                   : onboardingStep === "ActivateAccount"
                     ? t("Activate your account")
-                    : userDetails?.account_type === "business"
-                      ? t("Business IBAN")
-                      : t("My virtual bank")}
+                    : t("My virtual IBAN")}
               </h1>
             </div>
             <div className={styles.mobileTopRight}>

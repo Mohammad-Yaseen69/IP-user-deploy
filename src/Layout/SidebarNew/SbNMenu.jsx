@@ -113,7 +113,7 @@ export const MENU = [
         type: "text",
       },
       {
-        title: "My Wallets",
+        title: "My wallets",
         Icon: Wallets,
         icon: <img loading="lazy" src={wallets} />,
         activeIcon: <img loading="lazy" src={wallets_a} />,
@@ -122,7 +122,7 @@ export const MENU = [
         permission: "wallet.view",
       },
       {
-        title: "Crypto Hub",
+        title: "Crypto hub",
         Icon: Bitcoin,
         icon: <img loading="lazy" src={crypto_icon} />,
         activeIcon: <img loading="lazy" src={crypto_icon_a} />,
@@ -169,7 +169,7 @@ export const MENU = [
         permission: "mastercard.view",
       },
       {
-        title: "My Portfolio",
+        title: "My portfolio",
         Icon: Basket,
         icon: <img loading="lazy" src={portfolio} />,
         activeIcon: <img loading="lazy" src={portfolio_a} />,
@@ -191,7 +191,7 @@ export const MENU = [
         permission: "payments.view",
       },
       {
-        title: "Pay Bills",
+        title: "Pay bills",
         Icon: PayBills,
         icon: <img loading="lazy" src={paym} />,
         activeIcon: <img loading="lazy" src={paym_a} />,
@@ -218,7 +218,7 @@ export const MENU = [
         permission: "transactions.main.view",
       },
       {
-        title: "Payment Requests",
+        title: "Payment requests",
         Icon: Send,
         icon: <img loading="lazy" src={pen} />,
         activeIcon: <img loading="lazy" src={pen_a} />,
@@ -227,7 +227,7 @@ export const MENU = [
         permission: "payment-request.view",
       },
       {
-        title: "Schedules",
+        title: "Scheduled",
         Icon: CalendarCheck,
         icon: <img loading="lazy" src={schedules} />,
         activeIcon: <img loading="lazy" src={schedules_a} />,
@@ -236,7 +236,7 @@ export const MENU = [
         permission: "schedules.view",
       },
       {
-        title: "Pay Via Social",
+        title: "Pay via social",
         Icon: Share2,
         icon: <img loading="lazy" src={payviasocial_unactive} />,
         activeIcon: <img loading="lazy" src={payviasocial} />,
@@ -249,7 +249,7 @@ export const MENU = [
         type: "text",
       },
       {
-        title: "My Payment Address",
+        title: "My payment address",
         Icon: Hash,
         icon: <img loading="lazy" src={pa} />,
         activeIcon: <img loading="lazy" src={pa_a} />,
@@ -258,7 +258,7 @@ export const MENU = [
         permission: "payment-address.view",
       },
       {
-        title: "My QR Code Sticker",
+        title: "My QR code sticker",
         Icon: QrCode,
         icon: <img loading="lazy" src={qr_s} />,
         activeIcon: <img loading="lazy" src={qr_s_a} />,
@@ -267,7 +267,7 @@ export const MENU = [
         permission: "qr-sticker.view",
       },
       {
-        title: "My Invoices",
+        title: "My invoices",
         Icon: FileText,
         icon: <img loading="lazy" src={rec} />,
         activeIcon: <img loading="lazy" src={rec_a} />,
@@ -311,7 +311,7 @@ export const MENU = [
         permission: "user-profile.view",
       },
       {
-        title: "Geo Fencing",
+        title: "Geo-fencing",
         Icon: GeoFencing,
         icon: <img loading="lazy" src={location} />,
         activeIcon: <img loading="lazy" src={location_a} />,
@@ -320,7 +320,7 @@ export const MENU = [
         permission: "geo-fencing.view",
       },
       {
-        title: "Third-Party senders",
+        title: "Third-party senders",
         Icon: UsersRound,
         icon: <img loading="lazy" src={paym} />,
         activeIcon: <img loading="lazy" src={paym_a} />,
@@ -386,7 +386,7 @@ export const MENU = [
         permission: "settings.view",
       },
       {
-        title: "Delegate Access",
+        title: "Delegate access",
         Icon: UserCog,
         icon: <img loading="lazy" src={delegate} />,
         activeIcon: <img loading="lazy" src={delegate_a} />,
@@ -397,7 +397,7 @@ export const MENU = [
         showOnly: "business",
       },
       {
-        title: "Activity Feed",
+        title: "Activity feed",
         Icon: Activity,
         icon: <img loading="lazy" src={Feed} />,
         activeIcon: <img loading="lazy" src={Feed_a} />,
