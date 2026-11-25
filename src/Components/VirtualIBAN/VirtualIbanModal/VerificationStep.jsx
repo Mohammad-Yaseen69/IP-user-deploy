@@ -3,8 +3,9 @@ import { Shield } from "react-feather";
 import styles from "./virtualIbanModal.module.scss";
 import MT from "./icons/mt.svg";
 import GB from "./icons/uk.svg";
+import US from "../../../assets/fonts/flag-icon/us.svg";
 import { getJurisdiction } from "../../../stateMachines/virtualIbanPayment";
-const FLAGS = { MT, GB };
+const FLAGS = { MT, GB, US };
 
 const VerificationStep = ({ jurisdiction }) => {
   const { t } = useTranslation();
@@ -14,7 +15,7 @@ const VerificationStep = ({ jurisdiction }) => {
     <>
       <div className={styles.feesHeader}>
         <h4>
-          <img src={FLAGS[jurisdiction]} />
+          <img src={FLAGS[jurisdiction]} width={34} height={24} />
           {t(info.header)}
         </h4>
         <div className={styles.badges}>

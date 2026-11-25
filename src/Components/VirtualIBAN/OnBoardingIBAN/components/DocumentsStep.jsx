@@ -5,16 +5,22 @@ import { toast } from "react-toastify";
 import styles from "../style/onboardingSteps.module.css";
 import SidebarProgress from "./SidebarProgress";
 import StepProgress from "./StepProgress";
-import { useMediaQuery } from "@mui/material";
+import { Skeleton, useMediaQuery } from "@mui/material";
 import AlertBox from "./AlertBox";
 import useStepValidation from "../../../../hooks/useStepValidation";
 import {
   IBAN_DOC_KEY_TO_SLOT,
   IBAN_POA_DOC_KEYS,
   IBAN_POA_SLOT,
+  IBAN_RHUB_DOC_KEYS,
   toDraftFileRef,
 } from "../../../../utils/Data/businessDraft";
+import { apiWrapper } from "../../../../utils/Functions/apiWrapper";
+import { useQuery } from "@tanstack/react-query";
 
+const RUHUB_DOCS = {
+  "Due Diligence Questionnaire Corporate": "due_diligence_questionnaire",
+};
 const ALLOWED_FILE_TYPES = {
   "application/pdf": [".pdf"],
   "application/msword": [".doc"],
@@ -61,6 +67,20 @@ const DocumentsStep = ({
     ""
   ).toLowerCase();
 
+  const isRhub = Boolean(data?.isRhub);
+  const { data: rhubDocs, isLoading: rhubDocsLoading } = useQuery({
+    queryKey: ["rhub", "documents-requirements"],
+    queryFn: () =>
+      apiWrapper({
+        endpoint: `/api/rhub/documents-requirements`,
+      }).then((dec) => dec?.data),
+    enabled: isRhub,
+  });
+  const rhubDocList = (rhubDocs?.virtualCustomerDocumentTypeList || [])
+    .filter((doc) => doc?.mandatory && RUHUB_DOCS?.[doc?.name])
+    .map((doc) => ({ ...doc, key: RUHUB_DOCS?.[doc.name] }));
+  const rhubDocsReady = !isRhub || (!rhubDocsLoading && rhubDocList.length > 0);
+
   let requiredDocKeys = [
     "commercial_register",
     "articles_association",
@@ -79,6 +99,9 @@ const DocumentsStep = ({
         requiredDocKeys.push("authority_letter");
       }
     }
+  }
+  if (isRhub) {
+    requiredDocKeys = [...requiredDocKeys, ...rhubDocList.map((doc) => doc.key)];
   }
 
   const setDocFile = (key, value) => {
@@ -118,7 +141,9 @@ const DocumentsStep = ({
     e.target.value = "";
     setDocFile(key, file);
 
-    const slot = IBAN_DOC_KEY_TO_SLOT[key];
+    const keyToSlot = { ...IBAN_DOC_KEY_TO_SLOT, ...IBAN_RHUB_DOC_KEYS };
+
+    const slot = keyToSlot[key];
     if (!onUploadDraftFile || !slot) return;
 
     setUploadingKeys((prev) => ({ ...prev, [key]: true }));
@@ -267,9 +292,11 @@ const DocumentsStep = ({
 
   const isDocProvided = (key) => Boolean(files[key]) || isKeyVerifiedFromKyb(key);
   const isDocsValid =
+    rhubDocsReady &&
     requiredDocKeys.every((k) =>
       k === IBAN_POA_SLOT ? IBAN_POA_DOC_KEYS.some(isDocProvided) : isDocProvided(k),
-    ) && !Object.values(uploadingKeys).some(Boolean);
+    ) &&
+    !Object.values(uploadingKeys).some(Boolean);
 
   const handleContinue = () => {
     validate();
@@ -391,6 +418,29 @@ const DocumentsStep = ({
 
                 {renderUploadControl("good_standing")}
               </div>
+              {isRhub && (
+                <div className={styles.documentList}>
+                  {rhubDocsLoading ? (
+                    [...new Array(4)].map((_, i) => (
+                      <Skeleton key={i} variant="rounded" height={25} sx={{ mb: 2 }} />
+                    ))
+                  ) : rhubDocList?.length ? (
+                    rhubDocList?.map((doc) => (
+                      <div key={doc.key} className={styles.documentRow}>
+                        <div className={styles.left}>
+                          <span className={styles.empty}></span>
+                          <span>{t(doc?.name)}</span>
+                        </div>
+                        {renderUploadControl(doc.key)}
+                      </div>
+                    ))
+                  ) : (
+                    <p className={styles.subtitle}>
+                      {t("Unable to load the required documents. Please try again later.")}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 

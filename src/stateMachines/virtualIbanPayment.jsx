@@ -11,6 +11,7 @@ export const STEPS = {
 
 export const VIRTUAL_IBAN_ACTIVATION_FEE = 4;
 export const VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY = "USD";
+export const MAX_BUSINESS_IBANS = 3;
 
 export const JURISDICTIONS = {
   MT: {
@@ -22,6 +23,7 @@ export const JURISDICTIONS = {
     bic: "IPT12345",
     currency: "Euro - EUR",
     currencyCode: "EUR",
+    provider: "bvnk",
     activationFee: "4.00",
     activationFeeCurrency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
     monthlyFee: "4.99",
@@ -29,6 +31,27 @@ export const JURISDICTIONS = {
     included: [
       "Dedicated MT IBAN registered in your name",
       "SEPA + SWIFT receiving worldwide",
+      "Funds safeguarded with regulated tier-1 partner bank",
+      "Real-time notifications + monthly PDF statements",
+    ],
+  },
+  US: {
+    id: "US",
+    title: "United States Account",
+    subtitle: "US jurisdiction · USD account",
+    header: "United States Account · US jurisdiction",
+    iban: "",
+    bic: "",
+    currency: "US Dollar - USD",
+    currencyCode: "USD",
+    provider: "rhub",
+    activationFee: "4.00",
+    activationFeeCurrency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
+    monthlyFee: "4.99",
+    monthlyFeeCurrency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
+    included: [
+      "Dedicated USD account registered in your name",
+      "Local USD + SWIFT receiving",
       "Funds safeguarded with regulated tier-1 partner bank",
       "Real-time notifications + monthly PDF statements",
     ],
