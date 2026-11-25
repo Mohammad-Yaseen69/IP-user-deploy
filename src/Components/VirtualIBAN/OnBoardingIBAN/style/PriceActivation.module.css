@@ -18,7 +18,7 @@
   gap: var(--lg, 24px);
   align-self: stretch;
   background-color: #fff;
-  border-radius: 10px;
+  border-radius: 16px;
 }
 
 .iconcon {

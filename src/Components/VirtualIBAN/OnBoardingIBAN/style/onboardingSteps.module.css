@@ -10,7 +10,7 @@
   animation: fadeIn 0.3s ease;
   padding: var(--lg, 24px);
   background-color: #fff;
-  border-radius: 10px;
+  border-radius: 16px;
 }
 
 @keyframes fadeIn {
@@ -859,7 +859,7 @@
   border-radius: 12px;
   background: #fff;
   padding: 18px;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .sectionHeader {

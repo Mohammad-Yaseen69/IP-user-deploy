@@ -48,14 +48,14 @@
 .cardsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: 20px;
+  gap: 16px;
 }
 
 .card {
   min-width: 0;
   background: #ffffff;
   border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 22px;
 }
 

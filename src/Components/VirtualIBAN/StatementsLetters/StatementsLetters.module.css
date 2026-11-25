@@ -21,7 +21,7 @@
   gap: 15px;
   background-color: #ffffff;
   padding: 24px;
-  border-radius: 10px;
+  border-radius: 16px;
 }
 
 .navigationHeader {
@@ -183,7 +183,7 @@
 .columnsFlexGrid {
   display: flex;
   flex-direction: row;
-  gap: 32px;
+  gap: 24px;
   width: 100%;
 }
 
@@ -205,7 +205,7 @@
   flex-direction: column;
   flex: 1;
   padding: 24px;
-  border-radius: 12px;
+  border-radius: 16px;
   background: #fff;
   border: 1px solid #f2f4f7;
 }

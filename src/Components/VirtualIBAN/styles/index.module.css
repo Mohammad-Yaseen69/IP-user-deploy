@@ -49,7 +49,7 @@
 .tabContent {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 24px;
 }
 
 @media (max-width: 900px) {

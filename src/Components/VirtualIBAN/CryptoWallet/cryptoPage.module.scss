@@ -12,7 +12,7 @@
 
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
   font-family: "Inter", sans-serif;
   color: var(--cw-text);
 }
@@ -20,7 +20,7 @@
 .layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 360px;
-  gap: 20px;
+  gap: 24px;
   align-items: start;
 }
 
