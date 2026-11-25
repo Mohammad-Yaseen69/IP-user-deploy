@@ -1,3 +1,6 @@
+import { toast } from "react-toastify";
+import i18n from "../i18n";
+
 export const takeScreenshot = (classname = "App", setLoading) => {
   setLoading(true);
 
@@ -9,9 +12,8 @@ export const takeScreenshot = (classname = "App", setLoading) => {
       aTag.href = imgData;
       aTag.download = true;
       aTag.click();
-
-      document.removeChild(aTag);
     })
+    .catch(() => toast.error(i18n.t("Something went wrong on our end. Please try again later.")))
     .finally(() => setLoading(false));
 };
 

@@ -16,6 +16,9 @@ import {
   WidthType,
 } from "docx";
 import axios from "axios";
+import { toast } from "react-toastify";
+
+const EXPORT_ERROR = "Something went wrong on our end. Please try again later.";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
@@ -133,67 +136,76 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
 
   const generateCSV = async () => {
     setDownloading(true);
-    const cell = (value) => `"${String(value ?? "").replace(/"/g, '""')}"`;
-    const csv = [["Title", "Details"], ...getPersonalRows()]
-      .map((row) => row.map(cell).join(","))
-      .join("\r\n");
-    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
-    const FileSaver = await import("file-saver");
-    FileSaver.saveAs(
-      blob,
-      `${userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name}_${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`}${new Date().toLocaleString()}.csv`,
-    );
-    setDownloading(false);
+    try {
+      const cell = (value) => `"${String(value ?? "").replace(/"/g, '""')}"`;
+      const csv = [["Title", "Details"], ...getPersonalRows()]
+        .map((row) => row.map(cell).join(","))
+        .join("\r\n");
+      const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+      const FileSaver = await import("file-saver");
+      FileSaver.saveAs(
+        blob,
+        `${userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name}_${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`}${new Date().toLocaleString()}.csv`,
+      );
+    } catch {
+      toast.error(t(EXPORT_ERROR));
+    } finally {
+      setDownloading(false);
+    }
   };
 
   const generatePDF = async () => {
     setDownloading(true);
-    const tableStyles = {
-      fontSize: 7,
-    };
-    const tableHeaderStyles = {
-      fontSize: 7,
-      fillColor: [89, 38, 240],
-      textColor: [255, 255, 255],
-    };
+    try {
+      const tableStyles = {
+        fontSize: 7,
+      };
+      const tableHeaderStyles = {
+        fontSize: 7,
+        fillColor: [89, 38, 240],
+        textColor: [255, 255, 255],
+      };
 
-    const [{ default: jsPDF }] = await Promise.all([import("jspdf"), import("jspdf-autotable")]);
-    const doc = new jsPDF();
+      const [{ default: jsPDF }] = await Promise.all([import("jspdf"), import("jspdf-autotable")]);
+      const doc = new jsPDF();
 
-    doc.addImage(img, "png", 14, 10, 46.5, 13);
-    doc.setFont("sans-serif", "normal", "normal");
-    doc.setFontSize(10);
-    doc.text(
-      `Below are the requested details of ${userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`} includes their requested info available on InstaPay.`,
-      14,
-      32,
-      { maxWidth: 200 },
-    );
-    const currentDate = new Date();
-    const formattedDate = `As of ${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()}`;
-    doc.setFont("sans-serif", "normal", "bold");
-    doc.setFontSize(10);
-    doc.text(formattedDate, 148, 17.5);
+      doc.addImage(img, "png", 14, 10, 46.5, 13);
+      doc.setFont("sans-serif", "normal", "normal");
+      doc.setFontSize(10);
+      doc.text(
+        `Below are the requested details of ${userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`} includes their requested info available on InstaPay.`,
+        14,
+        32,
+        { maxWidth: 200 },
+      );
+      const currentDate = new Date();
+      const formattedDate = `As of ${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()}`;
+      doc.setFont("sans-serif", "normal", "bold");
+      doc.setFontSize(10);
+      doc.text(formattedDate, 148, 17.5);
 
-    doc.setFont("sans-serif", "normal", "bold");
-    doc.setFontSize(17);
-    doc.text("Personal Details: ", 14, 45);
+      doc.setFont("sans-serif", "normal", "bold");
+      doc.setFontSize(17);
+      doc.text("Personal Details: ", 14, 45);
 
-    const personalTable = {
-      head: [["Title", "Details"]],
-      body: getPersonalRows(),
-      startY: 50,
-      styles: tableStyles,
-      headStyles: tableHeaderStyles,
-    };
+      const personalTable = {
+        head: [["Title", "Details"]],
+        body: getPersonalRows(),
+        startY: 50,
+        styles: tableStyles,
+        headStyles: tableHeaderStyles,
+      };
 
-    doc.autoTable(personalTable);
+      doc.autoTable(personalTable);
 
-    doc.save(
-      `${userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name}_${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`}${new Date().toLocaleString()}.pdf`,
-    );
-    // console.log(doc)
-    setDownloading(false);
+      doc.save(
+        `${userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name}_${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`}${new Date().toLocaleString()}.pdf`,
+      );
+    } catch {
+      toast.error(t(EXPORT_ERROR));
+    } finally {
+      setDownloading(false);
+    }
   };
 
   function generateTableRows() {
@@ -448,14 +460,14 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
       ],
     });
 
-    Packer.toBlob(doc).then(async (blob) => {
-      const FileSaver = await import("file-saver");
-      FileSaver.saveAs(
-        blob,
-        `${userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name}_${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`}${new Date().toLocaleString()}.docx`,
-      );
-      // console.log("Document created successfully");
-    });
+    Promise.all([Packer.toBlob(doc), import("file-saver")])
+      .then(([blob, FileSaver]) => {
+        FileSaver.saveAs(
+          blob,
+          `${userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name}_${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`}${new Date().toLocaleString()}.docx`,
+        );
+      })
+      .catch(() => toast.error(t(EXPORT_ERROR)));
   };
 
   const can = usePermission();

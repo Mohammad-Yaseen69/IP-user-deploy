@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import logo from "../../assets/images/logo/logo2.png";
 import { UserContext } from "../../Context/UserContext";
 import { formatCurrency } from "../../Helper/AmountFormat";
@@ -372,7 +373,7 @@ const TransactionSheet = ({
           `The status "${statusEn}" means InstaPay has received your payment instruction. It does not confirm that the beneficiary's bank has credited the funds.`,
         "Please use the transaction ID when contacting support.",
       ],
-    });
+    }).catch(() => toast.error(t("Something went wrong on our end. Please try again later.")));
   };
 
   return (

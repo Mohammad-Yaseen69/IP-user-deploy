@@ -658,7 +658,9 @@ const DoneStep = ({
                 feeDetails,
                 payoutResult,
                 t,
-              })
+              }).catch(() =>
+                toast.error(t("Something went wrong on our end. Please try again later.")),
+              )
             }
           >
             <Download size={15} />
