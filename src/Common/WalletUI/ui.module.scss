@@ -514,8 +514,15 @@ button.wcardChip {
   color: $tint-2;
 
   b {
-    font-weight: 700;
+    font-weight: 500;
+    font-size: 12px;
     color: #f8f9fc;
+  }
+
+  span {
+    font-size: 10px;
+    font-weight: 500;
+    color: $tint-2;
   }
 }
 
@@ -570,6 +577,10 @@ button.wcardChip {
     text-overflow: ellipsis;
     color: #f8f9fc;
   }
+}
+
+.small {
+  font-size: 10px;
 }
 
 .wcardBar {
@@ -851,4 +862,34 @@ button.wcardChip {
   .wcardBalance b {
     font-size: 24px;
   }
+}
+
+.barIn,
+.barOut {
+  display: block;
+  width: 100%;
+  border-radius: 4px;
+  transition: height 0.3s ease;
+}
+
+.barIn {
+  background: #e6dfff;
+  width: 30px;
+}
+
+.barOut {
+  background: #e4e8ef;
+  width: 30px;
+}
+
+.barInActive {
+  background: #5926f0;
+}
+
+.barOutActive {
+  background: #1b1f2a;
+}
+
+.empty i {
+  opacity: 0.6;
 }

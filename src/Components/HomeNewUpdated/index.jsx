@@ -220,8 +220,6 @@ const HomeNewUpdated = () => {
               )}
             </section>
 
-            <QuickTransfer />
-
             <div className={`${u.row} ${u.rowDash}`}>
               {can("dashboard.insights.view") && (
                 <MoneyInOut currency={walletCurrency} data={moneyData} loading={moneyLoading} />
@@ -230,6 +228,7 @@ const HomeNewUpdated = () => {
                 <RecentActivity currentWallet={selectedWallet} />
               )}
             </div>
+            <QuickTransfer />
 
             <CryptoBalances tickers={currenciesData} hidden={hideBalances} />
 

@@ -29,19 +29,38 @@ const TIP_SLOTS = {
     },
   },
 };
+const monthKey = (d) => `${d.getFullYear()}-${d.getMonth()}`;
+
+const buildMonths = (data, count) => {
+  const parseDate = (d) =>
+    d instanceof Date ? d : new Date(String(d).length === 10 ? `${d}T00:00:00` : d);
+
+  const byKey = new Map(data.map((m) => [monthKey(parseDate(m.date)), m]));
+  const now = new Date();
+
+  return Array.from({ length: count }, (_, i) => {
+    const date = new Date(now.getFullYear(), now.getMonth() - (count - 1 - i), 1);
+    const hit = byKey.get(monthKey(date));
+    return {
+      date,
+      in: Number(hit?.in ?? 0),
+      out: Number(hit?.out ?? 0),
+    };
+  });
+};
 
 const MoneyInOut = ({ currency = "", data = [], loading = false }) => {
   const { t, i18n } = useTranslation();
   const [range, setRange] = useState(12);
 
-  const months = useMemo(() => data.slice(-range), [data, range]);
+  const months = useMemo(() => buildMonths(data, range), [data, range]);
   const totals = useMemo(
     () =>
       months.reduce((sum, m) => ({ in: sum.in + m.in, out: sum.out + m.out }), { in: 0, out: 0 }),
     [months],
   );
-  const max = niceMax(Math.max(0, ...months.flatMap((m) => [m.in, m.out])));
-  const height = (value) => (value > 0 ? `max(2px, ${(value / max) * 100}%)` : 0);
+  const max = niceMax(Math.max(0, ...months.flatMap((m) => [m.in, m.out]))) || 1;
+  const barHeight = (value) => (value > 0 ? `max(15px, ${(value / max) * 100}%)` : "80px");
   const monthYear = (date, month = "short") =>
     date?.toLocaleString(i18n.language, { month, year: "numeric" });
 
@@ -110,6 +129,8 @@ const MoneyInOut = ({ currency = "", data = [], loading = false }) => {
               <div className={s.cols}>
                 {months.map((m) => {
                   const rows = figures(m);
+                  const isEmpty = m.in === 0 && m.out === 0;
+                  const monthLabel = monthYear(m.date, "long");
                   return (
                     <Tooltip
                       key={m.date.getTime()}
@@ -119,31 +140,45 @@ const MoneyInOut = ({ currency = "", data = [], loading = false }) => {
                       slotProps={TIP_SLOTS}
                       title={
                         <div className={s.tip}>
-                          <strong>{monthYear(m.date, "long")}</strong>
-                          {rows.map((row) => (
-                            <div key={row.label}>
-                              <i style={{ background: row.tipColor }} />
-                              <span>{row.label}</span>
-                              <b className={row.negative ? s.tipNeg : row.positive ? s.tipPos : ""}>
-                                {row.value} {currency}
-                              </b>
-                            </div>
-                          ))}
+                          <strong>{monthLabel}</strong>
+                          {isEmpty ? (
+                            <span>{t("No activity")}</span>
+                          ) : (
+                            rows.map((row) => (
+                              <div key={row.label}>
+                                <i style={{ background: row.tipColor }} />
+                                <span>{row.label}</span>
+                                <b
+                                  className={row.negative ? s.tipNeg : row.positive ? s.tipPos : ""}
+                                >
+                                  {row.value} {currency}
+                                </b>
+                              </div>
+                            ))
+                          )}
                         </div>
                       }
                     >
                       <button
                         type="button"
-                        className={s.col}
-                        aria-label={`${monthYear(m.date, "long")}: ${rows
-                          .map((row) => `${row.label} ${row.value}`)
-                          .join(", ")} ${currency}`}
+                        className={`${s.col} ${isEmpty ? s.empty : ""}`}
+                        aria-label={`${monthLabel}: ${
+                          isEmpty
+                            ? t("No activity")
+                            : rows.map((row) => `${row.label} ${row.value}`).join(", ")
+                        } ${currency}`}
                       >
                         <div>
-                          <i className={s.barIn} style={{ height: height(m.in) }} />
+                          <i
+                            className={`${s.barIn} ${m.in > 0 ? s.barInActive : ""}`}
+                            style={{ height: barHeight(m.in) }}
+                          />
                         </div>
                         <div>
-                          <i className={s.barOut} style={{ height: height(m.out) }} />
+                          <i
+                            className={`${s.barOut} ${m.out > 0 ? s.barOutActive : ""}`}
+                            style={{ height: barHeight(m.out) }}
+                          />
                         </div>
                         <span>{m.date.toLocaleString(i18n.language, { month: "short" })}</span>
                       </button>

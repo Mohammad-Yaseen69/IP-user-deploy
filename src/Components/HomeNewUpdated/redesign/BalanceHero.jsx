@@ -31,7 +31,7 @@ const LINKS = [
   { Icon: MapPin, text: "My Payment Address", to: "/payment-address" },
 ];
 
-const MASK = "••••••";
+const MASK = "*******";
 
 const BalanceHero = ({ hidden, onToggleHidden, activity, walletCount }) => {
   const { t } = useTranslation();
@@ -72,7 +72,7 @@ const BalanceHero = ({ hidden, onToggleHidden, activity, walletCount }) => {
               <p className={d.balanceValue}>
                 <small>USD</small>
                 {hidden || balanceLoading ? (
-                  <b>{hidden ? MASK : "…"}</b>
+                  <b className={hidden ? d.mask : undefined}>{hidden ? MASK : "…"}</b>
                 ) : (
                   <>
                     <b>{whole}</b>
@@ -109,7 +109,7 @@ const BalanceHero = ({ hidden, onToggleHidden, activity, walletCount }) => {
         </>
       )}
 
-      <div className={d.stats}>
+      {/* <div className={d.stats}>
         {showBalance && (
           <>
             <p className={d.stat}>
@@ -135,7 +135,7 @@ const BalanceHero = ({ hidden, onToggleHidden, activity, walletCount }) => {
             <small>USD</small>
           </span>
         </Link>
-      </div>
+      </div> */}
 
       <div className={d.actions}>
         {LINKS.map(({ Icon, text, to }, index) => (
