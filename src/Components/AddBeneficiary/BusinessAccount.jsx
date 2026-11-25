@@ -1,4 +1,3 @@
-import { Circle, CheckCircle, Plus } from "react-feather";
 import {
   Button,
   CardBody,
@@ -15,7 +14,6 @@ import "react-phone-input-2/lib/style.css";
 import "./req_star.css";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
-import WalletDetails from "./WalletDetails";
 import CountryDropDown from "./CountryDropDown";
 import CitiesDropDown from "../CitiesDropDown";
 import ConfirmationModal from "./ConfirmationModal";
@@ -23,15 +21,12 @@ import { useTranslation } from "react-i18next";
 import PaymentChannelUI from "./PaymentChannelUI";
 import useBankDetails from "../../hooks/BeneficiaryHooks/useBankDetails";
 import useChannels from "../../hooks/BeneficiaryHooks/useChannels";
-import DateMomentUtils from "@date-io/moment";
-import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
+import DatePicker from "../../CommonElements/DatePicker";
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 import {
   bankExtrasInitial,
   BUSINESS_RELATIONSHIPS,
   idTypeData,
-  friendsAndFamily,
-  BeneficiaryRelation,
   C2B_RELATIONSHIPS,
   normalizeBankExtras,
 } from "../../utils/Data";
@@ -40,10 +35,10 @@ import useBenCreateFunc from "../../hooks/BeneficiaryHooks/useBenCreateFunc";
 import useBenEditFunc from "../../hooks/BeneficiaryHooks/useBenEditFunc";
 import citiesData from "../CitiesDropDown/CitiesData.json";
 import InstaPayLoader from "../Loader";
-import { useLocation, useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import SuccessModal from "./SuccessModal";
-import NestedDropdown from "../NestedDropdown";
 import { handleNameInput, preventEdgeSpaces, preventEmailSpaces } from "../../hooks/useTrimInput";
+import { useBeneficiaryDetails } from "../../hooks/BeneficiaryHooks/useBeneficiaryDetails";
 
 const BusinessAccount = ({
   isInternational,
@@ -174,7 +169,8 @@ const BusinessAccount = ({
   const [user, setUser] = useState(null);
   const [clicked, setClicked] = useState(false);
   const [missingFields, setMissingFields] = useState([]);
-  const { allowedCountries, authHeader, beneficiaries, userDetails } = useContext(UserContext);
+  const { allowedCountries, authHeader, userDetails } = useContext(UserContext);
+  const { data: beneficiary } = useBeneficiaryDetails(user_id, { enabled: !isAddBeneficiary });
   const {
     getBankDetails,
     bankCountry,
@@ -219,10 +215,9 @@ const BusinessAccount = ({
 
   useEffect(() => {
     if (!isAddBeneficiary) {
-      const filtered = beneficiaries.filter((ben) => ben._id === user_id)[0];
-      setUser(filtered);
+      setUser(beneficiary);
     }
-  }, [beneficiaries, isAddBeneficiary, user_id]);
+  }, [beneficiary, isAddBeneficiary]);
 
   useEffect(() => {
     setFormData((prev) => ({
@@ -1299,7 +1294,7 @@ const BusinessAccount = ({
 
   return (
     <div style={isAddBeneficiary ? {} : { margin: "1rem var(--page-gutter)" }}>
-      <MuiPickersUtilsProvider utils={DateMomentUtils}>
+      <>
         {isAddBeneficiary ? (
           Jsx()
         ) : (
@@ -1370,7 +1365,7 @@ const BusinessAccount = ({
             {Jsx()}
           </Form>
         )}
-      </MuiPickersUtilsProvider>
+      </>
     </div>
   );
 };

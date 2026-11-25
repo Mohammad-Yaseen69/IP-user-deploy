@@ -1,8 +1,6 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import { Container, Row, Col } from "reactstrap";
-import { Link } from "react-router-dom";
 import H3 from "../Headings/H3Element";
-import { Home } from "react-feather";
 
 const Breadcrumbs = (props) => {
   return (

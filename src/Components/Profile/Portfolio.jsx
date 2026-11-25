@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import PortfolioItem from "./PortfolioItem";
 import AddPortfolioItem from "../Portfolio/AddPortfolioItem";
 import styles from "./styles/index.module.scss";

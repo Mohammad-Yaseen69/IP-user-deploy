@@ -2,8 +2,6 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { UserContext } from "../../Context/UserContext";
-import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
-import { toast } from "react-toastify";
 
 const neemaMethodIDs = {
   cash: 1,
@@ -74,9 +72,10 @@ const useChannels = ({
 
       const getChannels = async () => {
         setFieldsInfo(null);
+        const txType = `${userDetails?.account_type === "individual" ? "C" : "B"}2${isBusiness ? "B" : "C"}`;
         axios
           .get(
-            `${import.meta.env.VITE_IP_DEV_API}/api/payment/services/${countryIsoCode}/${userDetails?.country?.country_iso_code}`,
+            `${import.meta.env.VITE_IP_DEV_API}/api/payment/services/${countryIsoCode}/${userDetails?.country?.country_iso_code}?transaction_type=${txType}`,
             { headers: authHeader },
           )
           .then(async (res) => {

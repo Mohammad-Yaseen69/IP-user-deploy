@@ -1,5 +1,3 @@
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 import QRCodeStyling from "qr-code-styling";
 import logoImg from "../../../assets/images/logo/logo2.webp";
 import signatureImg from "./signatur.png";
@@ -512,6 +510,10 @@ const generateSwiftLetterPdf = async (iban, userDetails = {}, options = {}) => {
   const pageElements = wrapper.querySelectorAll(".swift-pdf-page");
 
   try {
+    const [{ default: jsPDF }, { default: html2canvas }] = await Promise.all([
+      import("jspdf"),
+      import("html2canvas"),
+    ]);
     const doc = new jsPDF({
       orientation: "portrait",
       unit: "mm",

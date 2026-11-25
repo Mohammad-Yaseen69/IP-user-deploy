@@ -1,28 +1,16 @@
 import { useContext, useEffect, useMemo, useState, lazy } from "react";
 import styles from "./styles/index.module.scss";
-import cardsStyle from "./styles/CardsContainer.module.css";
-import { useTranslation } from "react-i18next";
-import { BsFillPlayFill } from "react-icons/bs";
 import { MessageCircle } from "lucide-react";
 import { UserContext } from "../../Context/UserContext";
-import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 
-const EarnMoneyBanner = lazy(() => import("./EarnMoneyBanner"));
-const TransDetails = lazy(() => import("./TransDetails"));
-const Stats = lazy(() => import("./Stats"));
 const SearchComponent = lazy(() => import("./Search"));
-const CryptoCard = lazy(() => import("./CryptoCard"));
-const RecentBeneficiaries = lazy(() => import("./RecentBeneficiaries"));
-const WalletsMobile = lazy(() => import("./WalletsMobile"));
 const CurConversion = lazy(() => import("./CurConversion"));
-const QuickLinksMobile = lazy(() => import("./QuickLinksMobile"));
 const TopBar = lazy(() => import("../../Layout/TopBar"));
 const BusinessModal = lazy(() => import("../BusinessModal"));
 
 import btc from "../PaymentsNewer/files/btc.png";
 import eth from "../PaymentsNewer/files/eth.webp";
 import usdt from "../PaymentsNewer/files/usdt.webp";
-import crown from "./files/crown.svg";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import PageHeader from "../../Common/PageHeader";
 import MoneyInOut from "../../Common/WalletUI/MoneyInOut";
@@ -36,6 +24,7 @@ import CryptoBalances from "./redesign/CryptoBalances";
 import SpendingCard from "./redesign/SpendingCard";
 import { PartnerBanner, UpgradeCard } from "./redesign/Promos";
 import d from "./redesign/dashboard.module.scss";
+import { useTranslation } from "react-i18next";
 
 const HomeNewUpdated = () => {
   const [currenciesData, setCurrenciesData] = useState([
@@ -83,6 +72,7 @@ const HomeNewUpdated = () => {
     },
   ]);
   const can = usePermission();
+  const [pricesLoading, setPricesLoading] = useState(true);
 
   useEffect(() => {
     const getCryptoRates = async () => {
@@ -113,7 +103,7 @@ const HomeNewUpdated = () => {
       }
     };
 
-    getCryptoRates();
+    getCryptoRates().finally(() => setPricesLoading(false));
   }, []);
 
   const getGreeting = () => {
@@ -130,8 +120,14 @@ const HomeNewUpdated = () => {
     return "Good evening";
   };
 
-  const { userDetails, profileCompletedPercentage, userWallets, isAgentLogin, agentDetails } =
-    useContext(UserContext);
+  const {
+    userDetails,
+    profileCompletedPercentage,
+    userWallets,
+    walletsLoading,
+    isAgentLogin,
+    agentDetails,
+  } = useContext(UserContext);
   const [showCompletionModal, setShowCompletionModal] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState(null);
 
@@ -142,8 +138,8 @@ const HomeNewUpdated = () => {
   const {
     data: moneyData,
     transactions: walletTransactions,
-    loading: moneyLoading,
-  } = useMoneyInOut(window.innerWidth > 1000 ? selectedWallet : null); // the mobile layout has its own charts
+    loading: moneyRequestLoading,
+  } = useMoneyInOut(selectedWallet);
   const walletCurrency = selectedWallet?.currency?.code ?? "";
   const thisMonth = moneyData[moneyData.length - 1];
 
@@ -151,6 +147,8 @@ const HomeNewUpdated = () => {
     () => (userWallets ?? []).filter((w) => w?.wallet_type !== "crypto").length,
     [userWallets],
   );
+  const moneyLoading =
+    moneyRequestLoading && (walletsLoading || (walletCount > 0 && can("wallet.list.view")));
 
   const firstName =
     userDetails?.account_type?.toLowerCase() === "individual"
@@ -209,6 +207,7 @@ const HomeNewUpdated = () => {
                 hidden={hideBalances}
                 onToggleHidden={() => setHideBalances((prev) => !prev)}
                 walletCount={walletCount}
+                activityLoading={moneyLoading}
                 activity={
                   can("dashboard.insights.view") && selectedWallet && !moneyLoading
                     ? { code: walletCurrency, net: thisMonth.in - thisMonth.out }
@@ -231,7 +230,11 @@ const HomeNewUpdated = () => {
               )}
             </div>
 
-            <CryptoBalances tickers={currenciesData} hidden={hideBalances} />
+            <CryptoBalances
+              tickers={currenciesData}
+              hidden={hideBalances}
+              pricesLoading={pricesLoading}
+            />
 
             <div className={`${u.row} ${u.rowDash}`}>
               {can("dashboard.insights.view") && (
@@ -265,55 +268,69 @@ const HomeNewUpdated = () => {
         >
           <BusinessModal isOpen={showBusinessModal} toggle={() => setShowBusinessModal(false)} />
           <TopBar />
-          <EarnMoneyBanner />
-          <RecentBeneficiaries />
-          {can("wallet.list.view") && <WalletsMobile setCurrentWallet={setSelectedWallet} />}
-          {/* crypto */}
-          <div className={styles.crypto}>
-            <h5>
-              {t("crypto wallet balance")
-                .split(" ")
-                ?.map((item) => service_name_formatter(item))
-                ?.join(" ")}
-            </h5>
-            <div className={styles.scroll_view}>
-              {currenciesData.map((item) => (
-                <CryptoCard key={item.name} item={item} />
-              ))}
+
+          <div className={d.greeting}>
+            <div>
+              <h2>
+                {t(getGreeting())}
+                {firstName ? `, ${firstName}` : ""}
+              </h2>
+              <p>
+                {new Date().toLocaleDateString(i18n.language, {
+                  weekday: "long",
+                  day: "numeric",
+                  month: "long",
+                })}
+              </p>
             </div>
-            {userDetails?.account_type === "individual" && (
-              <button
-                onClick={() => setShowBusinessModal(true)}
-                className={cardsStyle.button}
-                style={{
-                  background: "linear-gradient(to left, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
-                  color: "white",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: ".75rem",
-                  borderRadius: "7px",
-                  padding: "1rem",
-                }}
+            <div className={d.greetingTools}>
+              <SearchComponent showOthers={false} />
+              <a
+                href="https://api.whatsapp.com/send/?phone=41783192428"
+                target="_blank"
+                rel="noreferrer"
+                className={d.chat}
               >
-                <img src={crown} alt="c" loading="lazy" style={{ width: "20px" }} />
-                <span
-                  style={{
-                    color: "white",
-                    WebkitTextFillColor: "white",
-                    fontSize: ".9rem",
-                  }}
-                >
-                  {t("Upgrade to Business Account")}
-                </span>
-                <BsFillPlayFill size={25} style={{ marginLeft: "auto" }} />
-              </button>
+                <MessageCircle size={16} />
+                {t("Chat with us")}
+              </a>
+            </div>
+          </div>
+          <section className={d.hero}>
+            <BalanceHero
+              hidden={hideBalances}
+              onToggleHidden={() => setHideBalances((prev) => !prev)}
+              walletCount={walletCount}
+              activityLoading={moneyLoading}
+              activity={
+                can("dashboard.insights.view") && selectedWallet && !moneyLoading
+                  ? { code: walletCurrency, net: thisMonth.in - thisMonth.out }
+                  : null
+              }
+            />
+            <div className={d.wallet_card}>
+              {can("wallet.list.view") && (
+                <WalletPanel setCurrentWallet={setSelectedWallet} hidden={hideBalances} />
+              )}
+            </div>
+          </section>
+          <QuickTransfer />
+          <div className={`${u.row} ${u.rowDash}`}>
+            {can("dashboard.insights.view") && (
+              <MoneyInOut currency={walletCurrency} data={moneyData} loading={moneyLoading} />
+            )}
+            {can("dashboard.recent-transactions.view") && (
+              <RecentActivity currentWallet={selectedWallet} />
             )}
           </div>
-          <QuickLinksMobile />
-          {can("dashboard.insights.view") && <Stats currentWallet={selectedWallet} />}
-          {can("dashboard.insights.view") && <TransDetails selectedWallet={selectedWallet} />}
-          <CurConversion />
+          <CryptoBalances tickers={currenciesData} hidden={hideBalances} />
+          {can("wallet.payment.conversion") && <CurConversion variant="card" />}
+          <div className={`${u.row} ${u.rowDash}`}>
+            <PartnerBanner hidden={hideBalances} />
+            {userDetails?.account_type === "individual" && (
+              <UpgradeCard onUpgrade={() => setShowBusinessModal(true)} />
+            )}
+          </div>
         </div>
       )}
     </>

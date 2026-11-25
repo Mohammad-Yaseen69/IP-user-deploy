@@ -20,7 +20,6 @@ import CatDown from "./CatDown";
 import { service_name_formatter } from "./TransactionItem";
 import statuses from "./files/thunesTransactionStatus.json";
 import { downloadTransactionPdf, getPayoutRows } from "./txutils";
-import { toast } from "react-toastify";
 import useCopyToClipboard from "../../hooks/useCopyToClipboard";
 import { truncateHash } from "../../utils/Functions/transactionHelpers";
 

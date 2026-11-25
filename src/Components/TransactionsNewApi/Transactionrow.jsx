@@ -18,7 +18,7 @@ import { formatCurrency } from "../../Helper/AmountFormat";
 const TransactionRow = ({ item, activeItem, setActiveItem, index, fromReferral = false }) => {
   const { t, i18n } = useTranslation();
   const can = usePermission();
-  const { authHeader, beneficiaries, userDetails } = useContext(UserContext);
+  const { authHeader, userDetails } = useContext(UserContext);
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [note, setNote] = useState(item?.note);
   const [isSaving, setIsSaving] = useState(false);
@@ -62,11 +62,8 @@ const TransactionRow = ({ item, activeItem, setActiveItem, index, fromReferral =
 
   const internationalReceiver = useMemo(() => {
     if (!item?.beneficiary) return null;
-    return (
-      beneficiaries.filter((benef) => benef?._id === item?.beneficiary)?.[0] ||
-      item?.beneficiaryDetails
-    );
-  }, [beneficiaries, item]);
+    return item?.beneficiaryDetails;
+  }, [item]);
 
   const externalStatusDescription = useMemo(() => {
     if (item?.payment_type === "non_instapay") {

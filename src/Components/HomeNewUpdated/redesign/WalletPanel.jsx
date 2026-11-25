@@ -8,11 +8,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { EffectCards, EffectFade } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Segmented } from "../../../Common/WalletUI/Primitives";
+import Skeleton from "../../../Common/WalletUI/Skeleton";
 import u from "../../../Common/WalletUI/ui.module.scss";
 import WalletCard from "../../../Common/WalletUI/WalletCard";
 import { UserContext } from "../../../Context/UserContext";
 import { usePermission } from "../../../hooks/GeneralUse/usePermission";
-import { getLimits } from "../../WalletsNew";
+import { getLimits } from "../../WalletsNew/getLimits";
 import d from "./dashboard.module.scss";
 
 // Each card loads its own monthly limit, as the old dashboard card did.
@@ -40,7 +41,7 @@ const WalletPanel = ({ setCurrentWallet, hidden }) => {
   const [activeDot, setActiveDot] = useState(0);
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { userWallets: allWallets, getUserWallets } = useContext(UserContext);
+  const { userWallets: allWallets, getUserWallets, walletsLoading } = useContext(UserContext);
   const swiperRef = useRef(null);
   const can = usePermission();
   const userWallets = useMemo(
@@ -48,6 +49,7 @@ const WalletPanel = ({ setCurrentWallet, hidden }) => {
     [allWallets],
   );
   const wallet = userWallets?.[activeDot];
+  const showSkeleton = walletsLoading && userWallets.length === 0;
 
   useEffect(() => {
     getUserWallets();
@@ -104,28 +106,40 @@ const WalletPanel = ({ setCurrentWallet, hidden }) => {
         )}
       </div>
 
-      <Swiper
-        effect={isSafari ? "fade" : "cards"}
-        grabCursor={true}
-        speed={isSafari && 1000}
-        modules={[isSafari ? EffectFade : EffectCards]}
-        cardsEffect={{
-          rotate: false,
-          slideShadows: false,
-        }}
-        className={`mySwiper ${d.carousel}`}
-        onSlideChange={(e) => {
-          setActiveDot(e.activeIndex);
-          setCurrentWallet(userWallets?.[e.activeIndex]);
-        }}
-        ref={swiperRef}
-      >
-        {userWallets.map((item, index) => (
-          <SwiperSlide key={item?._id ?? index} style={{ borderRadius: "10px" }}>
-            <LimitCard wallet={item} hidden={hidden} />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      {showSkeleton ? (
+        <Skeleton
+          sx={{
+            width: "100%",
+            maxWidth: 293,
+            height: "auto",
+            aspectRatio: "430 / 256",
+            borderRadius: "10px",
+          }}
+        />
+      ) : (
+        <Swiper
+          effect={isSafari ? "fade" : "cards"}
+          grabCursor={true}
+          speed={isSafari && 1000}
+          modules={[isSafari ? EffectFade : EffectCards]}
+          cardsEffect={{
+            rotate: false,
+            slideShadows: false,
+          }}
+          className={`mySwiper ${d.carousel}`}
+          onSlideChange={(e) => {
+            setActiveDot(e.activeIndex);
+            setCurrentWallet(userWallets?.[e.activeIndex]);
+          }}
+          ref={swiperRef}
+        >
+          {userWallets.map((item, index) => (
+            <SwiperSlide key={item?._id ?? index} style={{ borderRadius: "10px" }}>
+              <LimitCard wallet={item} hidden={hidden} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      )}
 
       <div className={d.pager}>
         <button

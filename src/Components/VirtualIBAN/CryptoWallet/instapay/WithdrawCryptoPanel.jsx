@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Plus } from "react-feather";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
@@ -38,10 +38,14 @@ import { usePayoutCountries } from "../../../../hooks/Payments/usePayoutCountrie
 
 const QUICK_PERCENTAGES = [25, 50, 75, 100];
 
-const WithdrawCryptoPanel = ({ wallets = [], wallet, onSelectWallet }) => {
+const WithdrawCryptoPanel = ({ wallets = [], wallet, onSelectWallet, onActionComplete }) => {
   const { t } = useTranslation();
   const { userWithdrawals, cryptoWithdrawals } = useContext(UserContext);
   const flow = useCryptoWithdrawFlow(wallet);
+
+  useEffect(() => {
+    if (flow.step === WITHDRAW_STEPS.DONE) onActionComplete?.();
+  }, [flow.step]);
   const { countries: payoutCountries } = usePayoutCountries();
   const [isAddWalletOpen, setIsAddWalletOpen] = useState(false);
 

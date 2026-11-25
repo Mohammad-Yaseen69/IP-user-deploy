@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { Plus, Search, User, Users } from "react-feather";
+import { Plus, Search } from "react-feather";
 import { useTranslation } from "react-i18next";
 import useWindowWidth from "../../utils/useWindowWidth";
 import PageHeader from "../../Common/PageHeader";

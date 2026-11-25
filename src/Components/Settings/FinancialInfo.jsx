@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styles from "./styles/FinancialInfo.module.scss";
 import CitiesData from "../CitiesDropDown/CitiesData.json";
 import { useTranslation } from "react-i18next";

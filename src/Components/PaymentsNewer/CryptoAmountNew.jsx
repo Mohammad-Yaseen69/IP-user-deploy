@@ -1,11 +1,10 @@
-import { ChevronRight, HelpCircle } from "react-feather";
+import { ChevronRight } from "react-feather";
 import { useTranslation } from "react-i18next";
-import { Button, Card, CardBody, Input } from "reactstrap";
+import { Button, Card, CardBody } from "reactstrap";
 import { NumberInputValidator } from "../../Helper/NumberInput";
 import { NumberSeperator } from "../../Helper/NumberSeperator";
 import { useEffect, useState } from "react";
 import { IoWarningOutline } from "react-icons/io5";
-import { AiFillInfoCircle } from "react-icons/ai";
 
 const isBig = window.innerWidth > 1000;
 

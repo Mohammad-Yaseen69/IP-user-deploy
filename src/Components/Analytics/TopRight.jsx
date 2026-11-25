@@ -1,6 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./styles/TopRight.module.css";
-import chev_up from "../HomeNewUpdated/files/chev_up.png";
 import ReactApexChart from "react-apexcharts";
 import { useTranslation } from "react-i18next";
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";

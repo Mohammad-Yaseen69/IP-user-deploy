@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Filter, Plus, Search, Sliders } from "react-feather";
 import styles from "./BeneficiaryStep.module.css";
@@ -33,13 +33,21 @@ const BeneficiaryStep = ({
   onAddBeneficiary,
   emptyMessage,
   children,
+  server,
 }) => {
   const { t } = useTranslation();
-  const [query, setQuery] = useState("");
-  const [typeFilter, setTypeFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("name_asc");
+  const [localQuery, setLocalQuery] = useState("");
+  const [localTypeFilter, setLocalTypeFilter] = useState("all");
+  const [localSortBy, setLocalSortBy] = useState("name_asc");
+  const query = server ? server.query : localQuery;
+  const setQuery = server ? server.setQuery : setLocalQuery;
+  const typeFilter = server ? server.typeFilter : localTypeFilter;
+  const setTypeFilter = server ? server.setTypeFilter : setLocalTypeFilter;
+  const sortBy = server ? server.sortBy : localSortBy;
+  const setSortBy = server ? server.setSortBy : setLocalSortBy;
   const [openMenu, setOpenMenu] = useState(null);
   const filtered = useMemo(() => {
+    if (server) return beneficiaries || [];
     const q = query.trim().toLowerCase();
 
     const list = (beneficiaries || []).filter((b) => {
@@ -61,7 +69,7 @@ const BeneficiaryStep = ({
       const cmp = (getBeneficiaryName(a) || "").localeCompare(getBeneficiaryName(b) || "");
       return sortBy === "name_desc" ? -cmp : cmp;
     });
-  }, [beneficiaries, query, typeFilter, sortBy]);
+  }, [beneficiaries, query, typeFilter, sortBy, server]);
 
   const toggleMenu = (name) => setOpenMenu((prev) => (prev === name ? null : name));
 
@@ -134,7 +142,11 @@ const BeneficiaryStep = ({
 
       <div className={styles.beneficiaryList}>
         {filtered.length === 0 && (
-          <div className={styles.emptyState}>{emptyMessage || t("No beneficiaries found.")}</div>
+          <div className={styles.emptyState}>
+            {server?.isLoading
+              ? t("Loading beneficiaries...")
+              : emptyMessage || t("No beneficiaries found.")}
+          </div>
         )}
         {filtered.map((b) => {
           const id = getBeneficiaryId(b);
@@ -159,6 +171,7 @@ const BeneficiaryStep = ({
             </button>
           );
         })}
+        {server?.hasNextPage && <div ref={server.loaderRef} style={{ height: 40 }} />}
       </div>
 
       {children}
