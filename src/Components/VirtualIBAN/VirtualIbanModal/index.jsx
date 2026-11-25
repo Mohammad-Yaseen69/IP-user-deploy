@@ -899,7 +899,7 @@ const VirtualIbanModal = ({
     if (
       currentStep === STEPS.JURISDICTION &&
       jurisdictionInfo.provider === "rhub" &&
-      userDetails?.email
+      !userDetails?.email
     ) {
       setMissingEmailModal(true);
       return;

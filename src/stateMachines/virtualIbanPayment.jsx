@@ -15,6 +15,7 @@ export const EXTERNAL_PAYMENT_METHODS = ["paypal", "bank", "mobile"];
 
 export const VIRTUAL_IBAN_ACTIVATION_FEE = 4;
 export const VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY = "USD";
+export const MAX_BUSINESS_IBANS = 3;
 
 export const JURISDICTIONS = {
   MT: {
