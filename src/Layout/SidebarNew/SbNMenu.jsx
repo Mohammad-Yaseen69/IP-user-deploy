@@ -1,30 +1,22 @@
 import { CreditCard as CreditCardIcon, DollarSign, Home, User } from "react-feather";
 import {
   Activity,
-  Banknote,
   CalendarCheck,
-  ChartColumn,
   CircleUser,
   CreditCard,
   FileChartColumn,
   FileText,
   Hash,
-  Landmark,
   LayoutGrid,
   LifeBuoy,
   LogOut,
-  MapPin,
   MessageSquareHeart,
   QrCode,
-  Receipt,
-  ReceiptText,
   Settings,
   Share2,
-  ShoppingBag,
   UserCog,
   Users,
   UsersRound,
-  Wallet,
 } from "lucide-react";
 import acc from "./files/acc.svg";
 import acc_a from "./files/acc_a.svg";
@@ -76,7 +68,18 @@ import v_bank_a from "./files/v_bank_a.svg";
 import v_bank from "./files/v_bank.svg";
 import payviasocial from "./files/payviasocial.svg";
 import payviasocial_unactive from "./files/payviasocial_unactive.svg";
-import { Analytics, Bank, Basket, Bitcoin, PayBills, Payments, Send, Wallets } from "../NavIcons";
+import {
+  Analytics,
+  Bank,
+  Basket,
+  Bitcoin,
+  GeoFencing,
+  PayBills,
+  Payments,
+  Quotation,
+  Send,
+  Wallets,
+} from "../NavIcons";
 
 export const MENU = [
   {
@@ -274,7 +277,7 @@ export const MENU = [
       },
       {
         title: "Quotations",
-        Icon: ReceiptText,
+        Icon: Quotation,
         icon: <img loading="lazy" src={quotations} />,
         activeIcon: <img loading="lazy" src={quotations_a} />,
         type: "link",
@@ -309,7 +312,7 @@ export const MENU = [
       },
       {
         title: "Geo Fencing",
-        Icon: MapPin,
+        Icon: GeoFencing,
         icon: <img loading="lazy" src={location} />,
         activeIcon: <img loading="lazy" src={location_a} />,
         type: "link",

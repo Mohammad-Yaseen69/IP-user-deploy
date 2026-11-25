@@ -132,6 +132,7 @@ const Layout = ({ children, classNames, ...rest }) => {
   const [showSuccessModal, setShowSuccessModal] = useState();
   const [showAdditionalFilesModal, setShowAdditionalModal] = useState(false);
   const navigate = useNavigate();
+  const [dismissedBeneficiaryId, setDismissedBeneficiaryId] = useState(null);
 
   const accountId = userDetails?.account?._id || userDetails?.account_id;
 
@@ -179,23 +180,33 @@ const Layout = ({ children, classNames, ...rest }) => {
       navigate("/", { replace: true });
     }
   }, [virtualIbans, virtualIbansLoading, location.pathname, navigate]);
-  const beneficiaryWithoutAddresses = useMemo(() => {
-    if (location.pathname.startsWith("/beneficiaries/edit") && benId) {
-      const beneficiary = beneficiaries?.find((ben) => ben?._id === benId);
 
-      if (beneficiary?.address) {
-        return [];
-      } else {
-        return [beneficiary];
-      }
-    } else {
-      return [];
-    }
-  }, [beneficiaries, location]);
+  const beneficiaryWithoutAddresses = useMemo(() => {
+    if (!location.pathname.startsWith("/beneficiaries/edit") || !benId) return [];
+    if (dismissedBeneficiaryId === benId) return [];
+    const beneficiary = beneficiaries?.find((ben) => ben?._id === benId);
+    return beneficiary && !beneficiary.address ? [beneficiary] : [];
+  }, [beneficiaries, location, benId, dismissedBeneficiaryId]);
 
   useEffect(() => {
-    setShowModal(!profileCompleted);
+    setDismissedBeneficiaryId(null);
+  }, [location]);
+
+  const needsKyc =
+    Boolean(userDetails?.country?.kyc_required) && userDetails?.user?.kyc_status !== "approved";
+  const onSettingsPage = location.pathname.toLowerCase().includes("settings");
+
+  useEffect(() => {
+    if (typeof profileCompleted !== "boolean") return;
+    setShowModal((!profileCompleted || needsKyc) && !onSettingsPage);
+    setShowKyc(needsKyc);
   }, [profileCompleted]);
+
+  useEffect(() => {
+    if (typeof profileCompleted !== "boolean" || !needsKyc || onSettingsPage) return;
+    setShowModal(true);
+    setShowKyc(true);
+  }, [userDetails]);
 
   useEffect(() => {
     const handleOnline = () => {
@@ -301,11 +312,6 @@ const Layout = ({ children, classNames, ...rest }) => {
 
   useEffect(() => {
     setShowSourceModal(!userDetails?.user?.source_of_funds && userDetails?.user?.occupation);
-
-    if (userDetails?.user?.kyc_status !== "approved" && userDetails?.country?.kyc_required) {
-      setShowModal(true);
-      setShowKyc(true);
-    }
   }, [userDetails]);
 
   const isFinancialQuestionModalOpen =
@@ -319,13 +325,19 @@ const Layout = ({ children, classNames, ...rest }) => {
   const canShowForcedAuthenticator =
     shouldForceAuthenticator && !showModal && !isFinancialQuestionModalOpen;
 
+  const isBlockingModalOpen =
+    Boolean(showModal) ||
+    isFinancialQuestionModalOpen ||
+    canShowForcedAuthenticator ||
+    showForcedFilesModal;
+
   return (
     <Fragment>
       {beneficiaryWithoutAddresses.length > 0 && (
         <AddBeneficiaryAddressModal
           isOpen={beneficiaryWithoutAddresses.length > 0}
           toggle={getUserBeneficiaries}
-          close={() => (beneficiaryWithoutAddresses.length = 0)}
+          close={() => setDismissedBeneficiaryId(benId)}
           beneficiaries={beneficiaryWithoutAddresses}
         />
       )}
@@ -517,7 +529,7 @@ const Layout = ({ children, classNames, ...rest }) => {
           />
         )}
         <PushConsentModal
-          isOpen={showPushConsent}
+          isOpen={showPushConsent && !isBlockingModalOpen}
           onClose={() => setShowPushConsent(false)}
           accountId={userDetails?._id}
           authHeader={authHeader}

@@ -55,7 +55,7 @@ const QuotationRow = ({ item, type = "received", isActive, setActive }) => {
   const status = item?.status?.toLowerCase();
   const open = isOpenQuotation(item);
   const party = item?.[received ? "sender" : "reciever"];
-  const name = partyName(party);
+  const name = partyName(party ?? {});
   const label = t(LABELS[status] ?? capitalizeStatus(item?.status));
   const dotKey = DOT_KEYS[status] ?? status;
   const code = item?.amount_reciever_currency?.currency?.code;
