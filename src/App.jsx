@@ -13,6 +13,9 @@ import { TimezonesProvider } from "./Context/TimezoneContext";
 import ErrorBoundary from "./ErrorBoundary";
 import { ToastContainer } from "react-toastify";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import DateMomentUtils from "@date-io/moment";
 import AdBlockCheck from "./Components/AdBlockCheck/AdBlockCheck";
 import LanguageAttributeSync from "./Common/LanguageAttributeSync";
 
@@ -25,6 +28,10 @@ import "./Components/PaymentsNewer/styles/Timeline.css";
 import "./Components/AddFunds/styles/creditcard.css";
 
 const underMaintaince = false;
+
+const APP_FONT = "'Inter', sans-serif";
+const muiTheme = createTheme({ typography: { fontFamily: APP_FONT } });
+window.Apex = { chart: { fontFamily: APP_FONT } };
 
 const App = () => {
   const [showOtherTabError, setShowOtherTabError] = useState(false);
@@ -162,10 +169,10 @@ const App = () => {
                     <InactivityWrapper>
                       <CustomizerProvider>
                         <AnimationThemeProvider>
-                          <>
+                          <ThemeProvider theme={muiTheme}>
                             {" "}
                             <Routers />{" "}
-                          </>
+                          </ThemeProvider>
                         </AnimationThemeProvider>
                       </CustomizerProvider>
                     </InactivityWrapper>

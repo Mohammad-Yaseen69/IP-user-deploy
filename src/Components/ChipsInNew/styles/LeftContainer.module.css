@@ -40,7 +40,7 @@
   color: #5926f0;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 17.884px;
   font-style: normal;
   font-weight: 800;
@@ -56,7 +56,7 @@
   leading-trim: both;
   text-edge: cap;
   text-overflow: ellipsis;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 36px;
   font-style: normal;
   font-weight: 800;
@@ -92,7 +92,7 @@
   color: #fff;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;
@@ -113,7 +113,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -188,7 +188,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;
@@ -213,7 +213,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 700;
@@ -239,7 +239,7 @@
 .ic_top button span {
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
@@ -260,7 +260,7 @@
   leading-trim: both;
   text-edge: cap;
   text-overflow: ellipsis;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 15px;
   font-style: normal;
   font-weight: 600;
@@ -292,7 +292,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -319,7 +319,7 @@
   text-edge: cap;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -361,7 +361,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;

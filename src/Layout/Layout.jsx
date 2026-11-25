@@ -1,4 +1,3 @@
-import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   Fragment,
   Suspense,
@@ -10,13 +9,14 @@ import {
   useRef,
   useState,
 } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import TapTop from "./TapTop/index";
 import CheckContext from "../Helper/Customizer";
 import AnimationThemeContext from "../Helper/AnimationTheme";
 import ConfigDB from "../Config/ThemeConfig";
 import Loader from "./Loader";
-import SidebarNew from "./SidebarNew/SidebarNew";
+import Sidebar from "./Sidebar";
 import ForcedAuthenticatorModal from "../Components/ForcedAuthenticatorModal";
 import { UserContext } from "../Context/UserContext";
 import styles from "./Layout.module.css";
@@ -25,7 +25,7 @@ import MobileSidebar from "./MobileSidebar";
 import InactivityLogoutModal from "../Components/InactivityLogoutModal";
 import ThreeDaysModal from "../Components/SecurityQuestionsModals/ThreeDaysModal";
 import ThirtyDaysModal from "../Components/SecurityQuestionsModals/ThirtyDaysModal";
-import { InactivityContext, InactivityCountdownContext } from "../InactivityWrapper";
+import { InactivityCountdownContext } from "../InactivityWrapper";
 import "swiper/css";
 import "../Components/MyMasterCard/styles/modal.reset.css";
 import "./globalElementStyles.css";
@@ -39,7 +39,6 @@ import SocketsService from "../Services/Socket";
 import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
 import { getPendingAdditionalFiles, MASTERCARD_PURPOSE } from "../utils/Functions/additionalFiles";
-import NewMenu from "../Common/NewMenu";
 import { useVirtualIbans } from "../hooks/useVirtualIban";
 import PushConsentModal from "../Components/PushConsentModal";
 import { isPushSupported, getPushPermissionState } from "../Services/PushNotificationService";
@@ -47,8 +46,6 @@ import {
   useBeneficiaryDetails,
   useInvalidateBeneficiaryDetails,
 } from "../hooks/BeneficiaryHooks/useBeneficiaryDetails";
-import InstaPayLoader from "../Components/Loader";
-import { getLoginPath } from "../utils/Functions/loginPage";
 import useWindowWidth from "../utils/useWindowWidth";
 
 const loadAddBeneficiaryAddressModal = () => import("../Components/AddBeneficiaryAddressModal");
@@ -357,7 +354,7 @@ const Layout = ({ children, classNames, ...rest }) => {
     return () => clearTimeout(timer);
   }, [userDetails?._id]);
 
-  const { showTimerCountdown } = useContext(InactivityContext);
+  const showTimerCountdown = useContext(InactivityCountdownContext);
 
   useEffect(() => {
     verifyToken();
@@ -544,21 +541,25 @@ const Layout = ({ children, classNames, ...rest }) => {
               {/* <Header /> */}
               <div className="page-body-wrapper">
                 {/* <SideBar /> */}
-                <NewMenu />
-                <SidebarNew setShowModal={setShowModal} showModal={showModal} />
-                <div className="page-body" style={{ marginTop: 0, paddingTop: 0 }}>
-                  <TransitionGroup {...rest}>
-                    <CSSTransition
-                      nodeRef={pageTransitionRef}
-                      timeout={100}
-                      classNames={animationTheme}
-                      unmountOnExit
-                    >
-                      <Suspense fallback={<Loader />}>
-                        <Outlet />
-                      </Suspense>
-                    </CSSTransition>
-                  </TransitionGroup>
+                <Sidebar setShowModal={setShowModal} showModal={showModal} />
+                <div
+                  className="page-body"
+                  style={{ marginTop: 0, paddingTop: 0, paddingInline: 0 }}
+                >
+                  <div className={styles.page_content}>
+                    <TransitionGroup {...rest}>
+                      <CSSTransition
+                        nodeRef={pageTransitionRef}
+                        timeout={100}
+                        classNames={animationTheme}
+                        unmountOnExit
+                      >
+                        <Suspense fallback={<Loader />}>
+                          <Outlet />
+                        </Suspense>
+                      </CSSTransition>
+                    </TransitionGroup>
+                  </div>
                 </div>
                 {/* <Footer /> */}
               </div>

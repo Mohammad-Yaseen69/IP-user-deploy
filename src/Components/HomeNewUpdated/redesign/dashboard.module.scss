@@ -75,7 +75,7 @@ $stack: 1100px;
   flex-direction: column;
   min-width: 0;
   padding: 24px;
-  overflow: hidden;
+  overflow: clip;
 
   // Soft lilac glow in the top-right corner of the design.
   &::before {

@@ -25,7 +25,7 @@
   color: #808080;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -42,7 +42,7 @@
   color: var(#000);
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 2rem;
   font-style: normal;
   font-weight: 700;
@@ -62,7 +62,7 @@
 
 .currency span {
   color: var(--colour-of-country-names, #000);
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 13.068px;
   font-style: normal;
   font-weight: 600;
@@ -142,7 +142,7 @@
   color: #808080;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -163,7 +163,7 @@
 
 .main span {
   color: var(--colour-of-country-names, #000);
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
@@ -175,7 +175,7 @@
   color: var(--colour-of-country-names, #000);
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 36px;
   font-style: normal;
   font-weight: 700;
@@ -194,7 +194,7 @@
   color: #808080;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -248,7 +248,7 @@
 
 .channel span {
   color: var(--colour-of-country-names, #000);
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
@@ -277,7 +277,7 @@
   leading-trim: both;
   text-edge: cap;
   text-overflow: ellipsis;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
@@ -290,7 +290,7 @@
   leading-trim: both;
   text-edge: cap;
   text-overflow: ellipsis;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 13px;
   font-style: normal;
   font-weight: 700;

@@ -18,7 +18,7 @@ import styles from "./BeneficiariesVirtual.module.css";
 import IbanBreadcrumb from "../components/IbanBreadcrumb";
 import { useTranslation } from "react-i18next";
 import useWindowWidth from "../../../utils/useWindowWidth";
-import TopRight from "../../topRight";
+import PageHeader from "../../../Common/PageHeader";
 import AddBeneficiaryModal from "./Modals/AddBeneficiaryModal";
 import DynamicChannelModal from "./Modals/DynamicChannelModal";
 import AddBeneficiaryFlowV2 from "./AddBeneficiaryFlowV2";
@@ -149,15 +149,10 @@ const BeneficiariesVirtual = () => {
   return (
     <div className={styles.container}>
       {!isMobile && (
-        <div className={styles.top}>
-          <div className={styles.headerTitleMain}>
-            <div className={styles.titleWithBack}>
-              <h1>{t("IBAN Beneficiaries")}</h1>
-            </div>
-            <p>{t("Manage your virtual bank and payout channel beneficiaries.")}</p>
-          </div>
-          <div className={styles.topright}>{width > 1000 && <TopRight />}</div>
-        </div>
+        <PageHeader
+          title={t("IBAN Beneficiaries")}
+          subtitle={t("Manage your virtual bank and payout channel beneficiaries.")}
+        />
       )}
       <div className={styles.mainContent}>
         {!isMobile && (

@@ -1,7 +1,6 @@
 import { useContext, useEffect, useMemo, useState, lazy } from "react";
 import styles from "./styles/index.module.scss";
 import { MessageCircle } from "lucide-react";
-import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
 
 const SearchComponent = lazy(() => import("./Search"));
@@ -13,7 +12,7 @@ import btc from "../PaymentsNewer/files/btc.png";
 import eth from "../PaymentsNewer/files/eth.webp";
 import usdt from "../PaymentsNewer/files/usdt.webp";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import MoneyInOut from "../../Common/WalletUI/MoneyInOut";
 import { useMoneyInOut } from "../../Common/WalletUI/useMoneyInOut";
 import u from "../../Common/WalletUI/ui.module.scss";
@@ -169,15 +168,10 @@ const HomeNewUpdated = () => {
             }
           }}
         >
-          <header className={u.header}>
-            <div className={u.headerText}>
-              <h1>{t("Dashboard")}</h1>
-              <p>{t("Manage and monitor your InstaPay Wallet")}</p>
-            </div>
-            <div className={u.headerRight}>
-              <TopRight position="static" />
-            </div>
-          </header>
+          <PageHeader
+            title={t("Dashboard")}
+            subtitle={t("Manage and monitor your InstaPay Wallet")}
+          />
 
           <div className={u.content}>
             <div className={d.greeting}>

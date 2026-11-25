@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import ConfigDB from "../../Config/ThemeConfig";
 import Context from "./index";
 
+const MENU_COLLAPSED_KEY = "sidebar_collapsed";
+
 const CustomizerProvider = (props) => {
   const [sidebar_types, setSidebarTypes] = useState("");
   const [settings, setSettings] = useState(ConfigDB.data.settings);
@@ -13,7 +15,14 @@ const CustomizerProvider = (props) => {
   const [mixLayout, setMixLayout] = useState(false);
   const [sidebarResponsive, setSidebarResponsive] = useState(false);
   const [IsOpen, setIsClose] = useState(false);
-  const [togglSidebar, setTogglSidebar] = useState(true);
+  const [togglSidebar, setMenuCollapsed] = useState(
+    () => localStorage.getItem(MENU_COLLAPSED_KEY) === "true",
+  );
+
+  const setTogglSidebar = (collapsed) => {
+    setMenuCollapsed(collapsed);
+    localStorage.setItem(MENU_COLLAPSED_KEY, String(collapsed));
+  };
 
   useEffect(() => {
     setSettings(ConfigDB.data.settings.sidebar_setting);

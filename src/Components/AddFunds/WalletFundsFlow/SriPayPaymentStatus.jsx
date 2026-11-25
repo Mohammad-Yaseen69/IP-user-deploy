@@ -104,7 +104,7 @@ const SriPayPaymentStatus = ({ transactionId, redirectUrl, walletName, onRestart
       />
       <h2
         style={{
-          fontFamily: "Manrope, sans-serif",
+          fontFamily: "Inter, sans-serif",
           fontSize: "1.8rem",
           fontWeight: 800,
           margin: 0,
@@ -115,7 +115,7 @@ const SriPayPaymentStatus = ({ transactionId, redirectUrl, walletName, onRestart
       <p
         style={{
           color: "#848484",
-          fontFamily: "Manrope, sans-serif",
+          fontFamily: "Inter, sans-serif",
           fontSize: "0.95rem",
           fontWeight: 600,
           maxWidth: "400px",
@@ -135,7 +135,7 @@ const SriPayPaymentStatus = ({ transactionId, redirectUrl, walletName, onRestart
           background: "#5926F0",
           padding: "0.8rem 2.5rem",
           color: "#FFF",
-          fontFamily: "Manrope, sans-serif",
+          fontFamily: "Inter, sans-serif",
           fontWeight: 700,
           minWidth: "160px",
           textAlign: "center",

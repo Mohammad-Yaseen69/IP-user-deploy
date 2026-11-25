@@ -8,7 +8,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { UserContext } from "../../Context/UserContext";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import QrGenerate from "../Settings/QrGenerate";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import LeftContainer from "./LeftContainer";
 import MobileComponent from "./MobileComponent";
 import SpecificQrs from "./SpecificQrs";
@@ -83,18 +83,19 @@ const ChipsInNew = () => {
       {userDetails?.level?.qr_pay?.receive ? (
         <>
           <div className={styles.container}>
-            <div className={styles.top}>
-              <h4 style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-                {t("My QR Code Sticker")}{" "}
-                <Info
-                  color="#5926f0"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setShowTooltip(!showTooltip)}
-                  size={16}
-                />
-              </h4>
-              <TopRight />
-            </div>
+            <PageHeader
+              title={
+                <>
+                  {t("My QR Code Sticker")}
+                  <Info
+                    color="#5926f0"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setShowTooltip(!showTooltip)}
+                    size={16}
+                  />
+                </>
+              }
+            />
             <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
               {/* <GeneralContainer currency={currency} setCurrency={setCurrency} currentWallet={currentWallet} setWalletRefresh={setWalletRefresh} authHeader={authHeader} defaultWal={defaultWal} showTooltip={showTooltip} setShowTooltip={setShowTooltip} /> */}
               <LeftContainer

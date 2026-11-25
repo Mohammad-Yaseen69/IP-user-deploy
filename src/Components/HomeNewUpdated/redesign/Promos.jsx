@@ -54,15 +54,10 @@ export const PartnerBanner = ({ hidden }) => {
               </button>
             </div>
           )}
-          <a
-            href="https://insta-pay.ch/affiliation-program"
-            target="_blank"
-            rel="noreferrer"
-            className={d.white}
-          >
+          <Link to="/referrals" className={d.white}>
             {t("See how it works")}
             <ChevronRight size={16} />
-          </a>
+          </Link>
         </div>
       </div>
     </section>

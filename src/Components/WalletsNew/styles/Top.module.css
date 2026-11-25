@@ -21,7 +21,7 @@
 .left .top h2,
 .right .top h2 {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 700;
@@ -71,7 +71,7 @@
 .default span,
 .add_cur span {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-weight: 600;
   line-height: normal;
@@ -131,7 +131,7 @@
   border-radius: 6px;
   background: rgba(89, 38, 240, 0.08);
   color: #5926f0;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 13.141px;
   font-style: normal;
   font-weight: 700;
@@ -323,7 +323,7 @@
   border-radius: 8px;
   background: #ece6ff;
   color: #5926f0;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-weight: 600;
   white-space: nowrap;
@@ -471,7 +471,7 @@
   border-radius: 12px;
   background: #f3efff;
   color: #5926f0;
-  font-family: Manrope, sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-weight: 700;
 }
@@ -479,7 +479,7 @@
 .balanceText h2 {
   margin: 0;
   color: #111827;
-  font-family: Manrope, sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-weight: 600;
   line-height: 1.2;
@@ -488,7 +488,7 @@
 .balanceText p {
   margin: 4px 0 0;
   color: #9ca3af;
-  font-family: Manrope, sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-weight: 400;
   line-height: 1.3;

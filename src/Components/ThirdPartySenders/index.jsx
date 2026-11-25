@@ -4,7 +4,7 @@ import { Briefcase, Edit2, Plus, Search, Trash2, User } from "react-feather";
 import { Button, Input, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import { UserContext } from "../../Context/UserContext";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import { getExtractedPhone } from "../../utils/Functions";
@@ -395,13 +395,10 @@ const ThirdPartySenders = () => {
   return (
     <>
       <div className={styles.container}>
-        <div className={styles.top}>
-          <h4>{t("Third-party sender")}</h4>
-          <p style={{ color: "#777", fontWeight: 600 }}>
-            {t("Manage saved senders for third-party international transfers.")}
-          </p>
-          <TopRight />
-        </div>
+        <PageHeader
+          title={t("Third-party sender")}
+          subtitle={t("Manage saved senders for third-party international transfers.")}
+        />
 
         {renderToolbar()}
 

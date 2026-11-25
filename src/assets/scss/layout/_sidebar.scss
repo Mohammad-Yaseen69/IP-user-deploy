@@ -301,7 +301,7 @@
             }
 
             span {
-              font-family: $font-roboto;
+              font-family: "Inter", sans-serif;
               font-size: 13px;
               font-weight: 400;
               letter-spacing: 0.5px;
@@ -363,7 +363,7 @@
                 background-color: $transparent-color;
                 color: $white;
                 border: none;
-                font-family: "Roboto", sans-serif, sans-serif;
+                font-family: "Inter", sans-serif;
 
                 &:focus {
                   outline: $transparent-color;
@@ -1658,13 +1658,15 @@
     }
 
     .page-body-wrapper {
+      display: flex;
+      align-items: flex-start;
+
       div {
         &.sidebar-wrapper {
-          position: fixed;
+          position: sticky;
           top: 0;
           z-index: 9;
-          // height: 100%;
-          left: 50px;
+          flex-shrink: 0;
           line-height: inherit;
           background-color: $sidebar-color;
           width: 280px;
@@ -1751,12 +1753,6 @@
               transform: translate(183px);
             }
 
-            ~ .page-body,
-            ~ footer {
-              margin-left: 140px;
-              transition: 0.5s;
-            }
-
             ~ .footer-fix {
               width: calc(100% - 90px);
             }
@@ -1819,7 +1815,7 @@
               overflow: auto;
               color: rgba(0, 0, 0, 0);
               padding: 24px 20px;
-              font-family: $font-Montserrat;
+              font-family: "Inter", sans-serif;
 
               li {
                 a {
@@ -2298,11 +2294,11 @@
       }
 
       .page-body {
+        flex: 1;
+        min-width: 0;
         min-height: calc(100vh - 95px);
         margin-top: 92px;
         padding-top: 30px;
-        margin-left: 346px;
-        padding: 0;
       }
     }
   }

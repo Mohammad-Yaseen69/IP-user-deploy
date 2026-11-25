@@ -115,7 +115,7 @@ const ExtraContentOnFee = ({ data, fxRate, fxCurrency, fxAmount }) => {
         <span
           style={{
             color: "#8A8A8A",
-            fontFamily: "Manrope",
+            fontFamily: "Inter, sans-serif",
             fontSize: ".7rem",
             fontStyle: "normal",
             fontWeight: 600,
@@ -128,7 +128,7 @@ const ExtraContentOnFee = ({ data, fxRate, fxCurrency, fxAmount }) => {
         <strong
           style={{
             color: "#000",
-            fontFamily: "Manrope",
+            fontFamily: "Inter, sans-serif",
             fontSize: ".7rem",
             fontStyle: "normal",
             lineHeight: 1.5,
@@ -154,7 +154,7 @@ const ExtraContentOnFee = ({ data, fxRate, fxCurrency, fxAmount }) => {
         <span
           style={{
             color: "#8A8A8A",
-            fontFamily: "Manrope",
+            fontFamily: "Inter, sans-serif",
             fontSize: ".7rem",
             fontStyle: "normal",
             fontWeight: 600,
@@ -168,7 +168,7 @@ const ExtraContentOnFee = ({ data, fxRate, fxCurrency, fxAmount }) => {
         <strong
           style={{
             color: "#000",
-            fontFamily: "Manrope",
+            fontFamily: "Inter, sans-serif",
             fontSize: "1.2rem",
             fontStyle: "normal",
             fontWeight: 700,
@@ -971,7 +971,7 @@ const WalletFundsFlow = ({ setAction }) => {
                               <span
                                 style={{
                                   color: "#5926F0",
-                                  fontFamily: "Manrope",
+                                  fontFamily: "Inter, sans-serif",
                                   fontSize: ".7rem",
                                   fontWeight: 700,
                                   lineHeight: 1.3,
@@ -1006,7 +1006,7 @@ const WalletFundsFlow = ({ setAction }) => {
                             <span
                               style={{
                                 color: "#5926F0",
-                                fontFamily: "Manrope",
+                                fontFamily: "Inter, sans-serif",
                                 fontSize: ".7rem",
                                 fontStyle: "normal",
                                 fontWeight: 700,
@@ -1295,7 +1295,7 @@ const WalletFundsFlow = ({ setAction }) => {
                           <span
                             style={{
                               color: "#5926F0",
-                              fontFamily: "Manrope",
+                              fontFamily: "Inter, sans-serif",
                               fontSize: ".7rem",
                               fontWeight: 700,
                               lineHeight: 1.3,
@@ -1330,7 +1330,7 @@ const WalletFundsFlow = ({ setAction }) => {
                         <span
                           style={{
                             color: "#5926F0",
-                            fontFamily: "Manrope",
+                            fontFamily: "Inter, sans-serif",
                             fontSize: ".7rem",
                             fontStyle: "normal",
                             fontWeight: 700,
@@ -1364,7 +1364,7 @@ const WalletFundsFlow = ({ setAction }) => {
                           <span
                             style={{
                               color: "#8A8A8A",
-                              fontFamily: "Manrope",
+                              fontFamily: "Inter, sans-serif",
                               fontSize: ".7rem",
                               fontStyle: "normal",
                               fontWeight: 600,
@@ -1377,7 +1377,7 @@ const WalletFundsFlow = ({ setAction }) => {
                           <strong
                             style={{
                               color: "#000",
-                              fontFamily: "Manrope",
+                              fontFamily: "Inter, sans-serif",
                               fontSize: ".7rem",
                               fontStyle: "normal",
                               lineHeight: 1.5,
@@ -1403,7 +1403,7 @@ const WalletFundsFlow = ({ setAction }) => {
                           <span
                             style={{
                               color: "#8A8A8A",
-                              fontFamily: "Manrope",
+                              fontFamily: "Inter, sans-serif",
                               fontSize: ".7rem",
                               fontStyle: "normal",
                               fontWeight: 600,
@@ -1416,7 +1416,7 @@ const WalletFundsFlow = ({ setAction }) => {
                           <strong
                             style={{
                               color: "#000",
-                              fontFamily: "Manrope",
+                              fontFamily: "Inter, sans-serif",
                               fontSize: "1.2rem",
                               fontStyle: "normal",
                               fontWeight: 700,

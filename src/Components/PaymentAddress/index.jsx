@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../Context/UserContext";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import PaymentAddressComponent from "./PaymentAddressComponent";
 import { Card, CardBody, CardText } from "reactstrap";
 import { Link } from "react-router-dom";
@@ -21,18 +21,19 @@ const PaymentAddress = () => {
     <>
       {window.innerWidth > 1000 ? (
         <div className={styles.container}>
-          <div className={styles.top}>
-            <h4 style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-              {t("My Payment Address")}{" "}
-              <Info
-                color="#5926f0"
-                style={{ cursor: "pointer" }}
-                onClick={() => setIsOpen(!isOpen)}
-                size={16}
-              />
-            </h4>
-            <TopRight />
-          </div>
+          <PageHeader
+            title={
+              <>
+                {t("My Payment Address")}
+                <Info
+                  color="#5926f0"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setIsOpen(!isOpen)}
+                  size={16}
+                />
+              </>
+            }
+          />
           {
             <>
               {userDetails?.level?.payment_address?.receive ? (

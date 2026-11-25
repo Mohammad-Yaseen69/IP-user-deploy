@@ -141,7 +141,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
                   <span
                     style={{
                       color: "#BE9A08",
-                      fontFamily: "Manrope",
+                      fontFamily: "Inter, sans-serif",
                       fontSize: ".7rem",
                       fontStyle: "normal",
                       fontWeight: 700,
@@ -177,7 +177,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
                     <span
                       style={{
                         color: "#8A8A8A",
-                        fontFamily: "Manrope",
+                        fontFamily: "Inter, sans-serif",
                         fontSize: ".7rem",
                         fontStyle: "normal",
                         fontWeight: 600,
@@ -190,7 +190,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
                     <strong
                       style={{
                         color: "#000",
-                        fontFamily: "Manrope",
+                        fontFamily: "Inter, sans-serif",
                         fontSize: ".7rem",
                         fontStyle: "normal",
                         lineHeight: 1.5,
@@ -218,7 +218,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
                     <span
                       style={{
                         color: "#8A8A8A",
-                        fontFamily: "Manrope",
+                        fontFamily: "Inter, sans-serif",
                         fontSize: ".7rem",
                         fontStyle: "normal",
                         fontWeight: 600,
@@ -231,7 +231,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
                     <strong
                       style={{
                         color: "#000",
-                        fontFamily: "Manrope",
+                        fontFamily: "Inter, sans-serif",
                         fontSize: "1.2rem",
                         fontStyle: "normal",
                         fontWeight: 700,
