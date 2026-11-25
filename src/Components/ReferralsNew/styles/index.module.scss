@@ -67,7 +67,7 @@
   .ref_dets {
     display: flex;
     margin-top: 1rem;
-    border-radius: 30px;
+    border-radius: 16px;
     gap: 1rem;
     background: #fff;
     box-shadow: 0px 2px 43px 0px rgba(38, 51, 77, 0.13);
@@ -165,7 +165,7 @@
     gap: 1rem;
     margin-top: 1rem;
     align-items: center;
-    border-radius: 30px;
+    border-radius: 16px;
     background: #fff;
     box-shadow: 0px 2px 43px 0px rgba(38, 51, 77, 0.13);
     padding: 2rem 3rem;
@@ -254,7 +254,7 @@
     overflow: auto;
 
     .item {
-      border-radius: 30px;
+      border-radius: 12px;
       border-top: 1px solid rgba(0, 0, 0, 0.04);
       border-bottom: 1px solid rgba(0, 0, 0, 0.04);
       background: #fff;
@@ -352,7 +352,7 @@
 }
 
 .table_header {
-  border-radius: 30px;
+  border-radius: 16px;
   border-top: 1px solid rgba(0, 0, 0, 0.04);
   border-bottom: 1px solid rgba(0, 0, 0, 0.04);
   background: #fff;
