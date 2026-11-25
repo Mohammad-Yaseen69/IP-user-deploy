@@ -1,5 +1,3 @@
-import jsPDF from "jspdf";
-
 // InstaPay theme
 const C = {
   brand: [89, 38, 240],
@@ -23,7 +21,7 @@ const toPdfText = (v) => String(v ?? "").replace(/[^ -ÿ]/g, "");
  * summary: [[label, value]] money lines, followed by the highlighted `total` row
  * fx:      [[label, value]] optional currency-conversion block
  */
-export const downloadTransactionPdf = ({
+export const downloadTransactionPdf = async ({
   logo,
   headline,
   statusLabel,
@@ -38,6 +36,7 @@ export const downloadTransactionPdf = ({
   reference,
   notes = [],
 }) => {
+  const { default: jsPDF } = await import("jspdf");
   const doc = new jsPDF();
   const W = doc.internal.pageSize.getWidth();
   const H = doc.internal.pageSize.getHeight();

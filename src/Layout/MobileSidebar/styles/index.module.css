@@ -104,7 +104,7 @@
 
 .nav_item a {
   display: flex;
-  gap: 1rem;
+  gap: 28px;
   padding: 1rem;
   align-items: center;
   background: #fbfbfb;

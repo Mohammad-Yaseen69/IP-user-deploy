@@ -1,20 +1,11 @@
-import React, { useContext, useMemo, useRef, useState } from "react";
+import { useContext, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import useWindowWidth from "../../../../utils/useWindowWidth";
-import TopRight from "../../../topRight";
+import PageHeader from "../../../../Common/PageHeader";
 import styles from "../style/moveMoney.module.css";
 import IbanBreadcrumb from "../../components/IbanBreadcrumb";
 import Tooltip from "@mui/material/Tooltip";
-import {
-  Compass,
-  Globe,
-  Briefcase,
-  RefreshCw,
-  CreditCard,
-  ArrowLeft,
-  Search,
-  ChevronLeft,
-} from "react-feather";
+import { Compass, Globe, Briefcase, RefreshCw, CreditCard } from "react-feather";
 import SepaTransfer from "../../SendMoney/SepaTransfer";
 import SwiftTransfer from "../../SendMoney/SwiftTransfer";
 import CryptoTopupModal from "../../CryptoTopupModal";
@@ -73,30 +64,26 @@ const MoveMoney = () => {
       )}
       <div className={styles.container}>
         {width > 600 && (
-          <div className={styles.top}>
-            <div className={styles.headerTitle}>
-              <h1>{t("Move money")}</h1>
-              <p>
-                {t("Choose how to pay, get paid and manage your balances — pick one to begin.")}
-              </p>
-            </div>
-            <div className={styles.topright}>{width > 1000 && <TopRight />}</div>
-          </div>
+          <PageHeader
+            title={t("Move money")}
+            subtitle={t(
+              "Choose how to pay, get paid and manage your balances — pick one to begin.",
+            )}
+          />
         )}
 
         <div className={styles.mainContent}>
           {showSepaPage ? (
             <>
-              <IbanBreadcrumb
-                items={[
-                  { label: "My virtual bank", path: "/virtual-IBAN" },
-                  {
-                    label: "Move money",
-                    onClick: () => setShowSepaPage(false),
-                  },
-                  { label: "SEPA Transfer" },
-                ]}
-              />
+              {width > 600 && (
+                <IbanBreadcrumb
+                  items={[
+                    { label: "My virtual bank", path: "/virtual-IBAN" },
+                    { label: "Move money", onClick: handleClose },
+                    { label: "SEPA Transfer" },
+                  ]}
+                />
+              )}
               <SepaTransfer
                 isPage={true}
                 selectedIban={selectedIban}
@@ -106,21 +93,18 @@ const MoveMoney = () => {
             </>
           ) : showSwiftPage ? (
             <>
-              {width > 600 && (
-                <IbanBreadcrumb
-                  items={[
-                    { label: "My virtual bank", path: "/virtual-IBAN" },
-                    { label: "Move money", onClick: handleClose },
-                    { label: "SWIFT Transfer" },
-                  ]}
-                />
-              )}
+              <IbanBreadcrumb
+                items={[
+                  { label: "My virtual bank", path: "/virtual-IBAN" },
+                  { label: "Move money", onClick: () => setShowSwiftPage(false) },
+                  { label: "SWIFT Transfer" },
+                ]}
+              />
               <SwiftTransfer
                 isPage={true}
                 selectedIban={selectedIban}
                 availableBalance={currentBalance}
-                toggle={handleClose}
-                ref={btnRef}
+                toggle={() => setShowSwiftPage(false)}
               />
             </>
           ) : (
@@ -147,9 +131,7 @@ const MoveMoney = () => {
                     <div
                       className={`${styles.card} ${isOutboundBlocked ? styles.cardDisabled : ""}`}
                       onClick={isOutboundBlocked ? undefined : () => setShowSepaPage(true)}
-                      style={{
-                        cursor: isOutboundBlocked ? "not-allowed" : "pointer",
-                      }}
+                      style={{ cursor: isOutboundBlocked ? "not-allowed" : "pointer" }}
                     >
                       <div className={`${styles.iconBox} ${styles.bgBlue}`}>
                         <Compass size={20} />
@@ -173,9 +155,7 @@ const MoveMoney = () => {
                     <div
                       className={`${styles.card} ${isOutboundBlocked ? styles.cardDisabled : ""}`}
                       onClick={isOutboundBlocked ? undefined : () => setShowSwiftPage(true)}
-                      style={{
-                        cursor: isOutboundBlocked ? "not-allowed" : "pointer",
-                      }}
+                      style={{ cursor: isOutboundBlocked ? "not-allowed" : "pointer" }}
                     >
                       <div className={`${styles.iconBox} ${styles.bgYellow}`}>
                         <Globe size={20} />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "reactstrap";
 
@@ -80,7 +80,7 @@ const MobileWalletLink = ({ externalLink, setSubStep, data, type = "Mobile Walle
           <div
             style={{
               color: "#698AFF",
-              fontFamily: "Manrope",
+              fontFamily: "Inter, sans-serif",
               fontSize: ".8rem",
               fontStyle: "normal",
               fontWeight: 600,
@@ -93,7 +93,7 @@ const MobileWalletLink = ({ externalLink, setSubStep, data, type = "Mobile Walle
             style={{
               marginBottom: 0,
               color: "#FFF",
-              fontFamily: "Manrope",
+              fontFamily: "Inter, sans-serif",
               fontSize: "1.5rem",
               fontStyle: "normal",
               fontWeight: 800,
@@ -137,7 +137,7 @@ const MobileWalletLink = ({ externalLink, setSubStep, data, type = "Mobile Walle
             background: "f5f2fe",
             padding: ".3rem .7rem",
             color: "var(--colour-of-country-names, #000)",
-            fontFamily: "Manrope",
+            fontFamily: "Inter, sans-serif",
             fontSize: ".7rem",
             fontStyle: "normal",
             fontWeight: 600,
@@ -150,7 +150,7 @@ const MobileWalletLink = ({ externalLink, setSubStep, data, type = "Mobile Walle
           style={{
             overflow: "hidden",
             color: "#000",
-            fontFamily: "Manrope",
+            fontFamily: "Inter, sans-serif",
             fontSize: "1.5rem",
             fontStyle: "normal",
             fontWeight: 800,
@@ -168,7 +168,7 @@ const MobileWalletLink = ({ externalLink, setSubStep, data, type = "Mobile Walle
           background: "#FFE3C2",
           padding: ".7rem",
           color: "#EB8C1D",
-          fontFamily: "Manrope",
+          fontFamily: "Inter, sans-serif",
           fontSize: "12px",
           fontStyle: "normal",
           fontWeight: 500,

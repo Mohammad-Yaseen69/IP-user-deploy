@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import styles from "./styles/index.module.scss";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import TransactionsTable from "./TransactionsTable";
 
 const OtherTransactions = () => {
@@ -8,10 +8,7 @@ const OtherTransactions = () => {
   return (
     <>
       <div className={styles.container}>
-        <div className={styles.top}>
-          <h4>{t("Subscriptions & Scheduled")}</h4>
-          <TopRight />
-        </div>
+        <PageHeader title={t("Subscriptions & Scheduled")} />
         <TransactionsTable />
       </div>
       <div className={styles.mobile}>

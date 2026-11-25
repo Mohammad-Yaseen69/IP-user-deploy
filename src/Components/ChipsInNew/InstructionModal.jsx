@@ -1,4 +1,3 @@
-import React from "react";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import img from "./chips_in_left.png";
 import img_2 from "./qr_2.png";

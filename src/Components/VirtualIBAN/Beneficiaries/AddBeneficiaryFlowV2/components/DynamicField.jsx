@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { DatePicker } from "@material-ui/pickers";
+import DatePicker from "../../../../../CommonElements/DatePicker";
 import { FieldLabel, Hint, SelectField, TextField } from "./index";
 import CountryDropDown from "../../../../AddBeneficiary/CountryDropDown";
 import CitiesDropDown from "../../../../CitiesDropDown";

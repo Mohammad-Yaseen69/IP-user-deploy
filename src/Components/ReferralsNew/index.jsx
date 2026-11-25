@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import styles from "./styles/index.module.scss";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import EarnMoneyBanner from "../HomeNewUpdated/EarnMoneyBanner";
-import { Check, ChevronDown, ChevronRight, MoreHorizontal } from "react-feather";
+import { Check, MoreHorizontal } from "react-feather";
 import copy_ic from "../ChipsInNew/copy.png";
 import ref_share from "./ref_share.png";
 import { useContext, useEffect, useMemo, useState } from "react";
@@ -11,7 +11,7 @@ import { UserContext } from "../../Context/UserContext";
 import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { Button, Card, CardBody, CardText, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import countries from "../PaymentsNewer/CountriesData.json";
 import InstaPayLoader from "../Loader";
 import CommissionConversion from "./CommissionConversion";
@@ -19,7 +19,6 @@ import SuccessModal from "../AddBeneficiary/SuccessModal";
 import CommissionWithdraw from "./CommissionWithdraw";
 import RefItem from "./RefItem";
 import TransactionItem from "../TransactionsNewApi/TransactionItem";
-import TransactionItemMobile from "../TransactionsNewApi/Mobile/TransactionItemMobile";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 const ReferralsNew = () => {
@@ -227,10 +226,7 @@ const ReferralsNew = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.top}>
-        <h4>{t("Referrals")}</h4>
-        {window.innerWidth > 1000 && <TopRight />}
-      </div>
+      <PageHeader title={t("Referrals")} />
       {userDetails?.username ? (
         <>
           {convertModal && (
@@ -324,14 +320,7 @@ const ReferralsNew = () => {
             </ModalBody>
           </Modal>
           <div className={styles.banner_con}>
-            <EarnMoneyBanner
-              height="100%"
-              showLink={false}
-              headSize={"4cqi"}
-              textSize={"2cqi"}
-              radius={"30px"}
-              minWidth="40vw"
-            />
+            <EarnMoneyBanner showLink={false} minWidth="40vw" />
             <div style={{ display: "flex", gap: "1.5rem", flex: 1 }}>
               <div className={styles.total_refs}>
                 <div>

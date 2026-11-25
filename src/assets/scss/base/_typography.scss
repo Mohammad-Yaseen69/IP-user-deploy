@@ -3,13 +3,10 @@
 ==========================**/
 //Custom css Start
 
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap");
-
 body {
   font-size: $body-font-size;
   overflow-x: hidden;
-  // font-family: $font-Montserrat;
-  font-family: "Manrope";
+  font-family: "Inter", sans-serif;
   color: $theme-body-font-color;
   background-color: $body-color;
 }

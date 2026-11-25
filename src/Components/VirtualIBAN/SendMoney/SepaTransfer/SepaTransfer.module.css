@@ -489,7 +489,7 @@
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  font-family: Manrope, sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-weight: 800;
 }
@@ -837,7 +837,7 @@
   border: 0;
   background: transparent;
   color: #777;
-  font-family: Manrope, sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-weight: 600;
   padding: 8px 12px;

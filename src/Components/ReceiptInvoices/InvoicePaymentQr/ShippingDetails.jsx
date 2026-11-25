@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import CountryDropDown from "../../AddBeneficiary/CountryDropDown";
 import CitiesDropDown from "../../CitiesDropDown";
 import iso2 from "../../AddFunds/WalletFund/countries_iso2.json";

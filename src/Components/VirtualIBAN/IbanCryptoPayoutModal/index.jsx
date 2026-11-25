@@ -45,7 +45,6 @@ import {
   getChannelProtocol,
   getInitialProtocol,
   getProtocolsForAddress,
-  hasCryptoChannel,
 } from "../../WalletsNew/SendCryptoModal/cryptoProtocols";
 import {
   getContinueLabel,
@@ -62,6 +61,10 @@ import {
 import RecipientStep from "./RecipientStep";
 import ReviewStep from "./ReviewStep";
 import StatusStep from "./StatusStep";
+import {
+  useAllBeneficiaries,
+  useInvalidateBeneficiaryPages,
+} from "../../../hooks/BeneficiaryHooks/useBeneficiariesPage";
 
 const QUOTE_LIFETIME_MS = 10 * 60 * 1000;
 
@@ -176,8 +179,8 @@ const IbanCryptoPayoutModal = forwardRef(
     const isMobile = width <= 600;
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const { userDetails, beneficiaries, getUserBeneficiaries, setProfileLockTime } =
-      useContext(UserContext);
+    const { userDetails, getUserBeneficiaries, setProfileLockTime } = useContext(UserContext);
+    const invalidateBeneficiaryPages = useInvalidateBeneficiaryPages();
     const { getKey, reset: resetIdempotency } = useIdempotency();
 
     const getDefaultAuthType = () => (userDetails?.tfa ? "authenticator" : "sms");
@@ -226,17 +229,11 @@ const IbanCryptoPayoutModal = forwardRef(
     });
 
     useEffect(() => {
-      if (active && userDetails?._id) getUserBeneficiaries?.();
-    }, [active, userDetails?._id]);
-
-    useEffect(() => {
       if (userDetails?.tfa) setAuthType("authenticator");
     }, [userDetails?.tfa]);
 
-    const cryptoBeneficiaries = useMemo(
-      () => (beneficiaries || []).filter((beneficiary) => hasCryptoChannel(beneficiary, asset)),
-      [beneficiaries, asset],
-    );
+    const { beneficiaries: cryptoBeneficiaries, isComplete: cryptoListComplete } =
+      useAllBeneficiaries({ filters: { crypto: asset || "any" }, enabled: !!active });
 
     const cryptoChannels = useMemo(() => {
       const channels = getBeneficiaryCryptoChannels(selectedBeneficiary);
@@ -261,12 +258,12 @@ const IbanCryptoPayoutModal = forwardRef(
     }, [address, apiProtocols, selectedChannel, savedProtocol]);
 
     useEffect(() => {
-      if (!selectedBeneficiary) return;
+      if (!selectedBeneficiary || !cryptoListComplete) return;
       const stillListed = cryptoBeneficiaries.some(
         (beneficiary) => getBeneficiaryId(beneficiary) === getBeneficiaryId(selectedBeneficiary),
       );
       if (!stillListed) setSelectedBeneficiary(null);
-    }, [cryptoBeneficiaries, selectedBeneficiary]);
+    }, [cryptoBeneficiaries, selectedBeneficiary, cryptoListComplete]);
 
     useEffect(() => {
       setSelectedChannel(cryptoChannels[0] || null);
@@ -785,6 +782,7 @@ const IbanCryptoPayoutModal = forwardRef(
           onSaveSuccess={async (saved) => {
             setIsAddBeneficiaryOpen(false);
             setSavedBeneficiaryId(getBeneficiaryId(saved) || "");
+            invalidateBeneficiaryPages();
             await getUserBeneficiaries?.();
           }}
           fixedMethod="crypto_wallet"

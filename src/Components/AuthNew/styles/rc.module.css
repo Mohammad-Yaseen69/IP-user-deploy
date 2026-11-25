@@ -19,7 +19,7 @@
 .left h1 {
   color: #ddd;
   text-align: center;
-  font-family: "General Sans", sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: min(1.8vw, 27.923px);
   font-style: normal;
   font-weight: 500;
@@ -30,7 +30,7 @@
   margin-top: 70px;
   color: #fff;
   text-align: center;
-  font-family: "Red Hat Display", sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: min(2.5vw, 55.847px);
   font-style: normal;
   font-weight: 700;
@@ -41,7 +41,7 @@
 .left h3 {
   color: #ddd;
   text-align: center;
-  font-family: "General Sans", sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: min(1.8vw, 27.923px);
   font-style: normal;
   font-weight: 500;
@@ -76,7 +76,7 @@
   text-align: center;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 32px;
   font-style: normal;
   font-weight: 700;
@@ -88,7 +88,7 @@
   text-align: center;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;
@@ -138,7 +138,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -151,7 +151,7 @@
   color: #5926f0;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;

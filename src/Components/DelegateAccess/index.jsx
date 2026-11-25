@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { Plus, Search, User, Users } from "react-feather";
+import { Plus, Search } from "react-feather";
 import { useTranslation } from "react-i18next";
 import useWindowWidth from "../../utils/useWindowWidth";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import RoleModal from "./Components/RoleModal";
 import DelegateTable from "./Components/Table";
 import styles from "./styles/Index.module.css";
@@ -83,14 +83,10 @@ const DelegateAccess = () => {
       : 1;
   return (
     <div className={styles.container}>
-      <div className={styles.top}>
-        <div className={styles.headerTitle}>
-          <h1>{t("Delegate Access")}</h1>
-          <p>{t("Handle your Agents and Roles with ease")}</p>
-        </div>
-
-        <div className={styles.topright}>{width > 1000 && <TopRight />}</div>
-      </div>
+      <PageHeader
+        title={t("Delegate Access")}
+        subtitle={t("Handle your Agents and Roles with ease")}
+      />
       <div className={styles.main}>
         <div className={styles.receiptsCont}>
           <div className={styles.tabSwitcher}>

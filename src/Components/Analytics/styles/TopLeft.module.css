@@ -53,7 +53,7 @@
 
 .cdi_currency {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 13.543px;
   font-style: normal;
   font-weight: 700;
@@ -125,7 +125,7 @@
 
 .filter label {
   margin-bottom: 0 !important;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 13.543px;
   font-style: normal;
   font-weight: 700;

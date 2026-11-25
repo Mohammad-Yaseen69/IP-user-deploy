@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import Success from "../AddFunds/ResponseModals/Success";
 import Error from "../AddFunds/ResponseModals/Error";

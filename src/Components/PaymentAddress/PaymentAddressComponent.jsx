@@ -1,24 +1,12 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import styles from "./styles/PAC.module.scss";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardText,
-  Col,
-  Input,
-  Modal,
-  ModalBody,
-  ModalHeader,
-} from "reactstrap";
+import { Card, CardBody, CardText, Input, Modal, ModalBody, ModalHeader } from "reactstrap";
 import countries from "../PaymentsNewer/CountriesData.json";
-import { Check, CheckCircle, ChevronDown } from "react-feather";
+import { CheckCircle, ChevronDown } from "react-feather";
 import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
-import vpa_styles from "./styles/Vpa.module.css";
-import logo_white from "../../assets/images/logo/logo_white.png";
 import copy from "../ChipsInNew/copy.png";
 import InstructionsModal from "./InstructionsModal";
 import InstaPayLoader from "../Loader";

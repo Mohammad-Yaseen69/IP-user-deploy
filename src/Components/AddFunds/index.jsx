@@ -1,11 +1,10 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import styles from "./styles/index.module.scss";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import { useTranslation } from "react-i18next";
 import money from "./files/money.png";
 import crypto from "./files/crypto.png";
 import CryptoFund from "./CryptoFund";
-import WalletFund from "./WalletFund";
 import { useLocation, useParams } from "react-router";
 import CryptoJS from "../../Helper/cryptoJs";
 import Success from "./ResponseModals/Success";
@@ -17,7 +16,6 @@ import { UserContext } from "../../Context/UserContext";
 import InstaPayLoader from "../Loader";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import WalletFundsFlow from "./WalletFundsFlow";
-import set from "date-fns/fp/set/index.js";
 
 const AddFunds = () => {
   const { t } = useTranslation();
@@ -165,6 +163,27 @@ const AddFunds = () => {
 
       if (pathname.includes("success")) {
         setCurrentModal("success");
+        // Paytently: reconcile the wallet credit on return in case the webhook is delayed.
+        if (pathname.includes("card")) {
+          try {
+            const pid = localStorage.getItem("paytently_payment_id");
+            if (pid) {
+              localStorage.removeItem("paytently_payment_id");
+              localStorage.removeItem("paytently_authorize_url");
+              axios
+                .post(
+                  `${import.meta.env.VITE_IP_DEV_API}/api/paytently/verify/${pid}`,
+                  {},
+                  { headers: authHeader },
+                )
+                .then((res) => {
+                  const dec = decryptData(res.data.data);
+                  if (dec?.result === "completed") setStatus("completed");
+                })
+                .catch(() => {});
+            }
+          } catch {}
+        }
       }
       if (pathname.includes("failed") || pathname.includes("error")) {
         setCurrentModal("error");
@@ -203,10 +222,7 @@ const AddFunds = () => {
   ) : (
     <>
       <div className={styles.container}>
-        <div className={styles.top}>
-          <h4 style={{ marginBottom: ".2rem" }}>{t("Add Funds")}</h4>
-          <TopRight />
-        </div>
+        <PageHeader title={t("Add Funds")} />
         {!action && (
           <div
             style={{

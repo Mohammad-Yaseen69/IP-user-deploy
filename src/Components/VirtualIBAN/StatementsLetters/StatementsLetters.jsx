@@ -1,21 +1,10 @@
 import { useContext, useMemo, useState } from "react";
-import {
-  Copy,
-  Download,
-  Share2,
-  FileText,
-  ChevronLeft,
-  Eye,
-  Loader,
-  File,
-  Globe,
-  Check,
-} from "react-feather";
+import { Copy, Download, Share2, FileText, Eye, Loader, File, Globe, Check } from "react-feather";
 import styles from "./StatementsLetters.module.css";
 import IbanBreadcrumb from "../components/IbanBreadcrumb";
 import { useTranslation } from "react-i18next";
 import useWindowWidth from "../../../utils/useWindowWidth";
-import TopRight from "../../topRight";
+import PageHeader from "../../../Common/PageHeader";
 import { UserContext } from "../../../Context/UserContext";
 import { useVirtualIbans, useVirtualIbanDetails } from "../../../hooks/useVirtualIban";
 import { normalizeVirtualIban } from "../utils/virtualIban";
@@ -222,15 +211,10 @@ const StatementsLetters = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.top}>
-        <div className={styles.headerTitleMain}>
-          <div className={styles.titleWithBack}>
-            <h1>{t("Statements & letters")}</h1>
-          </div>
-          <p>{t("Statements, IBAN confirmation letter")}</p>
-        </div>
-        <div className={styles.topright}>{width > 1000 && <TopRight />}</div>
-      </div>
+      <PageHeader
+        title={t("Statements & letters")}
+        subtitle={t("Statements, IBAN confirmation letter")}
+      />
 
       <div className={styles.mainContent}>
         <div className={styles.navigationHeader}>

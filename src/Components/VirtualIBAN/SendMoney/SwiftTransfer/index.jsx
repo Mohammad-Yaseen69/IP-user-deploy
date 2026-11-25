@@ -24,9 +24,7 @@ import {
   Globe,
   Home,
   List,
-  Plus,
   RefreshCw,
-  Search,
   Send,
   User,
 } from "react-feather";
@@ -39,7 +37,6 @@ import ContactBox from "../../../MyMasterCard/PaymentModal/ContactBox";
 import { getAmountNumber } from "../../utils/amount";
 import { getVirtualIbanId } from "../../utils/virtualIban";
 import {
-  CHARGE_BEARER_OPTIONS,
   getContinueLabel,
   getDisabledState,
   getPurposeCode,
@@ -47,7 +44,6 @@ import {
   goNext,
   isSidebarStepActive,
   isSidebarStepCompleted,
-  MIN_AMOUNT,
   MAX_AMOUNT,
   PURPOSE_OPTIONS,
   SIDEBAR_STEPS,
@@ -72,8 +68,6 @@ import {
 } from "../../../../hooks/useVirtualIban";
 import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError";
 import OTPConfirmation from "../../../../Common/Component/OtpVerification";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
 import US_Image from "../../files/images/US.svg";
 import {
   validateSwiftBeneficiary,
@@ -81,18 +75,19 @@ import {
   isValidBic,
 } from "../../utils/swiftValidation";
 import BeneficiaryStep from "../Common/BeneficiaryStep";
+import {
+  fetchBeneficiaryMatch,
+  useBeneficiaryPicker,
+  useInvalidateBeneficiaryPages,
+} from "../../../../hooks/BeneficiaryHooks/useBeneficiariesPage";
 import AddressTooLongBanner from "../Common/AddressTooLongBanner";
 import {
   getBeneficiaryName,
   getBeneficiaryTypeLabel,
   getBeneficiaryCountry,
-  getBeneficiaryBankDetail,
   getBeneficiaryBic,
   getBeneficiaryBankName,
-  getBeneficiaryInitial,
   getBeneficiaryId,
-  getBeneficiaryAccountCount,
-  getBeneficiarySubtitle,
   getRawSwiftCode,
   hasBeneficiarySwiftCode,
   isBeneficiaryAddressTooLong,
@@ -102,6 +97,8 @@ import MobileStepProgress from "../../VirtualIbanModal/MobileStepProgress";
 import MobileFooter from "../../../../Common/Component/MobileFooter";
 import StepsDrawer from "../../../../Common/Component/StepsDrawer";
 import img from "../../../../assets/images/logo/logo2.png";
+
+const SWIFT_BENEFICIARY_FILTERS = { account_type: "bank" };
 
 const DEFAULT_BENEFICIARY_FORM = {
   type: "individual",
@@ -789,7 +786,7 @@ const ReviewStep = ({
   );
 };
 
-const downloadSwiftReceipt = ({
+const downloadSwiftReceipt = async ({
   amount,
   currencyCode,
   selectedBeneficiary,
@@ -799,6 +796,10 @@ const downloadSwiftReceipt = ({
   payoutResult,
   t,
 }) => {
+  const [{ default: jsPDF }, { default: autoTable }] = await Promise.all([
+    import("jspdf"),
+    import("jspdf-autotable"),
+  ]);
   const doc = new jsPDF();
 
   const feeAmount = feeDetails?.fee;
@@ -995,8 +996,14 @@ const SwiftTransfer = forwardRef(
     const width = useWindowWidth();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const { userDetails, setProfileLockTime, getUserBeneficiaries, beneficiaries, authHeader } =
+    const { userDetails, setProfileLockTime, getUserBeneficiaries, authHeader } =
       useContext(UserContext);
+    const invalidateBeneficiaryPages = useInvalidateBeneficiaryPages();
+    const refreshBeneficiaries = () => {
+      invalidateBeneficiaryPages();
+      return getUserBeneficiaries();
+    };
+    const picker = useBeneficiaryPicker({ filters: SWIFT_BENEFICIARY_FILTERS });
 
     const ibanId = selectedIban?._id || selectedIban?.id;
     const { data: syncedBalance } = useSyncVirtualIbanBalance(ibanId);
@@ -1011,7 +1018,6 @@ const SwiftTransfer = forwardRef(
           : userDetails?.whatsapp_verification
             ? "whatsapp"
             : "sms";
-
     const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT);
     const [amount, setAmount] = useState("");
     const [selectedBeneficiary, setSelectedBeneficiary] = useState(null);
@@ -1089,13 +1095,7 @@ const SwiftTransfer = forwardRef(
       ],
     );
 
-    const swiftBeneficiaries = useMemo(
-      () =>
-        (beneficiaries || []).filter(
-          (b) => Array.isArray(b?.account_type) && b.account_type.includes("bank"),
-        ),
-      [beneficiaries],
-    );
+    const swiftBeneficiaries = picker.beneficiaries;
 
     const isProcessing = payoutFee.isPending || isSendingOtp || isRefreshingQuote;
     const isQuoteExpired = quoteExpiresAt
@@ -1119,15 +1119,6 @@ const SwiftTransfer = forwardRef(
       else if (userDetails?.whatsapp_verification) setAuthType("whatsapp");
     }, [userDetails?.tfa, userDetails?.email_verification, userDetails?.whatsapp_verification]);
 
-    useEffect(() => {
-      if (userDetails?._id) getUserBeneficiaries();
-    }, [userDetails]);
-
-    const [savedBeneficiaryId, setSavedBeneficiaryId] = useState("");
-
-    /* The new flow saves the recipient and the bank details together, so there is no
-       second modal to chain into - the saved record is picked up once the refreshed
-       list carries its channel. */
     const handleBeneficiarySaved = async (savedBeneficiary, isNew) => {
       if (!USE_NEW_BENEFICIARY_FLOW) {
         if (isNew && savedBeneficiary) {
@@ -1140,24 +1131,18 @@ const SwiftTransfer = forwardRef(
       setIsAddModalOpen(false);
       setIsChannelModalOpen(false);
       setChannelModalBeneficiary(null);
-      setSavedBeneficiaryId(savedBeneficiary?._id || savedBeneficiary?.id || "");
-      await getUserBeneficiaries();
+      const savedId = savedBeneficiary?._id || savedBeneficiary?.id;
+      refreshBeneficiaries();
+      const saved =
+        savedId &&
+        (await fetchBeneficiaryMatch(userDetails?._id, SWIFT_BENEFICIARY_FILTERS, savedId).catch(
+          () => null,
+        ));
+      if (saved) setSelectedBeneficiary(saved);
     };
 
-    useEffect(() => {
-      if (!savedBeneficiaryId) return;
-
-      const saved = swiftBeneficiaries.find(
-        (item) => (item?._id || item?.id) === savedBeneficiaryId,
-      );
-      if (!saved) return;
-
-      setSelectedBeneficiary(saved);
-      setSavedBeneficiaryId("");
-    }, [swiftBeneficiaries, savedBeneficiaryId]);
-
     const handleChannelSaved = async (updatedBeneficiary) => {
-      await getUserBeneficiaries();
+      await refreshBeneficiaries();
       if (updatedBeneficiary) {
         const hasBank =
           (Array.isArray(updatedBeneficiary.account_type) &&
@@ -1375,6 +1360,7 @@ const SwiftTransfer = forwardRef(
           return (
             <BeneficiaryStep
               beneficiaries={swiftBeneficiaries}
+              server={picker.server}
               selectedBeneficiary={selectedBeneficiary}
               setSelectedBeneficiary={setSelectedBeneficiary}
               onAddBeneficiary={() => setIsAddModalOpen(true)}
@@ -1386,7 +1372,7 @@ const SwiftTransfer = forwardRef(
                   authHeader={authHeader}
                   onSwiftCodeSaved={async (updatedBeneficiary) => {
                     setSelectedBeneficiary(updatedBeneficiary);
-                    await getUserBeneficiaries();
+                    await refreshBeneficiaries();
                   }}
                 />
               )}
@@ -1395,7 +1381,7 @@ const SwiftTransfer = forwardRef(
                   beneficiary={selectedBeneficiary}
                   onAddressSaved={async (updatedBeneficiary) => {
                     setSelectedBeneficiary(updatedBeneficiary);
-                    await getUserBeneficiaries();
+                    await refreshBeneficiaries();
                   }}
                 />
               )}

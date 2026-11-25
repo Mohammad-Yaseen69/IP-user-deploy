@@ -22,7 +22,7 @@
 
 .left h1 {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 800;
@@ -34,7 +34,7 @@
   all: unset;
   color: #575757;
   text-align: center;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 13px;
   font-style: normal;
   font-weight: 700;
@@ -56,7 +56,7 @@
 
 .s1_t {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -73,7 +73,7 @@
 .s1_inp_con label {
   margin-bottom: 0;
   color: #545454;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -128,7 +128,7 @@
   color: #fff;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -145,7 +145,7 @@
 
 .s2_t {
   color: #808080;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
@@ -187,7 +187,7 @@
   margin-bottom: 0;
   color: #000;
   text-align: center;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
@@ -202,7 +202,7 @@
 
 .auth_secret label {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
@@ -214,7 +214,7 @@
 .auth_secret button {
   all: unset;
   color: #808080;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 10px;
   font-style: normal;
   font-weight: 600;
@@ -235,7 +235,7 @@
   color: #fff;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -259,7 +259,7 @@
 
 .auth_code_details h2 {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
@@ -268,7 +268,7 @@
 
 .auth_code_details p {
   color: #808080;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
@@ -288,7 +288,7 @@
 
 .code_field label {
   color: #545454;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
@@ -330,7 +330,7 @@
   width: 100%;
   color: black;
   text-align: center;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 1.2rem;
   font-size: normal;
   font-weight: 600;
@@ -397,7 +397,7 @@ button:disabled {
   .s3 h1 {
     color: #808080;
     text-align: center;
-    font-family: Manrope;
+    font-family: "Inter", sans-serif;
     font-size: 14px;
     font-style: normal;
     font-weight: 600;
@@ -409,7 +409,7 @@ button:disabled {
     all: unset;
     color: #575757;
     text-align: center;
-    font-family: Manrope;
+    font-family: "Inter", sans-serif;
     font-size: 13px;
     font-style: normal;
     font-weight: 700;
@@ -441,7 +441,7 @@ button:disabled {
   .auth_secret label {
     color: #000;
     text-align: center;
-    font-family: Manrope;
+    font-family: "Inter", sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -450,7 +450,7 @@ button:disabled {
   }
 
   .auth_secret > button {
-    font-family: Manrope;
+    font-family: "Inter", sans-serif;
     font-size: 12px;
     font-style: normal;
     font-weight: 600;

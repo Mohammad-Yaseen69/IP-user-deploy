@@ -6,9 +6,7 @@ import styles from "./virtualIbanModal.module.scss";
 import MT from "./icons/mt.svg";
 import GB from "./icons/uk.svg";
 import US from "../../../assets/fonts/flag-icon/us.svg";
-import { CheckCircle } from "react-feather";
-import { useContext } from "react";
-import { UserContext } from "../../../Context/UserContext";
+import { formatMoney } from "../utils/ibanPaymentModel";
 
 const FLAGS = { MT, GB, US };
 
@@ -16,18 +14,18 @@ const FeesStep = ({
   jurisdiction,
   feesAccepted,
   setFeesAccepted,
-  activationFeeAmount,
-  activationFeeCurrency,
-  monthlyFeeCurr,
+  activationFee,
+  monthlyFee,
+  feesLoading = false,
 }) => {
   const { t } = useTranslation();
-  const { userDetails } = useContext(UserContext);
   const info = getJurisdiction(jurisdiction);
-  const displayedActivationFee = activationFeeAmount ?? info.activationFee;
-  const displayedActivationFeeCurrency =
-    activationFeeCurrency || info.activationFeeCurrency || "USD";
-  const monthlyFeeCurrency =
-    monthlyFeeCurr || info.monthlyFeeCurrency || displayedActivationFeeCurrency;
+
+  const renderAmount = (money) => {
+    if (feesLoading) return t("Loading...");
+    if (!money) return t("Not available");
+    return formatMoney(money);
+  };
 
   return (
     <div>
@@ -50,9 +48,7 @@ const FeesStep = ({
 
           <div>
             <span className={styles.feeLabel}>{t("ONE TIME")}</span>
-            <div className={styles.feeAmount}>
-              {displayedActivationFeeCurrency} {displayedActivationFee}
-            </div>
+            <div className={styles.feeAmount}>{renderAmount(activationFee)}</div>
             <div className={styles.feeDesc}>{t("Activation fee")}</div>
           </div>
         </div>
@@ -63,10 +59,7 @@ const FeesStep = ({
 
           <div>
             <span className={styles.feeLabel}>{t("MONTHLY")}</span>
-            <div className={styles.feeAmount}>
-              {monthlyFeeCurrency}{" "}
-              {userDetails?.country_iso_code === "CYP" ? "45" : info.monthlyFee}
-            </div>
+            <div className={styles.feeAmount}>{renderAmount(monthlyFee)}</div>
             <div className={styles.feeDesc}>{t("Maintenance fee")}</div>
           </div>
         </div>
@@ -113,16 +106,15 @@ const FeesStep = ({
         <input
           type="checkbox"
           checked={feesAccepted}
+          disabled={feesLoading || !activationFee || !monthlyFee}
           onChange={(e) => setFeesAccepted(e.target.checked)}
         />
         <p>
           {t(
-            "I understand and agree to the fees above. I authorise InstaPay to charge the activation fee of {{activationFeeCurrency}} {{activationFee}} and monthly fee of {{monthlyFeeCurrency}} {{monthlyFee}} from my selected wallet.",
+            "I understand and agree to the fees above. I authorise InstaPay to charge the activation fee of {{activationFee}} and monthly fee of {{monthlyFee}} from my selected wallet.",
             {
-              activationFeeCurrency: displayedActivationFeeCurrency,
-              activationFee: displayedActivationFee,
-              monthlyFeeCurrency,
-              monthlyFee: info.monthlyFee,
+              activationFee: renderAmount(activationFee),
+              monthlyFee: renderAmount(monthlyFee),
             },
           )}
         </p>

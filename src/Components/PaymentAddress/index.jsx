@@ -1,7 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../Context/UserContext";
-import TopRight from "../topRight";
+import { useShowOnce } from "../../hooks/GeneralUse/useShowOnce";
+import PageHeader from "../../Common/PageHeader";
 import PaymentAddressComponent from "./PaymentAddressComponent";
 import { Card, CardBody, CardText } from "reactstrap";
 import { Link } from "react-router-dom";
@@ -11,28 +12,24 @@ import { Info } from "react-feather";
 const PaymentAddress = () => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
-  // modal
-  const [isOpen, setIsOpen] = useState(!sessionStorage.getItem("show_pa_modal"));
-
-  useEffect(() => {
-    sessionStorage.setItem("show_pa_modal", true);
-  }, []);
+  const [isOpen, setIsOpen] = useShowOnce("payment_address_intro");
   return (
     <>
       {window.innerWidth > 1000 ? (
         <div className={styles.container}>
-          <div className={styles.top}>
-            <h4 style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-              {t("My Payment Address")}{" "}
-              <Info
-                color="#5926f0"
-                style={{ cursor: "pointer" }}
-                onClick={() => setIsOpen(!isOpen)}
-                size={16}
-              />
-            </h4>
-            <TopRight />
-          </div>
+          <PageHeader
+            title={
+              <>
+                {t("My Payment Address")}
+                <Info
+                  color="#5926f0"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setIsOpen(!isOpen)}
+                  size={16}
+                />
+              </>
+            }
+          />
           {
             <>
               {userDetails?.level?.payment_address?.receive ? (

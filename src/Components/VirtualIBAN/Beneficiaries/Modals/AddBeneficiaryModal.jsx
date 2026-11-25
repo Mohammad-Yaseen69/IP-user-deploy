@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { Box, Modal, TextField, IconButton, useMediaQuery } from "@mui/material";
 import { X, User, Briefcase } from "react-feather";
 import { useTranslation } from "react-i18next";

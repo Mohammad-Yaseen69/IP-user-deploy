@@ -2,7 +2,7 @@ import axios from "axios";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useContext, useState } from "react";
-import { Modal, ModalBody, ModalFooter, Button, Input, ModalHeader } from "reactstrap";
+import { Modal, ModalBody, Button, ModalHeader } from "reactstrap";
 import { UserContext } from "../../../Context/UserContext";
 import styles from "./styles/recentTrans.module.scss";
 import { useTranslation } from "react-i18next";
@@ -12,8 +12,8 @@ import useWindowWidth from "../../../utils/useWindowWidth";
 import countriesData from "../CountriesData.json";
 import repeat from "./repeat.svg";
 import { capitalizeStatus } from "../../PendingNew/ItemMobile";
-import { X } from "react-feather";
 import { formatCurrency } from "../../../Helper/AmountFormat";
+import { useAllBeneficiaries } from "../../../hooks/BeneficiaryHooks/useBeneficiariesPage";
 
 const getRecentTransaction = async (authHeader, account, type) => {
   const res = await axios.get(
@@ -44,13 +44,20 @@ const RecentTransactions = ({
   setSubStep,
   dataCurrency,
 }) => {
-  const { userDetails, authHeader, userWallets, beneficiaries } = useContext(UserContext);
+  const { userDetails, authHeader, userWallets } = useContext(UserContext);
   const { t } = useTranslation();
   const { data, isError } = useQuery({
     queryKey: ["RecentTransaction", type, userDetails?._id],
     queryFn: () => getRecentTransaction(authHeader, userDetails?._id, type),
     staleTime: 0,
     gcTime: 0,
+  });
+  const recentBeneficiaryIds = [
+    ...new Set((Array.isArray(data) ? data : []).map((tx) => tx?.beneficiary?._id).filter(Boolean)),
+  ].join(",");
+  const { beneficiaries } = useAllBeneficiaries({
+    filters: { id: recentBeneficiaryIds },
+    enabled: !!recentBeneficiaryIds,
   });
   const width = useWindowWidth();
   const payoutChannelData = usePayoutChannel(userDetails);

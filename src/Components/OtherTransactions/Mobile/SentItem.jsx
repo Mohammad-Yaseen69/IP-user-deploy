@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import styles from "./item.module.css";
 import { ChevronDown, ChevronRight, ChevronLeft } from "react-feather";
-import { Link } from "react-router-dom";
 import { Button } from "reactstrap";
 import { cancelSubscriptionOrSchedulePayment } from "../ReceivedTransactionItem";
 import { useContext, useMemo, useState } from "react";
