@@ -30,6 +30,9 @@ import MobileWalletStatus from "../PaymentAddressPublic/PayAsGuest/MobileWalletS
 import PlaidBankTransfer from "../AddFunds/WalletFundsFlow/PlaidBankTransfer";
 import ErrorModal from "../PaymentsNewer/InternationalFlow/ErrorModal";
 import { useIdempotency } from "../../hooks/Payments/useIdempotency";
+import { useVirtualIbans, virtualIbanQueryKeys } from "../../hooks/useVirtualIban";
+import { isVirtualIbanPayable } from "../VirtualIBAN/utils/virtualIban";
+import { useQueryClient } from "@tanstack/react-query";
 
 const paymentChannels = [
   {
@@ -57,6 +60,11 @@ const paymentChannels = [
     icon: pc,
     value: "bank",
   },
+  {
+    name: "Virtual IBAN",
+    icon: bd,
+    value: "iban",
+  },
 ];
 
 const VerificationPayment = ({
@@ -83,7 +91,10 @@ const VerificationPayment = ({
     cardExpiry: "",
     CardCVC: "",
   });
-  const { reset } = useIdempotency();
+  const { getKey, reset } = useIdempotency();
+  const queryClient = useQueryClient();
+  const [iban, setIban] = useState(null);
+  const isIban = payoutChannel?.value === "iban";
 
   const [isValid, setIsValid] = useState(false);
   const { userDetails, userWallets, authHeader, setProfileLockTime, verifyToken, checkAuth } =
@@ -175,12 +186,39 @@ const VerificationPayment = ({
 
   const wallets = useMemo(() => filteredWallets, [filteredWallets]);
 
+  const { data: allIbans = [] } = useVirtualIbans(userDetails?._id);
+  const [feeEur, setFeeEur] = useState(null);
+  useEffect(() => {
+    const feeUsd = amount || userDetails?.country?.kyc_fee;
+    if (!feeUsd) return;
+    axios
+      .get(
+        `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=USD&to=EUR&amount=${feeUsd}`,
+        { headers: authHeader },
+      )
+      .then((res) => {
+        const dec = decryptData(res?.data?.data);
+        setFeeEur(
+          Number(dec?.exchangeRate?.exchanged_amount ?? dec?.exchangeRate?.result ?? 0) || null,
+        );
+      })
+      .catch(() => setFeeEur(null));
+  }, [amount, userDetails?.country?.kyc_fee]);
+  const ibans = useMemo(
+    () =>
+      allIbans.filter(
+        (item) =>
+          isVirtualIbanPayable(item) && feeEur != null && Number(item.balance || 0) >= feeEur,
+      ),
+    [allIbans, feeEur],
+  );
+
   const sendOtp = async (method) => {
     setSaving(true);
     try {
       const data = {
         data: {
-          wallet_id: wallet?._id,
+          ...(isIban ? { iban_id: iban?._id } : { wallet_id: wallet?._id }),
           desc,
           occupation,
           source_of_funds,
@@ -232,7 +270,7 @@ const VerificationPayment = ({
         type: codeType,
       };
 
-      const endpoint = `/api/${payoutChannel?.value === "mobile_wallet" ? "collection" : isKYB ? "company" : "user"}/${payoutChannel?.value === "mobile_wallet" ? "" : "charge-"}${partnerId ? "partner-kyc" : isKYB ? "kyb" : "kyc"}`;
+      const endpoint = `/api/${payoutChannel?.value === "mobile_wallet" ? "collection" : isKYB ? "company" : "user"}/${payoutChannel?.value === "mobile_wallet" ? "" : "charge-"}${partnerId ? "partner-kyc" : isKYB ? "kyb" : "kyc"}${isIban ? "/iban" : ""}`;
 
       console.log(endpoint);
 
@@ -241,9 +279,11 @@ const VerificationPayment = ({
         payload: data,
         isEncrypted: true,
         endpoint,
+        idempotencyKey: getKey(),
       });
       console.log(res);
       setCreatedTransactionId(res?.data?.transactionId || res?.data?.transaction_id);
+      if (isIban) queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.all });
       setter(true);
     } catch (err) {
       // console.log(decryptData(error?.response?.data?.data))
@@ -316,6 +356,14 @@ const VerificationPayment = ({
           setStep((prev) => prev + 1);
         }
       }
+      if (isIban && iban) {
+        if (!isKYB) {
+          sendOtp();
+        } else {
+          if (!partnerId) setFeeDetails(await getFeeDetails({ payment_type: "card" }));
+          setStep((prev) => prev + 1);
+        }
+      }
       if (payoutChannel?.value === "card" && (currentCard?._id ?? isValid)) {
         if (isKYB && !partnerId) {
           const feeDets = await getFeeDetails({
@@ -353,7 +401,9 @@ const VerificationPayment = ({
                     .filter((item) =>
                       item?.value === "wallet"
                         ? wallets.length > 0
-                        : methods?.includes(item?.value),
+                        : item?.value === "iban"
+                          ? ibans.length > 0
+                          : methods?.includes(item?.value),
                     )
                     .map((item) => {
                       const isPaypalDisabled =
@@ -576,6 +626,64 @@ const VerificationPayment = ({
                 </div>
               </>
             )}
+            {step === 2 && isIban && (
+              <>
+                <h5>{t("Select Your IBAN")}</h5>
+                <div
+                  style={{
+                    margin: "1rem 0",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "1rem",
+                  }}
+                >
+                  {ibans.map((item) => (
+                    <div
+                      key={item._id}
+                      onClick={() => setIban(item)}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        background: "white",
+                        boxShadow: iban?._id !== item._id ? "0 0 4px #1111113e" : "0 0 4px green",
+                        padding: "1rem",
+                        borderRadius: "16px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <div>
+                        <h5 style={{ fontSize: "1rem", fontWeight: 700, marginBottom: 0 }}>
+                          {item.currency} {t("IBAN")} ·· {String(item.iban || "").slice(-4)}
+                        </h5>
+                        <span style={{ color: "#a8a8a8", fontSize: ".6rem", fontWeight: 500 }}>
+                          {item.bank_name}
+                        </span>
+                      </div>
+                      <div style={{ textAlign: "right" }}>
+                        <span style={{ color: "#a8a8a8", fontSize: ".6rem", fontWeight: 500 }}>
+                          {t("Balance")}:{" "}
+                        </span>
+                        <h5 style={{ fontSize: "1rem", fontWeight: 700, marginBottom: 0 }}>
+                          {item.currency}{" "}
+                          {Number(item.balance || 0).toLocaleString("en-US", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </h5>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {feeEur != null && (
+                  <h5>
+                    {t("Your IBAN will be charged {{amount}} for the verification process.", {
+                      amount: `€${feeEur}`,
+                    })}
+                  </h5>
+                )}
+              </>
+            )}
             {step === 2 && payoutChannel?.value === "card" && (
               <CardDetails
                 setSubStep={setStep}
@@ -703,6 +811,7 @@ const VerificationPayment = ({
                     if (step === 1) return !payoutChannel?.value;
                     if (step === 2) {
                       if (payoutChannel?.value === "wallet") return !wallet;
+                      if (payoutChannel?.value === "iban") return !iban;
                       if (payoutChannel?.value === "card") {
                         if (currentCard?._id) return false;
                         return !isValid || !cardHolderName || !!cardError;
@@ -782,12 +891,16 @@ const VerificationPayment = ({
 
               <div className="text-center">
                 <p className="mb-0">
-                  {isKYB
-                    ? t(`Thank you for submitting the required documents for business verification. An email has been sent to the business directors to complete their KYC verification.
+                  {isIban
+                    ? t(
+                        "Your IBAN payment is processing. Verification opens as soon as the transfer is confirmed, usually within a minute. Refresh this page if it does not.",
+                      )
+                    : isKYB
+                      ? t(`Thank you for submitting the required documents for business verification. An email has been sent to the business directors to complete their KYC verification.
                                     Once the business documents and directors’ KYC are successfully validated, your business account will be verified.`)
-                    : t(
-                        "The KYC fee payment is successful. Please proceed to verify your account.",
-                      )}
+                      : t(
+                          "The KYC fee payment is successful. Please proceed to verify your account.",
+                        )}
                 </p>
                 <Button
                   style={{
@@ -801,10 +914,10 @@ const VerificationPayment = ({
                     borderRadius: "6px",
                     marginTop: "1.5rem",
                   }}
-                  onClick={!isKYB ? verify : toggle}
+                  onClick={!isKYB && !isIban ? verify : toggle}
                   disabled={loading}
                 >
-                  {!isKYB ? t("Procees") : t("Close")}
+                  {!isKYB && !isIban ? t("Procees") : t("Close")}
                 </Button>
               </div>
             </>
