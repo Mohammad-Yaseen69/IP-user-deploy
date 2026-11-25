@@ -7,6 +7,7 @@ import { Button, Input } from "reactstrap";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import BeneficiaryCard from "./BeneficiaryCard";
+import FilterPanel from "./FilterPanel";
 import { UserContext } from "../../Context/UserContext";
 import add_ben from "./add_ben.svg";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
@@ -17,12 +18,6 @@ import {
   useBeneficiariesPage,
   useInvalidateBeneficiaryPages,
 } from "../../hooks/BeneficiaryHooks/useBeneficiariesPage";
-
-const TYPE_OPTIONS = [
-  { value: "all", label: "All" },
-  { value: "individual", label: "Individual" },
-  { value: "business", label: "Business" },
-];
 
 const SORT_OPTIONS = [
   { value: "name_asc", label: "Name (A–Z)" },
@@ -39,7 +34,7 @@ const Beneficiaries = () => {
   const { verifyToken, getUserBeneficiaries } = useContext(UserContext);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [typeFilter, setTypeFilter] = useState("all");
+  const [filters, setFilters] = useState({ type: "all", accountTypes: [] });
   const [sortBy, setSortBy] = useState("name_asc");
   const [openMenu, setOpenMenu] = useState(null); // "filter" | "sort" | null
 
@@ -67,14 +62,19 @@ const Beneficiaries = () => {
     setBeneficiaryMode(mode);
   };
 
-  const activeFilterCount = typeFilter !== "all" ? 1 : 0;
+  const activeFilterCount = (filters.type !== "all") + filters.accountTypes.length;
 
   const {
     beneficiaries: filtered,
     isLoading,
     hasNextPage,
     loaderRef,
-  } = useBeneficiariesPage({ search: searchTerm, type: typeFilter, sort: sortBy });
+  } = useBeneficiariesPage({
+    search: searchTerm,
+    type: filters.type,
+    sort: sortBy,
+    filters: { account_types: filters.accountTypes.join(",") },
+  });
   const invalidateBeneficiaryPages = useInvalidateBeneficiaryPages();
 
   const onBeneficiarySaved = () => {
@@ -104,21 +104,13 @@ const Beneficiaries = () => {
           {activeFilterCount > 0 && <span className={styles.badge}>{activeFilterCount}</span>}
         </Button>
         {openMenu === "filter" && (
-          <div className={styles.menu}>
-            {TYPE_OPTIONS.map((o) => (
-              <button
-                key={o.value}
-                type="button"
-                className={`${styles.menu_item} ${typeFilter === o.value ? styles.menu_item_active : ""}`}
-                onClick={() => {
-                  setTypeFilter(o.value);
-                  setOpenMenu(null);
-                }}
-              >
-                {t(o.label)}
-              </button>
-            ))}
-          </div>
+          <FilterPanel
+            value={filters}
+            onApply={(next) => {
+              setFilters(next);
+              setOpenMenu(null);
+            }}
+          />
         )}
       </div>
 
