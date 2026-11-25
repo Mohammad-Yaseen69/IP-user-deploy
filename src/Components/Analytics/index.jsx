@@ -9,7 +9,7 @@ const Analytics = () => {
     <>
       {window.innerWidth > 1000 ? (
         <div className={styles.container}>
-          <PageHeader title={t("Analytics")} />
+          <PageHeader title={t("Analytics")} subtitle={t("See how your money moves over time.")} />
           <Reports />
         </div>
       ) : (

@@ -29,6 +29,7 @@ const PaymentAddress = () => {
                 />
               </>
             }
+            subtitle={t("Your InstaPay address for receiving payments.")}
           />
           {
             <>

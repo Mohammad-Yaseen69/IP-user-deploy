@@ -226,7 +226,7 @@ const Quotations = () => {
     </div>
   ) : (
     <div className={styles.container}>
-      <PageHeader title={t("Quotations")} />
+      <PageHeader title={t("Quotations")} subtitle={t("Quotes you have sent and received.")} />
       {sendQuotation}
       {ledger}
     </div>

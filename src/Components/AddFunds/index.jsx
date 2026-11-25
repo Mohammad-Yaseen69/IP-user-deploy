@@ -203,7 +203,7 @@ const AddFunds = () => {
   ) : (
     <>
       <div className={styles.container}>
-        <PageHeader title={t("Add Funds")} />
+        <PageHeader title={t("Add Funds")} subtitle={t("Add money to your InstaPay wallet.")} />
         {!action && (
           <div
             style={{

@@ -94,7 +94,7 @@ const ReceiptInvoice = () => {
   console.log("data", data);
   return (
     <div className={styles.container}>
-      <PageHeader title={t("My Invoices")} />
+      <PageHeader title={t("My Invoices")} subtitle={t("Create, send and track your invoices.")} />
 
       <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
         <div

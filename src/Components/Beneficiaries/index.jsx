@@ -172,7 +172,10 @@ const Beneficiaries = () => {
   return (
     <>
       <div className={styles.container}>
-        <PageHeader title={t("Beneficiaries")} />
+        <PageHeader
+          title={t("Beneficiaries")}
+          subtitle={t("Manage the people and businesses you pay.")}
+        />
         <div className={styles.table_header}>
           <div className={styles.search_field}>
             <Search />

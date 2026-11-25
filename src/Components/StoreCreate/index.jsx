@@ -72,7 +72,7 @@ const StoreCreate = () => {
 
   return (
     <div className={styles.container}>
-      <PageHeader title={t("My e-Shop")} />
+      <PageHeader title={t("My e-Shop")} subtitle={t("Set up and manage your online shop.")} />
 
       <div
         className={styles.mainContent}

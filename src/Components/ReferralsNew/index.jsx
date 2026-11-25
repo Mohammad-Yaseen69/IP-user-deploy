@@ -227,7 +227,7 @@ const ReferralsNew = () => {
 
   return (
     <div className={styles.container}>
-      <PageHeader title={t("Referrals")} />
+      <PageHeader title={t("Referrals")} subtitle={t("Invite friends and track your rewards.")} />
       {userDetails?.username ? (
         <>
           {convertModal && (

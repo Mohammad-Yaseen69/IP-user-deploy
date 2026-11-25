@@ -22,7 +22,10 @@ const TransactionsNewApi = () => {
       {userDetails && (
         <>
           <div className={styles.container}>
-            <PageHeader title={t("Transactions")} />
+            <PageHeader
+              title={t("Transactions")}
+              subtitle={t("Every payment in and out of your account.")}
+            />
             <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem" }}>
               <button onClick={() => navigate("/payments")} type="button" className={s.btnPrimary}>
                 <Plus size={16} />

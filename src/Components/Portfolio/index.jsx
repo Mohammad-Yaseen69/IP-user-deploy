@@ -77,6 +77,7 @@ const Portfolio = () => {
               />
             </>
           }
+          subtitle={t("Showcase your work with images, videos and PDFs.")}
         />
         <p className={styles.desc}>
           {t(

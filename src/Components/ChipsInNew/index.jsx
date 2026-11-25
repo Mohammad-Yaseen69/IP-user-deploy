@@ -92,6 +92,7 @@ const ChipsInNew = () => {
                   />
                 </>
               }
+              subtitle={t("Share your QR code so anyone can pay you.")}
             />
             <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
               {/* <GeneralContainer currency={currency} setCurrency={setCurrency} currentWallet={currentWallet} setWalletRefresh={setWalletRefresh} authHeader={authHeader} defaultWal={defaultWal} showTooltip={showTooltip} setShowTooltip={setShowTooltip} /> */}
