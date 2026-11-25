@@ -18,7 +18,7 @@ const StepFour = ({ data, updateDataHandler, getPackageDetails }) => {
       <div className={styles.container}>
         {((width < 1000 && (data.payment_type?.value !== "wallet" || !data.payment_type?.value)) ||
           width > 1000) && (
-          <IntStepFour data={data} dataHandler={updateDataHandler} isAirtime={true} />
+          <IntStepFour data={data} dataHandler={updateDataHandler} isAirtime={true} ibanPay />
         )}
         <div className={styles.buttons}>
           <button
@@ -48,7 +48,8 @@ const StepFour = ({ data, updateDataHandler, getPackageDetails }) => {
             disabled={
               data.loading ||
               !data.payment_type?.name ||
-              (data.payment_type?.value === "wallet" ? !data.wallet?._id : false)
+              (data.payment_type?.value === "wallet" ? !data.wallet?._id : false) ||
+              (data.payment_type?.value === "iban" && !data.iban?._id)
             }
             onClick={() => {
               if (data.payment_type?.value === "card" && !data.showCard) {

@@ -238,6 +238,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         product_id: data?.package?.id || data.eSimData.selectedPlan?.productId,
         payment_method: data.payment_type?.value,
         wallet_id: data.payment_type?.value === "wallet" ? data.wallet?._id : data.localWallet?._id,
+        iban_id: data.payment_type?.value === "iban" ? data.iban?._id : undefined,
         sub_service_id: data.flow === "e-sim" ? 14 : data.service_type?.id || 12,
         local_wallet_id: data?.localWallet?._id,
         type: data.flow === "e-sim" && "esim",
@@ -295,6 +296,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
               : `+${userDetails.phone}`,
           type: data.flow === "e-sim" && "esim",
           airtimeType: isOpenRange ? "ranged" : "fixed",
+          iban_id: data.payment_type?.value === "iban" ? data.iban?._id : undefined,
         },
         type: codeType || data.codeType,
       };
@@ -352,7 +354,9 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         data.service_type?.name?.toLowerCase()?.includes("airtime");
       let url;
 
-      if (data.flow === "airtime") {
+      if (data.payment_type?.value === "iban") {
+        url = `${import.meta.env.VITE_IP_DEV_API}/api/dt/iban-pay/confirm`;
+      } else if (data.flow === "airtime") {
         if (data.payment_type.value === "paypal") {
           url = `${import.meta.env.VITE_IP_DEV_API}${isOpenRange ? "/api/paypal/initiate-airtime-ranged-payment" : "/api/paypal/initiate-airtime-fixed-payment"}`;
         } else if (data?.payment_type?.value === "mobile_wallet") {
@@ -467,6 +471,8 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         // return !data.payment_type?.name || data.payment_type?.value === "wallet" ? !data.wallet?._id : data.payment_type?.value === "card" ? !data?.selectedSavedCard?._id && (!data.cardHolderName || !data.cardNumber || !data.cvc || !data.expiry || data.cardError) : false
         if (data.payment_type?.value === "wallet") {
           return !data.wallet?._id;
+        } else if (data.payment_type?.value === "iban") {
+          return !data.iban?._id;
         } else if (data.payment_type?.value === "card") {
           const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
           const currentDate = new Date();
