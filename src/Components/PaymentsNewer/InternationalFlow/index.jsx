@@ -1034,6 +1034,7 @@ const InternationFlow = ({
         wallet_id: internationalData.wallet?._id ?? internationalData.currency_wallet?._id,
         token: internationalData.quotation_details?.token,
         vendor: internationalData.payoutChannel?.vendor,
+        payerName: internationalData.payer?.name,
       };
 
       if (internationalData.payoutChannel?.vendor === "thunes") {
