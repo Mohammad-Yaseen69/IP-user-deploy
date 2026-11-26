@@ -43,7 +43,7 @@ const same = (a, b) => String(a ?? "").toLowerCase() === String(b ?? "").toLower
 const WalletLedger = ({ currentWallet }) => {
   const { t } = useTranslation();
   const can = usePermission();
-  const { userDetails, authHeader, getUserBeneficiaries } = useContext(UserContext);
+  const { userDetails, authHeader } = useContext(UserContext);
 
   const [active, setActive] = useState("All");
   const [activeItem, setActiveItem] = useState(0);
@@ -63,10 +63,6 @@ const WalletLedger = ({ currentWallet }) => {
   const isFetchingRef = useRef(false);
 
   const walletId = currentWallet?.wallet_id;
-
-  useEffect(() => {
-    getUserBeneficiaries();
-  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearchQuery(searchQuery), 1000);

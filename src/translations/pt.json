@@ -6860,5 +6860,8 @@
   "No requested information found.": "Nenhuma informação solicitada encontrada.",
   "View Requested Information": "Ver informações solicitadas",
   "Get Fee Quote": "Obter cotação de taxas",
-  "Confirm & Pay": "Confirmar e pagar"
+  "Confirm & Pay": "Confirmar e pagar",
+  "Beneficiary type": "Tipo de beneficiário",
+  "Select one or more": "Selecione um ou mais",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Você não tem uma carteira ativa para enviar. Ative uma carteira e tente novamente."
 }

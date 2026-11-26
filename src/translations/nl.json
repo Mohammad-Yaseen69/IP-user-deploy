@@ -6540,5 +6540,8 @@
   "No transactions": "Geen transacties",
   "SEND TOP-UP AND E-SIM": "OPWAARDERING EN E-SIM VERSTUREN",
   "Holiday List": "Lijst met feestdagen",
-  "My Withdrawls": "Mijn opnames"
+  "My Withdrawls": "Mijn opnames",
+  "Beneficiary type": "Type begunstigde",
+  "Select one or more": "Selecteer een of meer",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "U heeft geen actieve wallet om vanaf te verzenden. Activeer een wallet en probeer het opnieuw."
 }

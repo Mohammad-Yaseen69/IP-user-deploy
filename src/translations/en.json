@@ -7014,5 +7014,8 @@
   "Take me to Withdraw funds": "Take me to Withdraw funds",
   "MONTHLY": "MONTHLY",
   "Your Virtual IBAN is being created!": "Your Virtual IBAN is being created!",
-  "Sender Name": "Sender Name"
+  "Sender Name": "Sender Name",
+  "Beneficiary type": "Beneficiary type",
+  "Select one or more": "Select one or more",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "You have no active wallet to send from. Please activate a wallet and try again."
 }

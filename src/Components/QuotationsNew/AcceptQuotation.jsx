@@ -31,6 +31,7 @@ import GeneralNoticeModal from "../PaymentsNewer/GeneralNoticeModal";
 import PlaidBankTransfer from "../AddFunds/WalletFundsFlow/PlaidBankTransfer";
 import { useQueryClient } from "@tanstack/react-query";
 import { useIdempotency } from "../../hooks/Payments/useIdempotency";
+import { getDefaultSenderWallet } from "../../utils/Functions/senderWallet";
 
 const initialState = {
   step: 1,
@@ -123,13 +124,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
     dataHandler("beneficiary", type === "receive" ? item?.sender : item?.receiver);
   }, [item]);
   useEffect(() => {
-    const def =
-      userWallets?.[0]?.wallet_type === "insta" &&
-      !userWallets?.[0]?.blocked &&
-      !userWallets?.[0]?.admin_blocked &&
-      userWallets?.[0]?.status?.toLowerCase() === "active"
-        ? userWallets?.[0]
-        : userWallets?.find((item) => item?.default);
+    const def = getDefaultSenderWallet(userWallets);
     dataHandler("currency_wallet", def);
     dataHandler("currency", def);
   }, [userWallets]);

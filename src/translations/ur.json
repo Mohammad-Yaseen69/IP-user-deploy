@@ -6882,5 +6882,8 @@
   "No requested information found.": "کوئی مطلوبہ معلومات نہیں ملی۔",
   "View Requested Information": "مطلوبہ معلومات دیکھیں",
   "Get Fee Quote": "فیس کوٹیشن حاصل کریں",
-  "Confirm & Pay": "تصدیق کریں اور ادا کریں"
+  "Confirm & Pay": "تصدیق کریں اور ادا کریں",
+  "Beneficiary type": "مستفید کی قسم",
+  "Select one or more": "ایک یا زیادہ منتخب کریں",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "آپ کے پاس بھیجنے کے لیے کوئی فعال والٹ نہیں ہے۔ براہ کرم ایک والٹ فعال کریں اور دوبارہ کوشش کریں۔"
 }

@@ -6584,5 +6584,8 @@
   "No Portfolio Items": "Babu abubuwan fayil",
   "Joined At": "Ya shiga a",
   "Select the receiving channel below and setup the details.": "Zaɓi tashar karɓa a ƙasa ku saita bayanan.",
-  "total amount": "jimillar adadi"
+  "total amount": "jimillar adadi",
+  "Beneficiary type": "Nau'in mai karɓa",
+  "Select one or more": "Zaɓi ɗaya ko fiye",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Ba ka da walat mai aiki da za ka aika daga gare shi. Da fatan za a kunna walat kuma a sake gwadawa."
 }

@@ -6884,5 +6884,8 @@
   "No requested information found.": "Tidak ada informasi yang diminta.",
   "View Requested Information": "Lihat informasi yang diminta",
   "Get Fee Quote": "Dapatkan penawaran biaya",
-  "Confirm & Pay": "Konfirmasi & bayar"
+  "Confirm & Pay": "Konfirmasi & bayar",
+  "Beneficiary type": "Jenis penerima",
+  "Select one or more": "Pilih satu atau lebih",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Anda tidak memiliki dompet aktif untuk mengirim. Silakan aktifkan dompet dan coba lagi."
 }

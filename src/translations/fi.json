@@ -6540,5 +6540,8 @@
   "No transactions": "Ei tapahtumia",
   "SEND TOP-UP AND E-SIM": "LATAUS JA E-SIM",
   "Holiday List": "Pyhäpäiväluettelo",
-  "My Withdrawls": "Omat nostot"
+  "My Withdrawls": "Omat nostot",
+  "Beneficiary type": "Edunsaajan tyyppi",
+  "Select one or more": "Valitse yksi tai useampi",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Sinulla ei ole aktiivista lompakkoa, josta lähettää. Aktivoi lompakko ja yritä uudelleen."
 }

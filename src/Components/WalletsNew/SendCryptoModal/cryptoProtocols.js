@@ -109,16 +109,6 @@ export const getBeneficiaryCryptoChannels = (beneficiary) =>
     getChannelAddress(channel),
   );
 
-export const hasCryptoChannel = (beneficiary, cryptoCurrency = "") => {
-  const channels = getBeneficiaryCryptoChannels(beneficiary);
-  if (!channels.length) return false;
-  if (!cryptoCurrency) return true;
-  return channels.some((channel) => {
-    const asset = getChannelAsset(channel);
-    return !asset || asset === String(cryptoCurrency).toUpperCase();
-  });
-};
-
 export const maskAddress = (address) => {
   const value = String(address || "").trim();
   if (value.length <= 12) return value;

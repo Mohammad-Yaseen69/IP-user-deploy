@@ -6880,5 +6880,8 @@
   "No requested information found.": "कोई मांगी गई जानकारी नहीं मिली।",
   "View Requested Information": "मांगी गई जानकारी देखें",
   "Get Fee Quote": "शुल्क कोटेशन पाएँ",
-  "Confirm & Pay": "पुष्टि करें और भुगतान करें"
+  "Confirm & Pay": "पुष्टि करें और भुगतान करें",
+  "Beneficiary type": "लाभार्थी का प्रकार",
+  "Select one or more": "एक या अधिक चुनें",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "आपके पास भेजने के लिए कोई सक्रिय वॉलेट नहीं है। कृपया एक वॉलेट सक्रिय करें और फिर से प्रयास करें।"
 }

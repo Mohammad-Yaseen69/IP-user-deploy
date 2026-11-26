@@ -6540,5 +6540,8 @@
   "No transactions": "Nincsenek tranzakciók",
   "SEND TOP-UP AND E-SIM": "FELTÖLTÉS ÉS E-SIM KÜLDÉSE",
   "Holiday List": "Ünnepnapok listája",
-  "My Withdrawls": "Kifizetéseim"
+  "My Withdrawls": "Kifizetéseim",
+  "Beneficiary type": "Kedvezményezett típusa",
+  "Select one or more": "Válasszon egyet vagy többet",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Nincs aktív pénztárcája, amelyből küldhetne. Kérjük, aktiváljon egy pénztárcát, és próbálja újra."
 }

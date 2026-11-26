@@ -13,6 +13,7 @@ import countriesData from "../CountriesData.json";
 import repeat from "./repeat.svg";
 import { capitalizeStatus } from "../../PendingNew/ItemMobile";
 import { formatCurrency } from "../../../Helper/AmountFormat";
+import { useAllBeneficiaries } from "../../../hooks/BeneficiaryHooks/useBeneficiariesPage";
 
 const getRecentTransaction = async (authHeader, account, type) => {
   const res = await axios.get(
@@ -43,13 +44,20 @@ const RecentTransactions = ({
   setSubStep,
   dataCurrency,
 }) => {
-  const { userDetails, authHeader, userWallets, beneficiaries } = useContext(UserContext);
+  const { userDetails, authHeader, userWallets } = useContext(UserContext);
   const { t } = useTranslation();
   const { data, isError } = useQuery({
     queryKey: ["RecentTransaction", type, userDetails?._id],
     queryFn: () => getRecentTransaction(authHeader, userDetails?._id, type),
     staleTime: 0,
     gcTime: 0,
+  });
+  const recentBeneficiaryIds = [
+    ...new Set((Array.isArray(data) ? data : []).map((tx) => tx?.beneficiary?._id).filter(Boolean)),
+  ].join(",");
+  const { beneficiaries } = useAllBeneficiaries({
+    filters: { id: recentBeneficiaryIds },
+    enabled: !!recentBeneficiaryIds,
   });
   const width = useWindowWidth();
   const payoutChannelData = usePayoutChannel(userDetails);

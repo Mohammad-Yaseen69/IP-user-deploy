@@ -43,6 +43,10 @@ import NewMenu from "../Common/NewMenu";
 import { useVirtualIbans } from "../hooks/useVirtualIban";
 import PushConsentModal from "../Components/PushConsentModal";
 import { isPushSupported, getPushPermissionState } from "../Services/PushNotificationService";
+import {
+  useBeneficiaryDetails,
+  useInvalidateBeneficiaryDetails,
+} from "../hooks/BeneficiaryHooks/useBeneficiaryDetails";
 import useWindowWidth from "../utils/useWindowWidth";
 import InstaPayLoader from "../Components/Loader";
 import { getLoginPath } from "../utils/Functions/loginPage";
@@ -149,7 +153,6 @@ const LayoutContent = ({ children, classNames, ...rest }) => {
     set3DaysReminderInfo,
     setIs30DaysInfo,
     verifyToken,
-    beneficiaries,
     getUserBeneficiaries,
     showAnotherLoginModal,
     setShowAnotherLoginModal,
@@ -239,19 +242,20 @@ const LayoutContent = ({ children, classNames, ...rest }) => {
       navigate("/", { replace: true });
     }
   }, [virtualIbans, virtualIbansLoading, location.pathname, navigate]);
-  const beneficiaryWithoutAddresses = useMemo(() => {
-    if (location.pathname.startsWith("/beneficiaries/edit") && benId) {
-      const beneficiary = beneficiaries?.find((ben) => ben?._id === benId);
-
-      if (beneficiary?.address) {
-        return [];
-      } else {
-        return [beneficiary];
-      }
-    } else {
-      return [];
-    }
-  }, [beneficiaries, location]);
+  const isBeneficiaryEdit = location.pathname.startsWith("/beneficiaries/edit") && !!benId;
+  const { data: editedBeneficiary } = useBeneficiaryDetails(benId, { enabled: isBeneficiaryEdit });
+  const invalidateBeneficiaryDetails = useInvalidateBeneficiaryDetails();
+  const beneficiaryWithoutAddresses = useMemo(
+    () =>
+      isBeneficiaryEdit && editedBeneficiary && !editedBeneficiary.address
+        ? [editedBeneficiary]
+        : [],
+    [isBeneficiaryEdit, editedBeneficiary],
+  );
+  const onBeneficiaryAddressSaved = () => {
+    invalidateBeneficiaryDetails(benId);
+    getUserBeneficiaries();
+  };
   const [dismissedBeneficiaries, setDismissedBeneficiaries] = useState(null);
   const windowWidth = useWindowWidth();
 
@@ -402,7 +406,7 @@ const LayoutContent = ({ children, classNames, ...rest }) => {
           <Suspense fallback={null}>
             <AddBeneficiaryAddressModal
               isOpen={beneficiaryWithoutAddresses.length > 0}
-              toggle={getUserBeneficiaries}
+              toggle={onBeneficiaryAddressSaved}
               close={() => {
                 beneficiaryWithoutAddresses.length = 0;
                 setDismissedBeneficiaries(beneficiaryWithoutAddresses);

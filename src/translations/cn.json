@@ -6854,5 +6854,8 @@
   "Get Fee Quote": "获取费用报价",
   "Confirm & Pay": "确认并付款",
   "Top-Up Summary": "充值摘要",
-  "Within Minutes": "几分钟内"
+  "Within Minutes": "几分钟内",
+  "Beneficiary type": "收款人类型",
+  "Select one or more": "选择一个或多个",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "您没有可用于付款的有效钱包。请激活一个钱包后重试。"
 }

@@ -6540,5 +6540,8 @@
   "No transactions": "Χωρίς συναλλαγές",
   "SEND TOP-UP AND E-SIM": "ΑΠΟΣΤΟΛΗ ΦΟΡΤΙΣΗΣ ΚΑΙ E-SIM",
   "Holiday List": "Λίστα αργιών",
-  "My Withdrawls": "Οι αναλήψεις μου"
+  "My Withdrawls": "Οι αναλήψεις μου",
+  "Beneficiary type": "Τύπος δικαιούχου",
+  "Select one or more": "Επιλέξτε ένα ή περισσότερα",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Δεν έχετε ενεργό πορτοφόλι για αποστολή. Ενεργοποιήστε ένα πορτοφόλι και δοκιμάστε ξανά."
 }

@@ -6543,5 +6543,8 @@
   "No transactions": "Tranzaksiyalar yo‘q",
   "SEND TOP-UP AND E-SIM": "TO‘LDIRISH VA E-SIM YUBORISH",
   "Holiday List": "Bayramlar ro‘yxati",
-  "My Withdrawls": "Mening yechib olishlarim"
+  "My Withdrawls": "Mening yechib olishlarim",
+  "Beneficiary type": "Benefitsiar turi",
+  "Select one or more": "Bir yoki bir nechtasini tanlang",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Yuborish uchun faol hamyoningiz yo'q. Iltimos, hamyonni faollashtiring va qayta urinib ko'ring."
 }
