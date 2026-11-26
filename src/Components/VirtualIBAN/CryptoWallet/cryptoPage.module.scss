@@ -108,10 +108,14 @@
 .eyeBtn {
   border: 0;
   background: transparent;
-  padding: 4px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
   color: var(--cw-text-muted);
   cursor: pointer;
   display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     color: var(--cw-text-secondary);

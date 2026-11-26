@@ -21,12 +21,14 @@ const PaymentAddress = () => {
             title={
               <>
                 {t("My Payment Address")}
-                <Info
-                  color="#5926f0"
-                  style={{ cursor: "pointer" }}
+                <button
+                  type="button"
+                  className="tap-target"
+                  aria-label={t("More info")}
                   onClick={() => setIsOpen(!isOpen)}
-                  size={16}
-                />
+                >
+                  <Info color="#5926f0" size={16} />
+                </button>
               </>
             }
             subtitle={t("Your InstaPay address for receiving payments.")}

@@ -22,6 +22,31 @@
   outline-offset: 2px;
 }
 
+.tap-target {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 32px);
+    height: max(100%, 32px);
+    transform: translate(-50%, -50%);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
 [role="menuitem"]:focus-visible,
 [role="option"]:focus-visible {
   outline: 2px solid var(--focus-ring) !important;

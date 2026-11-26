@@ -445,13 +445,14 @@ const ReferralsNew = () => {
                   {copied ? (
                     <Check />
                   ) : (
-                    <img
-                      src={copy_ic}
-                      alt="c"
-                      loading="lazy"
-                      style={{ cursor: "pointer" }}
+                    <button
+                      type="button"
+                      className="tap-target"
+                      aria-label={t("Copy")}
                       onClick={handleCopy}
-                    />
+                    >
+                      <img src={copy_ic} alt="" loading="lazy" />
+                    </button>
                   )}
                 </div>
                 {canShareReferral && (
