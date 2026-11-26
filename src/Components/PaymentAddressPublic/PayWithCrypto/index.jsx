@@ -17,8 +17,7 @@ import { verifyPhoneNumber } from "../../../utils/Functions/phoneVerification";
 import ShippingDetails from "../../ReceiptInvoices/InvoicePaymentQr/ShippingDetails";
 import { WidgetSDK } from "@keabank/websdk";
 import CryptoDetailsModal from "../CryptoDetailsModal";
-import DateMomentUtils from "@date-io/moment";
-import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DatePicker from "../../../CommonElements/DatePicker";
 
 const sdk = new WidgetSDK({
   integrationId: import.meta.env.VITE_KEABANK_INTEGRATION_ID,
@@ -288,7 +287,7 @@ const PayWithCrypto = ({
                     {t("Date of Birth")}
                     {"*:"}
                   </label>
-                  <MuiPickersUtilsProvider utils={DateMomentUtils}>
+                  <>
                     <DatePicker
                       required={true}
                       format="YYYY-MM-DD"
@@ -313,7 +312,7 @@ const PayWithCrypto = ({
                         },
                       }}
                     />
-                  </MuiPickersUtilsProvider>
+                  </>
                 </div>
                 <div>
                   <label htmlFor="email">{t("Email (Optional)")}</label>

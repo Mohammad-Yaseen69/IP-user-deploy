@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import styles from "./PID.module.css";
-import Rating from "react-rating";
+import StarRating from "../../Common/Component/StarRating";
 import arrow from "../TransactionsNewApi/./files/arrow.svg";
 import file from "../TransactionsNewApi/./files/file.svg";
 import location from "../TransactionsNewApi/./files/location.svg";
@@ -47,13 +47,7 @@ const PendingItemDetails = ({ item, allRating, allReviews, badgeColor, type = "r
             <h4>{allRating}/5</h4>
           </div>
           <div className={styles.oac_right}>
-            <Rating
-              initialRating={allRating.toFixed(1)}
-              emptySymbol="fa fa-star-o fa-2x"
-              fullSymbol="fa fa-star fa-2x"
-              readonly
-              className={styles.rating}
-            />
+            <StarRating value={allRating.toFixed(1)} readOnly className={styles.rating} />
             <span className={styles.rating_count}>
               {allReviews.length} {t("ratings")}
             </span>
@@ -79,12 +73,7 @@ const PendingItemDetails = ({ item, allRating, allReviews, badgeColor, type = "r
                   </div>
                 </div>
                 <div className={styles.rc_rating}>
-                  <Rating
-                    initialRating={item.rating}
-                    emptySymbol="fa fa-star-o fa-2x"
-                    fullSymbol="fa fa-star fa-2x"
-                    readonly
-                  ></Rating>
+                  <StarRating value={item.rating} readOnly />
                 </div>
                 <p>{item.comment}</p>
               </div>

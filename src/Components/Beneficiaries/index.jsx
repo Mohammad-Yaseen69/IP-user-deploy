@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import styles from "./styles/index.module.scss";
 import PageHeader from "../../Common/PageHeader";
 import { useTranslation } from "react-i18next";

@@ -1,14 +1,5 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
-import {
-  Button,
-  Card,
-  CardBody,
-  Input,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-} from "reactstrap";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { Button, Card, CardBody, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import pc from "../PaymentsNewer/files/pc.png";
 import i from "../PaymentsNewer/files/i.svg";
 import bd from "../../assets/images/logo/logo_white.png";
@@ -19,7 +10,6 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import axios from "axios";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import OTPConfirmation from "../../Common/Component/OtpVerification";
-import SuccessModal from "../AddBeneficiary/SuccessModal";
 import { toast } from "react-toastify";
 import CardDetails from "../AddFunds/WalletFund/CardDetails";
 import ConfirmWalletFund from "../AddFunds/ConfirmWalletFund";

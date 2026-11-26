@@ -1,19 +1,5 @@
-import React, { useContext, useState } from "react";
-import {
-  Copy,
-  Plus,
-  ChevronLeft,
-  Search,
-  User,
-  Trash2,
-  Edit3,
-  Shield,
-  Phone,
-  Mail,
-  MapPin,
-  Filter,
-  Sliders,
-} from "react-feather";
+import { useContext, useState } from "react";
+import { Copy, Plus, Search, Trash2, Edit3, Filter, Sliders } from "react-feather";
 import styles from "./BeneficiariesVirtual.module.css";
 import IbanBreadcrumb from "../components/IbanBreadcrumb";
 import { useTranslation } from "react-i18next";

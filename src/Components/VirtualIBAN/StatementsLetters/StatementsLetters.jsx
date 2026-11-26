@@ -1,16 +1,5 @@
 import { useContext, useMemo, useState } from "react";
-import {
-  Copy,
-  Download,
-  Share2,
-  FileText,
-  ChevronLeft,
-  Eye,
-  Loader,
-  File,
-  Globe,
-  Check,
-} from "react-feather";
+import { Copy, Download, Share2, FileText, Eye, Loader, File, Globe, Check } from "react-feather";
 import styles from "./StatementsLetters.module.css";
 import IbanBreadcrumb from "../components/IbanBreadcrumb";
 import { useTranslation } from "react-i18next";

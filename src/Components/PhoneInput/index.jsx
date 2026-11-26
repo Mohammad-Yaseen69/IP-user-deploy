@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import CountryCode from "./CountryCode";
 import PhoneNumber from "./PhoneNumber";
 import styles from "./styles/index.module.css";

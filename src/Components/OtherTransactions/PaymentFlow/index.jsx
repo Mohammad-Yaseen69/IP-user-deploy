@@ -24,7 +24,7 @@ import paym_styles from "../../PaymentsNewer/InternationalFlow/styles/index.modu
 import { toast } from "react-toastify";
 import { createShambeToken } from "../../../Helper/CreateToken";
 import NotFoundModal from "../../NotFound/NotFoundModal";
-import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow";
+import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow/apiErrorMessage";
 import { useQueryClient } from "@tanstack/react-query";
 
 const initialState = {

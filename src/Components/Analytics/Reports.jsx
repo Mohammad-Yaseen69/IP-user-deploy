@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import TopLeft from "./TopLeft";
 import TopRight from "./TopRight";
 import BottomLeft from "./BottomLeft";
-import BottomRight from "./BottomRight";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import axios from "axios";
 import { UserContext } from "../../Context/UserContext";

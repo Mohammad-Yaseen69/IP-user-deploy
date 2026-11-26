@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import QrReader from "react-qr-reader";
 import { useTranslation } from "react-i18next";
 import axios from "axios";

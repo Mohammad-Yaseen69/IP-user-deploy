@@ -13,11 +13,9 @@ import { UserContext } from "../../Context/UserContext";
 import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import SentTransactionItem from "./SentTransactionItem";
-import ReceivedTransactionItem from "./ReceivedTransactionItem";
 import InstaPayLoader from "../Loader";
 import SentItem from "./Mobile/SentItem";
 import PlanSubscriptionTable from "./PlanSubscriptionTable";
-import ReceivedItem from "./Mobile/ReceivedItem";
 import { useQuery } from "@tanstack/react-query";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 const fetchTransactions = async (url, authHeader) => {

@@ -1,8 +1,5 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
-import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
-import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
-import axios from "axios";
 
 export const useAgentAuth = () => {
   const sendLoginOtp = useMutation({

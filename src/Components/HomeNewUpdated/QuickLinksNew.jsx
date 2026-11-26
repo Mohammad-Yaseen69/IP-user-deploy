@@ -1,4 +1,3 @@
-import React from "react";
 // import funds from "./files/funds.svg"
 // import rm from "./files/rm.svg"
 // import rq from "./files/rq.svg"
@@ -8,7 +7,6 @@ import funds from "./files/AddFunds.png";
 import sm from "./files/SendMoney.png";
 import rm from "./files/ReceiveMoney.png";
 // import cf from "./files/CryptoToFiat.png"
-import cf from "./files/CryptoToFiat.svg";
 import pa from "./files/pa.svg";
 import qr from "./files/qr_s.svg";
 import { Link } from "react-router-dom";

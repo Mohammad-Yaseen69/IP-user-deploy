@@ -1,5 +1,5 @@
 import "react-phone-input-2/lib/style.css";
-import React, { lazy, useLayoutEffect, useState } from "react";
+import { lazy, useLayoutEffect, useState } from "react";
 import Routers from "./RouteNew";
 import CustomizerProvider from "./Helper/Customizer/CustomizerProvider";
 import AnimationThemeProvider from "./Helper/AnimationTheme/AnimationThemeProvider";
@@ -13,9 +13,7 @@ import { TimezonesProvider } from "./Context/TimezoneContext";
 import ErrorBoundary from "./ErrorBoundary";
 import { ToastContainer } from "react-toastify";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import DateMomentUtils from "@date-io/moment";
 import AdBlockCheck from "./Components/AdBlockCheck/AdBlockCheck";
 import LanguageAttributeSync from "./Common/LanguageAttributeSync";
 
@@ -170,9 +168,8 @@ const App = () => {
                       <CustomizerProvider>
                         <AnimationThemeProvider>
                           <ThemeProvider theme={muiTheme}>
-                            <MuiPickersUtilsProvider utils={DateMomentUtils}>
-                              <Routers />
-                            </MuiPickersUtilsProvider>
+                            {" "}
+                            <Routers />{" "}
                           </ThemeProvider>
                         </AnimationThemeProvider>
                       </CustomizerProvider>
@@ -184,7 +181,7 @@ const App = () => {
           </Suspense>
         </ErrorBoundary>
       )}
-      <ToastContainer />
+      <ToastContainer closeOnClick draggable />
     </div>
   );
 };
