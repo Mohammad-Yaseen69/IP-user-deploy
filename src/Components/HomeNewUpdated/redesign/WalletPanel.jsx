@@ -1,6 +1,6 @@
 import "swiper/css";
 import "swiper/css/effect-cards";
-import { ArrowUpRight, ChevronLeft, ChevronRight, FileText, Gauge, Plus } from "lucide-react";
+import { RefreshCw, ChevronLeft, ChevronRight, FileText, Gauge, Lock } from "lucide-react";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { isSafari } from "react-device-detect";
 import { useTranslation } from "react-i18next";
@@ -59,28 +59,41 @@ const WalletPanel = ({ setCurrentWallet, hidden }) => {
 
   const options = [
     {
-      name: "Top Up",
-      Icon: Plus,
-      link: `/add-funds?type=${wallet?.wallet_type === "crypto" ? "crypto" : "wallet"}&wallet_address=${wallet?.wallet_id}`,
+      name: "Freeze",
+      Icon: Lock,
+      link: `/wallets?wallet_address=${wallet?.wallet_id}`,
       permission: "wallet.payment.topup",
     },
+    //   {
+    //   name: "Top Up",
+    //   Icon: Plus,
+    //   link: `/add-funds?type=${wallet?.wallet_type === "crypto" ? "crypto" : "wallet"}&wallet_address=${wallet?.wallet_id}`,
+    //   permission: "wallet.payment.topup",
+    // },
     {
       name: "Statement",
       Icon: FileText,
       link: `/wallets?action=download&wallet_address=${wallet?.wallet_id}`,
       permission: "transactions.wallet.export",
     },
-    {
-      name: "Withdraw",
-      Icon: ArrowUpRight,
-      link: `/wallets?action=withdraw&wallet_address=${wallet?.wallet_id}`,
-      permission: "wallet.payment.withdraw",
-    },
+    // {
+    //   name: "Withdraw",
+    //   Icon: ArrowUpRight,
+    //   link: `/wallets?action=withdraw&wallet_address=${wallet?.wallet_id}`,
+    //   permission: "wallet.payment.withdraw",
+    // },
     {
       name: "Limits",
       Icon: Gauge,
       link: `/wallets?wallet_address=${wallet?.wallet_id}`,
       permission: "wallet.view",
+    },
+    {
+      name: "Auto-transfer",
+      Icon: RefreshCw,
+      link: `/wallets`,
+      permission: "wallet.view",
+      disabled: true, // Not implemented yet
     },
   ];
 
@@ -160,17 +173,32 @@ const WalletPanel = ({ setCurrentWallet, hidden }) => {
       </div>
 
       <div className={d.sideActions}>
-        {options.map(
-          ({ name, Icon, link, permission }) =>
-            can(permission) && (
-              <Link key={name} to={link} className={d.sideAction}>
-                <i>
-                  <Icon size={20} strokeWidth={1.75} />
-                </i>
-                {t(name)}
-              </Link>
-            ),
-        )}
+        {options.map(({ name, Icon, link, permission, disabled }) => {
+          if (!can(permission)) return null;
+
+          const content = (
+            <>
+              <i>
+                <Icon size={20} strokeWidth={1.75} />
+              </i>
+              {t(name)}
+            </>
+          );
+
+          return disabled ? (
+            <span
+              key={name}
+              className={`${d.sideAction} ${d.sideActionDisabled}`}
+              aria-disabled="true"
+            >
+              {content}
+            </span>
+          ) : (
+            <Link key={name} to={link} className={d.sideAction}>
+              {content}
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

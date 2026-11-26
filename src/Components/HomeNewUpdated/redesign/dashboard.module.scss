@@ -195,6 +195,7 @@ $stack: 1100px;
     letter-spacing: -1.08px;
     color: #a99fc4;
   }
+
   .mask {
     font-family: Inter;
     font-size: 36px;
@@ -476,6 +477,18 @@ a.stat:hover b {
   }
 }
 
+.sideActionDisabled,
+.sideActionDisabled:hover {
+  color: $muted;
+  cursor: not-allowed;
+
+  i,
+  &:hover i {
+    border-color: $input-border;
+    color: $muted;
+    background: $soft;
+  }
+}
 /* ---------- Quick transfer ---------- */
 .quick {
   flex-direction: row !important;
