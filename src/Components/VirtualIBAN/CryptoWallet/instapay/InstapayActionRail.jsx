@@ -59,14 +59,14 @@ const InstapayActionRail = ({ wallets = [], wallet, onSelectWallet, onActionComp
         ))}
       </div>
 
-      {tab === "Send" ? (
+      {activeTab === "Send" ? (
         <SendCryptoPanel
           wallets={wallets}
           wallet={wallet}
           onSelectWallet={onSelectWallet}
           onActionComplete={onActionComplete}
         />
-      ) : tab === "Withdraw" ? (
+      ) : activeTab === "Withdraw" ? (
         <WithdrawCryptoPanel
           wallets={wallets}
           wallet={wallet}
