@@ -12,7 +12,6 @@ import useStepValidation, { required } from "../../../../hooks/useStepValidation
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import { isWebsiteValid } from "../../../../utils/Functions/validations";
 
 const formatDateForInput = (val) => {
   if (!val) return "";
@@ -59,7 +58,7 @@ const COMPANY_RULES = {
   legalName: required.text("legalName"),
   registeredAddress: required.list("registeredAddress"),
   dateOfIncorporation: required.list("dateOfIncorporation"),
-  website: (f) => !isWebsiteValid(f.website),
+  website: required.text("website"),
 };
 
 const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentStep }) => {
@@ -112,7 +111,7 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
     form.registrationNumber?.trim() &&
     form.legalName?.trim() &&
     form.registeredAddress?.trim() &&
-    isWebsiteValid(form.website) &&
+    form.website?.trim() &&
     form.dateOfIncorporation?.trim(),
   );
 
