@@ -80,7 +80,7 @@
     grid-template-columns: 1fr 1fr 1fr;
     border-radius: 6px;
     overflow: hidden;
-    border: 0.5px solid var(--COLORS-Neutral-200, #e8e8e8);
+    border: 0.5px solid var(--COLORS-Neutral-200, #eff1f6);
     background: rgba(255, 255, 255, 0);
     min-width: 800px;
 
@@ -171,7 +171,7 @@
       padding: 1rem;
       overflow: hidden;
       border-radius: var(--RADIUS-radius-1, 4px);
-      border: 1px solid var(--COLORS-Neutral-200, #e8e8e8);
+      border: 1px solid var(--COLORS-Neutral-200, #eff1f6);
       background: var(--COLORS-Neutral-100, #fff);
       display: flex;
       margin-bottom: 7px;
@@ -220,7 +220,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       padding: 19px 1rem !important;
-      border-bottom: 0.5px solid var(--COLORS-Neutral-200, #e8e8e8);
+      border-bottom: 0.5px solid var(--COLORS-Neutral-200, #eff1f6);
       background: rgba(255, 255, 255, 0);
       align-items: start !important;
       gap: 1rem;

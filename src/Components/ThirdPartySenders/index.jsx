@@ -137,7 +137,7 @@ const ThirdPartySenders = () => {
   };
 
   const actionButtonStyle = {
-    border: "1px solid #E8E8E8",
+    border: "1px solid #EFF1F6",
     borderRadius: "7px",
     background: "#fff",
     width: "32px",
@@ -275,7 +275,7 @@ const ThirdPartySenders = () => {
           type="button"
           onClick={() => setTypeFilter(filter.value)}
           style={{
-            border: `1px solid ${typeFilter === filter.value ? "#5926F0" : "#E8E8E8"}`,
+            border: `1px solid ${typeFilter === filter.value ? "#5926F0" : "#EFF1F6"}`,
             borderRadius: "999px",
             background: typeFilter === filter.value ? "rgba(89, 38, 240, 0.08)" : "#fff",
             color: typeFilter === filter.value ? "#5926F0" : "#606060",

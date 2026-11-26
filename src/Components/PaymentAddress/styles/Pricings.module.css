@@ -8,7 +8,7 @@
   gap: var(--SPACING-spacing-3, 24px);
   align-self: stretch;
   border-radius: var(--RADIUS-radius-3, 12px);
-  border: 1px solid var(--COLORS-Neutral-200, #e8e8e8);
+  border: 1px solid var(--COLORS-Neutral-200, #eff1f6);
   background: var(--COLORS-Neutral-100, #fff);
 }
 

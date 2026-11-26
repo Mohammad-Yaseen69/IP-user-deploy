@@ -154,7 +154,7 @@
   flex-direction: column;
   width: 35%;
   gap: 16px;
-  border-right: 1px solid #eaecf0;
+  border-right: 1px solid #eff1f6;
   padding-right: 16px;
 }
 
@@ -188,7 +188,7 @@
 }
 
 .lefHeader {
-  border-bottom: 1px solid #eaecf0;
+  border-bottom: 1px solid #eff1f6;
   padding-bottom: 16px;
   display: flex;
   align-items: center;
@@ -254,7 +254,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #eaecf0;
+  border-bottom: 1px solid #eff1f6;
   padding-bottom: 24px;
   margin-bottom: 24px;
   width: 100%;
@@ -390,7 +390,7 @@
   flex-direction: column;
   gap: 12px;
   border-radius: 12px;
-  border: 1px solid #eaecf0;
+  border: 1px solid #eff1f6;
   background: #ffffff;
 }
 
