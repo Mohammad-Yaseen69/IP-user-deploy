@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styles from "./styles/PortfolioItem.module.css";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import file_img from "../Portfolio/files/file.png";

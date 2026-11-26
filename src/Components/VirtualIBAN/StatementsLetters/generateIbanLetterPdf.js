@@ -1,5 +1,3 @@
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 import QRCodeStyling from "qr-code-styling";
 import logoImg from "../../../assets/images/logo/logo2.webp";
 import signatureImg from "./signatur.png";
@@ -396,6 +394,10 @@ const generateIbanLetterPdf = async (iban, userDetails = {}, options = {}) => {
   const target = wrapper.querySelector("#iban-letter");
 
   try {
+    const [{ default: jsPDF }, { default: html2canvas }] = await Promise.all([
+      import("jspdf"),
+      import("html2canvas"),
+    ]);
     const canvas = await html2canvas(target, {
       scale: 2,
       useCORS: true,

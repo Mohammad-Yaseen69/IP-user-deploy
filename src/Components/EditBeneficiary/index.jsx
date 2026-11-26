@@ -27,8 +27,7 @@ import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 import PhoneInput from "../PhoneInput";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import DateMomentUtils from "@date-io/moment";
-import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
+import DatePicker from "../../CommonElements/DatePicker";
 import PaymentChannelUI from "../AddBeneficiary/PaymentChannelUI";
 import useBankDetails from "../../hooks/BeneficiaryHooks/useBankDetails";
 import useChannels from "../../hooks/BeneficiaryHooks/useChannels";
@@ -615,7 +614,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
         />
         {user && (
           <>
-            <MuiPickersUtilsProvider utils={DateMomentUtils}>
+            <>
               <Form
                 className="card"
                 style={{
@@ -1381,7 +1380,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                   </CardBody>
                 )}
               </Form>
-            </MuiPickersUtilsProvider>
+            </>
           </>
         )}
       </div>

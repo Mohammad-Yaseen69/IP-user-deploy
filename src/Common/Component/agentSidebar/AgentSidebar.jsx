@@ -1,15 +1,11 @@
 import { useContext, useState } from "react";
 import {
-  BarChart2,
   ChevronRight,
   DollarSign,
-  FileText,
-  Globe,
   Grid,
   LogOut,
   Target,
   User,
-  UserCheck,
   Users,
   Tag,
   Maximize2,

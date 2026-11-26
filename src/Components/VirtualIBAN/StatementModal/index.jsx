@@ -1,9 +1,7 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { Modal, ModalBody } from "reactstrap";
 import { FileText } from "react-feather";
 import { useTranslation } from "react-i18next";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
 import { toast } from "react-toastify";
 import styles from "./statementModal.module.scss";
 import logoImg from "../../../assets/images/logo/logo2.webp";
@@ -213,6 +211,10 @@ const StatementModal = ({ isOpen, toggle, selectedIban }) => {
           textColor: [255, 255, 255],
         };
 
+        const [{ default: jsPDF }] = await Promise.all([
+          import("jspdf"),
+          import("jspdf-autotable"),
+        ]);
         const doc = new jsPDF({ orientation: "landscape" });
 
         try {
@@ -306,7 +308,7 @@ const StatementModal = ({ isOpen, toggle, selectedIban }) => {
         doc.save(`${fileBase}.pdf`);
         toast.success(t("Statement downloaded successfully!"));
       } else {
-        downloadIbanStatementCsv(filteredTransactions, `${fileBase}.csv`);
+        await downloadIbanStatementCsv(filteredTransactions, `${fileBase}.csv`);
         toast.success(t("CSV Statement exported successfully!"));
       }
 

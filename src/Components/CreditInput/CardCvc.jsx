@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import styles from "./styles/card_cvc.module.css";
 
 const CardCVC = ({ content, setContent, maxLength = 5, isinVVC = false, guest }) => {

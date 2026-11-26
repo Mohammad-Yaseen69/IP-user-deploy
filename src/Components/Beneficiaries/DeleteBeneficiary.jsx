@@ -1,7 +1,6 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
 import { toast } from "react-toastify";

@@ -6,7 +6,6 @@ import { Info } from "react-feather";
 import PaypalCurrencies from "../../AddFunds/PaypalCurrencies.json";
 import FeesComponent from "../../PaymentsNewer/InternationalFlow/FeesComponent";
 import InstaPayLoader from "../../Loader";
-import { PlaidCurrencies } from "../../AddFunds/WalletFundsFlow";
 import CardMaintenanceModal from "../../CardMaintenanceModal";
 
 const StepOne = ({ data, dataHandler, allowed, wallet }) => {

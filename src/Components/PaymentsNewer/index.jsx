@@ -25,7 +25,6 @@ const NonInstapayPayment = lazy(() => import("./NonInstapay"));
 
 // Static assets (normal imports)
 import rq from "./files/mobile/rq.png";
-import sc from "./files/mobile/sc.png";
 import qr from "./files/mobile/qr.png";
 import w2_ic from "./files/wallet.svg";
 import qr_ic from "./files/qr.svg";

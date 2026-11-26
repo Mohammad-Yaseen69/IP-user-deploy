@@ -384,6 +384,7 @@ export const usePayBillFlow = ({
     amount,
     setAmount,
     amountLimits,
+    isAmountValid,
     statement,
     selectStatement,
     statements: statementsMutation,

@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from "react";
 import styles from "./styles/BottomLeft.module.css";
 import Chart from "react-apexcharts";
-import { MoreHorizontal } from "react-feather";
 import { useTranslation } from "react-i18next";
 
 const BottomLeft = ({ data, requestedAmount, quotedAmount, currentWallet }) => {

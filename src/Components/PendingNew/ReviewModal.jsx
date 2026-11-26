@@ -1,10 +1,9 @@
 import { Button, Card, CardBody, Input, Modal, ModalBody, ModalHeader } from "reactstrap";
 import review from "./review.png";
 import styles from "./ReviewModal.module.css";
-import Rating from "react-rating";
+import StarRating from "../../Common/Component/StarRating";
 import { useContext, useEffect, useState } from "react";
-import { CheckCircle, MoreHorizontal } from "react-feather";
-import { AiTwotoneLike } from "react-icons/ai";
+import { CheckCircle } from "react-feather";
 import axios from "axios";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { UserContext } from "../../Context/UserContext";
@@ -238,12 +237,7 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
                     <p></p>
                     <h4>{sellerOverallRating}/5</h4>
                     <div>
-                      <Rating
-                        initialRating={4.5}
-                        emptySymbol="fa fa-star-o fa-2x"
-                        fullSymbol="fa fa-star fa-2x"
-                        readonly
-                      ></Rating>
+                      <StarRating value={4.5} readOnly />
                     </div>
                     <span>
                       {sellerOverallRatingCount} {t("ratings")}
@@ -276,13 +270,7 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
                         )}
                       </div>
                       <div className={styles.rb_rating}>
-                        <Rating
-                          initialRating={rating}
-                          onChange={(e) => setRating(e)}
-                          emptySymbol="fa fa-star-o fa-2x"
-                          fullSymbol="fa fa-star fa-2x"
-                          readonly={step > 1}
-                        ></Rating>
+                        <StarRating value={rating} onChange={setRating} readOnly={step > 1} />
                       </div>
                       <Input
                         type="textarea"
@@ -325,12 +313,7 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
                           {/* <MoreHorizontal size={30} /> */}
                         </div>
                         <div className={styles.rc_rating}>
-                          <Rating
-                            initialRating={sellerRating}
-                            emptySymbol="fa fa-star-o fa-2x"
-                            fullSymbol="fa fa-star fa-2x"
-                            readonly
-                          ></Rating>
+                          <StarRating value={sellerRating} readOnly />
                         </div>
                         <p>{sellerMessage}</p>
                         <div className={styles.rc_bottom}>
@@ -418,13 +401,11 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
                       )}
                     </div>
                     <div className={styles.rb_rating}>
-                      <Rating
-                        initialRating={sellerRating}
-                        onChange={(e) => setSellerRating(e)}
-                        emptySymbol="fa fa-star-o fa-2x"
-                        fullSymbol="fa fa-star fa-2x"
-                        readonly={sellerStep > 1}
-                      ></Rating>
+                      <StarRating
+                        value={sellerRating}
+                        onChange={setSellerRating}
+                        readOnly={sellerStep > 1}
+                      />
                     </div>
                     <Input
                       type="textarea"
@@ -461,12 +442,7 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
                       {/* <MoreHorizontal size={30} /> */}
                     </div>
                     <div className={styles.rc_rating}>
-                      <Rating
-                        initialRating={rating}
-                        emptySymbol="fa fa-star-o fa-2x"
-                        fullSymbol="fa fa-star fa-2x"
-                        readonly
-                      ></Rating>
+                      <StarRating value={rating} readOnly />
                     </div>
                     <p>{message}</p>
                     {showReplyForm ? (

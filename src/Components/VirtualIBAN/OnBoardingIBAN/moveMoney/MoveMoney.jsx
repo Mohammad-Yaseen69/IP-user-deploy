@@ -1,20 +1,11 @@
-import React, { useContext, useMemo, useRef, useState } from "react";
+import { useContext, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import useWindowWidth from "../../../../utils/useWindowWidth";
 import TopRight from "../../../topRight";
 import styles from "../style/moveMoney.module.css";
 import IbanBreadcrumb from "../../components/IbanBreadcrumb";
 import Tooltip from "@mui/material/Tooltip";
-import {
-  Compass,
-  Globe,
-  Briefcase,
-  RefreshCw,
-  CreditCard,
-  ArrowLeft,
-  Search,
-  ChevronLeft,
-} from "react-feather";
+import { Compass, Globe, Briefcase, RefreshCw, CreditCard } from "react-feather";
 import SepaTransfer from "../../SendMoney/SepaTransfer";
 import SwiftTransfer from "../../SendMoney/SwiftTransfer";
 import CryptoTopupModal from "../../CryptoTopupModal";
