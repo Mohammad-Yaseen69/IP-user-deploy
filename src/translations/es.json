@@ -6540,5 +6540,8 @@
   "No transactions": "Sin transacciones",
   "SEND TOP-UP AND E-SIM": "ENVIAR RECARGA Y E-SIM",
   "Holiday List": "Lista de festivos",
-  "My Withdrawls": "Mis retiros"
+  "My Withdrawls": "Mis retiros",
+  "Beneficiary type": "Tipo de beneficiario",
+  "Select one or more": "Selecciona uno o más",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "No tienes una billetera activa desde la que enviar. Activa una billetera e inténtalo de nuevo."
 }

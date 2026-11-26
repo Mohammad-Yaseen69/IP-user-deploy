@@ -47,6 +47,8 @@ import {
   useInvalidateBeneficiaryDetails,
 } from "../hooks/BeneficiaryHooks/useBeneficiaryDetails";
 import useWindowWidth from "../utils/useWindowWidth";
+import InstaPayLoader from "../Components/Loader";
+import { getLoginPath } from "../utils/Functions/loginPage";
 
 const loadAddBeneficiaryAddressModal = () => import("../Components/AddBeneficiaryAddressModal");
 const AddBeneficiaryAddressModal = lazy(loadAddBeneficiaryAddressModal);

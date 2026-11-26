@@ -1,5 +1,4 @@
 import { ChevronRight, Plus } from "lucide-react";
-
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { initials } from "../../../Common/Ledger/utils";

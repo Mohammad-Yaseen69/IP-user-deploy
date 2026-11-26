@@ -6880,5 +6880,8 @@
   "No requested information found.": "Hakuna taarifa zilizoombwa zilizopatikana.",
   "View Requested Information": "Tazama taarifa zilizoombwa",
   "Get Fee Quote": "Pata nukuu ya ada",
-  "Confirm & Pay": "Thibitisha na ulipe"
+  "Confirm & Pay": "Thibitisha na ulipe",
+  "Beneficiary type": "Aina ya mnufaika",
+  "Select one or more": "Chagua moja au zaidi",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Huna pochi inayotumika ya kutuma kutoka. Tafadhali washa pochi kisha ujaribu tena."
 }

@@ -6879,5 +6879,8 @@
   "No requested information found.": "Nie znaleziono wymaganych informacji.",
   "View Requested Information": "Zobacz wymagane informacje",
   "Get Fee Quote": "Uzyskaj wycenę opłat",
-  "Confirm & Pay": "Potwierdź i zapłać"
+  "Confirm & Pay": "Potwierdź i zapłać",
+  "Beneficiary type": "Typ odbiorcy",
+  "Select one or more": "Wybierz jeden lub więcej",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Nie masz aktywnego portfela, z którego można wysłać środki. Aktywuj portfel i spróbuj ponownie."
 }

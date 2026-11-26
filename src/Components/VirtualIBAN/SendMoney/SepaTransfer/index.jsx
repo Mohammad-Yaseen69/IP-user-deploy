@@ -855,11 +855,10 @@ const SepaTransfer = ({
   const width = useWindowWidth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { userDetails, setProfileLockTime, getUserBeneficiaries } = useContext(UserContext);
+  const { userDetails, setProfileLockTime } = useContext(UserContext);
   const invalidateBeneficiaryPages = useInvalidateBeneficiaryPages();
   const refreshBeneficiaries = () => {
-    invalidateBeneficiaryPages();
-    return getUserBeneficiaries();
+    return invalidateBeneficiaryPages();
   };
   const picker = useBeneficiaryPicker({ filters: SEPA_BENEFICIARY_FILTERS });
   const [addedBeneficiaries, setAddedBeneficiaries] = useState([]);

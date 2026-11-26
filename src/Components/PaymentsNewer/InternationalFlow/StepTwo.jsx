@@ -1,8 +1,7 @@
 import { useLocation, useNavigate } from "react-router";
 import styles from "./styles/steptwo.module.css";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import search_icon from "./files/search.svg";
-import { UserContext } from "../../../Context/UserContext";
 import { service_name_formatter } from "../../TransactionsNewApi/TransactionItem";
 import { useTranslation } from "react-i18next";
 import { Modal, ModalBody } from "reactstrap";
@@ -53,7 +52,6 @@ const findSimilarBankBeneficiaries = (array, word, threshold = 60) =>
 
 const StepTwo = ({ data, dataHandler }) => {
   const { t } = useTranslation();
-  const { getUserBeneficiaries } = useContext(UserContext);
   const invalidateBeneficiaryPages = useInvalidateBeneficiaryPages();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
@@ -428,8 +426,7 @@ const StepTwo = ({ data, dataHandler }) => {
             <AddBeneficiary
               inInternationalModal={true}
               toggleHandler={async (addedBen) => {
-                await getUserBeneficiaries();
-                invalidateBeneficiaryPages();
+                await invalidateBeneficiaryPages();
                 dataHandler("beneficiary", addedBen);
                 setShowBeneficiaryAddModal(false);
               }}

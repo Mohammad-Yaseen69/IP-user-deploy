@@ -10,6 +10,7 @@ import styles from "./BankDeposit.module.scss";
 import axios from "axios";
 import { PlaidCurrencies } from ".";
 import useSendOtp from "../../../hooks/GeneralUse/useSendOtp";
+import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
 import usePlaidLinkPayment from "../../../hooks/Payments/usePlaidLinkPayment";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError";
@@ -52,11 +53,13 @@ const PlaidBankTransfer = ({
   const [showOtp, setShowOtp] = useState(false);
   const [codeType, setCodeType] = useState("sms");
   const [redirectTimer, setRedirectTimer] = useState(10);
+  // the backend caches every response per key, so each OTP attempt gets a fresh one
+  const { getKey: getIdempotencyKey, reset: resetIdempotency } = useIdempotency();
+  const idempotencyKey = () => (requiresOtp ? getIdempotencyKey() : null);
   const isInternational = type === "international";
   const isBankSelectionOnly = isInternational || !!onBankSelected;
   const { sendOtp, isSendingOtp } = useSendOtp({
     onSuccess: (token, data) => {
-      console.log(token, data);
       setShowOtp(true);
       setOtpToken(token);
       setOtpMethods(data);
@@ -155,14 +158,11 @@ const PlaidBankTransfer = ({
     mutationFn: async ({ otp }) => {
       const initiatePayloadResponse = buildInitiatePayload();
 
-      console.log(otp, otpToken);
       if (otp && otpToken) {
         initiatePayloadResponse.otp = otp;
         initiatePayloadResponse.token = otpToken;
         initiatePayloadResponse.type = codeType;
       }
-
-      console.log("Initiating Plaid Payment with payload:", initiatePayloadResponse);
 
       const response = await apiWrapper({
         endpoint:
@@ -173,6 +173,7 @@ const PlaidBankTransfer = ({
         payload: initiatePayloadResponse,
         isEncrypted: type === "add_funds" || type === "wallet_to_wallet" ? false : true,
         isDecrypted: type === "add_funds" ? false : true,
+        idempotencyKey: idempotencyKey(),
       });
 
       console.log("Plaid initiation response:", response);
@@ -210,10 +211,8 @@ const PlaidBankTransfer = ({
     );
   };
 
-  const initiateCallback = (setter, _, otp) => {
-    if (otpForSavedBank) performSavedBankPayment({ otp });
-    else initiatePlaidPayment({ otp });
-  };
+  const initiateCallback = (setter, _, otp) =>
+    (otpForSavedBank ? performSavedBankPayment : initiatePlaidPayment)({ otp }).catch(() => {}); // onError shows it
 
   const { mutateAsync: performSavedBankPayment, isPending: isUsingSavedBank } = useMutation({
     mutationFn: async ({ otp } = {}) => {
@@ -234,13 +233,12 @@ const PlaidBankTransfer = ({
         payload.type = codeType;
       }
 
-      console.log("Using saved bank with payload:", payload);
-
       const response = await apiWrapper({
         endpoint: endpoint || "/api/plaid/use-saved-bank",
         payload: type === "add_funds" ? topupPayload : payload,
         isEncrypted: type === "add_funds" || type === "wallet_to_wallet" ? false : true,
         isDecrypted: type === "add_funds" ? false : true,
+        idempotencyKey: idempotencyKey(),
         method: "POST",
       });
 
@@ -411,8 +409,9 @@ const PlaidBankTransfer = ({
             setter={setShowOtp}
             setterValue={false}
             hideOtp={() => setShowOtp(false)}
-            processing={isSendingOtp || isInitiatingPlaid}
+            processing={isSendingOtp || isInitiatingPlaid || isUsingSavedBank}
             resendHandler={sendOtpHandler}
+            resetIdempotency={resetIdempotency}
             authType={codeType}
             setAuthType={setCodeType}
             methods={otpMethods}
@@ -454,6 +453,7 @@ const PlaidBankTransfer = ({
                     await onBankSelected();
                   } else if (requiresOtp) {
                     setOtpForSavedBank(useSavedBank);
+                    resetIdempotency();
                     await sendOtp(
                       buildInitiatePayload(useSavedBank ? savedBankFields() : {}),
                       codeType,

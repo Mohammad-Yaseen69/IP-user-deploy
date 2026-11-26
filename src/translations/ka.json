@@ -5204,5 +5204,8 @@
   "SEND TOP-UP AND E-SIM": "შევსებისა და E-SIM-ის გაგზავნა",
   "Holiday List": "დასვენების დღეების სია",
   "My Withdrawls": "ჩემი გატანები",
-  "Enter a code shown in the app to make sure everything works fine.": "შეიყვანეთ აპლიკაციაში ნაჩვენები კოდი, რომ დარწმუნდეთ, ყველაფერი გამართულად მუშაობს."
+  "Enter a code shown in the app to make sure everything works fine.": "შეიყვანეთ აპლიკაციაში ნაჩვენები კოდი, რომ დარწმუნდეთ, ყველაფერი გამართულად მუშაობს.",
+  "Beneficiary type": "ბენეფიციარის ტიპი",
+  "Select one or more": "აირჩიეთ ერთი ან მეტი",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "გასაგზავნად აქტიური საფულე არ გაქვთ. გთხოვთ, გაააქტიუროთ საფულე და სცადოთ ხელახლა."
 }

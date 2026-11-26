@@ -72,7 +72,7 @@ export const getBeneficiaryName = (beneficiary) => {
 export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { userDetails, getUserBeneficiaries, setProfileLockTime } = useContext(UserContext);
+  const { userDetails, setProfileLockTime } = useContext(UserContext);
   const invalidateBeneficiaryPages = useInvalidateBeneficiaryPages();
 
   const walletId = wallet?._id;
@@ -275,8 +275,7 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
 
   const onBeneficiarySaved = async (savedBeneficiary) => {
     setSavedBeneficiaryId(getBeneficiaryId(savedBeneficiary) || "");
-    invalidateBeneficiaryPages();
-    await getUserBeneficiaries?.();
+    await invalidateBeneficiaryPages();
   };
 
   const buildFeePayload = () => ({

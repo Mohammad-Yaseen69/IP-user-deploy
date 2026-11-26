@@ -6540,5 +6540,8 @@
   "No transactions": "Žádné transakce",
   "SEND TOP-UP AND E-SIM": "DOBITÍ A E-SIM",
   "Holiday List": "Seznam svátků",
-  "My Withdrawls": "Moje výběry"
+  "My Withdrawls": "Moje výběry",
+  "Beneficiary type": "Typ příjemce",
+  "Select one or more": "Vyberte jeden nebo více",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Nemáte aktivní peněženku, ze které lze odeslat. Aktivujte prosím peněženku a zkuste to znovu."
 }

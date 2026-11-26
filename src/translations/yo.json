@@ -6879,5 +6879,8 @@
   "No requested information found.": "A kò rí àlàyé tí a béèrè kankan.",
   "View Requested Information": "Wo àlàyé tí a béèrè",
   "Get Fee Quote": "Gba ìdíyelé owó iṣẹ́",
-  "Confirm & Pay": "Jẹ́rìí & sanwó"
+  "Confirm & Pay": "Jẹ́rìí & sanwó",
+  "Beneficiary type": "Iru olugba",
+  "Select one or more": "Yan ọkan tabi diẹ sii",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "O ko ni apamọwọ ti n ṣiṣẹ lati firanṣẹ lati. Jọwọ mu apamọwọ ṣiṣẹ ki o tun gbiyanju."
 }

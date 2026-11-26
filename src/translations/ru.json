@@ -6860,5 +6860,8 @@
   "No requested information found.": "Запрошенная информация не найдена.",
   "View Requested Information": "Посмотреть запрошенную информацию",
   "Get Fee Quote": "Получить расчёт комиссии",
-  "Confirm & Pay": "Подтвердить и оплатить"
+  "Confirm & Pay": "Подтвердить и оплатить",
+  "Beneficiary type": "Тип получателя",
+  "Select one or more": "Выберите один или несколько",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "У вас нет активного кошелька для отправки. Активируйте кошелёк и повторите попытку."
 }

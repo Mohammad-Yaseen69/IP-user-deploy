@@ -6538,5 +6538,8 @@
   "SEND TOP-UP AND E-SIM": "ARTIRMA VƏ E-SIM GÖNDƏR",
   "Holiday List": "Bayram günlərinin siyahısı",
   "My Withdrawls": "Vəsait çıxarışlarım",
-  "Enter a code shown in the app to make sure everything works fine.": "Hər şeyin düzgün işlədiyini yoxlamaq üçün tətbiqdə göstərilən kodu daxil edin."
+  "Enter a code shown in the app to make sure everything works fine.": "Hər şeyin düzgün işlədiyini yoxlamaq üçün tətbiqdə göstərilən kodu daxil edin.",
+  "Beneficiary type": "Benefisiar növü",
+  "Select one or more": "Bir və ya bir neçəsini seçin",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Göndərmək üçün aktiv pul kisəniz yoxdur. Zəhmət olmasa pul kisəsini aktivləşdirin və yenidən cəhd edin."
 }

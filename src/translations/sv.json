@@ -6540,5 +6540,8 @@
   "No transactions": "Inga transaktioner",
   "SEND TOP-UP AND E-SIM": "SKICKA PÅFYLLNING OCH E-SIM",
   "Holiday List": "Helgdagslista",
-  "My Withdrawls": "Mina uttag"
+  "My Withdrawls": "Mina uttag",
+  "Beneficiary type": "Mottagartyp",
+  "Select one or more": "Välj en eller flera",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Du har ingen aktiv plånbok att skicka från. Aktivera en plånbok och försök igen."
 }

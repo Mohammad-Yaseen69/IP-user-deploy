@@ -7017,6 +7017,9 @@
   "MONTHLY": "MONTHLY",
   "Your Virtual IBAN is being created!": "Your Virtual IBAN is being created!",
   "Sender Name": "Sender Name",
+  "Beneficiary type": "Beneficiary type",
+  "Select one or more": "Select one or more",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "You have no active wallet to send from. Please activate a wallet and try again.",
   "This payment method is not available for this purchase.": "This payment method is not available for this purchase.",
   "IBAN Activation request submitted. Your bank payment is being processed and will complete once the transfer clears.": "IBAN Activation request submitted. Your bank payment is being processed and will complete once the transfer clears."
 }

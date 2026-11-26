@@ -6879,5 +6879,8 @@
   "No requested information found.": "İstenen bilgi bulunamadı.",
   "View Requested Information": "İstenen bilgileri görüntüle",
   "Get Fee Quote": "Ücret teklifi al",
-  "Confirm & Pay": "Onayla ve öde"
+  "Confirm & Pay": "Onayla ve öde",
+  "Beneficiary type": "Alıcı türü",
+  "Select one or more": "Bir veya daha fazlasını seçin",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Gönderim yapabileceğiniz aktif bir cüzdanınız yok. Lütfen bir cüzdanı etkinleştirip tekrar deneyin."
 }
