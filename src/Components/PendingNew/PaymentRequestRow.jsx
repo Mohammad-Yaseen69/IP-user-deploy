@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router";
 import { AmountCell, PartyCell, StatusCell, TxCell } from "../../Common/Ledger/Cells";
 import s from "../../Common/Ledger/ledger.module.scss";
-import { capitalizeStatus } from "../../Common/Ledger/utils";
+import { capitalizeStatus, rowActivation } from "../../Common/Ledger/utils";
 import { UserContext } from "../../Context/UserContext";
 import { formatCurrency } from "../../Helper/AmountFormat";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
@@ -163,7 +163,8 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
       <div
         ref={itemRef}
         className={`${s.cols} ${s.row}`}
-        onClick={() => setActiveItem(isActive ? 0 : index + 1)}
+        aria-expanded={isActive}
+        {...rowActivation(() => setActiveItem(isActive ? 0 : index + 1))}
       >
         <TxCell
           Icon={item?.attachments?.length ? Receipt : MessageSquare}
