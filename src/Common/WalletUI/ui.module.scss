@@ -561,7 +561,7 @@ button.wcardChip {
   justify-content: space-between;
   gap: 8px;
   margin-bottom: 10px !important;
-  font-size: 11px;
+  font-size: 12.5px;
   line-height: normal;
   letter-spacing: -0.33px;
   white-space: nowrap;
@@ -857,6 +857,7 @@ button.wcardChip {
 
   .wcard {
     padding: 18px;
+    min-height: 170px;
   }
 
   .wcardBalance b {

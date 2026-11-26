@@ -3,10 +3,12 @@ import { JURISDICTIONS } from "../../../stateMachines/virtualIbanPayment";
 import styles from "./virtualIbanModal.module.scss";
 import MT from "./icons/mt.svg";
 import GB from "./icons/uk.svg";
+import US from "../../../assets/fonts/flag-icon/us.svg";
 
 const FLAGS = {
   MT,
   GB,
+  US,
 };
 
 const JurisdictionStep = ({ jurisdiction, setJurisdiction, availability = {} }) => {
@@ -33,7 +35,7 @@ const JurisdictionStep = ({ jurisdiction, setJurisdiction, availability = {} }) 
               <span className={styles.radio} />
 
               <div className={styles.flag}>
-                <img src={FLAGS[option.id]} alt="" />
+                <img src={FLAGS[option.id]} width={34} height={24} alt="country flag" />
               </div>
               <div className={styles.optionText}>
                 <div className={styles.optionTitleRow}>

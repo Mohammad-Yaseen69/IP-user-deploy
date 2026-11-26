@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
+import MarqueeText from "../../Common/MarqueeText";
 import { isPathActive, toAppPath } from "./menuSections";
 import styles from "./Sidebar.module.scss";
 
@@ -8,13 +9,20 @@ const MenuItem = ({ item, open, onSelect }) => {
   const { pathname } = useLocation();
   const label = t(item.title);
   const isActive = isPathActive(item.url, pathname);
-  const className = `${styles.item} ${isActive ? styles.itemActive : ""}`;
+  const { Icon } = item;
+  const className = [
+    styles.item,
+    isActive && styles.itemActive,
+    item.title === "Logout" && styles.itemDanger,
+  ]
+    .filter(Boolean)
+    .join(" ");
   const content = (
     <>
       <span className={styles.itemIcon}>
-        {isActive ? (item.activeIcon ?? item.icon) : item.icon}
+        <Icon size={18} strokeWidth={1.6} />
       </span>
-      {open && <span className={styles.itemLabel}>{label}</span>}
+      {open && <MarqueeText text={label} className={styles.itemLabel} />}
     </>
   );
 

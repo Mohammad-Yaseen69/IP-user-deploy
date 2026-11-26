@@ -2,7 +2,7 @@
   padding: 0 var(--page-gutter);
   background: linear-gradient(to right, transparent, white);
   min-height: 100vh;
-  font-family: "Manrope";
+  font-family: "Inter", sans-serif;
 
   .banner_con {
     display: flex;
@@ -198,7 +198,7 @@
         height: 119px;
         padding: 1rem;
         gap: 5px;
-        font-family: "Clash Display", sans-serif;
+        font-family: "Inter", sans-serif;
 
         h4 {
           color: #fff;

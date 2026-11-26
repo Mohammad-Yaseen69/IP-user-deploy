@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper";

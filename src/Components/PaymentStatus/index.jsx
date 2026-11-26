@@ -4,9 +4,11 @@ import InstaPayLoader from "../Loader";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import axios from "axios";
+import { fetchBeneficiaryDetails } from "../../hooks/BeneficiaryHooks/useBeneficiaryDetails";
+import { verifyPaytentlyReturn } from "../../utils/Functions/paytently";
 
 const PaymentStatus = () => {
-  const { getUserBeneficiaries, beneficiaries, authHeader } = useContext(UserContext);
+  const { authHeader } = useContext(UserContext);
   const { type, status, code } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -31,12 +33,13 @@ const PaymentStatus = () => {
 
     const fetchDetailsAndRedirect = () => {
       if (type === "international") {
-        getUserBeneficiaries().then(() => {
-          const benef = beneficiaries.find((item) => item._id === code);
-          navigate(
-            `/payments?payment_action=send_money&send_type=${type}&transaction_status=${status}&transaction_id=test&code=${code}&title=${benef?.first_name || benef?.company_name || "Recipient"} ${benef?.last_name || ""}`,
-          );
-        });
+        fetchBeneficiaryDetails(code)
+          .catch(() => null)
+          .then((benef) => {
+            navigate(
+              `/payments?payment_action=send_money&send_type=${type}&transaction_status=${status}&transaction_id=test&code=${code}&title=${benef?.first_name || benef?.company_name || "Recipient"} ${benef?.last_name || ""}`,
+            );
+          });
       } else {
         searchUser().then((res) => {
           navigate(
@@ -47,7 +50,7 @@ const PaymentStatus = () => {
     };
 
     if (status === "success") {
-      fetchDetailsAndRedirect();
+      verifyPaytentlyReturn().finally(fetchDetailsAndRedirect);
     } else {
       const url =
         type === "airtime"

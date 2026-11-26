@@ -17,6 +17,7 @@ import TypingSpan from "../../TypingSpan";
 import { UserContext } from "../../../Context/UserContext";
 import { useQuery } from "@tanstack/react-query";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
+import { usePaytently } from "../../../utils/Functions/paytently";
 
 export const typesData = [
   {
@@ -69,7 +70,7 @@ const StepFour = ({
   filteringValue = "dummy",
   customStyles = {},
   isAirtime,
-  bankComingSoon = false, // international transfer has no Plaid backend yet (Phase 4)
+  bankComingSoon = false,
 }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
@@ -162,7 +163,7 @@ const StepFour = ({
                   <span
                     style={{
                       color: "#BE9A08",
-                      fontFamily: "Manrope",
+                      fontFamily: "Inter, sans-serif",
                       fontSize: ".7rem",
                       fontStyle: "normal",
                       fontWeight: 700,
@@ -197,7 +198,7 @@ const StepFour = ({
                     <span
                       style={{
                         color: "#8A8A8A",
-                        fontFamily: "Manrope",
+                        fontFamily: "Inter, sans-serif",
                         fontSize: ".7rem",
                         fontStyle: "normal",
                         fontWeight: 600,
@@ -210,7 +211,7 @@ const StepFour = ({
                     <strong
                       style={{
                         color: "#000",
-                        fontFamily: "Manrope",
+                        fontFamily: "Inter, sans-serif",
                         fontSize: ".7rem",
                         fontStyle: "normal",
                         lineHeight: 1.5,
@@ -239,7 +240,7 @@ const StepFour = ({
                     <span
                       style={{
                         color: "#8A8A8A",
-                        fontFamily: "Manrope",
+                        fontFamily: "Inter, sans-serif",
                         fontSize: ".7rem",
                         fontStyle: "normal",
                         fontWeight: 600,
@@ -252,7 +253,7 @@ const StepFour = ({
                     <strong
                       style={{
                         color: "#000",
-                        fontFamily: "Manrope",
+                        fontFamily: "Inter, sans-serif",
                         fontSize: "1.2rem",
                         fontStyle: "normal",
                         fontWeight: 700,
@@ -309,7 +310,7 @@ const StepFour = ({
                 className={`${styles.item} ${item.status !== "Active" ? styles.disabled : ""}`}
                 key={item.name}
                 onClick={() => {
-                  if (item.value === "card" && userDetails?.username !== "ahmed") {
+                  if (item.value === "card" && !usePaytently) {
                     setShowCardMaintenanceModal(true);
                     return;
                   }

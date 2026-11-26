@@ -16,7 +16,7 @@
 
 .left h1 {
   color: #5926f0;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 800;
@@ -28,7 +28,7 @@
 
 .left h2 {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 800;
@@ -39,7 +39,7 @@
 
 .left p {
   color: #8d8d8d;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -69,7 +69,7 @@
   align-items: center;
   gap: 1rem;
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -136,7 +136,7 @@
   all: unset;
   color: #8d8d8d;
   text-align: right;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -167,7 +167,7 @@
 
 .f_btn span {
   color: #fff;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 17.31px;
   font-style: normal;
   font-weight: 600;

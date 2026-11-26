@@ -1,7 +1,5 @@
 import { Search } from "react-feather";
-import { Badge, Card, CardBody, Col, Input } from "reactstrap";
-import notf from "./files/notf.svg";
-import msg from "./files/msg.svg";
+import { Badge, Col } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import LanguagePicker from "../LanguagePicker";
 import { useContext, useEffect, useRef, useState } from "react";

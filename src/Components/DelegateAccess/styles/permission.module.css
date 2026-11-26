@@ -29,7 +29,7 @@ select {
   color: #333;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.8rem;
   font-style: normal;
   font-weight: 600;

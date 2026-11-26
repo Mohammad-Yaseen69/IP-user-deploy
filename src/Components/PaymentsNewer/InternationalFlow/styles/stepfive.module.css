@@ -19,7 +19,7 @@
   color: #5926f0;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 49px;
   font-style: normal;
   font-weight: 800;
@@ -33,7 +33,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 700;
@@ -71,7 +71,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 700;
@@ -84,7 +84,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;
@@ -112,7 +112,7 @@
   color: #5926f0;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 10px;
   font-style: normal;
   font-weight: 600;
@@ -137,7 +137,7 @@
   color: #848484;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 10px;
   font-style: normal;
   font-weight: 600;
@@ -161,7 +161,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -173,7 +173,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;
@@ -201,7 +201,7 @@
   color: #8a8a8a;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -221,7 +221,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 700;

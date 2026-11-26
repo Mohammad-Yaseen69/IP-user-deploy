@@ -1,16 +1,16 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
 import { toast } from "react-toastify";
+import { useInvalidateBeneficiaryPages } from "../../hooks/BeneficiaryHooks/useBeneficiariesPage";
 
 const DeleteBeneficiary = ({ isOpen, toggle, benef, onDeleted }) => {
   const { t } = useTranslation();
   const [isDeleting, setIsDeleting] = useState(false);
-  const { userDetails, authHeader, getUserBeneficiaries, setBeneficiaries } =
-    useContext(UserContext);
+  const { userDetails, authHeader, getUserBeneficiaries } = useContext(UserContext);
+  const invalidateBeneficiaryPages = useInvalidateBeneficiaryPages();
 
   const deleteBeneficiary = async () => {
     if (!benef?._id) return;
@@ -23,7 +23,6 @@ const DeleteBeneficiary = ({ isOpen, toggle, benef, onDeleted }) => {
         },
       );
       // console.log(decryptData(res.data.data))
-      setBeneficiaries?.((prev) => prev.filter((i) => i._id !== benef._id));
       onDeleted?.(benef._id);
       toggle();
     } catch (error) {
@@ -31,6 +30,7 @@ const DeleteBeneficiary = ({ isOpen, toggle, benef, onDeleted }) => {
       toast.error(t("Something went wrong while deleting the beneficiary!"));
     } finally {
       getUserBeneficiaries?.();
+      invalidateBeneficiaryPages();
       setIsDeleting(false);
     }
   };

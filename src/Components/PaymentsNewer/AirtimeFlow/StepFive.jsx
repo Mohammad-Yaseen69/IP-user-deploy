@@ -3,10 +3,7 @@ import styles from "./styles/stepfive.module.css";
 import { useTranslation } from "react-i18next";
 import logo from "../../../assets/images/logo/logo_white.png";
 import airtime from "./files/airtime.svg";
-import { useContext, useEffect } from "react";
-import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
-import axios from "axios";
-import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
+import { useContext } from "react";
 import InstaPayLoader from "../../Loader";
 import { UserContext } from "../../../Context/UserContext";
 import { useNavigate } from "react-router";
@@ -144,7 +141,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
                   <span
                     style={{
                       color: "#BE9A08",
-                      fontFamily: "Manrope",
+                      fontFamily: "Inter, sans-serif",
                       fontSize: ".7rem",
                       fontStyle: "normal",
                       fontWeight: 700,
@@ -180,7 +177,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
                     <span
                       style={{
                         color: "#8A8A8A",
-                        fontFamily: "Manrope",
+                        fontFamily: "Inter, sans-serif",
                         fontSize: ".7rem",
                         fontStyle: "normal",
                         fontWeight: 600,
@@ -193,7 +190,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
                     <strong
                       style={{
                         color: "#000",
-                        fontFamily: "Manrope",
+                        fontFamily: "Inter, sans-serif",
                         fontSize: ".7rem",
                         fontStyle: "normal",
                         lineHeight: 1.5,
@@ -221,7 +218,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
                     <span
                       style={{
                         color: "#8A8A8A",
-                        fontFamily: "Manrope",
+                        fontFamily: "Inter, sans-serif",
                         fontSize: ".7rem",
                         fontStyle: "normal",
                         fontWeight: 600,
@@ -234,7 +231,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
                     <strong
                       style={{
                         color: "#000",
-                        fontFamily: "Manrope",
+                        fontFamily: "Inter, sans-serif",
                         fontSize: "1.2rem",
                         fontStyle: "normal",
                         fontWeight: 700,

@@ -2,8 +2,7 @@
   padding: 0 var(--page-gutter);
   background: linear-gradient(to right, transparent, white);
   min-height: 100vh;
-  font-family: "Manrope";
-  overflow-y: auto;
+  font-family: "Inter", sans-serif;
 }
 
 .container > p {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ConfigDB from "../../Config/ThemeConfig";
 import Context from "./index";
 

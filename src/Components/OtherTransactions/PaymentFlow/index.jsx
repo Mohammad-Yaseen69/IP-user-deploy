@@ -24,7 +24,7 @@ import paym_styles from "../../PaymentsNewer/InternationalFlow/styles/index.modu
 import { toast } from "react-toastify";
 import { createShambeToken } from "../../../Helper/CreateToken";
 import NotFoundModal from "../../NotFound/NotFoundModal";
-import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow";
+import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow/apiErrorMessage";
 import { useQueryClient } from "@tanstack/react-query";
 
 const initialState = {
@@ -713,7 +713,7 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
                             <span
                               style={{
                                 color: "#BE9A08",
-                                fontFamily: "Manrope",
+                                fontFamily: "Inter, sans-serif",
                                 fontSize: ".7rem",
                                 fontStyle: "normal",
                                 fontWeight: 700,
@@ -748,7 +748,7 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
                               <span
                                 style={{
                                   color: "#8A8A8A",
-                                  fontFamily: "Manrope",
+                                  fontFamily: "Inter, sans-serif",
                                   fontSize: ".7rem",
                                   fontStyle: "normal",
                                   fontWeight: 600,
@@ -761,7 +761,7 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
                               <strong
                                 style={{
                                   color: "#000",
-                                  fontFamily: "Manrope",
+                                  fontFamily: "Inter, sans-serif",
                                   fontSize: ".7rem",
                                   fontStyle: "normal",
                                   lineHeight: 1.5,
@@ -789,7 +789,7 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
                               <span
                                 style={{
                                   color: "#8A8A8A",
-                                  fontFamily: "Manrope",
+                                  fontFamily: "Inter, sans-serif",
                                   fontSize: ".7rem",
                                   fontStyle: "normal",
                                   fontWeight: 600,
@@ -802,7 +802,7 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
                               <strong
                                 style={{
                                   color: "#000",
-                                  fontFamily: "Manrope",
+                                  fontFamily: "Inter, sans-serif",
                                   fontSize: "1.2rem",
                                   fontStyle: "normal",
                                   fontWeight: 700,

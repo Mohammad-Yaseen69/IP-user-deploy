@@ -6,7 +6,7 @@
   background-position: center;
   background-size: cover;
   min-height: 100vh;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   display: flex;
   /* align-items: center; */
   gap: 1rem;
@@ -34,7 +34,7 @@
   color: #fff;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;

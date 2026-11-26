@@ -1,5 +1,12 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { ArrowLeftToLine, ArrowRightToLine, Maximize2, Minimize2 } from "lucide-react";
+import {
+  ArrowLeftToLine,
+  ArrowRightToLine,
+  LogIn,
+  Maximize2,
+  Minimize2,
+  UserPlus,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { UserContext } from "../../Context/UserContext";
@@ -7,8 +14,6 @@ import CustomizerContext from "../../Helper/Customizer";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import logo from "../../assets/images/logo/logo.svg";
 import logoMark from "../../assets/images/logo/sidebarnewManulogo.svg";
-import signupIcon from "../SidebarNew/files/signup.svg";
-import loginIcon from "../SidebarNew/files/login.svg";
 import { MENU } from "../SidebarNew/SbNMenu";
 import MenuItem from "./MenuItem";
 import MenuSearch from "./MenuSearch";
@@ -17,14 +22,24 @@ import { groupIntoSections, isItemVisible } from "./menuSections";
 import styles from "./Sidebar.module.scss";
 
 const HIDDEN_ON = ["/create-pin", "/update-pin"];
+const PINNED_ITEMS = ["Settings", "Support", "Logout"];
 
 const GUEST_ITEMS = [
-  { title: "Sign Up", url: "/signup", icon: <img src={signupIcon} alt="" /> },
-  { title: "Login", url: "/login", icon: <img src={loginIcon} alt="" /> },
+  { title: "Sign Up", url: "/signup", Icon: UserPlus },
+  { title: "Login", url: "/login", Icon: LogIn },
 ];
 
 const isTypingTarget = (target) =>
   target.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName);
+
+const revealActiveItem = (list) => {
+  const active = list?.querySelector("[aria-current='page']");
+  if (!active) return;
+  const item = active.getBoundingClientRect();
+  const box = list.getBoundingClientRect();
+  if (item.top < box.top) list.scrollTop -= box.top - item.top;
+  if (item.bottom > box.bottom) list.scrollTop += item.bottom - box.bottom;
+};
 
 const isSearchShortcut = (event) =>
   event.key === "/" &&
@@ -46,12 +61,17 @@ const Sidebar = ({ showModal, setShowModal }) => {
   const [query, setQuery] = useState("");
   const [searching, setSearching] = useState(false);
   const searchRef = useRef(null);
+  const sectionsRef = useRef(null);
 
   const menuOpen = !togglSidebar || hovered || searching || query !== "";
 
   useEffect(() => {
     if (searching) searchRef.current?.focus();
   }, [searching]);
+
+  useEffect(() => {
+    revealActiveItem(sectionsRef.current);
+  }, [pathname, menuOpen]);
 
   useEffect(() => {
     const onKeyDown = (event) => {
@@ -96,6 +116,20 @@ const Sidebar = ({ showModal, setShowModal }) => {
         .filter((section) => section.items.length > 0)
     : [{ title: "", items: GUEST_ITEMS }];
 
+  const isPinned = (item) => PINNED_ITEMS.includes(item.title);
+  const pinnedItems = sections.flatMap((section) => section.items.filter(isPinned));
+  const scrollingSections = sections
+    .map((section) => ({ ...section, items: section.items.filter((item) => !isPinned(item)) }))
+    .filter((section) => section.items.length > 0);
+
+  const renderItems = (items) => (
+    <div className={styles.items}>
+      {items.map((item) => (
+        <MenuItem key={item.title} item={item} open={menuOpen} onSelect={handleSelect} />
+      ))}
+    </div>
+  );
+
   return (
     <aside
       className={`${styles.sidebar} ${menuOpen ? styles.open : ""}`}
@@ -113,6 +147,9 @@ const Sidebar = ({ showModal, setShowModal }) => {
           {showProductNames ? <ArrowLeftToLine size={18} /> : <ArrowRightToLine size={18} />}
         </button>
         <ProductSwitcher showNames={showProductNames} />
+        <span className={styles.watermark} aria-hidden="true">
+          INSTAPAY
+        </span>
       </div>
 
       <nav className={styles.menu} aria-label={t("Main menu")}>
@@ -141,21 +178,20 @@ const Sidebar = ({ showModal, setShowModal }) => {
           inputRef={searchRef}
         />
 
-        <div className={styles.sections}>
-          {sections.map((section) => (
+        <div ref={sectionsRef} className={styles.sections}>
+          {scrollingSections.map((section, index) => (
             <section key={section.title} className={styles.section}>
               {menuOpen && section.title && (
                 <h2 className={styles.sectionTitle}>{t(section.title)}</h2>
               )}
-              <div className={styles.items}>
-                {section.items.map((item) => (
-                  <MenuItem key={item.title} item={item} open={menuOpen} onSelect={handleSelect} />
-                ))}
-              </div>
+              {!menuOpen && index > 0 && <hr className={styles.divider} />}
+              {renderItems(section.items)}
             </section>
           ))}
           {sections.length === 0 && <p className={styles.empty}>{t("No matches")}</p>}
         </div>
+
+        {pinnedItems.length > 0 && <div className={styles.pinned}>{renderItems(pinnedItems)}</div>}
       </nav>
     </aside>
   );

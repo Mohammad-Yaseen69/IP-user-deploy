@@ -1,5 +1,5 @@
 import { Button, Card, CardBody } from "reactstrap";
-import { ChevronRight, Clock, HelpCircle } from "react-feather";
+import { ChevronRight } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import schedule from "../../PaymentsNewer/files/schedule.png";

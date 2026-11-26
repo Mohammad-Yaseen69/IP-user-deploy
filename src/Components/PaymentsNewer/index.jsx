@@ -25,7 +25,6 @@ const NonInstapayPayment = lazy(() => import("./NonInstapay"));
 
 // Static assets (normal imports)
 import rq from "./files/mobile/rq.png";
-import sc from "./files/mobile/sc.png";
 import qr from "./files/mobile/qr.png";
 import w2_ic from "./files/wallet.svg";
 import qr_ic from "./files/qr.svg";
@@ -48,14 +47,7 @@ import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import useEffectivePermission, { PERMISSIONS } from "../../hooks/GeneralUse/useEffectivePermission";
 
 const PaymentsNewer = () => {
-  const {
-    checkRegisteredBenficiaries,
-    getAllActiveCountries,
-    getUserWallets,
-    userDetails,
-    getUserBeneficiaries,
-    beneficiaries,
-  } = useContext(UserContext);
+  const { getAllActiveCountries, getUserWallets, userDetails } = useContext(UserContext);
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -148,16 +140,8 @@ const PaymentsNewer = () => {
     if (userDetails) {
       getUserWallets();
       getAllActiveCountries();
-      checkRegisteredBenficiaries();
-      getUserBeneficiaries();
     }
   }, [userDetails]);
-
-  useEffect(() => {
-    if (beneficiaries) {
-      checkRegisteredBenficiaries();
-    }
-  }, [beneficiaries]);
 
   // mobile
   const setActionType = (actionType) => {

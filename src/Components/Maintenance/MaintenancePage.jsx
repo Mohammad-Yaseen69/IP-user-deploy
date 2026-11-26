@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { RefreshCw, Shield, Clock, Tool } from "react-feather";
+import { RefreshCw, Tool } from "react-feather";
 import logo from "../../assets/images/logo/logo.svg";
 import styles from "./MaintenancePage.module.css";
 

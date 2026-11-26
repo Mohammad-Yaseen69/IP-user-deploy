@@ -13,7 +13,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  font-family: "DM Sans", Inter, "Segoe UI", sans-serif;
+  font-family: "Inter", sans-serif;
   color: var(--cw-text);
 }
 
@@ -422,7 +422,7 @@
   background: var(--cw-surface);
   overflow: hidden;
   position: sticky;
-  top: 16px;
+  top: calc(var(--page-header-height) + 16px);
 }
 
 .railTabs {
@@ -978,7 +978,7 @@
   padding: 0 var(--page-gutter) 48px;
   min-height: 100vh;
   background: #f8f9fc;
-  font-family: "DM Sans", Inter, "Segoe UI", sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 @media (max-width: 600px) {

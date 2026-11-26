@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { Input, Label, Modal, ModalBody, ModalHeader, Progress } from "reactstrap";
+import { useContext, useState } from "react";
+import { Input, Label, Modal, ModalBody, ModalHeader } from "reactstrap";
 import modal from "./files/modal.png";
 import Dropzone from "./CustomDropZone";
 import axios from "axios";
@@ -219,7 +219,7 @@ const AddPortfolioItem = ({ isOpen, toggle, pAddress }) => {
                     color: "#000",
                     leadingTrim: "both",
                     textEdge: "cap",
-                    fontFamily: "Manrope",
+                    fontFamily: "Inter, sans-serif",
                     fontSize: 18.512,
                     fontStyle: "normal",
                     fontWeight: 700,
@@ -245,7 +245,7 @@ const AddPortfolioItem = ({ isOpen, toggle, pAddress }) => {
                     color: "#000",
                     leadingTrim: "both",
                     textEdge: "cap",
-                    fontFamily: "Manrope",
+                    fontFamily: "Inter, sans-serif",
                     fontSize: 18.512,
                     fontStyle: "normal",
                     fontWeight: 700,

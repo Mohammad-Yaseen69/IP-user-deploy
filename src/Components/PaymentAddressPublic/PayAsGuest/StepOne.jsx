@@ -6,10 +6,10 @@ import { Info } from "react-feather";
 import PaypalCurrencies from "../../AddFunds/PaypalCurrencies.json";
 import FeesComponent from "../../PaymentsNewer/InternationalFlow/FeesComponent";
 import InstaPayLoader from "../../Loader";
-import { PlaidCurrencies } from "../../AddFunds/WalletFundsFlow";
 import CardMaintenanceModal from "../../CardMaintenanceModal";
 
-const StepOne = ({ data, dataHandler, allowed, wallet }) => {
+// cardEnabled: card goes through Paytently, so skip the Trust maintenance notice.
+const StepOne = ({ data, dataHandler, allowed, wallet, cardEnabled = false }) => {
   const [showCardMaintenanceModal, setShowCardMaintenanceModal] = useState(false);
   const payouts = [
     {
@@ -72,7 +72,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
             }}
             onClick={() => {
               if (item.coming_soon) return console.log("");
-              if (item.value === "card") {
+              if (item.value === "card" && !cardEnabled) {
                 setShowCardMaintenanceModal(true);
                 return;
               }
@@ -169,7 +169,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                   <span
                     style={{
                       color: "#BE9A08",
-                      fontFamily: "Manrope",
+                      fontFamily: "Inter, sans-serif",
                       fontSize: ".7rem",
                       fontStyle: "normal",
                       fontWeight: 700,
@@ -203,7 +203,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                     <span
                       style={{
                         color: "#8A8A8A",
-                        fontFamily: "Manrope",
+                        fontFamily: "Inter, sans-serif",
                         fontSize: ".7rem",
                         fontStyle: "normal",
                         fontWeight: 600,
@@ -216,7 +216,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                     <strong
                       style={{
                         color: "#000",
-                        fontFamily: "Manrope",
+                        fontFamily: "Inter, sans-serif",
                         fontSize: ".7rem",
                         fontStyle: "normal",
                         lineHeight: 1.5,
@@ -238,7 +238,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                     <span
                       style={{
                         color: "#8A8A8A",
-                        fontFamily: "Manrope",
+                        fontFamily: "Inter, sans-serif",
                         fontSize: ".7rem",
                         fontStyle: "normal",
                         fontWeight: 600,
@@ -251,7 +251,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                     <strong
                       style={{
                         color: "#000",
-                        fontFamily: "Manrope",
+                        fontFamily: "Inter, sans-serif",
                         fontSize: "1.2rem",
                         fontStyle: "normal",
                         fontWeight: 700,

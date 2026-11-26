@@ -15,7 +15,7 @@
 
 .sub span {
   color: rgba(0, 0, 0, 0.8);
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.85rem;
   font-style: normal;
   font-weight: 600;
@@ -25,7 +25,7 @@
 .sub p {
   margin-bottom: 0;
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 1.1rem;
   font-style: normal;
   font-weight: 700;
@@ -51,7 +51,7 @@
     leading-trim: both;
 
     text-edge: cap;
-    font-family: Manrope;
+    font-family: "Inter", sans-serif;
     font-size: 0.7rem;
     font-style: normal;
     font-weight: 600;
@@ -64,7 +64,7 @@
     color: #5ba412;
     leading-trim: both;
     text-edge: cap;
-    font-family: Manrope;
+    font-family: "Inter", sans-serif;
     font-size: 0.7rem;
     font-style: normal;
     font-weight: 600;
@@ -78,7 +78,7 @@
     white-space: nowrap;
     leading-trim: both;
     text-edge: cap;
-    font-family: Manrope;
+    font-family: "Inter", sans-serif;
     font-size: 1rem;
     font-style: normal;
     font-weight: 700;

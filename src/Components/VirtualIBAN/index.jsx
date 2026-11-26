@@ -30,6 +30,7 @@ import VirtualIbanModal from "./VirtualIbanModal";
 import Notifications from "../Notifications";
 import LanguagePicker from "../LanguagePicker";
 import { ChevronLeft } from "react-feather";
+import { MAX_BUSINESS_IBANS } from "../../stateMachines/virtualIbanPayment";
 
 const VirtualBank = () => {
   const { userDetails, selectedAccount, setSelectedAccount } = useContext(UserContext);
@@ -43,6 +44,7 @@ const VirtualBank = () => {
   const [showGetIBAN, setShowGetIBAN] = useState(false);
   const ibanDetailsRef = useRef(null);
   const onboardingRef = useRef(null);
+  const ibanCountWhenOpenedRef = useRef(0);
   const [onboardingStep, setOnboardingStep] = useState("landing");
 
   const ibans = useMemo(() => asVirtualIbanArray(rawIbans), [rawIbans]);
@@ -175,13 +177,15 @@ const VirtualBank = () => {
     if (!selectedAccount && ibans?.length) {
       setSelectedAccount(ibans[0]?._id || ibans[0]?.id);
     }
-    if (ibans?.length) {
+    const gotNewIban = ibans.length > ibanCountWhenOpenedRef.current;
+    if (ibans.length >= MAX_BUSINESS_IBANS || gotNewIban) {
       setShowGetIBAN(false);
     }
   }, [ibans, selectedAccount]);
 
   const handleOpenIBAN = () => {
     if (!canCreateIban) return;
+    ibanCountWhenOpenedRef.current = ibans.length;
     setShowGetIBAN(true);
     setSelectedAccount(null);
   };
@@ -235,7 +239,6 @@ const VirtualBank = () => {
     refetch();
   }, []);
 
-  console.log(rawIbans, "rawIbans");
   return (
     <div className={styles.container}>
       {width > 600 && (
@@ -254,7 +257,7 @@ const VirtualBank = () => {
         userDetails?.account_type === "business" && (
           <div className={styles.mobileTop}>
             <div className={styles.headerTitle}>
-              {onboardingStep !== "landing" && (
+              {(onboardingStep !== "landing" || (showGetIBAN && ibans.length > 0)) && (
                 <ChevronLeft size={22} onClick={() => onboardingRef.current?.back()} />
               )}
               <h1>
@@ -288,7 +291,12 @@ const VirtualBank = () => {
         </div>
       ) : showGetIBAN || (ibans.length === 0 && canCreateIban) ? (
         userDetails?.account_type === "business" ? (
-          <OnboardingIBAN ref={onboardingRef} onStepChange={setOnboardingStep} />
+          <OnboardingIBAN
+            ref={onboardingRef}
+            onStepChange={setOnboardingStep}
+            addNew={showGetIBAN && ibans.length > 0}
+            onCancel={handleBackToDashboard}
+          />
         ) : (
           <IBAN onCreated={handleBackToDashboard} />
         )

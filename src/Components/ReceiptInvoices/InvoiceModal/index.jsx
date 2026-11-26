@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useReducer } from "react";
+import { useContext, useEffect, useMemo, useReducer } from "react";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import icon from "../files/invoice-icon.png";
 import { useTranslation } from "react-i18next";

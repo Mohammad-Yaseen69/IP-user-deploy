@@ -2,6 +2,7 @@ import { Tooltip } from "@mui/material";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Panel, Segmented } from "./Primitives";
+import Skeleton from "./Skeleton";
 import s from "./ui.module.scss";
 import { niceMax } from "./utils";
 
@@ -95,12 +96,16 @@ const MoneyInOut = ({ currency = "", data = [], loading = false }) => {
               <i style={{ background: stat.color }} />
               {stat.label}
             </span>
-            <p
-              className={`${s.mioValue} ${stat.negative ? s.mioNeg : stat.positive ? s.mioNet : ""}`}
-            >
-              {stat.value}
-              <span>{currency}</span>
-            </p>
+            {loading ? (
+              <Skeleton width={96} height={28} sx={{ mt: "4px" }} />
+            ) : (
+              <p
+                className={`${s.mioValue} ${stat.negative ? s.mioNeg : stat.positive ? s.mioNet : ""}`}
+              >
+                {stat.value}
+                <span>{currency}</span>
+              </p>
+            )}
           </div>
         ))}
       </div>
@@ -110,9 +115,7 @@ const MoneyInOut = ({ currency = "", data = [], loading = false }) => {
       </p>
       <div className={s.mioScroll}>
         {loading ? (
-          <div className={s.state} style={{ minHeight: 245 }}>
-            {t("Loading...")}
-          </div>
+          <Skeleton height={245} sx={{ borderRadius: "10px" }} />
         ) : (
           <div className={s.chart}>
             <div className={s.plot}>

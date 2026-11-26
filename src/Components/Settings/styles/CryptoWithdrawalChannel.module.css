@@ -14,7 +14,7 @@
 
 .header h1 {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 800;
@@ -25,7 +25,7 @@
 
 .header p {
   color: #8d8d8d;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -46,7 +46,7 @@
   justify-content: center;
   gap: 0.5rem;
   color: #fff !important;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-weight: 700;
   white-space: nowrap;

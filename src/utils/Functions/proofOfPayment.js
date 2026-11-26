@@ -1,4 +1,3 @@
-import jsPDF from "jspdf";
 import countriesData from "../../Components/CitiesDropDown/CitiesData.json";
 import logoImg from "../../assets/images/logo/logo2.webp";
 import { service_name_formatter } from "../../Components/TransactionsNewApi/TransactionItem";
@@ -78,6 +77,7 @@ const COLOR_CARD_BORDER = [222, 214, 250];
 const COLOR_DIVIDER = [225, 222, 240];
 
 export const generateProofOfPaymentPDF = async (tx, selectedIban, userDetails) => {
+  const { default: jsPDF } = await import("jspdf");
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
