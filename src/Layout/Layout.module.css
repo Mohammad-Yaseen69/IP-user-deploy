@@ -1,3 +1,8 @@
+.page_content {
+  max-width: 1440px;
+  margin-inline: auto;
+}
+
 .mobile_layout {
   display: none;
 }

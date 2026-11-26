@@ -1,29 +1,8 @@
 .container {
-  padding: 3rem 3rem 0;
+  padding: 0 var(--page-gutter);
   background: linear-gradient(to right, transparent, white);
   min-height: 100vh;
-  font-family: "Manrope";
-
-  .top {
-    margin-bottom: 4rem;
-    position: relative;
-
-    h4 {
-      font-size: 3vw;
-      background:
-        linear-gradient(3.1deg, #e64067 -102.47%, #5926f0 25.82%, #4828a0 128.05%), #ffffff;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-fill-color: transparent;
-      margin-bottom: 1rem;
-    }
-
-    p {
-      font-size: 17px;
-      font-weight: 600;
-    }
-  }
+  font-family: "Inter", sans-serif;
 
   .banner_con {
     display: flex;
@@ -219,7 +198,7 @@
         height: 119px;
         padding: 1rem;
         gap: 5px;
-        font-family: "Clash Display", sans-serif;
+        font-family: "Inter", sans-serif;
 
         h4 {
           color: #fff;
@@ -352,11 +331,7 @@
 
 @media screen and (max-width: 1500px) {
   .container {
-    padding: 1.5rem 2rem 0;
-
-    .top {
-      margin-bottom: 3rem;
-    }
+    padding: 0 var(--page-gutter);
 
     .ref_dets {
       padding: 1rem;
@@ -402,23 +377,8 @@
 @media screen and (max-width: 1000px) {
   .container {
     display: block;
-    padding: 2rem;
+    padding: 0 2rem 2rem;
     background-color: white;
-
-    .top {
-      margin-bottom: 2rem;
-
-      h4 {
-        font-size: 1.4rem;
-        background:
-          linear-gradient(3.1deg, #e64067 -102.47%, #5926f0 25.82%, #4828a0 128.05%), #ffffff;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        text-fill-color: transparent;
-        margin-bottom: 1rem;
-      }
-    }
 
     .banner_con {
       display: grid;

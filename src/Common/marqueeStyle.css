@@ -23,6 +23,12 @@
   animation: marquee-scroll 3.5s ease-in-out infinite alternate;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .marquee-container .marquee-text.marquee-can-scroll {
+    animation: none;
+  }
+}
+
 @keyframes marquee-scroll {
   0% {
     transform: translateX(0);

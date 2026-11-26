@@ -54,7 +54,7 @@ const walletOption = (wallet, t) => {
  * the wallet paid into, and the live quote underneath. Confirming hands the quote to
  * the same ConversionModal My Wallets uses, so the money moves through one path.
  */
-const ConvertCryptoPanel = ({ wallet }) => {
+const ConvertCryptoPanel = ({ wallet, onActionComplete }) => {
   const { t } = useTranslation();
   const fx = useWalletConversion(wallet);
   const queryClient = useQueryClient();
@@ -91,6 +91,7 @@ const ConvertCryptoPanel = ({ wallet }) => {
   const onConverted = () => {
     setConverted(true);
     queryClient.invalidateQueries({ queryKey: ["crypto", "portfolio"] });
+    onActionComplete?.();
   };
 
   const fromCode = fx.senderWallet?.currency?.code || "";

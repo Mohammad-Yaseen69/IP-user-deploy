@@ -41,7 +41,7 @@
 .broadcast-div p {
   color: rgba(0, 0, 0, 0.6);
   text-align: center;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -103,7 +103,7 @@
   text-align: center;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -121,7 +121,7 @@
   background: #eee8ff;
   color: #5926f0;
   text-align: center;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;

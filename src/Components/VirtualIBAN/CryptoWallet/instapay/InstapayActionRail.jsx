@@ -10,7 +10,7 @@ import useEffectivePermission, {
 
 const TABS = ["Send", "Convert", "Withdraw"];
 
-const InstapayActionRail = ({ wallets = [], wallet, onSelectWallet }) => {
+const InstapayActionRail = ({ wallets = [], wallet, onSelectWallet, onActionComplete }) => {
   const { t } = useTranslation();
   const [tab, setTab] = useState("Send");
   const hasPermission = useEffectivePermission();
@@ -59,12 +59,22 @@ const InstapayActionRail = ({ wallets = [], wallet, onSelectWallet }) => {
         ))}
       </div>
 
-      {activeTab === "Send" ? (
-        <SendCryptoPanel wallets={wallets} wallet={wallet} onSelectWallet={onSelectWallet} />
-      ) : activeTab === "Withdraw" ? (
-        <WithdrawCryptoPanel wallets={wallets} wallet={wallet} onSelectWallet={onSelectWallet} />
+      {tab === "Send" ? (
+        <SendCryptoPanel
+          wallets={wallets}
+          wallet={wallet}
+          onSelectWallet={onSelectWallet}
+          onActionComplete={onActionComplete}
+        />
+      ) : tab === "Withdraw" ? (
+        <WithdrawCryptoPanel
+          wallets={wallets}
+          wallet={wallet}
+          onSelectWallet={onSelectWallet}
+          onActionComplete={onActionComplete}
+        />
       ) : (
-        <ConvertCryptoPanel key={wallet?._id} wallet={wallet} />
+        <ConvertCryptoPanel key={wallet?._id} wallet={wallet} onActionComplete={onActionComplete} />
       )}
     </aside>
   );

@@ -6,7 +6,7 @@ import { useLocation } from "react-router";
 import { UserContext } from "../../Context/UserContext";
 import useWindowWidth from "../../utils/useWindowWidth";
 import InstaPayLoader from "../Loader";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import InvoiceModal from "./InvoiceModal";
 import InvoiceTable from "./InvoiceTable";
 import { getInvoiceList } from "./queries";
@@ -94,11 +94,7 @@ const ReceiptInvoice = () => {
   console.log("data", data);
   return (
     <div className={styles.container}>
-      <div className={styles.top}>
-        <h1>{t("My Invoices & Plans")}</h1>
-
-        {width > 1000 && <TopRight />}
-      </div>
+      <PageHeader title={t("My Invoices & Plans")} />
 
       <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
         <div

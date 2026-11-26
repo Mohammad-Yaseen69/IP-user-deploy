@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="22" viewBox="0 0 32 21.333" fill="none">
+  <clipPath id="us-flag-clip">
+    <rect width="32" height="21.333" rx="2" />
+  </clipPath>
+  <g clip-path="url(#us-flag-clip)">
+    <rect width="32" height="21.333" fill="#D80027" />
+    <g fill="#F0F0F0">
+      <rect y="1.641" width="32" height="1.641" />
+      <rect y="4.923" width="32" height="1.641" />
+      <rect y="8.205" width="32" height="1.641" />
+      <rect y="11.487" width="32" height="1.641" />
+      <rect y="14.769" width="32" height="1.641" />
+      <rect y="18.051" width="32" height="1.641" />
+    </g>
+    <rect width="14" height="11.487" fill="#0052B4" />
+    <g fill="#F0F0F0">
+      <circle cx="2" cy="1.8" r="0.55" />
+      <circle cx="4.5" cy="1.8" r="0.55" />
+      <circle cx="7" cy="1.8" r="0.55" />
+      <circle cx="9.5" cy="1.8" r="0.55" />
+      <circle cx="12" cy="1.8" r="0.55" />
+      <circle cx="3.25" cy="4.1" r="0.55" />
+      <circle cx="5.75" cy="4.1" r="0.55" />
+      <circle cx="8.25" cy="4.1" r="0.55" />
+      <circle cx="10.75" cy="4.1" r="0.55" />
+      <circle cx="2" cy="6.4" r="0.55" />
+      <circle cx="4.5" cy="6.4" r="0.55" />
+      <circle cx="7" cy="6.4" r="0.55" />
+      <circle cx="9.5" cy="6.4" r="0.55" />
+      <circle cx="12" cy="6.4" r="0.55" />
+      <circle cx="3.25" cy="8.7" r="0.55" />
+      <circle cx="5.75" cy="8.7" r="0.55" />
+      <circle cx="8.25" cy="8.7" r="0.55" />
+      <circle cx="10.75" cy="8.7" r="0.55" />
+    </g>
+  </g>
+</svg>

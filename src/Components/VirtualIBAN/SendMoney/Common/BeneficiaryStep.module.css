@@ -103,7 +103,7 @@
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  font-family: Manrope, sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-weight: 800;
 }

@@ -26,7 +26,7 @@
   text-align: center;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 800;
@@ -126,7 +126,7 @@
 
 .input_container .input_error span {
   color: #f32d2d;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 12.232px;
   font-style: normal;
   font-weight: 600;

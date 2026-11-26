@@ -25,7 +25,7 @@
 
 .top h1 {
   color: #5926f0;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 800;
@@ -36,7 +36,7 @@
 
 .top h2 {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 32px;
   font-style: normal;
   font-weight: 800;
@@ -45,7 +45,7 @@
 
 .top p {
   color: #8d8d8d;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -62,7 +62,7 @@
 
 .top ol li {
   color: #8d8d8d;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -89,7 +89,7 @@
   background-blend-mode: overlay, normal;
   box-shadow: 0px 4px 5px rgba(89, 38, 240, 0.04);
   color: #fff;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 17px;
   font-style: normal;
   font-weight: 600;
@@ -132,7 +132,7 @@
 
 .last h1 {
   color: #5926f0;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 800;
@@ -149,7 +149,7 @@
   align-items: center;
   gap: 10px;
   color: #ff1f1f;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 600;
@@ -169,7 +169,7 @@
 
 .avoid h2 {
   color: #5926f0;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 800;
@@ -184,7 +184,7 @@
 
 .avoid ul li {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -201,7 +201,7 @@
 
 .note p {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;
@@ -223,7 +223,7 @@
   border: none;
   outline: none;
   color: #8d8d8d;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-weight: 500;
   cursor: pointer;
@@ -246,7 +246,7 @@
   outline: none;
   padding: 12px 24px;
   color: #fff;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 17px;
   font-weight: 600;
   cursor: pointer;

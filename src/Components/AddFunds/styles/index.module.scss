@@ -1,23 +1,7 @@
 .container {
-  padding: 3rem;
+  padding: 0 var(--page-gutter) 3rem;
   background: linear-gradient(to right, transparent, white);
   min-height: 100vh;
-
-  .top {
-    margin-bottom: 4rem;
-    position: relative;
-
-    h4 {
-      font-size: 3vw;
-      background:
-        linear-gradient(3.1deg, #e64067 -102.47%, #5926f0 25.82%, #4828a0 128.05%), #ffffff;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-fill-color: transparent;
-      margin-bottom: 1rem;
-    }
-  }
 }
 
 .mobile {
@@ -26,11 +10,7 @@
 
 @media screen and (max-width: 1500px) {
   .container {
-    padding: 1rem 2rem 0;
-
-    .top {
-      margin-bottom: 2rem;
-    }
+    padding: 0 var(--page-gutter);
   }
 }
 
@@ -53,13 +33,11 @@
       align-items: center;
 
       h4 {
+        font-family: Inter, sans-serif;
         font-size: 1.5rem;
-        background:
-          linear-gradient(3.1deg, #e64067 -102.47%, #5926f0 25.82%, #4828a0 128.05%), #ffffff;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        text-fill-color: transparent;
+        font-weight: 600;
+        letter-spacing: -0.72px;
+        color: #141414;
         margin-bottom: 1rem;
       }
     }

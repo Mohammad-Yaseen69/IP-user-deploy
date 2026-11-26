@@ -41,7 +41,7 @@ export const useAvailableMethods = (countryIso3, transactionType) => {
     queryKey: ["abfServices", countryIso3, senderIso3, transactionType],
     queryFn: async () => {
       const res = await apiWrapper({
-        endpoint: `/api/payment/services/${countryIso3}/${senderIso3}`,
+        endpoint: `/api/payment/services/${countryIso3}/${senderIso3}${transactionType ? `?transaction_type=${transactionType}` : ""}`,
         method: "GET",
         isDecrypted: true,
       });

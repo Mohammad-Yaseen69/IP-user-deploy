@@ -11,6 +11,7 @@ import { useSearchParams } from "react-router-dom";
 import { apiWrapper } from "../utils/Functions/apiWrapper";
 import i18n from "../i18n";
 import { clearAuthStorage, getLoginPath } from "../utils/Functions/loginPage";
+import { BENEFICIARIES_PAGE_KEY } from "../hooks/BeneficiaryHooks/useBeneficiariesPage";
 
 const getRegisteredBeneficiariesFn = async (head) => {
   const res = await axios.get(
@@ -56,8 +57,9 @@ const UserState = ({ children }) => {
   const token = localStorage.getItem("token");
   const [userDetails, setUserDetails] = useState(null);
   const [userWallets, setUserWallets] = useState([]);
-  const [beneficiaries, setBeneficiaries] = useState([]);
-  const [registeredBeneficiaries, setRegisteredBeneficiaries] = useState([]);
+  const [referralLoading, setReferralLoading] = useState(true);
+  const [walletsLoading, setWalletsLoading] = useState(true);
+  const [tokenCheckFailures, setTokenCheckFailures] = useState(0);
   const [userTransactions, setUserTransactions] = useState([]);
   const [userSecurityQues, setUserSecurityQues] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -99,7 +101,7 @@ const UserState = ({ children }) => {
   });
   const {
     data: balances,
-    isLoading: balanceLoading,
+    isPending: balanceLoading,
     refetch: refetchBalances,
   } = useQuery({
     queryKey: ["getBalancesIUSD", userDetails?._id],
@@ -160,8 +162,8 @@ const UserState = ({ children }) => {
   const clearData = () => {
     setUserDetails(null);
     setUserWallets([]);
-    setBeneficiaries([]);
-    setRegisteredBeneficiaries([]);
+    setWalletsLoading(true);
+    setReferralLoading(true);
     setUserTransactions([]);
     setUserSecurityQues([]);
     setSearchQuery("");
@@ -306,6 +308,9 @@ const UserState = ({ children }) => {
           return decrypted;
         })
         .catch((err) => {
+          if (!err?.response?.data?.data) {
+            setTokenCheckFailures((count) => count + 1);
+          }
           if (err?.response?.data?.data) {
             decryptData(err.response.data.data);
             clearAuthStorage();
@@ -467,7 +472,8 @@ const UserState = ({ children }) => {
           setUserWallets(wallets);
         }
         getUserBalances();
-      });
+      })
+      .finally(() => setWalletsLoading(false));
   };
 
   const getPAddressDets = async () => {
@@ -513,27 +519,9 @@ const UserState = ({ children }) => {
     }
   }, [userDetails?._id, userDetails?.isPendingRequests]);
 
-  // user beneficiaries
-  const getUserBeneficiaries = async () => {
-    try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/get-user-beneficiaries/${userDetails?._id}`,
-        {
-          headers: authHeader,
-        },
-      );
-      const decrypted = decryptData(res.data.data);
-      const regularBens = decrypted?.beneficiaryList || [];
-
-      setBeneficiaries(regularBens);
-    } catch {
-      //
-    }
-  };
-
-  const checkRegisteredBenficiaries = () => {
-    setRegisteredBeneficiaries(registeredBenApiData);
-  };
+  const getUserBeneficiaries = () =>
+    queryClient.invalidateQueries({ queryKey: BENEFICIARIES_PAGE_KEY });
+  const registeredBeneficiaries = registeredBenApiData ?? [];
 
   // security questions
   const getSecurityQuestions = () => {
@@ -737,6 +725,8 @@ const UserState = ({ children }) => {
       console.log(data, "commision data");
     } catch {
       // console.log(decryptData(error?.response?.data?.data));
+    } finally {
+      setReferralLoading(false);
     }
   };
 
@@ -868,10 +858,10 @@ const UserState = ({ children }) => {
         setUserDetails,
         userWallets,
         setUserWallets,
+        walletsLoading,
+        referralLoading,
         token,
         authHeader,
-        beneficiaries,
-        setBeneficiaries,
         userTransactions,
         setUserTransactions,
         searchQuery,
@@ -883,6 +873,7 @@ const UserState = ({ children }) => {
         userSessions,
         allowedFeatures,
         verifyToken,
+        tokenCheckFailures,
         userWithdrawals,
         setUserWithdrawals,
         cryptoWithdrawals,
@@ -897,7 +888,6 @@ const UserState = ({ children }) => {
         setUserVideos,
         getUserVideos,
         userVideos,
-        checkRegisteredBenficiaries,
         getAllActiveCountries,
         getUserWallets,
         getUserBeneficiaries,
