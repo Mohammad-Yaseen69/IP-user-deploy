@@ -4,18 +4,19 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import Top from "./Top";
 import WalletLimits from "./WalletLimits";
 import WalletLedger from "./WalletLedger";
-import ComingUp from "./ComingUp";
+// import ComingUp from "./ComingUp";
 import axios from "axios";
+import { getLimits } from "./getLimits";
 import { UserContext } from "../../Context/UserContext";
 import QrGenerate from "../Settings/QrGenerate";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
-import { getLimits } from "./getLimits";
 // import { useLocation } from "react-router"
 import CurConversion from "../HomeNewUpdated/CurConversion";
 import MoneyInOut from "../../Common/WalletUI/MoneyInOut";
 import { useMoneyInOut } from "../../Common/WalletUI/useMoneyInOut";
 import u from "../../Common/WalletUI/ui.module.scss";
 
+// Lives in its own file so other screens can load it without the whole page; re-exported for old imports.
 export { getLimits };
 
 const WalletsNew = () => {
@@ -109,7 +110,7 @@ const WalletsNew = () => {
                 currentWallet={currentWallet}
               />
             )}
-            {can("schedules.view") && <ComingUp />}
+            {/* {can("schedules.view") && <ComingUp />} */}
           </div>
 
           {can("transactions.wallet.list") && <WalletLedger currentWallet={currentWallet} />}

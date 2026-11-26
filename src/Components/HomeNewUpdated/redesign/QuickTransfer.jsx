@@ -1,13 +1,13 @@
 import { ChevronRight, Plus } from "lucide-react";
-import { useContext, useEffect } from "react";
+
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { initials } from "../../../Common/Ledger/utils";
 import Skeleton from "../../../Common/WalletUI/Skeleton";
 import u from "../../../Common/WalletUI/ui.module.scss";
-import { UserContext } from "../../../Context/UserContext";
 import BenefCard from "../BenefCard";
 import d from "./dashboard.module.scss";
+import { useBeneficiariesPage } from "../../../hooks/BeneficiaryHooks/useBeneficiariesPage";
 
 const COLORS = [
   ["#f2eeff", "#5926f0"],
@@ -20,14 +20,10 @@ const COLORS = [
 
 const QuickTransfer = () => {
   const { t } = useTranslation();
-  const { userDetails, beneficiaries, getUserBeneficiaries, beneficiariesLoading } =
-    useContext(UserContext);
-
-  useEffect(() => {
-    if (userDetails) {
-      getUserBeneficiaries();
-    }
-  }, [userDetails]);
+  const { beneficiaries, isLoading: beneficiariesLoading } = useBeneficiariesPage({
+    limit: 10,
+    sort: "date_desc",
+  });
 
   const showSkeleton = beneficiariesLoading && beneficiaries.length === 0;
 

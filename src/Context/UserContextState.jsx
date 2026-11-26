@@ -11,6 +11,7 @@ import { useSearchParams } from "react-router-dom";
 import { apiWrapper } from "../utils/Functions/apiWrapper";
 import i18n from "../i18n";
 import { clearAuthStorage, getLoginPath } from "../utils/Functions/loginPage";
+import { BENEFICIARIES_PAGE_KEY } from "../hooks/BeneficiaryHooks/useBeneficiariesPage";
 
 const getRegisteredBeneficiariesFn = async (head) => {
   const res = await axios.get(
@@ -56,13 +57,9 @@ const UserState = ({ children }) => {
   const token = localStorage.getItem("token");
   const [userDetails, setUserDetails] = useState(null);
   const [userWallets, setUserWallets] = useState([]);
-  const [beneficiariesLoading, setBeneficiariesLoading] = useState(true);
   const [referralLoading, setReferralLoading] = useState(true);
   const [walletsLoading, setWalletsLoading] = useState(true);
-  const verifyingToken = useRef(false);
   const [tokenCheckFailures, setTokenCheckFailures] = useState(0);
-  const [beneficiaries, setBeneficiaries] = useState([]);
-  const [registeredBeneficiaries, setRegisteredBeneficiaries] = useState([]);
   const [userTransactions, setUserTransactions] = useState([]);
   const [userSecurityQues, setUserSecurityQues] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -167,9 +164,6 @@ const UserState = ({ children }) => {
     setUserWallets([]);
     setWalletsLoading(true);
     setReferralLoading(true);
-    setBeneficiariesLoading(true);
-    setBeneficiaries([]);
-    setRegisteredBeneficiaries([]);
     setUserTransactions([]);
     setUserSecurityQues([]);
     setSearchQuery("");
@@ -244,11 +238,10 @@ const UserState = ({ children }) => {
     if (
       (!window.location.pathname.includes("auth") &&
         !userDetails &&
-        Object.keys(userDetails || {}).length === 0 &&
-        !verifyingToken.current) ||
+        Object.keys(userDetails || {}).length === 0) ||
       isFetchRequired
     ) {
-      verifyingToken.current = true;
+      if (!isFetchRequired && verifyTokenRequestRef.current) return;
       const isAgentLoginCheck = localStorage.getItem("isAgentLogin");
       const url = isAgentLoginCheck
         ? `/api/business-agents/agents/auth/${token}`
@@ -350,7 +343,7 @@ const UserState = ({ children }) => {
           }
         })
         .finally(() => {
-          verifyingToken.current = false;
+          if (verifyTokenRequestRef.current === request) verifyTokenRequestRef.current = null;
         });
       verifyTokenRequestRef.current = request;
     }
@@ -526,29 +519,9 @@ const UserState = ({ children }) => {
     }
   }, [userDetails?._id, userDetails?.isPendingRequests]);
 
-  // user beneficiaries
-  const getUserBeneficiaries = async () => {
-    try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/get-user-beneficiaries/${userDetails?._id}`,
-        {
-          headers: authHeader,
-        },
-      );
-      const decrypted = decryptData(res.data.data);
-      const regularBens = decrypted?.beneficiaryList || [];
-
-      setBeneficiaries(regularBens);
-    } catch {
-      //
-    } finally {
-      setBeneficiariesLoading(false);
-    }
-  };
-
-  const checkRegisteredBenficiaries = () => {
-    setRegisteredBeneficiaries(registeredBenApiData);
-  };
+  const getUserBeneficiaries = () =>
+    queryClient.invalidateQueries({ queryKey: BENEFICIARIES_PAGE_KEY });
+  const registeredBeneficiaries = registeredBenApiData ?? [];
 
   // security questions
   const getSecurityQuestions = () => {
@@ -887,11 +860,8 @@ const UserState = ({ children }) => {
         setUserWallets,
         walletsLoading,
         referralLoading,
-        beneficiariesLoading,
         token,
         authHeader,
-        beneficiaries,
-        setBeneficiaries,
         userTransactions,
         setUserTransactions,
         searchQuery,
@@ -918,7 +888,6 @@ const UserState = ({ children }) => {
         setUserVideos,
         getUserVideos,
         userVideos,
-        checkRegisteredBenficiaries,
         getAllActiveCountries,
         getUserWallets,
         getUserBeneficiaries,

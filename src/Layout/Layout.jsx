@@ -17,7 +17,6 @@ import AnimationThemeContext from "../Helper/AnimationTheme";
 import ConfigDB from "../Config/ThemeConfig";
 import Loader from "./Loader";
 import Sidebar from "./Sidebar";
-import ProfileCompletionModal from "../Components/ProfileCompletionModal";
 import ForcedAuthenticatorModal from "../Components/ForcedAuthenticatorModal";
 import { UserContext } from "../Context/UserContext";
 import styles from "./Layout.module.css";
@@ -43,6 +42,10 @@ import { getPendingAdditionalFiles, MASTERCARD_PURPOSE } from "../utils/Function
 import { useVirtualIbans } from "../hooks/useVirtualIban";
 import PushConsentModal from "../Components/PushConsentModal";
 import { isPushSupported, getPushPermissionState } from "../Services/PushNotificationService";
+import {
+  useBeneficiaryDetails,
+  useInvalidateBeneficiaryDetails,
+} from "../hooks/BeneficiaryHooks/useBeneficiaryDetails";
 import useWindowWidth from "../utils/useWindowWidth";
 import InstaPayLoader from "../Components/Loader";
 import { getLoginPath } from "../utils/Functions/loginPage";
@@ -56,6 +59,7 @@ const FinancialInfoModal = lazy(loadFinancialInfoModal);
 const loadAdditionalDocumentModal = () => import("./AdditionalDocumentModal");
 const AdditionalDocumentModal = lazy(loadAdditionalDocumentModal);
 const loadProfileCompletionModal = () => import("../Components/ProfileCompletionModal");
+const ProfileCompletionModal = lazy(loadProfileCompletionModal);
 const loadForcedAdditionalFilesModal = () => import("../Components/ForcedAdditionalFilesModal");
 const ForcedAdditionalFilesModal = lazy(loadForcedAdditionalFilesModal);
 const loadAnotherLoginModal = () => import("../Components/AnotherLoginModal");
@@ -148,7 +152,6 @@ const LayoutContent = ({ children, classNames, ...rest }) => {
     set3DaysReminderInfo,
     setIs30DaysInfo,
     verifyToken,
-    beneficiaries,
     getUserBeneficiaries,
     showAnotherLoginModal,
     setShowAnotherLoginModal,
@@ -240,12 +243,23 @@ const LayoutContent = ({ children, classNames, ...rest }) => {
     }
   }, [virtualIbans, virtualIbansLoading, location.pathname, navigate]);
 
-  const beneficiaryWithoutAddresses = useMemo(() => {
-    if (!location.pathname.startsWith("/beneficiaries/edit") || !benId) return [];
-    if (dismissedBeneficiaryId === benId) return [];
-    const beneficiary = beneficiaries?.find((ben) => ben?._id === benId);
-    return beneficiary && !beneficiary.address ? [beneficiary] : [];
-  }, [beneficiaries, location, benId, dismissedBeneficiaryId]);
+  const isBeneficiaryEdit = location.pathname.startsWith("/beneficiaries/edit") && !!benId;
+  const { data: editedBeneficiary } = useBeneficiaryDetails(benId, { enabled: isBeneficiaryEdit });
+  const invalidateBeneficiaryDetails = useInvalidateBeneficiaryDetails();
+  const beneficiaryWithoutAddresses = useMemo(
+    () =>
+      isBeneficiaryEdit &&
+      editedBeneficiary &&
+      !editedBeneficiary.address &&
+      dismissedBeneficiaryId !== benId
+        ? [editedBeneficiary]
+        : [],
+    [isBeneficiaryEdit, editedBeneficiary, dismissedBeneficiaryId, benId],
+  );
+  const onBeneficiaryAddressSaved = () => {
+    invalidateBeneficiaryDetails(benId);
+    getUserBeneficiaries();
+  };
 
   useEffect(() => {
     setDismissedBeneficiaryId(null);
@@ -393,12 +407,14 @@ const LayoutContent = ({ children, classNames, ...rest }) => {
   return (
     <Fragment>
       {beneficiaryWithoutAddresses.length > 0 && (
-        <AddBeneficiaryAddressModal
-          isOpen={beneficiaryWithoutAddresses.length > 0}
-          toggle={getUserBeneficiaries}
-          close={() => setDismissedBeneficiaryId(benId)}
-          beneficiaries={beneficiaryWithoutAddresses}
-        />
+        <Suspense fallback={null}>
+          <AddBeneficiaryAddressModal
+            isOpen={beneficiaryWithoutAddresses.length > 0}
+            toggle={onBeneficiaryAddressSaved}
+            close={() => setDismissedBeneficiaryId(benId)}
+            beneficiaries={beneficiaryWithoutAddresses}
+          />
+        </Suspense>
       )}
       <Modal isOpen={showOfflineModal}>
         <ModalHeader>
@@ -556,7 +572,9 @@ const LayoutContent = ({ children, classNames, ...rest }) => {
                         classNames={animationTheme}
                         unmountOnExit
                       >
-                        <Outlet />
+                        <Suspense fallback={<Loader />}>
+                          <Outlet />
+                        </Suspense>
                       </CSSTransition>
                     </TransitionGroup>
                   </div>

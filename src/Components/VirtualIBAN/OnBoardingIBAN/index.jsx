@@ -32,16 +32,34 @@ import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
 import useSendOtp from "../../../hooks/GeneralUse/useSendOtp";
 import OTPConfirmation from "../../../Common/Component/OtpVerification";
 import { useMediaQuery } from "@mui/material";
+import ProviderSelectModal from "./components/ProviderSelectModal";
 import useDraft from "../../../hooks/GeneralUse/useDraft";
 import {
   BUSINESS_PROFILE_SCOPE,
   IBAN_ONBOARDING_SCOPE,
+  IBAN_RHUB_DOC_KEYS,
   draftFilesToIbanDocs,
   isDraftFileRef,
 } from "../../../utils/Data/businessDraft";
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
 import { useRiskPreview } from "../../../hooks/useRiskPreview";
 import { RiskPreviewContext } from "./riskPreviewContext";
+import MissingInfoModal from "../../MyMasterCard/MissingInfoModal";
+import {
+  getPlaidBankPayload,
+  isSavedBankPaymentStarted,
+} from "../../AddFunds/WalletFundsFlow/plaidBank";
+import PlaidLinkHandler from "../../PaymentsNewer/InternationalFlow/PlaidLinkHandler";
+import MobileWalletStatus from "../../PaymentAddressPublic/PayAsGuest/MobileWalletStatus";
+import PaymentProgressOverlay from "../PaymentProgressOverlay";
+import { useNavigate } from "react-router";
+
+const FEE_PAYMENT_ROUTES = {
+  wallet: "confirm-activation",
+  paypal: "initiate-paypal",
+  bank: "initiate-plaid",
+  mobile_wallet: "initiate-mobile-wallet",
+};
 
 const STEPS_BUSINESS = [
   "landing",
@@ -72,6 +90,7 @@ const DRAFT_COMPANY_KEYS = [
   "website",
   "mainContact",
 ];
+const DRAFT_RHUB_COMPANY_KEYS = ["idExpiryDate", "state", "idTypeCode", "legalStatusCode"];
 
 const RISK_PREVIEW_STEPS = ["company", "activity", "ownership", "documents", "review"];
 const RISK_ACTIVITY_KEYS = [
@@ -91,6 +110,7 @@ const initialState = {
   step: "landing",
   userType: "business",
   status: "submitted",
+  provider: "bvnk",
   account: { email: "", otp: "" },
   company: {
     legalName: "",
@@ -105,6 +125,10 @@ const initialState = {
     taxNumber: "",
     mainContact: "",
     agent: "",
+    idExpiryDate: "",
+    state: "",
+    idTypeCode: "",
+    legalStatusCode: "",
   },
   activity: {
     industry: "",
@@ -159,6 +183,7 @@ function onboardingReducer(state, action) {
       return {
         ...state,
         step: action.payload.step || state.step,
+        provider: action.payload.provider || state.provider,
         company: { ...state.company, ...action.payload.company },
         activity: { ...state.activity, ...action.payload.activity },
         ownership: { ...state.ownership, owners: action.payload.owners || state.ownership.owners },
@@ -167,6 +192,8 @@ function onboardingReducer(state, action) {
           files: { ...state.documents.files, ...action.payload.files },
         },
       };
+    case "SET_PROVIDER":
+      return { ...state, provider: action.payload };
     case "RESET_ALL":
       return initialState;
     default:
@@ -174,12 +201,14 @@ function onboardingReducer(state, action) {
   }
 }
 
-const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
+const OPEN_REQUEST_STATUSES = ["pending", "submitted", "in_review", "under_review"];
+
+const OnboardingIBAN = forwardRef(({ onCreated, onStepChange, addNew = false, onCancel }, ref) => {
   const { t } = useTranslation();
   const can = usePermission();
   const isMobile = useMediaQuery("(max-width:600px)");
   const { getKey, reset } = useIdempotency();
-
+  const navigate = useNavigate();
   const canCreateIban = can("virtual-iban.account.create");
   const { userDetails, authHeader } = useContext(UserContext);
 
@@ -188,14 +217,21 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
   const [otpToken, setOtpToken] = useState("");
   const [codeType, setCodeType] = useState("sms");
   const [otpMethods, setOtpMethods] = useState(null);
+  const [providerModal, setProviderModal] = useState(false);
+  const [feePayment, setFeePayment] = useState({ method: "wallet", plaidBank: null });
+  const [plaidLink, setPlaidLink] = useState(null);
+  const [isRedirecting, setIsRedirecting] = useState(false);
+  const [mobileWalletTransactionId, setMobileWalletTransactionId] = useState(null);
   const [loadingStatus, setLoadingStatus] = useState(true);
   const [statusCheckedFor, setStatusCheckedFor] = useState(null);
   const [draftHydrated, setDraftHydrated] = useState(false);
+  const [missingPhoneModal, setMissingPhoneModal] = useState(false);
   const hydratedForRef = useRef(null);
 
   const draftEnabled = Boolean(userDetails?._id) && userDetails?.account_type === "business";
   const profileDraft = useDraft(BUSINESS_PROFILE_SCOPE, { enabled: draftEnabled });
   const ibanDraft = useDraft(IBAN_ONBOARDING_SCOPE, { enabled: draftEnabled });
+  const isRhub = state.provider === "rhub";
 
   const checkRequestStatus = async () => {
     if (!userDetails?._id) {
@@ -209,7 +245,9 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         { headers: authHeader },
       );
       const dec = decryptData(res.data?.data);
-      if (dec?.hasRequest && dec?.requestStatus && dec.requestStatus !== "none") {
+      const hasRequest = dec?.hasRequest && dec?.requestStatus && dec.requestStatus !== "none";
+      const blocksNewRequest = !addNew || OPEN_REQUEST_STATUSES.includes(dec?.requestStatus);
+      if (hasRequest && blocksNewRequest) {
         dispatch({ type: "SET_STATUS", payload: dec.requestStatus });
         dispatch({ type: "SET_STEP", payload: "status" });
         if (dec?.data) {
@@ -239,6 +277,15 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
   }, [userDetails?._id]);
 
   useEffect(() => {
+    const handlePageShow = (event) => {
+      if (event.persisted) setIsRedirecting(false);
+    };
+
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
+
+  useEffect(() => {
     if (!draftEnabled || hydratedForRef.current === userDetails._id) return;
     if (statusCheckedFor !== userDetails._id || !profileDraft.isLoaded || !ibanDraft.isLoaded)
       return;
@@ -248,8 +295,13 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
       const profileCompany = profileDraft.data?.company || {};
       const savedActivity = ibanDraft.data?.activity || {};
       const industryReference = profileCompany.industryReference || savedActivity.industryReference;
+      const savedRhubCompany = ibanDraft.data?.rhubCompany || {};
       const company = DRAFT_COMPANY_KEYS.reduce(
         (acc, key) => (profileCompany[key] ? { ...acc, [key]: profileCompany[key] } : acc),
+        {},
+      );
+      const rhubCompany = DRAFT_RHUB_COMPANY_KEYS.reduce(
+        (acc, key) => (savedRhubCompany[key] ? { ...acc, [key]: savedRhubCompany[key] } : acc),
         {},
       );
       const restoredStep = DRAFT_STEPS.includes(ibanDraft.data?.step) ? ibanDraft.data.step : null;
@@ -258,7 +310,8 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         type: "HYDRATE_DRAFT",
         payload: {
           step: restoredStep,
-          company,
+          provider: ibanDraft.data?.provider,
+          company: { ...company, ...rhubCompany },
           activity: {
             ...savedActivity,
             ...(industryReference
@@ -307,8 +360,16 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
           isPep,
         })),
     });
-    ibanDraft.update({ step: state.step, activity: state.activity });
-  }, [draftHydrated, state.step, state.company, state.activity, state.ownership]);
+    ibanDraft.update({
+      step: state.step,
+      activity: state.activity,
+      provider: state.provider,
+      rhubCompany: DRAFT_RHUB_COMPANY_KEYS.reduce(
+        (acc, key) => ({ ...acc, [key]: state.company?.[key] || "" }),
+        {},
+      ),
+    });
+  }, [draftHydrated, state.step, state.provider, state.company, state.activity, state.ownership]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
@@ -334,6 +395,22 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
       toast.error(err?.message || t("Unable to send verification OTP"));
     },
   });
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      back() {
+        return goBack();
+      },
+    }),
+    [state.step],
+  );
+
+  useEffect(() => {
+    onStepChange?.(state.step);
+  }, [state.step, onStepChange]);
+
+  if (userDetails?.account_type === "individual") navigate("/virtual-IBAN");
 
   const stepOrder = state.userType === "individual" ? STEPS_INDIVIDUAL : STEPS_BUSINESS;
 
@@ -399,7 +476,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     dispatch({ type: "SET_STEP", payload: type === "individual" ? "review" : "company" });
   };
 
-  const handleInitiatePayment = async () => {
+  const handleInitiatePayment = async (paymentOptions = {}) => {
     if (!state.selectedWallet?._id) {
       toast.error(t("Please select an Instapay wallet to continue."));
       return;
@@ -419,10 +496,14 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     reset();
     setCodeType(selectedType);
 
+    const method = paymentOptions.method || "wallet";
+    setFeePayment({ method, plaidBank: paymentOptions.plaidBank || null });
+
     const payload = {
       wallet_id: state.selectedWallet._id,
       amount: state.feeDetails.convertedAmount,
       currency: state.feeDetails.currency,
+      ...(method === "bank" ? getPlaidBankPayload(paymentOptions.plaidBank) : {}),
     };
 
     try {
@@ -435,19 +516,27 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
   const handleVerifyOtpSubmit = async (setVerified, type, otp, setOtpError) => {
     try {
       const formData = new FormData();
+      const company = isRhub
+        ? state.company
+        : Object.fromEntries(
+            Object.entries(state.company).filter(([key]) => !DRAFT_RHUB_COMPANY_KEYS.includes(key)),
+          );
       const payloadData = {
         wallet_id: state.selectedWallet?._id,
         token: otpToken,
         otp,
         type: type || codeType,
-        ...state.company,
+        provider: state.provider,
+        ...company,
         ...state.activity,
         ubos: state.ownership?.owners || state.ownership?.ubos || state.ownership || [],
         email: state.account.email,
+        ...(feePayment.method === "bank" ? getPlaidBankPayload(feePayment.plaidBank) : {}),
       };
 
       const draftFiles = [];
       const appendDoc = (field, f) => {
+        if (!isRhub && IBAN_RHUB_DOC_KEYS[field]) return;
         if (isDraftFileRef(f)) {
           draftFiles.push({ slot: f.slot, field });
         } else if (f && (f instanceof File || f instanceof Blob)) {
@@ -472,7 +561,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
       ibanDraft.cancelPending();
 
       const response = await axios.post(
-        `${import.meta.env.VITE_IP_DEV_API}/api/iban-fees/confirm-activation`,
+        `${import.meta.env.VITE_IP_DEV_API}/api/iban-fees/${FEE_PAYMENT_ROUTES[feePayment.method] || FEE_PAYMENT_ROUTES.wallet}`,
         formData,
         {
           headers: {
@@ -484,13 +573,47 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
       );
 
       const dec = decryptData(response.data?.data);
-      if (dec?.status) {
+      const details = dec?.data ?? dec;
+
+      const paypalUrl = details?.approvalUrl || details?.url;
+      if (feePayment.method === "paypal" && paypalUrl) {
+        setIsRedirecting(true);
+        setShowOtpModal(false);
+        window.location.href = paypalUrl;
+        return;
+      }
+
+      if (feePayment.method === "bank" && details?.linkToken) {
         setVerified(true);
         setShowOtpModal(false);
-        await checkRequestStatus();
-        dispatch({ type: "SET_STATUS", payload: "submitted" });
-        dispatch({ type: "SET_STEP", payload: "status" });
-        toast.success(t("IBAN Activation request and payment completed successfully!"));
+        setPlaidLink(details);
+        return;
+      }
+
+      if (feePayment.method === "bank" && isSavedBankPaymentStarted(dec)) {
+        setVerified(true);
+        setShowOtpModal(false);
+        await completeActivation({ bankTransfer: true });
+        return;
+      }
+
+      if (feePayment.method === "mobile_wallet" && dec?.status) {
+        setVerified(true);
+        setShowOtpModal(false);
+        const transactionId = details?.transactionId || details?.transaction_id;
+        if (transactionId) {
+          setMobileWalletTransactionId(transactionId);
+        } else {
+          toast.info(dec?.message || t("Payment Initiated"));
+          await checkRequestStatus();
+        }
+        return;
+      }
+
+      if (feePayment.method === "wallet" && dec?.status) {
+        setVerified(true);
+        setShowOtpModal(false);
+        await completeActivation();
       } else {
         setOtpError?.(dec?.message || t("Verification failed"));
       }
@@ -498,6 +621,24 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
       const decErr = decryptData(err?.response?.data?.data);
       setOtpError?.(decErr?.message || t("Verification failed or insufficient balance"));
     }
+  };
+
+  const completeActivation = async ({ bankTransfer = false } = {}) => {
+    await checkRequestStatus();
+    dispatch({ type: "SET_STATUS", payload: "submitted" });
+    dispatch({ type: "SET_STEP", payload: "status" });
+    toast.success(
+      bankTransfer
+        ? t(
+            "IBAN Activation request submitted. Your bank payment is being processed and will complete once the transfer clears.",
+          )
+        : t("IBAN Activation request and payment completed successfully!"),
+    );
+  };
+
+  const closeMobileWalletStatus = async () => {
+    setMobileWalletTransactionId(null);
+    await checkRequestStatus();
   };
 
   const closeOtpModal = () => {
@@ -534,15 +675,23 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     ref,
     () => ({
       back() {
+        if (addNew && ["landing", "status"].includes(state.step)) return onCancel?.();
         return goBack();
       },
     }),
-    [state.step],
+    [state.step, addNew, onCancel],
   );
 
   useEffect(() => {
     onStepChange?.(state.step);
   }, [state.step, onStepChange]);
+
+  const isOnboardingReady = !loadingStatus && (!draftEnabled || draftHydrated);
+  useEffect(() => {
+    if (addNew && isOnboardingReady && state.step === "landing") {
+      setProviderModal(true);
+    }
+  }, [addNew, isOnboardingReady]);
 
   const riskPayload = useMemo(
     () => ({
@@ -571,6 +720,28 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     () => ({ data: riskPreview.data, isFetching: riskPreview.isFetching }),
     [riskPreview.data, riskPreview.isFetching],
   );
+
+  const toggleProvideModal = () => {
+    setProviderModal((prev) => !prev);
+  };
+
+  const closeProviderModal = () => {
+    setProviderModal(false);
+    if (addNew) onCancel?.();
+  };
+
+  const startBusinessFlow = () => {
+    handleTypeSelect("business");
+    setProviderModal(false);
+  };
+
+  const handleNext = () => {
+    if (!userDetails?.phone && isRhub) {
+      setMissingPhoneModal(true);
+      return;
+    }
+    startBusinessFlow();
+  };
 
   if (loadingStatus || (draftEnabled && !draftHydrated)) {
     return (
@@ -610,10 +781,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
             </p>
             <div className={styles.buttoncont}>
               {canCreateIban && (
-                <button
-                  className={styles.buttonGroup1}
-                  onClick={() => handleTypeSelect("business")}
-                >
+                <button className={styles.buttonGroup1} onClick={toggleProvideModal}>
                   {t("Request IBAN Activation")} <ArrowRight size={16} />
                 </button>
               )}
@@ -642,7 +810,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
           </div>
 
           <div className={styles.footerContainer}>
-            <button className={styles.buttonGroup1} onClick={() => handleTypeSelect("business")}>
+            <button className={styles.buttonGroup1} onClick={toggleProvideModal}>
               <span>{t("Request IBAN Activation")}</span>
               <div className={styles.forwardBtnIcon}>
                 <ArrowRight size={18} />
@@ -711,7 +879,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
           onBack={goBack}
           onChange={(form) => dispatch({ type: "UPDATE_COMPANY", payload: form })}
           userType={state.userType}
-          data={state.company}
+          data={{ ...state.company, isRhub }}
           currentStep={state.step}
         />
       )}
@@ -746,7 +914,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
           onChange={(files) => dispatch({ type: "UPDATE_DOCUMENTS", payload: { files } })}
           onUploadDraftFile={profileDraft.uploadFile}
           userType={state.userType}
-          data={{ files: state.documents.files }}
+          data={{ files: state.documents.files, isRhub }}
           userDetails={userDetails}
           companyDetails={state.company}
           currentStep={state.step}
@@ -818,6 +986,44 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         />
       )}
 
+      <PaymentProgressOverlay show={isRedirecting || !!plaidLink} />
+
+      {plaidLink?.linkToken && (
+        <PlaidLinkHandler
+          link={plaidLink}
+          data={{
+            recipient_iban: feePayment.plaidBank?.recipient_iban,
+            wallet: state.selectedWallet,
+            exchange_rate: {
+              sending: {
+                amount: state.feeDetails?.convertedAmount,
+                currency: state.feeDetails?.currency,
+              },
+              fee: { amount: 0 },
+            },
+          }}
+          onAuthorized={async () => {
+            await completeActivation({ bankTransfer: true });
+            setPlaidLink(null);
+          }}
+          onCancelled={() => {
+            reset();
+            setPlaidLink(null);
+          }}
+        />
+      )}
+
+      <Modal isOpen={!!mobileWalletTransactionId} toggle={closeMobileWalletStatus} centered>
+        <ModalBody>
+          <MobileWalletStatus
+            inGuestPay={false}
+            transactionId={mobileWalletTransactionId}
+            toggle={closeMobileWalletStatus}
+            containerStyle={{ padding: "0", minHeight: "auto" }}
+          />
+        </ModalBody>
+      </Modal>
+
       <Modal
         style={{ maxWidth: isMobile ? "90%" : "auto" }}
         isOpen={showOtpModal}
@@ -844,6 +1050,24 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
           />
         </ModalBody>
       </Modal>
+      {providerModal && (
+        <ProviderSelectModal
+          isOpen={providerModal}
+          value={state.provider}
+          onChange={(val) => dispatch({ type: "SET_PROVIDER", payload: val })}
+          onClose={closeProviderModal}
+          onNext={handleNext}
+        />
+      )}
+      {missingPhoneModal && (
+        <MissingInfoModal
+          isOpen={missingPhoneModal}
+          toggle={() => setMissingPhoneModal(false)}
+          missingType="phone"
+          onSuccess={startBusinessFlow}
+          description={"To proceed with your IBAN activation, please provide your phone."}
+        />
+      )}
     </RiskPreviewContext.Provider>
   );
 });

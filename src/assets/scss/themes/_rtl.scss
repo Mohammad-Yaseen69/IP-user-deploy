@@ -326,42 +326,6 @@ html[dir="rtl"] {
       .page-body-wrapper {
         div.sidebar-wrapper {
           &.close_icon {
-            &:hover {
-              .sidebar-main {
-                .sidebar-links {
-                  .sidebar-list {
-                    &.hoverd {
-                      .sidebar-title {
-                        &.active {
-                          ~ .sidebar-submenu {
-                            display: block !important;
-                          }
-                        }
-                      }
-                    }
-                  }
-                  .simplebar-wrapper {
-                    .simplebar-mask {
-                      .simplebar-content-wrapper {
-                        .simplebar-content {
-                          .menu-box {
-                            > ul {
-                              > li {
-                                .sidebar-link {
-                                  &::before {
-                                    right: 13px;
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
             .sidebar-main {
               .sidebar-links {
                 .simplebar-wrapper {
@@ -510,52 +474,6 @@ html[dir="rtl"] {
             }
             .according-menu {
               display: none;
-            }
-            &:hover {
-              .sidebar-main {
-                .sidebar-links {
-                  .simplebar-wrapper {
-                    .simplebar-mask {
-                      .simplebar-content-wrapper {
-                        .simplebar-content {
-                          > li {
-                            a {
-                              svg {
-                                margin-left: 13px;
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-          &:hover {
-            transform: translate(0px);
-            .sidebar-main {
-              .sidebar-links {
-                .simplebar-wrapper {
-                  .simplebar-mask {
-                    .simplebar-content-wrapper {
-                      .simplebar-content {
-                        > li {
-                          a {
-                            svg {
-                              float: none;
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            .according-menu {
-              display: block;
             }
           }
           .sidebar-main {
@@ -6675,11 +6593,6 @@ html[dir="rtl"] {
         }
         .page-body-wrapper {
           div.sidebar-wrapper {
-            &.close_icon {
-              &:hover {
-                transform: translate(285px);
-              }
-            }
             .sidebar-main {
               .sidebar-links {
                 height: calc(100vh - 95px);
