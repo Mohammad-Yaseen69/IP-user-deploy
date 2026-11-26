@@ -179,7 +179,7 @@ const IbanCryptoPayoutModal = forwardRef(
     const isMobile = width <= 600;
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const { userDetails, getUserBeneficiaries, setProfileLockTime } = useContext(UserContext);
+    const { userDetails, setProfileLockTime } = useContext(UserContext);
     const invalidateBeneficiaryPages = useInvalidateBeneficiaryPages();
     const { getKey, reset: resetIdempotency } = useIdempotency();
 
@@ -782,8 +782,7 @@ const IbanCryptoPayoutModal = forwardRef(
           onSaveSuccess={async (saved) => {
             setIsAddBeneficiaryOpen(false);
             setSavedBeneficiaryId(getBeneficiaryId(saved) || "");
-            invalidateBeneficiaryPages();
-            await getUserBeneficiaries?.();
+            await invalidateBeneficiaryPages();
           }}
           fixedMethod="crypto_wallet"
         />

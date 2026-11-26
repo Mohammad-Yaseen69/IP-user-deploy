@@ -997,12 +997,10 @@ const SwiftTransfer = forwardRef(
     const width = useWindowWidth();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const { userDetails, setProfileLockTime, getUserBeneficiaries, authHeader } =
-      useContext(UserContext);
+    const { userDetails, setProfileLockTime, authHeader } = useContext(UserContext);
     const invalidateBeneficiaryPages = useInvalidateBeneficiaryPages();
     const refreshBeneficiaries = () => {
-      invalidateBeneficiaryPages();
-      return getUserBeneficiaries();
+      return invalidateBeneficiaryPages();
     };
     const picker = useBeneficiaryPicker({ filters: SWIFT_BENEFICIARY_FILTERS });
 

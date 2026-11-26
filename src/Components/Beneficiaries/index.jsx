@@ -31,7 +31,7 @@ const Beneficiaries = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const { verifyToken, getUserBeneficiaries } = useContext(UserContext);
+  const { verifyToken } = useContext(UserContext);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({ type: "all", accountTypes: [] });
@@ -78,7 +78,6 @@ const Beneficiaries = () => {
   const invalidateBeneficiaryPages = useInvalidateBeneficiaryPages();
 
   const onBeneficiarySaved = () => {
-    getUserBeneficiaries();
     invalidateBeneficiaryPages();
   };
 

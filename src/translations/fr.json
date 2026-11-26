@@ -6860,5 +6860,8 @@
   "No requested information found.": "Aucune information demandée trouvée.",
   "View Requested Information": "Voir les informations demandées",
   "Get Fee Quote": "Obtenir un devis des frais",
-  "Confirm & Pay": "Confirmer et payer"
+  "Confirm & Pay": "Confirmer et payer",
+  "Beneficiary type": "Type de bénéficiaire",
+  "Select one or more": "Sélectionnez un ou plusieurs",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Vous n'avez aucun portefeuille actif pour envoyer. Veuillez activer un portefeuille et réessayer."
 }

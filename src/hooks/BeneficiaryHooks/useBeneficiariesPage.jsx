@@ -94,11 +94,11 @@ export const useBeneficiaryPicker = ({ filters, enabled = true, limit = 20 }) =>
 
 export const useAllBeneficiaries = ({ filters, enabled = true }) => {
   const page = useBeneficiariesPage({ limit: 100, sort: "date_desc", filters, enabled });
-  const { hasNextPage, isFetchingNextPage, fetchNextPage } = page;
+  const { hasNextPage, isFetchingNextPage, isFetchNextPageError, fetchNextPage } = page;
 
   useEffect(() => {
-    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+    if (hasNextPage && !isFetchingNextPage && !isFetchNextPageError) fetchNextPage();
+  }, [hasNextPage, isFetchingNextPage, isFetchNextPageError, fetchNextPage]);
 
   return { ...page, isComplete: page.isFetched && !hasNextPage };
 };

@@ -6540,5 +6540,8 @@
   "No transactions": "Няма транзакции",
   "SEND TOP-UP AND E-SIM": "ЗАРЕЖДАНЕ И E-SIM",
   "Holiday List": "Списък на празниците",
-  "My Withdrawls": "Моите тегления"
+  "My Withdrawls": "Моите тегления",
+  "Beneficiary type": "Тип бенефициент",
+  "Select one or more": "Изберете един или повече",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Нямате активен портфейл, от който да изпратите. Моля, активирайте портфейл и опитайте отново."
 }

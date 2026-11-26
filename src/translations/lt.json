@@ -6538,5 +6538,8 @@
   "SEND TOP-UP AND E-SIM": "SIŲSTI PAPILDYMĄ IR E-SIM",
   "Holiday List": "Švenčių sąrašas",
   "My Withdrawls": "Mano išėmimai",
-  "Enter a code shown in the app to make sure everything works fine.": "Įveskite programėlėje rodomą kodą, kad įsitikintumėte, jog viskas veikia tinkamai."
+  "Enter a code shown in the app to make sure everything works fine.": "Įveskite programėlėje rodomą kodą, kad įsitikintumėte, jog viskas veikia tinkamai.",
+  "Beneficiary type": "Gavėjo tipas",
+  "Select one or more": "Pasirinkite vieną ar daugiau",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Neturite aktyvios piniginės, iš kurios galėtumėte siųsti. Suaktyvinkite piniginę ir bandykite dar kartą."
 }

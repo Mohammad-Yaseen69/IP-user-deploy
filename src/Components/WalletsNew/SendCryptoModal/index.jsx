@@ -192,7 +192,7 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
   const { t } = useTranslation();
   const width = useWindowWidth();
   const navigate = useNavigate();
-  const { userDetails, getUserBeneficiaries, setProfileLockTime } = useContext(UserContext);
+  const { userDetails, setProfileLockTime } = useContext(UserContext);
   const invalidateBeneficiaryPages = useInvalidateBeneficiaryPages();
 
   const walletId = wallet?._id;
@@ -434,8 +434,7 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
   const handleBeneficiarySaved = async (savedBeneficiary) => {
     setIsAddBeneficiaryOpen(false);
     setSavedBeneficiaryId(getBeneficiaryId(savedBeneficiary) || "");
-    invalidateBeneficiaryPages();
-    await getUserBeneficiaries?.();
+    await invalidateBeneficiaryPages();
   };
 
   const buildFeePayload = () => ({

@@ -6540,5 +6540,8 @@
   "No transactions": "Ingen transaksjoner",
   "SEND TOP-UP AND E-SIM": "SEND PÅFYLLING OG E-SIM",
   "Holiday List": "Helligdagsliste",
-  "My Withdrawls": "Mine uttak"
+  "My Withdrawls": "Mine uttak",
+  "Beneficiary type": "Mottakertype",
+  "Select one or more": "Velg én eller flere",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Du har ingen aktiv lommebok å sende fra. Aktiver en lommebok og prøv igjen."
 }

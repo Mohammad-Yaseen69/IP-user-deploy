@@ -6880,5 +6880,8 @@
   "No requested information found.": "لم يتم العثور على معلومات مطلوبة.",
   "View Requested Information": "عرض المعلومات المطلوبة",
   "Get Fee Quote": "الحصول على عرض سعر للرسوم",
-  "Confirm & Pay": "تأكيد ودفع"
+  "Confirm & Pay": "تأكيد ودفع",
+  "Beneficiary type": "نوع المستفيد",
+  "Select one or more": "اختر واحدًا أو أكثر",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "ليس لديك محفظة نشطة للإرسال منها. يرجى تفعيل محفظة والمحاولة مرة أخرى."
 }

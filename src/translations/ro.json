@@ -6540,5 +6540,8 @@
   "No transactions": "Nicio tranzacție",
   "SEND TOP-UP AND E-SIM": "TRIMITE REÎNCĂRCARE ȘI E-SIM",
   "Holiday List": "Lista sărbătorilor",
-  "My Withdrawls": "Retragerile mele"
+  "My Withdrawls": "Retragerile mele",
+  "Beneficiary type": "Tipul beneficiarului",
+  "Select one or more": "Selectați unul sau mai multe",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Nu aveți un portofel activ din care să trimiteți. Vă rugăm să activați un portofel și să încercați din nou."
 }

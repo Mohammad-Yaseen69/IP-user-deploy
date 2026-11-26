@@ -6540,5 +6540,8 @@
   "No transactions": "Գործարքներ չկան",
   "SEND TOP-UP AND E-SIM": "ՈՒՂԱՐԿԵԼ ՀԱՄԱԼՐՈՒՄ ԵՎ E-SIM",
   "Holiday List": "Տոնական օրերի ցուցակ",
-  "My Withdrawls": "Իմ դուրսբերումները"
+  "My Withdrawls": "Իմ դուրսբերումները",
+  "Beneficiary type": "Շահառուի տեսակը",
+  "Select one or more": "Ընտրեք մեկ կամ մի քանիսը",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Դուք չունեք ակտիվ դրամապանակ ուղարկելու համար։ Խնդրում ենք ակտիվացնել դրամապանակ և կրկին փորձել։"
 }

@@ -6860,5 +6860,8 @@
   "No requested information found.": "Запитаної інформації не знайдено.",
   "View Requested Information": "Переглянути запитану інформацію",
   "Get Fee Quote": "Отримати розрахунок комісії",
-  "Confirm & Pay": "Підтвердити й оплатити"
+  "Confirm & Pay": "Підтвердити й оплатити",
+  "Beneficiary type": "Тип отримувача",
+  "Select one or more": "Виберіть один або кілька",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "У вас немає активного гаманця для надсилання. Активуйте гаманець і спробуйте ще раз."
 }

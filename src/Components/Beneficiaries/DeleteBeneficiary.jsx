@@ -9,7 +9,7 @@ import { useInvalidateBeneficiaryPages } from "../../hooks/BeneficiaryHooks/useB
 const DeleteBeneficiary = ({ isOpen, toggle, benef, onDeleted }) => {
   const { t } = useTranslation();
   const [isDeleting, setIsDeleting] = useState(false);
-  const { userDetails, authHeader, getUserBeneficiaries } = useContext(UserContext);
+  const { userDetails, authHeader } = useContext(UserContext);
   const invalidateBeneficiaryPages = useInvalidateBeneficiaryPages();
 
   const deleteBeneficiary = async () => {
@@ -29,7 +29,6 @@ const DeleteBeneficiary = ({ isOpen, toggle, benef, onDeleted }) => {
       // console.log(decryptData(error?.response?.data?.data))
       toast.error(t("Something went wrong while deleting the beneficiary!"));
     } finally {
-      getUserBeneficiaries?.();
       invalidateBeneficiaryPages();
       setIsDeleting(false);
     }
