@@ -376,7 +376,8 @@ const PaymentsBeneficiary = ({
           style={{
             display: "flex",
             alignItems: "center",
-            padding: ".25rem .75rem",
+            height: "40px",
+            padding: "0 .75rem",
             borderRadius: "10px",
             background: "#fff",
             position: "relative",

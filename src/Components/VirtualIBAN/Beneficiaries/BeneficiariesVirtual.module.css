@@ -162,9 +162,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  height: 40px;
   border: 1px solid #d0d5dd;
-  border-radius: 8px;
-  padding: 10px 14px;
+  border-radius: 10px;
+  padding: 0 14px;
   background: #fff;
   width: 100%;
 }
@@ -554,7 +555,7 @@
 
   .searchBarWrapper {
     border: 1px solid #ece9f5;
-    padding: 9px 12px;
+    padding: 0 12px;
     background-color: #faf9fd;
 
     input {

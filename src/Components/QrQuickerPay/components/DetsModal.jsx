@@ -45,7 +45,13 @@ const DetsModal = ({
           <label htmlFor="" style={{ fontWeight: 600 }}>
             {t("Phone Number")}
           </label>
-          <PhoneInput phone={phone} setPhone={setPhone} country={country} setCountry={setCountry} />
+          <PhoneInput
+            size="lg"
+            phone={phone}
+            setPhone={setPhone}
+            country={country}
+            setCountry={setCountry}
+          />
         </div>
         <div style={{ marginTop: "1rem" }}>
           <label htmlFor="" style={{ fontWeight: 600 }}>

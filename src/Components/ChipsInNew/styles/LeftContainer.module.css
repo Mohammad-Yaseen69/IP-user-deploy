@@ -253,9 +253,13 @@
   -webkit-text-fill-color: transparent;
 }
 
+.inp_con input {
+  height: 40px;
+}
+
 .inp_con input,
 .inp_con textarea {
-  border-radius: 6px;
+  border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.3);
   background: #fff;
   padding: 0.6rem 1rem;

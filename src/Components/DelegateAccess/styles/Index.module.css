@@ -99,11 +99,12 @@
   flex: 1;
   display: flex;
   align-items: center;
-  border-radius: 8px;
+  height: 40px;
+  border-radius: 10px;
   border: 1px solid var(--Greyscale-50, #e7e9e9);
   background: var(--Greyscale-0, #fff);
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
-  padding: 10px 24px;
+  padding: 0 16px;
 
   Search {
     border-radius: 9.416px;

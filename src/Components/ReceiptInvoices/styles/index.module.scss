@@ -103,10 +103,11 @@
         align-items: center;
         gap: 10px;
         width: 100%;
-        border-radius: var(--SPACING-spacing-0, 8px);
+        height: 40px;
+        border-radius: 10px;
         background: #fff;
         box-shadow: 0 4.328px 35.702px 0 rgba(0, 0, 0, 0.06);
-        padding: 8px 14px;
+        padding: 0 14px;
 
         input {
           border: none;

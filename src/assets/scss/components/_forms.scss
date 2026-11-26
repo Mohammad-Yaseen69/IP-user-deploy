@@ -173,7 +173,12 @@ form {
 .form-select {
   border-color: $light-gray;
   font-size: 14px;
-  padding: 12px 15px;
+  line-height: 20px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  &.form-select {
+    min-height: 40px;
+  }
   &:focus {
     box-shadow: none;
     border-color: $light-gray;

@@ -436,7 +436,10 @@
             }
 
             .title {
-              border-radius: var(--RADIUS-radius-1, 4px);
+              display: flex;
+              align-items: center;
+              height: 40px;
+              border-radius: 10px;
               border: 1px solid var(--COLORS-Neutral-200, #eff1f6);
               background: var(--COLORS-Neutral-100, #fff);
 

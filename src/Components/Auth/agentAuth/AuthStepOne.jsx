@@ -82,6 +82,7 @@ const AuthStepOne = ({
           ) : (
             <label>
               <PhoneInput
+                size="lg"
                 phone={email}
                 setPhone={setEmail}
                 country={country}

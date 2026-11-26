@@ -1357,6 +1357,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                 <div className={styles.input_container}>
                   <label>{t("Phone Number")}</label>
                   <PhoneInput
+                    size="lg"
                     setPhone={setPhone}
                     country={countryCode}
                     setCountry={(country) => {
@@ -1423,6 +1424,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                     {t("Phone Number")} ({t("Optional")})
                   </label>
                   <PhoneInput
+                    size="lg"
                     setPhone={setPhone}
                     country={countryCode}
                     setCountry={(country) => {
