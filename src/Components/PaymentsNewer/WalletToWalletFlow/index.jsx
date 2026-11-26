@@ -1626,7 +1626,7 @@ const WalletToWalletFlow = ({
                         data={data}
                         dataHandler={dataHandler}
                         loading={data.loading}
-                        ibanPay
+                        ibanPay={!payment_type}
                       />
                     ))}
                   {data.step === 5 &&
@@ -1920,7 +1920,11 @@ const WalletToWalletFlow = ({
                                 <PaymentType data={data} dataHandler={dataHandler} />
                               )
                             ) : (
-                              <StepFour data={data} dataHandler={dataHandler} ibanPay />
+                              <StepFour
+                                data={data}
+                                dataHandler={dataHandler}
+                                ibanPay={!payment_type}
+                              />
                             ))}
                           {data.step === 5 &&
                             (data?.payment_type?.value === "bank_transfer" ? (
