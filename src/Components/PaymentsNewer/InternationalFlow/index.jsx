@@ -406,7 +406,8 @@ const InternationFlow = ({
           (internationalData.payment_type.value !== "wallet"
             ? false
             : !internationalData?.wallet?._id) ||
-          (internationalData.payment_type.value === "iban" && !internationalData?.iban?._id) ||
+          (internationalData.payment_type.value === "iban" &&
+            (!internationalData?.iban?._id || !internationalData?.quotation_details?.token)) ||
           internationalData.ex_extra_error
         );
 
@@ -637,6 +638,8 @@ const InternationFlow = ({
   ) => {
     setLoading(true);
     updateInternationalData("exchange_rate_error", "");
+    updateInternationalData("ex_extra_error", "");
+    updateInternationalData("quotation_details", {});
     if (!amount) return;
     try {
       const dataa = {
@@ -908,6 +911,18 @@ const InternationFlow = ({
               internationalData?.wallet?.currency?.code,
               Number(String(internationalData.amount)?.replaceAll(",", "")),
             );
+          } else if (internationalData.payment_type?.value === "iban") {
+            const from =
+              internationalData?.currency_wallet?.currency?.code ?? internationalData?.currency;
+            const typed = Number(String(internationalData.amount)?.replaceAll(",", ""));
+            if (!from) {
+              updateInternationalData(
+                "ex_extra_error",
+                "Select the sending currency again to pay from your IBAN.",
+              );
+              return undefined;
+            }
+            amount = from === "EUR" ? typed : await getPlainExchangeRate(from, "EUR", typed);
           } else {
             amount = Number(String(internationalData.amount)?.replaceAll(",", ""));
           }
@@ -929,7 +944,8 @@ const InternationFlow = ({
               ? "EUR"
               : internationalData?.currency;
         getAmount().then((res) => {
-          if (wallet_id) {
+          if (res == null) return;
+          if (wallet_id || internationalData.payment_type?.value === "iban") {
             getExchangeRateNew(res, () => {}, wallet_id, currency_code, false, setLoading);
           }
         });

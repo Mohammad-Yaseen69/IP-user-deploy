@@ -116,7 +116,7 @@ const RecentTransactions = ({
       dataHandler("amount", Number(finalAmount).toFixed(2));
       dataHandler("country", country);
       dataHandler("beneficiary", beneficiary);
-      dataHandler("currency", currency?.currency?.code);
+      dataHandler("currency", currency?.currency?.code ?? t?.currency?.code);
       dataHandler("currency_wallet", currency);
       dataHandler(
         "flow",

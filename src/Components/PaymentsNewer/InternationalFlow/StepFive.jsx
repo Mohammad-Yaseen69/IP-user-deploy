@@ -11,6 +11,8 @@ const StepFive = ({ data }) => {
   const { t } = useTranslation();
   const { authHeader } = useContext(UserContext);
   const [exchangedAmount, setExchangedAmount] = useState(0);
+  const ibanCurrency =
+    data.payment_type?.value === "iban" ? data.exchange_rate?.sending?.currency : null;
 
   useEffect(() => {
     if (data.currency_wallet?._id !== data?.wallet?._id) {
@@ -120,9 +122,10 @@ const StepFive = ({ data }) => {
               <span>{t("Exchange Rate")}</span>
               <span>
                 1.00{" "}
-                {data.payment_type?.value !== "wallet"
-                  ? data.currency_wallet?.currency?.code
-                  : data.wallet?.currency?.code}{" "}
+                {ibanCurrency ??
+                  (data.payment_type?.value !== "wallet"
+                    ? data.currency_wallet?.currency?.code
+                    : data.wallet?.currency?.code)}{" "}
                 = {String(data.exchange_rate?.exchange_rate)?.slice(0, 6)}{" "}
                 {data.exchange_rate?.receiver?.currency}
               </span>
@@ -135,9 +138,10 @@ const StepFive = ({ data }) => {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}{" "}
-              {data.payment_type?.value !== "wallet"
-                ? data.currency_wallet?.currency?.code
-                : data.wallet?.currency?.code}{" "}
+              {ibanCurrency ??
+                (data.payment_type?.value !== "wallet"
+                  ? data.currency_wallet?.currency?.code
+                  : data.wallet?.currency?.code)}{" "}
             </span>
           </div>
           <div className={styles.aao_item}>
@@ -153,9 +157,10 @@ const StepFive = ({ data }) => {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}{" "}
-            {data.wallet?.currency?.code !== data?.currency_wallet?.currency?.code
-              ? (data.wallet?.currency?.code ?? data?.currency_wallet?.currency?.code)
-              : data.currency?.currency?.code || data?.currency}
+            {ibanCurrency ??
+              (data.wallet?.currency?.code !== data?.currency_wallet?.currency?.code
+                ? (data.wallet?.currency?.code ?? data?.currency_wallet?.currency?.code)
+                : data.currency?.currency?.code || data?.currency)}
           </span>
         </div>
       </div>
