@@ -315,15 +315,14 @@
 }
 
 .link span {
-  max-width: 80%;
-  overflow: hidden;
+  flex: 1;
+  min-width: 0;
   color: #fff;
   leading-trim: both;
   text-edge: cap;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
   font-family: "Inter", sans-serif;
-  font-size: 18px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
