@@ -9,7 +9,7 @@ const PageHeader = ({ title, subtitle, children }) => (
     </div>
     <div className={styles.right}>
       {children}
-      <TopRight position="static" />
+      <TopRight position="static" withMenu />
     </div>
   </header>
 );
