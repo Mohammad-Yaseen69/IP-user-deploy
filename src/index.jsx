@@ -7,6 +7,9 @@ import { i18nReady } from "./i18n";
 // libs css
 import { BrowserRouter } from "react-router-dom";
 import * as Sentry from "@sentry/react";
+import { installFlagFallback } from "./utils/Functions/flagFallback";
+
+installFlagFallback();
 import { preloadDashboard } from "./Components/HomeNewUpdated/dashboardChunks";
 
 window.addEventListener("error", (e) => {
