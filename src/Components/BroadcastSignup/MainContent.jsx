@@ -39,7 +39,13 @@ const MainContent = () => {
           });
         } else if (file.name.endsWith(".xlsx")) {
           // Parse XLSX file using XLSX
-          const XLSX = await import("xlsx");
+          let XLSX;
+          try {
+            XLSX = await import("xlsx");
+          } catch {
+            toast.error(t("Something went wrong on our end. Please try again later."));
+            return;
+          }
           const workbook = XLSX.read(content, { type: "binary" });
           const sheetName = workbook.SheetNames[0];
           const sheet = workbook.Sheets[sheetName];
@@ -117,7 +123,13 @@ const MainContent = () => {
     const failedUsers = processedUsers.filter((user) => user.status === false);
 
     // Create Excel file for failed users
-    const XLSX = await import("xlsx");
+    let XLSX;
+    try {
+      XLSX = await import("xlsx");
+    } catch {
+      toast.error(t("Something went wrong on our end. Please try again later."));
+      return;
+    }
     const ws = XLSX.utils.json_to_sheet(failedUsers);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "FailedUsers");
