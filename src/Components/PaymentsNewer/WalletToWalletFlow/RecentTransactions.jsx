@@ -36,6 +36,18 @@ const getWallet = async (authHeader, id, currency) => {
   return decrypted?.walletList?.find((item) => item?.currency?.code === currency);
 };
 
+// the wallet the transfer was sent from; if it is gone, an active wallet in the same currency can repeat it
+const findSendingWallet = (wallets, tx) =>
+  wallets?.find((w) => w?.wallet_id === tx?.wallet_id) ||
+  wallets?.find(
+    (w) =>
+      w?.wallet_type === "insta" &&
+      w?.status === "active" &&
+      !w?.blocked &&
+      !w?.admin_blocked &&
+      w?.currency?.code === tx?.currency?.code,
+  );
+
 const RecentTransactions = ({
   dataHandler,
   type,
@@ -92,7 +104,7 @@ const RecentTransactions = ({
   };
 
   const proceedTransaction = async (t, finalAmount) => {
-    const sendingWallet = userWallets?.find((w) => w?.wallet_id === t?.wallet_id);
+    const sendingWallet = findSendingWallet(userWallets, t);
     const currency = {
       ...sendingWallet,
       ...currencies.find((item) => item.currency_code === sendingWallet?.currency?.code),
@@ -155,7 +167,7 @@ const RecentTransactions = ({
   };
 
   const canRepeat = async (tx) => {
-    const sendingWallet = userWallets?.find((w) => w?.wallet_id === tx?.wallet_id);
+    const sendingWallet = findSendingWallet(userWallets, tx);
     if (!sendingWallet) return false;
 
     if (type === "international") {

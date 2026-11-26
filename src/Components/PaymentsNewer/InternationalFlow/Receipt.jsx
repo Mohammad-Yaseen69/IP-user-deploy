@@ -12,6 +12,25 @@ import help from "./files/help.svg";
 import logo from "./files/ins_logo.svg";
 import styles from "./styles/receipt.module.css";
 import { getBeneficiaryDisplayName } from "./beneficiaryHelpers";
+import { useQuery } from "@tanstack/react-query";
+import { apiWrapper } from "../../../utils/Functions/apiWrapper";
+
+const IBAN_DONE = ["completed", "refunded", "failed"];
+const useIbanPaymentState = (data) => {
+  const details = data?.transaction_details;
+  const reference = details?.reference_id ?? details?.referenceId ?? details?.data?.reference_id;
+  const isIban = data?.payment_type?.value === "iban" && !!reference;
+  const { data: res } = useQuery({
+    queryKey: ["iban-pay-status", reference],
+    queryFn: () =>
+      apiWrapper({ endpoint: `/api/virtual-iban/iban-pay/status/${reference}` }).then(
+        (r) => r?.data,
+      ),
+    enabled: isIban,
+    refetchInterval: (query) => (IBAN_DONE.includes(query.state.data?.state) ? false : 5000),
+  });
+  return isIban ? res?.state || "processing" : null;
+};
 
 const Receipt = ({
   data,
@@ -33,8 +52,12 @@ const Receipt = ({
   const shareUrl = `${window.location.origin}${window.location.pathname}${window.location.search}`;
   const base_url = shareUrl;
 
+  const ibanState = useIbanPaymentState(data);
+  const isIbanPayment = data.payment_type?.value === "iban";
+
   useEffect(() => {
     if (data.payment_type?.value === "mobile_wallet" && !isGuest) return;
+    if (isIbanPayment) return;
     if (isGuest) return;
     const timer = setInterval(() => {
       setCountdown((prev) => {
@@ -86,15 +109,27 @@ const Receipt = ({
           ) : (
             <div className={styles.confirmed}>
               <div className={styles.c_left}>
-                <h3 style={{ maxWidth: "15ch" }}>
-                  {transactionStatus === "error"
-                    ? t("Your payment is Failed")
-                    : success
-                      ? t("Your payment is Completed!")
-                      : t("Your payment is in process")}
+                <h3 style={{ maxWidth: ibanState ? "22ch" : "15ch" }}>
+                  {ibanState === "completed"
+                    ? t("Your payment is Completed!")
+                    : ibanState === "refunded"
+                      ? t(
+                          "Your payment could not be completed. The full amount is back in your IBAN.",
+                        )
+                      : ibanState === "refunding"
+                        ? t(
+                            "Your payment could not be completed. We are returning the amount to your IBAN.",
+                          )
+                        : ibanState === "failed"
+                          ? t("Your payment did not go through. Nothing was charged.")
+                          : transactionStatus === "error"
+                            ? t("Your payment is Failed")
+                            : success
+                              ? t("Your payment is Completed!")
+                              : t("Your payment is in process")}
                 </h3>
                 <p>{t("Thanks for Using InstaPay")}</p>
-                {isGuest === false && (
+                {isGuest === false && !isIbanPayment && (
                   <p
                     style={{
                       marginTop: "1.5rem",
