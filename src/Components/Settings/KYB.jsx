@@ -561,6 +561,7 @@ const KYB = () => {
       );
 
       const decrypted = decryptData(res.data.data);
+      toast.success(decrypted?.message || "Your KYB files have been uploaded successfully.");
 
       if (draftEnabled) {
         const submittedSlots = fileEntries
@@ -582,11 +583,8 @@ const KYB = () => {
           await processWithoutCharge();
         }
       } else {
-        toast.success(decrypted?.message);
         verifyToken(true);
       }
-
-      console.log(decrypted);
     } catch (error) {
       console.log(error);
       const dec = decryptData(error.response?.data?.data);
