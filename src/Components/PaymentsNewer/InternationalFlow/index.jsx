@@ -34,7 +34,7 @@ import Receipt from "./Receipt";
 import SelectedCard from "./SelectedCard";
 import ServiceDetails from "./ServiceDetails";
 import StepFive from "./StepFive";
-import StepFour from "./StepFour";
+import StepFour, { isIbanShort } from "./StepFour";
 import StepOne from "./StepOne";
 import StepThree from "./StepThree";
 import StepTwo from "./StepTwo";
@@ -407,7 +407,9 @@ const InternationFlow = ({
             ? false
             : !internationalData?.wallet?._id) ||
           (internationalData.payment_type.value === "iban" &&
-            (!internationalData?.iban?._id || !internationalData?.quotation_details?.token)) ||
+            (!internationalData?.iban?._id ||
+              !internationalData?.quotation_details?.token ||
+              isIbanShort(internationalData))) ||
           internationalData.ex_extra_error
         );
 
@@ -770,6 +772,11 @@ const InternationFlow = ({
         if (error) {
           updateInternationalData("exchange_rate_error", error);
           updateInternationalData("ex_extra_error", error);
+        } else if (
+          typeof dec?.message === "string" &&
+          /insufficient iban balance/i.test(dec.message)
+        ) {
+          updateInternationalData("exchange_rate_error", "");
         } else if (
           typeof dec?.message === "string"
             ? dec?.message?.toLowerCase()?.includes("insufficient")

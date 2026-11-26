@@ -470,7 +470,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         if (data.payment_type?.value === "wallet") {
           return !data.wallet?._id;
         } else if (data.payment_type?.value === "iban") {
-          return !data.iban?._id;
+          return !data.iban?._id || /insufficient iban balance/i.test(String(data.error || ""));
         } else if (data.payment_type?.value === "card") {
           const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
           const currentDate = new Date();

@@ -15,7 +15,7 @@ import axios from "axios";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import { LimitsErrorMessage } from "../../../utils/Functions/paymentLimits";
 import StepThree from "../InternationalFlow/StepThree";
-import StepFour from "../InternationalFlow/StepFour";
+import StepFour, { isIbanShort } from "../InternationalFlow/StepFour";
 import WalletsComponent from "../InternationalFlow/WalletsComponent";
 import PaymentType from "../WalletToWalletFlow/PaymentType";
 import StepFive from "../WalletToWalletFlow/StepFive";
@@ -175,7 +175,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
       case 3:
         return !data.reason;
       case 4:
-        if (data.payment_type?.value === "iban") return !data.iban?._id;
+        if (data.payment_type?.value === "iban") return !data.iban?._id || isIbanShort(data);
         return !data.payment_type?.name || data.payment_type?.value === "wallet"
           ? !data.wallet?._id
           : data?.payment_duration?.value == "subscription"

@@ -1,6 +1,6 @@
 import { Modal, ModalBody } from "reactstrap";
 import styles from "./Modal.module.css";
-import StepFour from "../../PaymentsNewer/InternationalFlow/StepFour";
+import StepFour, { isIbanShort } from "../../PaymentsNewer/InternationalFlow/StepFour";
 import { Link, useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, HelpCircle, Info, X } from "react-feather";
 import { useContext, useMemo, useState } from "react";
@@ -52,7 +52,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
         if (data.payment_type?.value === "wallet") {
           return !data.wallet?._id;
         } else if (data.payment_type?.value === "iban") {
-          return !data.iban?._id;
+          return !data.iban?._id || isIbanShort(data);
         } else {
           return !data.payment_type?.value;
         }

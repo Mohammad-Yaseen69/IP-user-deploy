@@ -23,6 +23,22 @@ import { formatWalletAmount } from "../../VirtualIBAN/CryptoWallet/instapay/wall
 
 export const IBAN_PAY_TYPE = { name: "Virtual IBAN", value: "iban", icon: bank, status: "Active" };
 
+const IBAN_SHORT_RX = /insufficient iban balance/i;
+export const isIbanShort = (data) => {
+  if (data?.payment_type?.value !== "iban" || !data?.iban?._id) return false;
+  const errors = [data.ex_extra_error, data.exchange_rate_error, data.error]
+    .map((e) => String(e || ""))
+    .join(" ");
+  if (IBAN_SHORT_RX.test(errors)) return true;
+  const total = data.exchange_rate?.total;
+  const totalCurrency = data.exchange_rate?.sending?.currency;
+  return (
+    total != null &&
+    totalCurrency === data.iban.currency &&
+    Number(total) > Number(data.iban.balance || 0)
+  );
+};
+
 const IbanPicker = ({ data, dataHandler }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
@@ -34,26 +50,39 @@ const IbanPicker = ({ data, dataHandler }) => {
 
   return (
     <div className={styles.container}>
-      {payable.map((item) => (
-        <div
-          key={item._id}
-          className={styles.item}
-          onClick={() => dataHandler("iban", item)}
-          aria-pressed={data.iban?._id === item._id}
-        >
-          <img src={bank} alt="" className={styles.icon} loading="lazy" />
-          <span>
-            {item.currency} {t("IBAN")} ·· {String(item.iban || "").slice(-4)}
-            <br />
-            <small>
-              {formatWalletAmount(item.balance)} {item.currency} {t("available")}
-            </small>
-          </span>
-          {data.iban?._id === item._id && (
-            <Check color="green" size={24} style={{ marginLeft: "auto" }} />
-          )}
-        </div>
-      ))}
+      {payable.map((item) => {
+        const short = data.iban?._id === item._id && isIbanShort(data);
+        return (
+          <div
+            key={item._id}
+            className={styles.item}
+            onClick={() => dataHandler("iban", item)}
+            aria-pressed={data.iban?._id === item._id}
+            aria-disabled={short}
+            style={short ? { opacity: 0.6 } : undefined}
+          >
+            <img src={bank} alt="" className={styles.icon} loading="lazy" />
+            <span>
+              {item.currency} {t("IBAN")} ·· {String(item.iban || "").slice(-4)}
+              <br />
+              <small>
+                {formatWalletAmount(item.balance)} {item.currency} {t("available")}
+              </small>
+              {short && (
+                <>
+                  <br />
+                  <small style={{ color: "#d32f2f", fontWeight: 600 }}>
+                    {t("Insufficient balance")}
+                  </small>
+                </>
+              )}
+            </span>
+            {data.iban?._id === item._id && !short && (
+              <Check color="green" size={24} style={{ marginLeft: "auto" }} />
+            )}
+          </div>
+        );
+      })}
       {!payable.length && <div>{t("You need an active EUR virtual IBAN to pay this way.")}</div>}
     </div>
   );

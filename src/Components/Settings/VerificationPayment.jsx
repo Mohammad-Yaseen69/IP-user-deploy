@@ -194,14 +194,9 @@ const VerificationPayment = ({
       })
       .catch(() => setFeeEur(null));
   }, [amount, userDetails?.country?.kyc_fee]);
-  const ibans = useMemo(
-    () =>
-      allIbans.filter(
-        (item) =>
-          isVirtualIbanPayable(item) && feeEur != null && Number(item.balance || 0) >= feeEur,
-      ),
-    [allIbans, feeEur],
-  );
+  // every live EUR IBAN is listed; one that cannot cover the fee is shown disabled, not hidden
+  const ibans = useMemo(() => allIbans.filter(isVirtualIbanPayable), [allIbans]);
+  const ibanCovers = (item) => feeEur != null && Number(item.balance || 0) >= feeEur;
 
   const sendOtp = async (method) => {
     setSaving(true);
@@ -630,7 +625,8 @@ const VerificationPayment = ({
                   {ibans.map((item) => (
                     <div
                       key={item._id}
-                      onClick={() => setIban(item)}
+                      onClick={() => ibanCovers(item) && setIban(item)}
+                      aria-disabled={!ibanCovers(item)}
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
@@ -639,13 +635,19 @@ const VerificationPayment = ({
                         boxShadow: iban?._id !== item._id ? "0 0 4px #1111113e" : "0 0 4px green",
                         padding: "1rem",
                         borderRadius: "16px",
-                        cursor: "pointer",
+                        cursor: ibanCovers(item) ? "pointer" : "not-allowed",
+                        opacity: ibanCovers(item) ? 1 : 0.6,
                       }}
                     >
                       <div>
                         <h5 style={{ fontSize: "1rem", fontWeight: 700, marginBottom: 0 }}>
                           {item.currency} {t("IBAN")} ·· {String(item.iban || "").slice(-4)}
                         </h5>
+                        {feeEur != null && !ibanCovers(item) && (
+                          <span style={{ color: "#d32f2f", fontSize: ".75rem", fontWeight: 600 }}>
+                            {t("Insufficient balance")}
+                          </span>
+                        )}
                         <span style={{ color: "#a8a8a8", fontSize: ".6rem", fontWeight: 500 }}>
                           {item.bank_name}
                         </span>

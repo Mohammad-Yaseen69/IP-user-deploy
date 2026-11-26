@@ -1,5 +1,5 @@
 import styles from "./styles/stepfour.module.css";
-import IntStepFour from "../InternationalFlow/StepFour";
+import IntStepFour, { isIbanShort } from "../InternationalFlow/StepFour";
 import { ChevronLeft, ChevronRight } from "react-feather";
 import { useTranslation } from "react-i18next";
 import useWindowWidth from "../../../utils/useWindowWidth";
@@ -49,7 +49,7 @@ const StepFour = ({ data, updateDataHandler, getPackageDetails }) => {
               data.loading ||
               !data.payment_type?.name ||
               (data.payment_type?.value === "wallet" ? !data.wallet?._id : false) ||
-              (data.payment_type?.value === "iban" && !data.iban?._id)
+              (data.payment_type?.value === "iban" && (!data.iban?._id || isIbanShort(data)))
             }
             onClick={() => {
               if (data.payment_type?.value === "card" && !data.showCard) {

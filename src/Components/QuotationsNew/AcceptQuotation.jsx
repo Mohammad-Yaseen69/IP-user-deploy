@@ -9,7 +9,7 @@ import { Modal, ModalBody } from "reactstrap";
 import Receipt from "../PaymentsNewer/InternationalFlow/Receipt";
 import InstaPayLoader from "../Loader";
 import FeesComponent from "../PaymentsNewer/InternationalFlow/FeesComponent";
-import StepFour from "../PaymentsNewer/InternationalFlow/StepFour";
+import StepFour, { isIbanShort } from "../PaymentsNewer/InternationalFlow/StepFour";
 import CreditCard from "../PaymentsNewer/InternationalFlow/CreditCard";
 import StepFive from "../PaymentsNewer/WalletToWalletFlow/StepFive";
 import OtpConfirmation from "../../Common/Component/OtpVerification";
@@ -140,7 +140,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
         if (data.payment_type?.value === "wallet") {
           return !data.wallet?._id;
         } else if (data.payment_type?.value === "iban") {
-          return !data.iban?._id;
+          return !data.iban?._id || isIbanShort(data);
         } else {
           return !data.payment_type?.value;
         }

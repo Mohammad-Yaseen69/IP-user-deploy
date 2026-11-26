@@ -27,7 +27,7 @@ import FeesComponent from "../InternationalFlow/FeesComponent";
 import MobileWalletServices from "../InternationalFlow/MobileWalletServices";
 import OtpConfirmation from "../../../Common/Component/OtpVerification";
 import Receipt from "../InternationalFlow/Receipt";
-import StepFour from "../InternationalFlow/StepFour";
+import StepFour, { isIbanShort } from "../InternationalFlow/StepFour";
 import { currencies } from "../InternationalFlow/StepOne";
 import StepThree from "../InternationalFlow/StepThree";
 import styles from "../InternationalFlow/styles/index.module.css";
@@ -243,7 +243,7 @@ const WalletToWalletFlow = ({
         return !data.payment_type?.name ||
           data.limitReached ||
           (data.payment_type?.value === "wallet" ? !data.wallet?._id || !isShippingValid : false) ||
-          (data.payment_type?.value === "iban" && !data.iban?._id) ||
+          (data.payment_type?.value === "iban" && (!data.iban?._id || isIbanShort(data))) ||
           data?.payment_duration?.value === "subscription"
           ? !data.payment_duration?.recStartDate ||
               (!data.payment_duration?.cycles && !data.payment_duration?.unlimited)
