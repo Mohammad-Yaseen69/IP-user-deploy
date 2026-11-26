@@ -26,6 +26,11 @@ const Ledger = ({
   const { t } = useTranslation();
   const [pickerOpen, setPickerOpen] = useState(false);
   const pickerRef = useRef(null);
+  const headRef = useRef(null);
+
+  const syncHeadScroll = (e) => {
+    if (headRef.current) headRef.current.scrollLeft = e.currentTarget.scrollLeft;
+  };
 
   useEffect(() => {
     if (!pickerOpen) return;
@@ -91,15 +96,15 @@ const Ledger = ({
       </div>
       {activeFilters}
 
-      <div className={s.scroll}>
-        <div className={s.table}>
-          <div className={`${s.cols} ${s.head}`}>
-            {columns?.map((name, i) => (
-              <div key={i}>{name && t(name)}</div>
-            ))}
-          </div>
-          {children}
+      <div ref={headRef} className={s.headScroll}>
+        <div className={`${s.table} ${s.cols} ${s.head}`}>
+          {columns?.map((name, i) => (
+            <div key={i}>{name && t(name)}</div>
+          ))}
         </div>
+      </div>
+      <div className={s.scroll} onScroll={syncHeadScroll}>
+        <div className={s.table}>{children}</div>
       </div>
     </div>
   );

@@ -156,6 +156,7 @@ $mobile: 1000px;
   width: 360px;
   max-width: 100%;
   height: 40px;
+  margin: 0;
   padding: 0 12px;
   color: $text-2;
   background: #fff;
@@ -191,6 +192,10 @@ $mobile: 1000px;
   overflow: hidden;
   border-radius: 10px;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.headScroll {
+  overflow: hidden;
 }
 
 .scroll {
@@ -756,6 +761,27 @@ p.note {
 
   &:focus {
     border-color: $primary;
+  }
+}
+
+@media screen and (min-width: #{$mobile + 1}) {
+  .ledger {
+    --ledger-tools-height: 68px;
+  }
+
+  .tools {
+    position: sticky;
+    top: var(--page-header-height);
+    z-index: 5;
+    min-height: var(--ledger-tools-height);
+    background: #fff;
+  }
+
+  .headScroll {
+    position: sticky;
+    top: calc(var(--page-header-height) + var(--ledger-tools-height));
+    z-index: 4;
+    background: #fff;
   }
 }
 
