@@ -34,8 +34,6 @@ const InstapayCryptoWallets = () => {
       { cancelRefetch: false },
     );
   };
-  const hasPermission = useEffectivePermission();
-  const canSendCrypto = hasPermission(PERMISSIONS.CRYPTO_PAYOUT);
 
   const wallets = useMemo(() => (userWallets || []).filter(isLiveCryptoWallet), [userWallets]);
 

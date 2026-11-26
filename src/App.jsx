@@ -13,9 +13,7 @@ import { TimezonesProvider } from "./Context/TimezoneContext";
 import ErrorBoundary from "./ErrorBoundary";
 import { ToastContainer } from "react-toastify";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import DateMomentUtils from "@date-io/moment";
 import AdBlockCheck from "./Components/AdBlockCheck/AdBlockCheck";
 import LanguageAttributeSync from "./Common/LanguageAttributeSync";
 
