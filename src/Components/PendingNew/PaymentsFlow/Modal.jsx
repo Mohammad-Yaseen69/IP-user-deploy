@@ -617,6 +617,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                       data={data}
                       dataHandler={dataHandler}
                       loading={data.loading}
+                      ibanPay
                     />
                   )}
                   {data.step === 2 && data.show_cards ? (
