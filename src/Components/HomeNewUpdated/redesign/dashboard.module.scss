@@ -77,7 +77,6 @@ $stack: 1100px;
   padding: 24px;
   overflow: clip;
 
-  // Soft lilac glow in the top-right corner of the design.
   &::before {
     position: absolute;
     top: -160px;
@@ -99,11 +98,13 @@ $stack: 1100px;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  font-weight: 500;
   min-height: 40px;
   padding-bottom: 8px;
   font-size: 14px;
-  line-height: 21px;
+  line-height: 20.3px;
   color: $text-2;
+  font-family: Inter;
 }
 
 .ghost {
@@ -131,28 +132,29 @@ $stack: 1100px;
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  min-height: 165px;
-  padding: 25px;
+  gap: 24px;
+  min-height: 0;
+  padding: 25px 0;
+  padding-bottom: 0;
   overflow: hidden;
-  background: linear-gradient(100deg, #f7f4ff 0%, #f1ebff 55%, #e9e0fd 100%);
-  border: 1px solid #ddd1fb;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px -16px rgba(89, 38, 240, 0.35);
+  justify-content: flex-start;
 
-  &::before {
-    position: absolute;
-    top: -109px;
-    right: -133px;
-    width: 312px;
-    height: 312px;
-    content: "";
-    background: rgba(255, 255, 255, 0.28);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 50%;
-    box-shadow: 0 0 0 46px rgba(255, 255, 255, 0.14);
-  }
-
+  // background: linear-gradient(100deg, #f7f4ff 0%, #f1ebff 55%, #e9e0fd 100%);
+  // border: 1px solid #ddd1fb;
+  // border-radius: 16px;
+  // box-shadow: 0 8px 24px -16px rgba(89, 38, 240, 0.35);
+  // &::before {
+  //   position: absolute;
+  //   top: -109px;
+  //   right: -133px;
+  //   width: 312px;
+  //   height: 312px;
+  //   content: "";
+  //   background: rgba(255, 255, 255, 0.28);
+  //   border: 1px solid rgba(255, 255, 255, 0.5);
+  //   border-radius: 50%;
+  //   box-shadow: 0 0 0 46px rgba(255, 255, 255, 0.14);
+  // }
   > * {
     position: relative;
   }
@@ -163,7 +165,7 @@ $stack: 1100px;
   flex-wrap: wrap;
   align-items: center;
   gap: 12px;
-  min-height: 67px;
+  min-height: 7.5rem;
 }
 
 .balanceValue {
@@ -171,6 +173,7 @@ $stack: 1100px;
   align-items: baseline;
   gap: 8px;
   color: #22183d;
+  padding: 24px 0;
 
   small {
     font-size: 18px;
@@ -191,6 +194,18 @@ $stack: 1100px;
     font-weight: 500;
     letter-spacing: -1.08px;
     color: #a99fc4;
+  }
+
+  .mask {
+    font-family: Inter;
+    font-size: 36px;
+    font-weight: 500;
+    line-height: 135%;
+    letter-spacing: -0.03em;
+    text-box: trim-both cap alphabetic;
+    color: #302039;
+    min-width: 120px;
+    font-size: 36px;
   }
 }
 
@@ -225,9 +240,11 @@ $stack: 1100px;
 
   small {
     margin-left: auto;
-    font-size: 11px;
+    font-size: 12px;
     line-height: 13px;
     color: $text-2;
+    font-weight: 400;
+    color: #76667e;
   }
 }
 
@@ -460,6 +477,18 @@ a.stat:hover b {
   }
 }
 
+.sideActionDisabled,
+.sideActionDisabled:hover {
+  color: $muted;
+  cursor: not-allowed;
+
+  i,
+  &:hover i {
+    border-color: $input-border;
+    color: $muted;
+    background: $soft;
+  }
+}
 /* ---------- Quick transfer ---------- */
 .quick {
   flex-direction: row !important;

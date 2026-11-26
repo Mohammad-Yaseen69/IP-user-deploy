@@ -199,6 +199,8 @@ const Beneficiaries = () => {
             overflowX: "auto",
             height: "fit-content",
             minHeight: "500px",
+            width: "100%",
+            minWidth: 0,
           }}
         >
           {can("beneficiaries.view-all") && filtered.length > 0

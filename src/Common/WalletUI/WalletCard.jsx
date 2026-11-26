@@ -52,7 +52,7 @@ const WalletCard = ({ wallet, limits, small = false, hidden = false, onSetDefaul
       <div>
         <p className={s.wcardBalance}>
           {hidden ? (
-            <b>••••••</b>
+            <b>*******</b>
           ) : (
             <>
               <b>
@@ -85,9 +85,9 @@ const WalletCard = ({ wallet, limits, small = false, hidden = false, onSetDefaul
       </div>
       <div>
         <p className={s.wcardLimit}>
-          <span>{t("Monthly limit")}</span>
+          <span className={small && s.small}>{t("Monthly limit")}</span>
           {balanceLimits && !hidden && (
-            <b>
+            <b className={small && s.small}>
               {balanceLimits.used} / {balanceLimits.total}
             </b>
           )}
