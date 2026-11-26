@@ -280,13 +280,13 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
   const isTabDisabled = (item) =>
     (item?.name !== "Basic Info" && profileIncompleteReason === "basic") ||
     (userDetails?.country?.kyc_required &&
-      item?.name !== "Verification" &&
+      item?.name !== verificationTabName &&
       !ft &&
       !isKycApproved) ||
     (hasRequiredAdditionalFiles && item?.name !== verificationTabName);
 
   const tabClassName = (item) =>
-    `${styles.tab} ${currentTab === item?.name ? styles.active : ""} ${isTabDisabled(item) ? styles.disabled : ""} ${userDetails?.country?.kyc_required && item?.name !== "Verification" ? styles.kyc : ""} ${hasRequiredAdditionalFiles && item?.name !== verificationTabName ? styles.required : ""}`;
+    `${styles.tab} ${currentTab === item?.name ? styles.active : ""} ${isTabDisabled(item) ? styles.disabled : ""} ${userDetails?.country?.kyc_required && item?.name !== verificationTabName ? styles.kyc : ""} ${hasRequiredAdditionalFiles && item?.name !== verificationTabName ? styles.required : ""}`;
 
   const searchTerm = search.trim().toLowerCase();
   const visibleTabs = tabsData.filter(
