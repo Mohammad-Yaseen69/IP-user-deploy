@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Bell, Shield, Zap } from "react-feather";
 import { toast } from "react-toastify";

@@ -21,7 +21,7 @@ import FeeScreen from "./components/FeeScreen";
 import { getWalletDetails, sendOtpSkip, confirmTransaction } from "./queries";
 import useBiometricVerifications from "../../hooks/GeneralUse/useBiometricVerfications";
 import useFXNew from "../../hooks/Payments/useFXNew";
-import { apiErrorMessage } from "../PaymentsNewer/InternationalFlow";
+import { apiErrorMessage } from "../PaymentsNewer/InternationalFlow/apiErrorMessage";
 
 const initialData = {
   step: 1,

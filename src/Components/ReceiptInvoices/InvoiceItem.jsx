@@ -9,7 +9,7 @@ import { deleteInvoice } from "./queries";
 import { SwipeableDrawer } from "@mui/material";
 import useWindowWidth from "../../utils/useWindowWidth";
 import { AnimatePresence, motion } from "framer-motion";
-import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
+import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { ButtonForRequests } from "./UI/FormElements";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 

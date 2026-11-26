@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AlertTriangle } from "react-feather";
 import { Modal, ModalHeader, ModalBody, Button, ModalFooter } from "reactstrap";
 import InstaPayLoader from "../Loader";

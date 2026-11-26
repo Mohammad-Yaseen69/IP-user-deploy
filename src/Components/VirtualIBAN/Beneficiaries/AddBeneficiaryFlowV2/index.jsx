@@ -1,7 +1,5 @@
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Modal } from "@mui/material";
-import DateMomentUtils from "@date-io/moment";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { ArrowLeft, X } from "react-feather";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
@@ -22,7 +20,7 @@ import {
   prefillEditBag,
 } from "./buildPayloads";
 import { useAvailableMethods, useRequiredFields, useRequirements } from "./useVendorRequirements";
-import { BANK_COUNTRY_FIELD, getEditRequirements, getFieldDef } from "./vendorFields";
+import { BANK_COUNTRY_FIELD, getFieldDef } from "./vendorFields";
 import { apiWrapper } from "../../../../utils/Functions/apiWrapper";
 import { UserContext } from "../../../../Context/UserContext";
 import {
@@ -703,73 +701,71 @@ const AddBeneficiaryFlowV2 = ({
 
   return (
     <Modal open={open} onClose={handleClose} aria-labelledby="add-beneficiary-v2">
-      <MuiPickersUtilsProvider utils={DateMomentUtils}>
-        <div className={styles.root}>
-          <div className={styles.modal}>
-            <div className={styles.header}>
-              <div className={styles.titleRow}>
-                <div className={styles.titleText}>
-                  <h2 className={styles.title} id="add-beneficiary-v2">
-                    {MODE_TITLES[mode] || MODE_TITLES.create}
-                  </h2>
-                  <p className={styles.subtitle}>{subtitle()}</p>
-                </div>
-                <button type="button" className={styles.closeBtn} onClick={handleClose}>
-                  <X size={16} />
-                </button>
+      <div className={styles.root}>
+        <div className={styles.modal}>
+          <div className={styles.header}>
+            <div className={styles.titleRow}>
+              <div className={styles.titleText}>
+                <h2 className={styles.title} id="add-beneficiary-v2">
+                  {MODE_TITLES[mode] || MODE_TITLES.create}
+                </h2>
+                <p className={styles.subtitle}>{subtitle()}</p>
               </div>
+              <button type="button" className={styles.closeBtn} onClick={handleClose}>
+                <X size={16} />
+              </button>
+            </div>
 
-              {stages.length > 1 && (
-                <Stepper
-                  steps={stages.map((item) => STAGE_LABELS[item])}
-                  current={stages.indexOf(stage) + 1}
-                />
+            {stages.length > 1 && (
+              <Stepper
+                steps={stages.map((item) => STAGE_LABELS[item])}
+                current={stages.indexOf(stage) + 1}
+              />
+            )}
+          </div>
+
+          <div className={styles.body} ref={bodyRef}>
+            {renderBody()}
+          </div>
+
+          <div className={styles.footer}>
+            <div className={styles.footerSide}>
+              {stage === stages[0] ? (
+                <button
+                  type="button"
+                  className={`${styles.btn} ${styles.btnGhost}`}
+                  onClick={handleClose}
+                >
+                  {isViewMode ? "Close" : "Cancel"}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className={`${styles.btn} ${styles.btnGhost}`}
+                  onClick={goBack}
+                  disabled={saving}
+                >
+                  <ArrowLeft size={20} />
+                  Back
+                </button>
               )}
             </div>
 
-            <div className={styles.body} ref={bodyRef}>
-              {renderBody()}
-            </div>
-
-            <div className={styles.footer}>
-              <div className={styles.footerSide}>
-                {stage === stages[0] ? (
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnGhost}`}
-                    onClick={handleClose}
-                  >
-                    {isViewMode ? "Close" : "Cancel"}
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnGhost}`}
-                    onClick={goBack}
-                    disabled={saving}
-                  >
-                    <ArrowLeft size={20} />
-                    Back
-                  </button>
-                )}
-              </div>
-
-              <div className={styles.footerSide}>
-                {!isViewMode && (
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnPrimary}`}
-                    onClick={goNext}
-                    disabled={primaryDisabled()}
-                  >
-                    {primaryLabel()}
-                  </button>
-                )}
-              </div>
+            <div className={styles.footerSide}>
+              {!isViewMode && (
+                <button
+                  type="button"
+                  className={`${styles.btn} ${styles.btnPrimary}`}
+                  onClick={goNext}
+                  disabled={primaryDisabled()}
+                >
+                  {primaryLabel()}
+                </button>
+              )}
             </div>
           </div>
         </div>
-      </MuiPickersUtilsProvider>
+      </div>
     </Modal>
   );
 };

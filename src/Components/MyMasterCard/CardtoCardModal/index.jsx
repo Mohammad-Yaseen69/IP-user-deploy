@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer } from "react";
+import { useContext, useEffect, useReducer } from "react";
 import { Modal, ModalBody } from "reactstrap";
 import styles from "../styles/CardToCard.module.scss";
 import useWindowWidth from "../../../utils/useWindowWidth";
@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 import OtpConfirmation from "../../../Common/Component/OtpVerification";
 import InstaPayLoader from "../../Loader";
 import { Link } from "react-router-dom";
-import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow";
+import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow/apiErrorMessage";
 
 const initialState = {
   step: 1,

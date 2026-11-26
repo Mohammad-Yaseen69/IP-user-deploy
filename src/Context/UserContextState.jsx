@@ -235,6 +235,11 @@ const UserState = ({ children }) => {
     }
   };
 
+  // The app shell and Layout both call verifyToken on mount, before the first
+  // response has set userDetails. Share the in-flight request so only one goes
+  // out; a second response would also re-run every [userDetails] effect.
+  const verifyTokenRequestRef = useRef(null);
+
   const verifyToken = (isFetchRequired = false) => {
     if (
       (!window.location.pathname.includes("auth") &&
@@ -249,7 +254,7 @@ const UserState = ({ children }) => {
         ? `/api/business-agents/agents/auth/${token}`
         : `/api/account/auth/${token}`;
 
-      axios
+      const request = axios
         .get(`${import.meta.env.VITE_IP_DEV_API}${url}`)
         .then((res) => {
           const decrypted = decryptData(res.data.data);
@@ -347,6 +352,7 @@ const UserState = ({ children }) => {
         .finally(() => {
           verifyingToken.current = false;
         });
+      verifyTokenRequestRef.current = request;
     }
   };
 

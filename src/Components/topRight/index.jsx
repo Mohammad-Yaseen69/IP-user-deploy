@@ -1,5 +1,4 @@
 import { Col } from "reactstrap";
-import msg from "./msg.svg";
 import { useContext } from "react";
 import { UserContext } from "../../Context/UserContext";
 import LanguagePicker from "../LanguagePicker";

@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import logo from "../../assets/images/logo/logo2.png";
 import { UserContext } from "../../Context/UserContext";
 import { formatCurrency } from "../../Helper/AmountFormat";
@@ -20,7 +21,6 @@ import CatDown from "./CatDown";
 import { service_name_formatter } from "./TransactionItem";
 import statuses from "./files/thunesTransactionStatus.json";
 import { downloadTransactionPdf, getPayoutRows } from "./txutils";
-import { toast } from "react-toastify";
 import useCopyToClipboard from "../../hooks/useCopyToClipboard";
 import { truncateHash } from "../../utils/Functions/transactionHelpers";
 
@@ -118,6 +118,7 @@ const TransactionSheet = ({
   const canEdit = can("transactions.category.add");
   const walletLabelFirst =
     item?.payment_type === "conversion" || item?.service_type === "withdrawal";
+  const fees = formatCurrency(item?.fee + (item?.metadata?.crypto?.network_fee ?? 0), true);
 
   const rows = [
     [
@@ -156,11 +157,7 @@ const TransactionSheet = ({
       isDebit ? t("Amount To Send") : t("Received Amount"),
       `${formatCurrency(item?.amount || item?.txAmount, true)} ${item?.currency?.code || item?.currency}`,
     ],
-    [t("Fees"), `${formatCurrency(item?.fee, true)} ${billCode}`],
-    item?.metadata?.crypto?.network_fee && [
-      t("Network Fee"),
-      `${item?.metadata?.crypto?.network_fee} ${item?.metadata?.crypto?.currency ?? ""}`,
-    ],
+    [t("Fees"), `${fees} ${billCode}`],
     item?.payment_type?.toLowerCase() === "commission" &&
       item?.replacement_currency?.value && [
         t("Withdrawal Received"),
@@ -326,7 +323,6 @@ const TransactionSheet = ({
             ["Description", descEn],
             ["Your reference", item?.client_reference],
             ["Crypto transaction hash", item?.metadata?.crypto_tx_hash],
-            ["Network Fee", item?.metadata?.network_fee],
             ["Reason", item?.reason],
           ],
         ],
@@ -356,7 +352,7 @@ const TransactionSheet = ({
           isDebit ? "Transfer amount" : "Amount received",
           money(item?.amount || item?.txAmount, sendCode),
         ],
-        ["InstaPay fee", money(item?.fee, billCode)],
+        ["InstaPay fee", money(fees, billCode)],
         item?.payment_type?.toLowerCase() === "commission" &&
           item?.replacement_currency?.value && [
             "Withdrawal received",
@@ -377,7 +373,7 @@ const TransactionSheet = ({
           `The status "${statusEn}" means InstaPay has received your payment instruction. It does not confirm that the beneficiary's bank has credited the funds.`,
         "Please use the transaction ID when contacting support.",
       ],
-    });
+    }).catch(() => toast.error(t("Something went wrong on our end. Please try again later.")));
   };
 
   return (
