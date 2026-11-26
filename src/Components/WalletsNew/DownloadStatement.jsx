@@ -14,7 +14,7 @@ import { exportToExcel } from "../../utils/Functions/csvExport";
 import { formatCurrency } from "../../Helper/AmountFormat";
 
 const DownloadStatement = ({ showModal, setShowModal, wallet, isTransection }) => {
-  const { userDetails, authHeader } = useContext(UserContext);
+  const { userDetails, authHeader, beneficiaries } = useContext(UserContext);
   const { t } = useTranslation();
   const [dateString, setDateString] = useState("");
   const [fileType, setFileType] = useState("");
@@ -249,7 +249,9 @@ const DownloadStatement = ({ showModal, setShowModal, wallet, isTransection }) =
             ],
           ],
           body: arr.map((item) => {
-            const internationalReceiver = item?.beneficiaryDetails;
+            const internationalReceiver =
+              beneficiaries.filter((benef) => benef?._id === item?.beneficiary)?.[0] ||
+              item?.beneficiaryDetails;
 
             return [
               new Date(item?.createdAt)?.toLocaleString(),

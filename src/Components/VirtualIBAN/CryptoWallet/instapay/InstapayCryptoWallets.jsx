@@ -19,6 +19,8 @@ import { getWalletAvailable, isLiveCryptoWallet } from "./wallets";
 const InstapayCryptoWallets = () => {
   const { t } = useTranslation();
   const can = usePermission();
+  const hasPermission = useEffectivePermission();
+  const canSendCrypto = hasPermission(PERMISSIONS.CRYPTO_PAYOUT);
   const { userWallets, getUserWallets, refetchBalances } = useContext(UserContext);
   const queryClient = useQueryClient();
   const [refreshKey, setRefreshKey] = useState(0);
