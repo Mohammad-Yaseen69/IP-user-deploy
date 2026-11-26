@@ -233,7 +233,7 @@ const containerStyle = {
   justifyContent: "center",
   backgroundColor: "#F3F4F6",
   padding: "20px",
-  fontFamily: "Inter, system-ui, -apple-system, sans-serif",
+  fontFamily: "Inter, sans-serif",
 };
 
 const cardStyle = {

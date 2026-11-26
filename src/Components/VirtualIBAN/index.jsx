@@ -9,7 +9,7 @@ import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import { getAdditionalFiles, isPendingAdditionalFile } from "../../utils/Functions/additionalFiles";
 import useWindowWidth from "../../utils/useWindowWidth";
 import InstaPayLoader from "../Loader";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import Compliance from "./Compliance";
 import AccountsSidebar from "./components/AccountsSidebar";
 import BalanceHeader from "./components/BalanceHeader";
@@ -238,20 +238,16 @@ const VirtualBank = () => {
   console.log(rawIbans, "rawIbans");
   return (
     <div className={styles.container}>
-      <div className={styles.top}>
-        <div className={styles.headerTitle}>
-          <h1>
-            {userDetails?.account_type === "business" ? t("Business IBAN") : t("My virtual bank")}
-          </h1>
-          <p>
-            {userDetails?.account_type === "business"
+      {width > 600 && (
+        <PageHeader
+          title={t("My virtual IBAN")}
+          subtitle={
+            userDetails?.account_type === "business"
               ? t("Activate a dedicated business account to receive and hold company funds.")
-              : t("Manage and monitor your InstaPay Virtual Bank Account.")}
-          </p>
-        </div>
-
-        <div className={styles.topright}>{width > 1000 && <TopRight />}</div>
-      </div>
+              : t("Manage and monitor your InstaPay Virtual Bank Account.")
+          }
+        />
+      )}
       {(showGetIBAN || (ibans.length === 0 && canCreateIban)) &&
         userDetails?.account_type === "business" && (
           <div className={styles.mobileTop}>
@@ -264,9 +260,7 @@ const VirtualBank = () => {
                   ? t("Your pricing")
                   : onboardingStep === "ActivateAccount"
                     ? t("Activate your account")
-                    : userDetails?.account_type === "business"
-                      ? t("Business IBAN")
-                      : t("My virtual bank")}
+                    : t("My virtual IBAN")}
               </h1>
             </div>
             <div className={styles.mobileTopRight}>

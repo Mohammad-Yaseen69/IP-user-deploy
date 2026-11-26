@@ -686,7 +686,9 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
           <button
             disabled={disabled || isPending}
             style={{
-              padding: width < 1000 && "18px",
+              padding: width < 1000 && "0 18px",
+              height: width < 1000 && "56px",
+              borderRadius: width < 1000 && "12px",
               marginTop: width < 1000 && "12px",
               width: width < 1000 && "100%",
               opacity: disabled && 0.6,

@@ -4,15 +4,10 @@
 //Card css
 .card {
   margin-bottom: $card-margin-bottom;
-  border: none;
+  border: 1px solid #eff1f6;
   transition: all 0.3s ease;
   letter-spacing: 0.5px;
   border-radius: $card-border-radious;
-  box-shadow: $card-box-shadow;
-  &:hover {
-    box-shadow: $card-hover-box-shadow;
-    transition: all 0.3s ease;
-  }
   .icon-box {
     width: 33px;
     height: 33px;

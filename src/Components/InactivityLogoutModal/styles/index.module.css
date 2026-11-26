@@ -19,7 +19,7 @@
 .content h1 {
   color: #000;
   text-align: center;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 20px;
   font-style: normal;
   font-weight: 800;
@@ -32,7 +32,7 @@
 .content p {
   color: #545454;
   text-align: center;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 700;
@@ -58,7 +58,7 @@
 
 .content span {
   color: #fff;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 15px;
   font-style: normal;
   font-weight: 600;

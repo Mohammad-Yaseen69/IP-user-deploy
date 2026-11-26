@@ -244,7 +244,6 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
 
       <button
         className={styles.buttonStyles}
-        style={{ fontSize: "15px" }}
         disabled={!title || !currency || isSaving || !isActive}
         onClick={() => {
           if (!editMode && paymentAddressDetails?.title) {
@@ -449,16 +448,18 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                       {urlCopied ? (
                         <CheckCircle size={14} color="white" />
                       ) : (
-                        <img
-                          src={copy}
-                          style={{
-                            cursor: "pointer",
-                            height: "14px",
-                            width: "14px",
-                            objectFit: "contain",
-                          }}
+                        <button
+                          type="button"
+                          className="tap-target"
+                          aria-label={t("Copy")}
                           onClick={copyHandler}
-                        />
+                        >
+                          <img
+                            src={copy}
+                            alt=""
+                            style={{ height: "14px", width: "14px", objectFit: "contain" }}
+                          />
+                        </button>
                       )}
                     </span>
                   </div>

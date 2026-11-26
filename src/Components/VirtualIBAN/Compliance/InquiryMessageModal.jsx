@@ -132,13 +132,17 @@ const InquiryMessageModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
               onClick={toggle}
               disabled={loading}
               style={{
+                height: "40px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
                 background: "#f3f4f6",
                 color: "#4b5563",
                 border: "none",
-                padding: "9px 18px",
-                borderRadius: "8px",
-                fontSize: "13px",
-                fontWeight: "600",
+                padding: "0 18px",
+                borderRadius: "10px",
+                fontSize: "14px",
+                fontWeight: "500",
                 cursor: "pointer",
               }}
             >
@@ -148,16 +152,18 @@ const InquiryMessageModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
               type="submit"
               disabled={loading}
               style={{
+                height: "40px",
+                justifyContent: "center",
                 display: "flex",
                 alignItems: "center",
                 gap: "6px",
                 background: "#4f46e5",
                 color: "#ffffff",
                 border: "none",
-                padding: "9px 20px",
-                borderRadius: "8px",
-                fontSize: "13px",
-                fontWeight: "600",
+                padding: "0 20px",
+                borderRadius: "10px",
+                fontSize: "14px",
+                fontWeight: "500",
                 cursor: "pointer",
                 opacity: loading ? 0.7 : 1,
               }}

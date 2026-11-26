@@ -460,10 +460,12 @@ const ConversionModal = ({
                   onClick={onRefreshQuote}
                   disabled={isRefreshing}
                   style={{
+                    height: "40px",
+                    display: "inline-flex",
                     border: "none",
                     outline: "none",
-                    borderRadius: "8px",
-                    padding: ".6rem 1.4rem",
+                    borderRadius: "10px",
+                    padding: "0 1.4rem",
                     fontWeight: 600,
                     color: "white",
                     cursor: isRefreshing ? "not-allowed" : "pointer",

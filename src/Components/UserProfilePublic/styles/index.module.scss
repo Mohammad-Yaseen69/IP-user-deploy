@@ -234,9 +234,9 @@
         margin-bottom: 2.7rem;
 
         .qr_container {
-          border-radius: 31.364px;
+          border-radius: 12px;
+          border: 1px solid #eff1f6;
           background: #fff;
-          box-shadow: 0px 4.70456px 48.61381px 0px rgba(99, 99, 99, 0.25);
           width: 45%;
 
           .qr_body {
@@ -595,7 +595,7 @@
 
           h5 {
             color: #000;
-            font-family: Manrope;
+            font-family: "Inter", sans-serif;
             font-size: 24px;
             font-style: normal;
             font-weight: 600;
@@ -1308,7 +1308,7 @@
 }
 
 .reply_review_card {
-  border-radius: 20.569px;
+  border-radius: 12px;
   background: #fff;
   padding: 36px;
   margin-top: 3.5rem;

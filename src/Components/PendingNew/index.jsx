@@ -2,7 +2,7 @@ import { Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import s from "../../Common/Ledger/ledger.module.scss";
 import styles from "../TransactionsNewApi/styles/index.module.scss";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import PaymentRequestsTable from "./PaymentRequestsTable";
 import { useNavigate } from "react-router";
 import { useMediaQuery } from "@mui/material";
@@ -41,11 +41,10 @@ const PendingNew = () => {
         </div>
       ) : (
         <div className={styles.container}>
-          <div className={styles.top}>
-            <h4>{t("Payment Requests")}</h4>
-            <p>{t("Requests you've received and sent, in one place.")}</p>
-            <TopRight />
-          </div>
+          <PageHeader
+            title={t("Payment Requests")}
+            subtitle={t("Requests you've received and sent, in one place.")}
+          />
           <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem" }}>
             <button
               onClick={() => navigate("/payments?payment_action=req_money")}

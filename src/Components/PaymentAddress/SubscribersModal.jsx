@@ -147,16 +147,18 @@ const SubscribersModal = ({
                             disabled={isCancelling}
                             title={t("Cancel Subscription")}
                             style={{
+                              height: "32px",
+                              justifyContent: "center",
                               display: "flex",
                               alignItems: "center",
                               gap: "4px",
                               background: "#FEE2E2",
                               color: "#991B1B",
                               border: "1px solid #FECACA",
-                              borderRadius: "6px",
-                              padding: "4px 10px",
-                              fontWeight: 600,
-                              fontSize: "11px",
+                              borderRadius: "8px",
+                              padding: "0 10px",
+                              fontWeight: 500,
+                              fontSize: "13px",
                               cursor: isCancelling ? "not-allowed" : "pointer",
                               opacity: isCancelling ? 0.6 : 1,
                               whiteSpace: "nowrap",

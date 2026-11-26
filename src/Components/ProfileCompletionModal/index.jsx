@@ -120,11 +120,15 @@ const ProfileCompletionModal = ({ setShowModal, profileIncompleteReason, kyc = f
               <button
                 onClick={() => setShowModal(false)}
                 style={{
-                  borderRadius: window.innerWidth > 700 ? "16px" : "10px",
+                  borderRadius: "10px",
+                  height: "40px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   background:
                     "linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%)",
                   backgroundBlendMode: "overlay, normal",
-                  padding: "10px",
+                  padding: "0 10px",
                   flex: 1,
                   width: "100%",
                 }}

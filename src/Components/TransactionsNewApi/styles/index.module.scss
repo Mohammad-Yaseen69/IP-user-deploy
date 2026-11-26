@@ -1,36 +1,15 @@
 .container {
-  padding: 3rem 3rem 0;
+  padding: 0 var(--page-gutter);
   // background: linear-gradient(to right, transparent, white);
   min-height: 100vh;
-  font-family: "Manrope";
-
-  .top {
-    margin-bottom: 4rem;
-    position: relative;
-
-    h4 {
-      font-size: 3vw;
-      background:
-        linear-gradient(3.1deg, #e64067 -102.47%, #5926f0 25.82%, #4828a0 128.05%), #ffffff;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-fill-color: transparent;
-      margin-bottom: 1rem;
-    }
-
-    p {
-      font-size: 17px;
-      font-weight: 600;
-    }
-  }
+  font-family: "Inter", sans-serif;
 
   .table {
     .menu {
       background-color: #fff;
-      box-shadow: 0.146323204040527px 25px 67px rgba(0, 0, 0, 0.07);
       padding: 16px 19px;
       border-radius: 12px;
+      border: 1px solid #eff1f6;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -103,9 +82,9 @@
 
       .table_header {
         background-color: #fff;
-        box-shadow: 0.146323204040527px 25px 67px rgba(0, 0, 0, 0.07);
         padding: 16px 19px;
         border-radius: 12px;
+        border: 1px solid #eff1f6;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -511,11 +490,7 @@
 
 @media screen and (max-width: 1530px) {
   .container {
-    padding: 1.5rem 2rem 1rem;
-
-    .top {
-      margin-bottom: 3rem;
-    }
+    padding: 0 var(--page-gutter) 1rem;
 
     .table {
       .tableWrapper {
@@ -582,14 +557,12 @@
       margin: 1rem;
 
       h4 {
-        font-size: 1.4rem;
-        background:
-          linear-gradient(3.1deg, #e64067 -102.47%, #5926f0 25.82%, #4828a0 128.05%), #ffffff;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        text-fill-color: transparent;
         margin-bottom: 0;
+        font-family: Inter, sans-serif;
+        font-size: 1.4rem;
+        font-weight: 600;
+        letter-spacing: -0.72px;
+        color: #141414;
       }
     }
 

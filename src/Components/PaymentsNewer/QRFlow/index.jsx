@@ -970,7 +970,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                               <span
                                 style={{
                                   color: "#BE9A08",
-                                  fontFamily: "Manrope",
+                                  fontFamily: "Inter, sans-serif",
                                   fontSize: ".7rem",
                                   fontStyle: "normal",
                                   fontWeight: 700,
@@ -1005,7 +1005,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                 <span
                                   style={{
                                     color: "#8A8A8A",
-                                    fontFamily: "Manrope",
+                                    fontFamily: "Inter, sans-serif",
                                     fontSize: ".7rem",
                                     fontStyle: "normal",
                                     fontWeight: 600,
@@ -1018,7 +1018,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                 <strong
                                   style={{
                                     color: "#000",
-                                    fontFamily: "Manrope",
+                                    fontFamily: "Inter, sans-serif",
                                     fontSize: ".7rem",
                                     fontStyle: "normal",
                                     lineHeight: 1.5,
@@ -1046,7 +1046,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                 <span
                                   style={{
                                     color: "#8A8A8A",
-                                    fontFamily: "Manrope",
+                                    fontFamily: "Inter, sans-serif",
                                     fontSize: ".7rem",
                                     fontStyle: "normal",
                                     fontWeight: 600,
@@ -1059,7 +1059,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                 <strong
                                   style={{
                                     color: "#000",
-                                    fontFamily: "Manrope",
+                                    fontFamily: "Inter, sans-serif",
                                     fontSize: "1.2rem",
                                     fontStyle: "normal",
                                     fontWeight: 700,

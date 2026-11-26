@@ -374,12 +374,16 @@ const RecentTransactions = ({
               <Button
                 onClick={handleModalContinue}
                 style={{
+                  height: "40px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   background:
                     "linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%)",
                   border: "none",
-                  borderRadius: "8px",
-                  padding: "12px",
-                  fontWeight: "600",
+                  borderRadius: "10px",
+                  padding: "0 12px",
+                  fontWeight: "500",
                 }}
               >
                 {t("Continue")}
@@ -411,14 +415,18 @@ const RecentTransactions = ({
                 <button
                   onClick={() => setModalData((prev) => ({ ...prev, isEditing: true }))}
                   style={{
+                    height: "40px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                     flex: 1,
-                    borderRadius: "8px",
-                    padding: "10px",
+                    borderRadius: "10px",
+                    padding: "0 10px",
                     border: "1px solid #5926F0",
                     color: "#5926F0",
                     backgroundColor: "white",
                     outline: "none",
-                    fontWeight: 600,
+                    fontWeight: 500,
                   }}
                 >
                   {t("Edit Amount")}
@@ -426,13 +434,17 @@ const RecentTransactions = ({
                 <Button
                   onClick={handleModalContinue}
                   style={{
+                    height: "40px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                     flex: 1,
                     background:
                       "linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%)",
                     border: "none",
-                    borderRadius: "8px",
-                    padding: "10px",
-                    fontWeight: "600",
+                    borderRadius: "10px",
+                    padding: "0 10px",
+                    fontWeight: "500",
                   }}
                 >
                   {t("Continue")}

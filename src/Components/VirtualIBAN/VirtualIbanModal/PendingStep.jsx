@@ -19,12 +19,16 @@ const PendingStep = ({ transactionRef }) => {
       <button
         onClick={() => navigate("/dashboard/default")}
         style={{
+          height: "40px",
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
           marginTop: "20px",
-          padding: "10px 20px",
+          padding: "0 20px",
           backgroundColor: "#5626e6",
           color: "#fff",
           border: "none",
-          borderRadius: "4px",
+          borderRadius: "10px",
           cursor: "pointer",
         }}
       >

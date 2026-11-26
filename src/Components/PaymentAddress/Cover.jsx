@@ -120,12 +120,16 @@ const Cover = ({ cover, setCover, dets, canUploadPaymentBanner }) => {
             <Button
               color="primary"
               style={{
+                height: "32px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
                 background: "white",
                 border: "none",
                 outline: "none",
-                borderRadius: "5px",
-                padding: "5px 10px",
-                fontSize: ".65rem",
+                borderRadius: "8px",
+                padding: "0 10px",
+                fontSize: "13px",
               }}
               onClick={handleSave}
               disabled={isSaving}
@@ -136,12 +140,16 @@ const Cover = ({ cover, setCover, dets, canUploadPaymentBanner }) => {
             <Button
               color="primary"
               style={{
+                height: "32px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
                 background: "white",
                 border: "none",
                 outline: "none",
-                borderRadius: "5px",
-                padding: "5px 10px",
-                fontSize: ".65rem",
+                borderRadius: "8px",
+                padding: "0 10px",
+                fontSize: "13px",
               }}
               disabled={true}
             >

@@ -139,7 +139,7 @@ const MobileWalletStatus = ({
       <h2
         style={{
           color: "#000",
-          fontFamily: "Manrope, sans-serif",
+          fontFamily: "Inter, sans-serif",
           fontSize: "1.8rem",
           fontWeight: 800,
           margin: 0,
@@ -150,7 +150,7 @@ const MobileWalletStatus = ({
       <p
         style={{
           color: "#848484",
-          fontFamily: "Manrope, sans-serif",
+          fontFamily: "Inter, sans-serif",
           fontSize: "0.95rem",
           fontWeight: 600,
           lineHeight: "160%",
@@ -173,7 +173,7 @@ const MobileWalletStatus = ({
                 : "#5926F0",
             padding: "0.8rem 2.5rem",
             color: "#FFF",
-            fontFamily: "Manrope, sans-serif",
+            fontFamily: "Inter, sans-serif",
             fontSize: "1rem",
             fontWeight: 700,
             transition: "all 0.2s ease",

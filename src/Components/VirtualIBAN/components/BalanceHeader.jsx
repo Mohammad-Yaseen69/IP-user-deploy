@@ -129,15 +129,15 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
             </h1>
             {/* <h1 className={styles.balance}>{canViewBalance ? formatAmount(currentBalance, currency) : "****"}</h1> */}
             {canViewBalance && (
-              <span
+              <button
+                type="button"
+                className="tap-target"
+                aria-label={isHiddenByUser ? t("Show balance") : t("Hide balance")}
                 onClick={handleEyeClick}
-                style={{
-                  cursor: isToggling ? "not-allowed" : "pointer",
-                  opacity: isToggling ? 0.5 : 1,
-                }}
+                disabled={isToggling}
               >
                 {isHiddenByUser ? <EyeOff size={18} /> : <Eye size={18} />}
-              </span>
+              </button>
             )}
           </div>
         </div>
@@ -151,11 +151,14 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
                   {canViewDetails ? mappedIban?.iban || "-" : "****"}
                 </span>
                 {canCopyDetails && (
-                  <Copy
-                    size={16}
-                    className={styles.copyIcon}
+                  <button
+                    type="button"
+                    className="tap-target"
+                    aria-label={t("Copy")}
                     onClick={() => handleCopy(mappedIban?.iban)}
-                  />
+                  >
+                    <Copy size={16} className={styles.copyIcon} />
+                  </button>
                 )}
               </div>
             </div>
@@ -165,7 +168,14 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
               <div>
                 <span className={styles.value}>{canViewDetails ? bic : "****"}</span>
                 {canCopyDetails && (
-                  <Copy size={16} className={styles.copyIcon} onClick={() => handleCopy(bic)} />
+                  <button
+                    type="button"
+                    className="tap-target"
+                    aria-label={t("Copy")}
+                    onClick={() => handleCopy(bic)}
+                  >
+                    <Copy size={16} className={styles.copyIcon} />
+                  </button>
                 )}
               </div>
             </div>
@@ -220,11 +230,14 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
                 {canViewDetails ? mappedIban?.iban || "-" : "****"}
               </span>
               {canCopyDetails && (
-                <Copy
-                  size={16}
-                  className={styles.copyIcon}
+                <button
+                  type="button"
+                  className="tap-target"
+                  aria-label={t("Copy")}
                   onClick={() => handleCopy(mappedIban?.iban)}
-                />
+                >
+                  <Copy size={16} className={styles.copyIcon} />
+                </button>
               )}
             </div>
           </div>
@@ -234,7 +247,14 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
             <div>
               <span className={styles.value}>{canViewDetails ? bic : "****"}</span>
               {canCopyDetails && (
-                <Copy size={16} className={styles.copyIcon} onClick={() => handleCopy(bic)} />
+                <button
+                  type="button"
+                  className="tap-target"
+                  aria-label={t("Copy")}
+                  onClick={() => handleCopy(bic)}
+                >
+                  <Copy size={16} className={styles.copyIcon} />
+                </button>
               )}
             </div>
           </div>

@@ -233,11 +233,15 @@ const Channels = ({ setChannel, channel, thunesServices, thunesProviders = [] })
             <button
               onClick={() => setShowVerificationModal(false)}
               style={{
+                height: "40px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
                 backgroundColor: "#5926f0",
                 color: "white",
-                borderRadius: "8px",
+                borderRadius: "10px",
                 border: "none",
-                padding: "8px 16px",
+                padding: "0 16px",
                 margin: "8px",
                 "&:hover": {
                   backgroundColor: "#5926f0",

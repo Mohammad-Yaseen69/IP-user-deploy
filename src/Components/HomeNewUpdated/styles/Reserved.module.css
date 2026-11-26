@@ -17,7 +17,7 @@
 
 .r_total span {
   color: rgba(255, 255, 255, 0.8);
-  font-family: "Red Hat Display";
+  font-family: "Inter", sans-serif;
   font-size: 8.86px;
   font-style: normal;
   font-weight: 400;
@@ -26,7 +26,7 @@
 
 .r_total h5 {
   color: #fff;
-  font-family: "Clash Display";
+  font-family: "Inter", sans-serif;
   font-size: 1rem;
   font-style: normal;
   font-weight: 400;
@@ -44,7 +44,7 @@
 
 .r_blocked span {
   color: rgba(255, 255, 255, 0.8);
-  font-family: "Red Hat Display";
+  font-family: "Inter", sans-serif;
   font-size: 7.336px;
   font-style: normal;
   font-weight: 400;
@@ -53,7 +53,7 @@
 
 .r_blocked h5 {
   color: #fff;
-  font-family: "Clash Display";
+  font-family: "Inter", sans-serif;
   font-size: 8.86px;
   font-style: normal;
   font-weight: 400;
@@ -68,7 +68,7 @@
 
 .r_wallet span {
   color: rgba(255, 255, 255, 0.8);
-  font-family: "Red Hat Display";
+  font-family: "Inter", sans-serif;
   font-size: 8.86px;
   font-style: normal;
   font-weight: 400;
@@ -87,7 +87,7 @@
   color: #fff;
   leading-trim: both;
   text-edge: cap;
-  font-family: "Clash Display";
+  font-family: "Inter", sans-serif;
   font-size: 12.404px;
   font-style: normal;
   font-weight: 400;
@@ -102,7 +102,7 @@
 
 .r_bal span {
   color: rgba(255, 255, 255, 0.8);
-  font-family: "Red Hat Display";
+  font-family: "Inter", sans-serif;
   font-size: 7.088px;
   font-style: normal;
   font-weight: 400;
@@ -111,7 +111,7 @@
 
 .r_bal h5 {
   color: #fff;
-  font-family: "Clash Display";
+  font-family: "Inter", sans-serif;
   font-size: 10.189px;
   font-style: normal;
   font-weight: 400;
@@ -129,7 +129,7 @@
   text-align: right;
   leading-trim: both;
   text-edge: cap;
-  font-family: "Clash Display";
+  font-family: "Inter", sans-serif;
   font-size: 7.336px;
   font-style: normal;
   font-weight: 400;

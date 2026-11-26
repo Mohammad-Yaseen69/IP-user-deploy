@@ -68,10 +68,11 @@
 
 .buttons button {
   display: flex;
-  padding: var(--SPACING-spacing-0, 8px);
+  padding: 0 var(--SPACING-spacing-0, 8px);
+  height: 32px;
   justify-content: center;
   align-items: center;
-  border-radius: var(--RADIUS-radius-1, 4px);
+  border-radius: 8px;
   font-size: 12px;
   font-weight: 600;
   border: none;
@@ -216,11 +217,12 @@ button {
 
 .deleteModal button {
   display: flex;
-  padding: var(--SPACING-spacing-1, 12px) var(--SPACING-spacing-2, 18px);
+  padding: 0 var(--SPACING-spacing-2, 18px);
+  height: 40px;
   justify-content: center;
   align-items: center;
   gap: var(--SPACING-spacing-0, 8px);
-  border-radius: var(--RADIUS-radius-2, 8px);
+  border-radius: 10px;
   border: none;
   outline: none;
 }

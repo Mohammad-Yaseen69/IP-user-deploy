@@ -13,6 +13,7 @@ const Stepthree = ({ data, dataHandler, onKeyDown, onFocus }) => {
           <div className={styles.inp}>
             <label>{t("Phone Number")}</label>
             <PhoneInput
+              size="lg"
               country={
                 data.country?.alpha3 ||
                 data.country?.country_iso_code ||

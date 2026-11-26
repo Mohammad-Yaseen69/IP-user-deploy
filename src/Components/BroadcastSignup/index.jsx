@@ -1,5 +1,5 @@
 import styles from "./styles/index.module.css";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import { useEffect, useState } from "react";
 import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { toast } from "react-toastify";
@@ -19,12 +19,7 @@ const BroadcastSignup = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.top}>
-        <h4 style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-          {t("Onboarding Signup")}
-        </h4>
-        <TopRight />
-      </div>
+      <PageHeader title={t("Onboarding Signup")} />
       {!showModal ? (
         <MainContent />
       ) : (

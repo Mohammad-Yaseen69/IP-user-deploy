@@ -94,7 +94,7 @@ const BankIbanSelection = ({
                 padding: "12px",
                 border: "1px solid #ddd",
                 borderRadius: "6px",
-                fontFamily: "Manrope",
+                fontFamily: "Inter, sans-serif",
                 fontSize: "0.9rem",
               }}
             />

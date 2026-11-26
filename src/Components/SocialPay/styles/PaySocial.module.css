@@ -1,42 +1,7 @@
 .container {
-  padding: 32px 20px 40px 48px;
+  padding: 0 var(--page-gutter) 40px;
   min-height: 100vh;
   font-family: "Inter", sans-serif;
-}
-
-.top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  position: relative;
-  margin: 0px;
-  padding: 0px;
-}
-
-.headerTitle {
-  margin: 0px;
-  padding: 0px;
-}
-
-.headerTitle h1 {
-  color: #5626e6;
-  font-size: 40px;
-  font-style: normal;
-  font-weight: 700;
-  margin: 0px;
-  padding: 0px;
-}
-
-.headerTitle p {
-  color: #868686;
-  font-size: 14px;
-  font-weight: 400;
-  margin: 0px;
-  padding: 0px;
-}
-
-.topright {
-  margin-top: 100px;
 }
 
 .hero {
@@ -184,12 +149,13 @@
 }
 
 .pinBtn {
-  padding: 9px 16px;
+  height: 32px;
+  padding: 0 14px;
   border-radius: 8px;
   border: 1px solid #fde68a;
   background: #fff;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 500;
   line-height: 1.4;
   white-space: nowrap;
   cursor: pointer;
@@ -198,7 +164,7 @@
 .activeGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
+  gap: 16px;
   padding: 18px 0;
 }
 
@@ -333,9 +299,13 @@
 }
 
 .unlinkBtn {
-  padding: 8px 16px;
+  padding: 0 16px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: none;
-  border-radius: 999px;
+  border-radius: 8px;
   background: var(--step-bg);
   color: var(--accent);
   font-size: 11px;
@@ -355,13 +325,14 @@
 }
 
 .primaryBtn {
-  padding: 11px 18px;
+  height: 40px;
+  padding: 0 18px;
   border: none;
   border-radius: 10px;
   background: var(--accent);
   color: #fff;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   line-height: 1.4;
   cursor: pointer;
 }
@@ -376,7 +347,7 @@
 .comingSoonGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
+  gap: 16px;
 }
 
 .comingCard {
@@ -473,7 +444,7 @@
   }
 
   .activeGrid {
-    gap: 20px;
+    gap: 16px;
     padding: 16px 12px 0;
   }
 
@@ -514,13 +485,16 @@
     margin-top: 6px;
   }
 
-  .unlinkBtn,
+  .unlinkBtn {
+    padding: 0 16px;
+  }
+
   .connectedBadge {
     padding: 9px 16px;
   }
 
   .primaryBtn {
-    padding: 12px 18px;
+    padding: 0 18px;
     font-size: 14px;
   }
 
@@ -530,7 +504,7 @@
   }
 
   .pinBtn {
-    padding: 11px 16px;
+    padding: 0 16px;
     font-size: 13px;
   }
 
@@ -539,7 +513,7 @@
   }
 
   .comingSoonGrid {
-    gap: 20px;
+    gap: 16px;
     padding: 0 12px;
   }
 

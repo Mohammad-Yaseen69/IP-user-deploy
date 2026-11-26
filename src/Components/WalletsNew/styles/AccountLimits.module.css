@@ -3,8 +3,8 @@
   gap: 2rem;
   padding: 2rem;
   border-radius: 16px;
+  border: 1px solid #eff1f6;
   background: #fafafa;
-  box-shadow: 16.587px 4.739px 265.389px 0px rgba(0, 0, 0, 0.07);
 }
 
 .left {
@@ -29,7 +29,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 1.1rem;
   font-style: normal;
   font-weight: 700;
@@ -42,7 +42,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 1.5rem;
   font-style: normal;
   font-weight: 700;
@@ -55,7 +55,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 1.5rem;
   font-style: normal;
   font-weight: 700;
@@ -76,7 +76,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 1.1rem;
   font-style: normal;
   font-weight: 700;
@@ -95,7 +95,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 1rem;
   font-style: normal;
   font-weight: 500;
@@ -106,7 +106,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 1rem;
   font-style: normal;
   font-weight: 700;
@@ -155,7 +155,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.9rem;
   font-style: normal;
   font-weight: 500;
@@ -167,7 +167,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.9rem;
   font-style: normal;
   font-weight: 700;
@@ -197,7 +197,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 1.1rem;
   font-style: normal;
   font-weight: 700;
@@ -231,7 +231,7 @@
   color: rgba(0, 0, 0, 0.5);
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 1rem;
   font-style: normal;
   font-weight: 500;
@@ -242,7 +242,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
@@ -285,7 +285,7 @@
 .ril_used span,
 .ril_remaining span {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.9rem;
   font-style: normal;
   font-weight: 500;
@@ -295,7 +295,7 @@
 .ril_used strong,
 .ril_remaining strong {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.9rem;
   font-style: normal;
   font-weight: 700;

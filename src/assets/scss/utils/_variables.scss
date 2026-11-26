@@ -48,10 +48,6 @@ $light-body-bg-color: #fafdff;
 $font-themify: themify;
 $font-awesome: FontAwesome;
 $font-ICO: IcoFont;
-$font-sfpro: "SF Pro Text";
-$font-Montserrat: "Montserrat", sans-serif;
-$font-roboto: "Roboto", sans-serif;
-$font-serif: sans-serif;
 // dark layout variables
 $dark-body-background: #10101c;
 $dark-card-background: #171829;
@@ -142,25 +138,23 @@ $breadcrumb-ancher-color: $white;
 $breadcrumb-ancher-dark-color: $black;
 //buttons setting
 $btn-font-size: 14px;
-$btn-padding: 0.6rem 1.75rem;
-$btn-lg-font-size: 18px;
-$btn-sm-font-size: 12px;
+$btn-padding: 9px 20px;
+$btn-lg-font-size: 14px;
+$btn-sm-font-size: 13px;
 $btn-xs-font-size: 11px;
 $btn-xs-padding: 0.05rem 0.4rem;
 //Card settings
 $card-padding: 30px;
 $card-margin-bottom: 30px;
 $card-border-color: 1px solid $light-gray;
-$card-border-radious: 20px;
+$card-border-radious: 16px;
 $common-shadow-color: rgba($info-color, 0.08);
-$card-box-shadow: 0 0 20px rgba(8, 21, 66, 0.05);
 $card-header-bg-color: $white;
 $card-header-font-transform: capitalize;
 $card-header-span-size: 12px;
 $card-header-span-color: $theme-body-sub-title-color;
 $card-body-bg-color: $transparent-color;
 $card-footer-bg-color: $white;
-$card-hover-box-shadow: 0 0 40px rgba(8, 21, 66, 0.05);
 //footer settings
 $footer_bg_color: $white;
 $footer_box_shadow: 0 0 20px rgba($semi-dark, 0.1);

@@ -190,7 +190,7 @@ const BulkPaymentModal = ({ isOpen, onClose, onNext, initialRecipients = [] }) =
               style={{
                 color: "#D1245F",
                 fontSize: "0.8rem",
-                fontFamily: "Manrope, sans-serif",
+                fontFamily: "Inter, sans-serif",
                 fontWeight: 600,
                 margin: 0,
               }}

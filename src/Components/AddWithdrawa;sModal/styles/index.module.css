@@ -20,7 +20,7 @@
 
 .left h2 {
   color: #5926f0;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 10px;
   font-style: normal;
   font-weight: 800;
@@ -32,7 +32,7 @@
 
 .left h1 {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18.5px;
   font-style: normal;
   font-weight: 800;
@@ -55,7 +55,7 @@
   color: #8d8d8d;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
@@ -70,7 +70,7 @@
 
 .step_count {
   color: #5926f0;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 19px;
   font-style: normal;
   font-weight: 600;
@@ -88,7 +88,7 @@
 
 .gi_right h3 {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 800;
@@ -99,7 +99,7 @@
 
 .gi_right p {
   color: #5e5e5e;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
@@ -116,7 +116,7 @@
 
 .guide_item ul li {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -126,7 +126,7 @@
 
 .guide > h3 {
   color: #5926f0;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;
@@ -139,12 +139,13 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  border-radius: 10px;
+  border-radius: 12px;
   background: linear-gradient(341deg, #e64067 -4.84%, #5926f0 90.69%, #4828a0 166.81%), #d9d9d9;
   box-shadow: 0px 3.313px 5.797px 0px rgba(172, 53, 159, 0.31);
   border: none;
   outline: none;
-  padding: 1rem;
+  padding: 0 1rem;
+  height: 56px;
   width: 100%;
   justify-content: center;
 }
@@ -158,7 +159,7 @@
   color: #fff;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;

@@ -204,14 +204,19 @@
 }
 .btn {
   padding: $btn-padding;
-  font-weight: 600;
-  border-radius: 30px;
+  font-weight: 500;
+  line-height: 20px;
+  border-radius: 10px;
 }
 .btn-lg {
+  padding: 17px 28px;
   font-size: $btn-lg-font-size;
+  border-radius: 12px;
 }
 .btn-sm {
+  padding: 5px 14px;
   font-size: $btn-sm-font-size;
+  border-radius: 8px;
 }
 .btn-xs {
   padding: $btn-xs-padding;

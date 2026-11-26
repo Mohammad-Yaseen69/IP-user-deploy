@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import Tooltip from "@mui/material/Tooltip";
 import { ArrowDownCircle, RefreshCw, Send } from "react-feather";
 import useWindowWidth from "../../../../utils/useWindowWidth";
-import TopRight from "../../../topRight";
+import PageHeader from "../../../../Common/PageHeader";
 import styles from "../style/moveMoney.module.css";
 import IbanBreadcrumb from "../../components/IbanBreadcrumb";
 import CryptoTopupModal from "../../CryptoTopupModal";
@@ -87,13 +87,10 @@ const CryptoActions = () => {
       )}
       <div className={styles.container}>
         {!isMobile && (
-          <div className={styles.top}>
-            <div className={styles.headerTitle}>
-              <h1>{t("Crypto")}</h1>
-              <p>{t("Top up with crypto, convert your balance to crypto, and send it out.")}</p>
-            </div>
-            <div className={styles.topright}>{width > 1000 && <TopRight />}</div>
-          </div>
+          <PageHeader
+            title={t("Crypto")}
+            subtitle={t("Top up with crypto, convert your balance to crypto, and send it out.")}
+          />
         )}
 
         <div className={styles.mainContent}>

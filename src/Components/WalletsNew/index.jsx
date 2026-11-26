@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import Top from "./Top";
 import WalletLimits from "./WalletLimits";
@@ -74,21 +74,18 @@ const WalletsNew = () => {
         <QrGenerate wallets={userWallets?.filter((item) => !item?.qrCode?.url)} />
       )}
       <div className={u.page}>
-        <header className={u.header}>
-          <div className={u.headerText}>
-            <h1>{t("My Wallets")}</h1>
-            <p>
+        <PageHeader
+          title={t("My Wallets")}
+          subtitle={
+            <>
               {currencyCount === 1
                 ? t("1 currency in one wallet.")
                 : t("{{n}} currencies in one wallet.", { n: currencyCount })}
               {currentWallet?.wallet_id &&
                 ` ${t("Wallet ID")} ${currentWallet?.wallet_type?.toUpperCase()}-${currentWallet.wallet_id.toUpperCase()}.`}
-            </p>
-          </div>
-          <div className={u.headerRight}>
-            <TopRight position="static" />
-          </div>
-        </header>
+            </>
+          }
+        />
         <div className={u.content}>
           <Top currentWallet={currentWallet} setCurrentWallet={setCurrentWallet} data={data} />
 
