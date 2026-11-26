@@ -398,11 +398,12 @@
 
             button {
               display: flex !important;
-              padding: var(--SPACING-spacing-0, 4px) var(--SPACING-spacing-1, 12px) !important;
+              padding: 0 var(--SPACING-spacing-1, 12px) !important;
+              height: 32px !important;
               justify-content: center !important;
               align-items: center !important;
               gap: 10px !important;
-              border-radius: var(--RADIUS-radius-2, 8px) !important;
+              border-radius: 8px !important;
               border: 1px solid var(--COLORS-Neutral-200, #e8e8e8) !important;
               background: var(--COLORS-Primary-300, #5926f0) !important;
             }
@@ -534,11 +535,12 @@
 .buttonStyles {
   display: flex;
   float: right;
-  padding: var(--SPACING-spacing-0, 8px);
+  height: 32px;
+  padding: 0 12px;
   justify-content: center;
   align-items: center;
   gap: 10px;
-  border-radius: var(--RADIUS-radius-1, 4px);
+  border-radius: 8px;
   background: var(--COLORS-Primary-300, #5926f0);
   background-color: var(--COLORS-Primary-300, #5926f0);
   color: var(--COLORS-Neutral-100, #fff);

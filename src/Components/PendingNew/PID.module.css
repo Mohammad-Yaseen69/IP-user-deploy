@@ -79,9 +79,13 @@
 }
 
 .r_item button {
-  border-radius: 9px;
+  border-radius: 10px;
   background: linear-gradient(296deg, #5926f0 2.47%, #4828a0 99.3%), #fff;
-  padding: 10px 16px;
+  padding: 0 16px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: none;
   outline: none;
 }

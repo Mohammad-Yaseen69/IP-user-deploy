@@ -157,11 +157,15 @@ const Profile = ({ dp, setDp, dets, canUpdatePaymentProfileImage }) => {
             <Button
               color="primary"
               style={{
+                height: "32px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
                 background: "white",
                 border: "none",
                 outline: "none",
-                borderRadius: "5px",
-                padding: "5px 10px",
+                borderRadius: "8px",
+                padding: "0 10px",
                 fontSize: ".65rem",
               }}
               onClick={handleSave}
@@ -173,11 +177,15 @@ const Profile = ({ dp, setDp, dets, canUpdatePaymentProfileImage }) => {
             <Button
               color="primary"
               style={{
+                height: "32px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
                 background: "white",
                 border: "none",
                 outline: "none",
-                borderRadius: "5px",
-                padding: "5px 10px",
+                borderRadius: "8px",
+                padding: "0 10px",
                 fontSize: ".65rem",
               }}
               disabled={true}

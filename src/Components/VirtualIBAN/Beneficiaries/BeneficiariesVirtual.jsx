@@ -770,7 +770,11 @@ const BeneficiariesVirtual = () => {
                             setIsChannelModalOpen(true);
                           }}
                           style={{
-                            padding: "8px 16px",
+                            height: "32px",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            padding: "0 16px",
                             borderRadius: "8px",
                             border: "none",
                             background: isMobile ? "#5926F0" : "#4F46E5",

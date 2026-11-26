@@ -57,11 +57,12 @@
 
 .activateBtn {
   display: flex;
-  padding: 10px 16px;
+  padding: 0 16px;
+  height: 40px;
   justify-content: center;
   align-items: center;
   gap: 8px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid #7f56d9;
   background: #7f56d9;
   color: #fff;
@@ -427,10 +428,11 @@
 
 .cancelBtn {
   display: flex;
-  padding: 10px 16px;
+  padding: 0 16px;
+  height: 40px;
   justify-content: center;
   align-items: center;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid #d0d5dd;
   background: #fff;
   color: #344054;
@@ -441,11 +443,12 @@
 
 .submitBtn {
   display: flex;
-  padding: 10px 16px;
+  padding: 0 16px;
+  height: 40px;
   justify-content: center;
   align-items: center;
   gap: 8px;
-  border-radius: 8px;
+  border-radius: 10px;
   background: #4f46e5;
   border: 1px solid #4f46e5;
   color: #fff;

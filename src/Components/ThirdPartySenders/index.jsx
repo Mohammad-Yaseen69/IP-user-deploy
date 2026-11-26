@@ -380,7 +380,14 @@ const ThirdPartySenders = () => {
         <Button
           color="transparent"
           className={styles.btn}
-          style={{ padding: ".5rem 1rem" }}
+          style={{
+            borderRadius: "10px",
+            height: "40px",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "0 1rem",
+          }}
           onClick={handleAddClick}
         >
           <span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
@@ -502,10 +509,14 @@ const ThirdPartySenders = () => {
             disabled={isDeletingSender}
             onClick={() => setConfirmDeleteSender(null)}
             style={{
+              height: "40px",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
               border: "1px solid #DDD",
-              borderRadius: "8px",
+              borderRadius: "10px",
               background: "#fff",
-              padding: "9px 14px",
+              padding: "0 14px",
               fontWeight: 800,
             }}
           >
@@ -516,11 +527,15 @@ const ThirdPartySenders = () => {
             disabled={isDeletingSender}
             onClick={() => deleteSender(confirmDeleteSender)}
             style={{
+              height: "40px",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
               border: "none",
-              borderRadius: "8px",
+              borderRadius: "10px",
               background: "#E64067",
               color: "#fff",
-              padding: "9px 14px",
+              padding: "0 14px",
               fontWeight: 800,
             }}
           >

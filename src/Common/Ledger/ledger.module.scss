@@ -18,7 +18,7 @@ $mobile: 1000px;
   color: $color;
 }
 
-@mixin button($bg, $color, $height: 36px) {
+@mixin button($bg, $color, $height: 40px) {
   @include type(14px, 500, $color, -0.42px);
   display: inline-flex;
   align-items: center;
@@ -27,7 +27,7 @@ $mobile: 1000px;
   height: $height;
   padding: 0 16px;
   border: 0;
-  border-radius: 6px;
+  border-radius: 10px;
   background: $bg;
   cursor: pointer;
 
@@ -64,18 +64,20 @@ $mobile: 1000px;
 .textBtn {
   @include button(transparent, $primary, 32px);
   padding: 0 8px;
+  border-radius: 8px;
   font-size: 12px;
 }
 
 .sm {
   height: 32px;
   padding: 0 12px;
+  border-radius: 8px;
   font-size: 12px;
 }
 
 .iconBtn {
   @include button($border, $navy);
-  width: 36px;
+  width: 40px;
   padding: 0;
 }
 

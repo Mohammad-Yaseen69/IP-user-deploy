@@ -56,9 +56,10 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: var(--sm, 8px) var(--lg, 24px);
+  padding: 0 var(--lg, 24px);
+  height: 40px;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   background: #5626e6;
   color: white;
   box-shadow: 0 2px 4px rgba(86, 38, 230, 0.2);
@@ -133,8 +134,9 @@
   gap: 8px;
   background: #f0f0f5;
   border: 1px solid #e0e0e0;
-  padding: 10px 16px;
-  border-radius: 8px;
+  padding: 0 16px;
+  height: 40px;
+  border-radius: 10px;
   font-size: 14px;
   font-weight: 600;
   color: #333;
@@ -186,9 +188,10 @@
 
     .addBtn {
       width: 40%;
-      padding: var(--sm, 12px) var(--lg, 17px);
+      padding: 0 var(--lg, 17px);
+      height: 40px;
 
-      border-radius: var(--sm, 6px);
+      border-radius: 10px;
       background: linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%), #4a32e3;
     }
 

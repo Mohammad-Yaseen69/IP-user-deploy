@@ -207,29 +207,32 @@ const PaymentsNewer = () => {
           subtitle={
             step === 1 && t("Select the option that matches your needs from the list below:")
           }
-        >
-          {step > 1 && (
-            <button
-              onClick={resetToMain}
-              style={{
-                fontSize: ".75rem",
-                padding: "4px 8px",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "6px",
-                borderRadius: "6px",
-                border: "1px solid #e5e5e5",
-                background: "#fff",
-                color: "#444",
-                cursor: "pointer",
-              }}
-              aria-label={t("Go back to main menu")}
-            >
-              <ChevronLeft color="#5826e9" size={14} />
-              <span style={{ fontWeight: 600 }}>{t("Go back to main menu")}</span>
-            </button>
-          )}
-        </PageHeader>
+        />
+
+        {step > 1 && (
+          <button
+            onClick={resetToMain}
+            style={{
+              height: "32px",
+              justifyContent: "center",
+              fontSize: ".75rem",
+              padding: "0 8px",
+              marginBottom: "16px",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              borderRadius: "8px",
+              border: "1px solid #e5e5e5",
+              background: "#fff",
+              color: "#444",
+              cursor: "pointer",
+            }}
+            aria-label={t("Go back to main menu")}
+          >
+            <ChevronLeft color="#5826e9" size={14} />
+            <span style={{ fontWeight: 600 }}>{t("Go back to main menu")}</span>
+          </button>
+        )}
 
         {step === 1 && <PaymentAction setAction={setAction} setStep={setStep} />}
 

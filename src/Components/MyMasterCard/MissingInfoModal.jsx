@@ -227,10 +227,12 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess }) => {
             onClick={sendOtp}
             disabled={isSaving || !info}
             style={{
+              height: "40px",
+              display: "inline-flex",
               backgroundColor: "#5926F0",
               border: "none",
-              borderRadius: "8px",
-              padding: "10px 25px",
+              borderRadius: "10px",
+              padding: "0 25px",
               fontWeight: "600",
               boxShadow: "0 4px 12px rgba(89, 38, 240, 0.2)",
             }}

@@ -379,11 +379,13 @@ const SelectSender = ({ data, dataHandler }) => {
             type="button"
             onClick={() => setShowAddSenderModal(true)}
             style={{
+              height: "40px",
+              justifyContent: "center",
               border: "none",
-              borderRadius: "8px",
+              borderRadius: "10px",
               background: "#5926F0",
               color: "#fff",
-              padding: "10px 14px",
+              padding: "0 14px",
               fontWeight: 800,
               display: "flex",
               alignItems: "center",
@@ -457,11 +459,13 @@ const SelectSender = ({ data, dataHandler }) => {
               type="button"
               onClick={() => setShowAddSenderModal(true)}
               style={{
+                height: "40px",
+                justifyContent: "center",
                 border: "none",
-                borderRadius: "8px",
+                borderRadius: "10px",
                 background: "#5926F0",
                 color: "#fff",
-                padding: "10px 14px",
+                padding: "0 14px",
                 fontWeight: 800,
                 display: "flex",
                 alignItems: "center",
@@ -509,10 +513,14 @@ const SelectSender = ({ data, dataHandler }) => {
             type="button"
             onClick={() => setPendingSavedSender(null)}
             style={{
+              height: "40px",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
               border: "1px solid #DDD",
-              borderRadius: "8px",
+              borderRadius: "10px",
               background: "#fff",
-              padding: "9px 14px",
+              padding: "0 14px",
               fontWeight: 800,
             }}
           >
@@ -522,11 +530,15 @@ const SelectSender = ({ data, dataHandler }) => {
             type="button"
             onClick={confirmSavedSenderSelection}
             style={{
+              height: "40px",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
               border: "none",
-              borderRadius: "8px",
+              borderRadius: "10px",
               background: "#5926F0",
               color: "#fff",
-              padding: "9px 14px",
+              padding: "0 14px",
               fontWeight: 800,
             }}
           >
@@ -548,10 +560,14 @@ const SelectSender = ({ data, dataHandler }) => {
             disabled={isDeletingSender}
             onClick={() => setConfirmDeleteSender(null)}
             style={{
+              height: "40px",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
               border: "1px solid #DDD",
-              borderRadius: "8px",
+              borderRadius: "10px",
               background: "#fff",
-              padding: "9px 14px",
+              padding: "0 14px",
               fontWeight: 800,
             }}
           >
@@ -562,11 +578,15 @@ const SelectSender = ({ data, dataHandler }) => {
             disabled={isDeletingSender}
             onClick={() => deleteSender(confirmDeleteSender)}
             style={{
+              height: "40px",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
               border: "none",
-              borderRadius: "8px",
+              borderRadius: "10px",
               background: "#E64067",
               color: "#fff",
-              padding: "9px 14px",
+              padding: "0 14px",
               fontWeight: 800,
             }}
           >

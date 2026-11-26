@@ -161,8 +161,12 @@ const primaryButtonStyle = {
   background: "linear-gradient(135deg, #e64067 0%, #5926f0 50%, #4828a0 100%)",
   color: "#fff",
   border: "none",
-  borderRadius: "6px",
-  padding: "5px 12px",
+  borderRadius: "8px",
+  height: "32px",
+  padding: "0 12px",
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
   fontSize: "11px",
   fontWeight: "700",
   cursor: "pointer",
@@ -340,7 +344,7 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
             disabled={uploading || !value.trim()}
             style={{
               ...primaryButtonStyle,
-              padding: "8px 18px",
+              padding: "0 18px",
               fontSize: "12px",
               opacity: uploading || !value.trim() ? 0.6 : 1,
             }}
@@ -452,7 +456,7 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
               disabled={uploading}
               style={{
                 ...primaryButtonStyle,
-                ...(isModal ? { padding: "8px 18px", fontSize: "12px" } : {}),
+                ...(isModal ? { padding: "0 18px", fontSize: "12px" } : {}),
               }}
             >
               {uploading ? t("Uploading...") : t("Upload")}
@@ -739,13 +743,15 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
                           type="button"
                           onClick={() => setDetailsItemId(item._id)}
                           style={{
+                            height: "32px",
+                            justifyContent: "center",
                             display: "inline-flex",
                             alignItems: "center",
                             gap: "6px",
                             background: "none",
                             border: "1px solid #e2e8f0",
-                            borderRadius: "6px",
-                            padding: "4px 10px",
+                            borderRadius: "8px",
+                            padding: "0 10px",
                             fontSize: "11px",
                             fontWeight: "600",
                             color: "#5926f0",

@@ -326,10 +326,14 @@ const QRCodeScan = ({ setSubStep, dataHandler }) => {
             <button
               style={{
                 all: "unset",
-                padding: ".3rem 1rem",
+                height: "32px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "0 1rem",
                 fontSize: ".6rem",
                 background: "white",
-                borderRadius: "40px",
+                borderRadius: "8px",
                 boxShadow:
                   "0px 3.3496174812316895px 11.723660469055176px -3.3496174812316895px rgba(89, 38, 240, 0.25)",
                 cursor: "pointer",

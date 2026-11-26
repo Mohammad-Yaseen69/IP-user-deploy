@@ -1055,12 +1055,14 @@ const AddSenderFormModal = ({
               disabled={isSubmitting}
               type="submit"
               style={{
+                height: "40px",
+                justifyContent: "center",
                 alignSelf: "flex-end",
                 border: "none",
-                borderRadius: "8px",
+                borderRadius: "10px",
                 background: isSubmitting ? "#9E8AED" : "#5926F0",
                 color: "#fff",
-                padding: "10px 16px",
+                padding: "0 16px",
                 fontWeight: 800,
                 display: "flex",
                 alignItems: "center",

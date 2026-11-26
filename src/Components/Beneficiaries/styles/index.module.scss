@@ -30,6 +30,10 @@
     }
 
     .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
       border: none;
       outline: none;
       color: black;
@@ -144,8 +148,9 @@
   display: flex !important;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.5rem 1rem !important;
-  border-radius: 8px;
+  height: 40px;
+  padding: 0 16px !important;
+  border-radius: 10px;
   background: #fff !important;
   color: #333 !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);

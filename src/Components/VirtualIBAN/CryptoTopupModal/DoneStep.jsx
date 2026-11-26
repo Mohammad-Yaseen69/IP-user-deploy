@@ -87,11 +87,13 @@ const DoneStep = ({ confirmData, selectedIban, onOpenCheckout }) => {
               type="button"
               onClick={handleOpenCheckout}
               style={{
+                height: "32px",
+                justifyContent: "center",
                 background: "#5926f0",
                 color: "#fff",
                 border: "none",
                 borderRadius: "8px",
-                padding: "8px 14px",
+                padding: "0 14px",
                 fontSize: "13px",
                 fontWeight: 600,
                 cursor: "pointer",

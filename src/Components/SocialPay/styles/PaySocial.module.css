@@ -149,7 +149,8 @@
 }
 
 .pinBtn {
-  padding: 9px 16px;
+  height: 32px;
+  padding: 0 14px;
   border-radius: 8px;
   border: 1px solid #fde68a;
   background: #fff;
@@ -298,9 +299,13 @@
 }
 
 .unlinkBtn {
-  padding: 8px 16px;
+  padding: 0 16px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: none;
-  border-radius: 999px;
+  border-radius: 8px;
   background: var(--step-bg);
   color: var(--accent);
   font-size: 11px;
@@ -320,7 +325,8 @@
 }
 
 .primaryBtn {
-  padding: 11px 18px;
+  height: 40px;
+  padding: 0 18px;
   border: none;
   border-radius: 10px;
   background: var(--accent);
@@ -479,13 +485,16 @@
     margin-top: 6px;
   }
 
-  .unlinkBtn,
+  .unlinkBtn {
+    padding: 0 16px;
+  }
+
   .connectedBadge {
     padding: 9px 16px;
   }
 
   .primaryBtn {
-    padding: 12px 18px;
+    padding: 0 18px;
     font-size: 14px;
   }
 
@@ -495,7 +504,7 @@
   }
 
   .pinBtn {
-    padding: 11px 16px;
+    padding: 0 16px;
     font-size: 13px;
   }
 

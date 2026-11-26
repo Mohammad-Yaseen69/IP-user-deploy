@@ -36,8 +36,9 @@
   align-items: center;
   justify-content: center;
   gap: 0.7rem;
-  padding: 0.7rem 1.2rem;
-  border-radius: 40px;
+  height: 40px;
+  padding: 0 1.2rem;
+  border-radius: 10px;
   background-color: #5926f0;
   color: white;
   font-size: 0.9rem;
@@ -66,9 +67,11 @@
 
 .edit {
   display: flex;
+  align-items: center;
   gap: 1rem;
-  padding: 0.7rem 1.2rem;
-  border-radius: 40px;
+  height: 40px;
+  padding: 0 1.2rem;
+  border-radius: 10px;
   box-shadow: 0 3px 5px rgba(89, 38, 240, 0.11);
   background-color: white;
   border: none;
@@ -138,12 +141,16 @@
 
 .form button {
   margin: 0 auto;
-  padding: 0.7rem 1.25rem;
+  padding: 0 1.25rem;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: #5926f0;
   color: white;
   border: none;
   outline: none;
-  border-radius: 1000px;
+  border-radius: 10px;
 }
 
 .form button:disabled {

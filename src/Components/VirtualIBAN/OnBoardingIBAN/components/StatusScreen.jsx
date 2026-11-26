@@ -344,11 +344,15 @@ const StatusScreen = ({
                 <button
                   type="button"
                   style={{
+                    height: "40px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                     background: "#5B3DF5",
                     color: "#FFFFFF",
                     border: "none",
-                    padding: "10px 24px",
-                    borderRadius: "8px",
+                    padding: "0 24px",
+                    borderRadius: "10px",
                     fontWeight: 600,
                     fontSize: "14px",
                     cursor: "pointer",

@@ -499,7 +499,13 @@ const ReferralsNew = () => {
                   <div style={{ fontSize: "1.1rem", fontWeight: 700 }}>{t(currentTab)}</div>
                   <Button
                     color="primary"
-                    style={{ borderRadius: "8px" }}
+                    style={{
+                      height: "40px",
+                      borderRadius: "10px",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                     onClick={() =>
                       setCurrentTab(
                         currentTab === "My Referrals" ? "my withdrawls" : "My Referrals",

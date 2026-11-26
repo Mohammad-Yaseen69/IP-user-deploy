@@ -334,11 +334,13 @@ const TransactionItemDetails = ({
                   navigator.clipboard.writeText(item?.metadata?.crypto_tx_hash);
                 }}
                 style={{
+                  height: "32px",
+                  justifyContent: "center",
                   background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                   border: "none",
                   outline: "none",
                   borderRadius: "8px",
-                  padding: "6px 12px",
+                  padding: "0 12px",
                   cursor: "pointer",
                   display: "flex",
                   alignItems: "center",

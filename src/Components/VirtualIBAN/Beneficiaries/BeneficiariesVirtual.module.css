@@ -36,11 +36,12 @@
 
 .backBtn {
   display: flex;
-  padding: 6px 12px;
+  padding: 0 12px;
+  height: 32px;
   justify-content: center;
   align-items: center;
   gap: 6px;
-  border-radius: 6px;
+  border-radius: 8px;
   border: 1px solid #d0d5dd;
   background: #fff;
   color: #344054;
@@ -120,7 +121,7 @@
   align-items: center;
   gap: 8px;
   border: none;
-  border-radius: var(--sm, 6px);
+  border-radius: 8px;
   background: var(--Primary-600---Base, #4a32e3);
   color: var(--Greyscale-0, #fff);
   text-align: center;
@@ -325,8 +326,12 @@
   background: #4f46e5;
   color: white;
   border: 1px solid #4f46e5;
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: 0 16px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -544,7 +549,7 @@
 
   .addBeneficiaryBtn {
     background: #4a32e3;
-    height: 36px;
+    height: 40px;
   }
 
   .searchBarWrapper {
@@ -687,7 +692,8 @@
   justify-content: center;
   gap: 6px;
   width: 100%;
-  padding: 6px 12px;
+  padding: 0 12px;
+  height: 32px;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   background: #ffffff;

@@ -142,16 +142,17 @@
 
   .saveBtn {
     display: flex;
-    padding: var(--SPACING-spacing-1, 12px) var(--SPACING-spacing-2, 18px);
+    height: 40px;
+    padding: 0 18px;
     justify-content: center;
     align-items: center;
     gap: 8px;
     background: var(--COLORS-Primary-300, #5926f0);
-    border-radius: 6px;
+    border-radius: 10px;
     color: white;
 
     @media screen and (max-width: 768px) {
-      padding: 8px 14px;
+      padding: 0 14px;
       font-size: 14px;
     }
   }

@@ -91,12 +91,13 @@ const CardMaintenanceModal = ({ isOpen, toggle }) => {
             type="button"
             onClick={toggle}
             style={{
+              height: "40px",
               border: "none",
-              borderRadius: "8px",
+              borderRadius: "10px",
               background: "#8D40FF",
               color: "#fff",
               fontWeight: 800,
-              padding: "12px 20px",
+              padding: "0 20px",
               marginTop: "4px",
               width: "100%",
               boxShadow: "0 10px 18px rgba(141, 64, 255, 0.22)",

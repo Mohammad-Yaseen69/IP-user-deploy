@@ -151,7 +151,7 @@ $mobile: 768px;
   padding: 0 12px;
   flex-shrink: 0;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-family: inherit;
   font-size: 12px;
   font-weight: 500;
@@ -167,8 +167,9 @@ $mobile: 768px;
 }
 
 @mixin button-medium {
-  height: 36px;
+  height: 40px;
   padding: 0 16px;
+  border-radius: 10px;
   font-size: 14px;
   letter-spacing: -0.42px;
 }
@@ -177,6 +178,7 @@ $mobile: 768px;
 @mixin button-large {
   height: 40px;
   padding: 0 20px;
+  border-radius: 10px;
   font-size: 14px;
   letter-spacing: -0.42px;
 }

@@ -54,9 +54,12 @@ const RedirectButton = ({ platform }) => {
     <button
       onClick={handleRedirect}
       style={{
-        display: "inline-block",
-        padding: "0.5rem 1rem",
-        borderRadius: "9px",
+        height: "40px",
+        alignItems: "center",
+        justifyContent: "center",
+        display: "flex",
+        padding: "0 1rem",
+        borderRadius: "10px",
         backgroundColor: "#5926f0fe",
         color: "white",
         border: "none",

@@ -77,13 +77,15 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  border-radius: 30px;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 10px;
   background: linear-gradient(0deg, #5926f0 0%, #5926f0 100%), #ececec;
 }
 
 .tl_bot button img {
   /* width: 15px; */
-  height: 21px;
+  height: 18px;
   flex-shrink: 0;
   object-fit: contain;
 }
@@ -93,9 +95,9 @@
   leading-trim: both;
   text-edge: cap;
   font-family: "Inter", sans-serif;
-  font-size: 18px;
+  font-size: 14px;
   font-style: normal;
-  font-weight: 700;
+  font-weight: 600;
   line-height: normal;
   letter-spacing: -0.36px;
 }
@@ -223,11 +225,12 @@
 .ic_top button {
   border: none;
   outline: none;
-  border-radius: 19.474px;
+  border-radius: 8px;
   background: #fff;
   box-shadow: 0px 3.35px 11.724px -3.35px rgba(89, 38, 240, 0.25);
   display: inline-flex;
-  padding: 6px 12px;
+  height: 32px;
+  padding: 0 12px;
   justify-content: center;
   align-items: center;
 }
@@ -340,9 +343,10 @@
 }
 
 .bt_bot button {
-  border-radius: 490px;
+  height: 40px;
+  border-radius: 10px;
   background: #ececec;
-  padding: 0.8rem 1.3rem;
+  padding: 0 20px;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -392,7 +396,7 @@
   }
 
   .tl_bot button {
-    padding: 0.5rem 1rem;
+    padding: 0 16px;
   }
 
   .tl_bot button img {
@@ -438,7 +442,7 @@
   }
 
   .ic_top button {
-    padding: 3px 8px;
+    padding: 0 10px;
   }
 
   .ic_top button span {
@@ -472,7 +476,7 @@
   }
 
   .bt_bot button {
-    padding: 0.8rem 1.2rem;
+    padding: 0 16px;
   }
 
   .bt_bot button img {

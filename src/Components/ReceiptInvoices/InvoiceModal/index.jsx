@@ -367,10 +367,14 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv, directCard = false }) => {
                     disabled={isEditing}
                     onClick={() => dataHandler("mode", "form")}
                     style={{
+                      height: "40px",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
                       border: "none",
                       outline: "none",
-                      padding: "10px 16px",
-                      borderRadius: 8,
+                      padding: "0 16px",
+                      borderRadius: "10px",
                       fontWeight: 700,
                       background: "#EEEEEE",
                       color: "#111",
@@ -408,10 +412,14 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv, directCard = false }) => {
                   disabled={isPending}
                   onClick={() => dataHandler("mode", "form")}
                   style={{
+                    height: "40px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                     border: "none",
                     outline: "none",
-                    padding: "10px 16px",
-                    borderRadius: 8,
+                    padding: "0 16px",
+                    borderRadius: "10px",
                     fontWeight: 700,
                     background: "#EEEEEE",
                     color: "#111",

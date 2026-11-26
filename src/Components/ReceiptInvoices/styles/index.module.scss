@@ -33,13 +33,14 @@
       button {
         border: none;
         outline: none;
-        border-radius: var(--Corner-Radius-Small-Roundness, 8px);
+        border-radius: 12px;
         background:
           linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.5) 100%),
           linear-gradient(259deg, #e64067 8.36%, #5926f0 54.71%, #4828a0 91.64%);
         background-blend-mode: soft-light, normal;
         display: flex;
-        padding: var(--Gaps-Gap-Large, 16px) var(--Gaps-Gap-XLarge, 20px);
+        padding: 0 var(--Gaps-Gap-XLarge, 20px);
+        height: 56px;
         justify-content: center;
         align-items: center;
         gap: 10px;
@@ -78,10 +79,11 @@
 
       button {
         display: flex;
-        padding: var(--Gaps-Gap-Small, 8px) 15px var(--Gaps-Gap-Small, 8px) 10px;
+        height: 40px;
+        padding: 0 16px 0 12px;
         align-items: center;
         gap: 6px;
-        border-radius: var(--RADIUS-radius-1, 4px);
+        border-radius: 10px;
         background: var(--COLORS-Primary-300, #5926f0);
         color: white;
         font-weight: 600;

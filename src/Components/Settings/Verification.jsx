@@ -329,11 +329,15 @@ const Verification = () => {
         </p>
         <Button
           style={{
+            height: "40px",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
             background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
             border: "none",
             outline: "none",
             borderRadius: "10px",
-            padding: "12px 32px",
+            padding: "0 32px",
             fontSize: "1rem",
             fontWeight: 500,
             marginTop: "0.5rem",

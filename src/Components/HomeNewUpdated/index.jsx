@@ -305,14 +305,15 @@ const HomeNewUpdated = () => {
                 onClick={() => setShowBusinessModal(true)}
                 className={cardsStyle.button}
                 style={{
+                  height: "56px",
                   background: "linear-gradient(to left, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
                   color: "white",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
                   gap: ".75rem",
-                  borderRadius: "7px",
-                  padding: "1rem",
+                  borderRadius: "12px",
+                  padding: "0 1rem",
                 }}
               >
                 <img src={crown} alt="c" loading="lazy" style={{ width: "20px" }} />

@@ -686,11 +686,14 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
             <button
               className={styles.buttonGroup1}
               style={{
+                borderRadius: "10px",
+                height: "40px",
+                justifyContent: "center",
                 display: "flex",
                 alignItems: "center",
                 gap: "8px",
                 cursor: "pointer",
-                padding: "12px 32px",
+                padding: "0 32px",
                 fontSize: "15px",
                 fontWeight: 600,
               }}

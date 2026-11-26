@@ -94,10 +94,14 @@ export const ButtonForRequests = ({ isLoading, onClick, children, style }) => {
       disabled={isLoading}
       onClick={onClick}
       style={{
+        height: "40px",
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
         border: "none",
         outline: "none",
-        padding: "10px 16px",
-        borderRadius: 8,
+        padding: "0 16px",
+        borderRadius: "10px",
         fontWeight: 700,
         background: "#5926F0",
         color: "#fff",

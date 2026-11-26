@@ -1218,6 +1218,8 @@ const BusinessAccount = ({
           {isAddBeneficiary ? (
             <Button
               style={{
+                height: "40px",
+                justifyContent: "center",
                 border: "none",
                 outline: "none",
                 background:
@@ -1225,10 +1227,10 @@ const BusinessAccount = ({
                 backgroundBlendMode: "overlay, normal",
                 boxShadow:
                   "0px 11.90068244934082px 8.655041694641113px -5.409400939941406px rgba(89, 38, 240, 0.17)",
-                borderRadius: "40px",
+                borderRadius: "10px",
                 display: "flex",
                 alignItems: "center",
-                padding: ".6rem 2rem",
+                padding: "0 2rem",
               }}
               className="i_t_button"
               disabled={
@@ -1259,6 +1261,8 @@ const BusinessAccount = ({
             isEditMode && (
               <Button
                 style={{
+                  height: "40px",
+                  justifyContent: "center",
                   border: "none",
                   outline: "none",
                   background:
@@ -1266,10 +1270,10 @@ const BusinessAccount = ({
                   backgroundBlendMode: "overlay, normal",
                   boxShadow:
                     "0px 11.90068244934082px 8.655041694641113px -5.409400939941406px rgba(89, 38, 240, 0.17)",
-                  borderRadius: "40px",
+                  borderRadius: "10px",
                   display: "flex",
                   alignItems: "center",
-                  padding: ".6rem 2rem",
+                  padding: "0 2rem",
                 }}
                 className="i_t_button"
                 disabled={saveloading}
@@ -1339,12 +1343,13 @@ const BusinessAccount = ({
                     }}
                     style={{
                       all: "unset",
-                      padding: "1rem",
+                      height: "56px",
+                      padding: "0 1rem",
                       boxShadow: "0 0 3px rgba(128,128,128,0.4)",
                       textAlign: "center",
                       cursor: "pointer",
                       type: "button",
-                      borderRadius: "10px",
+                      borderRadius: "12px",
                       background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                       color: "white",
                       display: "flex",

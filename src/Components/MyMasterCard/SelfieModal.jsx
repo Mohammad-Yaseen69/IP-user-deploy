@@ -282,7 +282,14 @@ const SelfieModal = ({ isOpen, toggle, onUploadSuccess }) => {
                   color="danger"
                   size="sm"
                   onClick={stopCamera}
-                  style={{ borderRadius: "20px", padding: "5px 15px" }}
+                  style={{
+                    height: "32px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "8px",
+                    padding: "0 15px",
+                  }}
                 >
                   {t("Cancel")}
                 </Button>
@@ -291,8 +298,12 @@ const SelfieModal = ({ isOpen, toggle, onUploadSuccess }) => {
                   size="sm"
                   onClick={captureImage}
                   style={{
-                    borderRadius: "20px",
-                    padding: "5px 20px",
+                    height: "32px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "8px",
+                    padding: "0 20px",
                     backgroundColor: "#5926f0",
                     border: "none",
                   }}

@@ -160,9 +160,9 @@
     button {
       display: flex;
       width: 100%;
-      border-radius: var(--RADIUS-radius-2, 8px);
+      border-radius: 12px;
       background: #5926f0;
-      height: 55px;
+      height: 56px;
       justify-content: center;
       color: var(--COLORS-Neutral-100, #fff);
       font-size: 18px;
@@ -198,7 +198,7 @@
       }
 
       button {
-        height: 55px;
+        height: 56px;
         font-size: 16px;
       }
     }

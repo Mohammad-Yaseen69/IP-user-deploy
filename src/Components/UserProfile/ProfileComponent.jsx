@@ -336,10 +336,14 @@ const ProfileComponent = () => {
                 >
                   <button
                     style={{
-                      padding: "7px 14px",
+                      height: "32px",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: "0 14px",
                       border: "none",
                       outline: "none",
-                      borderRadius: "50px",
+                      borderRadius: "8px",
                       background: "#FFF",
                       color: "black",
                     }}

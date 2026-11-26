@@ -158,7 +158,12 @@ const CardDetails = ({
             color="danger"
             onClick={deleteCard}
             disabled={isDeleting}
-            style={{ borderRadius: "8px", padding: ".7rem 1.5rem" }}
+            style={{
+              height: "40px",
+              display: "inline-flex",
+              borderRadius: "10px",
+              padding: "0 1.5rem",
+            }}
           >
             {t("Delete")}
           </Button>
@@ -300,6 +305,7 @@ const CardDetails = ({
           <Button
             size="sm"
             style={{
+              height: "40px",
               border: "none",
               outline: "none",
               background:
@@ -312,8 +318,8 @@ const CardDetails = ({
               alignItems: "center",
               width: isBig ? "40%" : "inherit",
               minWidth: "fit-content",
-              padding: ".75rem 2rem",
-              borderRadius: "12px",
+              padding: "0 2rem",
+              borderRadius: "10px",
             }}
             // className="i_t_button"
             onClick={() => {

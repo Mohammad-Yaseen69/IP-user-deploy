@@ -209,6 +209,10 @@ const InviteFriendModal = ({ isOpen, toggle }) => {
             <Button
               onClick={() => setStep((prev) => prev - 1)}
               style={{
+                height: "40px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
                 border: "none",
                 outline: "none",
                 background:
@@ -216,8 +220,8 @@ const InviteFriendModal = ({ isOpen, toggle }) => {
                 backgroundBlendMode: "overlay, normal",
                 boxShadow:
                   "0px 11.90068244934082px 8.655041694641113px -5.409400939941406px rgba(89, 38, 240, 0.17)",
-                borderRadius: "6px",
-                padding: "7px 24px",
+                borderRadius: "10px",
+                padding: "0 24px",
                 fontSize: "16px",
               }}
             >
@@ -229,6 +233,10 @@ const InviteFriendModal = ({ isOpen, toggle }) => {
               onClick={() => setStep((prev) => prev + 1)}
               disabled={step === 1 ? !loginMethod : step === 2 ? email.length < 8 : false}
               style={{
+                height: "40px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
                 border: "none",
                 outline: "none",
                 background:
@@ -236,8 +244,8 @@ const InviteFriendModal = ({ isOpen, toggle }) => {
                 backgroundBlendMode: "overlay, normal",
                 boxShadow:
                   "0px 11.90068244934082px 8.655041694641113px -5.409400939941406px rgba(89, 38, 240, 0.17)",
-                borderRadius: "6px",
-                padding: "7px 24px",
+                borderRadius: "10px",
+                padding: "0 24px",
                 fontSize: "16px",
               }}
             >
@@ -249,6 +257,10 @@ const InviteFriendModal = ({ isOpen, toggle }) => {
               disabled={laoding}
               onClick={handleInvite}
               style={{
+                height: "40px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
                 border: "none",
                 outline: "none",
                 background:
@@ -256,8 +268,8 @@ const InviteFriendModal = ({ isOpen, toggle }) => {
                 backgroundBlendMode: "overlay, normal",
                 boxShadow:
                   "0px 11.90068244934082px 8.655041694641113px -5.409400939941406px rgba(89, 38, 240, 0.17)",
-                borderRadius: "6px",
-                padding: "7px 24px",
+                borderRadius: "10px",
+                padding: "0 24px",
                 fontSize: "16px",
               }}
             >

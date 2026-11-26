@@ -490,13 +490,17 @@ const UploadAdditionalKYB = ({ isOpen, toggle, files, user_id, type = "kyb", par
               onClick={handleToggle}
               disabled={isUploading}
               style={{
+                height: "32px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
                 background: "#f1f5f9",
                 border: "1px solid #cbd5e1",
                 color: "#475569",
                 fontWeight: "600",
                 fontSize: "12px",
-                padding: "6px 12px",
-                borderRadius: "6px",
+                padding: "0 12px",
+                borderRadius: "8px",
                 cursor: "pointer",
               }}
             >
@@ -528,14 +532,16 @@ const UploadAdditionalKYB = ({ isOpen, toggle, files, user_id, type = "kyb", par
             onClick={handleUploadCurrent}
             disabled={!selectedFile || isUploading}
             style={{
+              height: "32px",
+              justifyContent: "center",
               background: selectedFile
                 ? "linear-gradient(135deg, #e64067 0%, #5926f0 50%, #4828a0 100%)"
                 : "#cbd5e1",
               color: "#ffffff",
               fontWeight: "700",
               fontSize: "12px",
-              padding: "6px 14px",
-              borderRadius: "6px",
+              padding: "0 14px",
+              borderRadius: "8px",
               border: "none",
               cursor: !selectedFile || isUploading ? "not-allowed" : "pointer",
               display: "flex",

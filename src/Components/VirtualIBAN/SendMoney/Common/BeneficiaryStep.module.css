@@ -21,9 +21,9 @@
 }
 
 .primarySmallBtn {
-  min-height: 36px;
+  height: 40px;
   border: 0;
-  border-radius: 6px;
+  border-radius: 10px;
   padding: 0 16px;
   display: inline-flex;
   align-items: center;
@@ -176,7 +176,7 @@
     background: linear-gradient(180deg, #7040ff 0%, #5926f0 100%);
     border-radius: 10px;
     box-shadow: 0px 4px 12px -4px #5926f08c;
-    padding: 8px 11px;
+    padding: 0 11px;
     font-size: 13.5px;
     font-weight: 600;
     letter-spacing: -0.2px;
@@ -208,7 +208,8 @@
   justify-content: center;
   gap: 6px;
   width: 100%;
-  padding: 6px 12px;
+  padding: 0 12px;
+  height: 32px;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   background: #ffffff;

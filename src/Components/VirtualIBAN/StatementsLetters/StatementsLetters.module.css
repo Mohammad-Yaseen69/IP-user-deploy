@@ -36,11 +36,12 @@
 
 .backBtn {
   display: flex;
-  padding: 6px 12px;
+  padding: 0 12px;
+  height: 32px;
   justify-content: center;
   align-items: center;
   gap: 6px;
-  border-radius: 6px;
+  border-radius: 8px;
   border: 1px solid #d0d5dd;
   background: #fff;
   color: #344054;
@@ -291,10 +292,11 @@
 
 .previewBtn {
   display: flex;
-  padding: 8px 14px;
+  padding: 0 14px;
+  height: 40px;
   align-items: center;
   gap: 6px;
-  border-radius: 6px;
+  border-radius: 10px;
   border: 1px solid #d0d5dd;
   background: #fff;
   color: #344054;
@@ -317,10 +319,11 @@
 
 .downloadBtn {
   display: flex;
-  padding: 8px 14px;
+  padding: 0 14px;
+  height: 40px;
   align-items: center;
   gap: 6px;
-  border-radius: 6px;
+  border-radius: 10px;
   border: 1px solid #5626e6;
   background: #5626e6;
   color: #fff;
@@ -356,10 +359,11 @@
 
 .shareBtn {
   display: flex;
-  padding: 8px 14px;
+  padding: 0 14px;
+  height: 40px;
   align-items: center;
   gap: 6px;
-  border-radius: 6px;
+  border-radius: 10px;
   background: #fff;
   border: 1px solid #d0d5dd;
   color: #344054;
@@ -377,10 +381,11 @@
 
 .downloadStatementBtn {
   display: flex;
-  padding: 8px 14px;
+  padding: 0 14px;
+  height: 40px;
   align-items: center;
   gap: 6px;
-  border-radius: 6px;
+  border-radius: 10px;
   border: 1px solid #10b981;
   background: #10b981;
   color: #fff;
@@ -633,8 +638,12 @@
 }
 
 .swiftCancelBtn {
-  padding: 9px 18px;
-  border-radius: 8px;
+  padding: 0 18px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
   border: 1px solid #d0d5dd;
   background: #ffffff;
   color: #344054;
@@ -652,8 +661,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 9px 20px;
-  border-radius: 8px;
+  padding: 0 20px;
+  height: 40px;
+  border-radius: 10px;
   border: 1px solid #5626e6;
   background: #5626e6;
   color: #ffffff;
@@ -748,7 +758,7 @@
     background: #5626e6 !important;
     border-color: #5626e6 !important;
     color: #ffffff !important;
-    padding: 10px 4px;
+    padding: 0 4px;
     font-size: 12px;
     justify-content: center;
     white-space: nowrap;
@@ -759,7 +769,7 @@
     background: #fff !important;
     border: 1px solid #d0d5dd !important;
     color: #1d2025 !important;
-    padding: 10px 4px;
+    padding: 0 4px;
     font-weight: 700;
     font-size: 12px;
     justify-content: center;
@@ -767,7 +777,7 @@
   }
 
   .shareBtn {
-    padding: 11px 10px;
+    padding: 0 10px;
   }
 
   .sectionHeadingSub {

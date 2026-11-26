@@ -232,6 +232,8 @@ const PlanSubscriptionTable = ({ searchQuery = "" }) => {
                             }}
                             disabled={isCancelling}
                             style={{
+                              height: "40px",
+                              justifyContent: "center",
                               display: "flex",
                               alignItems: "center",
                               gap: "8px",
@@ -239,7 +241,7 @@ const PlanSubscriptionTable = ({ searchQuery = "" }) => {
                               color: "#991B1B",
                               border: "1px solid #FECACA",
                               borderRadius: "10px",
-                              padding: "8px 20px",
+                              padding: "0 20px",
                               fontWeight: 600,
                               fontSize: "13px",
                               cursor: isCancelling ? "not-allowed" : "pointer",
@@ -596,6 +598,7 @@ const PlanSubscriptionTable = ({ searchQuery = "" }) => {
                           }}
                           disabled={isCancelling}
                           style={{
+                            height: "32px",
                             display: "flex",
                             alignItems: "center",
                             gap: "6px",
@@ -603,7 +606,7 @@ const PlanSubscriptionTable = ({ searchQuery = "" }) => {
                             color: "#991B1B",
                             border: "1px solid #FECACA",
                             borderRadius: "8px",
-                            padding: "6px 14px",
+                            padding: "0 14px",
                             fontWeight: 600,
                             fontSize: "12px",
                             cursor: isCancelling ? "not-allowed" : "pointer",

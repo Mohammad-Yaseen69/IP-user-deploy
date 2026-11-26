@@ -22,6 +22,8 @@ const ConfirmationModal = ({
       <ModalFooter>
         <Button
           style={{
+            height: "40px",
+            justifyContent: "center",
             border: "none",
             outline: "none",
             background:
@@ -29,10 +31,10 @@ const ConfirmationModal = ({
             backgroundBlendMode: "overlay, normal",
             boxShadow:
               "0px 11.90068244934082px 8.655041694641113px -5.409400939941406px rgba(89, 38, 240, 0.17)",
-            borderRadius: "40px",
+            borderRadius: "10px",
             display: "flex",
             alignItems: "center",
-            padding: ".6rem 2rem",
+            padding: "0 2rem",
           }}
           className="i_t_button"
           onClick={onCancel}
@@ -41,6 +43,8 @@ const ConfirmationModal = ({
         </Button>
         <Button
           style={{
+            height: "40px",
+            justifyContent: "center",
             border: "none",
             outline: "none",
             background:
@@ -48,10 +52,10 @@ const ConfirmationModal = ({
             backgroundBlendMode: "overlay, normal",
             boxShadow:
               "0px 11.90068244934082px 8.655041694641113px -5.409400939941406px rgba(89, 38, 240, 0.17)",
-            borderRadius: "40px",
+            borderRadius: "10px",
             display: "flex",
             alignItems: "center",
-            padding: ".6rem 2rem",
+            padding: "0 2rem",
           }}
           className="i_t_button"
           onClick={onConfirm}
