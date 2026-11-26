@@ -65,15 +65,17 @@ const InstapayWalletCard = ({ wallet, onOpen, onSend }) => {
       </div>
 
       <div className={styles.walletActions} onClick={stop}>
-        <button
-          type="button"
-          className={styles.walletBtnPrimary}
-          disabled={blocked}
-          title={blocked ? t("This wallet is blocked or inactive.") : undefined}
-          onClick={() => onSend(wallet)}
-        >
-          {t("Send")}
-        </button>
+        {onSend && (
+          <button
+            type="button"
+            className={styles.walletBtnPrimary}
+            disabled={blocked}
+            title={blocked ? t("This wallet is blocked or inactive.") : undefined}
+            onClick={() => onSend(wallet)}
+          >
+            {t("Send")}
+          </button>
+        )}
         <button type="button" className={styles.walletBtnGhost} onClick={() => onOpen(wallet)}>
           {t("Open")}
         </button>

@@ -5,7 +5,6 @@ import secondaryFeeIcon from "./icons/moneyWavy.svg";
 import styles from "./virtualIbanModal.module.scss";
 import MT from "./icons/mt.svg";
 import GB from "./icons/uk.svg";
-import { CheckCircle } from "react-feather";
 import { useContext } from "react";
 import { UserContext } from "../../../Context/UserContext";
 

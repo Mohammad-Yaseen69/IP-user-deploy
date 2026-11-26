@@ -14,7 +14,7 @@ import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 import useWindowWidth from "../../../utils/useWindowWidth";
 import TrustpaymentPage from "../../AddFunds/WalletFund/CreditTransaction";
 import { CARD_TYPES } from "../../CreditInput/CreditCardTypes";
-import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow";
+import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow/apiErrorMessage";
 import ErrorModal from "../../PaymentsNewer/InternationalFlow/ErrorModal";
 import { LimitsErrorMessage } from "../../../utils/Functions/paymentLimits";
 import OTPConfirmation from "../../../Common/Component/OtpVerification";

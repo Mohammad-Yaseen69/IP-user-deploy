@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import styles from "./styles/index.module.scss";
 import Giftpng from "./files/gift-png.png";
 import IpLogo from "./files/ip.svg";
@@ -11,11 +11,8 @@ import {
   Wallet2,
   FileDown,
   CreditCardP,
-  Notification,
-  Speaker,
   Apay,
   Gpay,
-  Samsung,
   Copy,
   checktoggle,
   ApayWhite,
@@ -42,8 +39,6 @@ import { DateRangePicker } from "react-date-range";
 import CountriesData from "../PaymentsNewer/CountriesData.json";
 import "./styles/modal.reset.css";
 // Add PDF and DOCX generation imports
-import jsPDF from "jspdf";
-import "jspdf-autotable";
 import {
   Packer,
   Document,
@@ -55,7 +50,6 @@ import {
   HeadingLevel,
   WidthType,
 } from "docx";
-import * as FileSaver from "file-saver";
 import img from "../../assets/images/logo/logo2.webp";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
@@ -474,100 +468,110 @@ const CardPurchased = ({
     }
   };
 
-  const generatePDF = (filteredTransactions) => {
+  const generatePDF = async (filteredTransactions) => {
     setDownloading(true);
-    const tableStyles = {
-      fontSize: 8,
-    };
-    const tableHeaderStyles = {
-      fontSize: 8,
-      fillColor: [89, 38, 240],
-      textColor: [255, 255, 255],
-    };
+    try {
+      const tableStyles = {
+        fontSize: 8,
+      };
+      const tableHeaderStyles = {
+        fontSize: 8,
+        fillColor: [89, 38, 240],
+        textColor: [255, 255, 255],
+      };
 
-    const doc = new jsPDF({ orientation: "landscape" });
+      const [{ default: jsPDF }] = await Promise.all([import("jspdf"), import("jspdf-autotable")]);
+      const doc = new jsPDF({ orientation: "landscape" });
 
-    // Add logo
-    doc.addImage(img, "png", 14, 10, 46.5, 13);
-    doc.setFont("sans-serif", "normal", "normal");
-    doc.setFontSize(10);
-    doc.text(
-      `Transaction Statement for ${userDetails?.first_name || userDetails?.company_name} ${userDetails?.last_name}`,
-      14,
-      32,
-      { maxWidth: 200 },
-    );
+      // Add logo
+      doc.addImage(img, "png", 14, 10, 46.5, 13);
+      doc.setFont("sans-serif", "normal", "normal");
+      doc.setFontSize(10);
+      doc.text(
+        `Transaction Statement for ${userDetails?.first_name || userDetails?.company_name} ${userDetails?.last_name}`,
+        14,
+        32,
+        { maxWidth: 200 },
+      );
 
-    const currentDate = new Date();
-    const formattedDate = `Generated on ${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()}`;
-    doc.setFont("sans-serif", "normal", "bold");
-    doc.setFontSize(10);
-    doc.text(formattedDate, 148, 17.5);
+      const currentDate = new Date();
+      const formattedDate = `Generated on ${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()}`;
+      doc.setFont("sans-serif", "normal", "bold");
+      doc.setFontSize(10);
+      doc.text(formattedDate, 148, 17.5);
 
-    // Add card info
-    doc.setFont("sans-serif", "normal", "bold");
-    doc.setFontSize(12);
-    doc.text("Card Information:", 14, 45);
-    doc.setFont("sans-serif", "normal", "normal");
-    doc.setFontSize(10);
-    doc.text(`Card Number: •••• •••• •••• ${cards?.[current]?.last4?.slice(-4)}`, 14, 55);
-    doc.text(`Card Type: ${cards[current]?.type === "standard" ? "Standard" : "Premium"}`, 14, 62);
+      // Add card info
+      doc.setFont("sans-serif", "normal", "bold");
+      doc.setFontSize(12);
+      doc.text("Card Information:", 14, 45);
+      doc.setFont("sans-serif", "normal", "normal");
+      doc.setFontSize(10);
+      doc.text(`Card Number: •••• •••• •••• ${cards?.[current]?.last4?.slice(-4)}`, 14, 55);
+      doc.text(
+        `Card Type: ${cards[current]?.type === "standard" ? "Standard" : "Premium"}`,
+        14,
+        62,
+      );
 
-    // Add date range if selected
-    if (dateRanges.startDate && dateRanges.endDate) {
-      const startDate = new Date(dateRanges.startDate).toLocaleDateString();
-      const endDate = new Date(dateRanges.endDate).toLocaleDateString();
-      doc.text(`Period: ${startDate} to ${endDate}`, 14, 69);
-    }
+      // Add date range if selected
+      if (dateRanges.startDate && dateRanges.endDate) {
+        const startDate = new Date(dateRanges.startDate).toLocaleDateString();
+        const endDate = new Date(dateRanges.endDate).toLocaleDateString();
+        doc.text(`Period: ${startDate} to ${endDate}`, 14, 69);
+      }
 
-    doc.setFont("sans-serif", "normal", "bold");
-    doc.setFontSize(14);
-    doc.text("Transaction Details:", 14, 85);
+      doc.setFont("sans-serif", "normal", "bold");
+      doc.setFontSize(14);
+      doc.text("Transaction Details:", 14, 85);
 
-    // Prepare transaction data
-    const transactionBody = filteredTransactions.map((tx) => [
-      new Date(tx.createdAt).toLocaleString(),
-      tx.transactionId,
-      `•••• •••• •••• ${tx.cardNo?.slice(-4) || "N/A"}`,
-      tx.type?.toUpperCase() || "N/A",
-      tx.transaction_type?.replace(/_/g, " ").toUpperCase() || "N/A",
-      tx.reason || "N/A",
-      tx.merchantName || "N/A",
-      tx.merchantCategory || "N/A",
-      CountriesData.find((item) => item.alpha3 === tx.merchantCountry)?.name ||
-        tx?.merchantCountry ||
-        "N/A",
-      `${tx.currency} ${tx.txAmount?.toFixed(2) || "0.00"}`,
-      tx.status || "N/A",
-    ]);
+      // Prepare transaction data
+      const transactionBody = filteredTransactions.map((tx) => [
+        new Date(tx.createdAt).toLocaleString(),
+        tx.transactionId,
+        `•••• •••• •••• ${tx.cardNo?.slice(-4) || "N/A"}`,
+        tx.type?.toUpperCase() || "N/A",
+        tx.transaction_type?.replace(/_/g, " ").toUpperCase() || "N/A",
+        tx.reason || "N/A",
+        tx.merchantName || "N/A",
+        tx.merchantCategory || "N/A",
+        CountriesData.find((item) => item.alpha3 === tx.merchantCountry)?.name ||
+          tx?.merchantCountry ||
+          "N/A",
+        `${tx.currency} ${tx.txAmount?.toFixed(2) || "0.00"}`,
+        tx.status || "N/A",
+      ]);
 
-    const transactionTable = {
-      head: [
-        [
-          "Date & Time",
-          "Transaction ID",
-          "Card No",
-          "Type",
-          "Transaction Type",
-          "Reason",
-          "Merchant Name",
-          "Merchant Category",
-          "Merchant Country",
-          "Amount",
-          "Status",
+      const transactionTable = {
+        head: [
+          [
+            "Date & Time",
+            "Transaction ID",
+            "Card No",
+            "Type",
+            "Transaction Type",
+            "Reason",
+            "Merchant Name",
+            "Merchant Category",
+            "Merchant Country",
+            "Amount",
+            "Status",
+          ],
         ],
-      ],
-      body: transactionBody,
-      startY: 95,
-      styles: tableStyles,
-      headStyles: tableHeaderStyles,
-    };
+        body: transactionBody,
+        startY: 95,
+        styles: tableStyles,
+        headStyles: tableHeaderStyles,
+      };
 
-    doc.autoTable(transactionTable);
+      doc.autoTable(transactionTable);
 
-    const fileName = `transaction_statement_${userDetails?.first_name || userDetails?.company_name}_${userDetails?.last_name}_${new Date().toISOString().split("T")[0]}.pdf`;
-    doc.save(fileName);
-    setDownloading(false);
+      const fileName = `transaction_statement_${userDetails?.first_name || userDetails?.company_name}_${userDetails?.last_name}_${new Date().toISOString().split("T")[0]}.pdf`;
+      doc.save(fileName);
+    } catch {
+      toast.error(t(CARD_DETAILS_ERROR));
+    } finally {
+      setDownloading(false);
+    }
   };
 
   const generateDOCX = (filteredTransactions) => {
@@ -757,11 +761,13 @@ const CardPurchased = ({
       ],
     });
 
-    Packer.toBlob(doc).then((blob) => {
-      const fileName = `transaction_statement_${userDetails?.first_name || userDetails?.company_name}_${userDetails?.last_name}_${new Date().toISOString().split("T")[0]}.docx`;
-      FileSaver.saveAs(blob, fileName);
-      setDownloading(false);
-    });
+    Promise.all([Packer.toBlob(doc), import("file-saver")])
+      .then(([blob, FileSaver]) => {
+        const fileName = `transaction_statement_${userDetails?.first_name || userDetails?.company_name}_${userDetails?.last_name}_${new Date().toISOString().split("T")[0]}.docx`;
+        FileSaver.saveAs(blob, fileName);
+      })
+      .catch(() => toast.error(t(CARD_DETAILS_ERROR)))
+      .finally(() => setDownloading(false));
   };
 
   console.log(cards, current, cards[current]);

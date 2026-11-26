@@ -5,7 +5,7 @@ import logo_white from "../../assets/images/logo/logo_white.png";
 // import card_bg_green from "../HomeNewUpdated/files/card_bg_green.svg"
 import { Check, Copy } from "react-feather";
 import { Progress } from "reactstrap";
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 // import { UserContext } from "../../Context/UserContext"
 // import axios from "axios"
 // import { decryptData } from "../../Helper/EssentilaMethods/Decryption"

@@ -5,6 +5,9 @@ import { ArrowLeft, Inbox, Plus } from "react-feather";
 import { UserContext } from "../../../../Context/UserContext";
 import { cryptoPayoutQueryKeys } from "../../../../hooks/Payments/useCryptoPayout";
 import { usePermission } from "../../../../hooks/GeneralUse/usePermission";
+import useEffectivePermission, {
+  PERMISSIONS,
+} from "../../../../hooks/GeneralUse/useEffectivePermission";
 import AddCryptoWalletModal from "./AddCryptoWalletModal";
 import PortfolioCard from "../components/PortfolioCard";
 import styles from "../cryptoPage.module.scss";
@@ -29,6 +32,8 @@ const InstapayCryptoWallets = () => {
       { cancelRefetch: false },
     );
   };
+  const hasPermission = useEffectivePermission();
+  const canSendCrypto = hasPermission(PERMISSIONS.CRYPTO_PAYOUT);
 
   const wallets = useMemo(() => (userWallets || []).filter(isLiveCryptoWallet), [userWallets]);
 
@@ -89,7 +94,7 @@ const InstapayCryptoWallets = () => {
               key={wallet?._id}
               wallet={wallet}
               onOpen={openWallet}
-              onSend={(w) => setSendWalletId(w?._id)}
+              onSend={canSendCrypto ? (w) => setSendWalletId(w?._id) : undefined}
             />
           ))}
         </div>

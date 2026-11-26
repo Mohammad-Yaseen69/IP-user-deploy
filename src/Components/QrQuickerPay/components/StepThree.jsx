@@ -1,4 +1,3 @@
-import React from "react";
 import { useTranslation } from "react-i18next";
 import r from "../r.svg";
 import success from "../success.svg";

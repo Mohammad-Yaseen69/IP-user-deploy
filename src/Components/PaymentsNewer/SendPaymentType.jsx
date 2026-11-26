@@ -1,10 +1,6 @@
-import { useTranslation } from "react-i18next";
-import InternationalTransfer from "./InternationalTransfer";
-import WalletTransfer from "./WalletTransfer";
 import { useContext, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
-import QrPayment from "./QrPayment";
 import InternationFlow from "./InternationalFlow";
 import WalletToWalletFlow from "./WalletToWalletFlow";
 import QRFlow from "./QRFlow";

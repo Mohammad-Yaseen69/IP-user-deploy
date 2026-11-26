@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef, useEffect } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
 import { UserContext } from "../../Context/UserContext";

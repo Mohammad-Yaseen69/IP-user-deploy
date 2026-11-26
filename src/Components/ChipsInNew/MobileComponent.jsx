@@ -6,7 +6,6 @@ import styles from "./styles/Mobile.module.css";
 import s from "../PaymentsNewer/files/PaymentsNewFiles/share.png";
 import { UserContext } from "../../Context/UserContext";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
-import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import axios from "axios";
 import SocialModal from "../ShareBtn/SocialModal";
 import DownloadQR from "./DownloadQR";

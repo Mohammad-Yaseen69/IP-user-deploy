@@ -1,6 +1,5 @@
-import React from "react";
 import { useTranslation } from "react-i18next";
-import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
+import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import * as rdd from "react-device-detect";
 import instructions from "./browserInstruction.json";
 import "../GoogleAuthenticatorModal/styles/modalstyles.css";

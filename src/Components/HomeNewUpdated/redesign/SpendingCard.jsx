@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Panel, Segmented } from "../../../Common/WalletUI/Primitives";
+import Skeleton from "../../../Common/WalletUI/Skeleton";
 import u from "../../../Common/WalletUI/ui.module.scss";
 import { spendingByLabel } from "../../../Common/WalletUI/utils";
 import { formatCurrency } from "../../../Helper/AmountFormat";
@@ -57,7 +58,14 @@ const SpendingCard = ({ transactions = [], currency = "", loading = false }) => 
       }
     >
       {loading ? (
-        <div className={u.state}>{t("Loading...")}</div>
+        <div className={d.spend}>
+          <Skeleton variant="circular" width={200} height={200} sx={{ flex: "none" }} />
+          <div className={d.skeletonLines}>
+            {Array.from({ length: 4 }, (_, index) => (
+              <Skeleton key={index} width="80%" height={16} />
+            ))}
+          </div>
+        </div>
       ) : (
         <div className={d.spend}>
           <div className={d.donut} style={{ "--ring": ring(rows) }}>
