@@ -51,7 +51,6 @@ const CurConversion = ({
         ?.filter((item) => item?.status === "active" && !item?.blocked && !item?.admin_blocked)
         ?.filter(
           (item) =>
-            item?.wallet_type !== "crypto" &&
             item?.currency?.code?.toLowerCase() !== "btc" &&
             item?.currency?.code?.toLowerCase() !== "eth",
         ) ?? [],
@@ -278,7 +277,6 @@ const CurConversion = ({
       ?.filter((item) => !item?.blocked && !item?.admin_blocked && item?.status === "active")
       ?.filter(
         (item) =>
-          item?.wallet_type !== "crypto" &&
           item?.currency?.code?.toLowerCase() !== "btc" &&
           item?.currency?.code?.toLowerCase() !== "eth",
       )
