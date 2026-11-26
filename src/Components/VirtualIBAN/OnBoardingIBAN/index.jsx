@@ -694,8 +694,8 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
                 gap: "8px",
                 cursor: "pointer",
                 padding: "0 32px",
-                fontSize: "15px",
-                fontWeight: 600,
+                fontSize: "14px",
+                fontWeight: 500,
               }}
               onClick={() => handleTypeSelect("business")}
             >

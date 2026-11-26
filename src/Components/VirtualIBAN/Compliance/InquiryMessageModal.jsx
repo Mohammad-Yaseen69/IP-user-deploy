@@ -141,8 +141,8 @@ const InquiryMessageModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
                 border: "none",
                 padding: "0 18px",
                 borderRadius: "10px",
-                fontSize: "13px",
-                fontWeight: "600",
+                fontSize: "14px",
+                fontWeight: "500",
                 cursor: "pointer",
               }}
             >
@@ -162,8 +162,8 @@ const InquiryMessageModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
                 border: "none",
                 padding: "0 20px",
                 borderRadius: "10px",
-                fontSize: "13px",
-                fontWeight: "600",
+                fontSize: "14px",
+                fontWeight: "500",
                 cursor: "pointer",
                 opacity: loading ? 0.7 : 1,
               }}

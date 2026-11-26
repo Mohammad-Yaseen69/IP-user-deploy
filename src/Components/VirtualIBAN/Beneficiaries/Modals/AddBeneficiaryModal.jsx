@@ -618,7 +618,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                 border: "none",
                 background: loading ? "#9CA3AF" : isMobile ? "#7040FF" : "#4F46E5",
                 color: "#FFFFFF",
-                fontWeight: 600,
+                fontWeight: 500,
                 fontSize: "14px",
                 cursor: loading ? "not-allowed" : "pointer",
                 transition: "background 0.2s ease",

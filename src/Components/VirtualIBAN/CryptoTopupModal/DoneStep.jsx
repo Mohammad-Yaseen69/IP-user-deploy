@@ -95,7 +95,7 @@ const DoneStep = ({ confirmData, selectedIban, onOpenCheckout }) => {
                 borderRadius: "8px",
                 padding: "0 14px",
                 fontSize: "13px",
-                fontWeight: 600,
+                fontWeight: 500,
                 cursor: "pointer",
                 display: "inline-flex",
                 alignItems: "center",

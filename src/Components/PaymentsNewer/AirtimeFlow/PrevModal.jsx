@@ -219,7 +219,7 @@ const PrevModal = ({ isOpen, toggle, isMobile }) => {
                     alignItems: "center",
                     justifyContent: "center",
                     border: "none",
-                    fontWeight: 600,
+                    fontWeight: 500,
                     color: "white",
                     borderRadius: "8px",
                     padding: "0 15px",

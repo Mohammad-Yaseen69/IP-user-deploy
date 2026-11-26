@@ -237,7 +237,7 @@ const QRRecipient = ({ wallet, dataHandler }) => {
                 alignItems: "center",
                 justifyContent: "center",
                 padding: "0 1rem",
-                fontSize: "1rem",
+                fontSize: "14px",
                 background: "white",
                 borderRadius: "10px",
                 boxShadow:
@@ -289,7 +289,7 @@ const QRRecipient = ({ wallet, dataHandler }) => {
                 alignItems: "center",
                 justifyContent: "center",
                 padding: "0 1rem",
-                fontSize: ".6rem",
+                fontSize: "13px",
                 background: "white",
                 borderRadius: "8px",
                 boxShadow:

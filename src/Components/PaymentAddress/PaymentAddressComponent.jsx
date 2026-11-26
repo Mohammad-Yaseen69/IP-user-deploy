@@ -244,7 +244,6 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
 
       <button
         className={styles.buttonStyles}
-        style={{ fontSize: "15px" }}
         disabled={!title || !currency || isSaving || !isActive}
         onClick={() => {
           if (!editMode && paymentAddressDetails?.title) {

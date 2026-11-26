@@ -309,8 +309,8 @@ const InquiryResponseModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
                 border: "none",
                 padding: "0 18px",
                 borderRadius: "10px",
-                fontSize: "13px",
-                fontWeight: "600",
+                fontSize: "14px",
+                fontWeight: "500",
                 cursor: "pointer",
               }}
             >
@@ -329,8 +329,8 @@ const InquiryResponseModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
                 border: "none",
                 padding: "0 22px",
                 borderRadius: "10px",
-                fontSize: "13px",
-                fontWeight: "600",
+                fontSize: "14px",
+                fontWeight: "500",
                 cursor: "pointer",
                 opacity: loading ? 0.7 : 1,
               }}

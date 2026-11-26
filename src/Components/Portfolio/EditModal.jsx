@@ -166,7 +166,7 @@ const EditModal = ({ isOpen, toggle, item, pAddress }) => {
                 backgroundColor: "transparent",
                 color: "#636363",
                 fontSize: "14px",
-                fontWeight: "600",
+                fontWeight: "500",
               }}
               onClick={toggle}
             >
@@ -182,7 +182,7 @@ const EditModal = ({ isOpen, toggle, item, pAddress }) => {
                 backgroundColor: "#6D29DC",
                 color: "white",
                 fontSize: "14px",
-                fontWeight: "600",
+                fontWeight: "500",
                 border: "none",
                 outline: "none",
                 padding: "0 16px",

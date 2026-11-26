@@ -47,9 +47,9 @@
   gap: 10.192px;
   border: none;
   outline: none;
-  font-size: 12px;
+  font-size: 14px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   line-height: normal;
 }
 
@@ -258,9 +258,9 @@
     gap: 10.192px;
     border: none;
     outline: none;
-    font-size: 12px;
+    font-size: 14px;
     font-style: normal;
-    font-weight: 600;
+    font-weight: 500;
     line-height: normal;
     position: fixed;
     bottom: 110px;

@@ -154,8 +154,8 @@
   border-radius: 8px;
   border: 1px solid #fde68a;
   background: #fff;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 500;
   line-height: 1.4;
   white-space: nowrap;
   cursor: pointer;
@@ -331,8 +331,8 @@
   border-radius: 10px;
   background: var(--accent);
   color: #fff;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   line-height: 1.4;
   cursor: pointer;
 }

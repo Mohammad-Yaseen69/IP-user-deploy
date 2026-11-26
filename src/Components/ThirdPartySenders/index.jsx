@@ -517,7 +517,7 @@ const ThirdPartySenders = () => {
               borderRadius: "10px",
               background: "#fff",
               padding: "0 14px",
-              fontWeight: 800,
+              fontWeight: 500,
             }}
           >
             {t("Cancel")}
@@ -536,7 +536,7 @@ const ThirdPartySenders = () => {
               background: "#E64067",
               color: "#fff",
               padding: "0 14px",
-              fontWeight: 800,
+              fontWeight: 500,
             }}
           >
             {isDeletingSender ? t("Removing") : t("Remove")}

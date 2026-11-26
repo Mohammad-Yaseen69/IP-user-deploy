@@ -216,7 +216,7 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
                 padding: "0 16px",
                 fontWeight: 600,
                 cursor: "pointer",
-                fontSize: 14,
+                fontSize: 13,
                 width: "auto",
               }}
             >

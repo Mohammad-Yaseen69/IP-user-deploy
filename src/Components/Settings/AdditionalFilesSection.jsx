@@ -167,8 +167,8 @@ const primaryButtonStyle = {
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
-  fontSize: "11px",
-  fontWeight: "700",
+  fontSize: "13px",
+  fontWeight: "500",
   cursor: "pointer",
 };
 
@@ -345,7 +345,7 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
             style={{
               ...primaryButtonStyle,
               padding: "0 18px",
-              fontSize: "12px",
+              fontSize: "13px",
               opacity: uploading || !value.trim() ? 0.6 : 1,
             }}
           >
@@ -456,7 +456,7 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
               disabled={uploading}
               style={{
                 ...primaryButtonStyle,
-                ...(isModal ? { padding: "0 18px", fontSize: "12px" } : {}),
+                ...(isModal ? { padding: "0 18px", fontSize: "13px" } : {}),
               }}
             >
               {uploading ? t("Uploading...") : t("Upload")}
@@ -752,8 +752,8 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
                             border: "1px solid #e2e8f0",
                             borderRadius: "8px",
                             padding: "0 10px",
-                            fontSize: "11px",
-                            fontWeight: "600",
+                            fontSize: "13px",
+                            fontWeight: "500",
                             color: "#5926f0",
                             cursor: "pointer",
                           }}

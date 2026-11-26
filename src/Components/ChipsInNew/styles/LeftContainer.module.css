@@ -97,7 +97,7 @@
   font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   line-height: normal;
   letter-spacing: -0.36px;
 }
@@ -243,9 +243,9 @@
   leading-trim: both;
   text-edge: cap;
   font-family: "Inter", sans-serif;
-  font-size: 12px;
+  font-size: 13px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   line-height: normal;
   background: linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%);
   background-clip: text;
@@ -365,7 +365,7 @@
   leading-trim: both;
   text-edge: cap;
   font-family: "Inter", sans-serif;
-  font-size: 18px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 700;
   line-height: 130%;
@@ -445,7 +445,7 @@
   }
 
   .ic_top button span {
-    font-size: 10px;
+    font-size: 13px;
   }
 
   .inp_con input,

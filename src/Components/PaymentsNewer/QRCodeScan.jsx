@@ -331,7 +331,7 @@ const QRCodeScan = ({ setSubStep, dataHandler }) => {
                 alignItems: "center",
                 justifyContent: "center",
                 padding: "0 1rem",
-                fontSize: ".6rem",
+                fontSize: "13px",
                 background: "white",
                 borderRadius: "8px",
                 boxShadow:

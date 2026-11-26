@@ -102,7 +102,7 @@ export const ButtonForRequests = ({ isLoading, onClick, children, style }) => {
         outline: "none",
         padding: "0 16px",
         borderRadius: "10px",
-        fontWeight: 700,
+        fontWeight: 500,
         background: "#5926F0",
         color: "#fff",
         cursor: isLoading ? "not-allowed" : "pointer",

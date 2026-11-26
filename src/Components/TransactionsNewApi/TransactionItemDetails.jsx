@@ -346,8 +346,8 @@ const TransactionItemDetails = ({
                   alignItems: "center",
                   gap: "4px",
                   color: "white",
-                  fontSize: "12px",
-                  fontWeight: 600,
+                  fontSize: "13px",
+                  fontWeight: 500,
                   whiteSpace: "nowrap",
                   flexShrink: 0,
                 }}

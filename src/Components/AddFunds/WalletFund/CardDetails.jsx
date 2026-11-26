@@ -295,7 +295,7 @@ const CardDetails = ({
               backgroundColor: "transparent",
               padding: 0,
               cursor: "pointer",
-              fontSize: ".9rem",
+              fontSize: "14px",
               color: "#afafaf",
             }}
             onClick={() => setSubStep((prev) => prev - 1)}

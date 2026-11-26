@@ -353,7 +353,7 @@ const StatusScreen = ({
                     border: "none",
                     padding: "0 24px",
                     borderRadius: "10px",
-                    fontWeight: 600,
+                    fontWeight: 500,
                     fontSize: "14px",
                     cursor: "pointer",
                     transition: "background 0.2s",

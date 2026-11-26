@@ -997,7 +997,7 @@ const OTPConfirmation = ({
                   borderRadius: "12px",
                   display: "flex",
                   alignItems: "center",
-                  fontSize: "18px",
+                  fontSize: "14px",
                   opacity: isAnyFieldEmpty || isSaving ? 0.5 : 1,
                   pointerEvents: isAnyFieldEmpty || isSaving ? "none" : "auto",
                   marginTop: "0.5rem",

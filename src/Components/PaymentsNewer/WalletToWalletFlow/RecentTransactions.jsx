@@ -383,7 +383,7 @@ const RecentTransactions = ({
                   border: "none",
                   borderRadius: "10px",
                   padding: "0 12px",
-                  fontWeight: "600",
+                  fontWeight: "500",
                 }}
               >
                 {t("Continue")}
@@ -426,7 +426,7 @@ const RecentTransactions = ({
                     color: "#5926F0",
                     backgroundColor: "white",
                     outline: "none",
-                    fontWeight: 600,
+                    fontWeight: 500,
                   }}
                 >
                   {t("Edit Amount")}
@@ -444,7 +444,7 @@ const RecentTransactions = ({
                     border: "none",
                     borderRadius: "10px",
                     padding: "0 10px",
-                    fontWeight: "600",
+                    fontWeight: "500",
                   }}
                 >
                   {t("Continue")}

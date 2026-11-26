@@ -625,7 +625,7 @@ const CardOtp = ({
                     borderRadius: "6px",
                     display: "flex",
                     alignItems: "center",
-                    fontSize: "18px",
+                    fontSize: "14px",
                   }}
                 >
                   <ChevronLeft size={24} />
@@ -646,7 +646,7 @@ const CardOtp = ({
                   borderRadius: "12px",
                   display: "flex",
                   alignItems: "center",
-                  fontSize: "18px",
+                  fontSize: "14px",
                   opacity: !isComplete || isSaving || processing ? 0.5 : 1,
                   pointerEvents: !isComplete || isSaving || processing ? "none" : "auto",
                 }}

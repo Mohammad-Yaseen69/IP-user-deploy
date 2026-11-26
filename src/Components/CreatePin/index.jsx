@@ -465,7 +465,7 @@ const CreatePin = () => {
             height: "56px",
             border: "none",
             color: "#FFF",
-            fontSize: "18px",
+            fontSize: "14px",
             fontWeight: "600",
             position: "absolute",
             bottom: "15px",

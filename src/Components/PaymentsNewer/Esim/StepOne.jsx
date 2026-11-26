@@ -350,7 +350,7 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
                   borderRadius: "10px",
                   padding: "0 22px",
                   fontWeight: 600,
-                  fontSize: 16,
+                  fontSize: 14,
                   cursor: "pointer",
                   boxShadow: "0 2px 8px rgba(10,124,255,0.08)",
                 }}

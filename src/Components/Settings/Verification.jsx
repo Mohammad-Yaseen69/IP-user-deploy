@@ -338,7 +338,7 @@ const Verification = () => {
             outline: "none",
             borderRadius: "10px",
             padding: "0 32px",
-            fontSize: "1rem",
+            fontSize: "14px",
             fontWeight: 500,
             marginTop: "0.5rem",
           }}

@@ -386,7 +386,7 @@ const SelectSender = ({ data, dataHandler }) => {
               background: "#5926F0",
               color: "#fff",
               padding: "0 14px",
-              fontWeight: 800,
+              fontWeight: 600,
               display: "flex",
               alignItems: "center",
               gap: "8px",
@@ -466,7 +466,7 @@ const SelectSender = ({ data, dataHandler }) => {
                 background: "#5926F0",
                 color: "#fff",
                 padding: "0 14px",
-                fontWeight: 800,
+                fontWeight: 600,
                 display: "flex",
                 alignItems: "center",
                 gap: "8px",
@@ -521,7 +521,7 @@ const SelectSender = ({ data, dataHandler }) => {
               borderRadius: "10px",
               background: "#fff",
               padding: "0 14px",
-              fontWeight: 800,
+              fontWeight: 600,
             }}
           >
             {t("Cancel")}
@@ -539,7 +539,7 @@ const SelectSender = ({ data, dataHandler }) => {
               background: "#5926F0",
               color: "#fff",
               padding: "0 14px",
-              fontWeight: 800,
+              fontWeight: 600,
             }}
           >
             {t("Use Saved Sender")}
@@ -568,7 +568,7 @@ const SelectSender = ({ data, dataHandler }) => {
               borderRadius: "10px",
               background: "#fff",
               padding: "0 14px",
-              fontWeight: 800,
+              fontWeight: 600,
             }}
           >
             {t("Cancel")}
@@ -587,7 +587,7 @@ const SelectSender = ({ data, dataHandler }) => {
               background: "#E64067",
               color: "#fff",
               padding: "0 14px",
-              fontWeight: 800,
+              fontWeight: 600,
             }}
           >
             {isDeletingSender ? t("Removing") : t("Remove")}

@@ -166,7 +166,7 @@ const Profile = ({ dp, setDp, dets, canUpdatePaymentProfileImage }) => {
                 outline: "none",
                 borderRadius: "8px",
                 padding: "0 10px",
-                fontSize: ".65rem",
+                fontSize: "13px",
               }}
               onClick={handleSave}
               disabled={isSaving}
@@ -186,7 +186,7 @@ const Profile = ({ dp, setDp, dets, canUpdatePaymentProfileImage }) => {
                 outline: "none",
                 borderRadius: "8px",
                 padding: "0 10px",
-                fontSize: ".65rem",
+                fontSize: "13px",
               }}
               disabled={true}
             >

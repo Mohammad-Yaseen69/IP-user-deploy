@@ -222,7 +222,7 @@ const InviteFriendModal = ({ isOpen, toggle }) => {
                   "0px 11.90068244934082px 8.655041694641113px -5.409400939941406px rgba(89, 38, 240, 0.17)",
                 borderRadius: "10px",
                 padding: "0 24px",
-                fontSize: "16px",
+                fontSize: "14px",
               }}
             >
               {t("Back")}
@@ -246,7 +246,7 @@ const InviteFriendModal = ({ isOpen, toggle }) => {
                   "0px 11.90068244934082px 8.655041694641113px -5.409400939941406px rgba(89, 38, 240, 0.17)",
                 borderRadius: "10px",
                 padding: "0 24px",
-                fontSize: "16px",
+                fontSize: "14px",
               }}
             >
               {t("Next")}
@@ -270,7 +270,7 @@ const InviteFriendModal = ({ isOpen, toggle }) => {
                   "0px 11.90068244934082px 8.655041694641113px -5.409400939941406px rgba(89, 38, 240, 0.17)",
                 borderRadius: "10px",
                 padding: "0 24px",
-                fontSize: "16px",
+                fontSize: "14px",
               }}
             >
               {t("Send")}

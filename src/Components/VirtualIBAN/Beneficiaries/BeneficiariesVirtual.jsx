@@ -779,7 +779,7 @@ const BeneficiariesVirtual = () => {
                             border: "none",
                             background: isMobile ? "#5926F0" : "#4F46E5",
                             color: "#FFF",
-                            fontWeight: 600,
+                            fontWeight: 500,
                             fontSize: "13px",
                             cursor: "pointer",
                           }}

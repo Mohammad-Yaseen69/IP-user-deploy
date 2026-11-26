@@ -314,7 +314,7 @@ const PaymentsBeneficiary = ({
                     alignItems: "center",
                     justifyContent: "center",
                     padding: "0 1rem",
-                    fontSize: ".6rem",
+                    fontSize: "13px",
                     background:
                       "linear-gradient(277.06deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%), #D9D9D9",
                     borderRadius: "8px",
@@ -342,7 +342,7 @@ const PaymentsBeneficiary = ({
                     alignItems: "center",
                     justifyContent: "center",
                     padding: "0 1rem",
-                    fontSize: ".6rem",
+                    fontSize: "13px",
                     background: "white",
                     borderRadius: "8px",
                     boxShadow:
@@ -413,7 +413,7 @@ const PaymentsBeneficiary = ({
                 transform: "translateY(-50%)",
                 borderRadius: "8px",
                 padding: "0 10px",
-                fontSize: ".7rem",
+                fontSize: "13px",
               }}
             >
               {t("Search")}

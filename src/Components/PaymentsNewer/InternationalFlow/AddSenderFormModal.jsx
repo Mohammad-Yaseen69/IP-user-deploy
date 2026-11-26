@@ -1063,7 +1063,7 @@ const AddSenderFormModal = ({
                 background: isSubmitting ? "#9E8AED" : "#5926F0",
                 color: "#fff",
                 padding: "0 16px",
-                fontWeight: 800,
+                fontWeight: 700,
                 display: "flex",
                 alignItems: "center",
                 gap: "8px",

@@ -64,7 +64,7 @@ const RedirectButton = ({ platform }) => {
         color: "white",
         border: "none",
         cursor: "pointer",
-        fontSize: "16px",
+        fontSize: "14px",
         textAlign: "center",
         textDecoration: "none",
         width: "100%",

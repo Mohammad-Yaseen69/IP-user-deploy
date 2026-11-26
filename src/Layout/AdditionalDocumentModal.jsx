@@ -245,7 +245,7 @@ const AdditionalDocumentModal = ({ isOpen, toggle, accounType }) => {
                 width: "100%",
                 padding: "0 24px",
                 borderRadius: "10px",
-                fontWeight: "700",
+                fontWeight: "500",
                 fontSize: "14px",
                 border: "none",
                 outline: "none",
