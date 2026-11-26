@@ -226,7 +226,7 @@
 
 .actionCard {
   display: flex;
-  padding: 16px;
+  padding: 20px;
   align-items: flex-start;
   gap: 12px;
   align-self: stretch;

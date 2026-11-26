@@ -386,7 +386,7 @@
 /* Individual Wallet Parameter Cards */
 .cryptoWalletCard {
   display: flex;
-  padding: 16px;
+  padding: 20px;
   flex-direction: column;
   gap: 12px;
   border-radius: 12px;

@@ -2,7 +2,7 @@
   height: auto;
   margin-bottom: 8px;
   display: flex;
-  padding: var(--SPACING-spacing-2, 18px);
+  padding: 20px;
   flex-direction: column;
   align-items: flex-start;
   gap: var(--SPACING-spacing-3, 24px);
