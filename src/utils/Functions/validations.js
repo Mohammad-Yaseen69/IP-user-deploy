@@ -2,6 +2,11 @@
 export const isEmailValid = (email) =>
   !email || /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
 
+export const WEBSITE_REGEX =
+  /^(https?:\/\/)?([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}(:\d{1,5})?([/?#]\S*)?$/i;
+
+export const isWebsiteValid = (website) => WEBSITE_REGEX.test(String(website ?? "").trim());
+
 export const isShippingValid = (shipping) =>
   shipping.country &&
   shipping.city &&
