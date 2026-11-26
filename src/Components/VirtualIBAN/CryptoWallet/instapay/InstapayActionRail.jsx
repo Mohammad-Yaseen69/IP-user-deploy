@@ -16,6 +16,14 @@ const InstapayActionRail = ({ wallets = [], wallet, onSelectWallet }) => {
   const hasPermission = useEffectivePermission();
   const canWithdrawCrypto = hasPermission(PERMISSIONS.CRYPTO_WITHDRAWAL);
   const canConvert = hasPermission(PERMISSIONS.WALLET_TO_CRYPTO_CONVERSION);
+  const canSendCrypto = hasPermission(PERMISSIONS.CRYPTO_PAYOUT);
+  const allowedTabs = TABS.filter(
+    (item) =>
+      (item !== "Send" || canSendCrypto) &&
+      (item !== "Convert" || canConvert) &&
+      (item !== "Withdraw" || canWithdrawCrypto),
+  );
+  const activeTab = allowedTabs.includes(tab) ? tab : allowedTabs[0];
   const railRef = useRef(null);
 
   useEffect(() => {
@@ -34,28 +42,26 @@ const InstapayActionRail = ({ wallets = [], wallet, onSelectWallet }) => {
     };
   }, []);
 
+  if (!activeTab) return null;
+
   return (
     <aside ref={railRef} className={styles.rail}>
       <div className={styles.railTabs}>
-        {TABS.map((item) => {
-          if (!canWithdrawCrypto && item === "Withdraw") return;
-          if (!canConvert && item === "Convert") return;
-          return (
-            <button
-              key={item}
-              type="button"
-              className={`${styles.railTab} ${tab === item ? styles.railTabActive : ""}`}
-              onClick={() => setTab(item)}
-            >
-              {t(item)}
-            </button>
-          );
-        })}
+        {allowedTabs.map((item) => (
+          <button
+            key={item}
+            type="button"
+            className={`${styles.railTab} ${activeTab === item ? styles.railTabActive : ""}`}
+            onClick={() => setTab(item)}
+          >
+            {t(item)}
+          </button>
+        ))}
       </div>
 
-      {tab === "Send" ? (
+      {activeTab === "Send" ? (
         <SendCryptoPanel wallets={wallets} wallet={wallet} onSelectWallet={onSelectWallet} />
-      ) : tab === "Withdraw" ? (
+      ) : activeTab === "Withdraw" ? (
         <WithdrawCryptoPanel wallets={wallets} wallet={wallet} onSelectWallet={onSelectWallet} />
       ) : (
         <ConvertCryptoPanel key={wallet?._id} wallet={wallet} />

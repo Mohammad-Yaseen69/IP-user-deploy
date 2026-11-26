@@ -28,6 +28,7 @@ import CurConversion from "../HomeNewUpdated/CurConversion";
 import AddWithdrawalsModal from "../AddWithdrawa;sModal";
 import QrGenerate from "../Settings/QrGenerate";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
+import useEffectivePermission, { PERMISSIONS } from "../../hooks/GeneralUse/useEffectivePermission";
 import { Tooltip } from "@mui/material";
 import SendCryptoModal from "./SendCryptoModal";
 import WalletCard from "../../Common/WalletUI/WalletCard";
@@ -81,6 +82,8 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
     userWithdrawals,
   } = useContext(UserContext);
   const can = usePermission();
+  const hasPermission = useEffectivePermission();
+  const canSendCrypto = hasPermission(PERMISSIONS.CRYPTO_PAYOUT);
   // Crypto wallets live on the Crypto & Stablecoins page, not here.
   const userWallets = useMemo(
     () => (allWallets || []).filter((w) => w?.provider !== "bvnk" && w?.wallet_type !== "crypto"),
@@ -155,6 +158,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
   const [sendCryptoWallet, setSendCryptoWallet] = useState(null);
 
   const openSendCryptoModal = (wallet) => {
+    if (!canSendCrypto) return;
     setSendCryptoWallet(wallet);
     setShowSendCryptoModal(true);
   };
@@ -442,7 +446,8 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
           />
 
           {isCryptoWallet ? (
-            can("wallet.payment.withdraw") && (
+            can("wallet.payment.withdraw") &&
+            canSendCrypto && (
               <Tile
                 Icon={ArrowRight}
                 title={t("Send Crypto")}
