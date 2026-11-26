@@ -40,7 +40,7 @@ const defaultRange = { startDate: undefined, endDate: undefined, key: "selection
 const same = (a, b) => String(a ?? "").toLowerCase() === String(b ?? "").toLowerCase();
 
 // Wallet-scoped version of the Transactions page ledger: same rows and tools, this wallet's endpoints.
-const WalletLedger = ({ currentWallet }) => {
+const WalletLedger = ({ currentWallet, refreshKey = 0 }) => {
   const { t } = useTranslation();
   const can = usePermission();
   const { userDetails, authHeader } = useContext(UserContext);
@@ -60,6 +60,8 @@ const WalletLedger = ({ currentWallet }) => {
 
   const loaderRef = useRef(null);
   const lastQueryKeyRef = useRef(null);
+  const lastRefreshKeyRef = useRef(refreshKey);
+  const silentRefreshRef = useRef(false);
   const isFetchingRef = useRef(false);
 
   const walletId = currentWallet?.wallet_id;
@@ -75,6 +77,7 @@ const WalletLedger = ({ currentWallet }) => {
     const queryKey = JSON.stringify([walletId, debouncedSearchQuery, apiDates]);
     if (lastQueryKeyRef.current !== queryKey) {
       lastQueryKeyRef.current = queryKey;
+      silentRefreshRef.current = false;
       setTransactions([]);
       setHasMore(true);
       setActive("All");
@@ -82,13 +85,23 @@ const WalletLedger = ({ currentWallet }) => {
         setPage(1);
         return undefined;
       }
+    } else if (lastRefreshKeyRef.current !== refreshKey) {
+      lastRefreshKeyRef.current = refreshKey;
+      silentRefreshRef.current = true;
+      if (page !== 1) {
+        setPage(1);
+        return undefined;
+      }
     }
+    lastRefreshKeyRef.current = refreshKey;
+    const silent = silentRefreshRef.current;
+    silentRefreshRef.current = false;
 
     const controller = new AbortController();
     const baseUrl = `${import.meta.env.VITE_IP_DEV_API}/api/transaction`;
     const config = { headers: authHeader, signal: controller.signal };
     isFetchingRef.current = true;
-    if (page === 1) setIsLoading(true);
+    if (page === 1 && !silent) setIsLoading(true);
 
     const request = apiDates
       ? axios.post(
@@ -115,7 +128,7 @@ const WalletLedger = ({ currentWallet }) => {
       .catch((error) => {
         if (controller.signal.aborted || axios.isCancel(error)) return;
         // The API answers with an error once there are no (more) transactions to return.
-        if (page === 1) setTransactions([]);
+        if (page === 1 && !silent) setTransactions([]);
         setHasMore(false);
       })
       .finally(() => {
@@ -128,7 +141,7 @@ const WalletLedger = ({ currentWallet }) => {
       controller.abort();
       isFetchingRef.current = false;
     };
-  }, [page, walletId, debouncedSearchQuery, apiDates, userDetails?._id]);
+  }, [page, walletId, debouncedSearchQuery, apiDates, userDetails?._id, refreshKey]);
 
   useEffect(() => {
     if (isLoading || !hasMore) return undefined;

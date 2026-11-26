@@ -31,7 +31,7 @@
   text-align: center;
   leading-trim: both;
   text-edge: cap;
-  font-family: "Clash Display";
+  font-family: "Inter", sans-serif;
   font-size: 4.75cqi;
   font-style: normal;
   font-weight: 600;
@@ -70,7 +70,7 @@
 }
 
 .qr_container div {
-  font-family: Clash Display;
+  font-family: "Inter", sans-serif;
   font-size: 4cqi;
   font-style: normal;
   font-weight: 600;
@@ -103,7 +103,7 @@
 .container h4 {
   color: #000;
   text-align: center;
-  font-family: "Clash Display";
+  font-family: "Inter", sans-serif;
   font-size: 4.2cqi;
   font-style: normal;
   font-weight: 600;
@@ -124,7 +124,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 2.5cqi;
   font-style: normal;
   font-weight: 600;
@@ -150,7 +150,7 @@
 
 .t {
   color: #fff;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 2.1cqi;
   font-style: normal;
   font-weight: 500;
@@ -164,7 +164,7 @@
   text-align: center;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 2.2cqi;
   font-style: normal;
   font-weight: 600;
@@ -177,7 +177,7 @@
   color: #fff;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 2.2cqi;
   font-style: normal;
   font-weight: 600;

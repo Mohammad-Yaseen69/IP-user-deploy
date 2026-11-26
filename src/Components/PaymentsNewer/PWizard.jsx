@@ -38,7 +38,7 @@ const PWizard = ({ subStep, totalCount = 4 }) => {
                     color: "white",
                     fontWeight: "700",
                     fontSize: ".7rem",
-                    fontFamily: "Manrope",
+                    fontFamily: "Inter, sans-serif",
                   }}
                 >
                   !

@@ -131,7 +131,7 @@
           text-align: center;
           display: flex;
           align-items: center;
-          font-family: Manrope;
+          font-family: "Inter", sans-serif;
           font-size: 12px;
           font-style: normal;
           font-weight: 500;
@@ -211,7 +211,7 @@
             margin-top: 10px;
             color: #5926f0;
             text-align: center;
-            font-family: Manrope;
+            font-family: "Inter", sans-serif;
             font-size: 12px;
             font-style: normal;
             font-weight: 600;
@@ -239,7 +239,7 @@
 
     .input_error span {
       color: #f32d2d;
-      font-family: Manrope;
+      font-family: "Inter", sans-serif;
       font-size: 12.232px;
       font-style: normal;
       font-weight: 600;
@@ -264,7 +264,7 @@
         display: flex;
         align-items: center;
         gap: 5px;
-        font-family: Manrope;
+        font-family: "Inter", sans-serif;
         font-size: 14px;
         font-style: normal;
         font-weight: 500;
@@ -282,7 +282,7 @@
 
       span {
         color: var(--COLORS-Neutral-700, #777);
-        font-family: Manrope;
+        font-family: "Inter", sans-serif;
         font-size: 12px;
         font-style: normal;
         font-weight: 600;

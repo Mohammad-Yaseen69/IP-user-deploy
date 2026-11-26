@@ -50,7 +50,7 @@ const PaymentRequestRow = ({ item, activeItem, setActiveItem, index, type = "rec
   const received = type === "received";
   const isActive = activeItem === index + 1;
   const pending = status?.toLowerCase() === "pending";
-  const name = partyName(item?.[received ? "sender" : "receiver"]);
+  const name = partyName(item?.[received ? "sender" : "receiver"] ?? {});
   const lowered = status?.toLowerCase();
 
   const label = t(

@@ -5,10 +5,11 @@ import styles from "./virtualIbanModal.module.scss";
 import success from "./icons/success.png";
 import MT from "./icons/mt.svg";
 import GB from "./icons/uk.svg";
+import US from "../../../assets/fonts/flag-icon/us.svg";
 import { Copy } from "react-feather";
 import { normalizeVirtualIban } from "../utils/virtualIban";
 
-const FLAGS = { MT, GB };
+const FLAGS = { MT, GB, US };
 const DoneStep = ({ jurisdiction, iban, onGoToAccount }) => {
   const { t } = useTranslation();
   const info = getJurisdiction(jurisdiction);

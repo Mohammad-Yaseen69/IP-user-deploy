@@ -13,8 +13,7 @@ import { useNavigate } from "react-router";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import { useQuery } from "@tanstack/react-query";
 import InstaPayLoader from "../Loader";
-import TopRight from "../topRight";
-import useWindowWidth from "../../utils/useWindowWidth";
+import PageHeader from "../../Common/PageHeader";
 
 export const getInitials = (name = "") =>
   name
@@ -27,7 +26,6 @@ export const getInitials = (name = "") =>
 
 const PayViaSocial = () => {
   const { header, themes, activeChannels, comingSoonChannels } = socialPayConfig;
-  const width = useWindowWidth();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { userDetails } = useContext(UserContext);
@@ -51,13 +49,10 @@ const PayViaSocial = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.top}>
-        <div className={styles.headerTitle}>
-          <h1>{t("Pay via Social")}</h1>
-          <p>{t("Send money through Instagram, WhatsApp or Telegram")}</p>
-        </div>
-        <div className={styles.topright}>{width > 1000 && <TopRight />}</div>
-      </div>
+      <PageHeader
+        title={t("Pay via Social")}
+        subtitle={t("Send money through Instagram, WhatsApp or Telegram")}
+      />
 
       <section className={styles.hero} style={{ "--hero-bg": `url("${heroImage}")` }}>
         <div className={styles.heroContent}>

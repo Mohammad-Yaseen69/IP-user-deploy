@@ -16,7 +16,7 @@
   color: rgba(0, 0, 0, 0.36);
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 10.665px;
   font-style: normal;
   font-weight: 600;
@@ -33,7 +33,7 @@
   color: rgba(0, 0, 0, 0.5);
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 8.994px;
   font-style: normal;
   font-weight: 600;
@@ -82,7 +82,7 @@
 
 .item span {
   color: var(--colour-of-country-names, #000);
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 700;

@@ -275,11 +275,7 @@ const CurConversion = ({
   const filteredWallets = useMemo(() => {
     return userWallets
       ?.filter((item) => !item?.blocked && !item?.admin_blocked && item?.status === "active")
-      ?.filter(
-        (item) =>
-          item?.currency?.code?.toLowerCase() !== "btc" &&
-          item?.currency?.code?.toLowerCase() !== "eth",
-      )
+      ?.filter((item) => item?.wallet_type !== "crypto")
       ?.sort((a, b) => (b?.default === true ? 1 : -1))
       ?.map((item) => ({ name: item?.currency?.code, ...item }));
   }, [userWallets]);

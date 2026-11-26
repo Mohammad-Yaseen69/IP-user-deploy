@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import styles from "./styles/index.module.scss";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import { useTranslation } from "react-i18next";
 import { Search, Filter, Sliders } from "react-feather";
 import { Button, Input } from "reactstrap";
@@ -145,10 +145,7 @@ const Beneficiaries = () => {
   return (
     <>
       <div className={styles.container}>
-        <div className={styles.top}>
-          <h4>{t("Beneficiaries")}</h4>
-          <TopRight />
-        </div>
+        <PageHeader title={t("Beneficiaries")} />
         <div className={styles.table_header}>
           <div className={styles.search_field}>
             <Search />
@@ -201,6 +198,8 @@ const Beneficiaries = () => {
             overflowX: "auto",
             height: "fit-content",
             minHeight: "500px",
+            width: "100%",
+            minWidth: 0,
           }}
         >
           {can("beneficiaries.view-all") && filtered.length > 0

@@ -107,7 +107,8 @@ const StepThree = ({
         purposeCodes.map((code) => [code, thunesReasons[code] || humanizeCode(code)]),
       );
     }
-    if (data?.payoutChannel?.vendor === "thunes" || !data.neemaReasons) {
+    // onafriq too
+    if (data?.payoutChannel?.vendor !== "neema" || !data.neemaReasons) {
       return thunesReasons;
     }
     return data.neemaReasons;
