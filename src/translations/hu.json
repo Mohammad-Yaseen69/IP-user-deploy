@@ -6540,5 +6540,12 @@
   "No transactions": "Nincsenek tranzakciók",
   "SEND TOP-UP AND E-SIM": "FELTÖLTÉS ÉS E-SIM KÜLDÉSE",
   "Holiday List": "Ünnepnapok listája",
-  "My Withdrawls": "Kifizetéseim"
+  "My Withdrawls": "Kifizetéseim",
+  "How do I send money abroad?": "Hogyan küldhetek pénzt külföldre?",
+  "Where can I download my statements?": "Hol tölthetem le a számlakivonataimat?",
+  "Why is my account limited?": "Miért van korlátozva a fiókom?",
+  "What fees will I pay on a transfer?": "Milyen díjakat kell fizetnem egy átutalásért?",
+  "The assistant is unavailable right now. Please try again shortly, or email support@insta-pay.ch.": "Az asszisztens jelenleg nem érhető el. Kérjük, próbálja újra hamarosan, vagy írjon a support@insta-pay.ch címre.",
+  "Ask about payments, limits, verification...": "Kérdezzen a fizetésekről, limitekről, azonosításról...",
+  "Assistant InstaPay": "InstaPay-asszisztens"
 }

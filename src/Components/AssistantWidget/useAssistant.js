@@ -12,9 +12,6 @@ const CHAT_ENDPOINT = `${import.meta.env.VITE_BOT_API_URL}/api/assistant/chat`;
 
 const MAX_HISTORY_TURNS = 8;
 
-const FALLBACK =
-  "The assistant is unavailable right now. Please try again shortly, or email support@insta-pay.ch.";
-
 let messageCounter = 0;
 const nextId = () => `assistant-${++messageCounter}`;
 
@@ -27,6 +24,10 @@ export const useAssistant = ({ authedFetch }) => {
   const [messages, setMessages] = useState([]);
   const [isThinking, setIsThinking] = useState(false);
   const historyRef = useRef([]);
+
+  const FALLBACK = t(
+    "The assistant is unavailable right now. Please try again shortly, or email support@insta-pay.ch.",
+  );
 
   /**
    * Only the pages this user may open. Sent with every request so the agent
@@ -46,12 +47,12 @@ export const useAssistant = ({ authedFetch }) => {
 
   const starterPrompts = useMemo(
     () => [
-      "How do I send money abroad?",
-      "Where can I download my statements?",
-      "Why is my account limited?",
-      "What fees will I pay on a transfer?",
+      t("How do I send money abroad?"),
+      t("Where can I download my statements?"),
+      t("Why is my account limited?"),
+      t("What fees will I pay on a transfer?"),
     ],
-    [],
+    [t],
   );
 
   const push = useCallback((message) => setMessages((prev) => [...prev, message]), []);
@@ -86,7 +87,11 @@ export const useAssistant = ({ authedFetch }) => {
         const response = await authedFetch(CHAT_ENDPOINT, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: text, history, pages: allowedPages }),
+          body: JSON.stringify({
+            message: text,
+            history,
+            pages: allowedPages,
+          }),
         });
 
         if (!response.ok || !response.body) {

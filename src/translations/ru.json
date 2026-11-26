@@ -6860,5 +6860,12 @@
   "No requested information found.": "Запрошенная информация не найдена.",
   "View Requested Information": "Посмотреть запрошенную информацию",
   "Get Fee Quote": "Получить расчёт комиссии",
-  "Confirm & Pay": "Подтвердить и оплатить"
+  "Confirm & Pay": "Подтвердить и оплатить",
+  "How do I send money abroad?": "Как отправить деньги за границу?",
+  "Where can I download my statements?": "Где можно скачать выписки?",
+  "Why is my account limited?": "Почему мой аккаунт ограничен?",
+  "What fees will I pay on a transfer?": "Какие комиссии нужно будет заплатить за перевод?",
+  "The assistant is unavailable right now. Please try again shortly, or email support@insta-pay.ch.": "Ассистент сейчас недоступен. Повторите попытку чуть позже или напишите на support@insta-pay.ch.",
+  "Ask about payments, limits, verification...": "Спросите о платежах, лимитах, проверке...",
+  "Assistant InstaPay": "Ассистент InstaPay"
 }
