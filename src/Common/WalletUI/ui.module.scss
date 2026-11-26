@@ -656,6 +656,10 @@ button.wcardChip {
   background: $soft;
   border: 1px solid $border;
   border-radius: 12px;
+
+  &:has(.exAmount:focus) {
+    border-color: $primary;
+  }
 }
 
 .exBoxTop {
