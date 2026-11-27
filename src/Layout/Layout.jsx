@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import TapTop from "./TapTop/index";
 import CheckContext from "../Helper/Customizer";
@@ -43,7 +43,13 @@ import NewMenu from "../Common/NewMenu";
 import { useVirtualIbans } from "../hooks/useVirtualIban";
 import PushConsentModal from "../Components/PushConsentModal";
 import { isPushSupported, getPushPermissionState } from "../Services/PushNotificationService";
+import {
+  useBeneficiaryDetails,
+  useInvalidateBeneficiaryDetails,
+} from "../hooks/BeneficiaryHooks/useBeneficiaryDetails";
 import useWindowWidth from "../utils/useWindowWidth";
+import InstaPayLoader from "../Components/Loader";
+import { getLoginPath } from "../utils/Functions/loginPage";
 
 const loadAddBeneficiaryAddressModal = () => import("../Components/AddBeneficiaryAddressModal");
 const AddBeneficiaryAddressModal = lazy(loadAddBeneficiaryAddressModal);
@@ -78,7 +84,7 @@ const MobileSbContextProvider = ({ children }) => {
   );
 };
 
-const Layout = ({ children, classNames, ...rest }) => {
+const LayoutContent = ({ children, classNames, ...rest }) => {
   const { setTogglSidebar, sidebar_types } = useContext(CheckContext);
   const { t } = useTranslation();
   const location = useLocation();
@@ -147,7 +153,6 @@ const Layout = ({ children, classNames, ...rest }) => {
     set3DaysReminderInfo,
     setIs30DaysInfo,
     verifyToken,
-    beneficiaries,
     getUserBeneficiaries,
     showAnotherLoginModal,
     setShowAnotherLoginModal,
@@ -237,19 +242,20 @@ const Layout = ({ children, classNames, ...rest }) => {
       navigate("/", { replace: true });
     }
   }, [virtualIbans, virtualIbansLoading, location.pathname, navigate]);
-  const beneficiaryWithoutAddresses = useMemo(() => {
-    if (location.pathname.startsWith("/beneficiaries/edit") && benId) {
-      const beneficiary = beneficiaries?.find((ben) => ben?._id === benId);
-
-      if (beneficiary?.address) {
-        return [];
-      } else {
-        return [beneficiary];
-      }
-    } else {
-      return [];
-    }
-  }, [beneficiaries, location]);
+  const isBeneficiaryEdit = location.pathname.startsWith("/beneficiaries/edit") && !!benId;
+  const { data: editedBeneficiary } = useBeneficiaryDetails(benId, { enabled: isBeneficiaryEdit });
+  const invalidateBeneficiaryDetails = useInvalidateBeneficiaryDetails();
+  const beneficiaryWithoutAddresses = useMemo(
+    () =>
+      isBeneficiaryEdit && editedBeneficiary && !editedBeneficiary.address
+        ? [editedBeneficiary]
+        : [],
+    [isBeneficiaryEdit, editedBeneficiary],
+  );
+  const onBeneficiaryAddressSaved = () => {
+    invalidateBeneficiaryDetails(benId);
+    getUserBeneficiaries();
+  };
   const [dismissedBeneficiaries, setDismissedBeneficiaries] = useState(null);
   const windowWidth = useWindowWidth();
 
@@ -631,4 +637,35 @@ const Layout = ({ children, classNames, ...rest }) => {
     </Fragment>
   );
 };
+const Layout = (props) => {
+  const { userDetails, verifyToken, tokenCheckFailures } = useContext(UserContext);
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (token && !userDetails) {
+      verifyToken();
+    }
+  }, [token]);
+
+  useEffect(() => {
+    if (!tokenCheckFailures || !token || userDetails) return undefined;
+    const timer = setTimeout(() => verifyToken(), 3000);
+    return () => clearTimeout(timer);
+  }, [tokenCheckFailures]);
+
+  if (!token) {
+    const currentPath = window.location.pathname + window.location.search;
+    if (currentPath !== "/") {
+      sessionStorage.setItem("path", currentPath);
+    }
+    return <Navigate to={getLoginPath()} replace />;
+  }
+
+  if (!userDetails) {
+    return <InstaPayLoader fallback />;
+  }
+
+  return <LayoutContent {...props} />;
+};
+
 export default Layout;

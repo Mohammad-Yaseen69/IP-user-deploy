@@ -8,7 +8,7 @@ import x from "./files/x.svg";
 import more from "./files/more.svg";
 import copy from "./files/copy.svg";
 import download from "./files/download.svg";
-import Rating from "react-rating";
+import StarRating from "../../Common/Component/StarRating";
 import { useContext, useEffect, useState } from "react";
 import { Heart, Share2 } from "react-feather";
 import init from "./files/init.svg";
@@ -280,14 +280,12 @@ const ProfileComponent = () => {
                   /5
                 </h4>
                 <div>
-                  <Rating
-                    initialRating={
+                  <StarRating
+                    value={
                       currentRevTab === "Seller" ? averageRatingAsSeller : averageRatingAsBuyer
                     }
-                    emptySymbol="fa fa-star-o fa-2x"
-                    fullSymbol="fa fa-star fa-2x"
-                    readonly
-                  ></Rating>
+                    readOnly
+                  />
                 </div>
                 <span>
                   {currentRevTab === "Seller" ? totalReviewsAsSeller : totalReviewsAsBuyer}{" "}
@@ -443,12 +441,7 @@ const ProfileComponent = () => {
                               {/* <MoreHorizontal size={30} /> */}
                             </div>
                             <div className={styles.rc_rating}>
-                              <Rating
-                                initialRating={item?.rating}
-                                emptySymbol="fa fa-star-o fa-2x"
-                                fullSymbol="fa fa-star fa-2x"
-                                readonly
-                              ></Rating>
+                              <StarRating value={item?.rating} readOnly />
                             </div>
                             <p>{item?.comment}</p>
                           </div>
@@ -483,12 +476,7 @@ const ProfileComponent = () => {
                               {/* <MoreHorizontal size={30} /> */}
                             </div>
                             <div className={styles.rc_rating}>
-                              <Rating
-                                initialRating={item?.rating}
-                                emptySymbol="fa fa-star-o fa-2x"
-                                fullSymbol="fa fa-star fa-2x"
-                                readonly
-                              ></Rating>
+                              <StarRating value={item?.rating} readOnly />
                             </div>
                             <p>{item?.comment}</p>
                           </div>

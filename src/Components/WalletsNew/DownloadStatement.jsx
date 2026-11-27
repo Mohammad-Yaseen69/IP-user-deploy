@@ -14,7 +14,7 @@ import { exportToExcel } from "../../utils/Functions/csvExport";
 import { formatCurrency } from "../../Helper/AmountFormat";
 
 const DownloadStatement = ({ showModal, setShowModal, wallet, isTransection }) => {
-  const { userDetails, authHeader, beneficiaries } = useContext(UserContext);
+  const { userDetails, authHeader } = useContext(UserContext);
   const { t } = useTranslation();
   const [dateString, setDateString] = useState("");
   const [fileType, setFileType] = useState("");
@@ -97,6 +97,10 @@ const DownloadStatement = ({ showModal, setShowModal, wallet, isTransection }) =
         setDateString("");
       })
       .catch((err) => {
+        if (!err?.response) {
+          toast.error(t("Something went wrong on our end. Please try again later."));
+          return;
+        }
         const decrypted = decryptData(err.response.data.data);
         console.log(decrypted);
         setDownloadError("No transactions found within the date range!");
@@ -173,108 +177,111 @@ const DownloadStatement = ({ showModal, setShowModal, wallet, isTransection }) =
 
   const generatePDF = async () => {
     setDownloading(true);
-    const tableStyles = {
-      fontSize: 5.5,
-    };
-    const tableHeaderStyles = {
-      fontSize: 7,
-      fillColor: [89, 38, 240],
-      textColor: [255, 255, 255],
-    };
-
-    // Set landscape orientation by passing parameters to jsPDF
-    const [{ default: jsPDF }] = await Promise.all([import("jspdf"), import("jspdf-autotable")]);
-    const doc = new jsPDF({ orientation: "landscape" });
-
-    doc.addImage(img, "png", 14, 10, 40, 11);
-    // doc.setFont("montserrat", "normal", "bolder");
-    // doc.setFontSize(20);
-    // doc.text("InstaPay", 14, 25);
-
-    doc.setFont("montserrat", "normal");
-    doc.setFontSize(8);
-    !isTransection ? doc.text(`Wallet ID: INSTA - ${wallet?.wallet_id}`, 14, 32) : null;
-
-    doc.text(
-      `Name: ${userDetails?.user?.first_name ?? userDetails?.company_name} ${userDetails?.user?.last_name ?? ""} `,
-      14,
-      38,
-    );
-    // doc.text(`Address: ${userDetails?.address ?? "N/A"} `, 14, 44);
-    doc.text(`Statement Duration: ${apiDates?.from} to ${apiDates?.to} `, 14, 44);
-
-    if (!isTransection && doc.autoTable) {
-      doc.autoTable({
-        head: [["Wallet ID", "Wallet Currency", "Current Balance", "Wallet Status"]],
-        body: [
-          [
-            `INSTA - ${wallet?.wallet_id}`,
-            wallet?.currency?.code,
-            `${formatCurrency(wallet?.balance?.available, true)} ${wallet?.currency?.code}`,
-            wallet?.status?.toUpperCase(),
-          ],
-        ],
-        startY: 60,
-        styles: tableStyles,
-        headStyles: tableHeaderStyles,
-      });
-    }
-
-    // Current Time and Date
-    const currentDate = new Date();
-    const formattedDate = `As of ${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()} `;
-    doc.setFont("montserrat", "normal", "bold");
-    doc.setFontSize(8);
-    doc.text(formattedDate, 160, 17.5);
-
-    const callback = (arr) => {
-      const transactionsTable = {
-        head: [
-          [
-            "Date & Time",
-            "Transaction ID",
-            "Payment Type",
-            "Recipient",
-            "Sender Email",
-            "Sender Phone",
-            "Type",
-            "Amount",
-            "Payment Reference",
-            "Status",
-          ],
-        ],
-        body: arr.map((item) => {
-          const internationalReceiver =
-            beneficiaries.filter((benef) => benef?._id === item?.beneficiary)?.[0] ||
-            item?.beneficiaryDetails;
-
-          return [
-            new Date(item?.createdAt)?.toLocaleString(),
-            item?.reference_id,
-            renderPaymentType(item),
-            renderRecipientName(item, internationalReceiver),
-            item?.guest_details?.email || item?.sender?.email || "--",
-            item?.guest_details?.phone || item?.sender?.phone || "--",
-            service_name_formatter(item?.service_type),
-            `${item?.transaction_type?.toLowerCase() === "debit" ? "-" : "+"}${item?.total ? formatCurrency(item?.total, true) : ""} ${item?.currency?.code} `,
-            item?.client_reference || "--",
-            item?.status,
-          ];
-        }),
-        startY: isTransection ? 60 : doc.lastAutoTable.finalY + 5,
-        styles: tableStyles,
-        headStyles: tableHeaderStyles,
+    try {
+      const tableStyles = {
+        fontSize: 5.5,
+      };
+      const tableHeaderStyles = {
+        fontSize: 7,
+        fillColor: [89, 38, 240],
+        textColor: [255, 255, 255],
       };
 
-      if (doc?.autoTable) {
-        doc?.autoTable(transactionsTable);
+      // Set landscape orientation by passing parameters to jsPDF
+      const [{ default: jsPDF }] = await Promise.all([import("jspdf"), import("jspdf-autotable")]);
+      const doc = new jsPDF({ orientation: "landscape" });
+
+      doc.addImage(img, "png", 14, 10, 40, 11);
+      // doc.setFont("montserrat", "normal", "bolder");
+      // doc.setFontSize(20);
+      // doc.text("InstaPay", 14, 25);
+
+      doc.setFont("montserrat", "normal");
+      doc.setFontSize(8);
+      !isTransection ? doc.text(`Wallet ID: INSTA - ${wallet?.wallet_id}`, 14, 32) : null;
+
+      doc.text(
+        `Name: ${userDetails?.user?.first_name ?? userDetails?.company_name} ${userDetails?.user?.last_name ?? ""} `,
+        14,
+        38,
+      );
+      // doc.text(`Address: ${userDetails?.address ?? "N/A"} `, 14, 44);
+      doc.text(`Statement Duration: ${apiDates?.from} to ${apiDates?.to} `, 14, 44);
+
+      if (!isTransection && doc.autoTable) {
+        doc.autoTable({
+          head: [["Wallet ID", "Wallet Currency", "Current Balance", "Wallet Status"]],
+          body: [
+            [
+              `INSTA - ${wallet?.wallet_id}`,
+              wallet?.currency?.code,
+              `${formatCurrency(wallet?.balance?.available, true)} ${wallet?.currency?.code}`,
+              wallet?.status?.toUpperCase(),
+            ],
+          ],
+          startY: 60,
+          styles: tableStyles,
+          headStyles: tableHeaderStyles,
+        });
       }
 
-      doc.save(
-        `${userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name}_${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`}${new Date().toLocaleString()} _transactions.pdf`,
-      );
-    };
-    getTransactions(callback);
+      // Current Time and Date
+      const currentDate = new Date();
+      const formattedDate = `As of ${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()} `;
+      doc.setFont("montserrat", "normal", "bold");
+      doc.setFontSize(8);
+      doc.text(formattedDate, 160, 17.5);
+
+      const callback = (arr) => {
+        const transactionsTable = {
+          head: [
+            [
+              "Date & Time",
+              "Transaction ID",
+              "Payment Type",
+              "Recipient",
+              "Sender Email",
+              "Sender Phone",
+              "Type",
+              "Amount",
+              "Payment Reference",
+              "Status",
+            ],
+          ],
+          body: arr.map((item) => {
+            const internationalReceiver = item?.beneficiaryDetails;
+
+            return [
+              new Date(item?.createdAt)?.toLocaleString(),
+              item?.reference_id,
+              renderPaymentType(item),
+              renderRecipientName(item, internationalReceiver),
+              item?.guest_details?.email || item?.sender?.email || "--",
+              item?.guest_details?.phone || item?.sender?.phone || "--",
+              service_name_formatter(item?.service_type),
+              `${item?.transaction_type?.toLowerCase() === "debit" ? "-" : "+"}${item?.total ? formatCurrency(item?.total, true) : ""} ${item?.currency?.code} `,
+              item?.client_reference || "--",
+              item?.status,
+            ];
+          }),
+          startY: isTransection ? 60 : doc.lastAutoTable.finalY + 5,
+          styles: tableStyles,
+          headStyles: tableHeaderStyles,
+        };
+
+        if (doc?.autoTable) {
+          doc?.autoTable(transactionsTable);
+        }
+
+        doc.save(
+          `${userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name}_${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`}${new Date().toLocaleString()} _transactions.pdf`,
+        );
+      };
+      getTransactions(callback);
+    } catch {
+      toast.error(t("Something went wrong on our end. Please try again later."));
+      setDownloading(false);
+    }
   };
 
   return (

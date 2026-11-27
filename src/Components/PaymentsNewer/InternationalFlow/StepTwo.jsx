@@ -1,17 +1,19 @@
 import { useLocation, useNavigate } from "react-router";
 import styles from "./styles/steptwo.module.css";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import search_icon from "./files/search.svg";
-import { UserContext } from "../../../Context/UserContext";
 import { service_name_formatter } from "../../TransactionsNewApi/TransactionItem";
 import { useTranslation } from "react-i18next";
-import i18next from "i18next";
 import { Modal, ModalBody } from "reactstrap";
 import AddBeneficiary from "../../AddBeneficiary";
 import QuickAddBeneficiary from "../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/QuickAddBeneficiary";
 import { USE_NEW_BENEFICIARY_FLOW } from "../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/constants";
 import { buildTransactionBeneficiaryDetails } from "../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/buildPayloads";
 import { getBeneficiaryDisplayName, getBeneficiaryInitial } from "./beneficiaryHelpers";
+import {
+  useBeneficiariesPage,
+  useInvalidateBeneficiaryPages,
+} from "../../../hooks/BeneficiaryHooks/useBeneficiariesPage";
 
 function levenshteinDistance(a, b) {
   const dp = Array(a.length + 1)
@@ -41,10 +43,16 @@ function calculateSimilarity(a, b) {
   return ((maxLen - distance) / maxLen) * 100;
 }
 
+const findSimilarBankBeneficiaries = (array, word, threshold = 60) =>
+  array.filter(
+    (item) =>
+      calculateSimilarity((item?.bank_details?.[0]?.name ?? "").toLowerCase(), word ?? "") >=
+      threshold,
+  );
+
 const StepTwo = ({ data, dataHandler }) => {
   const { t } = useTranslation();
-  const { getUserBeneficiaries, beneficiaries } = useContext(UserContext);
-  const [message, setMessage] = useState(t("No beneficiary found."));
+  const invalidateBeneficiaryPages = useInvalidateBeneficiaryPages();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [showOthers, setShowOthers] = useState(false);
@@ -56,9 +64,28 @@ const StepTwo = ({ data, dataHandler }) => {
     setShowBeneficiaryAddModal(true);
   };
 
-  useEffect(() => {
-    getUserBeneficiaries();
-  }, []);
+  const channel = data.payoutChannel?.value;
+  const isBank = channel === "bank";
+  const payerName = data.payer?.name?.toLowerCase();
+  // Channel, country, mobile payer and C/B type are filtered on the server, page by page.
+  const pickerFilters = {
+    channel,
+    country: data.country?.alpha3,
+    payer: channel === "mobile" ? data.payer?.id : undefined,
+    beneficiary_type: data.transactionType === "C" ? "individual" : "business",
+  };
+  const {
+    beneficiaries: channelBens,
+    hasNextPage,
+    loaderRef,
+    isFetched,
+  } = useBeneficiariesPage({
+    limit: 20,
+    search,
+    sort: "date_desc",
+    filters: pickerFilters,
+    enabled: !!channel,
+  });
 
   useEffect(() => {
     if (!USE_NEW_BENEFICIARY_FLOW || !showBeneficiaryAddModal) return;
@@ -93,139 +120,45 @@ const StepTwo = ({ data, dataHandler }) => {
 
   const draftBeneficiary = data.beneficiary?.isNew ? data.beneficiary : null;
 
-  const bensResult = useMemo(() => {
-    let emptyMessage = null;
-    let noBankMatch = false;
-    let fil = beneficiaries.filter((item) =>
-      item.account_type.some((item) =>
-        item.toLowerCase().includes(data.payoutChannel?.value?.toLowerCase()),
-      ),
-    );
-
-    if (data.country?.alpha3) {
-      fil = fil.filter((item) => {
-        const bankIsoCode = item?.bank_details?.[0]?.extras?.country_iso_code;
-        if (bankIsoCode && data.payoutChannel?.value === "bank") {
-          if (bankIsoCode === data.country?.alpha3) {
-            return true;
-          }
-        } else {
-          if (item?.country_iso_code === data.country?.alpha3) {
-            return true;
-          }
-        }
-        return false;
-      });
-      emptyMessage = t(`No beneficiary found from {{country}} having {{value}} details.`, {
-        value: data.payoutChannel?.value,
-        country: data.country?.name,
-      });
-    }
-
-    if (data.payoutChannel?.value === "mobile") {
-      fil = fil.filter((item) => +item?.mobile_wallet?.[0]?.money_provider === +data.payer?.id);
-      emptyMessage = t(`No beneficiary found from {{country}} having {{value}} details.`, {
-        value: data.payer?.name,
-        country: data.country?.name,
-      });
-    }
-
-    if (data.payoutChannel?.value === "bank") {
-      // fil = fil.filter(item => {
-      //     const distance = levenshteinDistance(item?.bank_details?.[0]?.bank_name, data.payer?.name);
-      //     const maxLength = Math.max(item?.bank_details?.[0]?.bank_name.length, data.payer?.name.length);
-      //     return distance / maxLength < 0.3;
-      // });
-
-      // fil.filter(item => item?.bank_details?.[0]?.bank_name?.toLowerCase() === data.payer?.name?.toLowerCase() || item?.bank_details?.[0]?.bank_name?.toLowerCase()?.split(" ")?.some((it) => data.payer?.toLowerCase()?.name?.split(' ').some(i => i?.toLowerCase() === it?.toLowerCase())))
-
-      function findSimilarItemsBySubstring(array, word, threshold = 60) {
-        return array.filter((item) => {
-          const similarity = calculateSimilarity(
-            item?.bank_details?.[0]?.name?.toLowerCase(),
-            word,
-          );
-          // console.log(`Similarity between "${item}" and "${word}": ${similarity}%`);
-          return similarity >= threshold;
-        });
-      }
-      fil = findSimilarItemsBySubstring(
-        fil?.map((i) => i),
-        data.payer?.name?.toLowerCase(),
-        60,
-      );
-
-      if (fil.length === 0) noBankMatch = true;
-      emptyMessage = t(`No beneficiary found from {{country}} having {{value}} details.`, {
-        value: data.payer?.name,
-        country: data.country?.name,
-      });
-    }
-
-    const type = data.transactionType === "C" ? "individual" : "business";
-    fil = fil.filter((ben) => ben.beneficiary_type === type);
-
-    return { list: fil, emptyMessage, noBankMatch };
-  }, [beneficiaries, i18next.language]);
-  const bens = bensResult.list;
+  const filterd = useMemo(
+    () => (isBank ? findSimilarBankBeneficiaries(channelBens, payerName) : channelBens),
+    [channelBens, isBank, payerName],
+  );
+  const bankBens = isBank ? channelBens : [];
 
   useEffect(() => {
-    if (bensResult.noBankMatch) setShowOthers(true);
-    if (bensResult.emptyMessage !== null) setMessage(bensResult.emptyMessage);
-  }, [bensResult]);
+    if (isBank && isFetched && filterd.length === 0) setShowOthers(true);
+  }, [isBank, isFetched, filterd.length]);
 
-  const bankBens = useMemo(() => {
-    let fil = beneficiaries.filter((item) =>
-      item.account_type.some((item) =>
-        item.toLowerCase().includes(data.payoutChannel?.value?.toLowerCase()),
-      ),
-    );
+  useEffect(() => {
+    if (search.length > 0 && data.beneficiary?._id) dataHandler("beneficiary", {});
+  }, [search]);
 
-    fil = fil.filter((item) => {
-      const bankIsoCode = item?.bank_details?.[0]?.extras?.country_iso_code;
-      if (bankIsoCode) {
-        if (bankIsoCode === data.country?.alpha3) {
-          return true;
-        }
-      } else {
-        if (item?.country_iso_code === data.country?.alpha3) {
-          return true;
-        }
-      }
-      return false;
-    });
-
-    const type = data.transactionType === "C" ? "individual" : "business";
-    fil = fil.filter((ben) => ben.beneficiary_type === type);
-
-    return fil;
-  }, [beneficiaries]);
-
-  const filterd = useMemo(() => {
-    if (search.length > 0) {
-      if (data.beneficiary?._id) {
-        dataHandler("beneficiary", {});
-      }
-      return bens?.filter(
-        (item) =>
-          item?.first_name?.toLowerCase()?.includes(search?.toLowerCase()) ||
-          item?.last_name?.toLowerCase()?.includes(search?.toLowerCase()),
-      );
-    } else {
-      return bens;
-    }
-  }, [search, bens]);
+  const message =
+    channel === "mobile" || isBank || data.country?.alpha3
+      ? t(`No beneficiary found from {{country}} having {{value}} details.`, {
+          value: channel === "mobile" || isBank ? data.payer?.name : channel,
+          country: data.country?.name,
+        })
+      : t("No beneficiary found.");
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const recipient = queryParams.get("recipient");
 
+  const { beneficiaries: recipientMatches } = useBeneficiariesPage({
+    limit: 1,
+    filters: { ...pickerFilters, id: recipient },
+    enabled: !!recipient && !!channel && !data.beneficiary?._id && !data.beneficiary?.isNew,
+  });
   useEffect(() => {
     if (!recipient || data.beneficiary?._id || data.beneficiary?.isNew) return;
 
-    const ben = filterd?.find((item) => item?._id === recipient);
+    const [ben] = isBank
+      ? findSimilarBankBeneficiaries(recipientMatches, payerName)
+      : recipientMatches;
     if (ben) dataHandler("beneficiary", ben);
-  }, [recipient, filterd]);
+  }, [recipient, recipientMatches]);
   if (USE_NEW_BENEFICIARY_FLOW && showBeneficiaryAddModal) {
     return (
       <div className={styles.container}>
@@ -480,6 +413,7 @@ const StepTwo = ({ data, dataHandler }) => {
         ) : (
           ""
         )}
+        {hasNextPage && <div ref={loaderRef} style={{ height: 40 }} />}
       </div>
 
       {!USE_NEW_BENEFICIARY_FLOW && (
@@ -492,7 +426,7 @@ const StepTwo = ({ data, dataHandler }) => {
             <AddBeneficiary
               inInternationalModal={true}
               toggleHandler={async (addedBen) => {
-                await getUserBeneficiaries();
+                await invalidateBeneficiaryPages();
                 dataHandler("beneficiary", addedBen);
                 setShowBeneficiaryAddModal(false);
               }}

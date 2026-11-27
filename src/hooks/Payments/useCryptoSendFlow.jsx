@@ -28,8 +28,11 @@ import {
   getChannelProtocol,
   getInitialProtocol,
   getProtocolsForAddress,
-  hasCryptoChannel,
 } from "../../Components/WalletsNew/SendCryptoModal/cryptoProtocols";
+import {
+  useAllBeneficiaries,
+  useInvalidateBeneficiaryPages,
+} from "../BeneficiaryHooks/useBeneficiariesPage";
 
 export const SEND_STEPS = {
   FORM: "FORM",
@@ -69,8 +72,8 @@ export const getBeneficiaryName = (beneficiary) => {
 export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { userDetails, beneficiaries, getUserBeneficiaries, setProfileLockTime } =
-    useContext(UserContext);
+  const { userDetails, setProfileLockTime } = useContext(UserContext);
+  const invalidateBeneficiaryPages = useInvalidateBeneficiaryPages();
 
   const walletId = wallet?._id;
   const cryptoCurrency = String(wallet?.currency?.code || "").toUpperCase();
@@ -115,11 +118,8 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
     },
   });
 
-  const cryptoBeneficiaries = useMemo(
-    () =>
-      (beneficiaries || []).filter((beneficiary) => hasCryptoChannel(beneficiary, cryptoCurrency)),
-    [beneficiaries, cryptoCurrency],
-  );
+  const { beneficiaries: cryptoBeneficiaries, isComplete: cryptoListComplete } =
+    useAllBeneficiaries({ filters: { crypto: cryptoCurrency || "any" }, enabled: !!active });
 
   const cryptoChannels = useMemo(() => {
     const channels = getBeneficiaryCryptoChannels(selectedBeneficiary);
@@ -149,20 +149,16 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
   const amountError = getAmountError(amount, availableBalance, cryptoCurrency);
 
   useEffect(() => {
-    if (active && userDetails?._id) getUserBeneficiaries?.();
-  }, [active, userDetails?._id]);
-
-  useEffect(() => {
     if (userDetails?.tfa) setAuthType("authenticator");
   }, [userDetails?.tfa]);
 
   useEffect(() => {
-    if (!selectedBeneficiary) return;
+    if (!selectedBeneficiary || !cryptoListComplete) return;
     const stillListed = cryptoBeneficiaries.some(
       (beneficiary) => getBeneficiaryId(beneficiary) === getBeneficiaryId(selectedBeneficiary),
     );
     if (!stillListed) setSelectedBeneficiary(null);
-  }, [cryptoBeneficiaries, selectedBeneficiary]);
+  }, [cryptoBeneficiaries, selectedBeneficiary, cryptoListComplete]);
 
   useEffect(() => {
     setSelectedChannel(cryptoChannels[0] || null);
@@ -279,7 +275,7 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
 
   const onBeneficiarySaved = async (savedBeneficiary) => {
     setSavedBeneficiaryId(getBeneficiaryId(savedBeneficiary) || "");
-    await getUserBeneficiaries?.();
+    await invalidateBeneficiaryPages();
   };
 
   const buildFeePayload = () => ({

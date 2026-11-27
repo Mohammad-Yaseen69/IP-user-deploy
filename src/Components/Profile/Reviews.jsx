@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import styles from "./styles/index.module.scss";
 import InstaPayLoader from "../Loader";
 import { UserContext } from "../../Context/UserContext";
-import Rating from "react-rating";
+import StarRating from "../../Common/Component/StarRating";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
@@ -127,12 +127,7 @@ const Reviews = ({
                         {/* <MoreHorizontal size={30} /> */}
                       </div>
                       <div className={styles.rc_rating}>
-                        <Rating
-                          initialRating={item?.rating}
-                          emptySymbol="fa fa-star-o fa-2x"
-                          fullSymbol="fa fa-star fa-2x"
-                          readonly
-                        ></Rating>
+                        <StarRating value={item?.rating} readOnly />
                       </div>
                       <p>{item?.comment}</p>
                       {item?.reply && (
@@ -224,12 +219,7 @@ const Reviews = ({
                         {/* <MoreHorizontal size={30} /> */}
                       </div>
                       <div className={styles.rc_rating}>
-                        <Rating
-                          initialRating={item?.rating}
-                          emptySymbol="fa fa-star-o fa-2x"
-                          fullSymbol="fa fa-star fa-2x"
-                          readonly
-                        ></Rating>
+                        <StarRating value={item?.rating} readOnly />
                       </div>
                       <p>{item?.comment}</p>
                     </div>
