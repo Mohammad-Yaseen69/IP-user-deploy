@@ -9,7 +9,7 @@ import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import CurConversion from "../../HomeNewUpdated/CurConversion";
 import InstaPayLoader from "../../Loader";
 import FeesComponent from "./FeesComponent";
-import { getLimits } from "../../WalletsNew/getLimits";
+import { useWalletLimits } from "../../../hooks/GeneralUse/useWalletsLimits";
 import { removeCommasAndCurrency } from "../../WalletsNew/AccountLimits";
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
 
@@ -133,20 +133,8 @@ export const WalletCard = ({
 }) => {
   const { t } = useTranslation();
   const { authHeader } = useContext(UserContext);
-  const [walletData, setWalletData] = useState({});
+  const { limits: walletData } = useWalletLimits(wallet);
   const [walletfeeDetails, setWalletFeeDetails] = useState([]);
-
-  useEffect(() => {
-    if (wallet?._id) {
-      getLimits(
-        wallet,
-        setWalletData,
-        authHeader,
-        () => {},
-        () => {},
-      );
-    }
-  }, [wallet]);
 
   const getExchangedAmounts = async (from, to, amount) => {
     try {

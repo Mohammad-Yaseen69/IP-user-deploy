@@ -2,20 +2,18 @@ import styles from "./styles/Card.module.scss";
 import logo_white from "../../assets/images/logo/logo_white.png";
 import { Check, Copy } from "react-feather";
 import { Progress } from "reactstrap";
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import card_bg from "./files/card_bg.svg";
 import card_bg_green from "./files/card_bg_green.svg";
-import { UserContext } from "../../Context/UserContext";
 import React from "react";
 import r_styles from "./styles/Reserved.module.css";
-import { getLimits } from "../WalletsNew/getLimits";
+import { useWalletLimits } from "../../hooks/GeneralUse/useWalletsLimits";
 import { removeCommasAndCurrency } from "../WalletsNew/AccountLimits";
 
 const ADCard = ({ data, isActive }) => {
   const [copied, setCopied] = useState(false);
   const { t } = useTranslation();
-  const { userWallets, authHeader, userDetails } = useContext(UserContext);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(`${data?.wallet_id?.toUpperCase()}`);
@@ -26,19 +24,7 @@ const ADCard = ({ data, isActive }) => {
   // const [totalBalance, setTotalBalance] = useState(0)
   // const [total, setTotal] = useState(0)
 
-  const [walletData, setWalletData] = useState({});
-
-  useEffect(() => {
-    if (data?._id) {
-      getLimits(
-        data,
-        setWalletData,
-        authHeader,
-        () => {},
-        () => {},
-      );
-    }
-  }, [data]);
+  const { limits: walletData } = useWalletLimits(data);
 
   // const getExchangedAmounts = async (from, to, amount) => {
   //     setIsLoading(true);

@@ -124,7 +124,7 @@ const CryptoCurrencyNew = ({ cryptoCurrency, setCryptoCurrency }) => {
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {item.name} ({item.value.toUpperCase()})
+                  {item?.name} ({item?.value?.toUpperCase()})
                 </h2>
                 <span
                   style={{
@@ -138,7 +138,7 @@ const CryptoCurrencyNew = ({ cryptoCurrency, setCryptoCurrency }) => {
                     fontWeight: 700,
                   }}
                 >
-                  {item.value.toUpperCase()}-USD
+                  {item?.value?.toUpperCase()}-USD
                 </span>
                 <h4
                   style={{
