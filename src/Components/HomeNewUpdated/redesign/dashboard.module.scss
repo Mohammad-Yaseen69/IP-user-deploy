@@ -192,6 +192,12 @@ $stack: 1100px;
     letter-spacing: -1.08px;
     color: #a99fc4;
   }
+
+  b.masked {
+    font-size: 32px;
+    letter-spacing: 4px;
+    color: #c3bbd9;
+  }
 }
 
 .eye {
@@ -499,7 +505,7 @@ a.stat:hover b {
   flex-direction: column;
   align-items: center;
   gap: 5px;
-  width: 86px;
+  width: 96px;
   padding: 0;
   background: none;
   border: 0;
@@ -1118,5 +1124,5 @@ a.stat:hover b {
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  width: 86px;
+  width: 96px;
 }

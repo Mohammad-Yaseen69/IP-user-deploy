@@ -150,7 +150,7 @@ const ProfileComponent = () => {
           height: "300px",
           width: "100%",
           objectFit: "cover",
-          borderRadius: "30px 30px 0 0",
+          borderRadius: "16px 16px 0 0",
         }}
       />
       <Card style={{ marginBottom: "0" }} className={styles.sub_container}>
@@ -331,7 +331,7 @@ const ProfileComponent = () => {
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    borderRadius: "20px",
+                    borderRadius: "16px",
                   }}
                 >
                   <button
@@ -384,7 +384,7 @@ const ProfileComponent = () => {
                     fontWeight: "600",
                     border: "2px solid rgba(17, 17, 17, 0.05)",
                     transition: ".25s",
-                    borderRadius: "20px",
+                    borderRadius: "10px",
                     cursor: "pointer",
                   }}
                   onClick={() => setCurrentRevTab("Seller")}
@@ -401,7 +401,7 @@ const ProfileComponent = () => {
                     fontWeight: "600",
                     border: "2px solid rgba(17, 17, 17, 0.05)",
                     transition: ".25s",
-                    borderRadius: "20px",
+                    borderRadius: "10px",
                     cursor: "pointer",
                   }}
                   onClick={() => setCurrentRevTab("Buyer")}

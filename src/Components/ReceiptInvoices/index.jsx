@@ -11,6 +11,7 @@ import InvoiceModal from "./InvoiceModal";
 import InvoiceTable from "./InvoiceTable";
 import { getInvoiceList } from "./queries";
 import styles from "./styles/index.module.scss";
+import s from "../../Common/Ledger/ledger.module.scss";
 import NoInvoiceScreen from "./UI/NoInvoiceScreen";
 import { useDebounce } from "../../hooks/useDebounce/useDebounce";
 import Paginations from "../../Common/Component/Paginations";
@@ -25,6 +26,12 @@ const TAB_PARAMS = {
   direct_card: "direct_card",
   "direct-card": "direct_card",
 };
+
+const TABS = [
+  { key: "invoice", label: "Invoices" },
+  { key: "plans", label: "Plans" },
+  { key: "direct_card", label: "Direct Card Invoice" },
+];
 
 const ReceiptInvoice = () => {
   const { t } = useTranslation();
@@ -96,46 +103,19 @@ const ReceiptInvoice = () => {
     <div className={styles.container}>
       <PageHeader title={t("My Invoices")} subtitle={t("Create, send and track your invoices.")} />
 
-      <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
-        <div
-          onClick={() => setActiveTab("invoice")}
-          style={{
-            cursor: "pointer",
-            padding: "10px 20px",
-            background: activeTab === "invoice" ? "#5926F0" : "rgb(221 218 218)",
-            fontWeight: 600,
-            color: activeTab === "invoice" ? "white" : "black",
-            borderRadius: "6px",
-          }}
-        >
-          {t("Invoices")}
-        </div>
-        <div
-          onClick={() => setActiveTab("plans")}
-          style={{
-            cursor: "pointer",
-            padding: "10px 20px",
-            background: activeTab === "plans" ? "#5926F0" : "rgb(221 218 218)",
-            fontWeight: 600,
-            color: activeTab === "plans" ? "white" : "black",
-            borderRadius: "6px",
-          }}
-        >
-          {t("Plans")}
-        </div>
-        <div
-          onClick={() => setActiveTab("direct_card")}
-          style={{
-            cursor: "pointer",
-            padding: "10px 20px",
-            background: activeTab === "direct_card" ? "#5926F0" : "rgb(221 218 218)",
-            fontWeight: 600,
-            color: activeTab === "direct_card" ? "white" : "black",
-            borderRadius: "6px",
-          }}
-        >
-          {t("Direct Card Invoice")}
-        </div>
+      <div className={`${s.tabs} ${styles.tabs}`} role="tablist">
+        {TABS.map(({ key, label }) => (
+          <button
+            key={key}
+            type="button"
+            role="tab"
+            aria-selected={activeTab === key}
+            className={`${s.tab} ${activeTab === key ? s.active : ""}`}
+            onClick={() => setActiveTab(key)}
+          >
+            {t(label)}
+          </button>
+        ))}
       </div>
 
       {activeTab === "invoice" || activeTab === "direct_card" ? (

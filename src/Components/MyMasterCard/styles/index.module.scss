@@ -51,7 +51,7 @@
       padding: var(--SPACING-spacing-1, 12px) var(--SPACING-spacing-2, 18px);
       flex-direction: column;
       border-radius: var(--RADIUS-radius-4, 16px);
-      box-shadow: 0px 16px 32px -12px rgba(88, 92, 95, 0.1);
+      border: 1px solid #eff1f6;
       align-items: flex-start;
       gap: var(--SPACING-spacing-4, 20px);
 
@@ -347,7 +347,6 @@
           border-radius: 8px;
           border: 1px solid var(--COLORS-Neutral-200, #eff1f6);
           background: var(--COLORS-Primary-300, #5926f0);
-          box-shadow: 0px 2px 4px 0px rgba(27, 28, 29, 0.04);
           font-family: "Inter", sans-serif;
           font-size: 14px;
           font-style: normal;
@@ -374,7 +373,7 @@
         align-self: stretch;
         border-radius: var(--RADIUS-radius-4, 16px);
         background: #fff;
-        box-shadow: 0px 16px 32px -12px rgba(88, 92, 95, 0.1);
+        border: 1px solid #eff1f6;
         position: relative;
 
         svg {
@@ -478,7 +477,7 @@
         gap: var(--SPACING-spacing-4, 32px);
         border-radius: var(--RADIUS-radius-4, 16px);
         background: #fafafa;
-        box-shadow: 0px 16px 32px -12px rgba(88, 92, 95, 0.1);
+        border: 1px solid #eff1f6;
 
         .title {
           color: #000;
@@ -763,7 +762,7 @@
           display: flex;
           align-items: center;
           background: #fff;
-          box-shadow: 0px 4.327520847320557px 35.70204544067383px 0px rgba(0, 0, 0, 0.06);
+          border: 1px solid #eff1f6;
           padding: 7px 13px;
           border-radius: 12px;
 
@@ -830,7 +829,6 @@
           border-top: 1px solid rgba(0, 0, 0, 0.04);
           border-bottom: 1px solid rgba(0, 0, 0, 0.04);
           background: #fff;
-          box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.04);
           cursor: pointer;
 
           div {
@@ -850,7 +848,6 @@
           border-top: 1px solid rgba(0, 0, 0, 0.04);
           border-bottom: 1px solid rgba(0, 0, 0, 0.04);
           background: #fff;
-          box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.04);
           cursor: pointer;
 
           // .details {
@@ -1254,7 +1251,7 @@
           display: flex;
           align-items: center;
           background: #fff;
-          box-shadow: 0px 4.327520847320557px 35.70204544067383px 0px rgba(0, 0, 0, 0.06);
+          border: 1px solid #eff1f6;
           padding: 7px 13px;
           border-radius: 12px;
           flex: 1;

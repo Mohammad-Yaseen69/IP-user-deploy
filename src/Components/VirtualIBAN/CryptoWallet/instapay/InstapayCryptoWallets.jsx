@@ -65,12 +65,6 @@ const InstapayCryptoWallets = () => {
             {t("Hold, send and convert crypto from your InstaPay balances.")}
           </p>
         </div>
-        {hasWallets && can("wallet.currencies.add") && (
-          <button type="button" className={styles.addBtn} onClick={() => setShowAddCurrency(true)}>
-            <Plus size={16} />
-            {t("Add crypto wallet")}
-          </button>
-        )}
       </div>
 
       {hasWallets ? (
@@ -83,6 +77,18 @@ const InstapayCryptoWallets = () => {
               onSend={canSendCrypto ? (w) => setSendWalletId(w?._id) : undefined}
             />
           ))}
+          {can("wallet.currencies.add") && (
+            <button
+              type="button"
+              className={styles.addCard}
+              onClick={() => setShowAddCurrency(true)}
+            >
+              <span className={styles.addCardIcon}>
+                <Plus size={20} />
+              </span>
+              {t("Add crypto wallet")}
+            </button>
+          )}
         </div>
       ) : (
         <div className={styles.empty}>
