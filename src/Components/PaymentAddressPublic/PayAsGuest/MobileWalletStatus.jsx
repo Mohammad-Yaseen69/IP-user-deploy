@@ -13,10 +13,11 @@ const MobileWalletStatus = ({
   buttonLabel = null,
   inGuestPay = true,
   containerStyle = {},
+  initialStatus = "PENDING",
 }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
-  const [status, setStatus] = useState("PENDING"); // PENDING, PROCESSING, COMPLETED, FAILED
+  const [status, setStatus] = useState(initialStatus); // PENDING, PROCESSING, COMPLETED, FAILED
 
   const socketConfig = useMemo(
     () => ({
