@@ -6547,5 +6547,8 @@
   "What fees will I pay on a transfer?": "Hvilke gebyrer skal jeg betale for en overførsel?",
   "The assistant is unavailable right now. Please try again shortly, or email support@insta-pay.ch.": "Assistenten er ikke tilgængelig lige nu. Prøv igen om lidt, eller skriv til support@insta-pay.ch.",
   "Ask about payments, limits, verification...": "Spørg om betalinger, grænser, bekræftelse...",
-  "Assistant InstaPay": "InstaPay-assistent"
+  "Assistant InstaPay": "InstaPay-assistent",
+  "Beneficiary type": "Modtagertype",
+  "Select one or more": "Vælg en eller flere",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Du har ingen aktiv tegnebog at sende fra. Aktivér venligst en tegnebog, og prøv igen."
 }

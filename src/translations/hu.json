@@ -6547,5 +6547,8 @@
   "What fees will I pay on a transfer?": "Milyen díjakat kell fizetnem egy átutalásért?",
   "The assistant is unavailable right now. Please try again shortly, or email support@insta-pay.ch.": "Az asszisztens jelenleg nem érhető el. Kérjük, próbálja újra hamarosan, vagy írjon a support@insta-pay.ch címre.",
   "Ask about payments, limits, verification...": "Kérdezzen a fizetésekről, limitekről, azonosításról...",
-  "Assistant InstaPay": "InstaPay-asszisztens"
+  "Assistant InstaPay": "InstaPay-asszisztens",
+  "Beneficiary type": "Kedvezményezett típusa",
+  "Select one or more": "Válasszon egyet vagy többet",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Nincs aktív pénztárcája, amelyből küldhetne. Kérjük, aktiváljon egy pénztárcát, és próbálja újra."
 }

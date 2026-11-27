@@ -6886,5 +6886,8 @@
   "What fees will I pay on a transfer?": "Bir para transferi için ne kadar ücret ödeyeceğim?",
   "The assistant is unavailable right now. Please try again shortly, or email support@insta-pay.ch.": "Asistan şu anda kullanılamıyor. Lütfen kısa süre sonra tekrar deneyin veya support@insta-pay.ch adresine e-posta gönderin.",
   "Ask about payments, limits, verification...": "Ödemeler, limitler ve doğrulama hakkında soru sorun...",
-  "Assistant InstaPay": "InstaPay Asistanı"
+  "Assistant InstaPay": "InstaPay Asistanı",
+  "Beneficiary type": "Alıcı türü",
+  "Select one or more": "Bir veya daha fazlasını seçin",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Gönderim yapabileceğiniz aktif bir cüzdanınız yok. Lütfen bir cüzdanı etkinleştirip tekrar deneyin."
 }

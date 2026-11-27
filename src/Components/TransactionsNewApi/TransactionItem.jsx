@@ -29,7 +29,7 @@ const TransactionItem = ({
   const { t, i18n } = useTranslation();
   const can = usePermission();
   const [selectedCategory, setSelectedCategory] = useState([]);
-  const { authHeader, beneficiaries } = useContext(UserContext);
+  const { authHeader } = useContext(UserContext);
   const [note, setNote] = useState(item?.note);
   const [isSaving, setIsSaving] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -128,11 +128,8 @@ const TransactionItem = ({
 
   const internationalReceiver = useMemo(() => {
     if (!item?.beneficiary) return null;
-    return (
-      beneficiaries.filter((benef) => benef?._id === item?.beneficiary)?.[0] ||
-      item?.beneficiaryDetails
-    );
-  }, [beneficiaries, item]);
+    return item?.beneficiaryDetails;
+  }, [item]);
 
   const externalStatusDescription = useMemo(() => {
     if (item?.payment_type === "non_instapay") {

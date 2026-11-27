@@ -6547,5 +6547,8 @@
   "What fees will I pay on a transfer?": "Jaké poplatky zaplatím za převod?",
   "The assistant is unavailable right now. Please try again shortly, or email support@insta-pay.ch.": "Asistent právě není k dispozici. Zkuste to prosím za chvíli znovu nebo napište na support@insta-pay.ch.",
   "Ask about payments, limits, verification...": "Zeptejte se na platby, limity, ověření...",
-  "Assistant InstaPay": "Asistent InstaPay"
+  "Assistant InstaPay": "Asistent InstaPay",
+  "Beneficiary type": "Typ příjemce",
+  "Select one or more": "Vyberte jeden nebo více",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Nemáte aktivní peněženku, ze které lze odeslat. Aktivujte prosím peněženku a zkuste to znovu."
 }

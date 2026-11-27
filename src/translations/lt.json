@@ -6545,5 +6545,8 @@
   "What fees will I pay on a transfer?": "Kokius mokesčius mokėsiu už pervedimą?",
   "The assistant is unavailable right now. Please try again shortly, or email support@insta-pay.ch.": "Asistentas šiuo metu nepasiekiamas. Pabandykite dar kartą netrukus arba parašykite el. paštu support@insta-pay.ch.",
   "Ask about payments, limits, verification...": "Klauskite apie mokėjimus, limitus, patvirtinimą...",
-  "Assistant InstaPay": "InstaPay asistentas"
+  "Assistant InstaPay": "InstaPay asistentas",
+  "Beneficiary type": "Gavėjo tipas",
+  "Select one or more": "Pasirinkite vieną ar daugiau",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Neturite aktyvios piniginės, iš kurios galėtumėte siųsti. Suaktyvinkite piniginę ir bandykite dar kartą."
 }

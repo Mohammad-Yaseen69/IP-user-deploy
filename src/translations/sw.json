@@ -6887,5 +6887,8 @@
   "What fees will I pay on a transfer?": "Nitalipa ada gani kwa uhamisho?",
   "The assistant is unavailable right now. Please try again shortly, or email support@insta-pay.ch.": "Msaidizi hapatikani kwa sasa. Tafadhali jaribu tena baada ya muda mfupi au tuma barua pepe kwa support@insta-pay.ch.",
   "Ask about payments, limits, verification...": "Uliza kuhusu malipo, vikomo, uthibitishaji...",
-  "Assistant InstaPay": "Msaidizi wa InstaPay"
+  "Assistant InstaPay": "Msaidizi wa InstaPay",
+  "Beneficiary type": "Aina ya mnufaika",
+  "Select one or more": "Chagua moja au zaidi",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Huna pochi inayotumika ya kutuma kutoka. Tafadhali washa pochi kisha ujaribu tena."
 }

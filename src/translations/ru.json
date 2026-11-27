@@ -6867,5 +6867,8 @@
   "What fees will I pay on a transfer?": "Какие комиссии нужно будет заплатить за перевод?",
   "The assistant is unavailable right now. Please try again shortly, or email support@insta-pay.ch.": "Ассистент сейчас недоступен. Повторите попытку чуть позже или напишите на support@insta-pay.ch.",
   "Ask about payments, limits, verification...": "Спросите о платежах, лимитах, проверке...",
-  "Assistant InstaPay": "Ассистент InstaPay"
+  "Assistant InstaPay": "Ассистент InstaPay",
+  "Beneficiary type": "Тип получателя",
+  "Select one or more": "Выберите один или несколько",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "У вас нет активного кошелька для отправки. Активируйте кошелёк и повторите попытку."
 }

@@ -6547,5 +6547,8 @@
   "What fees will I pay on a transfer?": "Փոխանցման համար ի՞նչ վճարներ եմ վճարելու։",
   "The assistant is unavailable right now. Please try again shortly, or email support@insta-pay.ch.": "Օգնականն այս պահին հասանելի չէ։ Խնդրում ենք քիչ անց կրկին փորձել կամ գրել support@insta-pay.ch հասցեին։",
   "Ask about payments, limits, verification...": "Հարցրեք վճարումների, սահմանաչափերի, հաստատման մասին...",
-  "Assistant InstaPay": "InstaPay օգնական"
+  "Assistant InstaPay": "InstaPay օգնական",
+  "Beneficiary type": "Շահառուի տեսակը",
+  "Select one or more": "Ընտրեք մեկ կամ մի քանիսը",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Դուք չունեք ակտիվ դրամապանակ ուղարկելու համար։ Խնդրում ենք ակտիվացնել դրամապանակ և կրկին փորձել։"
 }
