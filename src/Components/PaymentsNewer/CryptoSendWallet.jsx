@@ -74,6 +74,7 @@ const CryptoSendWallet = ({ setWallet, setSubStep, wallet }) => {
         <Button
           size="sm"
           style={{
+            height: "40px",
             border: "none",
             outline: "none",
             background:
@@ -86,8 +87,8 @@ const CryptoSendWallet = ({ setWallet, setSubStep, wallet }) => {
             alignItems: "center",
             width: "60%",
             minWidth: "fit-content",
-            padding: ".75rem 2rem",
-            borderRadius: "12px",
+            padding: "0 2rem",
+            borderRadius: "10px",
           }}
           className="i_t_button"
           onClick={() => setSubStep((prev) => prev + 1)}

@@ -108,6 +108,9 @@ const ExchangeCardView = ({
               <ArrowUpDown size={20} />
             </button>
           </div>
+          {insufficient && (
+            <p className={s.exError}>{t(`Insufficient Balance in PKR`).replace("PKR", from)}</p>
+          )}
           <p className={s.exLine}>
             {t("Rate")}
             <b>{rate ? `1 ${from} = ${rate} ${to}` : "—"}</b>
@@ -118,14 +121,8 @@ const ExchangeCardView = ({
           </p>
           {error && <p className={s.exError}>{error}</p>}
           <button type="submit" className={s.exCta} disabled={disabled}>
-            {insufficient ? (
-              t(`Insufficient Balance in PKR`).replace("PKR", from)
-            ) : (
-              <>
-                <ArrowLeftRight size={16} />
-                {loading ? t("Fetching Rates...") : t("Exchange {{from}} to {{to}}", { from, to })}
-              </>
-            )}
+            <ArrowLeftRight size={16} />
+            {loading ? t("Fetching Rates...") : t("Exchange {{from}} to {{to}}", { from, to })}
           </button>
         </form>
       ) : (

@@ -39,6 +39,7 @@ import SoleTradedDocs from "./SoleTradedDocs";
 import VerificationPayment from "./VerificationPayment";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import AdditionalFilesSection from "./AdditionalFilesSection";
+import { verifyPaytentlyReturn } from "../../utils/Functions/paytently";
 import useDraft from "../../hooks/GeneralUse/useDraft";
 import {
   BUSINESS_PROFILE_SCOPE,
@@ -144,6 +145,14 @@ const KYB = () => {
   const code = queryParams.get("code");
   const scroll = queryParams.get("scroll");
   const isModalOpen = !!status;
+
+  // Settles a Paytently card fee now in case the webhook is late; no-op for other providers.
+  useEffect(() => {
+    if (!status) return;
+    verifyPaytentlyReturn().then((result) => {
+      if (result) verifyToken(true);
+    });
+  }, [status]);
 
   useEffect(() => {
     if (scroll === "additional-files") {
@@ -561,6 +570,7 @@ const KYB = () => {
       );
 
       const decrypted = decryptData(res.data.data);
+      setUserDetails((prev) => ({ ...prev, company: decrypted?.results?.company }));
 
       if (draftEnabled) {
         const submittedSlots = fileEntries
@@ -1140,7 +1150,7 @@ const KYB = () => {
                   border: "none",
                   outline: "none",
                   background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                  borderRadius: "6px",
+                  borderRadius: "10px",
                   marginTop: "1.5rem",
                 }}
                 onClick={() => setShowProcessSuccessModal(false)}

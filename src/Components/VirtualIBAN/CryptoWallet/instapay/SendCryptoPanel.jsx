@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Plus } from "react-feather";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
@@ -46,9 +46,13 @@ const channelKey = (channel, index) => channel?._id || `${getChannelAddress(chan
  * Send button fetches the quote, and the review, OTP and receipt take the same slot.
  * The rules all live in useCryptoSendFlow, shared with SendCryptoModal.
  */
-const SendCryptoPanel = ({ wallets = [], wallet, onSelectWallet }) => {
+const SendCryptoPanel = ({ wallets = [], wallet, onSelectWallet, onActionComplete }) => {
   const { t } = useTranslation();
   const flow = useCryptoSendFlow(wallet);
+
+  useEffect(() => {
+    if (flow.step === SEND_STEPS.DONE) onActionComplete?.();
+  }, [flow.step]);
   const [sendTo, setSendTo] = useState("saved");
   const [isAddBeneficiaryOpen, setIsAddBeneficiaryOpen] = useState(false);
 

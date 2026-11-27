@@ -1,21 +1,9 @@
 .container {
-  padding: 1.5rem 2rem 1rem;
+  padding: 0 var(--page-gutter) 1rem;
   min-height: 100vh;
-  font-family: "Manrope";
+  font-family: "Inter", sans-serif;
   .top {
-    margin-bottom: 4rem;
     position: relative;
-
-    h4 {
-      font-size: 32px;
-      background:
-        linear-gradient(3.1deg, #e64067 -102.47%, #5926f0 25.82%, #4828a0 128.05%), #ffffff;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-fill-color: transparent;
-      margin-bottom: 1rem;
-    }
 
     p {
       font-size: 17px;
@@ -28,9 +16,9 @@
     gap: 12px;
     width: 100%;
     background-color: #fff;
-    box-shadow: 0.146323204040527px 25px 67px rgba(0, 0, 0, 0.07);
     padding: 24px;
     border-radius: 16px;
+    border: 1px solid #eff1f6;
 
     .tap {
       display: flex;
@@ -47,7 +35,7 @@
       text-edge: cap;
 
       /* Big Screen/BodyLarge */
-      font-family: Manrope;
+      font-family: "Inter", sans-serif;
       font-size: 16px;
       font-style: normal;
       font-weight: 600;
@@ -63,7 +51,7 @@
       padding: var(--SPACING-spacing-1, 12px) var(--SPACING-spacing-2, 18px);
       flex-direction: column;
       border-radius: var(--RADIUS-radius-4, 16px);
-      box-shadow: 0px 16px 32px -12px rgba(88, 92, 95, 0.1);
+      border: 1px solid #eff1f6;
       align-items: flex-start;
       gap: var(--SPACING-spacing-4, 20px);
 
@@ -195,7 +183,7 @@
                 color: #fff;
                 leading-trim: both;
                 text-edge: cap;
-                font-family: "Clash Display";
+                font-family: "Inter", sans-serif;
                 font-size: 10px;
                 font-style: normal;
                 font-weight: 500;
@@ -217,7 +205,7 @@
 
               .lab {
                 color: #fff;
-                font-family: Manrope;
+                font-family: "Inter", sans-serif;
                 font-size: 7px;
                 font-style: normal;
                 font-weight: 700;
@@ -272,7 +260,7 @@
 
           h2 {
             color: #fff;
-            font-family: "SF Pro Text";
+            font-family: "Inter", sans-serif;
             font-style: normal;
             font-weight: 700;
             font-size: 14px;
@@ -285,7 +273,7 @@
           h3 {
             color: #fff;
             text-align: center;
-            font-family: Manrope;
+            font-family: "Inter", sans-serif;
             font-size: 8px;
             font-style: normal;
             font-weight: 800;
@@ -352,14 +340,14 @@
 
         button {
           display: flex;
-          padding: var(--RADIUS-radius-1, 4px) 13px var(--RADIUS-radius-1, 4px) 7px;
+          padding: 0 13px 0 7px;
+          height: 32px;
           align-items: center;
           gap: 6px;
-          border-radius: var(--RADIUS-radius-2, 8px);
-          border: 1px solid var(--COLORS-Neutral-200, #e8e8e8);
+          border-radius: 8px;
+          border: 1px solid var(--COLORS-Neutral-200, #eff1f6);
           background: var(--COLORS-Primary-300, #5926f0);
-          box-shadow: 0px 2px 4px 0px rgba(27, 28, 29, 0.04);
-          font-family: Manrope;
+          font-family: "Inter", sans-serif;
           font-size: 14px;
           font-style: normal;
           color: white;
@@ -385,7 +373,7 @@
         align-self: stretch;
         border-radius: var(--RADIUS-radius-4, 16px);
         background: #fff;
-        box-shadow: 0px 16px 32px -12px rgba(88, 92, 95, 0.1);
+        border: 1px solid #eff1f6;
         position: relative;
 
         svg {
@@ -489,7 +477,7 @@
         gap: var(--SPACING-spacing-4, 32px);
         border-radius: var(--RADIUS-radius-4, 16px);
         background: #fafafa;
-        box-shadow: 0px 16px 32px -12px rgba(88, 92, 95, 0.1);
+        border: 1px solid #eff1f6;
 
         .title {
           color: #000;
@@ -722,9 +710,9 @@
   .table {
     .menu {
       background-color: #fff;
-      box-shadow: 0.146323204040527px 25px 67px rgba(0, 0, 0, 0.07);
       padding: 16px 19px;
       border-radius: 12px;
+      border: 1px solid #eff1f6;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -774,7 +762,7 @@
           display: flex;
           align-items: center;
           background: #fff;
-          box-shadow: 0px 4.327520847320557px 35.70204544067383px 0px rgba(0, 0, 0, 0.06);
+          border: 1px solid #eff1f6;
           padding: 7px 13px;
           border-radius: 12px;
 
@@ -797,9 +785,9 @@
 
       .table_header {
         background-color: #fff;
-        box-shadow: 0.146323204040527px 25px 67px rgba(0, 0, 0, 0.07);
         padding: 16px 19px;
         border-radius: 12px;
+        border: 1px solid #eff1f6;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -841,7 +829,6 @@
           border-top: 1px solid rgba(0, 0, 0, 0.04);
           border-bottom: 1px solid rgba(0, 0, 0, 0.04);
           background: #fff;
-          box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.04);
           cursor: pointer;
 
           div {
@@ -861,7 +848,6 @@
           border-top: 1px solid rgba(0, 0, 0, 0.04);
           border-bottom: 1px solid rgba(0, 0, 0, 0.04);
           background: #fff;
-          box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.04);
           cursor: pointer;
 
           // .details {
@@ -1265,7 +1251,7 @@
           display: flex;
           align-items: center;
           background: #fff;
-          box-shadow: 0px 4.327520847320557px 35.70204544067383px 0px rgba(0, 0, 0, 0.06);
+          border: 1px solid #eff1f6;
           padding: 7px 13px;
           border-radius: 12px;
           flex: 1;
@@ -1325,11 +1311,5 @@
     .detailsContainer {
       grid-template-columns: 1fr !important;
     }
-  }
-}
-
-@media screen and (max-width: 1000px) {
-  .top {
-    margin-bottom: 0rem !important;
   }
 }

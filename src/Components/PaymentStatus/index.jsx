@@ -5,6 +5,7 @@ import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import axios from "axios";
 import { fetchBeneficiaryDetails } from "../../hooks/BeneficiaryHooks/useBeneficiaryDetails";
+import { verifyPaytentlyReturn } from "../../utils/Functions/paytently";
 
 const PaymentStatus = () => {
   const { authHeader } = useContext(UserContext);
@@ -49,7 +50,7 @@ const PaymentStatus = () => {
     };
 
     if (status === "success") {
-      fetchDetailsAndRedirect();
+      verifyPaytentlyReturn().finally(fetchDetailsAndRedirect);
     } else {
       const url =
         type === "airtime"

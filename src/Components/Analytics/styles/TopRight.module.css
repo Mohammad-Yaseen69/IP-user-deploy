@@ -7,7 +7,7 @@
 
 .top {
   display: flex;
-  padding: 24px 30px;
+  padding: 20px;
   border-radius: 18.058px;
   background: #fafafa;
   justify-content: space-between;
@@ -151,7 +151,7 @@
   box-shadow:
     0px 12.415px 48.531px -28.78px rgba(0, 0, 0, 0.25),
     0px 75px 197px -99.5px rgba(89, 38, 240, 0.15) inset;
-  padding: 53px 87px;
+  padding: 24px;
 }
 
 .tabs {
@@ -289,7 +289,7 @@
   }
 
   .top {
-    padding: 14px 20px;
+    padding: 20px;
     border-radius: 14px;
   }
 
@@ -353,7 +353,7 @@
 
   .bottom {
     border-radius: 15px;
-    padding: 24px 36px;
+    padding: 24px;
   }
 
   .tabs {

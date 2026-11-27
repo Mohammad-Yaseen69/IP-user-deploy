@@ -241,10 +241,11 @@ const AdditionalDocumentModal = ({ isOpen, toggle, accounType }) => {
               type="button"
               onClick={handleRedirect}
               style={{
+                height: "40px",
                 width: "100%",
-                padding: "12px 24px",
+                padding: "0 24px",
                 borderRadius: "10px",
-                fontWeight: "700",
+                fontWeight: "500",
                 fontSize: "14px",
                 border: "none",
                 outline: "none",

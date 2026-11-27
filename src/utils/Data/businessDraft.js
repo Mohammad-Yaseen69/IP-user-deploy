@@ -25,6 +25,10 @@ export const IBAN_DOC_KEY_TO_SLOT = {
   ...Object.fromEntries(IBAN_POA_DOC_KEYS.map((key) => [key, IBAN_POA_SLOT])),
 };
 
+export const IBAN_RHUB_DOC_KEYS = {
+  due_diligence_questionnaire: "due_diligence_questionnaire",
+};
+
 export const KYB_DOCS_BY_TYPE = {
   private: [
     {
@@ -154,9 +158,8 @@ export const draftFilesToIbanDocs = (draftFiles = []) => {
       docs[variant] = toDraftFileRef(entry);
       return;
     }
-    const key = Object.keys(IBAN_DOC_KEY_TO_SLOT).find(
-      (docKey) => IBAN_DOC_KEY_TO_SLOT[docKey] === entry.slot,
-    );
+    const keyToSlot = { ...IBAN_DOC_KEY_TO_SLOT, ...IBAN_RHUB_DOC_KEYS };
+    const key = Object.keys(keyToSlot).find((docKey) => keyToSlot[docKey] === entry.slot);
     if (key) docs[key] = toDraftFileRef(entry);
   });
   return docs;

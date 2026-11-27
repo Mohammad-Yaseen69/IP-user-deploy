@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import styles from "./styles/index.module.scss";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import TransactionsTable from "./TransactionsTable";
 import { useContext } from "react";
 import { UserContext } from "../../Context/UserContext";
@@ -22,10 +22,10 @@ const TransactionsNewApi = () => {
       {userDetails && (
         <>
           <div className={styles.container}>
-            <div className={styles.top}>
-              <h4>{t("Transactions")}</h4>
-              <TopRight />
-            </div>
+            <PageHeader
+              title={t("Transactions")}
+              subtitle={t("Every payment in and out of your account.")}
+            />
             <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem" }}>
               <button onClick={() => navigate("/payments")} type="button" className={s.btnPrimary}>
                 <Plus size={16} />

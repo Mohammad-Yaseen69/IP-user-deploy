@@ -3,7 +3,7 @@
 .drawer {
   --cw-accent: #5926f0;
   --cw-accent-soft: #f4f1ff;
-  --cw-border: #eaecf0;
+  --cw-border: #eff1f6;
   --cw-surface: #ffffff;
   --cw-surface-muted: #f7f7fb;
   --cw-text: #101828;
@@ -11,36 +11,15 @@
   --cw-text-muted: #98a2b3;
   --bp-success: #079455;
   --bp-warning: #dc6803;
-  font-family: "DM Sans", Inter, "Segoe UI", sans-serif;
+  font-family: "Inter", sans-serif;
   color: var(--cw-text);
 }
 
 .page {
   position: relative;
   min-height: 100vh;
-  padding: 32px 40px 48px;
+  padding: 0 var(--page-gutter) 48px;
   background: #f8f9fc;
-}
-
-.top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 20px;
-}
-
-.title {
-  margin: 0;
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: -0.4px;
-}
-
-.sub {
-  margin: 4px 0 0;
-  font-size: 14px;
-  color: var(--cw-text-secondary);
 }
 
 .grid {
@@ -262,7 +241,7 @@
   padding: 0 16px;
   border-radius: 10px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
 
   &:disabled {
@@ -732,7 +711,7 @@
 
 @media (max-width: 1000px) {
   .page {
-    padding: 20px 16px 96px;
+    padding: 0 16px 96px;
   }
 
   .grid {

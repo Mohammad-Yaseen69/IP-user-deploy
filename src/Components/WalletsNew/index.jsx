@@ -1,21 +1,22 @@
 import { useTranslation } from "react-i18next";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import Top from "./Top";
 import WalletLimits from "./WalletLimits";
 import WalletLedger from "./WalletLedger";
-import ComingUp from "./ComingUp";
+// import ComingUp from "./ComingUp";
 import axios from "axios";
+import { getLimits } from "./getLimits";
 import { UserContext } from "../../Context/UserContext";
 import QrGenerate from "../Settings/QrGenerate";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
-import { getLimits } from "./getLimits";
 // import { useLocation } from "react-router"
 import CurConversion from "../HomeNewUpdated/CurConversion";
 import MoneyInOut from "../../Common/WalletUI/MoneyInOut";
 import { useMoneyInOut } from "../../Common/WalletUI/useMoneyInOut";
 import u from "../../Common/WalletUI/ui.module.scss";
 
+// Lives in its own file so other screens can load it without the whole page; re-exported for old imports.
 export { getLimits };
 
 const WalletsNew = () => {
@@ -74,21 +75,18 @@ const WalletsNew = () => {
         <QrGenerate wallets={userWallets?.filter((item) => !item?.qrCode?.url)} />
       )}
       <div className={u.page}>
-        <header className={u.header}>
-          <div className={u.headerText}>
-            <h1>{t("My Wallets")}</h1>
-            <p>
+        <PageHeader
+          title={t("My Wallets")}
+          subtitle={
+            <>
               {currencyCount === 1
                 ? t("1 currency in one wallet.")
                 : t("{{n}} currencies in one wallet.", { n: currencyCount })}
               {currentWallet?.wallet_id &&
                 ` ${t("Wallet ID")} ${currentWallet?.wallet_type?.toUpperCase()}-${currentWallet.wallet_id.toUpperCase()}.`}
-            </p>
-          </div>
-          <div className={u.headerRight}>
-            <TopRight position="static" />
-          </div>
-        </header>
+            </>
+          }
+        />
         <div className={u.content}>
           <Top currentWallet={currentWallet} setCurrentWallet={setCurrentWallet} data={data} />
 
@@ -112,7 +110,7 @@ const WalletsNew = () => {
                 currentWallet={currentWallet}
               />
             )}
-            {can("schedules.view") && <ComingUp />}
+            {/* {can("schedules.view") && <ComingUp />} */}
           </div>
 
           {can("transactions.wallet.list") && <WalletLedger currentWallet={currentWallet} />}

@@ -1,7 +1,9 @@
 import { useContext, useEffect, useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft, Inbox, Plus } from "react-feather";
 import { UserContext } from "../../../../Context/UserContext";
+import { cryptoPayoutQueryKeys } from "../../../../hooks/Payments/useCryptoPayout";
 import { usePermission } from "../../../../hooks/GeneralUse/usePermission";
 import useEffectivePermission, {
   PERMISSIONS,
@@ -19,7 +21,19 @@ const InstapayCryptoWallets = () => {
   const can = usePermission();
   const hasPermission = useEffectivePermission();
   const canSendCrypto = hasPermission(PERMISSIONS.CRYPTO_PAYOUT);
-  const { userWallets, getUserWallets } = useContext(UserContext);
+  const { userWallets, getUserWallets, refetchBalances } = useContext(UserContext);
+  const queryClient = useQueryClient();
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const refreshHub = () => {
+    setRefreshKey((key) => key + 1);
+    refetchBalances?.();
+    queryClient.invalidateQueries({ queryKey: ["crypto"] }, { cancelRefetch: false });
+    queryClient.invalidateQueries(
+      { queryKey: cryptoPayoutQueryKeys.all },
+      { cancelRefetch: false },
+    );
+  };
 
   const wallets = useMemo(() => (userWallets || []).filter(isLiveCryptoWallet), [userWallets]);
 
@@ -53,7 +67,7 @@ const InstapayCryptoWallets = () => {
         {t("My crypto wallets")}
       </button>
       <div style={{ marginTop: 14 }}>
-        <InstapayWalletDetail wallet={selectedWallet} />
+        <InstapayWalletDetail wallet={selectedWallet} refreshKey={refreshKey} />
       </div>
     </section>
   ) : (
@@ -65,12 +79,6 @@ const InstapayCryptoWallets = () => {
             {t("Hold, send and convert crypto from your InstaPay balances.")}
           </p>
         </div>
-        {hasWallets && can("wallet.currencies.add") && (
-          <button type="button" className={styles.addBtn} onClick={() => setShowAddCurrency(true)}>
-            <Plus size={16} />
-            {t("Add crypto wallet")}
-          </button>
-        )}
       </div>
 
       {hasWallets ? (
@@ -83,6 +91,18 @@ const InstapayCryptoWallets = () => {
               onSend={canSendCrypto ? (w) => setSendWalletId(w?._id) : undefined}
             />
           ))}
+          {can("wallet.currencies.add") && (
+            <button
+              type="button"
+              className={styles.addCard}
+              onClick={() => setShowAddCurrency(true)}
+            >
+              <span className={styles.addCardIcon}>
+                <Plus size={20} />
+              </span>
+              {t("Add crypto wallet")}
+            </button>
+          )}
         </div>
       ) : (
         <div className={styles.empty}>
@@ -127,6 +147,7 @@ const InstapayCryptoWallets = () => {
             wallets={wallets}
             wallet={sendWallet}
             onSelectWallet={setSendWalletId}
+            onActionComplete={refreshHub}
           />
         )}
       </div>

@@ -6,7 +6,7 @@ import { Button, Card, CardBody } from "reactstrap";
 import { useNavigate } from "react-router";
 import InstaPayLoader from "../Loader";
 import { ArrowLeft } from "./Icons";
-const TopRight = React.lazy(() => import("../topRight"));
+const PageHeader = React.lazy(() => import("../../Common/PageHeader"));
 const Tabs = React.lazy(() => import("./Tabs"));
 const Basic = React.lazy(() => import("./Basic"));
 const Password = React.lazy(() => import("./Password"));
@@ -42,6 +42,7 @@ const REDESIGNED_TABS = [
   "How Others Can Find You",
   "Financial Info",
   "Manage Saved Cards",
+  "API Key",
 ];
 
 const Settings = () => {
@@ -67,13 +68,10 @@ const Settings = () => {
       <Suspense fallback={<InstaPayLoader />}>
         {window.innerWidth > 1000 ? (
           <div className={styles.container}>
-            <div className={styles.top}>
-              <div className={styles.titles}>
-                <h4>{t("Settings")}</h4>
-                <p>{t("Your account, security and preferences.")}</p>
-              </div>
-              <TopRight />
-            </div>
+            <PageHeader
+              title={t("Settings")}
+              subtitle={t("Your account, security and preferences.")}
+            />
             <div className={styles.bottom}>
               <Tabs
                 currentTab={currentTab}

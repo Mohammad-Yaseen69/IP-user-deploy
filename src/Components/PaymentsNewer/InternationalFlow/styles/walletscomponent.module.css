@@ -20,7 +20,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
@@ -161,7 +161,7 @@
 
 .left span {
   color: rgba(255, 255, 255, 0.8);
-  font-family: "Red Hat Display";
+  font-family: "Inter", sans-serif;
   font-size: 7.339px;
   font-style: normal;
   font-weight: 600;
@@ -170,7 +170,7 @@
 
 .left h4 {
   color: #fff;
-  font-family: "Clash Display";
+  font-family: "Inter", sans-serif;
   font-size: 20.056px;
   font-style: normal;
   font-weight: 600;
@@ -194,7 +194,7 @@
 .bottom p {
   margin-bottom: 0;
   color: rgba(255, 255, 255, 0.8);
-  font-family: "Red Hat Display";
+  font-family: "Inter", sans-serif;
   font-size: 7.339px;
   font-style: normal;
   font-weight: 600;
@@ -203,7 +203,7 @@
 
 .bottom h3 {
   color: #fff;
-  font-family: "Clash Display";
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
@@ -220,7 +220,7 @@
   text-align: right;
   leading-trim: both;
   text-edge: cap;
-  font-family: "Clash Display";
+  font-family: "Inter", sans-serif;
   font-size: 7.339px;
   font-style: normal;
   font-weight: 600;
@@ -251,7 +251,7 @@
   color: var(--COLORS-Neutral-1000, #333);
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.7rem;
   font-style: normal;
   font-weight: 600;

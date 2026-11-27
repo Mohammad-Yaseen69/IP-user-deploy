@@ -6,7 +6,11 @@ import Skeleton from "../../../Common/WalletUI/Skeleton";
 import u from "../../../Common/WalletUI/ui.module.scss";
 import { UserContext } from "../../../Context/UserContext";
 import { formatCurrency } from "../../../Helper/AmountFormat";
+import usdc from "../files/usdc.svg";
+import usdt from "../files/usdt.svg";
 import d from "./dashboard.module.scss";
+
+const COIN_ICONS = { USDT: usdt, USDC: usdc };
 
 // Shows the user's crypto wallets when they have any, otherwise the live prices the dashboard always showed.
 const CryptoBalances = ({ tickers = [], hidden, pricesLoading = false }) => {
@@ -57,21 +61,28 @@ const CryptoBalances = ({ tickers = [], hidden, pricesLoading = false }) => {
               </div>
             ))
           : hasWallets
-            ? wallets.map((wallet) => (
-                <div key={wallet?._id} className={d.crypto}>
-                  <p className={d.cryptoTop}>
-                    <span className={d.cryptoIcon}>
-                      <Coins size={14} />
-                    </span>
-                    {wallet?.currency?.code}
-                    <small>{wallet?.currency?.name}</small>
-                  </p>
-                  <p className={d.cryptoValue}>
-                    {hidden ? "••••••" : formatCurrency(wallet?.balance?.available ?? 0, true)}{" "}
-                    {wallet?.currency?.code}
-                  </p>
-                </div>
-              ))
+            ? wallets.map((wallet) => {
+                const icon = COIN_ICONS?.[wallet?.currency?.code?.toUpperCase()];
+                return (
+                  <div key={wallet?._id} className={d.crypto}>
+                    <p className={d.cryptoTop}>
+                      {icon ? (
+                        <img src={icon} alt="" />
+                      ) : (
+                        <span className={d.cryptoIcon}>
+                          <Coins size={14} />
+                        </span>
+                      )}
+                      {wallet?.currency?.code}
+                      <small>{wallet?.currency?.name}</small>
+                    </p>
+                    <p className={d.cryptoValue}>
+                      {hidden ? "••••••" : formatCurrency(wallet?.balance?.available ?? 0, true)}{" "}
+                      {wallet?.currency?.code}
+                    </p>
+                  </div>
+                );
+              })
             : tickers.map((item) => (
                 <div key={item.name} className={d.crypto}>
                   <p className={d.cryptoTop}>

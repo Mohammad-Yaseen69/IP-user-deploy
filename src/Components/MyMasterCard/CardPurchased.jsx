@@ -1599,12 +1599,14 @@ const CardPurchased = ({
             <button
               type="submit"
               style={{
+                height: "40px",
+                display: "inline-flex",
                 border: "none",
                 outline: "none",
-                padding: "10px 18px",
+                padding: "0 18px",
                 fontWeight: 600,
-                fontSize: "15px",
-                borderRadius: "8px",
+                fontSize: "14px",
+                borderRadius: "10px",
                 background: "#5926F0",
                 color: "white",
                 float: "inline-end",
@@ -1687,11 +1689,13 @@ const CardPurchased = ({
               onClick={handleDownload}
               disabled={downloading}
               style={{
+                height: "32px",
+                display: "inline-flex",
                 border: "none",
                 outline: "none",
-                padding: "7px 15px",
-                borderRadius: "5px",
-                fontWeight: 600,
+                padding: "0 15px",
+                borderRadius: "8px",
+                fontWeight: 500,
                 background: downloading ? "#ccc" : "#5526e0",
                 color: "white",
                 cursor: downloading ? "not-allowed" : "pointer",

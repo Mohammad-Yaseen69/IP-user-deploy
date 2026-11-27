@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router";
 import { UserContext } from "../../Context/UserContext";
 import { ChevronLeft } from "react-feather";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 
 //  Lazy-loaded components
 const PaymentAction = lazy(() => import("./PaymentAction"));
@@ -187,37 +187,37 @@ const PaymentsNewer = () => {
   return (
     <>
       <div className={styles.container}>
-        <div className={styles.top}>
-          <h4 style={{ marginBottom: ".2rem" }}>{t("Payments")}</h4>
-          {step > 1 && (
-            <button
-              onClick={resetToMain}
-              style={{
-                fontSize: ".75rem",
-                padding: "4px 8px",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "6px",
-                borderRadius: "6px",
-                border: "1px solid #e5e5e5",
-                background: "#fff",
-                color: "#444",
-                cursor: "pointer",
-                marginLeft: "auto",
-              }}
-              aria-label={t("Go back to main menu")}
-            >
-              <ChevronLeft color="#5826e9" size={14} />
-              <span style={{ fontWeight: 600 }}>{t("Go back to main menu")}</span>
-            </button>
-          )}
-          {step === 1 && (
-            <p style={{ marginBottom: 0 }}>
-              {t("Select the option that matches your needs from the list below:")}
-            </p>
-          )}
-          <TopRight />
-        </div>
+        <PageHeader
+          title={t("Payments")}
+          subtitle={
+            step === 1 && t("Select the option that matches your needs from the list below:")
+          }
+        />
+
+        {step > 1 && (
+          <button
+            onClick={resetToMain}
+            style={{
+              height: "32px",
+              justifyContent: "center",
+              fontSize: "13px",
+              padding: "0 8px",
+              marginBottom: "16px",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              borderRadius: "8px",
+              border: "1px solid #e5e5e5",
+              background: "#fff",
+              color: "#444",
+              cursor: "pointer",
+            }}
+            aria-label={t("Go back to main menu")}
+          >
+            <ChevronLeft color="#5826e9" size={14} />
+            <span style={{ fontWeight: 500 }}>{t("Go back to main menu")}</span>
+          </button>
+        )}
 
         {step === 1 && <PaymentAction setAction={setAction} setStep={setStep} />}
 

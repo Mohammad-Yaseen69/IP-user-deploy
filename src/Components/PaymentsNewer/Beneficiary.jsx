@@ -294,11 +294,15 @@ const PaymentsBeneficiary = ({
                 <button
                   style={{
                     all: "unset",
-                    padding: ".3rem 1rem",
-                    fontSize: ".6rem",
+                    height: "32px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "0 1rem",
+                    fontSize: "13px",
                     background:
                       "linear-gradient(277.06deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%), #D9D9D9",
-                    borderRadius: "40px",
+                    borderRadius: "8px",
                     boxShadow:
                       "0px 3.3496174812316895px 11.723660469055176px -3.3496174812316895px rgba(89, 38, 240, 0.25)",
                     cursor: "pointer",
@@ -318,10 +322,14 @@ const PaymentsBeneficiary = ({
                 <button
                   style={{
                     all: "unset",
-                    padding: ".3rem 1rem",
-                    fontSize: ".6rem",
+                    height: "32px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "0 1rem",
+                    fontSize: "13px",
                     background: "white",
-                    borderRadius: "40px",
+                    borderRadius: "8px",
                     boxShadow:
                       "0px 3.3496174812316895px 11.723660469055176px -3.3496174812316895px rgba(89, 38, 240, 0.25)",
                     cursor: "pointer",
@@ -353,7 +361,8 @@ const PaymentsBeneficiary = ({
           style={{
             display: "flex",
             alignItems: "center",
-            padding: ".25rem .75rem",
+            height: "40px",
+            padding: "0 .75rem",
             borderRadius: "10px",
             background: "#fff",
             position: "relative",
@@ -380,13 +389,17 @@ const PaymentsBeneficiary = ({
               color="primary"
               disabled={isLoading}
               style={{
+                height: "32px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
                 position: "absolute",
                 top: "50%",
                 right: ".75rem",
                 transform: "translateY(-50%)",
-                borderRadius: "7px",
-                padding: "6px 10px",
-                fontSize: ".7rem",
+                borderRadius: "8px",
+                padding: "0 10px",
+                fontSize: "13px",
               }}
             >
               {t("Search")}
@@ -716,7 +729,7 @@ const PaymentsBeneficiary = ({
               backgroundBlendMode: "overlay, normal",
               boxShadow:
                 "0px 11.90068244934082px 8.655041694641113px -5.409400939941406px rgba(89, 38, 240, 0.17)",
-              borderRadius: "6px",
+              borderRadius: "8px",
               display: "flex",
               alignItems: "center",
             }}

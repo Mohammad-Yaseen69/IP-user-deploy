@@ -168,7 +168,7 @@ const LoginForm = ({ setIsLoginForm, setIsForgot, country }) => {
               <div className={styles.input_container}>
                 <label>{loginMethod === "phone" ? t("Phone Number") : t("Email")}</label>
                 {loginMethod === "phone" ? (
-                  <PhoneInput setPhone={setEmail} country={country} />
+                  <PhoneInput size="lg" setPhone={setEmail} country={country} />
                 ) : (
                   <input
                     type="email"

@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import { Search } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
-import useWindowWidth from "../../utils/useWindowWidth";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import styles from "./styles/Index.module.css";
 import ActivityTable from "./components/Table";
 import { EntityDropdown } from "./components/EntityDropdown";
@@ -12,7 +11,6 @@ import { ActionDropdown } from "./components/ActionDropdown";
 import adminActivitiesData from "../../Data/userActivitiesData.json";
 import Paginations from "../../Common/Component/Paginations";
 const LogActivity = () => {
-  const width = useWindowWidth();
   const { t } = useTranslation();
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -52,14 +50,10 @@ const LogActivity = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.top}>
-        <div className={styles.headerTitle}>
-          <h1>{t("Activity Feed")}</h1>
-          <p>{t("Stay on top of user actions and permission settings.")}</p>
-        </div>
-
-        {width > 1000 && <TopRight />}
-      </div>
+      <PageHeader
+        title={t("Activity Feed")}
+        subtitle={t("Stay on top of user actions and permission settings.")}
+      />
       <div className={styles.main}>
         <div className={styles.searchCont}>
           <div className={styles.searchBox}>

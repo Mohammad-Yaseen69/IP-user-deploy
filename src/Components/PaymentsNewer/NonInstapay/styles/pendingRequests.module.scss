@@ -148,7 +148,7 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          border-radius: 6px;
+          border-radius: 8px;
           background: transparent;
           border: none;
           outline: none;
@@ -156,6 +156,7 @@
           font-size: 15px;
           font-weight: 600;
           cursor: pointer;
+          height: 32px;
         }
       }
     }
@@ -217,8 +218,12 @@
 
   button {
     width: 100%;
-    padding: 10px;
-    border-radius: 6px;
+    padding: 0 10px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
     font-weight: 600;
     transition: all 0.2s;
     border: none;

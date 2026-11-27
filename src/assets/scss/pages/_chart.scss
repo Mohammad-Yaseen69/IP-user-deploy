@@ -75,7 +75,7 @@ $url-4: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAQCAYAAADNo/U5AA
     color: $dark-gray;
     background: $white;
     border: solid 1px $light-gray;
-    font-family: $font-serif;
+    font-family: "Inter", sans-serif;
     font-size: 12px;
     text-align: center;
     .morris-hover-row-label {
@@ -96,7 +96,9 @@ $url-4: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAQCAYAAADNo/U5AA
   background: rgba(49, 49, 49, 0.7);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
   color: $white;
-  font: 10px $font-Montserrat;
+  font:
+    10px "Inter",
+    sans-serif;
   text-align: left;
   white-space: nowrap;
   padding: 5px;
@@ -106,7 +108,9 @@ $url-4: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAQCAYAAADNo/U5AA
   border-radius: 5px;
   .jqsfield {
     color: $white;
-    font: 10px $font-Montserrat;
+    font:
+      10px "Inter",
+      sans-serif;
     text-align: left;
   }
 }

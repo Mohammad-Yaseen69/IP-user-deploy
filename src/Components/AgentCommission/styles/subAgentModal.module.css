@@ -85,7 +85,7 @@
 }
 
 .stepIndicatorInactive {
-  border: 2px solid #eaecf0;
+  border: 2px solid #eff1f6;
 }
 
 .stepIndicatorCompleted {
@@ -426,7 +426,7 @@
   justify-content: space-between;
   align-items: center;
   padding-top: 16px;
-  border-top: 1px solid #eaecf0;
+  border-top: 1px solid #eff1f6;
   margin-top: 16px;
 }
 
@@ -515,7 +515,7 @@
     align-items: center;
     gap: 16px;
     padding-bottom: 16px;
-    border-bottom: 1px solid #eaecf0;
+    border-bottom: 1px solid #eff1f6;
     margin-bottom: 8px;
   }
 

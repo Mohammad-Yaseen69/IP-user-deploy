@@ -126,7 +126,7 @@
 
 .reviews h5 {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 600;
@@ -234,9 +234,13 @@
 }
 
 .rc_reply_form button {
-  border-radius: 9px;
+  border-radius: 10px;
   background: linear-gradient(296deg, #5926f0 2.47%, #4828a0 99.3%), #fff;
-  padding: 10px 16px;
+  padding: 0 16px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: none;
   outline: none;
   white-space: nowrap;
@@ -280,7 +284,7 @@
 }
 
 .reply_review_card {
-  border-radius: 20.569px;
+  border-radius: 12px;
   background: #fff;
   padding: 36px;
   margin-top: 3.5rem;

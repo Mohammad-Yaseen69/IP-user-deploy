@@ -205,14 +205,18 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
             <button
               onClick={() => setShowAddModal(true)}
               style={{
+                height: "32px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
                 background: "#5926F0",
                 color: "#fff",
                 border: "none",
-                borderRadius: 6,
-                padding: "6px 16px",
+                borderRadius: "8px",
+                padding: "0 16px",
                 fontWeight: 600,
                 cursor: "pointer",
-                fontSize: 14,
+                fontSize: 13,
                 width: "auto",
               }}
             >

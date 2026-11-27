@@ -115,7 +115,7 @@ const formatSubmissionTime = (dateInput) => {
 const getFeeAmount = async ({ payload, authHeader }) => {
   const encryptedData = encryptData(payload);
   const res = await axios.post(
-    `${import.meta.env.VITE_IP_DEV_API}/api/company/kyb-fee-details`,
+    `${import.meta.env.VITE_IP_DEV_API}/api/company/kyb-fee`,
     { data: encryptedData },
     { headers: authHeader },
   );
@@ -238,7 +238,7 @@ const StatusScreen = ({
           width: "100%",
           background: "#FFFFFF",
           borderRadius: "16px",
-          padding: isMobile ? "20px 18px" : "40px 36px",
+          padding: isMobile ? "20px" : "24px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -344,12 +344,16 @@ const StatusScreen = ({
                 <button
                   type="button"
                   style={{
+                    height: "40px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                     background: "#5B3DF5",
                     color: "#FFFFFF",
                     border: "none",
-                    padding: "10px 24px",
-                    borderRadius: "8px",
-                    fontWeight: 600,
+                    padding: "0 24px",
+                    borderRadius: "10px",
+                    fontWeight: 500,
                     fontSize: "14px",
                     cursor: "pointer",
                     transition: "background 0.2s",
@@ -388,7 +392,7 @@ const StatusScreen = ({
           width: "100%",
           background: "#FFFFFF",
           borderRadius: "16px",
-          padding: isMobile ? "20px 18px" : "40px 36px",
+          padding: isMobile ? "20px" : "24px",
           display: "flex",
           flexDirection: "column",
           gap: "24px",

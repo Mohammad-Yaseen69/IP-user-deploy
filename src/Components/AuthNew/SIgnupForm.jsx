@@ -1357,6 +1357,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                 <div className={styles.input_container}>
                   <label>{t("Phone Number")}</label>
                   <PhoneInput
+                    size="lg"
                     setPhone={setPhone}
                     country={countryCode}
                     setCountry={(country) => {
@@ -1423,6 +1424,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                     {t("Phone Number")} ({t("Optional")})
                   </label>
                   <PhoneInput
+                    size="lg"
                     setPhone={setPhone}
                     country={countryCode}
                     setCountry={(country) => {
@@ -1617,7 +1619,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                   textAlign: "center",
                   leadingTrim: "both",
                   textEdge: "cap",
-                  fontFamily: "Manrope",
+                  fontFamily: "Inter, sans-serif",
                   fontSize: "24px",
                   fontStyle: "normal",
                   fontWeight: "700",
@@ -1634,7 +1636,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                   textAlign: "center",
                   leadingTrim: "both",
                   textEdge: "cap",
-                  fontFamily: "Manrope",
+                  fontFamily: "Inter, sans-serif",
                   fontSize: "16px",
                   fontStyle: "normal",
                   fontWeight: "600",
@@ -1671,7 +1673,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                   textAlign: "center",
                   leadingTrim: "both",
                   textEdge: "cap",
-                  fontFamily: "Manrope",
+                  fontFamily: "Inter, sans-serif",
                   fontSize: "24px",
                   fontStyle: "normal",
                   fontWeight: "700",
@@ -1688,7 +1690,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                   textAlign: "center",
                   leadingTrim: "both",
                   textEdge: "cap",
-                  fontFamily: "Manrope",
+                  fontFamily: "Inter, sans-serif",
                   fontSize: "16px",
                   fontStyle: "normal",
                   fontWeight: "600",

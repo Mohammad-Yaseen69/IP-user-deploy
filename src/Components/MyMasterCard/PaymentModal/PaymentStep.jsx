@@ -155,7 +155,7 @@ const PaymentStep = ({
                     cardToWallet
                       ? {
                           color: "#5926F0",
-                          fontFamily: "Manrope",
+                          fontFamily: "Inter, sans-serif",
                           fontSize: "12px",
                           fontStyle: "normal",
                           fontWeight: 700,

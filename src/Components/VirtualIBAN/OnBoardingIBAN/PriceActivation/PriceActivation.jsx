@@ -1,26 +1,19 @@
 import { Info, Plus } from "react-feather";
 import styles from "../style/PriceActivation.module.css";
 import { useTranslation } from "react-i18next";
-import useWindowWidth from "../../../../utils/useWindowWidth";
-import TopRight from "../../../topRight";
+import PageHeader from "../../../../Common/PageHeader";
 import NewActivationPackModal from "./NewActivationPackModal";
 import { useState } from "react";
 
 const PriceActivation = () => {
-  const width = useWindowWidth();
   const [showModal, setShowModal] = useState(false);
   const { t } = useTranslation();
   return (
     <div className={styles.container}>
-      <div className={styles.top}>
-        <div className={styles.headerTitle}>
-          <div className={styles.titleWithBack}>
-            <h1>{t("Business IBAN")}</h1>
-          </div>
-          <p>{t("Activate a dedicated business account to receive and hold company funds.")}</p>
-        </div>
-        <div className={styles.topright}>{width > 1000 && <TopRight />}</div>
-      </div>
+      <PageHeader
+        title={t("Business IBAN")}
+        subtitle={t("Activate a dedicated business account to receive and hold company funds.")}
+      />
       <div className={styles.mainContent}>
         <div className={styles.headerRow}>
           <div>

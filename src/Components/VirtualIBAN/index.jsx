@@ -9,7 +9,7 @@ import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import { getAdditionalFiles, isPendingAdditionalFile } from "../../utils/Functions/additionalFiles";
 import useWindowWidth from "../../utils/useWindowWidth";
 import InstaPayLoader from "../Loader";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import Compliance from "./Compliance";
 import AccountsSidebar from "./components/AccountsSidebar";
 import BalanceHeader from "./components/BalanceHeader";
@@ -31,6 +31,7 @@ import Notifications from "../Notifications";
 import LanguagePicker from "../LanguagePicker";
 import TourButton from "../ProductTour/TourButton";
 import { ChevronLeft } from "react-feather";
+import { MAX_BUSINESS_IBANS } from "../../stateMachines/virtualIbanPayment";
 
 const VirtualBank = () => {
   const { userDetails, selectedAccount, setSelectedAccount } = useContext(UserContext);
@@ -44,6 +45,7 @@ const VirtualBank = () => {
   const [showGetIBAN, setShowGetIBAN] = useState(false);
   const ibanDetailsRef = useRef(null);
   const onboardingRef = useRef(null);
+  const ibanCountWhenOpenedRef = useRef(0);
   const [onboardingStep, setOnboardingStep] = useState("landing");
 
   const ibans = useMemo(() => asVirtualIbanArray(rawIbans), [rawIbans]);
@@ -176,13 +178,15 @@ const VirtualBank = () => {
     if (!selectedAccount && ibans?.length) {
       setSelectedAccount(ibans[0]?._id || ibans[0]?.id);
     }
-    if (ibans?.length) {
+    const gotNewIban = ibans.length > ibanCountWhenOpenedRef.current;
+    if (ibans.length >= MAX_BUSINESS_IBANS || gotNewIban) {
       setShowGetIBAN(false);
     }
   }, [ibans, selectedAccount]);
 
   const handleOpenIBAN = () => {
     if (!canCreateIban) return;
+    ibanCountWhenOpenedRef.current = ibans.length;
     setShowGetIBAN(true);
     setSelectedAccount(null);
   };
@@ -236,28 +240,23 @@ const VirtualBank = () => {
     refetch();
   }, []);
 
-  console.log(rawIbans, "rawIbans");
   return (
     <div className={styles.container}>
-      <div className={styles.top}>
-        <div className={styles.headerTitle}>
-          <h1>
-            {userDetails?.account_type === "business" ? t("Business IBAN") : t("My virtual bank")}
-          </h1>
-          <p>
-            {userDetails?.account_type === "business"
+      {width > 600 && (
+        <PageHeader
+          title={t("My virtual IBAN")}
+          subtitle={
+            userDetails?.account_type === "business"
               ? t("Activate a dedicated business account to receive and hold company funds.")
-              : t("Manage and monitor your InstaPay Virtual Bank Account.")}
-          </p>
-        </div>
-
-        <div className={styles.topright}>{width > 1000 && <TopRight />}</div>
-      </div>
+              : t("Manage and monitor your InstaPay Virtual Bank Account.")
+          }
+        />
+      )}
       {(showGetIBAN || (ibans.length === 0 && canCreateIban)) &&
         userDetails?.account_type === "business" && (
           <div className={styles.mobileTop}>
             <div className={styles.headerTitle}>
-              {onboardingStep !== "landing" && (
+              {(onboardingStep !== "landing" || (showGetIBAN && ibans.length > 0)) && (
                 <ChevronLeft size={22} onClick={() => onboardingRef.current?.back()} />
               )}
               <h1>
@@ -265,9 +264,7 @@ const VirtualBank = () => {
                   ? t("Your pricing")
                   : onboardingStep === "ActivateAccount"
                     ? t("Activate your account")
-                    : userDetails?.account_type === "business"
-                      ? t("Business IBAN")
-                      : t("My virtual bank")}
+                    : t("My virtual IBAN")}
               </h1>
             </div>
             <div className={styles.mobileTopRight}>
@@ -292,7 +289,12 @@ const VirtualBank = () => {
         </div>
       ) : showGetIBAN || (ibans.length === 0 && canCreateIban) ? (
         userDetails?.account_type === "business" ? (
-          <OnboardingIBAN ref={onboardingRef} onStepChange={setOnboardingStep} />
+          <OnboardingIBAN
+            ref={onboardingRef}
+            onStepChange={setOnboardingStep}
+            addNew={showGetIBAN && ibans.length > 0}
+            onCancel={handleBackToDashboard}
+          />
         ) : (
           <IBAN onCreated={handleBackToDashboard} />
         )

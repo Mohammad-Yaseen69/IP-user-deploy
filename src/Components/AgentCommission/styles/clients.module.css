@@ -92,7 +92,7 @@
 .tableContainer {
   background: #ffffff;
   border-radius: 12px;
-  border: 1px solid #eaecf0;
+  border: 1px solid #eff1f6;
   overflow: auto;
   width: 100%;
 }
@@ -149,14 +149,14 @@
 
 .tableHeaderRow {
   background: #eff1f6;
-  border-bottom: 1px solid #eaecf0;
+  border-bottom: 1px solid #eff1f6;
   font-size: 13px;
   font-weight: 600;
   color: #6e7687;
 }
 
 .tableDataRow {
-  border-bottom: 1px solid #eaecf0;
+  border-bottom: 1px solid #eff1f6;
   font-size: 14px;
   color: #475467;
 }

@@ -379,11 +379,12 @@
         align-items: center;
         gap: 10px;
         display: flex;
-        border-radius: var(--RADIUS-radius-2, 8px);
+        border-radius: 12px;
         font-size: 18px;
         font-weight: 600;
         border: none;
         outline: none;
+        height: 56px;
       }
 
       .back {
@@ -555,12 +556,12 @@
         button {
           display: flex;
           width: 124px;
-          height: 36px;
-          padding: 11px 24px;
+          height: 40px;
+          padding: 0 24px;
           justify-content: center;
           align-items: center;
           gap: 10px;
-          border-radius: 6px;
+          border-radius: 10px;
           border: 1px solid #e64067;
           background: #fff;
           color: #000;

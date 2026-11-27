@@ -18,7 +18,7 @@ $mobile: 1000px;
   color: $color;
 }
 
-@mixin button($bg, $color, $height: 36px) {
+@mixin button($bg, $color, $height: 40px) {
   @include type(14px, 500, $color, -0.42px);
   display: inline-flex;
   align-items: center;
@@ -27,7 +27,7 @@ $mobile: 1000px;
   height: $height;
   padding: 0 16px;
   border: 0;
-  border-radius: 6px;
+  border-radius: 10px;
   background: $bg;
   cursor: pointer;
 
@@ -64,18 +64,20 @@ $mobile: 1000px;
 .textBtn {
   @include button(transparent, $primary, 32px);
   padding: 0 8px;
-  font-size: 12px;
+  border-radius: 8px;
+  font-size: 13px;
 }
 
 .sm {
   height: 32px;
   padding: 0 12px;
-  font-size: 12px;
+  border-radius: 8px;
+  font-size: 13px;
 }
 
 .iconBtn {
   @include button($border, $navy);
-  width: 36px;
+  width: 40px;
   padding: 0;
 }
 
@@ -89,7 +91,7 @@ $mobile: 1000px;
 .ledger {
   background: #fff;
   border: 1px solid $border;
-  border-radius: 14px;
+  border-radius: 16px;
 }
 
 // Optional card title above the tabs (wallet page).
@@ -132,7 +134,13 @@ $mobile: 1000px;
     margin-left: 6px;
   }
 
-  &.active {
+  &:focus:not(:focus-visible) {
+    border: 0;
+    border-bottom: 1px solid #d1d6e0;
+  }
+
+  &.active,
+  &.active:focus:not(:focus-visible) {
     color: $primary;
     border-color: $primary;
   }
@@ -154,11 +162,12 @@ $mobile: 1000px;
   width: 360px;
   max-width: 100%;
   height: 40px;
+  margin: 0;
   padding: 0 12px;
   color: $text-2;
   background: #fff;
   border: 1px solid $border;
-  border-radius: 6px;
+  border-radius: 10px;
   box-shadow: 0 1px 0.75px rgba(27, 31, 42, 0.04);
 
   input {
@@ -189,6 +198,10 @@ $mobile: 1000px;
   overflow: hidden;
   border-radius: 10px;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.headScroll {
+  overflow: hidden;
 }
 
 .scroll {
@@ -757,6 +770,27 @@ p.note {
   }
 }
 
+@media screen and (min-width: #{$mobile + 1}) {
+  .ledger {
+    --ledger-tools-height: 68px;
+  }
+
+  .tools {
+    position: sticky;
+    top: var(--page-header-height);
+    z-index: 5;
+    min-height: var(--ledger-tools-height);
+    background: #fff;
+  }
+
+  .headScroll {
+    position: sticky;
+    top: calc(var(--page-header-height) + var(--ledger-tools-height));
+    z-index: 4;
+    background: #fff;
+  }
+}
+
 @media screen and (max-width: 675px) {
   .picker {
     right: -68px;
@@ -805,4 +839,21 @@ p.note {
     grid-area: st;
     justify-self: end;
   }
+}
+
+.header {
+  padding: 20px 20px 12px;
+}
+
+.main_title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.main_description {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #6b7280;
 }

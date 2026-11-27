@@ -25,7 +25,7 @@
 
 .top h1 {
   color: #5926f0;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 800;
@@ -36,7 +36,7 @@
 
 .top h2 {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 32px;
   font-style: normal;
   font-weight: 800;
@@ -45,7 +45,7 @@
 
 .top p {
   color: #8d8d8d;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -62,7 +62,7 @@
 
 .top ol li {
   color: #8d8d8d;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -80,7 +80,7 @@
 }
 
 .bottom .button {
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
   outline: none;
   background:
@@ -89,7 +89,7 @@
   background-blend-mode: overlay, normal;
   box-shadow: 0px 4px 5px rgba(89, 38, 240, 0.04);
   color: #fff;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 17px;
   font-style: normal;
   font-weight: 600;
@@ -97,7 +97,8 @@
   display: flex;
   align-items: center;
   gap: 24px;
-  padding: 12px 24px;
+  padding: 0 24px;
+  height: 40px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -132,7 +133,7 @@
 
 .last h1 {
   color: #5926f0;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 800;
@@ -149,7 +150,7 @@
   align-items: center;
   gap: 10px;
   color: #ff1f1f;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 600;
@@ -169,7 +170,7 @@
 
 .avoid h2 {
   color: #5926f0;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 800;
@@ -184,7 +185,7 @@
 
 .avoid ul li {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -201,7 +202,7 @@
 
 .note p {
   color: #000;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;
@@ -223,11 +224,16 @@
   border: none;
   outline: none;
   color: #8d8d8d;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-weight: 500;
   cursor: pointer;
-  padding: 8px 16px;
+  padding: 0 16px;
+  height: 40px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   transition: color 0.3s ease;
 }
 
@@ -236,7 +242,7 @@
 }
 
 .f_button {
-  border-radius: 6px;
+  border-radius: 10px;
   background:
     linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 100%),
     linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%);
@@ -244,9 +250,10 @@
   box-shadow: 0px 4px 5px rgba(89, 38, 240, 0.04);
   border: none;
   outline: none;
-  padding: 12px 24px;
+  padding: 0 24px;
+  height: 40px;
   color: #fff;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 17px;
   font-weight: 600;
   cursor: pointer;
@@ -306,7 +313,7 @@
   .bottom .button {
     width: 100%;
     justify-content: center;
-    padding: 16px;
+    padding: 0 16px;
   }
 
   .right_item img {

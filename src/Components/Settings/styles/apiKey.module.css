@@ -66,13 +66,14 @@
 }
 
 .centerCol button {
-  border-radius: var(--Corner-Radius-Small-Roundness, 8px);
+  border-radius: 12px;
   background:
     linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.5) 100%),
     linear-gradient(259deg, #e64067 8.36%, #5926f0 54.71%, #4828a0 91.64%);
   background-blend-mode: soft-light, normal;
   display: flex;
-  padding: var(--Gaps-Gap-Large, 16px) var(--Gaps-Gap-XLarge, 30px);
+  padding: 0 var(--Gaps-Gap-XLarge, 30px);
+  height: 56px;
   justify-content: center;
   align-items: center;
   border: none;
@@ -94,9 +95,13 @@
 }
 
 .btn {
-  padding: var(--SPACING-spacing-0, 8px) var(--gap-gap-16, 36px);
+  padding: 0 var(--gap-gap-16, 36px);
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   align-self: stretch;
-  border-radius: 6px;
+  border-radius: 10px;
   background: var(--COLORS-Neutral-200, #e8e8e8);
   color: var(--COLORS-Neutral-1000, #333);
   font-size: 14px;
@@ -108,7 +113,7 @@
 }
 
 .btnPrimary {
-  border-radius: var(--RADIUS-radius-1, 4px);
+  border-radius: 10px;
   background: var(--COLORS-Primary-300, #5926f0);
   color: white;
 }

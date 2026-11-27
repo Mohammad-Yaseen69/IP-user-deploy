@@ -1,26 +1,50 @@
 .container {
   width: 100%;
-  border: none;
+  height: 40px;
+  border: 1px solid #eff1f6;
   outline: none;
-  border-radius: 8px;
+  border-radius: 10px;
   background: #fff;
-  box-shadow:
-    0px 4px 11px 0px rgba(0, 0, 0, 0.16),
-    0px 0px 4px 6px #fdfdfd inset;
-  font-size: 16px;
+  font-size: 14px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 400;
   line-height: normal;
   color: #000;
-  padding: 1rem;
+  padding: 0 12px;
   display: flex;
-  gap: 1rem;
+  align-items: center;
+  gap: 12px;
   position: relative;
 }
 
 @media screen and (max-width: 600px) {
   .container {
     box-shadow: none;
+    border: 1px solid #1412201f;
+    box-shadow: 0px 1px 2px 0px #1412200d;
+    border-radius: 10px;
+    font-size: 14px;
+    padding: 0 12px;
+    align-items: center;
+  }
+}
+
+.large {
+  height: auto;
+  border: none;
+  border-radius: 8px;
+  box-shadow:
+    0px 4px 11px 0px rgba(0, 0, 0, 0.16),
+    0px 0px 4px 6px #fdfdfd inset;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 1rem;
+  align-items: stretch;
+  gap: 1rem;
+}
+
+@media screen and (max-width: 600px) {
+  .large {
     border: 1px solid #1412201f;
     box-shadow: 0px 1px 2px 0px #1412200d;
     border-radius: 12px;

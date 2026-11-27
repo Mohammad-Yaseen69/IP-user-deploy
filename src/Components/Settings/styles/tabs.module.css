@@ -3,14 +3,16 @@
   min-width: 250px;
   flex-direction: column;
   position: sticky;
-  top: 1rem;
+  top: calc(var(--page-header-height) + 16px);
+  align-self: flex-start;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
   z-index: 1;
   width: 16vw;
   padding: 16px 12px;
-  border-radius: 14px;
+  border-radius: 16px;
   border: 1px solid #eff1f6;
   background: #fff;
-  box-shadow: 0px 1px 1px 0px rgba(27, 31, 42, 0.04);
   gap: 16px;
   font-family: Inter, sans-serif;
 }
@@ -22,7 +24,7 @@
   height: 40px;
   padding: 8px 12px;
   flex-shrink: 0;
-  border-radius: 6px;
+  border-radius: 10px;
   border: 1px solid #eff1f6;
   background: #fff;
   box-shadow: 0px 1px 1.5px 0px rgba(27, 31, 42, 0.04);
@@ -206,10 +208,11 @@
 
 .viewStepsBtn {
   display: flex;
-  padding: 10px 20px;
+  padding: 0 20px;
+  height: 40px;
   justify-content: center;
   align-items: center;
-  border-radius: 8px;
+  border-radius: 10px;
   color: #fff;
   border: none;
   font-size: 13px;
@@ -237,7 +240,7 @@
 
 .missingTabs span {
   color: var(--COLORS-Neutral-1000, #333);
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -259,10 +262,9 @@
   align-items: center;
   gap: 14px;
   padding: 16px;
-  border-radius: 14px;
+  border-radius: 12px;
   border: 1px solid #eff1f6;
   background: #fff;
-  box-shadow: 0px 1px 2px 0px rgba(27, 31, 42, 0.04);
 }
 
 .avatar {
@@ -332,7 +334,6 @@
   border-radius: 14px;
   border: 1px solid #eff1f6;
   background: #fff;
-  box-shadow: 0px 1px 2px 0px rgba(27, 31, 42, 0.04);
 }
 
 .mobileRow {
@@ -381,6 +382,8 @@
 @media screen and (max-width: 1000px) {
   .container {
     position: static;
+    max-height: none;
+    overflow-y: visible;
     flex-direction: column;
     margin-bottom: 2rem;
     padding: 0;

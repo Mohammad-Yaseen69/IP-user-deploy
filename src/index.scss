@@ -1,5 +1,58 @@
 @import "./assets/scss/app.scss";
 
+:root {
+  --page-gutter: 24px;
+  --page-header-height: 87px;
+  --focus-ring: #5926f0;
+}
+
+:is(
+  a,
+  button,
+  select,
+  summary,
+  [role="button"],
+  [role="tab"],
+  [role="link"],
+  [tabindex]:not([tabindex="-1"]),
+  input[type="checkbox"],
+  input[type="radio"]
+):focus-visible {
+  outline: 2px solid var(--focus-ring) !important;
+  outline-offset: 2px;
+}
+
+.tap-target {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 32px);
+    height: max(100%, 32px);
+    transform: translate(-50%, -50%);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+[role="menuitem"]:focus-visible,
+[role="option"]:focus-visible {
+  outline: 2px solid var(--focus-ring) !important;
+  outline-offset: -2px;
+}
+
 .wrong input {
   border: 1px solid red !important;
 }

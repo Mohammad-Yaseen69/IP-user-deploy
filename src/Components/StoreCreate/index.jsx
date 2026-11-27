@@ -9,7 +9,7 @@ import useWindowWidth from "../../utils/useWindowWidth";
 import InstaPayLoader from "../Loader";
 import bg from "../ReceiptInvoices/files/Footer Section.png";
 import styles from "./index.module.scss";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import TermsModal from "./TermsModal";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 const StoreCreate = () => {
@@ -72,17 +72,12 @@ const StoreCreate = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.top}>
-        <h1>{t("My e-Shop")}</h1>
-
-        {width > 1000 && <TopRight />}
-      </div>
+      <PageHeader title={t("My e-Shop")} subtitle={t("Set up and manage your online shop.")} />
 
       <div
         className={styles.mainContent}
         style={{ gridTemplateColumns: width < 800 ? "1fr" : "1fr 1fr" }}
       >
-        <span className={styles.MyeShop}>{t("My e-Shop")}</span>
         <div className={styles.left}>
           <h1>
             {t("Welcome to")} <br />

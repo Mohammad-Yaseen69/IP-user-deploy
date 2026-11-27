@@ -139,7 +139,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 13px 0;
-  border-bottom: 1px solid #eaecf0;
+  border-bottom: 1px solid #eff1f6;
 }
 
 .infoRow:last-child {
@@ -218,7 +218,7 @@
   color: #151514;
   font-size: 14px;
   font-weight: 500;
-  border-bottom: 1px solid #eaecf0;
+  border-bottom: 1px solid #eff1f6;
 }
 
 .table tbody tr:last-child td {

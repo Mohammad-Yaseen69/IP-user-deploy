@@ -50,12 +50,10 @@ const PaymentAction = ({ setAction, setStep }) => {
   return (
     <div
       style={{
-        display: "flex",
-        gap: "2rem",
-        overflowX: "scroll",
-        overflowY: "visible",
-        padding: "1rem",
-        scrollbarWidth: "none",
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
+        gap: "16px",
+        paddingBottom: "24px",
       }}
     >
       {(userDetails?.account_type === "individual"
@@ -69,7 +67,7 @@ const PaymentAction = ({ setAction, setStep }) => {
           userDetails?.level?.international_transfer?.mobile_money) && canSendMoney ? (
         <ActionCard
           bg={send}
-          title={t("Send Money")}
+          title={t("Send money")}
           icon={rm}
           desc={t(
             "Easily send money to friends, family, or businesses locally or internationally. \nChoose from multiple transfer options, including bank deposits, mobile wallets, \ncash pick-up, payment cards, and wallet-to-wallet transfers. Enjoy the convenience \nand security of InstaPay for seamless and instant money transfers.",
@@ -87,7 +85,7 @@ const PaymentAction = ({ setAction, setStep }) => {
         canRequestMoney && (
           <ActionCard
             bg={request}
-            title={t("Request Money")}
+            title={t("Request money")}
             icon={sm}
             desc={t(
               "Request money from anyone, anywhere, including across social networking platforms. With InstaPay, your payment requests are instantly accessible once accepted and funds are sent to your Receivable Accounts. Simplify your transactions and manage payments with ease and security.",
@@ -103,7 +101,7 @@ const PaymentAction = ({ setAction, setStep }) => {
         canSendQuote && (
           <ActionCard
             bg={s_quote}
-            title={t("Send A Quote")}
+            title={t("Send a quote")}
             icon={q}
             desc={t(
               "Send A Detailed Price Quote To Your Client Or Customer. Present Your Service, Products, Or Offers Professionally With A Personalized Quotation.",
@@ -116,7 +114,7 @@ const PaymentAction = ({ setAction, setStep }) => {
       {canTopupOrEsim && (
         <ActionCard
           bg={airtime}
-          title={t("SEND TOP-UP AND E-SIM")}
+          title={t("Send top-up and eSIM")}
           icon={airtime_s}
           desc={t(
             "Keep yourself and your loved ones connected and covered, no matter where you are! InstaPay's Send Top-up service allows you to instantly recharge mobile phones, get eSIMs, purchase branded vouchers & gift cards, and pay for utilities & bills in over 150 countries. Ideal for gifts or ensuring you always have what you need, our service is designed for ease, speed, and security.",

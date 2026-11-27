@@ -1,36 +1,15 @@
 .container {
-  padding: 3rem 3rem 0;
+  padding: 0 var(--page-gutter);
   background: linear-gradient(to right, transparent, white);
   min-height: 100vh;
-  font-family: "Manrope";
-
-  .top {
-    margin-bottom: 4rem;
-    position: relative;
-
-    h4 {
-      font-size: 3vw;
-      background:
-        linear-gradient(3.1deg, #e64067 -102.47%, #5926f0 25.82%, #4828a0 128.05%), #ffffff;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-fill-color: transparent;
-      margin-bottom: 1rem;
-    }
-
-    p {
-      font-size: 17px;
-      font-weight: 600;
-    }
-  }
+  font-family: "Inter", sans-serif;
 
   .table {
     .menu {
       background-color: #fff;
-      box-shadow: 0.146323204040527px 25px 67px rgba(0, 0, 0, 0.07);
       padding: 16px 19px;
       border-radius: 12px;
+      border: 1px solid #eff1f6;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -38,36 +17,10 @@
       margin-bottom: 1rem;
       // overflow-x: auto;
 
-      .right {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-
-        .menu_item {
-          display: flex;
-          gap: 9px;
-          align-items: center;
-          padding: 7px 2rem 7px 1rem;
-          min-width: 120px;
-          width: fit-content;
-          border-radius: 12px;
-          cursor: pointer;
-          position: relative;
-          transition: 250ms;
-
-          span {
-            font-weight: 600;
-          }
-
-          .dot {
-            height: 5px;
-            width: 5px;
-            border-radius: 10px;
-            background-color: white;
-            position: absolute;
-            right: 10px;
-          }
-        }
+      .tabs {
+        min-width: 0;
+        padding: 0;
+        border-bottom: 0;
       }
 
       .left {
@@ -80,9 +33,10 @@
           display: flex;
           align-items: center;
           background: #fff;
-          box-shadow: 0px 4.327520847320557px 35.70204544067383px 0px rgba(0, 0, 0, 0.06);
-          padding: 7px 13px;
-          border-radius: 12px;
+          border: 1px solid #eff1f6;
+          height: 40px;
+          padding: 0 13px;
+          border-radius: 10px;
 
           input {
             all: unset;
@@ -107,9 +61,9 @@
 
       .table_header {
         background-color: #fff;
-        box-shadow: 0.146323204040527px 25px 67px rgba(0, 0, 0, 0.07);
         padding: 16px 19px;
         border-radius: 12px;
+        border: 1px solid #eff1f6;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -176,15 +130,15 @@
 
           .rec_left {
             border-radius: 16px;
+            border: 1px solid #eff1f6;
             background: #fff;
-            box-shadow: 0px -7px 113px 0px rgba(0, 0, 0, 0.1);
             padding: 1rem;
           }
 
           .right {
             border-radius: 16px;
+            border: 1px solid #eff1f6;
             background: #fff;
-            box-shadow: 0px -7px 113px 0px rgba(0, 0, 0, 0.1);
             padding: 1.5rem;
             flex: 1;
             display: flex;
@@ -333,11 +287,7 @@
 
 @media screen and (max-width: 1530px) {
   .container {
-    padding: 1.5rem 2rem 1rem;
-
-    .top {
-      margin-bottom: 3rem;
-    }
+    padding: 0 var(--page-gutter) 1rem;
 
     .table {
       .tableWrapper {
@@ -399,13 +349,11 @@
       margin-bottom: 2rem;
 
       h4 {
+        font-family: Inter, sans-serif;
         font-size: 1.4rem;
-        background:
-          linear-gradient(3.1deg, #e64067 -102.47%, #5926f0 25.82%, #4828a0 128.05%), #ffffff;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        text-fill-color: transparent;
+        font-weight: 600;
+        letter-spacing: -0.72px;
+        color: #141414;
         margin-bottom: 1rem;
       }
     }
@@ -417,24 +365,8 @@
         gap: 2rem;
         margin-bottom: 3rem;
 
-        .right {
-          display: flex;
-          overflow-y: auto;
-          gap: 1.25rem;
-          padding-bottom: 0.5rem;
-
-          .menu_item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 5px 10px;
-            border-radius: 9px;
-            flex: 1;
-
-            span {
-              white-space: nowrap;
-            }
-          }
+        .tabs {
+          align-self: stretch;
         }
 
         .left {
@@ -451,9 +383,10 @@
             display: flex;
             align-items: center;
             background: #fff;
-            box-shadow: 0px 4.327520847320557px 35.70204544067383px 0px rgba(0, 0, 0, 0.06);
-            padding: 7px 13px;
-            border-radius: 12px;
+            border: 1px solid #eff1f6;
+            height: 40px;
+            padding: 0 13px;
+            border-radius: 10px;
 
             input {
               all: unset;
