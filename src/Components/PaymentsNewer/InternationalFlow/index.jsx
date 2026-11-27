@@ -978,6 +978,8 @@ const InternationFlow = ({
       const isNewBeneficiary = !!internationalData.beneficiary?.isNew;
       const transaction_data = {
         additional_information: internationalData.comment,
+        payerId: internationalData.payer?.id,
+        payerName: internationalData.payer?.name,
         purpose_of_remittance: internationalData.reason,
         user_id:
           userDetails?.account_type === "business"

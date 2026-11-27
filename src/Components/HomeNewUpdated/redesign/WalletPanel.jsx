@@ -15,6 +15,8 @@ import { UserContext } from "../../../Context/UserContext";
 import { usePermission } from "../../../hooks/GeneralUse/usePermission";
 import { getLimits } from "../../WalletsNew/getLimits";
 import d from "./dashboard.module.scss";
+import { useQuery } from "@tanstack/react-query";
+import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 
 // Each card loads its own monthly limit, as the old dashboard card did.
 const LimitCard = ({ wallet, hidden }) => {
@@ -23,13 +25,13 @@ const LimitCard = ({ wallet, hidden }) => {
 
   useEffect(() => {
     if (wallet?._id) {
-      getLimits(
-        wallet,
-        setLimits,
-        authHeader,
-        () => {},
-        () => {},
-      );
+      // getLimits(
+      //   wallet,
+      //   setLimits,
+      //   authHeader,
+      //   () => {},
+      //   () => {},
+      // );
     }
   }, [wallet?._id]);
 
@@ -50,6 +52,20 @@ const WalletPanel = ({ setCurrentWallet, hidden }) => {
   );
   const wallet = userWallets?.[activeDot];
   const showSkeleton = walletsLoading && userWallets.length === 0;
+
+  const { data: limits = [], isLoading: limitsLoading } = useQuery({
+    queryKey: ["wallet", "get-limits"],
+    queryFn: async () => {
+      const dec = await apiWrapper({
+        endpoint: "/api/wallet/get-limits",
+        method: "GET",
+        isDecrypted: true,
+      });
+      console.log("dec", dec);
+      // const list = dec.data ?? [];
+      // return list;
+    },
+  });
 
   useEffect(() => {
     getUserWallets();
