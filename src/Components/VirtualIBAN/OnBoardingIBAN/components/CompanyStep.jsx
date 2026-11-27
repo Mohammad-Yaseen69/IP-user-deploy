@@ -58,6 +58,7 @@ const COMPANY_RULES = {
   legalName: required.text("legalName"),
   registeredAddress: required.list("registeredAddress"),
   dateOfIncorporation: required.list("dateOfIncorporation"),
+  website: required.text("website"),
 };
 
 const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentStep }) => {
@@ -110,6 +111,7 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
     form.registrationNumber?.trim() &&
     form.legalName?.trim() &&
     form.registeredAddress?.trim() &&
+    form.website?.trim() &&
     form.dateOfIncorporation?.trim(),
   );
 
@@ -399,6 +401,7 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
 
                   <input
                     className={styles.textInput}
+                    style={err("website")}
                     value={form.website}
                     onChange={set("website")}
                     placeholder="https://"

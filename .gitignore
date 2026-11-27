@@ -28,3 +28,6 @@ mcp_config.json
 *.sw?
 /test*
 CLAUDE.md
+
+# rollup-plugin-visualizer output, regenerated on every build
+stats.html
