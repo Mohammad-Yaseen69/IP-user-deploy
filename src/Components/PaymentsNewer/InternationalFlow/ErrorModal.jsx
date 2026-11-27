@@ -38,7 +38,7 @@ const ErrorModal = ({ isOpen, toggle, message = "", heading = "Transaction Faile
         <Button
           color="primary"
           onClick={handleClick}
-          style={{ borderRadius: "9px", marginTop: "2rem" }}
+          style={{ borderRadius: "10px", marginTop: "2rem" }}
         >
           {t("Close")}
         </Button>

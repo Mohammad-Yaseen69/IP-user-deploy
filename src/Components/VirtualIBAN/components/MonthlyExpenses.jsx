@@ -14,6 +14,7 @@ const getChartOptions = (type, categories) => {
   return {
     chart: {
       type: "area",
+      fontFamily: "Inter, sans-serif",
       toolbar: { show: false },
       zoom: { enabled: false },
       animations: { enabled: true, easing: "easeinout", speed: 800 },

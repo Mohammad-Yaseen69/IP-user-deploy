@@ -590,7 +590,11 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
               type="button"
               onClick={handleClose}
               style={{
-                padding: isMobile ? "7px 20px" : "10px 18px",
+                padding: isMobile ? "0 20px" : "0 18px",
+                height: "40px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
                 borderRadius: "10px",
                 border: "1px solid #D1D5DB",
                 background: "#FFFFFF",
@@ -606,16 +610,19 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
               type="submit"
               disabled={loading}
               style={{
-                padding: isMobile ? "7px 20px" : "10px 24px",
+                padding: isMobile ? "0 20px" : "0 24px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
                 borderRadius: "10px",
                 border: "none",
                 background: loading ? "#9CA3AF" : isMobile ? "#7040FF" : "#4F46E5",
                 color: "#FFFFFF",
-                fontWeight: 600,
+                fontWeight: 500,
                 fontSize: "14px",
                 cursor: loading ? "not-allowed" : "pointer",
                 transition: "background 0.2s ease",
-                height: isMobile ? "fit-content" : "auto",
+                height: "40px",
               }}
             >
               {loading ? t("Saving...") : beneficiaryToEdit ? t("Update Beneficiary") : t("Next")}

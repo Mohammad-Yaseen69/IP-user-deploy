@@ -8,7 +8,32 @@
   animation: fadeIn 0.3s ease;
   padding: var(--lg, 24px);
   background-color: #fff;
-  border-radius: 10px;
+  border-radius: 16px;
+}
+
+.embedded {
+  padding: 0;
+  gap: 0;
+  border-radius: 0;
+  background: transparent;
+  animation: none;
+}
+
+.embedded .pricingGrid {
+  grid-template-columns: 1fr;
+}
+
+.embedded .item {
+  border-right: none;
+  padding: 12px 16px;
+}
+
+.embedded .item:nth-last-child(-n + 2) {
+  border-bottom: 1px solid #f0eef8;
+}
+
+.embedded .item:last-child {
+  border-bottom: none;
 }
 
 .mainArea {
@@ -35,11 +60,11 @@
 .backButton {
   display: flex;
   width: 110px;
-  height: 48px;
+  height: 40px;
   padding: 0 var(--md, 16px);
   align-items: center;
   gap: 8px;
-  border-radius: var(--sm, 6px);
+  border-radius: 10px;
   background: var(--Greyscale-15, #f3f3f4);
   color: var(--Primary-900, #1a144f);
   text-align: center;
@@ -60,12 +85,12 @@
 .continueButton {
   display: flex;
   width: 352px;
-  height: 48px;
+  height: 40px;
   padding: 0 var(--md, 16px);
   justify-content: center;
   align-items: center;
   gap: 8px;
-  border-radius: var(--sm, 6px);
+  border-radius: 10px;
   background: var(--Primary-600---Base, #4a32e3);
   color: var(--Greyscale-0, #fff);
   text-align: center;

@@ -772,11 +772,16 @@
   background: transparent;
   border: none;
   color: #777;
-  font-family: Manrope, sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
-  padding: 8px 12px;
+  padding: 0 12px;
+  height: 40px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .footerNav {
@@ -787,9 +792,9 @@
 
 .backBtn,
 .nextBtn {
-  height: 36px;
+  height: 40px;
   padding: 0 16px;
-  border-radius: 6px;
+  border-radius: 10px;
   font-weight: 500;
   font-size: 14px;
   font-family: Inter, sans-serif;
@@ -919,14 +924,14 @@
 
 .walletCardBalance {
   .balanceLabel {
-    font-family: "Red Hat Display", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 7px;
     font-weight: 600;
     color: #fff;
   }
 
   .balanceAmount {
-    font-family: "Clash Display", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 16px;
     font-weight: 600;
     color: #fff;
@@ -935,14 +940,14 @@
 
 .walletCardLimit {
   .limitLabel {
-    font-family: "Red Hat Display", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 7px;
     font-weight: 600;
     color: #fff;
   }
 
   .limitAmount {
-    font-family: "Clash Display", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 10px;
     font-weight: 600;
     color: #fff;

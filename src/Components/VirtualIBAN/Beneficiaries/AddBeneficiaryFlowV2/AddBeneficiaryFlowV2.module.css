@@ -222,10 +222,10 @@
   align-items: center;
   justify-content: center;
   gap: var(--abf-sm);
-  height: 36px;
+  height: 40px;
   padding: 0 16px;
   border: none;
-  border-radius: var(--abf-r-sm);
+  border-radius: 10px;
   background: transparent;
   font-family: inherit;
   font-size: 14px;

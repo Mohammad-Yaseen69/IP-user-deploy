@@ -1,43 +1,8 @@
 .container {
-  padding: 24px;
+  padding: 0 var(--page-gutter) 24px;
   background-color: #fcfcfc;
   min-height: 100vh;
   font-family: "Inter", sans-serif;
-}
-
-.top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  position: relative;
-  margin: 0px;
-  padding: 0px;
-}
-
-.headerTitle {
-  margin: 0px;
-  padding: 0px;
-}
-
-.headerTitle h1 {
-  color: #5626e6;
-  font-size: 40px;
-  font-style: normal;
-  font-weight: 700;
-  margin: 0px;
-  padding: 0px;
-}
-
-.headerTitle p {
-  color: #868686;
-  font-size: 14px;
-  font-weight: 400;
-  margin: 0px;
-  padding: 0px;
-}
-
-.topright {
-  margin-top: 100px;
 }
 
 .main {
@@ -91,9 +56,10 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: var(--sm, 8px) var(--lg, 24px);
+  padding: 0 var(--lg, 24px);
+  height: 40px;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   background: #5626e6;
   color: white;
   box-shadow: 0 2px 4px rgba(86, 38, 230, 0.2);
@@ -133,11 +99,12 @@
   flex: 1;
   display: flex;
   align-items: center;
-  border-radius: 8px;
+  height: 40px;
+  border-radius: 10px;
   border: 1px solid var(--Greyscale-50, #e7e9e9);
   background: var(--Greyscale-0, #fff);
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
-  padding: 10px 24px;
+  padding: 0 16px;
 
   Search {
     border-radius: 9.416px;
@@ -168,8 +135,9 @@
   gap: 8px;
   background: #f0f0f5;
   border: 1px solid #e0e0e0;
-  padding: 10px 16px;
-  border-radius: 8px;
+  padding: 0 16px;
+  height: 40px;
+  border-radius: 10px;
   font-size: 14px;
   font-weight: 600;
   color: #333;
@@ -183,7 +151,7 @@
 
 @media (max-width: 700px) {
   .container {
-    padding: 16px;
+    padding: 0 16px 16px;
   }
 
   .receiptsCont {
@@ -193,18 +161,6 @@
     .addBtn {
       width: 100%;
     }
-  }
-
-  .top {
-    margin-bottom: 16px;
-  }
-
-  .topright {
-    display: none;
-  }
-
-  .headerTitle h1 {
-    font-size: 24px;
   }
 
   .main {
@@ -233,9 +189,10 @@
 
     .addBtn {
       width: 40%;
-      padding: var(--sm, 12px) var(--lg, 17px);
+      padding: 0 var(--lg, 17px);
+      height: 40px;
 
-      border-radius: var(--sm, 6px);
+      border-radius: 10px;
       background: linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%), #4a32e3;
     }
 

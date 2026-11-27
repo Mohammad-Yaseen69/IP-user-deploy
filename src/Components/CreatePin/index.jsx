@@ -458,13 +458,14 @@ const CreatePin = () => {
         <button
           onClick={() => navigate("/pay-via-social")}
           style={{
+            display: "inline-flex",
             width: "96%",
-            borderRadius: "8px",
+            borderRadius: "12px",
             background: "#5926F0",
-            height: "55px",
+            height: "56px",
             border: "none",
             color: "#FFF",
-            fontSize: "18px",
+            fontSize: "14px",
             fontWeight: "600",
             position: "absolute",
             bottom: "15px",

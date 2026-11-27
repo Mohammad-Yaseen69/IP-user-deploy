@@ -11,7 +11,7 @@ import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import { AmountCell, PartyCell, StatusCell, TxCell } from "../../Common/Ledger/Cells";
 import s from "../../Common/Ledger/ledger.module.scss";
 import RejectModal from "../../Common/Ledger/RejectModal";
-import { capitalizeStatus, partyName, statusDot } from "../../Common/Ledger/utils";
+import { capitalizeStatus, partyName, rowActivation, statusDot } from "../../Common/Ledger/utils";
 import AcceptBargainedAmount from "./AcceptBaragainedAmount";
 import AcceptQuotation from "./AcceptQuotation";
 import BargainQuotation from "./BargainQuotation";
@@ -55,7 +55,7 @@ const QuotationRow = ({ item, type = "received", isActive, setActive }) => {
   const status = item?.status?.toLowerCase();
   const open = isOpenQuotation(item);
   const party = item?.[received ? "sender" : "reciever"];
-  const name = partyName(party);
+  const name = partyName(party ?? {});
   const label = t(LABELS[status] ?? capitalizeStatus(item?.status));
   const dotKey = DOT_KEYS[status] ?? status;
   const code = item?.amount_reciever_currency?.currency?.code;
@@ -97,7 +97,11 @@ const QuotationRow = ({ item, type = "received", isActive, setActive }) => {
 
   return (
     <>
-      <div className={`${s.cols} ${s.row}`} onClick={() => setActive(isActive ? 0 : item._id)}>
+      <div
+        className={`${s.cols} ${s.row}`}
+        aria-expanded={isActive}
+        {...rowActivation(() => setActive(isActive ? 0 : item._id))}
+      >
         <TxCell
           Icon={FileText}
           title={item?.title || t("Quotation")}

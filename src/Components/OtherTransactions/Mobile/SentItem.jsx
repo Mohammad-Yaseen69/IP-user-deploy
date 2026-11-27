@@ -206,7 +206,14 @@ const SentItem = ({ item, activeItem, setActiveItem, index, currentUser }) => {
               item?.status?.toLowerCase() === "processing") && (
               <Button
                 color="danger"
-                style={{ padding: "3px 18px" }}
+                style={{
+                  borderRadius: "8px",
+                  height: "32px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "0 18px",
+                }}
                 onClick={() =>
                   cancelSubscriptionOrSchedulePayment(item, authHeader, verifyToken, queryClient)
                 }

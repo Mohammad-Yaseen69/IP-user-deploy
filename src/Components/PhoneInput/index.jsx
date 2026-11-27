@@ -25,6 +25,7 @@ const PhoneInput = ({
   onKeyDown,
   onFocus,
   newUI = false,
+  size = "md",
 }) => {
   const [selectedCountry, setSelectedCountry] = useState({});
   const [number, setNumber] = useState("");
@@ -47,7 +48,7 @@ const PhoneInput = ({
   return (
     <>
       <div
-        className={styles.container}
+        className={`${styles.container} ${size === "lg" ? styles.large : ""}`}
         style={{
           opacity: disabled ? 0.8 : 1,
           pointerEvents: disabled ? "none" : "all",
@@ -60,7 +61,7 @@ const PhoneInput = ({
                 alignItems: "center",
                 gap: "12px",
                 alignSelf: "stretch",
-                borderRadius: "6px",
+                borderRadius: size === "lg" ? "6px" : "10px",
                 border: "1px solid #E1E5EE",
                 background: "#FFF",
                 boxShadow: "0 1px 1.5px 0 rgba(44, 54, 53, 0.03)",

@@ -161,7 +161,7 @@ const LinktoTelegramModal = ({ isOpen, toggle }) => {
                       display: "flex",
                       alignItems: "center",
                       color: "black",
-                      fontSize: "1rem",
+                      fontSize: "14px",
                       fontWeight: 500,
                       background: "transparent",
                       gap: "1rem",

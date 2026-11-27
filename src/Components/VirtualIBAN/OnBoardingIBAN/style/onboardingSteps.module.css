@@ -10,7 +10,7 @@
   animation: fadeIn 0.3s ease;
   padding: var(--lg, 24px);
   background-color: #fff;
-  border-radius: 10px;
+  border-radius: 16px;
 }
 
 @keyframes fadeIn {
@@ -105,7 +105,7 @@
   align-items: flex-start;
   gap: var(--lg, 24px);
   flex: 1 0 0;
-  border-radius: 14px;
+  border-radius: 16px;
   border: 1px solid #e1e5ee;
   background: #fff;
 }
@@ -233,11 +233,11 @@
 
 .registryBtn {
   display: flex;
-  height: 48px;
+  height: 40px;
   padding: 0 var(--md, 16px);
   align-items: center;
   gap: 8px;
-  border-radius: var(--sm, 6px);
+  border-radius: 10px;
   background: var(--Greyscale-15, #f3f3f4);
   color: var(--Primary-900, #1a144f);
   text-align: center;
@@ -499,7 +499,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  border: 1px solid #e8e8e8;
+  border: 1px solid #eff1f6;
   border-radius: 8px;
   background: #fff;
   padding: 14px 16px;
@@ -563,11 +563,14 @@
 }
 
 .actions button {
-  height: 28px;
+  height: 32px;
   border: 1px solid #dddddd;
   background: #fff;
-  border-radius: 5px;
+  border-radius: 8px;
   padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 11px;
   color: #555;
   cursor: pointer;
@@ -614,11 +617,11 @@
 
 .addBtn {
   display: flex;
-  height: 36px;
+  height: 40px;
   padding: 0 20px;
   align-items: center;
   gap: 8px;
-  border-radius: 6px;
+  border-radius: 10px;
   background: #f3f3f4;
   color: #6e7687;
   font-family: Inter;
@@ -661,19 +664,22 @@
 }
 
 .sendCodeBtn {
-  border-radius: 6px;
+  border-radius: 10px;
   background: #4a32e3;
   box-shadow: 0 8px 20px -8px rgba(74, 50, 227, 0.5);
   color: #fff;
   text-align: center;
-  font-family: Arial;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
-  height: 48px;
+  height: 40px;
   width: 100%;
   border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .sendCodeBtn:hover {
@@ -782,11 +788,11 @@
 .backButton {
   display: flex;
   width: 110px;
-  height: 48px;
+  height: 40px;
   padding: 0 var(--md, 16px);
   align-items: center;
   gap: 8px;
-  border-radius: var(--sm, 6px);
+  border-radius: 10px;
   background: var(--Greyscale-15, #f3f3f4);
   color: var(--Primary-900, #1a144f);
   text-align: center;
@@ -859,7 +865,7 @@
   border-radius: 12px;
   background: #fff;
   padding: 18px;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .sectionHeader {
@@ -1011,12 +1017,12 @@
 .continueButton {
   display: flex;
   width: 352px;
-  height: 48px;
+  height: 40px;
   padding: 0 var(--md, 16px);
   justify-content: center;
   align-items: center;
   gap: 8px;
-  border-radius: var(--sm, 6px);
+  border-radius: 10px;
   background: var(--Primary-600---Base, #4a32e3);
   color: var(--Greyscale-0, #fff);
   text-align: center;
@@ -1042,12 +1048,11 @@
   width: 300px;
   background: #fff;
   border: 1px solid #e7eaf2;
-  border-radius: 18px;
+  border-radius: 16px;
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
   position: sticky;
   top: 20px;
 }
@@ -1419,17 +1424,17 @@
 .askBtn {
   display: flex;
   height: 40px;
-  padding: 1px 6px;
+  padding: 0 6px;
   justify-content: center;
   align-items: center;
   gap: 7px;
   align-self: stretch;
-  border-radius: 6px;
+  border-radius: 10px;
   border: 1px solid #e9e0ff;
   background: #f5f2ff;
   color: #4a32e3;
   text-align: center;
-  font-family: Arial;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 700;
@@ -1641,8 +1646,12 @@
 .editBtn {
   background: none;
   border: 1.5px solid #e2e8f0;
-  border-radius: 7px;
-  padding: 3px 10px;
+  border-radius: 8px;
+  padding: 0 10px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 11.5px;
   font-weight: 600;
   color: #4a32e3;
@@ -1694,7 +1703,7 @@
   justify-content: center;
   gap: 9px;
   width: 100%;
-  height: 50px;
+  height: 56px;
   background: linear-gradient(135deg, #4a32e3 0%, #5926f0 100%);
   border: none;
   border-radius: 12px;
@@ -1776,7 +1785,6 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.03);
 }
 
 .statusCardTop {
@@ -1841,7 +1849,7 @@
 .statusBadge.waiting {
   color: #475467;
   background: #f2f4f7;
-  border: 1px solid #eaecf0;
+  border: 1px solid #eff1f6;
 }
 
 .statusBadgeDot {
@@ -2093,7 +2101,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 42px;
+  height: 40px;
   padding: 0 22px;
   background: #4a32e3;
   color: #fff;
@@ -2117,7 +2125,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 42px;
+  height: 40px;
   padding: 0 18px;
   background: transparent;
   color: #6e7687;
@@ -2139,7 +2147,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 42px;
+  height: 40px;
   padding: 0 18px;
   background: transparent;
   color: #ef4444;
@@ -2269,8 +2277,8 @@
 }
 
 .lookupBtn {
-  height: 44px;
-  border-radius: 12px;
+  height: 40px;
+  border-radius: 10px;
   border: 1px solid #1412201f;
   box-shadow: 0px 1px 2px 0px #1412200d;
   display: none;
@@ -2549,8 +2557,8 @@
   }
 
   .addBtn {
-    border-radius: 12px !important;
-    height: 44px;
+    border-radius: 10px !important;
+    height: 40px;
     width: 100%;
     justify-content: center;
     color: #141220;

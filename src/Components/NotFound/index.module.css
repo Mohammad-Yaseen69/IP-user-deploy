@@ -26,7 +26,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 2rem;
   font-style: normal;
   font-weight: 800;
@@ -42,7 +42,7 @@
   text-align: center;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 1rem;
   font-style: normal;
   font-weight: 400;
@@ -63,7 +63,7 @@
   leading-trim: both;
   text-edge: cap;
   font-variant-numeric: lining-nums proportional-nums;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.85rem;
   font-style: normal;
   font-weight: 700;

@@ -44,8 +44,8 @@ import {
   WarningCircle,
 } from "./Icons";
 import dayjs from "dayjs";
-import { getInitials } from "../../utils/Functions/getInitials";
 import CountryBasedPhone from "../PhoneInput/PhoneNumberBasedOnCountry.json";
+import { getInitials } from "../../utils/Functions/getInitials";
 
 export const currentDate = new Date();
 export const minDate = new Date(
@@ -1285,6 +1285,7 @@ const Basic = ({ setCurrentTab }) => {
               />
             </div>
             {isKybApproved && <Hint>{t("Verified · contact support to change it")}</Hint>}
+            {/* <Input disabled={1 + 1 === 2} readOnly={1 + 1 === 2} value={phone} onChange={e => setPhone(e.target.value)} /> */}
           </FormGroup>
 
           <FormGroup className={styles.field}>

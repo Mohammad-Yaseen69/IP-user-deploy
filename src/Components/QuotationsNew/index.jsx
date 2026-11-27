@@ -14,7 +14,7 @@ import Ledger from "../../Common/Ledger/Ledger";
 import s from "../../Common/Ledger/ledger.module.scss";
 import InstaPayLoader from "../Loader";
 import styles from "../TransactionsNewApi/styles/index.module.scss";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import QuotationRow, { isOpenQuotation } from "./QuotationRow";
 import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
 
@@ -226,10 +226,7 @@ const Quotations = () => {
     </div>
   ) : (
     <div className={styles.container}>
-      <div className={styles.top}>
-        <h4>{t("Quotations")}</h4>
-        <TopRight />
-      </div>
+      <PageHeader title={t("Quotations")} subtitle={t("Quotes you have sent and received.")} />
       {sendQuotation}
       {ledger}
     </div>

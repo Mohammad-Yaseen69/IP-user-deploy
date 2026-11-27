@@ -37,7 +37,7 @@
   font-weight: 900;
   background-color: #5926f0;
   color: white;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
 }
 
 .details {
@@ -52,7 +52,7 @@
   leading-trim: both;
   text-edge: cap;
   text-overflow: ellipsis;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.85rem;
   font-style: normal;
   font-weight: 700;
@@ -79,7 +79,7 @@
   leading-trim: both;
   text-edge: cap;
   text-overflow: ellipsis;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.95rem;
   font-style: normal;
   font-weight: 500;
@@ -145,7 +145,7 @@
   color: #fff;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.7rem;
   font-style: normal;
   font-weight: 700;

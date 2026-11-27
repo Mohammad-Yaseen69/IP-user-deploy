@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Card, CardBody, CardText } from "reactstrap";
 import { UserContext } from "../../Context/UserContext";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import styles from "../TransactionsNewApi/styles/index.module.scss";
 import ProfileComponent from "./ProfileComponent";
 
@@ -15,10 +15,7 @@ const ProfileTest = () => {
     <>
       {window.innerWidth > 1000 ? (
         <div className={styles.container}>
-          <div className={styles.top}>
-            <h4>{t("User Profile")}</h4>
-            <TopRight />
-          </div>
+          <PageHeader title={t("Profile")} subtitle={t("Your public profile on InstaPay.")} />
           {userDetails?.username ? (
             <ProfileComponent />
           ) : (

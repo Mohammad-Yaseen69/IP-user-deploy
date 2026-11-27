@@ -79,7 +79,7 @@ const AddBeneficiary = ({
   return (
     <div
       style={{
-        margin: !inInternationalModal ? "1rem 0 1rem 1rem" : "2rem 0 0 0",
+        margin: !inInternationalModal ? "1rem var(--page-gutter)" : "2rem 0 0 0",
       }}
     >
       <Form

@@ -21,7 +21,7 @@ import countriesData from "../PaymentsNewer/CountriesData.json";
 import { formatCountdown, getOtpThrottle } from "../../utils/Functions/otpThrottle";
 import { useCountdown } from "../../hooks/useCountdown";
 
-const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess }) => {
+const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess, description }) => {
   const { t } = useTranslation();
   const { authHeader, userDetails, setUserDetails } = useContext(UserContext);
 
@@ -203,9 +203,13 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess }) => {
         {!showOtp ? (
           <div>
             <p style={{ color: "#666", marginBottom: "1.5rem" }}>
-              {t("To proceed with your MasterCard purchase, please provide your {{missingType}}.", {
-                missingType: t(missingType),
-              })}
+              {t(
+                description ??
+                  "To proceed with your MasterCard purchase, please provide your {{missingType}}.",
+                {
+                  missingType: t(missingType),
+                },
+              )}
             </p>
             <FormGroup>
               <Label style={{ fontWeight: "600", fontSize: "0.9rem", color: "#555" }}>
@@ -244,10 +248,12 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess }) => {
             onClick={sendOtp}
             disabled={isDisabled}
             style={{
+              height: "40px",
+              display: "inline-flex",
               backgroundColor: "#5926F0",
               border: "none",
-              borderRadius: "8px",
-              padding: "10px 25px",
+              borderRadius: "10px",
+              padding: "0 25px",
               fontWeight: "600",
               boxShadow: "0 4px 12px rgba(89, 38, 240, 0.2)",
             }}

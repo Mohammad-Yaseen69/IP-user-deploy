@@ -225,7 +225,7 @@ const SplitPayment = (props) => {
             backgroundBlendMode: "overlay, normal",
             boxShadow:
               "0px 11.90068244934082px 8.655041694641113px -5.409400939941406px rgba(89, 38, 240, 0.17)",
-            borderRadius: "6px",
+            borderRadius: "8px",
             display: "flex",
             alignItems: "center",
           }}

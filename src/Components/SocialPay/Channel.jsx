@@ -265,7 +265,7 @@ const ChannelCard = ({ item, themes, isPinAdded }) => {
           </span>
         )}
         <button type="button" className={styles.primaryBtn} onClick={handleOpen}>
-          {item.primaryAction.label}
+          {t(item.primaryAction.label)}
         </button>
       </div>
       {instagram && showModal && (

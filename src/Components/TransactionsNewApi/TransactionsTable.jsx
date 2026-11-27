@@ -117,7 +117,7 @@ const useTransactions = (search, apiDates, filters) => {
   });
 };
 
-const TransactionsTable = () => {
+const TransactionsTable = ({ title, description }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
@@ -231,10 +231,11 @@ const TransactionsTable = () => {
   const dateLabel = apiDates
     ? `${dayjs(dateRange.startDate).format("MMM D")} - ${dayjs(dateRange.endDate).format("MMM D, YYYY")}`
     : t("All dates");
-
   return (
     <>
       <Ledger
+        title={title}
+        description={description}
         tabs={TABS}
         active={active}
         onTab={setActive}
@@ -303,7 +304,7 @@ const TransactionsTable = () => {
           </EmptyState>
         )}
 
-        {!isLoading && canLoadMore && (
+        {!isLoading && (
           <div ref={loaderRef} className={s.loader}>
             <InstaPayLoader />
           </div>

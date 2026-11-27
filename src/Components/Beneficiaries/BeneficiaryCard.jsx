@@ -386,30 +386,15 @@ const BeneficiaryCard = ({ user, onEdit = () => {}, onView = () => {} }) => {
                 className={styles.showMore}
               >
                 {can("beneficiaries.edit") && (
-                  <Button
-                    color="transparent"
-                    className={styles.btn}
-                    style={{ padding: ".5rem 1rem" }}
-                    onClick={() => onEdit(user)}
-                  >
+                  <Button color="transparent" className={styles.btn} onClick={() => onEdit(user)}>
                     {t("Edit") + " " + t("Beneficiary")}
                   </Button>
                 )}
-                <Button
-                  color="transparent"
-                  className={styles.btn}
-                  style={{ padding: ".5rem 1rem" }}
-                  onClick={() => onView(user)}
-                >
+                <Button color="transparent" className={styles.btn} onClick={() => onView(user)}>
                   {t("View") + " " + t("Beneficiary")}
                 </Button>
                 {can("beneficiaries.delete") && (
-                  <Button
-                    color="transparent"
-                    className={styles.btn}
-                    style={{ padding: ".5rem 1rem" }}
-                    onClick={toggleShowDelete}
-                  >
+                  <Button color="transparent" className={styles.btn} onClick={toggleShowDelete}>
                     {t("Delete") + " " + t("Beneficiary")}
                   </Button>
                 )}

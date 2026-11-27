@@ -34,7 +34,7 @@
   color: #848484;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.9rem;
   font-style: normal;
   font-weight: 700;
@@ -49,7 +49,7 @@
   color: #fff;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.45rem;
   font-style: normal;
   font-weight: 800;
@@ -61,7 +61,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 2rem;
   font-style: normal;
   font-weight: 700;
@@ -79,9 +79,13 @@
 }
 
 .r_item button {
-  border-radius: 9px;
+  border-radius: 10px;
   background: linear-gradient(296deg, #5926f0 2.47%, #4828a0 99.3%), #fff;
-  padding: 10px 16px;
+  padding: 0 16px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: none;
   outline: none;
 }
@@ -90,7 +94,7 @@
   color: #909090;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.9rem;
   font-style: normal;
   font-weight: 600;
@@ -103,7 +107,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -155,7 +159,7 @@
   color: rgba(0, 0, 0, 0.3);
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -197,7 +201,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 1rem;
   font-style: normal;
   font-weight: 700;
@@ -212,7 +216,7 @@
   color: #848484;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.6rem;
   font-style: normal;
   font-weight: 600;
@@ -235,7 +239,7 @@
 .country span,
 .p_type {
   color: var(--colour-of-country-names, #000);
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.9rem;
   font-style: normal;
   font-weight: 600;
@@ -252,7 +256,7 @@
   color: #6c6c6c;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 700;
@@ -282,7 +286,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 700;
@@ -311,7 +315,7 @@
   color: rgba(0, 0, 0, 0.3);
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -340,7 +344,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.75rem;
   font-style: normal;
   font-weight: 700;
@@ -367,7 +371,7 @@
   color: #d3a515;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.6rem;
   font-style: normal;
   font-weight: 700;
@@ -378,7 +382,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 700;

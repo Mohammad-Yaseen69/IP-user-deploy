@@ -17,7 +17,7 @@
   color: #808080;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 1rem;
   font-style: normal;
   font-weight: 600;
@@ -39,7 +39,7 @@
   color: var(--colour-of-country-names, #000);
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 2rem;
   font-style: normal;
   font-weight: 700;
@@ -52,7 +52,7 @@
   color: var(--colour-of-country-names, #000);
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 2rem;
   font-style: normal;
   font-weight: 700;
@@ -71,7 +71,7 @@
 
 .warning span {
   color: #eb8c1d;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 0.9rem;
   font-style: normal;
   font-weight: 600;

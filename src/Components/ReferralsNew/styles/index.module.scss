@@ -1,29 +1,8 @@
 .container {
-  padding: 3rem 3rem 0;
+  padding: 0 var(--page-gutter);
   background: linear-gradient(to right, transparent, white);
   min-height: 100vh;
-  font-family: "Manrope";
-
-  .top {
-    margin-bottom: 4rem;
-    position: relative;
-
-    h4 {
-      font-size: 3vw;
-      background:
-        linear-gradient(3.1deg, #e64067 -102.47%, #5926f0 25.82%, #4828a0 128.05%), #ffffff;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-fill-color: transparent;
-      margin-bottom: 1rem;
-    }
-
-    p {
-      font-size: 17px;
-      font-weight: 600;
-    }
-  }
+  font-family: "Inter", sans-serif;
 
   .banner_con {
     display: flex;
@@ -31,10 +10,11 @@
 
     .total_refs {
       flex: 1;
-      border-radius: 30px;
-      background: linear-gradient(278deg, #5926f0 8.85%, #fc60ff 126.18%), #d9d9d9;
-      padding: 1.5rem;
-      color: white;
+      border-radius: 16px;
+      border: 1px solid #eff1f6;
+      background: #fff;
+      padding: 24px;
+      color: #141414;
       container-type: inline-size;
 
       div {
@@ -46,7 +26,9 @@
 
         h5 {
           margin-bottom: 0;
-          font-size: 8cqi;
+          font-size: 14px;
+          font-weight: 500;
+          color: #6e7687;
         }
       }
 
@@ -58,12 +40,11 @@
 
     .total_earn {
       flex: 1;
-      border-radius: 30px;
-      background:
-        linear-gradient(0deg, #20bc25 0%, #20bc25 100%),
-        linear-gradient(143deg, #5926f0 -35.53%, #fc60ff 78.34%), #d9d9d9;
-      padding: 1.5rem;
-      color: white;
+      border-radius: 16px;
+      border: 1px solid #eff1f6;
+      background: #fff;
+      padding: 24px;
+      color: #141414;
       container-type: inline-size;
 
       div {
@@ -75,6 +56,9 @@
 
         h5 {
           margin-bottom: 0;
+          font-size: 14px;
+          font-weight: 500;
+          color: #6e7687;
         }
       }
 
@@ -88,11 +72,11 @@
   .ref_dets {
     display: flex;
     margin-top: 1rem;
-    border-radius: 30px;
+    border-radius: 16px;
+    border: 1px solid #eff1f6;
     gap: 1rem;
     background: #fff;
-    box-shadow: 0px 2px 43px 0px rgba(38, 51, 77, 0.13);
-    padding: 2rem;
+    padding: 24px;
 
     & > * {
       margin-bottom: 0;
@@ -101,8 +85,9 @@
     .ref_dets_sub {
       display: flex;
       gap: 0.75rem;
-      border-radius: 24px;
-      background: #f1f1f1;
+      border-radius: 12px;
+      border: 1px solid #eff1f6;
+      background: #f8f9fc;
       align-items: center;
       padding: 1rem;
       flex: 1;
@@ -121,10 +106,9 @@
         h4 {
           flex: 1;
           font-weight: 700;
-          border-radius: 17.657px;
-          background: rgba(109, 41, 220, 0.17);
-          box-shadow: 0px 7.06282px 22.95415px 0px rgba(0, 0, 0, 0.06);
-          backdrop-filter: blur(3.5314083099365234px);
+          border-radius: 10px;
+          background: #f2eeff;
+          color: #5926f0;
           padding: 0.75rem;
           white-space: nowrap;
           margin-bottom: 0;
@@ -151,7 +135,7 @@
             gap: 0.6rem;
             align-items: center;
             color: white;
-            border-radius: 16px;
+            border-radius: 10px;
             flex: 1;
             justify-content: space-between;
 
@@ -186,10 +170,10 @@
     gap: 1rem;
     margin-top: 1rem;
     align-items: center;
-    border-radius: 30px;
+    border-radius: 16px;
+    border: 1px solid #eff1f6;
     background: #fff;
-    box-shadow: 0px 2px 43px 0px rgba(38, 51, 77, 0.13);
-    padding: 2rem 3rem;
+    padding: 24px;
 
     h4 {
       margin-bottom: 0;
@@ -219,7 +203,7 @@
         height: 119px;
         padding: 1rem;
         gap: 5px;
-        font-family: "Clash Display", sans-serif;
+        font-family: "Inter", sans-serif;
 
         h4 {
           color: #fff;
@@ -275,12 +259,10 @@
     overflow: auto;
 
     .item {
-      border-radius: 30px;
-      border-top: 1px solid rgba(0, 0, 0, 0.04);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+      border-radius: 12px;
+      border: 1px solid #eff1f6;
       background: #fff;
-      box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.04);
-      padding: 1rem 3rem;
+      padding: 20px;
       min-height: 90px;
       display: flex;
       align-items: center;
@@ -352,18 +334,14 @@
 
 @media screen and (max-width: 1500px) {
   .container {
-    padding: 1.5rem 2rem 0;
-
-    .top {
-      margin-bottom: 3rem;
-    }
+    padding: 0 var(--page-gutter);
 
     .ref_dets {
-      padding: 1rem;
+      padding: 20px;
     }
 
     .ref_guide {
-      padding: 2rem 3rem;
+      padding: 20px;
     }
 
     .ref_table {
@@ -377,11 +355,9 @@
 }
 
 .table_header {
-  border-radius: 30px;
-  border-top: 1px solid rgba(0, 0, 0, 0.04);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  border-radius: 16px;
+  border: 1px solid #eff1f6;
   background: #fff;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.04);
   padding: 1rem 3rem;
   min-height: 90px;
   display: flex;
@@ -402,23 +378,8 @@
 @media screen and (max-width: 1000px) {
   .container {
     display: block;
-    padding: 2rem;
+    padding: 0 2rem 2rem;
     background-color: white;
-
-    .top {
-      margin-bottom: 2rem;
-
-      h4 {
-        font-size: 1.4rem;
-        background:
-          linear-gradient(3.1deg, #e64067 -102.47%, #5926f0 25.82%, #4828a0 128.05%), #ffffff;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        text-fill-color: transparent;
-        margin-bottom: 1rem;
-      }
-    }
 
     .banner_con {
       display: grid;
@@ -453,8 +414,8 @@
 
       .ref_dets_sub {
         border-radius: 16px;
+        border: 1px solid #eff1f6;
         background: #fafafa;
-        box-shadow: 0px 2px 43px rgba(38, 51, 77, 0.13);
         padding: 0.5rem;
 
         &.left {
@@ -466,8 +427,6 @@
               #5926f0 55.65%,
               #4828a0 100%
             );
-            box-shadow: 0px 10.712px 34.813px 0px rgba(0, 0, 0, 0.06);
-            backdrop-filter: blur(5.355913162231445px);
             color: white;
             border-radius: 8px;
             font-size: 1rem;
@@ -478,7 +437,6 @@
         &.right {
           flex-direction: column;
           align-items: flex-start;
-          box-shadow: 0px 2px 43px rgba(38, 51, 77, 0.13);
           padding: 0.75rem;
 
           & > span {

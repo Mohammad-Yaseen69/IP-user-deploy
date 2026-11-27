@@ -403,9 +403,9 @@
 .primarySmallBtn,
 .nextBtn,
 .backBtn {
-  min-height: 36px;
+  height: 40px;
   border: 0;
-  border-radius: 6px;
+  border-radius: 10px;
   padding: 0 16px;
   display: inline-flex;
   align-items: center;
@@ -489,7 +489,7 @@
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  font-family: Manrope, sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-weight: 800;
 }
@@ -837,10 +837,15 @@
   border: 0;
   background: transparent;
   color: #777;
-  font-family: Manrope, sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-weight: 600;
-  padding: 8px 12px;
+  padding: 0 12px;
+  height: 40px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
 }
 
@@ -900,10 +905,11 @@
 
 .helpPillBtn {
   border: 1px solid #e4dbff;
-  border-radius: 100px;
+  border-radius: 8px;
   background: #f2eeff;
   color: #5926f0;
-  padding: 6px 14px;
+  padding: 0 14px;
+  height: 32px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -1069,12 +1075,13 @@
     justify-self: end;
     background-color: #f1f2f6;
     border: none;
-    border-radius: 20px;
+    border-radius: 8px;
     color: #4b5563;
     font-family: Inter, sans-serif;
     font-size: 13px;
     font-weight: 500;
-    padding: 4px 12px;
+    padding: 0 12px;
+    height: 32px;
     cursor: pointer;
   }
 
@@ -1332,8 +1339,8 @@
 
   .nextBtn {
     flex: 1;
-    border-radius: 15px;
-    padding-top: 2px;
+    border-radius: 10px;
+    padding-top: 0;
   }
 
   .stepHeaderRow strong {

@@ -139,9 +139,7 @@
   background-color: #291070;
   border-radius: 20px;
   cursor: pointer;
-  max-height: 541px;
-  max-width: 339px;
-  min-width: 300px;
+  width: 100%;
   position: relative;
   transition: 0.5s;
 
@@ -150,13 +148,11 @@
     background-color: #291070;
     border-radius: 20px;
     cursor: pointer;
-    max-width: 339px;
-    min-width: 300px;
+    width: 100%;
     overflow: hidden;
     position: relative;
     transition: 0.5s;
     z-index: 10;
-    max-height: 541px;
 
     .bg {
       height: 100%;

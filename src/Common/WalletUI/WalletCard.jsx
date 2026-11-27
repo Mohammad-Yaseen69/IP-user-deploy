@@ -52,7 +52,7 @@ const WalletCard = ({ wallet, limits, small = false, hidden = false, onSetDefaul
       <div>
         <p className={s.wcardBalance}>
           {hidden ? (
-            <b>••••••</b>
+            <b>*******</b>
           ) : (
             <>
               <b>
@@ -78,16 +78,21 @@ const WalletCard = ({ wallet, limits, small = false, hidden = false, onSetDefaul
         <p className={s.wcardLabel}>{t("Wallet ID")}</p>
         <div className={s.wcardId}>
           {`${wallet?.wallet_type?.toUpperCase()}-${wallet?.wallet_id?.toUpperCase()}`}
-          <button type="button" aria-label={t("Copy")} onClick={copyToClipboard}>
+          <button
+            type="button"
+            className="tap-target"
+            aria-label={t("Copy")}
+            onClick={copyToClipboard}
+          >
             {copied ? <Check size={small ? 13 : 20} /> : <Copy size={small ? 13 : 20} />}
           </button>
         </div>
       </div>
       <div>
         <p className={s.wcardLimit}>
-          <span>{t("Monthly limit")}</span>
+          <span className={small && s.small}>{t("Monthly limit")}</span>
           {balanceLimits && !hidden && (
-            <b>
+            <b className={small && s.small}>
               {balanceLimits.used} / {balanceLimits.total}
             </b>
           )}

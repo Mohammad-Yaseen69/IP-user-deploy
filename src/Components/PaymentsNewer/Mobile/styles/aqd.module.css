@@ -27,7 +27,7 @@
 }
 
 .button {
-  border-radius: 10px;
+  border-radius: 12px;
   background:
     linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 100%),
     linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%);
@@ -37,9 +37,12 @@
   text-align: center;
   border: none;
   outline: none;
-  height: 60px;
+  height: 56px;
   font-size: 1.2rem;
   margin-top: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .method_selection {
@@ -119,8 +122,12 @@
 }
 
 .code_cont button {
-  padding: 6.273px 15.681px;
-  border-radius: 27.162px;
+  padding: 0 15.681px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
   background: #fff;
   box-shadow: 0px 4.672px 16.352px -4.672px rgba(89, 38, 240, 0.25);
   border: none;

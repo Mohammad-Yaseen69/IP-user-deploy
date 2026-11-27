@@ -16,6 +16,7 @@ $mobile: 1000px;
 /* ---------- Page shell ---------- */
 .page {
   min-height: 100vh;
+  padding: 0 var(--page-gutter);
   background: $canvas;
   font-family: "Inter", sans-serif;
   letter-spacing: -0.154px;
@@ -48,55 +49,11 @@ $mobile: 1000px;
   font-family: inherit;
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
-  min-height: 86px;
-  padding: 16px;
-  border-bottom: 1px solid $border;
-}
-
-.headerText {
-  display: flex;
-  flex: 1 0 0;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-  padding-left: 8px;
-  color: #141414;
-
-  h1 {
-    font-size: 24px;
-    font-weight: 600;
-    line-height: 1.2;
-    letter-spacing: -0.72px;
-    color: inherit;
-  }
-
-  p {
-    overflow: hidden;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.5;
-    letter-spacing: -0.42px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    opacity: 0.5;
-  }
-}
-
-// TopRight ships with a bottom margin meant for the old absolute header.
-.headerRight > div {
-  margin-bottom: 0 !important;
-}
-
 .content {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  padding: 32px;
+  padding: 0 0 32px;
 }
 
 .row {
@@ -557,8 +514,15 @@ button.wcardChip {
   color: $tint-2;
 
   b {
-    font-weight: 700;
+    font-weight: 500;
+    font-size: 12px;
     color: #f8f9fc;
+  }
+
+  span {
+    font-size: 10px;
+    font-weight: 500;
+    color: $tint-2;
   }
 }
 
@@ -597,7 +561,7 @@ button.wcardChip {
   justify-content: space-between;
   gap: 8px;
   margin-bottom: 10px !important;
-  font-size: 11px;
+  font-size: 12.5px;
   line-height: normal;
   letter-spacing: -0.33px;
   white-space: nowrap;
@@ -613,6 +577,10 @@ button.wcardChip {
     text-overflow: ellipsis;
     color: #f8f9fc;
   }
+}
+
+.small {
+  font-size: 10px;
 }
 
 .wcardBar {
@@ -699,6 +667,10 @@ button.wcardChip {
   background: $soft;
   border: 1px solid $border;
   border-radius: 12px;
+
+  &:has(.exAmount:focus) {
+    border-color: $primary;
+  }
 }
 
 .exBoxTop {
@@ -828,10 +800,11 @@ button.wcardChip {
 }
 
 .exError {
+  margin: 0;
   font-size: 12px;
   font-weight: 500;
   line-height: 17.4px;
-  color: #b45309;
+  color: #d92d20;
 }
 
 .exCta {
@@ -840,7 +813,7 @@ button.wcardChip {
   justify-content: center;
   gap: 8px;
   width: 100%;
-  height: 44px;
+  height: 40px;
   padding: 0 16px 0 14px;
   background: $primary;
   border: 0;
@@ -853,7 +826,9 @@ button.wcardChip {
 
   &:disabled {
     cursor: not-allowed;
-    opacity: 0.6;
+    background: #e4e7ec;
+    color: #667085;
+    opacity: 1;
   }
 }
 
@@ -866,27 +841,13 @@ button.wcardChip {
 }
 
 @media screen and (max-width: $mobile) {
-  .header {
-    min-height: 0;
-    padding: 16px 16px 12px;
-    border-bottom: 0;
-  }
-
-  .headerText {
-    padding-left: 0;
-
-    p {
-      white-space: normal;
-    }
-  }
-
-  .headerRight {
-    display: none;
+  .page {
+    padding: 0 16px;
   }
 
   .content {
     gap: 16px;
-    padding: 8px 16px 24px;
+    padding: 8px 0 24px;
   }
 
   .row {
@@ -903,9 +864,40 @@ button.wcardChip {
 
   .wcard {
     padding: 18px;
+    min-height: 170px;
   }
 
   .wcardBalance b {
     font-size: 24px;
   }
+}
+
+.barIn,
+.barOut {
+  display: block;
+  width: 100%;
+  border-radius: 4px;
+  transition: height 0.3s ease;
+}
+
+.barIn {
+  background: #e6dfff;
+  width: 30px;
+}
+
+.barOut {
+  background: #e4e8ef;
+  width: 30px;
+}
+
+.barInActive {
+  background: #5926f0;
+}
+
+.barOutActive {
+  background: #1b1f2a;
+}
+
+.empty i {
+  opacity: 0.6;
 }

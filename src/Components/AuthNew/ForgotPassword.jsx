@@ -326,7 +326,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                       : t("Email")}
                   </label>
                   {loginMethod === "phone" ? (
-                    <PhoneInput setPhone={setEmail} country={country} />
+                    <PhoneInput size="lg" setPhone={setEmail} country={country} />
                   ) : (
                     <input
                       type="email"

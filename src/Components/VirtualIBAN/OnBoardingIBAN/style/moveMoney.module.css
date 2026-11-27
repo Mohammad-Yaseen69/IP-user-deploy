@@ -1,23 +1,12 @@
 .container {
-  padding: 24px;
+  padding: 0 var(--page-gutter);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   height: auto;
-  margin: 1rem;
+  margin: 0 0 1rem;
   box-sizing: border-box;
-  overflow-y: auto !important;
   padding-bottom: 40px;
-}
-
-.top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  position: relative;
-  margin: 0px;
-  padding: 0px;
-  gap: 16px;
 }
 
 .headerTitle {
@@ -45,10 +34,6 @@
   padding: 0px;
 }
 
-.topright {
-  margin-top: 0px;
-}
-
 .mainContent {
   width: 100%;
   display: flex;
@@ -72,11 +57,12 @@
 
 .backBtn {
   display: flex;
-  padding: 6px 12px;
+  padding: 0 12px;
+  height: 32px;
   justify-content: center;
   align-items: center;
   gap: 6px;
-  border-radius: 6px;
+  border-radius: 8px;
   border: 1px solid #d0d5dd;
   background: #fff;
   color: #344054;
@@ -202,8 +188,8 @@
   align-items: flex-start;
   gap: 16px;
   flex: 1 0 0;
-  box-shadow: inset 0px 0px 0px 1px #d0d5dd;
   border-radius: 12px;
+  border: 1px solid #eff1f6;
   background: #fff;
   cursor: pointer;
   transition: border-color 0.2s ease;
@@ -342,9 +328,12 @@
   }
 
   .headerTitle h1 {
+    font-family: Inter, sans-serif;
     font-size: 22px;
+    font-weight: 600;
     line-height: 30px;
-    letter-spacing: -0.6px;
+    letter-spacing: -0.72px;
+    color: #141414;
   }
 
   .headerTitle p {

@@ -59,7 +59,6 @@ const UserState = ({ children }) => {
   const [userWallets, setUserWallets] = useState([]);
   const [referralLoading, setReferralLoading] = useState(true);
   const [walletsLoading, setWalletsLoading] = useState(true);
-  const verifyingToken = useRef(false);
   const [tokenCheckFailures, setTokenCheckFailures] = useState(0);
   const [userTransactions, setUserTransactions] = useState([]);
   const [userSecurityQues, setUserSecurityQues] = useState([]);
@@ -239,11 +238,10 @@ const UserState = ({ children }) => {
     if (
       (!window.location.pathname.includes("auth") &&
         !userDetails &&
-        Object.keys(userDetails || {}).length === 0 &&
-        !verifyingToken.current) ||
+        Object.keys(userDetails || {}).length === 0) ||
       isFetchRequired
     ) {
-      verifyingToken.current = true;
+      if (!isFetchRequired && verifyTokenRequestRef.current) return;
       const isAgentLoginCheck = localStorage.getItem("isAgentLogin");
       const url = isAgentLoginCheck
         ? `/api/business-agents/agents/auth/${token}`
@@ -345,7 +343,7 @@ const UserState = ({ children }) => {
           }
         })
         .finally(() => {
-          verifyingToken.current = false;
+          if (verifyTokenRequestRef.current === request) verifyTokenRequestRef.current = null;
         });
       verifyTokenRequestRef.current = request;
     }

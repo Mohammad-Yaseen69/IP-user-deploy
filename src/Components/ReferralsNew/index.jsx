@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import styles from "./styles/index.module.scss";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import EarnMoneyBanner from "../HomeNewUpdated/EarnMoneyBanner";
 import { Check, MoreHorizontal } from "react-feather";
 import copy_ic from "../ChipsInNew/copy.png";
@@ -226,10 +226,7 @@ const ReferralsNew = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.top}>
-        <h4>{t("Referrals")}</h4>
-        {window.innerWidth > 1000 && <TopRight />}
-      </div>
+      <PageHeader title={t("Referrals")} subtitle={t("Invite friends and track your rewards.")} />
       {userDetails?.username ? (
         <>
           {convertModal && (
@@ -323,14 +320,7 @@ const ReferralsNew = () => {
             </ModalBody>
           </Modal>
           <div className={styles.banner_con}>
-            <EarnMoneyBanner
-              height="100%"
-              showLink={false}
-              headSize={"4cqi"}
-              textSize={"2cqi"}
-              radius={"30px"}
-              minWidth="40vw"
-            />
+            <EarnMoneyBanner showLink={false} minWidth="40vw" />
             <div style={{ display: "flex", gap: "1.5rem", flex: 1 }}>
               <div className={styles.total_refs}>
                 <div>
@@ -455,13 +445,14 @@ const ReferralsNew = () => {
                   {copied ? (
                     <Check />
                   ) : (
-                    <img
-                      src={copy_ic}
-                      alt="c"
-                      loading="lazy"
-                      style={{ cursor: "pointer" }}
+                    <button
+                      type="button"
+                      className="tap-target"
+                      aria-label={t("Copy")}
                       onClick={handleCopy}
-                    />
+                    >
+                      <img src={copy_ic} alt="" loading="lazy" />
+                    </button>
                   )}
                 </div>
                 {canShareReferral && (
@@ -509,7 +500,13 @@ const ReferralsNew = () => {
                   <div style={{ fontSize: "1.1rem", fontWeight: 700 }}>{t(currentTab)}</div>
                   <Button
                     color="primary"
-                    style={{ borderRadius: "8px" }}
+                    style={{
+                      height: "40px",
+                      borderRadius: "10px",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                     onClick={() =>
                       setCurrentTab(
                         currentTab === "My Referrals" ? "my withdrawls" : "My Referrals",

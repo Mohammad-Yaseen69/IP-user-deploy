@@ -136,7 +136,7 @@ const Notification = ({ notification, currentUser, onRead }) => {
         justifyContent: "space-between",
         position: "relative",
       }}
-      className={styles.notif}
+      className={`${styles.notif} ${status === "unread" ? styles.unread : ""}`}
     >
       <div
         style={{
@@ -178,7 +178,7 @@ const Notification = ({ notification, currentUser, onRead }) => {
               : currentUser?.company_name?.[0]?.toUpperCase()}
           </div>
         )}
-        <div>
+        <div style={{ flex: 1, minWidth: 0 }}>
           <div
             style={{
               display: "flex",
@@ -193,7 +193,7 @@ const Notification = ({ notification, currentUser, onRead }) => {
                 fontSize: ".8rem",
                 fontWeight: 600,
                 marginBottom: "-5px",
-                maxWidth: "150px",
+                minWidth: 0,
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",

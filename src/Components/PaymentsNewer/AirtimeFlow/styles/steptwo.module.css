@@ -35,7 +35,7 @@
   color: rgba(255, 255, 255, 0.5);
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 800;
@@ -61,7 +61,7 @@
   color: #fff;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 29.925px;
   font-style: normal;
   font-weight: 700;
@@ -106,7 +106,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -154,7 +154,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -205,8 +205,9 @@
   display: flex;
   align-items: center;
   gap: 2rem;
-  padding: 0.4rem 1.25rem;
-  border-radius: 6px;
+  padding: 0 1.25rem;
+  height: 32px;
+  border-radius: 8px;
   background:
     linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 100%),
     linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%);
@@ -217,7 +218,7 @@
   color: #fff;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 17.31px;
   font-style: normal;
   font-weight: 600;
@@ -234,7 +235,7 @@
   color: #808080;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -295,12 +296,13 @@
   display: flex;
   border: 0;
   margin: 0;
-  padding: 9px 12px;
+  padding: 0 12px;
+  height: 40px;
   justify-content: center;
   align-items: center;
   gap: 10px;
   align-self: stretch;
-  border-radius: 6px;
+  border-radius: 10px;
   margin-top: 0.5rem;
   color: #d08329;
   font-size: 12px;
@@ -350,7 +352,7 @@
   justify-content: center;
   align-items: center;
   gap: 18px;
-  border-radius: 6px;
+  border-radius: 8px;
   background:
     linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 100%),
     linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%);
@@ -360,7 +362,8 @@
   font-size: 17.31px;
   font-weight: 600;
   border: none;
-  padding: 5px 12px;
+  padding: 0 12px;
+  height: 32px;
 }
 
 .btns .back {
@@ -474,19 +477,20 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    border-radius: 6px;
+    border-radius: 8px;
     background:
       linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 100%),
       linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%);
     background-blend-mode: overlay, normal;
     box-shadow: 0px 11.901px 8.655px -5.409px rgba(89, 38, 240, 0.17);
     display: flex;
-    padding: 0.4rem 1rem;
+    padding: 0 1rem;
+    height: 32px;
     align-items: center;
     color: #fff;
     leading-trim: both;
     text-edge: cap;
-    font-family: Manrope;
+    font-family: "Inter", sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -503,7 +507,7 @@
     color: #808080;
     leading-trim: both;
     text-edge: cap;
-    font-family: Manrope;
+    font-family: "Inter", sans-serif;
     font-size: 14px;
     font-style: normal;
     font-weight: 600;

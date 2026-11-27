@@ -31,6 +31,7 @@ import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import AdditionalFilesSection from "./AdditionalFilesSection";
 import { useIdempotency } from "../../hooks/Payments/useIdempotency";
 import { sourceOfFunds } from "./sourceOfFunds";
+import { verifyPaytentlyReturn } from "../../utils/Functions/paytently";
 
 const industries = [
   "Arts & Entertainment",
@@ -241,6 +242,14 @@ const Verification = () => {
     }
   }, [status, userDetails]);
 
+  // Settles a Paytently card fee now in case the webhook is late; no-op for other providers.
+  useEffect(() => {
+    if (!status) return;
+    verifyPaytentlyReturn().then((result) => {
+      if (result) verifyToken(true);
+    });
+  }, [status]);
+
   const clearStatus = () => {
     setStatusModal("");
     navigate(
@@ -329,12 +338,16 @@ const Verification = () => {
         </p>
         <Button
           style={{
+            height: "40px",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
             background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
             border: "none",
             outline: "none",
             borderRadius: "10px",
-            padding: "12px 32px",
-            fontSize: "1rem",
+            padding: "0 32px",
+            fontSize: "14px",
             fontWeight: 500,
             marginTop: "0.5rem",
           }}

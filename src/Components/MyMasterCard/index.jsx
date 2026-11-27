@@ -1,10 +1,9 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import OnBoarding from "./OnBoarding";
 import CardPurchased from "./CardPurchased";
 import styles from "./styles/index.module.scss";
 import TransactionsTable from "./TransactionTable";
-import CustomizerContext from "../../Helper/Customizer";
 import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
 import InstaPayLoader from "../Loader";
@@ -18,7 +17,6 @@ import Error from "../AddFunds/ResponseModals/Error";
 
 const MyMasterCard = () => {
   const [cardPurchased, setCardPurchased] = useState(false);
-  const { setTogglSidebar } = useContext(CustomizerContext);
   const [currentCardDetails, setCurrentCardDetails] = useState({});
   const { userDetails, authHeader } = useContext(UserContext);
   const [cards, setCards] = useState([]);
@@ -26,6 +24,7 @@ const MyMasterCard = () => {
   const [loading, setLoading] = useState(true);
   const [current, setCurrent] = useState(1);
   const [transactions, setTransactions] = useState([]);
+  const [transactionsLoading, setTransactionsLoading] = useState(true);
   const width = useWindowWidth();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -40,16 +39,10 @@ const MyMasterCard = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (cardPurchased) {
-      setTogglSidebar(true);
-    }
-  }, [userDetails, cardPurchased]);
-
-  useEffect(() => {
     if (showT) {
-      ref.current.scrollIntoView({ behavior: "smooth" });
+      ref.current?.scrollIntoView({ behavior: "smooth" });
     }
-  }, [showT]);
+  }, [showT, loading, cardPurchased]);
 
   useEffect(() => {
     const getCard = async () => {
@@ -106,9 +99,16 @@ const MyMasterCard = () => {
         } catch (error) {
           const dec = decryptData(error?.response?.data?.data);
           console.log(dec);
+        } finally {
+          setTransactionsLoading(false);
         }
       };
-      if (cards[current]) getTransactions();
+      if (cards[current]) {
+        setTransactionsLoading(true);
+        getTransactions();
+      } else {
+        setTransactionsLoading(false);
+      }
     }, 400);
 
     return () => clearTimeout(timer);
@@ -116,16 +116,9 @@ const MyMasterCard = () => {
 
   return (
     <div style={{ minHeight: "100vh" }} className={styles.container}>
-      <div className={styles.top}>
-        <h4
-          style={{
-            display: width < 1000 && (addFundsMobile || ctcMobile || ctwMobile) && "none",
-          }}
-        >
-          {t("My Mastercard")}
-        </h4>
-        {width > 1000 && <TopRight />}
-      </div>
+      {!(width < 1000 && (addFundsMobile || ctcMobile || ctwMobile)) && (
+        <PageHeader title={t("My Mastercard")} subtitle={t("Manage your InstaPay Mastercard.")} />
+      )}
 
       {status ? (
         status === "success" && paymentThrough !== "paypal" ? (
@@ -168,7 +161,7 @@ const MyMasterCard = () => {
                     ref={ref}
                     cardNo={cards[current]?.last4}
                     transactions={transactions}
-                    isLoading={loading}
+                    isLoading={transactionsLoading}
                     searchQuery={searchQuery}
                     setSearchQuery={setSearchQuery}
                   />

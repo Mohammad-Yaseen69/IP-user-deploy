@@ -9,7 +9,7 @@ import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import { AmountCell, PartyCell, StatusCell, TxCell } from "../../Common/Ledger/Cells";
 import s from "../../Common/Ledger/ledger.module.scss";
-import { capitalizeStatus, isVoid } from "../../Common/Ledger/utils";
+import { capitalizeStatus, isVoid, rowActivation } from "../../Common/Ledger/utils";
 import statuses from "./files/thunesTransactionStatus.json";
 import { service_name_formatter } from "./TransactionItem";
 import TransactionSheet from "./Transactionsheet";
@@ -169,7 +169,8 @@ const TransactionRow = ({ item, activeItem, setActiveItem, index, fromReferral =
     <>
       <div
         className={`${s.cols} ${s.row}`}
-        onClick={() => canView && setActiveItem(isActive ? 0 : index + 1)}
+        aria-expanded={canView ? isActive : undefined}
+        {...rowActivation(() => setActiveItem(isActive ? 0 : index + 1), canView)}
       >
         <TxCell
           Icon={Icon}

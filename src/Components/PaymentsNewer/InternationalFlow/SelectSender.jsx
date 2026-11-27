@@ -247,7 +247,7 @@ const SelectSender = ({ data, dataHandler }) => {
   );
 
   const actionButtonStyle = {
-    border: "1px solid #E8E8E8",
+    border: "1px solid #EFF1F6",
     borderRadius: "7px",
     background: "#fff",
     width: "32px",
@@ -379,12 +379,14 @@ const SelectSender = ({ data, dataHandler }) => {
             type="button"
             onClick={() => setShowAddSenderModal(true)}
             style={{
+              height: "40px",
+              justifyContent: "center",
               border: "none",
-              borderRadius: "8px",
+              borderRadius: "10px",
               background: "#5926F0",
               color: "#fff",
-              padding: "10px 14px",
-              fontWeight: 800,
+              padding: "0 14px",
+              fontWeight: 600,
               display: "flex",
               alignItems: "center",
               gap: "8px",
@@ -457,12 +459,14 @@ const SelectSender = ({ data, dataHandler }) => {
               type="button"
               onClick={() => setShowAddSenderModal(true)}
               style={{
+                height: "40px",
+                justifyContent: "center",
                 border: "none",
-                borderRadius: "8px",
+                borderRadius: "10px",
                 background: "#5926F0",
                 color: "#fff",
-                padding: "10px 14px",
-                fontWeight: 800,
+                padding: "0 14px",
+                fontWeight: 600,
                 display: "flex",
                 alignItems: "center",
                 gap: "8px",
@@ -509,11 +513,15 @@ const SelectSender = ({ data, dataHandler }) => {
             type="button"
             onClick={() => setPendingSavedSender(null)}
             style={{
+              height: "40px",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
               border: "1px solid #DDD",
-              borderRadius: "8px",
+              borderRadius: "10px",
               background: "#fff",
-              padding: "9px 14px",
-              fontWeight: 800,
+              padding: "0 14px",
+              fontWeight: 600,
             }}
           >
             {t("Cancel")}
@@ -522,12 +530,16 @@ const SelectSender = ({ data, dataHandler }) => {
             type="button"
             onClick={confirmSavedSenderSelection}
             style={{
+              height: "40px",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
               border: "none",
-              borderRadius: "8px",
+              borderRadius: "10px",
               background: "#5926F0",
               color: "#fff",
-              padding: "9px 14px",
-              fontWeight: 800,
+              padding: "0 14px",
+              fontWeight: 600,
             }}
           >
             {t("Use Saved Sender")}
@@ -548,11 +560,15 @@ const SelectSender = ({ data, dataHandler }) => {
             disabled={isDeletingSender}
             onClick={() => setConfirmDeleteSender(null)}
             style={{
+              height: "40px",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
               border: "1px solid #DDD",
-              borderRadius: "8px",
+              borderRadius: "10px",
               background: "#fff",
-              padding: "9px 14px",
-              fontWeight: 800,
+              padding: "0 14px",
+              fontWeight: 600,
             }}
           >
             {t("Cancel")}
@@ -562,12 +578,16 @@ const SelectSender = ({ data, dataHandler }) => {
             disabled={isDeletingSender}
             onClick={() => deleteSender(confirmDeleteSender)}
             style={{
+              height: "40px",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
               border: "none",
-              borderRadius: "8px",
+              borderRadius: "10px",
               background: "#E64067",
               color: "#fff",
-              padding: "9px 14px",
-              fontWeight: 800,
+              padding: "0 14px",
+              fontWeight: 600,
             }}
           >
             {isDeletingSender ? t("Removing") : t("Remove")}

@@ -1,8 +1,7 @@
 import { useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../Context/UserContext";
-import useWindowWidth from "../../utils/useWindowWidth";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import { isWalletBlocked } from "../VirtualIBAN/CryptoWallet/instapay/wallets";
 import styles from "./billPayments.module.scss";
 import PaySomethingNew from "./components/PaySomethingNew";
@@ -32,7 +31,6 @@ const saveBillWallet = (id) => {
 
 const BillPayments = () => {
   const { t } = useTranslation();
-  const width = useWindowWidth();
   const { userWallets } = useContext(UserContext);
   const { countries, homeCountry } = useBillCountryOptions();
   const { data: bills = [], isLoading: isLoadingBills } = useSavedBills();
@@ -61,15 +59,10 @@ const BillPayments = () => {
 
   return (
     <div className={styles.page}>
-      <div className={styles.top}>
-        <div>
-          <h1 className={styles.title}>{t("Pay Bills")}</h1>
-          <p className={styles.sub}>
-            {t("Electricity, water, internet and government bills, paid from your wallet.")}
-          </p>
-        </div>
-        {width > 1000 && <TopRight position="relative" />}
-      </div>
+      <PageHeader
+        title={t("Pay Bills")}
+        subtitle={t("Electricity, water, internet and government bills, paid from your wallet.")}
+      />
 
       <div className={styles.grid}>
         <div className={styles.column}>

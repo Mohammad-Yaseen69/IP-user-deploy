@@ -203,7 +203,7 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
               background: "none",
               border: "none",
               outline: "none",
-              fontWeight: 600,
+              fontWeight: 500,
               fontSize: "14px",
             }}
           >

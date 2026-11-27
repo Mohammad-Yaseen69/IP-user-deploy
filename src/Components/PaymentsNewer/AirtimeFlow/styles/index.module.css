@@ -25,7 +25,7 @@
   color: #5926f0;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 800;
@@ -39,7 +39,7 @@
   color: #000;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 32px;
   font-style: normal;
   font-weight: 800;
@@ -49,13 +49,14 @@
 
 .manageBtn {
   display: flex;
-  padding: 12px;
+  padding: 0 12px;
+  height: 40px;
   white-space: nowrap;
   justify-content: center;
   align-items: center;
   gap: 10px;
   align-self: stretch;
-  border-radius: var(--Corner-Radius-Small-Roundness, 8px);
+  border-radius: 10px;
   border: 1.5px solid rgba(89, 38, 240, 0.5);
   color: #000;
   font-size: 14px;
@@ -81,8 +82,9 @@
   display: flex;
   align-items: center;
   gap: 2rem;
-  padding: 0.4rem 1.25rem;
-  border-radius: 6px;
+  padding: 0 1.25rem;
+  height: 32px;
+  border-radius: 8px;
   background:
     linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 100%),
     linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%);
@@ -93,7 +95,7 @@
   color: #fff;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 17.31px;
   font-style: normal;
   font-weight: 600;
@@ -110,7 +112,7 @@
   color: #808080;
   leading-trim: both;
   text-edge: cap;
-  font-family: Manrope;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -144,7 +146,7 @@
     color: #a6a6a6;
     leading-trim: both;
     text-edge: cap;
-    font-family: Manrope;
+    font-family: "Inter", sans-serif;
     font-size: 12px;
     font-style: normal;
     font-weight: 600;
@@ -163,19 +165,20 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    border-radius: 6px;
+    border-radius: 8px;
     background:
       linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 100%),
       linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%);
     background-blend-mode: overlay, normal;
     box-shadow: 0px 11.901px 8.655px -5.409px rgba(89, 38, 240, 0.17);
     display: flex;
-    padding: 0.4rem 1rem;
+    padding: 0 1rem;
+    height: 32px;
     align-items: center;
     color: #fff;
     leading-trim: both;
     text-edge: cap;
-    font-family: Manrope;
+    font-family: "Inter", sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -192,7 +195,7 @@
     color: #808080;
     leading-trim: both;
     text-edge: cap;
-    font-family: Manrope;
+    font-family: "Inter", sans-serif;
     font-size: 14px;
     font-style: normal;
     font-weight: 600;
@@ -218,17 +221,18 @@
   }
 
   .buttons button {
-    border-radius: 11px;
+    border-radius: 12px;
     background:
       linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 100%),
       linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%);
     background-blend-mode: overlay, normal;
     box-shadow: 0px 30.589px 22.247px -13.904px rgba(89, 38, 240, 0.17);
-    padding: 1rem;
+    padding: 0 1rem;
+    height: 56px;
     color: #fff;
     leading-trim: both;
     text-edge: cap;
-    font-family: Manrope;
+    font-family: "Inter", sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
