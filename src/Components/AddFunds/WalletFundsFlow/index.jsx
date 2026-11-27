@@ -1015,6 +1015,7 @@ const WalletFundsFlow = ({ setAction }) => {
                   setExternalLink={(e) => dataHandler("externalLink", e)}
                   currentCard={data.selectedSavedCard}
                   paymentWithSavedCard={data.selectedSavedCard?._id}
+                  toggleConfirmation={() => dataHandler("show_confirmation", false)}
                   setSubStep={(e) => {
                     dataHandler("show_confirmation", false);
                     dataHandler("step", e);
