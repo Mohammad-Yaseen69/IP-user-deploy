@@ -33,6 +33,8 @@ const SuccessStep = ({
   const width = useWindowWidth();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const isIban = paymentType === "iban";
+  const payCurrency = feeDetails?.feeDetails?.iban_currency ?? feeDetails?.feeDetails?.currency;
   return (
     <div className={styles.step4}>
       <div style={{ gap: "12px" }} className={styles.infoDiv}>
@@ -46,11 +48,12 @@ const SuccessStep = ({
             }}
           >
             <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
-              <p>{t("You Have Paid")}</p>
+              <p>{isIban ? t("Top-up is processing") : t("You Have Paid")}</p>
               <h1>
-                {!addFunds ? feeDetails.currency : feeDetails?.feeDetails?.currency}
+                {!addFunds ? feeDetails.currency : payCurrency}
                 {!addFunds ? feeDetails.fee : feeDetails?.feeDetails?.totalAmount}
               </h1>
+              {isIban && <p>{t("Your card will be loaded once the transfer settles.")}</p>}
             </div>
 
             <img src={success} style={{ width: "100px" }} alt="" />
@@ -74,6 +77,14 @@ const SuccessStep = ({
                 <div>
                   <span>
                     {walletState?.name} {t("Wallet")}
+                  </span>
+                  <p>{walletState?.wallet_id}</p>
+                </div>
+              )}
+              {isIban && (
+                <div>
+                  <span>
+                    {walletState?.name} {t("IBAN")}
                   </span>
                   <p>{walletState?.wallet_id}</p>
                 </div>
@@ -119,14 +130,16 @@ const SuccessStep = ({
               <div className={styles.feeInfo}>
                 <h3>{t("Total Amount")}</h3>
                 <h3>
-                  {feeDetails?.feeDetails?.currency} {feeDetails?.feeDetails?.totalAmount}
+                  {payCurrency} {feeDetails?.feeDetails?.totalAmount}
                 </h3>
               </div>
               <div className={styles.feeInfo}>
                 <h3>{t("Exchange Rate")}</h3>
                 <h3>
-                  {feeDetails?.feeDetails?.currency}{" "}
-                  {Number(feeDetails?.feeDetails?.exchangeRate?.replace(/[,]/g, ""))?.toFixed(2)}
+                  {payCurrency}{" "}
+                  {Number(
+                    String(feeDetails?.feeDetails?.exchangeRate ?? "").replace(/[,]/g, ""),
+                  ).toFixed(isIban ? 4 : 2)}
                 </h3>
               </div>
             </>

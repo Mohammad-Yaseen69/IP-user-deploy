@@ -21,6 +21,7 @@ const PaymentSelect = ({
   styling,
   isInIban = false,
   isIban = false,
+  showIban = false,
 }) => {
   const { t } = useTranslation();
   const activeIban = isIban || isInIban;
@@ -47,6 +48,9 @@ const PaymentSelect = ({
       hoverIcon: Paypal_h,
       comingSoon: activeIban,
     },
+    ...(showIban
+      ? [{ type: "iban", text: "Virtual IBAN", icon: Bank, hoverIcon: Bank_h, comingSoon: false }]
+      : []),
     {
       type: "mobile",
       text: "Mobile money (coming soon)",

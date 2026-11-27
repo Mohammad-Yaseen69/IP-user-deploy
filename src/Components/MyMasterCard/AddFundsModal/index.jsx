@@ -27,6 +27,22 @@ import SuccessStep from "../PaymentModal/SuccessStep";
 import styles from "../styles/addFunds.module.scss";
 import onboardStyles from "../styles/onboard.module.scss";
 import SideProgress from "./SideProgress";
+import IbanSelect from "./IbanSelect";
+import {
+  isIbanShort,
+  useIbanTopup,
+  useIbanTopupQuote,
+} from "../../../hooks/useMastercardIbanTopup";
+
+const IBAN_TOPUP_ERRORS = {
+  feature_not_allowed: "Card top-up from your IBAN is not available for your account yet.",
+  invalid_token: "Your quote expired. Please try again.",
+};
+const GENERIC_ERROR = "We couldn't process your request at the moment! please try again later.";
+const ibanErrorText = (err) => {
+  const message = decryptData(err?.response?.data?.data)?.message;
+  return IBAN_TOPUP_ERRORS[message] ?? message ?? GENERIC_ERROR;
+};
 
 const PLACEHOLDER_CARD_TYPE = {
   type: "placeholder",
@@ -46,6 +62,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
   const [otpMethods, setOtpMethods] = useState(null);
   const [saveCard, setSaveCard] = useState(false);
   const [walletState, setWalletState] = useState({});
+  const [iban, setIban] = useState({});
   const [cardNumberError, setCardNumberError] = useState(null);
   const [disabledBtnS] = useState(false);
   const [amount, setAmount] = useState("");
@@ -117,6 +134,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
     setStep(1);
     setPaymentType("");
     setWalletState({});
+    setIban({});
     setLoading(false);
     setFeeDetails({});
     setToken(null);
@@ -181,11 +199,20 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
   const [disabled, setDisabled] = useState(false);
   const [cardTransactionDetails, setCardTransactionDetails] = useState({});
 
+  const ibanQuote = useIbanTopupQuote({
+    cardId: card?._id,
+    ibanId: iban?._id,
+    amount: +String(amount).replaceAll(",", ""),
+    enabled: paymentType === "iban",
+  });
+  const ibanTopupMutation = useIbanTopup();
+  const quote = paymentType === "iban" ? (ibanQuote.data ?? {}) : feeDetails;
+
   const sendOtp = async (methodId) => {
     const otpMethod = typeof methodId === "string" ? methodId : codeType;
     const data = {
       data: {
-        token: feeDetails?.token,
+        token: quote?.token,
         accountId: userDetails?._id,
       },
       type: otpMethod,
@@ -392,6 +419,43 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
       setLoading(false);
     }
   };
+  const ibanTopup = (setter, type, otp, setOtpError) => {
+    const showProcessing = () => {
+      setToken(null);
+      setshowOtpModal(false);
+      setStep(5);
+    };
+    ibanTopupMutation.mutate(
+      { otp, token, type: codeType },
+      {
+        onSuccess: showProcessing,
+        onError: (err) => {
+          const decrypted = decryptData(err?.response?.data?.data);
+          if (decrypted?.code === "DUPLICATE_REQUEST") {
+            showProcessing();
+          } else if (
+            decrypted?.code === "QUOTE_EXPIRED" ||
+            decrypted?.message === "invalid_token"
+          ) {
+            setToken(null);
+            setshowOtpModal(false);
+            setStep(3);
+            ibanQuote.refetch();
+            setError(t(ibanErrorText(err)));
+          } else {
+            const error1 = LimitsErrorMessage(
+              decrypted?.errors?.[0]?.code ?? decrypted?.code ?? decrypted?.message,
+            );
+            const error2 = apiErrorMessage(decrypted?.message);
+            if (error2) setOtpError(error2);
+            else if (error1) setOtpError(error1);
+            else errorHandler(err, setOtpError);
+          }
+        },
+      },
+    );
+  };
+
   const walletTopup = async (setter, type, otp, setError) => {
     const data = new FormData();
 
@@ -444,7 +508,11 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
         setDisabled(!paymentType || (paymentType === "paypal" && !feeDetails.token));
         break;
       case 3:
-        setDisabled(!feeDetails.token && !walletState._id);
+        setDisabled(
+          paymentType === "iban"
+            ? !quote.token || isIbanShort(iban, quote)
+            : !feeDetails.token && !walletState._id,
+        );
         setSideText(
           width > 1000
             ? t("Choose the method")
@@ -482,7 +550,18 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
         setDisabled(false);
         break;
     }
-  }, [step, amount, feeDetails, walletState, paymentType, width, cardDetail, selectedSaveCard]);
+  }, [
+    step,
+    amount,
+    feeDetails,
+    walletState,
+    iban,
+    ibanQuote.data,
+    paymentType,
+    width,
+    cardDetail,
+    selectedSaveCard,
+  ]);
 
   const handleBack = () => {
     if (step === 2) {
@@ -490,6 +569,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
     }
     if (step === 3) {
       setWalletState({});
+      setIban({});
       setCardDetails({
         cardNumber: "",
         cardExpiry: "",
@@ -505,6 +585,9 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
     }
   };
   // console.log("data", card?.currency)
+
+  const payerState =
+    paymentType === "iban" ? { name: iban?.currency, wallet_id: iban?.iban } : walletState;
 
   const renderData = () => (
     <div
@@ -590,9 +673,19 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
                   }}
                   paymentType={paymentType}
                   setPaymentType={setPaymentType}
+                  showIban={true}
                 />
               )}
-              {step === 3 && (
+              {step === 3 && paymentType === "iban" && (
+                <IbanSelect
+                  iban={iban}
+                  setIban={setIban}
+                  feeDetails={quote}
+                  quoteLoading={ibanQuote.isFetching}
+                  quoteError={ibanQuote.error && t(ibanErrorText(ibanQuote.error))}
+                />
+              )}
+              {step === 3 && paymentType !== "iban" && (
                 <PaymentStep
                   marginTop={"1rem"}
                   paymentType={paymentType}
@@ -621,8 +714,8 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
 
               {step === 4 && (
                 <ConfirmationStep
-                  feeDetails={feeDetails}
-                  walletState={walletState}
+                  feeDetails={quote}
+                  walletState={payerState}
                   sendOtp={sendOtp}
                   addFunds={true}
                   setStep={setStep}
@@ -633,8 +726,8 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
 
               {step === 5 && (
                 <SuccessStep
-                  feeDetails={feeDetails}
-                  walletState={walletState}
+                  feeDetails={quote}
+                  walletState={payerState}
                   setIsOpen={setOpen}
                   paymentType={paymentType}
                   addFunds={true}
@@ -744,13 +837,15 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             callback={
               paymentType === "wallet"
                 ? walletTopup
-                : paymentType === "paypal"
-                  ? paypalTopup
-                  : cardTopup
+                : paymentType === "iban"
+                  ? ibanTopup
+                  : paymentType === "paypal"
+                    ? paypalTopup
+                    : cardTopup
             }
             setterValue={true}
             hideOtp={() => setshowOtpModal(false)}
-            processing={loading}
+            processing={loading || ibanTopupMutation.isPending}
             resendHandler={sendOtp}
             authType={codeType}
             setAuthType={setCodeType}

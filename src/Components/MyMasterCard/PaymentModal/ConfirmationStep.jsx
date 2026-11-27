@@ -18,7 +18,9 @@ export const paymentInfoJSX = (feeDetails, addFunds, title, t) => (
         {!addFunds
           ? (feeDetails?.totalFee ?? feeDetails?.fee)
           : (feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount)}{" "}
-        {!addFunds ? feeDetails.currency : feeDetails?.feeDetails?.currency}
+        {!addFunds
+          ? feeDetails.currency
+          : (feeDetails?.feeDetails?.iban_currency ?? feeDetails?.feeDetails?.currency)}
       </h1>
     </div>
     <img src={Svg} style={{ position: "absolute", right: "10px", top: "0px" }} alt="" />
@@ -37,6 +39,7 @@ const ConfirmationStep = ({
   feeLabel,
 }) => {
   const { t } = useTranslation();
+  const payCurrency = feeDetails?.feeDetails?.iban_currency ?? feeDetails?.feeDetails?.currency;
   const exchangeRate = Number(String(feeDetails?.exchangeRate ?? "").replace(/,/g, ""));
   const showExchangeRate =
     !addFunds &&
@@ -77,7 +80,9 @@ const ConfirmationStep = ({
                     ? t("Payment Card")
                     : paymentType === "paypal"
                       ? t("Paypal")
-                      : t("Wallet")}
+                      : paymentType === "iban"
+                        ? t("IBAN")
+                        : t("Wallet")}
                 </span>
                 <p>{walletState?.wallet_id}</p>
               </div>
@@ -88,8 +93,10 @@ const ConfirmationStep = ({
                   <img src={er_icon} alt="" />
                   <span>
                     1.00 {cardDets?.currency} ={" "}
-                    {Number(feeDetails?.feeDetails?.exchangeRate?.replace(/[,]/g, ""))?.toFixed(2)}{" "}
-                    {feeDetails?.feeDetails?.currency}{" "}
+                    {Number(
+                      String(feeDetails?.feeDetails?.exchangeRate).replace(/[,]/g, ""),
+                    ).toFixed(paymentType === "iban" ? 4 : 2)}{" "}
+                    {payCurrency}{" "}
                   </span>
                 </div>
               </div>
@@ -112,7 +119,7 @@ const ConfirmationStep = ({
                 </h3>
                 <h3 style={{ marginBottom: "0", fontSize: "18px" }}>
                   {feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount}
-                  {feeDetails?.feeDetails?.currency}{" "}
+                  {payCurrency}{" "}
                 </h3>
               </div>
             )}
@@ -148,7 +155,7 @@ const ConfirmationStep = ({
                 <h3>
                   {" "}
                   {feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount}
-                  {feeDetails?.feeDetails?.currency}
+                  {payCurrency}
                 </h3>
               </div>
             </>
