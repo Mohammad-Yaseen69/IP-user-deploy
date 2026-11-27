@@ -116,7 +116,7 @@
 }
 
 .pinBanner {
-  margin: 16px 0;
+  margin: 24px 0;
   padding: 16px 20px;
   box-sizing: border-box;
   border-radius: 14px;
@@ -164,17 +164,16 @@
 .activeGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-  padding: 18px 0;
+  gap: 24px;
 }
 
 .card {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 22px;
+  gap: 24px;
   min-height: 440px;
-  padding: 22px;
+  padding: 24px;
   box-sizing: border-box;
   border-radius: 18px;
   border: 1px solid var(--border);
@@ -299,29 +298,34 @@
 }
 
 .unlinkBtn {
-  padding: 0 16px;
-  height: 32px;
+  padding: 0 18px;
+  height: 40px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   background: var(--step-bg);
   color: var(--accent);
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 500;
   line-height: 1.4;
   cursor: pointer;
+  text-align: center;
 }
 
 .connectedBadge {
-  padding: 8px 14px;
-  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 10px;
   background: #dcfce7;
   color: #15803d;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 500;
   line-height: 1.4;
+  text-align: center;
 }
 
 .primaryBtn {
@@ -331,23 +335,24 @@
   border-radius: 10px;
   background: var(--accent);
   color: #fff;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   line-height: 1.4;
   cursor: pointer;
+  text-align: center;
 }
 
 .sectionHeading {
-  margin: 28px 0px 12px;
-  font-size: 13px;
+  margin: 24px 0 16px;
+  font-size: 16px;
   font-weight: 600;
-  color: #334155;
+  color: #141414;
 }
 
 .comingSoonGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  gap: 24px;
 }
 
 .comingCard {

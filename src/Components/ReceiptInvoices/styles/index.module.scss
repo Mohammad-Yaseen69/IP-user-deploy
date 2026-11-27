@@ -61,7 +61,17 @@
     }
   }
 
+  .tabs {
+    padding: 0;
+    margin-bottom: 24px;
+  }
+
   .receiptsCont {
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #eff1f6;
+    border-radius: 16px;
+
     .head {
       display: flex;
       align-self: stretch;
@@ -106,14 +116,16 @@
         height: 40px;
         border-radius: 10px;
         background: #fff;
-        box-shadow: 0 4.328px 35.702px 0 rgba(0, 0, 0, 0.06);
+        border: 1px solid #eff1f6;
         padding: 0 14px;
 
         input {
+          flex: 1;
+          min-width: 0;
           border: none;
           outline: none;
           padding: 0px;
-          font-weight: 600;
+          font-weight: 400;
         }
       }
     }
@@ -126,7 +138,7 @@
 
     .table {
       width: 100%;
-      min-height: 100vh;
+      min-height: 320px;
     }
 
     .tr {

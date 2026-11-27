@@ -42,6 +42,7 @@ const REDESIGNED_TABS = [
   "How Others Can Find You",
   "Financial Info",
   "Manage Saved Cards",
+  "API Key",
 ];
 
 const Settings = () => {

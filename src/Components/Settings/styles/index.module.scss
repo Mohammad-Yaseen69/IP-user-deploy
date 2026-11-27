@@ -16,13 +16,13 @@
   .right {
     flex: 1;
     min-width: 0;
-    border-radius: 12px;
-    box-shadow:
-      0px -17px 58px 0px rgba(0, 0, 0, 0.02),
-      15.146px 4.328px 242.341px 0px rgba(0, 0, 0, 0.07);
+    border-radius: 16px;
+    border: 1px solid #eff1f6;
+    background: #fff;
 
     &.plain {
-      box-shadow: none;
+      border: 0;
+      background: none;
       padding-bottom: 24px;
     }
   }

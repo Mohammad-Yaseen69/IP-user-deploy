@@ -1,13 +1,10 @@
 import { useTranslation } from "react-i18next";
 import styles from "./styles/index.module.scss";
+import s from "../../Common/Ledger/ledger.module.scss";
 import calendar from "./files/calendar.png";
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Search } from "react-feather";
 import { Input } from "reactstrap";
-import sent_white from "./files/sent_white.png";
-import sent_grey from "./files/sent_grey.png";
-import received_white from "./files/received_white.png";
-import received_grey from "./files/received_grey.png";
 import { DateRangePicker } from "react-date-range";
 import { UserContext } from "../../Context/UserContext";
 import axios from "axios";
@@ -93,29 +90,21 @@ const TransactionsTable = () => {
     {
       id: 1,
       name: t("All"),
-      icon_white: sent_white,
-      icon_grey: sent_grey,
       value: "all",
     },
     {
       id: 2,
       name: t("Scheduled"),
-      icon_white: sent_white,
-      icon_grey: sent_grey,
       value: "schedule",
     },
     {
       id: 3,
       name: t("Recurring"),
-      icon_white: received_white,
-      icon_grey: received_grey,
       value: "recurring",
     },
     {
       id: 4,
       name: t("Plans Subscriptions"),
-      icon_white: received_white,
-      icon_grey: received_grey,
       value: "plans",
     },
   ];
@@ -250,31 +239,18 @@ const TransactionsTable = () => {
   return (
     <div className={styles.table}>
       <div className={styles.menu}>
-        <div className={styles.right}>
+        <div className={`${s.tabs} ${styles.tabs}`} role="tablist">
           {menuData.map((item) => (
-            <div
+            <button
               key={item.id}
-              style={{
-                background:
-                  active === item.value
-                    ? "linear-gradient(346deg, #E64067 0%, #5926F0 55.65%, #4828A0 100%), #D9D9D9"
-                    : "#f8f8f8",
-                boxShadow:
-                  active === item.value
-                    ? "0px 11.90068244934082px 8.655041694641113px rgba(89, 38, 240, 0.17)"
-                    : "none",
-                color: active === item.value ? "white" : "#848484",
-              }}
-              className={styles.menu_item}
+              type="button"
+              role="tab"
+              aria-selected={active === item.value}
+              className={`${s.tab} ${active === item.value ? s.active : ""}`}
               onClick={() => setActive(item.value)}
             >
-              <img
-                src={active === item.value ? item.icon_white : item.icon_grey}
-                style={{ width: "18px" }}
-              />
-              <span>{item.name}</span>
-              {active === item.value && <div className={styles.dot}></div>}
-            </div>
+              {item.name}
+            </button>
           ))}
         </div>
         <div className={styles.left}>

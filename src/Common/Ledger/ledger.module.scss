@@ -134,7 +134,13 @@ $mobile: 1000px;
     margin-left: 6px;
   }
 
-  &.active {
+  &:focus:not(:focus-visible) {
+    border: 0;
+    border-bottom: 1px solid #d1d6e0;
+  }
+
+  &.active,
+  &.active:focus:not(:focus-visible) {
     color: $primary;
     border-color: $primary;
   }

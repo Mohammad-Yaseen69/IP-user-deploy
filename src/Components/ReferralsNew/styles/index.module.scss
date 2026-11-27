@@ -10,10 +10,11 @@
 
     .total_refs {
       flex: 1;
-      border-radius: 30px;
-      background: linear-gradient(278deg, #5926f0 8.85%, #fc60ff 126.18%), #d9d9d9;
-      padding: 1.5rem;
-      color: white;
+      border-radius: 16px;
+      border: 1px solid #eff1f6;
+      background: #fff;
+      padding: 24px;
+      color: #141414;
       container-type: inline-size;
 
       div {
@@ -25,7 +26,9 @@
 
         h5 {
           margin-bottom: 0;
-          font-size: 8cqi;
+          font-size: 14px;
+          font-weight: 500;
+          color: #6e7687;
         }
       }
 
@@ -37,12 +40,11 @@
 
     .total_earn {
       flex: 1;
-      border-radius: 30px;
-      background:
-        linear-gradient(0deg, #20bc25 0%, #20bc25 100%),
-        linear-gradient(143deg, #5926f0 -35.53%, #fc60ff 78.34%), #d9d9d9;
-      padding: 1.5rem;
-      color: white;
+      border-radius: 16px;
+      border: 1px solid #eff1f6;
+      background: #fff;
+      padding: 24px;
+      color: #141414;
       container-type: inline-size;
 
       div {
@@ -54,6 +56,9 @@
 
         h5 {
           margin-bottom: 0;
+          font-size: 14px;
+          font-weight: 500;
+          color: #6e7687;
         }
       }
 
@@ -80,8 +85,9 @@
     .ref_dets_sub {
       display: flex;
       gap: 0.75rem;
-      border-radius: 24px;
-      background: #f1f1f1;
+      border-radius: 12px;
+      border: 1px solid #eff1f6;
+      background: #f8f9fc;
       align-items: center;
       padding: 1rem;
       flex: 1;
@@ -100,10 +106,9 @@
         h4 {
           flex: 1;
           font-weight: 700;
-          border-radius: 17.657px;
-          background: rgba(109, 41, 220, 0.17);
-          box-shadow: 0px 7.06282px 22.95415px 0px rgba(0, 0, 0, 0.06);
-          backdrop-filter: blur(3.5314083099365234px);
+          border-radius: 10px;
+          background: #f2eeff;
+          color: #5926f0;
           padding: 0.75rem;
           white-space: nowrap;
           margin-bottom: 0;
@@ -130,7 +135,7 @@
             gap: 0.6rem;
             align-items: center;
             color: white;
-            border-radius: 16px;
+            border-radius: 10px;
             flex: 1;
             justify-content: space-between;
 
@@ -422,8 +427,6 @@
               #5926f0 55.65%,
               #4828a0 100%
             );
-            box-shadow: 0px 10.712px 34.813px 0px rgba(0, 0, 0, 0.06);
-            backdrop-filter: blur(5.355913162231445px);
             color: white;
             border-radius: 8px;
             font-size: 1rem;
@@ -434,7 +437,6 @@
         &.right {
           flex-direction: column;
           align-items: flex-start;
-          box-shadow: 0px 2px 43px rgba(38, 51, 77, 0.13);
           padding: 0.75rem;
 
           & > span {

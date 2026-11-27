@@ -5,6 +5,7 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { FaBell } from "react-icons/fa6";
 import axios from "axios";
 import Notification from "./Notification";
+import styles from "./styles/index.module.css";
 import { useTranslation } from "react-i18next";
 
 const Notifications = ({ hideShadow = false }) => {
@@ -99,27 +100,7 @@ const Notifications = ({ hideShadow = false }) => {
           />
         )}
         {showDropDown && (
-          <div
-            style={{
-              position: "absolute",
-              top: "110%",
-              right: "0",
-              display: "flex",
-              flexDirection: "column",
-              width: "300px",
-              maxHeight: "420px",
-              overflowY: "auto",
-              background: "#fff",
-              padding: ".5rem",
-              boxShadow: "0px 9.94788px 10.7769px rgba(109, 41, 220, 0.17)",
-              border: "1.11414px solid rgba(0, 0, 0, 0.08)",
-              borderTop: "none",
-              borderRadius: "10px",
-              zIndex: 10000,
-              gap: "10px",
-            }}
-            onClick={() => setShowDropDown(!showDropDown)}
-          >
+          <div className={styles.panel} onClick={() => setShowDropDown(!showDropDown)}>
             {notifications.length > 0 ? (
               notifications
                 .sort((a, b) => {

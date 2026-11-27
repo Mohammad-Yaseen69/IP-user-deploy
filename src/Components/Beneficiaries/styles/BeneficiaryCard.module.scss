@@ -39,7 +39,6 @@
       .type_badge {
         border-radius: 143.4px;
         background: rgba(64, 0, 255, 0.31);
-        box-shadow: 0px 3.18667px 26.29px 0px rgba(89, 38, 240, 0.21);
         padding: 0.25rem 0.75rem;
         font-size: 0.7rem;
         color: black;
@@ -82,7 +81,7 @@
     .t_d {
       border-radius: 94.876px;
       background: #fff;
-      box-shadow: 0px 2.10835px 17.39387px 0px rgba(89, 38, 240, 0.21);
+      border: 1px solid #eff1f6;
       padding: 0 0.4rem;
       height: 10px;
       display: grid;
@@ -107,7 +106,6 @@
           outline: none;
           color: black;
           background: #fff;
-          box-shadow: 0px 4.32752px 35.70205px 0px rgba(0, 0, 0, 0.14);
           min-width: 200px;
           border-radius: 10px;
           height: 40px;

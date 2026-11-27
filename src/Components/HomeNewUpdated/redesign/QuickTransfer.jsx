@@ -49,6 +49,10 @@ const QuickTransfer = () => {
           const fullName = isPerson
             ? [item?.first_name, item?.last_name].filter(Boolean).join(" ")
             : (item?.company_name ?? "");
+          const lastInitial = item?.last_name?.trim()?.[0]?.toUpperCase();
+          const label = isPerson
+            ? [item?.first_name, lastInitial && `${lastInitial}.`].filter(Boolean).join(" ")
+            : fullName;
           const [background, color] = COLORS[index % COLORS.length];
           return (
             <BenefCard
@@ -59,7 +63,7 @@ const QuickTransfer = () => {
               trigger={(open) => (
                 <button type="button" className={d.contact} title={fullName} onClick={open}>
                   <i style={{ background, color }}>{initials(fullName)}</i>
-                  <span>{isPerson ? item?.first_name : fullName}</span>
+                  <span>{label}</span>
                 </button>
               )}
             />

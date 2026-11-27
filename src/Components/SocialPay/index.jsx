@@ -118,12 +118,16 @@ const PayViaSocial = () => {
           })}
         </section>
       )}
-      <h3 className={styles.sectionHeading}>{t("Coming Soon")}</h3>
-      <section className={styles.comingSoonGrid}>
-        {comingSoonChannels.map((item) => (
-          <ComingSoonCard key={item.id} item={item} themes={themes} />
-        ))}
-      </section>
+      {comingSoonChannels.length > 0 && (
+        <>
+          <h3 className={styles.sectionHeading}>{t("Coming Soon")}</h3>
+          <section className={styles.comingSoonGrid}>
+            {comingSoonChannels.map((item) => (
+              <ComingSoonCard key={item.id} item={item} themes={themes} />
+            ))}
+          </section>
+        </>
+      )}
     </div>
   );
 };

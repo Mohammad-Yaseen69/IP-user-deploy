@@ -81,8 +81,14 @@ const BalanceHero = ({ hidden, onToggleHidden, activity, walletCount, activityLo
             <div className={d.balanceMain}>
               <p className={d.balanceValue}>
                 <small>USD</small>
-                {hidden || balanceLoading ? (
-                  <b className={hidden ? d.mask : undefined}>{hidden ? MASK : "…"}</b>
+                {hidden ? (
+                  <b className={d.masked}>{MASK}</b>
+                ) : balanceLoading ? (
+                  <Skeleton
+                    width={180}
+                    height={56}
+                    sx={{ alignSelf: "center", borderRadius: "10px" }}
+                  />
                 ) : (
                   <>
                     <b>{whole}</b>
@@ -107,13 +113,14 @@ const BalanceHero = ({ hidden, onToggleHidden, activity, walletCount, activityLo
                   sx={{ display: "inline-block", verticalAlign: "middle" }}
                 />
               ) : (
-                activity &&
-                !hidden && (
+                activity && (
                   <span>
                     <CircleCheck size={16} />
                     {t("{{currency}} activity: {{amount}} this month", {
                       currency: activity.code,
-                      amount: `${activity.net >= 0 ? "+" : "−"}${usd(Math.abs(activity.net))}`,
+                      amount: hidden
+                        ? MASK
+                        : `${activity.net >= 0 ? "+" : "−"}${usd(Math.abs(activity.net))}`,
                     })}
                   </span>
                 )

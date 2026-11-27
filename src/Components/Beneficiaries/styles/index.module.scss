@@ -6,7 +6,7 @@
 
   .table_header {
     background-color: white;
-    filter: drop-shadow(15.146323204040527px 25px 67px rgba(0, 0, 0, 0.07));
+    border: 1px solid #eff1f6;
     display: flex;
     gap: 1.4rem;
     align-items: center;
@@ -18,7 +18,7 @@
       align-items: center;
       border-radius: 10px;
       background: #fff;
-      box-shadow: 0px 4.32752px 35.70205px 0px rgba(0, 0, 0, 0.06);
+      border: 1px solid #eff1f6;
       height: 40px;
       padding: 0 1rem;
       border-radius: 10px;
@@ -40,7 +40,7 @@
       color: black;
       border-radius: 10px;
       background: #fff;
-      box-shadow: 0px 4.32752px 35.70205px 0px rgba(0, 0, 0, 0.14);
+      border: 1px solid #eff1f6;
       min-width: 200px;
 
       a {
@@ -97,7 +97,7 @@
           align-items: center;
           border-radius: 16.208px;
           background: #fafafa;
-          box-shadow: 0px 1px 15.5px 0px rgba(0, 0, 0, 0.06) inset;
+          border: 1px solid #eff1f6;
           padding: 0 1rem;
           border-radius: 10px;
           min-width: 180px;
@@ -154,7 +154,7 @@
   border-radius: 10px;
   background: #fff !important;
   color: #333 !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #eff1f6;
   white-space: nowrap;
 }
 
