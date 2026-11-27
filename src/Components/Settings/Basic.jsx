@@ -15,6 +15,8 @@ import countryAlpha2Map from "../AddFunds/WalletFund/countries_iso2.json";
 import countriesData from "../PaymentsNewer/CountriesData.json";
 import PhoneInput from "../PhoneInput";
 import OTPConfirmation from "../../Common/Component/OtpVerification";
+import { formatCountdown, getOtpThrottle } from "../../utils/Functions/otpThrottle";
+import { useCountdown } from "../../hooks/useCountdown";
 import NextStepModal from "./NextStepModal";
 import QrGenerate from "./QrGenerate";
 import DeleteImageModal from "./DeleteImageModal";
@@ -333,6 +335,7 @@ const Basic = ({ setCurrentTab }) => {
 
   const [otpToken, setOtpToken] = useState("");
   const [otpMethods, setOtpMethods] = useState(null);
+  const { seconds: sendCooldown, setSeconds: setSendCooldown } = useCountdown(0);
   const sendOtp = async (arg = "") => {
     const isChannel = arg === "whatsapp" || arg === "sms";
     const type = isChannel
@@ -348,6 +351,7 @@ const Basic = ({ setCurrentTab }) => {
 
     setIsSaving(true);
     setOtpType(type === "email" ? "email" : "phone");
+    let throttleResult;
 
     try {
       const body = {
@@ -376,10 +380,20 @@ const Basic = ({ setCurrentTab }) => {
       if (!showOtp) setCodeType(data?.availableMethods?.whatsapp ? "whatsapp" : "sms");
       setShowOtp(true);
     } catch (err) {
-      const error = decryptData(err.response.data.data);
-      toast.error(error.message ?? "Something went wrong while sending otp to your " + type);
+      const throttle = getOtpThrottle(err);
+      if (throttle) {
+        toast.error(throttle.message ?? "Something went wrong while sending otp to your " + type);
+        if (throttle.seconds) {
+          if (!showOtp) setSendCooldown(throttle.seconds);
+          throttleResult = { retryAfterSeconds: throttle.seconds };
+        }
+      } else {
+        const error = decryptData(err.response?.data?.data);
+        toast.error(error?.message ?? "Something went wrong while sending otp to your " + type);
+      }
     }
     setIsSaving(false);
+    return throttleResult;
   };
 
   const editProfileHandler = () => {
@@ -593,6 +607,12 @@ const Basic = ({ setCurrentTab }) => {
   };
 
   const [showUsernameGuide, setShowUsernameGuide] = useState(false);
+
+  const contactNeedsOtp =
+    userDetails?.account_type === "individual"
+      ? !!email && userDetails?.email !== email
+      : userDetails?.account_type === "business" && (userDetails?.phone || "") !== (phone || "");
+  const isOtpCoolingDown = sendCooldown > 0 && contactNeedsOtp;
 
   const handleSaveClick = () => {
     if (userDetails?.account_type === "individual") {
@@ -1479,9 +1499,11 @@ const Basic = ({ setCurrentTab }) => {
           <div className={styles.saveBar}>
             <span className={`${styles.saveDot} ${changedCount === 0 ? styles.saveDotIdle : ""}`} />
             <p className={styles.saveText}>
-              {changedCount === 0
-                ? t("No unsaved changes")
-                : `${changedCount} ${changedCount === 1 ? t("unsaved change") : t("unsaved changes")}`}
+              {isOtpCoolingDown
+                ? `${t("Resend in")} ${formatCountdown(sendCooldown)}`
+                : changedCount === 0
+                  ? t("No unsaved changes")
+                  : `${changedCount} ${changedCount === 1 ? t("unsaved change") : t("unsaved changes")}`}
             </p>
             <button
               type="button"
@@ -1497,6 +1519,7 @@ const Basic = ({ setCurrentTab }) => {
               onClick={handleSaveClick}
               disabled={
                 isSaving ||
+                isOtpCoolingDown ||
                 (!isVerified &&
                   (usernameError ||
                     !usernameValid ||

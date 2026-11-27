@@ -15,6 +15,7 @@ import {
 import { InactivityContext } from "../../../InactivityWrapper";
 import { useOtpFields } from "../../../hooks/useOtpFields";
 import { useCountdown } from "../../../hooks/useCountdown";
+import { resendWithCooldown } from "../../../utils/Functions/otpThrottle";
 
 import { smsIcon, whatsappIcon, authIcon } from "../../../Components/Auth/files";
 import otpIcon from "../../../Components/PaymentsNewer/files/otp_icon.png";
@@ -26,7 +27,7 @@ import LanguagePicker from "../../../Components/LanguagePicker";
 
 export const OTP_METHOD_PRIORITY = ["authenticator", "email", "whatsapp", "sms"];
 
-const OTP_RESEND_SECONDS = 120;
+const OTP_RESEND_SECONDS = 0;
 
 export const OTP_METHOD_CONFIG = {
   authenticator: { label: "Google Authenticator", Icon: Lock },
@@ -193,8 +194,12 @@ const SignupOtp = ({
                   if (resendTimer === 0) {
                     const nextMethod = currentMethod === "sms" ? "whatsapp" : "sms";
                     setCurrentMethod(nextMethod);
-                    setResendTimer(OTP_RESEND_SECONDS);
-                    resendHandler(nextMethod);
+                    resendWithCooldown(
+                      resendHandler,
+                      nextMethod,
+                      setResendTimer,
+                      OTP_RESEND_SECONDS,
+                    );
                     setOTPValues(Array(numberOfFields).fill(""));
                   }
                 }}
@@ -254,8 +259,12 @@ const SignupOtp = ({
                     style={{ color: "#5926f0", cursor: "pointer" }}
                     onClick={() => {
                       setOTPValues(Array(numberOfFields).fill(""));
-                      resendHandler(currentMethod || "whatsapp");
-                      setResendTimer(timer);
+                      resendWithCooldown(
+                        resendHandler,
+                        currentMethod || "whatsapp",
+                        setResendTimer,
+                        timer,
+                      );
                     }}
                   >
                     {t("Resend Now")}
@@ -531,8 +540,12 @@ const CardOtp = ({
                       onClick={() => {
                         setOTPValues(Array(numberOfFields).fill(""));
                         resetIdempotency();
-                        resendHandler(authType);
-                        setResendTimer(OTP_RESEND_SECONDS);
+                        resendWithCooldown(
+                          resendHandler,
+                          authType,
+                          setResendTimer,
+                          OTP_RESEND_SECONDS,
+                        );
                       }}
                     >
                       {t("Resend Now")}
@@ -588,8 +601,12 @@ const CardOtp = ({
                             setAuthType(methodId);
 
                             if (resendTimer === 0) {
-                              resendHandler(methodId);
-                              setResendTimer(OTP_RESEND_SECONDS);
+                              resendWithCooldown(
+                                resendHandler,
+                                methodId,
+                                setResendTimer,
+                                OTP_RESEND_SECONDS,
+                              );
                             }
                           }}
                         >
@@ -802,8 +819,12 @@ const ModalOtp = ({
                       }}
                       onClick={() => {
                         setOTPValues(Array(numberOfFields).fill(""));
-                        resendHandler(data.codeType);
-                        setResendTimer(OTP_RESEND_SECONDS);
+                        resendWithCooldown(
+                          resendHandler,
+                          data.codeType,
+                          setResendTimer,
+                          OTP_RESEND_SECONDS,
+                        );
                       }}
                     >
                       {t("Resend Now")}
@@ -849,8 +870,12 @@ const ModalOtp = ({
                         dataHandler("codeType", methodId);
 
                         if (resendTimer === 0) {
-                          resendHandler(methodId);
-                          setResendTimer(OTP_RESEND_SECONDS);
+                          resendWithCooldown(
+                            resendHandler,
+                            methodId,
+                            setResendTimer,
+                            OTP_RESEND_SECONDS,
+                          );
                         }
                       }}
                     >
@@ -987,8 +1012,7 @@ const ButtonsOtp = ({
     setOtpError("");
     setAuthType(methodId);
     if (methodId !== "authenticator") {
-      setResendTimer(OTP_RESEND_SECONDS);
-      resendHandler(methodId);
+      resendWithCooldown(resendHandler, methodId, setResendTimer, OTP_RESEND_SECONDS);
     }
   };
 
@@ -1047,8 +1071,7 @@ const ButtonsOtp = ({
                   type="button"
                   onClick={() => {
                     setOTPValues(Array(numberOfFields).fill(""));
-                    resendHandler(authType);
-                    setResendTimer(OTP_RESEND_SECONDS);
+                    resendWithCooldown(resendHandler, authType, setResendTimer, OTP_RESEND_SECONDS);
                   }}
                 >
                   {t("Resend now")}

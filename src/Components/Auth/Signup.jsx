@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useContext, useEffect, useMemo, useReducer } from "react";
+import { useContext, useEffect, useMemo, useReducer, useState } from "react";
 import { ArrowLeft, ChevronRight } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { Link, useParams, useSearchParams } from "react-router-dom";
@@ -8,6 +8,8 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import useSecurityShield from "../../hooks/useSecurityShield";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
+import { formatCountdown, getOtpThrottle } from "../../utils/Functions/otpThrottle";
+import { useCountdown } from "../../hooks/useCountdown";
 import success from "../PaymentsNewer/files/confirm.mp4";
 import ErrorModal from "../PaymentsNewer/InternationalFlow/ErrorModal";
 import OtpConfirmation from "./Signup/OtpConfirmation";
@@ -82,6 +84,9 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
     recordTelemetryFocus,
     resetRecaptcha,
   } = useSecurityShield();
+  const { seconds: signupCooldown, setSeconds: setSignupCooldown } = useCountdown(0);
+  const [throttleError, setThrottleError] = useState("");
+  const isSignupCoolingDown = data.step === 5 && signupCooldown > 0;
 
   const dataHandler = (field, value) => {
     dispatch({ type: "UPDATE_FIELD", field, value });
@@ -271,6 +276,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
 
     setIsSubmitting(true);
     dataHandler("loading", true);
+    let throttleResult;
 
     const countryIso =
       typeof data?.country === "string"
@@ -328,15 +334,21 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
       }
     } catch (error) {
       const dec = error?.response?.data?.data ? decryptData(error.response.data.data) : null;
-      dataHandler(
-        "error",
-        dec?.message ?? error?.message ?? t("Something went wrong while sending OTP."),
-      );
+      const message =
+        dec?.message ?? error?.message ?? t("Something went wrong while sending OTP.");
+      dataHandler("error", message);
+      const throttle = getOtpThrottle(error);
+      if (throttle?.seconds) {
+        setSignupCooldown(throttle.seconds);
+        setThrottleError(message);
+        throttleResult = { retryAfterSeconds: throttle.seconds };
+      }
     } finally {
       dataHandler("loading", false);
       setIsSubmitting(false);
       resetRecaptcha();
     }
+    return throttleResult;
   };
 
   const uploadDp = async (token) => {
@@ -468,6 +480,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
         dataHandler("step", data.step + 1);
         break;
       case 5:
+        if (signupCooldown > 0) return;
         signupHandler("whatsapp");
         break;
 
@@ -522,6 +535,11 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
               }}
               heading={"Cannot Proceed"}
               message={data.error}
+              extra={
+                data.error === throttleError && signupCooldown > 0
+                  ? `${t("Resend in")} ${formatCountdown(signupCooldown)}`
+                  : null
+              }
             />
           )}
           {data.show_email_otp ? (
@@ -592,11 +610,15 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
                   </button>
                 )}
                 <button
-                  disabled={data.loading || buttonDisabled || isSubmitting}
+                  disabled={data.loading || buttonDisabled || isSubmitting || isSignupCoolingDown}
                   type="submit"
                   className={styles.form_btn}
                 >
-                  <span>{t("Continue")}</span>
+                  <span>
+                    {isSignupCoolingDown
+                      ? `${t("Resend in")} ${formatCountdown(signupCooldown)}`
+                      : t("Continue")}
+                  </span>
                   <ChevronRight size={20} color="white" />
                 </button>
               </div>

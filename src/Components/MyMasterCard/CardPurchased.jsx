@@ -31,6 +31,8 @@ import CardtoCard from "./CardtoCardModal";
 import { Modal, ModalBody, ModalHeader, Input, ModalFooter } from "reactstrap";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import OTPConfirmation from "../../Common/Component/OtpVerification";
+import { formatCountdown, getOtpThrottle } from "../../utils/Functions/otpThrottle";
+import { useCountdown } from "../../hooks/useCountdown";
 
 import { getDecimalPointIndex } from "../../Helper/getDecimalIndex";
 import CardtoWallet from "./CardtoWallet";
@@ -351,10 +353,12 @@ const CardPurchased = ({
   const [otpToken, setOtpToken] = useState(null);
   const [showOtp, setShowOtp] = useState(false);
   const [codeType, setCodeType] = useState("sms");
+  const { seconds: sendCooldown, setSeconds: setSendCooldown } = useCountdown(0);
 
   const sendOtp = async (type = "") => {
     setIsSaving(true);
     setOtpType(type === "email" ? "email" : "phone");
+    let throttleResult;
 
     try {
       const body = {
@@ -379,11 +383,21 @@ const CardPurchased = ({
       setOtpToken(data?.token);
       setShowOtp(true);
     } catch (err) {
-      const dec = decryptData(err.response.data.data);
-      console.log(dec);
-      toast.error("Something went wrong while sending otp to your " + type);
+      const throttle = getOtpThrottle(err);
+      if (throttle) {
+        toast.error(throttle.message || "Something went wrong while sending otp to your " + type);
+        if (throttle.seconds) {
+          if (!showOtp) setSendCooldown(throttle.seconds);
+          throttleResult = { retryAfterSeconds: throttle.seconds };
+        }
+      } else {
+        const dec = decryptData(err.response?.data?.data);
+        console.log(dec);
+        toast.error(dec?.message ?? "Something went wrong while sending otp to your " + type);
+      }
     }
     setIsSaving(false);
+    return throttleResult;
   };
 
   const updateCardEmail = async () => {
@@ -1562,7 +1576,7 @@ const CardPurchased = ({
             setterValue={true}
             hideOtp={() => setShowOtp(false)}
             processing={isSaving}
-            resendHandler={sendOtp}
+            resendHandler={() => sendOtp("email")}
             authType={codeType}
             setAuthType={setCodeType}
             showAuthToggle={false}
@@ -1598,6 +1612,7 @@ const CardPurchased = ({
             />
             <button
               type="submit"
+              disabled={sendCooldown > 0}
               style={{
                 height: "40px",
                 display: "inline-flex",
@@ -1612,7 +1627,9 @@ const CardPurchased = ({
                 float: "inline-end",
               }}
             >
-              {t("Submit")}
+              {sendCooldown > 0
+                ? `${t("Resend in")} ${formatCountdown(sendCooldown)}`
+                : t("Submit")}
             </button>
           </form>
         </ModalBody>

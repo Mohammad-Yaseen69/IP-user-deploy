@@ -18,6 +18,8 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { toast } from "react-toastify";
 import PhoneInput from "../PhoneInput";
 import countriesData from "../PaymentsNewer/CountriesData.json";
+import { formatCountdown, getOtpThrottle } from "../../utils/Functions/otpThrottle";
+import { useCountdown } from "../../hooks/useCountdown";
 
 const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess, description }) => {
   const { t } = useTranslation();
@@ -29,6 +31,7 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess, description 
   const [otpToken, setOtpToken] = useState(null);
   const [otpType, setOtpType] = useState("sms");
   const [codeType, setCodeType] = useState("sms");
+  const { seconds: sendCooldown, setSeconds: setSendCooldown } = useCountdown(0);
 
   useEffect(() => {
     if (isOpen) {
@@ -38,13 +41,17 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess, description 
     }
   }, [isOpen]);
 
+  const isDisabled = isSaving || !info || sendCooldown > 0;
+
   const sendOtp = async () => {
+    if (isSaving || sendCooldown > 0) return;
     if (!info) {
       toast.error(t("Please enter your {{missingType}}", { missingType: t(missingType) }));
       return;
     }
 
     setIsSaving(true);
+    let throttleResult;
     try {
       const type = missingType === "email" ? "email" : "phone";
       const body = {
@@ -68,10 +75,20 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess, description 
       setShowOtp(true);
       setOtpType(type);
     } catch (err) {
-      const dec = decryptData(err.response?.data?.data);
-      toast.error(dec?.message || t("Something went wrong while sending otp"));
+      const throttle = getOtpThrottle(err);
+      if (throttle) {
+        toast.error(throttle.message || t("Something went wrong while sending otp"));
+        if (throttle.seconds) {
+          if (!showOtp) setSendCooldown(throttle.seconds);
+          throttleResult = { retryAfterSeconds: throttle.seconds };
+        }
+      } else {
+        const dec = decryptData(err.response?.data?.data);
+        toast.error(dec?.message || t("Something went wrong while sending otp"));
+      }
     }
     setIsSaving(false);
+    return throttleResult;
   };
 
   const updateUserDetails = async () => {
@@ -229,7 +246,7 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess, description 
           <Button
             color="primary"
             onClick={sendOtp}
-            disabled={isSaving || !info}
+            disabled={isDisabled}
             style={{
               height: "40px",
               display: "inline-flex",
@@ -241,7 +258,11 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess, description 
               boxShadow: "0 4px 12px rgba(89, 38, 240, 0.2)",
             }}
           >
-            {isSaving ? t("Sending...") : t("Send OTP")}
+            {isSaving
+              ? t("Sending...")
+              : sendCooldown > 0
+                ? `${t("Resend in")} ${formatCountdown(sendCooldown)}`
+                : t("Send OTP")}
           </Button>
         </ModalFooter>
       )}
