@@ -22,7 +22,10 @@ import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import MobileWalletStatus from "../PaymentAddressPublic/PayAsGuest/MobileWalletStatus";
 import { useIdempotency } from "../../hooks/Payments/useIdempotency";
 import { LimitsErrorMessage } from "../../utils/Functions/paymentLimits";
-import { initiatePaytentlyVerificationPayment } from "../../utils/Functions/paytently";
+import {
+  initiatePaytentlyVerificationPayment,
+  usePaytently,
+} from "../../utils/Functions/paytently";
 import PaytentlyModal from "./PaytentlyModal";
 import useWindowWidth from "../../utils/useWindowWidth";
 
@@ -33,8 +36,6 @@ const sdk = new WidgetSDK({
 
 const isBig = window.innerWidth > 1000;
 const base_url = window.location.origin || "https://my.insta-pay.ch";
-// Paytently is the card provider (hosted-forms iframe).
-const usePaytently = true;
 
 const ConfirmWalletFund = ({
   setSubStep,

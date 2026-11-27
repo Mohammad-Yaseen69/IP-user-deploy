@@ -25,6 +25,7 @@ import wallet_ic from "../files/add_f_ic.png";
 import BankDeposit from "./BankDeposit";
 import PlaidBankTransfer from "./PlaidBankTransfer";
 import TopIcon from "../../PaymentsNewer/Mobile/files/Top";
+import { usePaytently } from "../../../utils/Functions/paytently";
 
 export const PlaidCurrencies = ["EUR", "GBP", "SEK", "DKK", "NOK", "CHF"];
 const initialState = {
@@ -185,7 +186,6 @@ const ExtraContentOnFee = ({ data, fxRate, fxCurrency, fxAmount }) => {
 
 const WalletFundsFlow = ({ setAction }) => {
   const { t } = useTranslation();
-  const usePaytently = true; // Paytently is the card provider (hosted-forms iframe).
   const [data, dispatch] = useReducer(reducer, initialState);
   const { userDetails, authHeader, userWallets } = useContext(UserContext);
   const navigate = useNavigate();
