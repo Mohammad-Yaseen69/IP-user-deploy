@@ -117,7 +117,7 @@ const useTransactions = (search, apiDates, filters) => {
   });
 };
 
-const TransactionsTable = () => {
+const TransactionsTable = ({ title, description }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
@@ -128,7 +128,7 @@ const TransactionsTable = () => {
   const [searchQuery, setSearchQuery] = useState(search);
   const [apiDates, setApiDates] = useState(null);
   const [filters, setFilters] = useState({});
-  const { userDetails, verifyToken, getUserBeneficiaries } = useContext(UserContext);
+  const { userDetails, verifyToken } = useContext(UserContext);
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(search);
   const [showStatementModal, setShowStatementModal] = useState(false);
   const can = usePermission();
@@ -143,10 +143,6 @@ const TransactionsTable = () => {
   const canLoadMore = hasNextPage && !isFetchNextPageError;
 
   const loaderRef = useInfiniteScroll({ hasNextPage: canLoadMore, isFetching, fetchNextPage });
-
-  useEffect(() => {
-    getUserBeneficiaries();
-  }, []);
 
   useEffect(() => {
     if (searchQuery === debouncedSearchQuery) return;
@@ -235,10 +231,11 @@ const TransactionsTable = () => {
   const dateLabel = apiDates
     ? `${dayjs(dateRange.startDate).format("MMM D")} - ${dayjs(dateRange.endDate).format("MMM D, YYYY")}`
     : t("All dates");
-
   return (
     <>
       <Ledger
+        title={title}
+        description={description}
         tabs={TABS}
         active={active}
         onTab={setActive}
@@ -307,7 +304,7 @@ const TransactionsTable = () => {
           </EmptyState>
         )}
 
-        {!isLoading && canLoadMore && (
+        {!isLoading && (
           <div ref={loaderRef} className={s.loader}>
             <InstaPayLoader />
           </div>

@@ -6540,5 +6540,15 @@
   "No transactions": "Χωρίς συναλλαγές",
   "SEND TOP-UP AND E-SIM": "ΑΠΟΣΤΟΛΗ ΦΟΡΤΙΣΗΣ ΚΑΙ E-SIM",
   "Holiday List": "Λίστα αργιών",
-  "My Withdrawls": "Οι αναλήψεις μου"
+  "My Withdrawls": "Οι αναλήψεις μου",
+  "How do I send money abroad?": "Πώς μπορώ να στείλω χρήματα στο εξωτερικό;",
+  "Where can I download my statements?": "Πού μπορώ να κατεβάσω τα αντίγραφα κινήσεών μου;",
+  "Why is my account limited?": "Γιατί είναι περιορισμένος ο λογαριασμός μου;",
+  "What fees will I pay on a transfer?": "Τι χρεώσεις θα πληρώσω για μια μεταφορά;",
+  "The assistant is unavailable right now. Please try again shortly, or email support@insta-pay.ch.": "Ο βοηθός δεν είναι διαθέσιμος αυτήν τη στιγμή. Δοκιμάστε ξανά σε λίγο ή στείλτε email στο support@insta-pay.ch.",
+  "Ask about payments, limits, verification...": "Ρωτήστε για πληρωμές, όρια, επαλήθευση...",
+  "Assistant InstaPay": "Βοηθός InstaPay",
+  "Beneficiary type": "Τύπος δικαιούχου",
+  "Select one or more": "Επιλέξτε ένα ή περισσότερα",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Δεν έχετε ενεργό πορτοφόλι για αποστολή. Ενεργοποιήστε ένα πορτοφόλι και δοκιμάστε ξανά."
 }

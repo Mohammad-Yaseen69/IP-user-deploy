@@ -13,6 +13,7 @@ import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import { LimitsErrorMessage } from "../../../utils/Functions/paymentLimits";
 import { toast } from "react-toastify";
 import ErrorModal from "../../PaymentsNewer/InternationalFlow/ErrorModal";
+import { getDefaultSenderWallet } from "../../../utils/Functions/senderWallet";
 
 const initialState = {
   step: 1,
@@ -108,13 +109,7 @@ const PaymentsFlow = ({ item }) => {
     updateData("beneficiary", item?.sender);
   }, [item]);
   useEffect(() => {
-    const def =
-      userWallets?.[0]?.wallet_type === "insta" &&
-      !userWallets?.[0]?.blocked &&
-      !userWallets?.[0]?.admin_blocked &&
-      userWallets?.[0]?.status?.toLowerCase() === "active"
-        ? userWallets?.[0]
-        : userWallets?.find((item) => item?.default);
+    const def = getDefaultSenderWallet(userWallets);
     updateData("currency_wallet", def);
     updateData("currency", def);
   }, [userWallets]);

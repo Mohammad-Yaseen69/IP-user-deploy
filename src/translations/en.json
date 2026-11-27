@@ -5410,6 +5410,8 @@
   "Business IBAN / IBAN Activation, payment services and compliance review. Please complete each section and return this form to InstaPay through the approved secure channel.": "Business IBAN / IBAN Activation, payment services and compliance review. Please complete each section and return this form to InstaPay through the approved secure channel.",
   "www.instapay.biz | Karrri Kingdom SA - Switzerland": "www.instapay.biz | Karrri Kingdom SA - Switzerland",
   "InstaMedia": "InstaMedia",
+  "Expand menu": "Expand menu",
+  "Collapse menu": "Collapse menu",
   "Join the waitlist": "Join the waitlist",
   "Powered by InstaPay · Launching Q3 2026": "Powered by InstaPay · Launching Q3 2026",
   "Your platform. Your": "Your platform. Your",
@@ -7014,5 +7016,17 @@
   "Take me to Withdraw funds": "Take me to Withdraw funds",
   "MONTHLY": "MONTHLY",
   "Your Virtual IBAN is being created!": "Your Virtual IBAN is being created!",
-  "Sender Name": "Sender Name"
+  "Sender Name": "Sender Name",
+  "How do I send money abroad?": "How do I send money abroad?",
+  "Where can I download my statements?": "Where can I download my statements?",
+  "Why is my account limited?": "Why is my account limited?",
+  "What fees will I pay on a transfer?": "What fees will I pay on a transfer?",
+  "The assistant is unavailable right now. Please try again shortly, or email support@insta-pay.ch.": "The assistant is unavailable right now. Please try again shortly, or email support@insta-pay.ch.",
+  "Ask about payments, limits, verification...": "Ask about payments, limits, verification...",
+  "Assistant InstaPay": "Assistant InstaPay",
+  "Beneficiary type": "Beneficiary type",
+  "Select one or more": "Select one or more",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "You have no active wallet to send from. Please activate a wallet and try again.",
+  "This payment method is not available for this purchase.": "This payment method is not available for this purchase.",
+  "IBAN Activation request submitted. Your bank payment is being processed and will complete once the transfer clears.": "IBAN Activation request submitted. Your bank payment is being processed and will complete once the transfer clears."
 }

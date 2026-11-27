@@ -20,7 +20,7 @@ const ROWS = 6;
 // Latest transactions of the selected wallet (same request as the old Recent Transactions card).
 const RecentActivity = ({ currentWallet }) => {
   const { t } = useTranslation();
-  const { authHeader, beneficiaries, walletsLoading } = useContext(UserContext);
+  const { authHeader, walletsLoading } = useContext(UserContext);
   const [transactions, setTransactions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const walletId = currentWallet?.wallet_id;
@@ -76,9 +76,7 @@ const RecentActivity = ({ currentWallet }) => {
         <div className={d.activity}>
           {transactions.slice(0, ROWS).map((tx) => {
             const isCredit = tx?.transaction_type?.toLowerCase() !== "debit";
-            const receiver = tx?.beneficiary
-              ? beneficiaries.find((item) => item?._id === tx.beneficiary) || tx?.beneficiaryDetails
-              : null;
+            const receiver = tx?.beneficiary ? tx?.beneficiaryDetails : null;
             const created = dayjs(tx?.createdAt);
             const Icon = isCredit ? ArrowDownLeft : ArrowUpRight;
             return (

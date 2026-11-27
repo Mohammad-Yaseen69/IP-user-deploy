@@ -6854,5 +6854,15 @@
   "Get Fee Quote": "获取费用报价",
   "Confirm & Pay": "确认并付款",
   "Top-Up Summary": "充值摘要",
-  "Within Minutes": "几分钟内"
+  "Within Minutes": "几分钟内",
+  "How do I send money abroad?": "如何向国外汇款？",
+  "Where can I download my statements?": "我可以在哪里下载账户对账单？",
+  "Why is my account limited?": "为什么我的账户受到限制？",
+  "What fees will I pay on a transfer?": "转账需要支付哪些费用？",
+  "The assistant is unavailable right now. Please try again shortly, or email support@insta-pay.ch.": "助手目前无法使用。请稍后再试，或发送邮件至 support@insta-pay.ch。",
+  "Ask about payments, limits, verification...": "询问付款、限额、验证...",
+  "Assistant InstaPay": "InstaPay 助手",
+  "Beneficiary type": "收款人类型",
+  "Select one or more": "选择一个或多个",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "您没有可用于付款的有效钱包。请激活一个钱包后重试。"
 }

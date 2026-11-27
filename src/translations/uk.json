@@ -6860,5 +6860,15 @@
   "No requested information found.": "Запитаної інформації не знайдено.",
   "View Requested Information": "Переглянути запитану інформацію",
   "Get Fee Quote": "Отримати розрахунок комісії",
-  "Confirm & Pay": "Підтвердити й оплатити"
+  "Confirm & Pay": "Підтвердити й оплатити",
+  "How do I send money abroad?": "Як надіслати гроші за кордон?",
+  "Where can I download my statements?": "Де можна завантажити виписки?",
+  "Why is my account limited?": "Чому мій обліковий запис обмежено?",
+  "What fees will I pay on a transfer?": "Які комісії я сплачу за переказ?",
+  "The assistant is unavailable right now. Please try again shortly, or email support@insta-pay.ch.": "Помічник зараз недоступний. Спробуйте ще раз трохи пізніше або напишіть на support@insta-pay.ch.",
+  "Ask about payments, limits, verification...": "Запитайте про платежі, ліміти, перевірку...",
+  "Assistant InstaPay": "Помічник InstaPay",
+  "Beneficiary type": "Тип отримувача",
+  "Select one or more": "Виберіть один або кілька",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "У вас немає активного гаманця для надсилання. Активуйте гаманець і спробуйте ще раз."
 }

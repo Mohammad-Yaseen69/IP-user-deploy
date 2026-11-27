@@ -32,7 +32,7 @@ const LINKS = [
   { Icon: MapPin, text: "My Payment Address", to: "/payment-address" },
 ];
 
-const MASK = "••••••";
+const MASK = "*******";
 
 const BalanceHero = ({ hidden, onToggleHidden, activity, walletCount, activityLoading }) => {
   const { t } = useTranslation();
@@ -145,7 +145,7 @@ const BalanceHero = ({ hidden, onToggleHidden, activity, walletCount, activityLo
         </>
       )}
 
-      <div className={d.stats}>
+      {/* <div className={d.stats}>
         {showBalance && (
           <>
             <p className={d.stat}>
@@ -183,7 +183,7 @@ const BalanceHero = ({ hidden, onToggleHidden, activity, walletCount, activityLo
             <small>USD</small>
           </span>
         </Link>
-      </div>
+      </div> */}
 
       <div className={d.actions}>
         {LINKS.map(({ Icon, text, to }, index) => (

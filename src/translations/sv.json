@@ -6540,5 +6540,15 @@
   "No transactions": "Inga transaktioner",
   "SEND TOP-UP AND E-SIM": "SKICKA PÅFYLLNING OCH E-SIM",
   "Holiday List": "Helgdagslista",
-  "My Withdrawls": "Mina uttag"
+  "My Withdrawls": "Mina uttag",
+  "How do I send money abroad?": "Hur skickar jag pengar utomlands?",
+  "Where can I download my statements?": "Var kan jag ladda ner mina kontoutdrag?",
+  "Why is my account limited?": "Varför är mitt konto begränsat?",
+  "What fees will I pay on a transfer?": "Vilka avgifter betalar jag för en överföring?",
+  "The assistant is unavailable right now. Please try again shortly, or email support@insta-pay.ch.": "Assistenten är inte tillgänglig just nu. Försök igen om en liten stund eller mejla support@insta-pay.ch.",
+  "Ask about payments, limits, verification...": "Fråga om betalningar, gränser, verifiering...",
+  "Assistant InstaPay": "InstaPay-assistent",
+  "Beneficiary type": "Mottagartyp",
+  "Select one or more": "Välj en eller flera",
+  "You have no active wallet to send from. Please activate a wallet and try again.": "Du har ingen aktiv plånbok att skicka från. Aktivera en plånbok och försök igen."
 }

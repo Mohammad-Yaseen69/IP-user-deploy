@@ -11,8 +11,12 @@ import { possibleErrors } from "../../../utils/Functions/paymentLimits";
 import { formatCurrency } from "../../../Helper/AmountFormat";
 import { cleanString } from "../../../Helper/cleanString";
 import useWindowWidth from "../../../utils/useWindowWidth";
+import { getDefaultSenderWallet } from "../../../utils/Functions/senderWallet";
 
 let api_timeout;
+// No usable sender wallet means no currency to quote in; say so instead of silently skipping the rate call.
+const NO_SENDER_WALLET = "no sender wallet";
+
 const StepTwo = ({ data, dataHandler, getExchangeRate, showFee, inNonInstapay = false }) => {
   const { userDetails, userWallets } = useContext(UserContext);
   const { t } = useTranslation();
@@ -38,13 +42,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee, inNonInstapay = 
       !data.currency_wallet?._id &&
       !data.wallet?._id
     ) {
-      const def =
-        userWallets?.[0]?.wallet_type === "insta" &&
-        !userWallets?.[0]?.blocked &&
-        !userWallets?.[0]?.admin_blocked &&
-        userWallets?.[0]?.status?.toLowerCase() === "active"
-          ? userWallets?.[0]
-          : userWallets?.find((item) => item?.default);
+      const def = getDefaultSenderWallet(userWallets);
       const wallet = {
         ...def,
         ...currencies.find((item) => item.currency_code === def?.currency?.code),
@@ -126,7 +124,11 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee, inNonInstapay = 
     api_timeout = setTimeout(async () => {
       const amount = String(e.target.value)?.replaceAll(",", "");
 
-      if (!amount || !data?.currency?.currency?.code) return;
+      if (!amount) return;
+      if (!data?.currency?.currency?.code) {
+        dataHandler("exchange_rate_error", NO_SENDER_WALLET);
+        return;
+      }
 
       try {
         const signal = abortPreviousRequest();
@@ -172,7 +174,11 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee, inNonInstapay = 
     api_timeout = setTimeout(async () => {
       const amount = String(e.target.value)?.replaceAll(",", "");
 
-      if (!amount || !data?.currency?.currency?.code) return;
+      if (!amount) return;
+      if (!data?.currency?.currency?.code) {
+        dataHandler("exchange_rate_error", NO_SENDER_WALLET);
+        return;
+      }
 
       try {
         const signal = abortPreviousRequest();
@@ -338,6 +344,8 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee, inNonInstapay = 
           {data?.exchange_rate_error === "min payer" &&
             t("You have entered an amount that is below the payer range.")}
           {data?.exchange_rate_error === "Invalid Amount.." && t("Invalid Amount")}
+          {data?.exchange_rate_error === NO_SENDER_WALLET &&
+            t("You have no active wallet to send from. Please activate a wallet and try again.")}
           {!inNonInstapay &&
             (t(
               possibleErrors?.[
@@ -347,7 +355,9 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee, inNonInstapay = 
               ],
             ) ??
               "")}
-          {data?.exchange_rate_error && inNonInstapay && data?.exchange_rate_error}
+          {data?.exchange_rate_error !== NO_SENDER_WALLET &&
+            inNonInstapay &&
+            data?.exchange_rate_error}
         </div>
       ) : (
         <div

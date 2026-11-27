@@ -1,0 +1,15 @@
+/* WEB-11 · Receiving destination (page behind the dialog). */
+
+/* The first section sits 40px below the intro block in the design (section top padding is 20px). */
+.intro {
+  padding-bottom: 20px;
+}
+
+.noticeText {
+  flex: 1;
+  min-width: 0;
+  padding-right: 17px;
+  font-size: 14px;
+  line-height: normal;
+  color: var(--ct-heading);
+}
