@@ -9,14 +9,14 @@ import {
   useRef,
   useState,
 } from "react";
-import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import TapTop from "./TapTop/index";
 import CheckContext from "../Helper/Customizer";
 import AnimationThemeContext from "../Helper/AnimationTheme";
 import ConfigDB from "../Config/ThemeConfig";
 import Loader from "./Loader";
-import SidebarNew from "./SidebarNew/SidebarNew";
+import Sidebar from "./Sidebar";
 import ForcedAuthenticatorModal from "../Components/ForcedAuthenticatorModal";
 import { UserContext } from "../Context/UserContext";
 import styles from "./Layout.module.css";
@@ -39,7 +39,6 @@ import SocketsService from "../Services/Socket";
 import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
 import { getPendingAdditionalFiles, MASTERCARD_PURPOSE } from "../utils/Functions/additionalFiles";
-import NewMenu from "../Common/NewMenu";
 import { useVirtualIbans } from "../hooks/useVirtualIban";
 import PushConsentModal from "../Components/PushConsentModal";
 import { isPushSupported, getPushPermissionState } from "../Services/PushNotificationService";
@@ -84,8 +83,8 @@ const MobileSbContextProvider = ({ children }) => {
   );
 };
 
-const LayoutContent = ({ children, classNames, ...rest }) => {
-  const { setTogglSidebar, sidebar_types } = useContext(CheckContext);
+const Layout = ({ children, classNames, ...rest }) => {
+  const { sidebar_types } = useContext(CheckContext);
   const { t } = useTranslation();
   const location = useLocation();
   const query = new URLSearchParams(location.search);
@@ -164,6 +163,7 @@ const LayoutContent = ({ children, classNames, ...rest }) => {
   const [showSuccessModal, setShowSuccessModal] = useState();
   const [showAdditionalFilesModal, setShowAdditionalModal] = useState(false);
   const navigate = useNavigate();
+  const [dismissedBeneficiaryId, setDismissedBeneficiaryId] = useState(null);
 
   const accountId = userDetails?.account?._id || userDetails?.account_id;
 
@@ -242,26 +242,45 @@ const LayoutContent = ({ children, classNames, ...rest }) => {
       navigate("/", { replace: true });
     }
   }, [virtualIbans, virtualIbansLoading, location.pathname, navigate]);
+
   const isBeneficiaryEdit = location.pathname.startsWith("/beneficiaries/edit") && !!benId;
   const { data: editedBeneficiary } = useBeneficiaryDetails(benId, { enabled: isBeneficiaryEdit });
   const invalidateBeneficiaryDetails = useInvalidateBeneficiaryDetails();
   const beneficiaryWithoutAddresses = useMemo(
     () =>
-      isBeneficiaryEdit && editedBeneficiary && !editedBeneficiary.address
+      isBeneficiaryEdit &&
+      editedBeneficiary &&
+      !editedBeneficiary.address &&
+      dismissedBeneficiaryId !== benId
         ? [editedBeneficiary]
         : [],
-    [isBeneficiaryEdit, editedBeneficiary],
+    [isBeneficiaryEdit, editedBeneficiary, dismissedBeneficiaryId, benId],
   );
   const onBeneficiaryAddressSaved = () => {
     invalidateBeneficiaryDetails(benId);
     getUserBeneficiaries();
   };
-  const [dismissedBeneficiaries, setDismissedBeneficiaries] = useState(null);
   const windowWidth = useWindowWidth();
 
   useEffect(() => {
-    setShowModal(!profileCompleted);
+    setDismissedBeneficiaryId(null);
+  }, [location]);
+
+  const needsKyc =
+    Boolean(userDetails?.country?.kyc_required) && userDetails?.user?.kyc_status !== "approved";
+  const onSettingsPage = location.pathname.toLowerCase().includes("settings");
+
+  useEffect(() => {
+    if (typeof profileCompleted !== "boolean") return;
+    setShowModal((!profileCompleted || needsKyc) && !onSettingsPage);
+    setShowKyc(needsKyc);
   }, [profileCompleted]);
+
+  useEffect(() => {
+    if (typeof profileCompleted !== "boolean" || !needsKyc || onSettingsPage) return;
+    setShowModal(true);
+    setShowKyc(true);
+  }, [userDetails]);
 
   useEffect(() => {
     const handleOnline = () => {
@@ -357,20 +376,6 @@ const LayoutContent = ({ children, classNames, ...rest }) => {
     return () => clearTimeout(timer);
   }, [userDetails?._id]);
 
-  useEffect(() => {
-    const path = location.pathname.toLowerCase();
-    if (
-      path === "/" ||
-      path === "/dashboard/default" ||
-      path === "/my-mastercard" ||
-      path === "/payments"
-    ) {
-      setTogglSidebar(true);
-    } else {
-      setTogglSidebar(false);
-    }
-  }, [location]);
-
   const showTimerCountdown = useContext(InactivityCountdownContext);
 
   useEffect(() => {
@@ -381,11 +386,6 @@ const LayoutContent = ({ children, classNames, ...rest }) => {
 
   useEffect(() => {
     setShowSourceModal(!userDetails?.user?.source_of_funds && userDetails?.user?.occupation);
-
-    if (userDetails?.user?.kyc_status !== "approved" && userDetails?.country?.kyc_required) {
-      setShowModal(true);
-      setShowKyc(true);
-    }
   }, [userDetails]);
 
   const isFinancialQuestionModalOpen =
@@ -399,22 +399,24 @@ const LayoutContent = ({ children, classNames, ...rest }) => {
   const canShowForcedAuthenticator =
     shouldForceAuthenticator && !showModal && !isFinancialQuestionModalOpen;
 
+  const isBlockingModalOpen =
+    Boolean(showModal) ||
+    isFinancialQuestionModalOpen ||
+    canShowForcedAuthenticator ||
+    showForcedFilesModal;
+
   return (
     <Fragment>
-      {beneficiaryWithoutAddresses.length > 0 &&
-        dismissedBeneficiaries !== beneficiaryWithoutAddresses && (
-          <Suspense fallback={null}>
-            <AddBeneficiaryAddressModal
-              isOpen={beneficiaryWithoutAddresses.length > 0}
-              toggle={onBeneficiaryAddressSaved}
-              close={() => {
-                beneficiaryWithoutAddresses.length = 0;
-                setDismissedBeneficiaries(beneficiaryWithoutAddresses);
-              }}
-              beneficiaries={beneficiaryWithoutAddresses}
-            />
-          </Suspense>
-        )}
+      {beneficiaryWithoutAddresses.length > 0 && (
+        <Suspense fallback={null}>
+          <AddBeneficiaryAddressModal
+            isOpen={beneficiaryWithoutAddresses.length > 0}
+            toggle={onBeneficiaryAddressSaved}
+            close={() => setDismissedBeneficiaryId(benId)}
+            beneficiaries={beneficiaryWithoutAddresses}
+          />
+        </Suspense>
+      )}
       <Modal isOpen={showOfflineModal}>
         <ModalHeader>
           <span style={{ fontSize: "22px", fontWeight: 600, color: "red" }}>
@@ -558,21 +560,25 @@ const LayoutContent = ({ children, classNames, ...rest }) => {
               {/* <Header /> */}
               <div className="page-body-wrapper">
                 {/* <SideBar /> */}
-                <NewMenu />
-                <SidebarNew setShowModal={setShowModal} showModal={showModal} />
-                <div className="page-body" style={{ marginTop: 0, paddingTop: 0 }}>
-                  <TransitionGroup {...rest}>
-                    <CSSTransition
-                      nodeRef={pageTransitionRef}
-                      timeout={100}
-                      classNames={animationTheme}
-                      unmountOnExit
-                    >
-                      <Suspense fallback={<Loader />}>
-                        <Outlet />
-                      </Suspense>
-                    </CSSTransition>
-                  </TransitionGroup>
+                <Sidebar setShowModal={setShowModal} showModal={showModal} />
+                <div
+                  className="page-body"
+                  style={{ marginTop: 0, paddingTop: 0, paddingInline: 0 }}
+                >
+                  <div className={styles.page_content}>
+                    <TransitionGroup {...rest}>
+                      <CSSTransition
+                        nodeRef={pageTransitionRef}
+                        timeout={100}
+                        classNames={animationTheme}
+                        unmountOnExit
+                      >
+                        <Suspense fallback={<Loader />}>
+                          <Outlet />
+                        </Suspense>
+                      </CSSTransition>
+                    </TransitionGroup>
+                  </div>
                 </div>
                 {/* <Footer /> */}
               </div>
@@ -626,7 +632,7 @@ const LayoutContent = ({ children, classNames, ...rest }) => {
           </Suspense>
         )}
         <PushConsentModal
-          isOpen={showPushConsent}
+          isOpen={showPushConsent && !isBlockingModalOpen}
           onClose={() => setShowPushConsent(false)}
           accountId={userDetails?._id}
           authHeader={authHeader}
@@ -637,36 +643,6 @@ const LayoutContent = ({ children, classNames, ...rest }) => {
       </MobileSbContextProvider>
     </Fragment>
   );
-};
-const Layout = (props) => {
-  const { userDetails, verifyToken, tokenCheckFailures } = useContext(UserContext);
-  const token = localStorage.getItem("token");
-
-  useEffect(() => {
-    if (token && !userDetails) {
-      verifyToken();
-    }
-  }, [token]);
-
-  useEffect(() => {
-    if (!tokenCheckFailures || !token || userDetails) return undefined;
-    const timer = setTimeout(() => verifyToken(), 3000);
-    return () => clearTimeout(timer);
-  }, [tokenCheckFailures]);
-
-  if (!token) {
-    const currentPath = window.location.pathname + window.location.search;
-    if (currentPath !== "/") {
-      sessionStorage.setItem("path", currentPath);
-    }
-    return <Navigate to={getLoginPath()} replace />;
-  }
-
-  if (!userDetails) {
-    return <InstaPayLoader fallback />;
-  }
-
-  return <LayoutContent {...props} />;
 };
 
 export default Layout;

@@ -2,6 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 import { useContext } from "react";
 import { UserContext } from "../../../Context/UserContext";
+import {
+  isOnafriq,
+  onafriqChannel,
+  PAYER_SERVICE_LABELS,
+} from "../../../Components/PaymentsNewer/InternationalFlow/onafriq";
 
 const useGetAllChannelPayers = ({ data, payoutChannelData, toggleModalHandler }) => {
   const { userDetails } = useContext(UserContext);
@@ -18,7 +23,8 @@ const useGetAllChannelPayers = ({ data, payoutChannelData, toggleModalHandler })
       }
 
       const decrypted = await apiWrapper({
-        endpoint: `/api/payment/services/${data.country.alpha3}/${data?.userCountryCode}`,
+        // Backend drops C2C-only vendors
+        endpoint: `/api/payment/services/${data.country.alpha3}/${data?.userCountryCode}?transaction_type=${data.flow}`,
       });
 
       const mappedServices =
@@ -28,10 +34,15 @@ const useGetAllChannelPayers = ({ data, payoutChannelData, toggleModalHandler })
           const channelData = payoutChannelData?.find(
             (it) => it?.name?.toLowerCase() === updatedServiceName,
           );
+          const vendor = item?.method?.split(" - ")?.[1]?.toLowerCase();
           return {
             ...item,
             ...channelData,
-            vendor: item?.method?.split(" - ")?.[1]?.toLowerCase(),
+            vendor,
+            // spread overwrites id
+            vendorServiceId: item?.id,
+            // ids not unique
+            channelKey: `${vendor ?? ""}:${channelData?.value ?? updatedServiceName}`,
           };
         }) || [];
 
@@ -48,7 +59,9 @@ const useGetAllChannelPayers = ({ data, payoutChannelData, toggleModalHandler })
           method: "POST",
           payload: {
             country: data.country.alpha3,
-            service: service?.name,
+            service: isOnafriq(service?.vendor)
+              ? (PAYER_SERVICE_LABELS[onafriqChannel(service)] ?? service?.name)
+              : service?.name,
             vendor: service?.vendor,
             transaction_type: data?.flow,
           },
@@ -112,7 +125,8 @@ const useGetAllChannelPayers = ({ data, payoutChannelData, toggleModalHandler })
       console.log(results);
 
       const servicesWithPayers = results
-        .filter((result) => result.payers.length > 0)
+        // may be empty
+        .filter((result) => result.payers.length > 0 || isOnafriq(result.service?.vendor))
         .map((result) => ({
           ...result.service,
           payers: result.payers,

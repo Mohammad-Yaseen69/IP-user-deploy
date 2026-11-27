@@ -19,7 +19,7 @@ import { toast } from "react-toastify";
 import PhoneInput from "../PhoneInput";
 import countriesData from "../PaymentsNewer/CountriesData.json";
 
-const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess }) => {
+const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess, description }) => {
   const { t } = useTranslation();
   const { authHeader, userDetails, setUserDetails } = useContext(UserContext);
 
@@ -186,9 +186,13 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess }) => {
         {!showOtp ? (
           <div>
             <p style={{ color: "#666", marginBottom: "1.5rem" }}>
-              {t("To proceed with your MasterCard purchase, please provide your {{missingType}}.", {
-                missingType: t(missingType),
-              })}
+              {t(
+                description ??
+                  "To proceed with your MasterCard purchase, please provide your {{missingType}}.",
+                {
+                  missingType: t(missingType),
+                },
+              )}
             </p>
             <FormGroup>
               <Label style={{ fontWeight: "600", fontSize: "0.9rem", color: "#555" }}>

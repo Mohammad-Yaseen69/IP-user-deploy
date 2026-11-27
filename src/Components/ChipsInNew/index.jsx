@@ -6,9 +6,10 @@ import { Link } from "react-router-dom";
 import { Card, CardBody, CardText } from "reactstrap";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { UserContext } from "../../Context/UserContext";
+import { useShowOnce } from "../../hooks/GeneralUse/useShowOnce";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import QrGenerate from "../Settings/QrGenerate";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 import LeftContainer from "./LeftContainer";
 import MobileComponent from "./MobileComponent";
 import SpecificQrs from "./SpecificQrs";
@@ -69,11 +70,7 @@ const ChipsInNew = () => {
     }
   }, []);
 
-  const [showTooltip, setShowTooltip] = useState(!sessionStorage.getItem("show_qr_modal"));
-
-  useEffect(() => {
-    sessionStorage.setItem("show_qr_modal", true);
-  }, []);
+  const [showTooltip, setShowTooltip] = useShowOnce("qr_sticker_intro");
 
   const { t } = useTranslation();
 
@@ -83,18 +80,19 @@ const ChipsInNew = () => {
       {userDetails?.level?.qr_pay?.receive ? (
         <>
           <div className={styles.container}>
-            <div className={styles.top}>
-              <h4 style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-                {t("My QR Code Sticker")}{" "}
-                <Info
-                  color="#5926f0"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setShowTooltip(!showTooltip)}
-                  size={16}
-                />
-              </h4>
-              <TopRight />
-            </div>
+            <PageHeader
+              title={
+                <>
+                  {t("My QR Code Sticker")}
+                  <Info
+                    color="#5926f0"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setShowTooltip(!showTooltip)}
+                    size={16}
+                  />
+                </>
+              }
+            />
             <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
               {/* <GeneralContainer currency={currency} setCurrency={setCurrency} currentWallet={currentWallet} setWalletRefresh={setWalletRefresh} authHeader={authHeader} defaultWal={defaultWal} showTooltip={showTooltip} setShowTooltip={setShowTooltip} /> */}
               <LeftContainer

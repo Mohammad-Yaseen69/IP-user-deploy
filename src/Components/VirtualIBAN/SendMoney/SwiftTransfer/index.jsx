@@ -68,6 +68,7 @@ import {
 } from "../../../../hooks/useVirtualIban";
 import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError";
 import OTPConfirmation from "../../../../Common/Component/OtpVerification";
+import US_Image from "../../files/images/US.svg";
 import {
   validateSwiftBeneficiary,
   isValidDescription,
@@ -237,7 +238,7 @@ const SwiftAmountStep = ({ amount, setAmount, availableBalance, currencyCode, so
         <div className={styles.sourceCard}>
           <div className={styles.sourceLeft}>
             <div className={styles.flagBox}>
-              <img src={MT} alt="" />
+              <img src={sourceIban?.provider === "rhub" ? US_Image : MT} alt="" />
             </div>
             <div>
               <h4>{sourceIban?.title || `${currencyCode} IBAN`}</h4>
@@ -1017,7 +1018,6 @@ const SwiftTransfer = forwardRef(
           : userDetails?.whatsapp_verification
             ? "whatsapp"
             : "sms";
-
     const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT);
     const [amount, setAmount] = useState("");
     const [selectedBeneficiary, setSelectedBeneficiary] = useState(null);
@@ -1065,6 +1065,7 @@ const SwiftTransfer = forwardRef(
       () => ({
         title: getVirtualIbanTitle(selectedIban, currencyCode),
         iban: getVirtualIbanNumber(selectedIban),
+        provider: selectedIban?.provider,
       }),
       [selectedIban, currencyCode],
     );

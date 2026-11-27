@@ -3,33 +3,9 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 32px;
+  padding: 0 var(--page-gutter) 32px;
   box-sizing: border-box;
   background: transparent;
-
-  .top {
-    position: relative;
-    margin-bottom: 2.5rem;
-    display: flex !important;
-    justify-content: space-between !important;
-
-    h1 {
-      color: #5626e6;
-      font-size: 40px;
-      font-style: normal;
-      font-weight: 700;
-    }
-  }
-
-  .MyeShop {
-    display: none;
-  }
-
-  .top {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 2rem;
-  }
 
   .mainContent {
     display: grid;
@@ -243,19 +219,7 @@
 
 @media (max-width: 1000px) {
   .container {
-    padding: 1rem;
-
-    .MyeShop {
-      display: block;
-      color: #4a32e3;
-
-      font-family: Manrope;
-      font-size: 30px;
-      font-style: normal;
-      font-weight: 800;
-      line-height: normal;
-      letter-spacing: -1.5px;
-    }
+    padding: 0 1rem 1rem;
 
     .mainContent {
       gap: 1rem;
@@ -291,19 +255,7 @@
 
 @media (max-width: 500px) {
   .container {
-    padding: 1rem;
-
-    .MyeShop {
-      display: block;
-      color: #4a32e3;
-
-      font-family: Manrope;
-      font-size: 30px;
-      font-style: normal;
-      font-weight: 800;
-      line-height: normal;
-      letter-spacing: -1.5px;
-    }
+    padding: 0 1rem 1rem;
 
     .mainContent {
       gap: 1rem;

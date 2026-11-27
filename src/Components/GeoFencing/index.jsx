@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import styles from "./styles/index.module.scss";
-import TopRight from "../topRight";
+import PageHeader from "../../Common/PageHeader";
 // import { useTranslation } from "react-i18next";
 // import { useLocation, useNavigate } from "react-router";
 import { UserContext } from "../../Context/UserContext";
@@ -290,17 +290,12 @@ const GeoFencing = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.top}>
-        <div style={{ width: "70%" }}>
-          <h2>{t("Manage Payment & Quotation Access")}</h2>
-          <p>
-            {t(
-              "Control countries from where you can receive Payment Requests and Quotations. Toggle on/off access for specific countries.",
-            )}
-          </p>
-        </div>
-        <div>{window.innerWidth > 1000 && <TopRight />}</div>
-      </div>
+      <PageHeader
+        title={t("Manage Payment & Quotation Access")}
+        subtitle={t(
+          "Control countries from where you can receive Payment Requests and Quotations. Toggle on/off access for specific countries.",
+        )}
+      />
 
       <div className={styles.search}>
         <div style={{ position: "relative" }}>

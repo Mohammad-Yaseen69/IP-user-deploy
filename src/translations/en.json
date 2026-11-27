@@ -5410,6 +5410,8 @@
   "Business IBAN / IBAN Activation, payment services and compliance review. Please complete each section and return this form to InstaPay through the approved secure channel.": "Business IBAN / IBAN Activation, payment services and compliance review. Please complete each section and return this form to InstaPay through the approved secure channel.",
   "www.instapay.biz | Karrri Kingdom SA - Switzerland": "www.instapay.biz | Karrri Kingdom SA - Switzerland",
   "InstaMedia": "InstaMedia",
+  "Expand menu": "Expand menu",
+  "Collapse menu": "Collapse menu",
   "Join the waitlist": "Join the waitlist",
   "Powered by InstaPay · Launching Q3 2026": "Powered by InstaPay · Launching Q3 2026",
   "Your platform. Your": "Your platform. Your",
@@ -7017,5 +7019,7 @@
   "Sender Name": "Sender Name",
   "Beneficiary type": "Beneficiary type",
   "Select one or more": "Select one or more",
-  "You have no active wallet to send from. Please activate a wallet and try again.": "You have no active wallet to send from. Please activate a wallet and try again."
+  "You have no active wallet to send from. Please activate a wallet and try again.": "You have no active wallet to send from. Please activate a wallet and try again.",
+  "This payment method is not available for this purchase.": "This payment method is not available for this purchase.",
+  "IBAN Activation request submitted. Your bank payment is being processed and will complete once the transfer clears.": "IBAN Activation request submitted. Your bank payment is being processed and will complete once the transfer clears."
 }
