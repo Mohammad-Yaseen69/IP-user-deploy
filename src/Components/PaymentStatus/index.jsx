@@ -4,6 +4,7 @@ import InstaPayLoader from "../Loader";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import axios from "axios";
+import { verifyPaytentlyReturn } from "../../utils/Functions/paytently";
 import { fetchBeneficiaryDetails } from "../../hooks/BeneficiaryHooks/useBeneficiaryDetails";
 
 const PaymentStatus = () => {
@@ -49,7 +50,7 @@ const PaymentStatus = () => {
     };
 
     if (status === "success") {
-      fetchDetailsAndRedirect();
+      verifyPaytentlyReturn().finally(fetchDetailsAndRedirect);
     } else {
       const url =
         type === "airtime"

@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Badge, Card, CardBody } from "reactstrap";
 import { UserContext } from "../../../Context/UserContext";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
+import { usePaytently } from "../../../utils/Functions/paytently";
 import CardMaintenanceModal from "../../CardMaintenanceModal";
 import InstaPayLoader from "../../Loader";
 import bd from "../../PaymentsNewer/files/bd.png";
@@ -18,6 +19,7 @@ const Channels = ({ setChannel, channel, thunesServices, thunesProviders = [] })
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
   const [showCardMaintenanceModal, setShowCardMaintenanceModal] = useState(false);
+  console.log("user detail(18)", userDetails);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const { data: methods, isLoading } = useQuery({
     queryKey: ["AvailableMethods"],
@@ -131,7 +133,7 @@ const Channels = ({ setChannel, channel, thunesServices, thunesProviders = [] })
                     return;
                   }
                 }
-                if (item?.value === "card") {
+                if (item?.value === "card" && !usePaytently) {
                   setShowCardMaintenanceModal(true);
                   return;
                 }

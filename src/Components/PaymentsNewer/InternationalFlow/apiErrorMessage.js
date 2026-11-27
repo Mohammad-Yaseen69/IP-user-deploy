@@ -11,6 +11,10 @@ const apiErrors = {
     "The transaction couldn't be completed. Please try again or use a different method.",
   feature_not_allowed:
     "This feature is currently disabled for your account. Contact support for assistance.",
+  currency_not_supported:
+    "Card top-up isn't available for this wallet's currency. Please use a different payment method.",
+  amount_too_large:
+    "This amount is too large for card payment. Please enter a smaller amount or use a different method.",
   beneficiary_details_missing:
     "It appears that some required beneficiary details are either missing or incorrect. Please review and update the beneficiary information, ensuring all fields are properly filled, and try again.",
   insufficient_funds: "You don't have enough funds for this transaction.",

@@ -116,6 +116,7 @@ const FeeModelRequests = lazy(
   () => import("../Components/AgentCommission/FeeRequests/FeeModelRequests.jsx"),
 );
 const LeadClaimConfirm = lazy(() => import("../Components/Auth/LeadClaimConfirm.jsx"));
+const PaytentlyCardCollected = lazy(() => import("../Components/PaytentlyCardCollected"));
 const PermissionFallback = lazy(() => import("./PermissionFallback"));
 
 const PermissionRoute = ({ permission, children }) => {
@@ -541,6 +542,7 @@ export const publicRoutes = [
   { path: "/v/:ibanId", component: <IbanValidationPage /> },
   { path: "/Insta-media", component: <InstaMedia /> },
   { path: "/lead-claim-confirm", component: <LeadClaimConfirm /> },
+  { path: "/paytently/card-collected", component: <PaytentlyCardCollected /> },
   { path: "*", component: <NotFound type="Page" /> },
 ];
 export const authRoutes = [

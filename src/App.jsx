@@ -48,7 +48,7 @@ const App = () => {
         ? crypto.randomUUID()
         : `${Date.now()}-${Math.random()}`;
     let appInUse = false;
-    const paths = ["/profile/", "/pay/", "/invoice"];
+    const paths = ["/profile/", "/pay/", "/invoice", "/paytently/"];
 
     const closeWindow = (e) => {
       try {
