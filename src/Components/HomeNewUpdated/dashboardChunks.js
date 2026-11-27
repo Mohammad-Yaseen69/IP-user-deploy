@@ -52,5 +52,5 @@ const mobileWidgets = [
 
 export const preloadDashboard = () => {
   const widgets = isDesktopDashboard() ? desktopWidgets : mobileWidgets;
-  [loadLayout, loadDashboard, ...widgets].forEach((load) => load().catch(() => {}));
+  return Promise.allSettled([loadLayout, loadDashboard, ...widgets].map((load) => load()));
 };

@@ -6,6 +6,7 @@ import {
   getLoginPath,
   setLastLoginUsedPage,
 } from "../../utils/Functions/loginPage.js";
+import { TOUR_SEEN_KEY } from "../../Components/ProductTour/start";
 
 const createMemoryStorage = () => {
   let store = {};
@@ -78,6 +79,14 @@ describe("loginPage", () => {
       expect(localStorage.getItem("isAgentLogin")).toBeNull();
       expect(localStorage.getItem("ip_country")).toBe("CHE");
       expect(getLoginPath()).toBe("/agent-login");
+    });
+
+    it("keeps who has had the product tour, so it does not auto-play again after logout", () => {
+      localStorage.setItem(TOUR_SEEN_KEY, '["u1"]');
+
+      clearAuthStorage();
+
+      expect(localStorage.getItem(TOUR_SEEN_KEY)).toBe('["u1"]');
     });
 
     it('does not write missing values back as the string "null"', () => {

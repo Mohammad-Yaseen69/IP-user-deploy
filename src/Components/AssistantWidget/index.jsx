@@ -265,6 +265,7 @@ const AssistantWidget = () => {
             aria-expanded={isOpen}
             aria-label={isOpen ? t("Close assistant") : t("Open assistant")}
             tabIndex={isOpen ? -1 : 0}
+            data-tour="assistant"
           />
         </div>
 

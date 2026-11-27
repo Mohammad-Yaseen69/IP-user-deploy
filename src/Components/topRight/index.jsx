@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { UserContext } from "../../Context/UserContext";
 import LanguagePicker from "../LanguagePicker";
 import Notifications from "../Notifications";
+import TourButton from "../ProductTour/TourButton";
 
 const TopRight = ({ position = "absolute" }) => {
   const { userDetails, croppedImages, isAgentLogin, agentDetails } = useContext(UserContext);
@@ -37,6 +38,7 @@ const TopRight = ({ position = "absolute" }) => {
                 }}>
                     <img src={msg} alt="" />
                 </Col> */}
+        <TourButton />
         <Notifications />
         <LanguagePicker />
       </div>

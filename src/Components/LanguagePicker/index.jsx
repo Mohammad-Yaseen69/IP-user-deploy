@@ -575,7 +575,7 @@ const LanguagePicker = ({
   }, [showDropDown]);
 
   return (
-    <div style={{ zIndex: 10 }} ref={dropdownRef}>
+    <div style={{ zIndex: 10 }} ref={dropdownRef} data-tour="language">
       {showDropDown ? (
         <Col
           xs="auto"

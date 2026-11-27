@@ -140,6 +140,7 @@ const SidebarSubMenu = ({
             ) : checkPermission(item?.permission) ? (
               <li
                 key={i}
+                data-tour={item.title}
                 className={`${className ? "" : "sidebar-link sidebar-title"}  ${(item.menu ? item.menu.map((innerItem) => ActiveNavLinkUrl(innerItem.url)).includes(true) : ActiveNavLinkUrl(item.url)) || isOpen[level] === item.title ? "active" : ""}`}
                 onClick={() => {
                   if (item?.type === "external_eshop") {
