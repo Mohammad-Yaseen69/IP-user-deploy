@@ -11,8 +11,11 @@ const PERIODS = [
   { value: "yearly", label: "Yearly", resets: "resets every year" },
 ];
 
-// Row titles for the three limit groups getLimits() returns, in the same order.
-const LABELS = ["Incoming", "Outgoing", "Number of transactions"];
+const LABELS = {
+  "Incoming Limit": "Incoming",
+  "Sending Limit": "Outgoing",
+  "Allowed Number Of Transactions": "Number of transactions",
+};
 
 // "10,000.00 EUR " -> ["10,000.00", "EUR"]; plain counts come back as [count, undefined].
 const parts = (value) =>
@@ -51,7 +54,7 @@ const WalletLimits = ({ currentWallet, data, loading, error }) => {
         <div className={u.state}>{error}</div>
       ) : (
         <div className={r.limitsBody}>
-          {data?.others?.map((group, index) => {
+          {data?.others?.map((group) => {
             const limit = group?.limits?.[period] ?? {};
             const percent =
               (removeCommasAndCurrency(limit.used) / removeCommasAndCurrency(limit.total)) * 100;
@@ -59,7 +62,7 @@ const WalletLimits = ({ currentWallet, data, loading, error }) => {
             return (
               <div key={group.title} className={r.limit}>
                 <p className={r.limitTop}>
-                  {t(LABELS[index] ?? group.title)}
+                  {t(LABELS[group.title] ?? group.title)}
                   <span>
                     <b>{parts(limit.used)[0]}</b> {t("of")} {String(limit.total ?? "").trim()}
                   </span>

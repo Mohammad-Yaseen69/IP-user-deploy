@@ -7,10 +7,9 @@ import { UserContext } from "../../../../Context/UserContext";
 import { usePermission } from "../../../../hooks/GeneralUse/usePermission";
 import { apiWrapper } from "../../../../utils/Functions/apiWrapper";
 import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError";
-import AccountLimits from "../../../WalletsNew/AccountLimits";
-import TransactionsTable from "../../../WalletsNew/TransactionTable";
+import WalletLimits from "../../../WalletsNew/WalletLimits";
+import WalletLedger from "../../../WalletsNew/WalletLedger";
 import DownloadStatement from "../../../WalletsNew/DownloadStatement";
-import txStyles from "../../../TransactionsNewApi/styles/index.module.scss";
 import add_funds from "../../../WalletsNew/files/top_up.svg";
 import download from "../../../WalletsNew/files/down_load.svg";
 import block from "../../../WalletsNew/files/block.svg";
@@ -28,7 +27,7 @@ import { getWalletStatus, isWalletBlocked } from "./wallets";
  * One InstaPay crypto wallet opened: the same limits, transactions and management
  * actions My Wallets gives it, laid out on this page.
  */
-const InstapayWalletDetail = ({ wallet }) => {
+const InstapayWalletDetail = ({ wallet, refreshKey = 0 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const can = usePermission();
@@ -37,9 +36,8 @@ const InstapayWalletDetail = ({ wallet }) => {
   const [copied, setCopied] = useState(false);
   const [busy, setBusy] = useState("");
   const [showStatement, setShowStatement] = useState(false);
-  const [filtered, setFiltered] = useState([]);
 
-  const limits = useWalletLimits(wallet);
+  const limits = useWalletLimits(wallet, refreshKey);
 
   const walletId = wallet?._id;
   const code = wallet?.currency?.code;
@@ -218,25 +216,16 @@ const InstapayWalletDetail = ({ wallet }) => {
       </div>
 
       {can("wallet.limits.view") && (
-        <div className={styles.detail}>
-          <div className={styles.sectionLabel}>{t("Account limits")}</div>
-          <AccountLimits
-            currentWallet={wallet}
-            data={limits.data}
-            loading={limits.loading}
-            error={limits.error}
-          />
-        </div>
+        <WalletLimits
+          currentWallet={wallet}
+          data={limits.data}
+          loading={limits.loading}
+          error={limits.error}
+        />
       )}
 
       {can("transactions.wallet.list") && (
-        <div
-          className={`${styles.detail} ${window.innerWidth > 1000 ? txStyles.container : txStyles.mobile}`}
-          style={{ padding: 24, minHeight: 0, display: "block" }}
-        >
-          {/* The table hides its desktop or mobile rows by which of these wraps it. */}
-          <TransactionsTable currentWallet={wallet} filtered={filtered} setFiltered={setFiltered} />
-        </div>
+        <WalletLedger currentWallet={wallet} refreshKey={refreshKey} />
       )}
 
       <DownloadStatement
