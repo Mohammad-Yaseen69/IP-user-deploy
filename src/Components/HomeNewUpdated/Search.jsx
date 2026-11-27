@@ -2,6 +2,7 @@ import { Search } from "react-feather";
 import { Badge, Col } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import LanguagePicker from "../LanguagePicker";
+import TourButton from "../ProductTour/TourButton";
 import { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
@@ -280,6 +281,7 @@ const SearchComponent = ({ showS = false, showOthers = true }) => {
                             }}>
                                 <img src={msg} alt="" />
                             </Col> */}
+              <TourButton />
               {can("notifications.view") && <Notifications />}
               <LanguagePicker />
             </div>

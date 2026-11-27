@@ -4,6 +4,7 @@ import { UserContext } from "../../Context/UserContext";
 import Notifications from "../../Components/Notifications";
 import { MobileSbContext } from "../Layout";
 import LanguagePicker from "../../Components/LanguagePicker";
+import TourButton from "../../Components/ProductTour/TourButton";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 const TopBar = () => {
@@ -35,6 +36,7 @@ const TopBar = () => {
           <p>{">"}</p>
         </div>
         <div className={styles.right}>
+          <TourButton />
           <LanguagePicker />
           {/* <Col xs="auto" style={{
                         padding: ".5rem",

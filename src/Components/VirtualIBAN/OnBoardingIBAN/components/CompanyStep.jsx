@@ -55,6 +55,15 @@ const formatDateForInput = (val) => {
   return "";
 };
 
+const COMPANY_RULES = {
+  countryOfIncorporation: required.text("countryOfIncorporation"),
+  registrationNumber: required.text("registrationNumber"),
+  legalName: required.text("legalName"),
+  registeredAddress: required.list("registeredAddress"),
+  dateOfIncorporation: required.list("dateOfIncorporation"),
+  website: required.text("website"),
+};
+
 const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentStep }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
@@ -453,6 +462,7 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
 
                   <input
                     className={styles.textInput}
+                    style={err("website")}
                     value={form.website}
                     onChange={set("website")}
                     placeholder="https://"

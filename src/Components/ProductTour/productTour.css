@@ -1,0 +1,49 @@
+.driver-popover.ip-tour {
+  font-family: inherit;
+  max-width: 340px;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(72, 40, 160, 0.18);
+}
+
+.driver-popover.ip-tour .driver-popover-title {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: normal;
+  color: #1a1617;
+}
+
+.driver-popover.ip-tour .driver-popover-description {
+  font-size: 14px;
+  letter-spacing: normal;
+  color: #555;
+}
+
+.driver-popover.ip-tour .driver-popover-progress-text {
+  font-size: 12px;
+  color: #848484;
+}
+
+.driver-popover.ip-tour .driver-popover-footer-btn {
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  text-shadow: none;
+  border-radius: 10px;
+}
+
+.driver-popover.ip-tour .driver-popover-prev-btn {
+  color: #5926f0;
+  border: 1px solid #d9ccfc;
+}
+
+.driver-popover.ip-tour .driver-popover-next-btn {
+  color: #fff;
+  border: 0;
+  background: linear-gradient(
+    277.06deg,
+    rgb(230, 64, 103) 9.52%,
+    rgb(89, 38, 240) 62.22%,
+    rgb(72, 40, 160) 119.38%
+  );
+}

@@ -65,6 +65,7 @@ const ForcedAdditionalFilesModal = lazy(loadForcedAdditionalFilesModal);
 const loadAnotherLoginModal = () => import("../Components/AnotherLoginModal");
 const AnotherLoginModal = lazy(loadAnotherLoginModal);
 const AssistantWidget = lazy(() => import("../Components/AssistantWidget"));
+const ProductTour = lazy(() => import("../Components/ProductTour"));
 
 export const MobileSbContext = createContext(null);
 
@@ -385,7 +386,17 @@ const LayoutContent = ({ children, classNames, ...rest }) => {
 
   useEffect(() => {
     setShowSourceModal(!userDetails?.user?.source_of_funds && userDetails?.user?.occupation);
-  }, [userDetails]);
+
+    if (userDetails?.user?.kyc_status !== "approved" && userDetails?.country?.kyc_required) {
+      setShowModal(true);
+      setShowKyc(true);
+    }
+  }, [
+    userDetails?.user?.source_of_funds,
+    userDetails?.user?.occupation,
+    userDetails?.user?.kyc_status,
+    userDetails?.country?.kyc_required,
+  ]);
 
   const isFinancialQuestionModalOpen =
     (is30DaysInfo && userDetails?.account_type === "individual" && profileCompleted === true) ||
@@ -639,6 +650,11 @@ const LayoutContent = ({ children, classNames, ...rest }) => {
         <Suspense fallback={null}>
           <AssistantWidget />
         </Suspense>
+        {userDetails?._id && (
+          <Suspense fallback={null}>
+            <ProductTour />
+          </Suspense>
+        )}
       </MobileSbContextProvider>
     </Fragment>
   );

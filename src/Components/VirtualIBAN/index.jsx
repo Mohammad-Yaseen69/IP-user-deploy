@@ -29,6 +29,7 @@ import { asVirtualIbanArray, isVirtualIbanAdminBlocked } from "./utils/virtualIb
 import VirtualIbanModal from "./VirtualIbanModal";
 import Notifications from "../Notifications";
 import LanguagePicker from "../LanguagePicker";
+import TourButton from "../ProductTour/TourButton";
 import { ChevronLeft } from "react-feather";
 import { MAX_BUSINESS_IBANS } from "../../stateMachines/virtualIbanPayment";
 
@@ -267,6 +268,7 @@ const VirtualBank = () => {
               </h1>
             </div>
             <div className={styles.mobileTopRight}>
+              <TourButton hideShadow={true} />
               <Notifications hideShadow={true} />
               <LanguagePicker hideShadow={true} />
             </div>

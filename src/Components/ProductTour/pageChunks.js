@@ -1,0 +1,35 @@
+import { preloadDashboard } from "../HomeNewUpdated/dashboardChunks";
+
+// Mirrors the lazy page imports in src/RouteNew/Routes.jsx, plus chunks that load on first render.
+export const PAGE_CHUNKS = {
+  "/dashboard/default": [preloadDashboard],
+  "/analytics": [() => import("../Analytics")],
+  "/wallets": [() => import("../WalletsNew")],
+  "/crypto-wallets": [() => import("../VirtualIBAN/CryptoWallet/CryptoWalletsPage.jsx")],
+  "/virtual-IBAN": [() => import("../VirtualIBAN")],
+  "/my-mastercard": [() => import("../MyMasterCard")],
+  "/portfolio": [() => import("../Portfolio")],
+  "/payments": [() => import("../PaymentsNewer"), () => import("../PaymentsNewer/PaymentAction")],
+  "/pay-bills": [() => import("../BillPayments")],
+  "/beneficiaries": [() => import("../Beneficiaries")],
+  "/transactions": [() => import("../TransactionsNewApi")],
+  "/payment-requests": [() => import("../PendingNew")],
+  "/other-transactions": [() => import("../OtherTransactions")],
+  "/pay-via-social": [() => import("../SocialPay/index.jsx")],
+  "/payment-address": [() => import("../PaymentAddress")],
+  "/chips-in": [() => import("../ChipsInNew")],
+  "/invoices": [() => import("../ReceiptInvoices")],
+  "/quotations": [() => import("../QuotationsNew")],
+  "/referrals": [() => import("../ReferralsNew")],
+  "/my-profile": [() => import("../Profile")],
+  "/geo-fencing": [() => import("../GeoFencing")],
+  "/third-party-senders": [() => import("../ThirdPartySenders")],
+  "/settings": [
+    () => import("../Settings"),
+    () => import("../topRight"),
+    () => import("../Settings/Tabs"),
+    () => import("../Settings/Basic"),
+  ],
+  "/delegate-access": [() => import("../DelegateAccess")],
+  "/activity": [() => import("../LogActivity")],
+};

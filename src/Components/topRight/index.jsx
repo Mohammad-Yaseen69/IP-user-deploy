@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { UserContext } from "../../Context/UserContext";
 import LanguagePicker from "../LanguagePicker";
 import Notifications from "../Notifications";
+import TourButton from "../ProductTour/TourButton";
 import ProfileMenu from "./ProfileMenu";
 
 const TopRight = ({ position = "absolute", withMenu = false }) => {
@@ -47,6 +48,19 @@ const TopRight = ({ position = "absolute", withMenu = false }) => {
       }}
     >
       <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+        {/* <Col xs="auto" style={{
+                    padding: ".5rem",
+                    boxShadow: "0px 9.94788px 10.7769px rgba(109, 41, 220, 0.17)",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: "10px",
+                    border: "1.11414px solid rgba(0, 0, 0, 0.08)",
+                    cursor: "pointer"
+                }}>
+                    <img src={msg} alt="" />
+                </Col> */}
+        <TourButton />
         <Notifications />
         <LanguagePicker />
       </div>
