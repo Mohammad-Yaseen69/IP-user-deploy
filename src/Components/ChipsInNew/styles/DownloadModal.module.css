@@ -90,12 +90,13 @@
   border: none;
   outline: none;
   cursor: pointer;
-  border-radius: 30px;
+  border-radius: 12px;
   background: linear-gradient(0deg, #5926f0 0%, #5926f0 100%), #ececec;
   display: flex;
   align-items: center;
   width: fit-content;
-  padding: 18px 26px;
+  padding: 0 26px;
+  height: 56px;
   gap: 8px;
 }
 
@@ -146,6 +147,7 @@
   }
 
   .button {
-    padding: 13px 20px;
+    padding: 0 20px;
+    height: 40px;
   }
 }

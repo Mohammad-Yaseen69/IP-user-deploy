@@ -8,7 +8,7 @@
 .top {
   background-color: white;
   border-radius: 1rem;
-  padding: 2rem;
+  padding: 24px;
 }
 
 .top_layer {
@@ -77,13 +77,15 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  border-radius: 30px;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 10px;
   background: linear-gradient(0deg, #5926f0 0%, #5926f0 100%), #ececec;
 }
 
 .tl_bot button img {
   /* width: 15px; */
-  height: 21px;
+  height: 18px;
   flex-shrink: 0;
   object-fit: contain;
 }
@@ -93,9 +95,9 @@
   leading-trim: both;
   text-edge: cap;
   font-family: "Inter", sans-serif;
-  font-size: 18px;
+  font-size: 14px;
   font-style: normal;
-  font-weight: 700;
+  font-weight: 500;
   line-height: normal;
   letter-spacing: -0.36px;
 }
@@ -167,7 +169,7 @@
 .bottom {
   background-color: white;
   border-radius: 1rem;
-  padding: 2rem;
+  padding: 24px;
   display: flex;
   gap: 3rem;
 }
@@ -223,11 +225,12 @@
 .ic_top button {
   border: none;
   outline: none;
-  border-radius: 19.474px;
+  border-radius: 8px;
   background: #fff;
   box-shadow: 0px 3.35px 11.724px -3.35px rgba(89, 38, 240, 0.25);
   display: inline-flex;
-  padding: 6px 12px;
+  height: 32px;
+  padding: 0 12px;
   justify-content: center;
   align-items: center;
 }
@@ -240,9 +243,9 @@
   leading-trim: both;
   text-edge: cap;
   font-family: "Inter", sans-serif;
-  font-size: 12px;
+  font-size: 13px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   line-height: normal;
   background: linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%);
   background-clip: text;
@@ -250,9 +253,13 @@
   -webkit-text-fill-color: transparent;
 }
 
+.inp_con input {
+  height: 40px;
+}
+
 .inp_con input,
 .inp_con textarea {
-  border-radius: 6px;
+  border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.3);
   background: #fff;
   padding: 0.6rem 1rem;
@@ -312,15 +319,14 @@
 }
 
 .link span {
-  max-width: 80%;
-  overflow: hidden;
+  flex: 1;
+  min-width: 0;
   color: #fff;
   leading-trim: both;
   text-edge: cap;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
   font-family: "Inter", sans-serif;
-  font-size: 18px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
@@ -340,9 +346,10 @@
 }
 
 .bt_bot button {
-  border-radius: 490px;
+  height: 40px;
+  border-radius: 10px;
   background: #ececec;
-  padding: 0.8rem 1.3rem;
+  padding: 0 20px;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -362,7 +369,7 @@
   leading-trim: both;
   text-edge: cap;
   font-family: "Inter", sans-serif;
-  font-size: 18px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 700;
   line-height: 130%;
@@ -375,7 +382,7 @@
   }
 
   .top {
-    padding: 1.25rem;
+    padding: 20px;
   }
 
   .top_layer {
@@ -392,7 +399,7 @@
   }
 
   .tl_bot button {
-    padding: 0.5rem 1rem;
+    padding: 0 16px;
   }
 
   .tl_bot button img {
@@ -417,7 +424,7 @@
   }
 
   .bottom {
-    padding: 1.5rem;
+    padding: 20px;
     gap: 2rem;
   }
 
@@ -438,11 +445,11 @@
   }
 
   .ic_top button {
-    padding: 3px 8px;
+    padding: 0 10px;
   }
 
   .ic_top button span {
-    font-size: 10px;
+    font-size: 13px;
   }
 
   .inp_con input,
@@ -472,7 +479,7 @@
   }
 
   .bt_bot button {
-    padding: 0.8rem 1.2rem;
+    padding: 0 16px;
   }
 
   .bt_bot button img {

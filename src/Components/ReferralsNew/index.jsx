@@ -226,7 +226,7 @@ const ReferralsNew = () => {
 
   return (
     <div className={styles.container}>
-      <PageHeader title={t("Referrals")} />
+      <PageHeader title={t("Referrals")} subtitle={t("Invite friends and track your rewards.")} />
       {userDetails?.username ? (
         <>
           {convertModal && (
@@ -445,13 +445,14 @@ const ReferralsNew = () => {
                   {copied ? (
                     <Check />
                   ) : (
-                    <img
-                      src={copy_ic}
-                      alt="c"
-                      loading="lazy"
-                      style={{ cursor: "pointer" }}
+                    <button
+                      type="button"
+                      className="tap-target"
+                      aria-label={t("Copy")}
                       onClick={handleCopy}
-                    />
+                    >
+                      <img src={copy_ic} alt="" loading="lazy" />
+                    </button>
                   )}
                 </div>
                 {canShareReferral && (
@@ -499,7 +500,13 @@ const ReferralsNew = () => {
                   <div style={{ fontSize: "1.1rem", fontWeight: 700 }}>{t(currentTab)}</div>
                   <Button
                     color="primary"
-                    style={{ borderRadius: "8px" }}
+                    style={{
+                      height: "40px",
+                      borderRadius: "10px",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                     onClick={() =>
                       setCurrentTab(
                         currentTab === "My Referrals" ? "my withdrawls" : "My Referrals",

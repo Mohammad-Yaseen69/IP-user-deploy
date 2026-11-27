@@ -3,7 +3,7 @@
 .drawer {
   --cw-accent: #5926f0;
   --cw-accent-soft: #f4f1ff;
-  --cw-border: #eaecf0;
+  --cw-border: #eff1f6;
   --cw-surface: #ffffff;
   --cw-surface-muted: #f7f7fb;
   --cw-text: #101828;
@@ -241,7 +241,7 @@
   padding: 0 16px;
   border-radius: 10px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
 
   &:disabled {

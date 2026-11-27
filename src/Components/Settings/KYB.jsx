@@ -1150,7 +1150,7 @@ const KYB = () => {
                   border: "none",
                   outline: "none",
                   background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                  borderRadius: "6px",
+                  borderRadius: "10px",
                   marginTop: "1.5rem",
                 }}
                 onClick={() => setShowProcessSuccessModal(false)}

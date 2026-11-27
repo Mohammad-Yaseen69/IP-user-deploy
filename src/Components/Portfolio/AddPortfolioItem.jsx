@@ -307,7 +307,7 @@ const AddPortfolioItem = ({ isOpen, toggle, pAddress }) => {
                     backgroundColor: "transparent",
                     color: "#636363",
                     fontSize: "14px",
-                    fontWeight: "600",
+                    fontWeight: "500",
                   }}
                   onClick={toggle}
                 >
@@ -315,14 +315,18 @@ const AddPortfolioItem = ({ isOpen, toggle, pAddress }) => {
                 </button>
                 <button
                   style={{
-                    borderRadius: "9px",
+                    height: "40px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "10px",
                     backgroundColor: "#6D29DC",
                     color: "white",
                     fontSize: "14px",
-                    fontWeight: "600",
+                    fontWeight: "500",
                     border: "none",
                     outline: "none",
-                    padding: "9px 16px",
+                    padding: "0 16px",
                     opacity: ((!title || !description) && !pAddress) || !file || isSaving ? 0.7 : 1,
                     cursor:
                       ((!title || !description) && !pAddress) || !file || isSaving

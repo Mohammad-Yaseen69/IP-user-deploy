@@ -165,8 +165,12 @@ const Withdraw = ({ isOpen, toggle, wallet }) => {
                   <Button
                     color="transparent"
                     style={{
-                      borderRadius: "8px",
-                      padding: ".6rem 1.25rem",
+                      height: "40px",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: "10px",
+                      padding: "0 1.25rem",
                       marginRight: "8px",
                     }}
                     onClick={() => {
@@ -187,9 +191,13 @@ const Withdraw = ({ isOpen, toggle, wallet }) => {
                 <Button
                   color="primary"
                   style={{
+                    height: "40px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                     backgroundColor: "#5926f0",
-                    borderRadius: "8px",
-                    padding: ".7rem 2.5rem",
+                    borderRadius: "10px",
+                    padding: "0 2.5rem",
                   }}
                   disabled={mainStep === 1 ? !withdrawType : !currentWithdrawal}
                   onClick={() =>
@@ -670,8 +678,12 @@ const WithdrawOldFlow = ({
           <Button
             color="transparent"
             style={{
-              borderRadius: "8px",
-              padding: ".6rem 1.25rem",
+              height: "40px",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: "10px",
+              padding: "0 1.25rem",
               marginRight: "8px",
             }}
             onClick={handleBack}
@@ -683,9 +695,13 @@ const WithdrawOldFlow = ({
             <Button
               color="primary"
               style={{
+                height: "40px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
                 backgroundColor: "#5926f0",
-                borderRadius: "8px",
-                padding: ".7rem 2.5rem",
+                borderRadius: "10px",
+                padding: "0 2.5rem",
               }}
               disabled={
                 isLoading || amountError || (isExternalWithdrawal && showNotice) ? !agree : false
@@ -698,9 +714,13 @@ const WithdrawOldFlow = ({
             <Button
               color="primary"
               style={{
+                height: "40px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
                 backgroundColor: "#5926f0",
-                borderRadius: "8px",
-                padding: ".7rem 2.5rem",
+                borderRadius: "10px",
+                padding: "0 2.5rem",
               }}
               onClick={() => navigate("/settings?tab=withdrawals")}
             >

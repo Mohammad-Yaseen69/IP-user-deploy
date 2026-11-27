@@ -1298,7 +1298,13 @@ const Login = ({ country, setIsLoginForm }) => {
                   }}
                 />
               ) : (
-                <PhoneInput phone={email} setPhone={setEmail} country={country} newUI={true} />
+                <PhoneInput
+                  size="lg"
+                  phone={email}
+                  setPhone={setEmail}
+                  country={country}
+                  newUI={true}
+                />
               )}
               <TextField
                 className={styles.inputField}

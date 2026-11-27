@@ -298,7 +298,7 @@
               align-items: center;
               gap: var(--Gaps-Gap-Small, 8px);
               border-radius: 4px;
-              border: 1px solid var(--COLORS-Neutral-200, #e8e8e8);
+              border: 1px solid var(--COLORS-Neutral-200, #eff1f6);
               background: #e8e8e8;
               position: absolute;
               display: flex;
@@ -320,7 +320,7 @@
                 gap: 3px;
                 cursor: pointer;
                 border-radius: 4px;
-                border: 1px solid var(--COLORS-Neutral-200, #e8e8e8);
+                border: 1px solid var(--COLORS-Neutral-200, #eff1f6);
                 background: rgba(51, 51, 51, 0.04);
                 padding: 4px;
 
@@ -372,7 +372,7 @@
         .infoCont {
           display: flex;
           border-radius: var(--RADIUS-radius-3, 12px);
-          border: 1px solid var(--COLORS-Neutral-200, #e8e8e8);
+          border: 1px solid var(--COLORS-Neutral-200, #eff1f6);
           background: var(--COLORS-Neutral-100, #fff);
           padding: var(--SPACING-spacing-3, 24px);
           flex-direction: column;
@@ -398,12 +398,13 @@
 
             button {
               display: flex !important;
-              padding: var(--SPACING-spacing-0, 4px) var(--SPACING-spacing-1, 12px) !important;
+              padding: 0 var(--SPACING-spacing-1, 12px) !important;
+              height: 32px !important;
               justify-content: center !important;
               align-items: center !important;
               gap: 10px !important;
-              border-radius: var(--RADIUS-radius-2, 8px) !important;
-              border: 1px solid var(--COLORS-Neutral-200, #e8e8e8) !important;
+              border-radius: 8px !important;
+              border: 1px solid var(--COLORS-Neutral-200, #eff1f6) !important;
               background: var(--COLORS-Primary-300, #5926f0) !important;
             }
           }
@@ -435,8 +436,11 @@
             }
 
             .title {
-              border-radius: var(--RADIUS-radius-1, 4px);
-              border: 1px solid var(--COLORS-Neutral-200, #e8e8e8);
+              display: flex;
+              align-items: center;
+              height: 40px;
+              border-radius: 10px;
+              border: 1px solid var(--COLORS-Neutral-200, #eff1f6);
               background: var(--COLORS-Neutral-100, #fff);
 
               box-shadow: 0px 2px 4px 0px rgba(27, 28, 29, 0.04);
@@ -460,7 +464,7 @@
           flex-direction: column;
           gap: 15px;
           border-radius: var(--RADIUS-radius-3, 12px);
-          border: 1px solid var(--COLORS-Neutral-200, #e8e8e8);
+          border: 1px solid var(--COLORS-Neutral-200, #eff1f6);
           background: var(--COLORS-Neutral-100, #fff);
           align-items: flex-start;
           flex-shrink: 0;
@@ -534,17 +538,18 @@
 .buttonStyles {
   display: flex;
   float: right;
-  padding: var(--SPACING-spacing-0, 8px);
+  height: 32px;
+  padding: 0 12px;
   justify-content: center;
   align-items: center;
   gap: 10px;
-  border-radius: var(--RADIUS-radius-1, 4px);
+  border-radius: 8px;
   background: var(--COLORS-Primary-300, #5926f0);
   background-color: var(--COLORS-Primary-300, #5926f0);
   color: var(--COLORS-Neutral-100, #fff);
-  font-size: 10px;
+  font-size: 13px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   border: none;
   width: 90px;
 }

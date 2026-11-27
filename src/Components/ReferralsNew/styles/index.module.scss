@@ -67,11 +67,11 @@
   .ref_dets {
     display: flex;
     margin-top: 1rem;
-    border-radius: 30px;
+    border-radius: 16px;
+    border: 1px solid #eff1f6;
     gap: 1rem;
     background: #fff;
-    box-shadow: 0px 2px 43px 0px rgba(38, 51, 77, 0.13);
-    padding: 2rem;
+    padding: 24px;
 
     & > * {
       margin-bottom: 0;
@@ -165,10 +165,10 @@
     gap: 1rem;
     margin-top: 1rem;
     align-items: center;
-    border-radius: 30px;
+    border-radius: 16px;
+    border: 1px solid #eff1f6;
     background: #fff;
-    box-shadow: 0px 2px 43px 0px rgba(38, 51, 77, 0.13);
-    padding: 2rem 3rem;
+    padding: 24px;
 
     h4 {
       margin-bottom: 0;
@@ -254,12 +254,10 @@
     overflow: auto;
 
     .item {
-      border-radius: 30px;
-      border-top: 1px solid rgba(0, 0, 0, 0.04);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+      border-radius: 12px;
+      border: 1px solid #eff1f6;
       background: #fff;
-      box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.04);
-      padding: 1rem 3rem;
+      padding: 20px;
       min-height: 90px;
       display: flex;
       align-items: center;
@@ -334,11 +332,11 @@
     padding: 0 var(--page-gutter);
 
     .ref_dets {
-      padding: 1rem;
+      padding: 20px;
     }
 
     .ref_guide {
-      padding: 2rem 3rem;
+      padding: 20px;
     }
 
     .ref_table {
@@ -352,11 +350,9 @@
 }
 
 .table_header {
-  border-radius: 30px;
-  border-top: 1px solid rgba(0, 0, 0, 0.04);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  border-radius: 16px;
+  border: 1px solid #eff1f6;
   background: #fff;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.04);
   padding: 1rem 3rem;
   min-height: 90px;
   display: flex;
@@ -413,8 +409,8 @@
 
       .ref_dets_sub {
         border-radius: 16px;
+        border: 1px solid #eff1f6;
         background: #fafafa;
-        box-shadow: 0px 2px 43px rgba(38, 51, 77, 0.13);
         padding: 0.5rem;
 
         &.left {

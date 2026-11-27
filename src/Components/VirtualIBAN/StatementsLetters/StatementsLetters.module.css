@@ -21,7 +21,7 @@
   gap: 15px;
   background-color: #ffffff;
   padding: 24px;
-  border-radius: 10px;
+  border-radius: 16px;
 }
 
 .navigationHeader {
@@ -36,11 +36,12 @@
 
 .backBtn {
   display: flex;
-  padding: 6px 12px;
+  padding: 0 12px;
+  height: 32px;
   justify-content: center;
   align-items: center;
   gap: 6px;
-  border-radius: 6px;
+  border-radius: 8px;
   border: 1px solid #d0d5dd;
   background: #fff;
   color: #344054;
@@ -183,7 +184,7 @@
 .columnsFlexGrid {
   display: flex;
   flex-direction: row;
-  gap: 32px;
+  gap: 24px;
   width: 100%;
 }
 
@@ -205,12 +206,9 @@
   flex-direction: column;
   flex: 1;
   padding: 24px;
-  border-radius: 12px;
+  border-radius: 16px;
   background: #fff;
   border: 1px solid #f2f4f7;
-  box-shadow:
-    0 1px 2px 0 rgba(23, 21, 34, 0.04),
-    0 20px 48px -28px rgba(23, 21, 34, 0.14);
 }
 
 .sectionHeadingTitle {
@@ -228,12 +226,12 @@
 
 .actionCard {
   display: flex;
-  padding: 16px;
+  padding: 20px;
   align-items: flex-start;
   gap: 12px;
   align-self: stretch;
   border-radius: 12px;
-  border: 1px solid #eaecf0;
+  border: 1px solid #eff1f6;
   background: #fff;
 }
 
@@ -294,14 +292,15 @@
 
 .previewBtn {
   display: flex;
-  padding: 8px 14px;
+  padding: 0 14px;
+  height: 40px;
   align-items: center;
   gap: 6px;
-  border-radius: 6px;
+  border-radius: 10px;
   border: 1px solid #d0d5dd;
   background: #fff;
   color: #344054;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -320,14 +319,15 @@
 
 .downloadBtn {
   display: flex;
-  padding: 8px 14px;
+  padding: 0 14px;
+  height: 40px;
   align-items: center;
   gap: 6px;
-  border-radius: 6px;
+  border-radius: 10px;
   border: 1px solid #5626e6;
   background: #5626e6;
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -359,14 +359,15 @@
 
 .shareBtn {
   display: flex;
-  padding: 8px 14px;
+  padding: 0 14px;
+  height: 40px;
   align-items: center;
   gap: 6px;
-  border-radius: 6px;
+  border-radius: 10px;
   background: #fff;
   border: 1px solid #d0d5dd;
   color: #344054;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -380,14 +381,15 @@
 
 .downloadStatementBtn {
   display: flex;
-  padding: 8px 14px;
+  padding: 0 14px;
+  height: 40px;
   align-items: center;
   gap: 6px;
-  border-radius: 6px;
+  border-radius: 10px;
   border: 1px solid #10b981;
   background: #10b981;
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -559,7 +561,7 @@
   gap: 12px;
   padding: 14px 16px;
   border-radius: 10px;
-  border: 1px solid #eaecf0;
+  border: 1px solid #eff1f6;
   background: #ffffff;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -631,17 +633,21 @@
   align-items: center;
   gap: 12px;
   padding-top: 16px;
-  border-top: 1px solid #eaecf0;
+  border-top: 1px solid #eff1f6;
   margin-top: 8px;
 }
 
 .swiftCancelBtn {
-  padding: 9px 18px;
-  border-radius: 8px;
+  padding: 0 18px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
   border: 1px solid #d0d5dd;
   background: #ffffff;
   color: #344054;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
@@ -655,13 +661,14 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 9px 20px;
-  border-radius: 8px;
+  padding: 0 20px;
+  height: 40px;
+  border-radius: 10px;
   border: 1px solid #5626e6;
   background: #5626e6;
   color: #ffffff;
-  font-size: 13.5px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -751,8 +758,8 @@
     background: #5626e6 !important;
     border-color: #5626e6 !important;
     color: #ffffff !important;
-    padding: 10px 4px;
-    font-size: 12px;
+    padding: 0 4px;
+    font-size: 13px;
     justify-content: center;
     white-space: nowrap;
   }
@@ -762,15 +769,15 @@
     background: #fff !important;
     border: 1px solid #d0d5dd !important;
     color: #1d2025 !important;
-    padding: 10px 4px;
-    font-weight: 700;
-    font-size: 12px;
+    padding: 0 4px;
+    font-weight: 500;
+    font-size: 13px;
     justify-content: center;
     white-space: nowrap;
   }
 
   .shareBtn {
-    padding: 11px 10px;
+    padding: 0 10px;
   }
 
   .sectionHeadingSub {

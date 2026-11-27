@@ -43,16 +43,17 @@
 }
 
 .visit_btn {
-  border-radius: 4px;
+  height: 32px;
+  border-radius: 8px;
   background: #5926f0;
-  padding: 0.25rem 0.5rem;
+  padding: 0 12px;
   color: #fff;
   leading-trim: both;
   text-edge: cap;
   font-family: "Inter", sans-serif;
-  font-size: 0.6rem;
+  font-size: 13px;
   font-style: normal;
-  font-weight: 800;
+  font-weight: 500;
   line-height: 150%;
   letter-spacing: -0.4px;
   border: none;
@@ -75,16 +76,17 @@
 }
 
 .action_btn {
-  border-radius: 4px;
+  height: 32px;
+  border-radius: 8px;
   background: #111827;
-  padding: 0.25rem 0.65rem;
+  padding: 0 12px;
   color: #fff;
   leading-trim: both;
   text-edge: cap;
   font-family: "Inter", sans-serif;
-  font-size: 0.6rem;
+  font-size: 13px;
   font-style: normal;
-  font-weight: 800;
+  font-weight: 500;
   line-height: 150%;
   letter-spacing: -0.4px;
   border: none;

@@ -49,10 +49,10 @@
   align-items: center;
   justify-content: center;
   gap: var(--abf-sm);
-  height: 44px;
+  height: 40px;
   padding: 0 20px;
   border: none;
-  border-radius: var(--abf-r-md);
+  border-radius: 10px;
   font-size: 15px;
   font-weight: 500;
   white-space: nowrap;

@@ -338,15 +338,19 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
               <button
                 onClick={() => setShowCompatibleModal(false)}
                 style={{
+                  height: "40px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   marginTop: 18,
                   alignSelf: "flex-end",
                   background: "#3417db",
                   color: "#fff",
                   border: "none",
-                  borderRadius: 6,
-                  padding: "8px 22px",
+                  borderRadius: "10px",
+                  padding: "0 22px",
                   fontWeight: 600,
-                  fontSize: 16,
+                  fontSize: 14,
                   cursor: "pointer",
                   boxShadow: "0 2px 8px rgba(10,124,255,0.08)",
                 }}

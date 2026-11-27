@@ -99,8 +99,8 @@ $mobile: 1000px;
   > button {
     display: grid;
     place-items: center;
-    width: 26px;
-    height: 26px;
+    width: 32px;
+    height: 32px;
     padding: 0;
     background: $tint-2;
     border: 0;
@@ -116,9 +116,16 @@ $mobile: 1000px;
   gap: 5px;
 
   button {
+    position: relative;
     width: 8px;
     height: 8px;
     padding: 0;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: -12px -2px;
+    }
     background: $text-2;
     border: 0;
     border-radius: 4px;

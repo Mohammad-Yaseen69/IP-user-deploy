@@ -222,13 +222,17 @@ const RequestMoneyMobile = ({ step, setStep, setCurrentFlow, setAction }) => {
             SetIsPreferencesCheck(false);
           }}
           style={{
+            height: "40px",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
             background: "#D92D20",
             color: "white",
             border: "none",
-            padding: "12px 24px", // Increased padding
-            borderRadius: "6px",
+            padding: "0 24px", // Increased padding
+            borderRadius: "10px",
             cursor: "pointer",
-            fontSize: "16px", // Increased font size
+            fontSize: "14px", // Increased font size
             fontWeight: "500",
             minWidth: "120px", // Added minimum width
             transition: "background 0.3s",

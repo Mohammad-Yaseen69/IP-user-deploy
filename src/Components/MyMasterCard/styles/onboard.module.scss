@@ -458,12 +458,13 @@
 
     button {
       display: flex;
-      padding: 8px 12px;
+      height: 40px;
+      padding: 0 16px;
       justify-content: center;
       align-items: center;
       gap: var(--SPACING-spacing-0, 8px);
-      border-radius: var(--RADIUS-radius-1, 4px);
-      font-size: 12px;
+      border-radius: 10px;
+      font-size: 14px;
       font-weight: 600;
       border: none;
       outline: none;
@@ -588,12 +589,13 @@
 
   button {
     display: flex;
-    padding: 8px 12px;
+    height: 40px;
+    padding: 0 16px;
     justify-content: center;
     align-items: center;
     gap: var(--SPACING-spacing-0, 8px);
-    border-radius: var(--RADIUS-radius-1, 4px);
-    font-size: 12px;
+    border-radius: 10px;
+    font-size: 14px;
     font-weight: 600;
     border: none;
     outline: none;
@@ -1169,7 +1171,8 @@
 
         button {
           width: 100%;
-          padding: 18px;
+          padding: 0 18px;
+          height: 56px;
         }
       }
     }

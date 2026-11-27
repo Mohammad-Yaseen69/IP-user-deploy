@@ -9,7 +9,7 @@
 
   .mainContent {
     display: grid;
-    gap: 2rem;
+    gap: 24px;
     align-items: center;
     padding: 0;
 
@@ -68,17 +68,17 @@
 
       button {
         display: flex;
-        height: 48px;
+        height: 40px;
         padding: 0 24px;
         justify-content: center;
         align-items: center;
         gap: 8px;
         align-self: stretch;
-        border-radius: var(--sm, 6px);
+        border-radius: 10px;
         background: #4a32e3;
         border: none;
         color: #fff;
-        font-weight: 700;
+        font-weight: 500;
         cursor: pointer;
         transition: 0.3s;
 
@@ -190,9 +190,13 @@
   gap: 0.75rem;
 
   button {
-    padding: 0.6rem 1.2rem;
-    border-radius: 8px;
-    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    padding: 0 1.2rem;
+    border-radius: 10px;
+    font-weight: 500;
     cursor: pointer;
     border: none;
   }

@@ -137,7 +137,7 @@ const ThirdPartySenders = () => {
   };
 
   const actionButtonStyle = {
-    border: "1px solid #E8E8E8",
+    border: "1px solid #EFF1F6",
     borderRadius: "7px",
     background: "#fff",
     width: "32px",
@@ -275,7 +275,7 @@ const ThirdPartySenders = () => {
           type="button"
           onClick={() => setTypeFilter(filter.value)}
           style={{
-            border: `1px solid ${typeFilter === filter.value ? "#5926F0" : "#E8E8E8"}`,
+            border: `1px solid ${typeFilter === filter.value ? "#5926F0" : "#EFF1F6"}`,
             borderRadius: "999px",
             background: typeFilter === filter.value ? "rgba(89, 38, 240, 0.08)" : "#fff",
             color: typeFilter === filter.value ? "#5926F0" : "#606060",
@@ -380,7 +380,14 @@ const ThirdPartySenders = () => {
         <Button
           color="transparent"
           className={styles.btn}
-          style={{ padding: ".5rem 1rem" }}
+          style={{
+            borderRadius: "10px",
+            height: "40px",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "0 1rem",
+          }}
           onClick={handleAddClick}
         >
           <span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
@@ -396,7 +403,7 @@ const ThirdPartySenders = () => {
     <>
       <div className={styles.container}>
         <PageHeader
-          title={t("Third-party sender")}
+          title={t("Third-party senders")}
           subtitle={t("Manage saved senders for third-party international transfers.")}
         />
 
@@ -420,7 +427,7 @@ const ThirdPartySenders = () => {
 
       <div className={styles.mobile}>
         <div className={styles.top}>
-          <h4>{t("Third-party sender")}</h4>
+          <h4>{t("Third-party senders")}</h4>
         </div>
         <div className={styles.bottom}>
           {renderToolbar(true)}
@@ -502,11 +509,15 @@ const ThirdPartySenders = () => {
             disabled={isDeletingSender}
             onClick={() => setConfirmDeleteSender(null)}
             style={{
+              height: "40px",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
               border: "1px solid #DDD",
-              borderRadius: "8px",
+              borderRadius: "10px",
               background: "#fff",
-              padding: "9px 14px",
-              fontWeight: 800,
+              padding: "0 14px",
+              fontWeight: 500,
             }}
           >
             {t("Cancel")}
@@ -516,12 +527,16 @@ const ThirdPartySenders = () => {
             disabled={isDeletingSender}
             onClick={() => deleteSender(confirmDeleteSender)}
             style={{
+              height: "40px",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
               border: "none",
-              borderRadius: "8px",
+              borderRadius: "10px",
               background: "#E64067",
               color: "#fff",
-              padding: "9px 14px",
-              fontWeight: 800,
+              padding: "0 14px",
+              fontWeight: 500,
             }}
           >
             {isDeletingSender ? t("Removing") : t("Remove")}

@@ -145,7 +145,10 @@ const Beneficiaries = () => {
   return (
     <>
       <div className={styles.container}>
-        <PageHeader title={t("Beneficiaries")} />
+        <PageHeader
+          title={t("Beneficiaries")}
+          subtitle={t("Manage the people and businesses you pay.")}
+        />
         <div className={styles.table_header}>
           <div className={styles.search_field}>
             <Search />
@@ -165,7 +168,7 @@ const Beneficiaries = () => {
               <Button
                 color="transparent"
                 className={`${styles.btn} ${styles.add_btn}`}
-                style={{ padding: ".5rem 1rem" }}
+                style={{ padding: "0 16px" }}
                 onClick={() => {
                   verifyToken();
                   setIsAddOpen(true);
@@ -177,7 +180,7 @@ const Beneficiaries = () => {
               <Button
                 color="transparent"
                 className={`${styles.btn} ${styles.add_btn}`}
-                style={{ padding: ".5rem 1rem" }}
+                style={{ padding: "0 16px" }}
                 onClick={verifyToken}
               >
                 <Link to={"/beneficiaries/add"}>{t("Add Beneficiary")}</Link>

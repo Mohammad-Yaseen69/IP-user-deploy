@@ -40,3 +40,17 @@ export const partyName = ({ user, company, company_name } = {}) =>
   [user?.first_name || company?.company_name || company_name, user?.last_name]
     .filter(Boolean)
     .join(" ");
+
+export const rowActivation = (onActivate, enabled = true) =>
+  enabled
+    ? {
+        role: "button",
+        tabIndex: 0,
+        onClick: onActivate,
+        onKeyDown: (e) => {
+          if (e.target !== e.currentTarget || (e.key !== "Enter" && e.key !== " ")) return;
+          e.preventDefault();
+          onActivate();
+        },
+      }
+    : {};

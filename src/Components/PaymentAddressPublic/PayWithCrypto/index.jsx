@@ -259,6 +259,7 @@ const PayWithCrypto = ({
                     {"*:"}
                   </label>
                   <PhoneInput
+                    size="lg"
                     phone={data?.cryptoDetails?.phone}
                     setPhone={(e) =>
                       dataHandler("cryptoDetails", {

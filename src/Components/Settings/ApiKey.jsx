@@ -486,7 +486,14 @@ const ApiKey = () => {
               <div style={{ marginTop: "2rem" }} className={styles.endActions}>
                 <button
                   className={styles.btn}
-                  style={{ padding: "13px 26px" }}
+                  style={{
+                    borderRadius: "10px",
+                    height: "40px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "0 26px",
+                  }}
                   onClick={handleDelete}
                   disabled={deleteKeyMutation.isPending}
                 >
@@ -494,7 +501,14 @@ const ApiKey = () => {
                 </button>
                 <button
                   className={styles.btn}
-                  style={{ padding: "13px 26px" }}
+                  style={{
+                    borderRadius: "10px",
+                    height: "40px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "0 26px",
+                  }}
                   onClick={handleUpdateFeatures}
                   disabled={updateFeatures.isPending || featureStatus !== "enabled"}
                 >
@@ -502,7 +516,14 @@ const ApiKey = () => {
                 </button>
                 <button
                   className={`${styles.btn} ${styles.btnPrimary}`}
-                  style={{ padding: "13px 26px" }}
+                  style={{
+                    borderRadius: "10px",
+                    height: "40px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "0 26px",
+                  }}
                   onClick={handleRegenerate}
                   disabled={isBusy || featureStatus !== "enabled" || !isEdit}
                 >

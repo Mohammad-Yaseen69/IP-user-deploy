@@ -221,7 +221,7 @@
 }
 
 .tableDataRow {
-  border-bottom: 1px solid #eaecf0;
+  border-bottom: 1px solid #eff1f6;
 }
 
 .tableBody {
@@ -350,7 +350,7 @@
 }
 
 .paginationRow {
-  border-top: 1px solid #eaecf0;
+  border-top: 1px solid #eff1f6;
   background-color: #fff;
 }
 

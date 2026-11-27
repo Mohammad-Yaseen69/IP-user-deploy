@@ -22,7 +22,7 @@
     align-items: center;
     gap: 8px;
     background: #ffffff;
-    border: 1px solid #eaecf0;
+    border: 1px solid #eff1f6;
     border-radius: 999px;
     padding: 4px 12px 4px 4px;
     cursor: pointer;
@@ -203,7 +203,7 @@
   }
 
   .drawerFooter {
-    border-top: 1px solid #eaecf0;
+    border-top: 1px solid #eff1f6;
     padding-top: 16px;
     margin-top: 20px;
     display: flex;

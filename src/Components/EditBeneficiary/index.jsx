@@ -657,12 +657,13 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                         }}
                         style={{
                           all: "unset",
-                          padding: "1rem",
+                          height: "56px",
+                          padding: "0 1rem",
                           boxShadow: "0 0 3px rgba(128,128,128,0.4)",
                           textAlign: "center",
                           cursor: "pointer",
                           type: "button",
-                          borderRadius: "10px",
+                          borderRadius: "12px",
                           background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                           color: "white",
                           display: "flex",
@@ -1349,11 +1350,12 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
                             onClick={editBeneficiaryHandler}
                             style={{
                               all: "unset",
-                              padding: "1rem",
+                              height: "56px",
+                              padding: "0 1rem",
                               boxShadow: "0 0 3px rgba(128,128,128,0.4)",
                               textAlign: "center",
                               cursor: handleDisable() ? "not-allowed" : "pointer",
-                              borderRadius: "10px",
+                              borderRadius: "12px",
                               background:
                                 "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                               color: "white",

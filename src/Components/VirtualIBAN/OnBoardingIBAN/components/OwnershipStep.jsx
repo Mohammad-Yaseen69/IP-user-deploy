@@ -400,11 +400,13 @@ const OwnershipStep = ({
                 onClick={() => openAddModal("individual")}
                 className={styles.addBtn}
                 style={{
-                  padding: "10px 16px",
-                  borderRadius: "8px",
+                  height: "40px",
+                  justifyContent: "center",
+                  padding: "0 16px",
+                  borderRadius: "10px",
                   background: "#f3f4f6",
                   border: "1px solid #d1d5db",
-                  fontWeight: 600,
+                  fontWeight: 500,
                   cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
@@ -420,11 +422,13 @@ const OwnershipStep = ({
                 title="Corporate entity UBO is disabled for now"
                 className={styles.addBtn}
                 style={{
-                  padding: "10px 16px",
-                  borderRadius: "8px",
+                  height: "40px",
+                  justifyContent: "center",
+                  padding: "0 16px",
+                  borderRadius: "10px",
                   background: "#f3f4f6",
                   border: "1px solid #e5e7eb",
-                  fontWeight: 600,
+                  fontWeight: 500,
                   opacity: 0.5,
                   cursor: "not-allowed",
                   display: "flex",

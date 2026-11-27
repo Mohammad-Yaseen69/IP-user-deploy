@@ -786,8 +786,13 @@ const FallbackStandardStep = ({ onSwitchToStandard, onCancel }) => {
           className={styles.nextBtn}
           onClick={onSwitchToStandard}
           style={{
+            borderRadius: "10px",
+            height: "40px",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
             background: "linear-gradient(to right, #5926F0 0%, #4828A0 100%)",
-            padding: "10px 20px",
+            padding: "0 20px",
           }}
         >
           <CheckCircle size={16} />

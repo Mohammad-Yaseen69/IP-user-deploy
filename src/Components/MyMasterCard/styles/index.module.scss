@@ -16,9 +16,9 @@
     gap: 12px;
     width: 100%;
     background-color: #fff;
-    box-shadow: 0.146323204040527px 25px 67px rgba(0, 0, 0, 0.07);
     padding: 24px;
     border-radius: 16px;
+    border: 1px solid #eff1f6;
 
     .tap {
       display: flex;
@@ -340,11 +340,12 @@
 
         button {
           display: flex;
-          padding: var(--RADIUS-radius-1, 4px) 13px var(--RADIUS-radius-1, 4px) 7px;
+          padding: 0 13px 0 7px;
+          height: 32px;
           align-items: center;
           gap: 6px;
-          border-radius: var(--RADIUS-radius-2, 8px);
-          border: 1px solid var(--COLORS-Neutral-200, #e8e8e8);
+          border-radius: 8px;
+          border: 1px solid var(--COLORS-Neutral-200, #eff1f6);
           background: var(--COLORS-Primary-300, #5926f0);
           box-shadow: 0px 2px 4px 0px rgba(27, 28, 29, 0.04);
           font-family: "Inter", sans-serif;
@@ -710,9 +711,9 @@
   .table {
     .menu {
       background-color: #fff;
-      box-shadow: 0.146323204040527px 25px 67px rgba(0, 0, 0, 0.07);
       padding: 16px 19px;
       border-radius: 12px;
+      border: 1px solid #eff1f6;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -785,9 +786,9 @@
 
       .table_header {
         background-color: #fff;
-        box-shadow: 0.146323204040527px 25px 67px rgba(0, 0, 0, 0.07);
         padding: 16px 19px;
         border-radius: 12px;
+        border: 1px solid #eff1f6;
         display: flex;
         justify-content: space-between;
         align-items: center;

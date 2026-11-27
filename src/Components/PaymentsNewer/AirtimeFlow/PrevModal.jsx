@@ -214,11 +214,15 @@ const PrevModal = ({ isOpen, toggle, isMobile }) => {
               <a download={qrModalContent.url} href={qrModalContent.url}>
                 <button
                   style={{
+                    height: "32px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                     border: "none",
-                    fontWeight: 600,
+                    fontWeight: 500,
                     color: "white",
-                    borderRadius: "6px",
-                    padding: "7px 15px",
+                    borderRadius: "8px",
+                    padding: "0 15px",
                     background: "#5926f0",
                   }}
                 >

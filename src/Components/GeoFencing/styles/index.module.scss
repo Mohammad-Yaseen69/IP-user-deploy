@@ -27,7 +27,7 @@
       margin-bottom: 0.75rem;
 
       div input {
-        padding: 6px 32px;
+        padding: 0 32px;
         font-size: 12px;
       }
 
@@ -45,10 +45,11 @@
 
       input {
         width: 100%;
-        padding: 8px 40px;
+        height: 40px;
+        padding: 0 40px;
         border: none;
         outline: none;
-        border-radius: 4px;
+        border-radius: 10px;
         background-color: #f6f6f6 !important;
       }
 
@@ -80,7 +81,7 @@
     grid-template-columns: 1fr 1fr 1fr;
     border-radius: 6px;
     overflow: hidden;
-    border: 0.5px solid var(--COLORS-Neutral-200, #e8e8e8);
+    border: 0.5px solid var(--COLORS-Neutral-200, #eff1f6);
     background: rgba(255, 255, 255, 0);
     min-width: 800px;
 
@@ -142,16 +143,19 @@
 
   .saveBtn {
     display: flex;
-    padding: var(--SPACING-spacing-1, 12px) var(--SPACING-spacing-2, 18px);
+    height: 40px;
+    padding: 0 18px;
     justify-content: center;
     align-items: center;
     gap: 8px;
     background: var(--COLORS-Primary-300, #5926f0);
-    border-radius: 6px;
+    border-radius: 10px;
     color: white;
+    font-size: 14px;
+    font-weight: 500;
 
     @media screen and (max-width: 768px) {
-      padding: 8px 14px;
+      padding: 0 14px;
       font-size: 14px;
     }
   }
@@ -170,7 +174,7 @@
       padding: 1rem;
       overflow: hidden;
       border-radius: var(--RADIUS-radius-1, 4px);
-      border: 1px solid var(--COLORS-Neutral-200, #e8e8e8);
+      border: 1px solid var(--COLORS-Neutral-200, #eff1f6);
       background: var(--COLORS-Neutral-100, #fff);
       display: flex;
       margin-bottom: 7px;
@@ -219,7 +223,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       padding: 19px 1rem !important;
-      border-bottom: 0.5px solid var(--COLORS-Neutral-200, #e8e8e8);
+      border-bottom: 0.5px solid var(--COLORS-Neutral-200, #eff1f6);
       background: rgba(255, 255, 255, 0);
       align-items: start !important;
       gap: 1rem;

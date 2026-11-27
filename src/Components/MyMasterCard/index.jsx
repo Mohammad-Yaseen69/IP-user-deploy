@@ -117,7 +117,7 @@ const MyMasterCard = () => {
   return (
     <div style={{ minHeight: "100vh" }} className={styles.container}>
       {!(width < 1000 && (addFundsMobile || ctcMobile || ctwMobile)) && (
-        <PageHeader title={t("My Mastercard")} />
+        <PageHeader title={t("My Mastercard")} subtitle={t("Manage your InstaPay Mastercard.")} />
       )}
 
       {status ? (

@@ -3,7 +3,7 @@
 .page {
   --cw-accent: #5926f0;
   --cw-accent-soft: #f4f1ff;
-  --cw-border: #eaecf0;
+  --cw-border: #eff1f6;
   --cw-surface: #ffffff;
   --cw-surface-muted: #f7f7fb;
   --cw-text: #101828;
@@ -12,7 +12,7 @@
 
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
   font-family: "Inter", sans-serif;
   color: var(--cw-text);
 }
@@ -20,7 +20,7 @@
 .layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 360px;
-  gap: 20px;
+  gap: 24px;
   align-items: start;
 }
 
@@ -35,9 +35,9 @@
 
 .portfolio {
   border: 1px solid var(--cw-border);
-  border-radius: 14px;
+  border-radius: 16px;
   background: var(--cw-surface);
-  padding: 22px 24px;
+  padding: 24px;
 }
 
 .portfolioTop {
@@ -108,10 +108,14 @@
 .eyeBtn {
   border: 0;
   background: transparent;
-  padding: 4px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
   color: var(--cw-text-muted);
   cursor: pointer;
   display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     color: var(--cw-text-secondary);
@@ -199,14 +203,14 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 42px;
+  height: 40px;
   padding: 0 18px;
-  border-radius: 9px;
+  border-radius: 10px;
   border: 0;
   background: var(--cw-accent);
   color: #fff;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
 
@@ -418,7 +422,7 @@
 
 .rail {
   border: 1px solid var(--cw-border);
-  border-radius: 14px;
+  border-radius: 16px;
   background: var(--cw-surface);
   overflow: hidden;
   position: sticky;
@@ -850,9 +854,10 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 6px 12px;
+  padding: 0 12px;
+  height: 32px;
   border: 0;
-  border-radius: 6px;
+  border-radius: 8px;
   background: var(--cw-accent);
   color: #fff;
   font-size: 12px;

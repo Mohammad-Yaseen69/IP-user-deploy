@@ -241,7 +241,14 @@ const LeftContainer = ({
                 {t("/q/")}
                 {currentWallet?.wallet_id}
               </span>
-              <img alt="" src={copy} onClick={copyHandler} />
+              <button
+                type="button"
+                className="tap-target"
+                aria-label={t("Copy")}
+                onClick={copyHandler}
+              >
+                <img alt="" src={copy} />
+              </button>
             </div>
           </div>
           <div className={styles.bt_bot}>

@@ -546,14 +546,17 @@ const CreatePin = () => {
             <button
               onClick={() => navigate("/settings")}
               style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
                 width: "96%",
-                borderRadius: "8px",
+                borderRadius: "12px",
                 background: "#5926F0",
-                height: "55px",
+                height: "56px",
                 border: "none",
                 color: "#FFF",
-                fontSize: "18px",
-                fontWeight: "600",
+                fontSize: "14px",
+                fontWeight: "500",
                 position: "absolute",
                 bottom: "15px",
                 left: "50%",

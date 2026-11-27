@@ -14,7 +14,7 @@ const UserProfilePublic = () => {
     <>
       {window.innerWidth > 1000 ? (
         <div className={styles.container}>
-          <PageHeader title={t("User Profile")}>
+          <PageHeader title={t("Profile")}>
             {userDetails && <SearchComponent showOthers={false} />}
           </PageHeader>
           <ProfileComponent />

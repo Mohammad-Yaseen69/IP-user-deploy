@@ -84,14 +84,17 @@ const ChipsInNew = () => {
               title={
                 <>
                   {t("My QR Code Sticker")}
-                  <Info
-                    color="#5926f0"
-                    style={{ cursor: "pointer" }}
+                  <button
+                    type="button"
+                    className="tap-target"
+                    aria-label={t("More info")}
                     onClick={() => setShowTooltip(!showTooltip)}
-                    size={16}
-                  />
+                  >
+                    <Info color="#5926f0" size={16} />
+                  </button>
                 </>
               }
+              subtitle={t("Share your QR code so anyone can pay you.")}
             />
             <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
               {/* <GeneralContainer currency={currency} setCurrency={setCurrency} currentWallet={currentWallet} setWalletRefresh={setWalletRefresh} authHeader={authHeader} defaultWal={defaultWal} showTooltip={showTooltip} setShowTooltip={setShowTooltip} /> */}
@@ -113,12 +116,14 @@ const ChipsInNew = () => {
             <div className={styles.top}>
               <h4 style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
                 {t("My QR Code Sticker")}{" "}
-                <Info
-                  color="#5926f0"
-                  style={{ cursor: "pointer" }}
+                <button
+                  type="button"
+                  className="tap-target"
+                  aria-label={t("More info")}
                   onClick={() => setShowTooltip(!showTooltip)}
-                  size={16}
-                />
+                >
+                  <Info color="#5926f0" size={16} />
+                </button>
               </h4>
             </div>
             <div className={styles.bottom}>

@@ -15,7 +15,7 @@
   gap: 118px;
   justify-content: space-between;
   align-items: center;
-  padding: 22px 30px;
+  padding: 20px;
 }
 
 .currency_dropdown {
@@ -81,7 +81,7 @@
 }
 
 .body {
-  padding: 34px;
+  padding: 24px;
   flex: 1;
 }
 
@@ -149,7 +149,7 @@
   }
 
   .header {
-    padding: 13px 22px;
+    padding: 20px;
     gap: 50px;
   }
 }

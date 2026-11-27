@@ -8,12 +8,12 @@ const OtherTransactions = () => {
   return (
     <>
       <div className={styles.container}>
-        <PageHeader title={t("Subscriptions & Scheduled")} />
+        <PageHeader title={t("Scheduled")} subtitle={t("Your scheduled and recurring payments.")} />
         <TransactionsTable />
       </div>
       <div className={styles.mobile}>
         <div className={styles.top}>
-          <h4>{t("Subscriptions & Scheduled")}</h4>
+          <h4>{t("Scheduled")}</h4>
         </div>
         <TransactionsTable />
       </div>

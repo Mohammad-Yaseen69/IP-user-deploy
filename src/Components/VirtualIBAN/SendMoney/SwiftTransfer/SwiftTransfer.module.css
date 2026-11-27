@@ -228,9 +228,9 @@
 .primarySmallBtn,
 .nextBtn,
 .backBtn {
-  min-height: 36px;
+  height: 40px;
   border: 0;
-  border-radius: 6px;
+  border-radius: 10px;
   padding: 0 16px;
   display: inline-flex;
   align-items: center;
@@ -755,13 +755,14 @@
 
 .refreshBtn {
   border: 1px solid #5926f0;
-  border-radius: 6px;
+  border-radius: 8px;
   background: #fff;
   color: #5926f0;
   font-family: Inter, sans-serif;
   font-size: 12px;
   font-weight: 600;
-  padding: 5px 10px;
+  padding: 0 10px;
+  height: 32px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -941,7 +942,12 @@
   font-family: "Inter", sans-serif;
   font-size: 14px;
   font-weight: 600;
-  padding: 8px 12px;
+  padding: 0 12px;
+  height: 40px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
 }
 
@@ -1139,11 +1145,11 @@
       box-shadow: 0px 1px 0px 0px #ffffff33 inset;
       box-shadow: 0px 6px 18px -5px #5926f06b;
       background: linear-gradient(180deg, #7040ff 0%, #5926f0 100%);
-      border-radius: 14px;
+      border-radius: 12px;
       font-size: 15px;
       font-weight: 600;
       letter-spacing: -0.25px;
-      height: 52px;
+      height: 56px;
     }
   }
 
@@ -1336,15 +1342,15 @@
       box-shadow: 0px 1px 2px 0px #1412200d;
       border: 1px solid #1412201f;
       background: #ffffff;
-      border-radius: 14px;
-      height: 52px;
+      border-radius: 12px;
+      height: 56px;
       font-size: 15px;
       font-weight: 600;
     }
 
     .nextBtn {
-      border-radius: 14px;
-      height: 52px;
+      border-radius: 12px;
+      height: 56px;
       font-size: 15px;
       font-weight: 600;
       letter-spacing: -0.25px;

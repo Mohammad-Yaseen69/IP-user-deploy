@@ -145,7 +145,7 @@ const AddBeneficiaryAddressModal = ({ isOpen, toggle, beneficiaries = [], close,
             marginRight: "auto",
             marginLeft: "1rem",
             cursor: "pointer",
-            fontWeight: "600",
+            fontWeight: "500",
           }}
           onClick={() => {
             if (beneficiaries[beneficiaries.length - 1]?._id === current) {

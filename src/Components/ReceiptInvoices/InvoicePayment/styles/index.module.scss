@@ -37,10 +37,11 @@
           width: 100%;
 
           button {
-            border-radius: var(--rad-med, 8px);
+            border-radius: 10px;
             backdrop-filter: blur(2px);
             display: flex;
-            padding: 12px;
+            padding: 0 12px;
+            height: 40px;
             justify-content: center;
             align-items: center;
             gap: 10px;
@@ -1190,16 +1191,16 @@
 
 .payButton {
   max-width: none;
-  min-height: 42px;
-  border-radius: 7px;
+  height: 40px;
+  border-radius: 10px;
   background: linear-gradient(90deg, #5926f0, #6d2df6);
   font-size: 12px;
 }
 
 .secondaryButton {
   min-width: 86px;
-  min-height: 42px;
-  border-radius: 7px;
+  height: 40px;
+  border-radius: 10px;
   font-size: 12px;
 }
 

@@ -291,7 +291,7 @@ const GeoFencing = () => {
   return (
     <div className={styles.container}>
       <PageHeader
-        title={t("Manage Payment & Quotation Access")}
+        title={t("Geo-fencing")}
         subtitle={t(
           "Control countries from where you can receive Payment Requests and Quotations. Toggle on/off access for specific countries.",
         )}

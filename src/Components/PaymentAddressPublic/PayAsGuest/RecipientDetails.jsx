@@ -100,6 +100,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
               {t("Phone Number")} <span>*</span>{" "}
             </label>
             <PhoneInput
+              size="lg"
               country={data.country?.alpha3}
               setPhone={(e) => dataHandler("phone", e)}
               disableDropdown={true}

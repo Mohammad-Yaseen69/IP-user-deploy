@@ -57,11 +57,12 @@
 
 .backBtn {
   display: flex;
-  padding: 6px 12px;
+  padding: 0 12px;
+  height: 32px;
   justify-content: center;
   align-items: center;
   gap: 6px;
-  border-radius: 6px;
+  border-radius: 8px;
   border: 1px solid #d0d5dd;
   background: #fff;
   color: #344054;
@@ -187,8 +188,8 @@
   align-items: flex-start;
   gap: 16px;
   flex: 1 0 0;
-  box-shadow: inset 0px 0px 0px 1px #d0d5dd;
   border-radius: 12px;
+  border: 1px solid #eff1f6;
   background: #fff;
   cursor: pointer;
   transition: border-color 0.2s ease;

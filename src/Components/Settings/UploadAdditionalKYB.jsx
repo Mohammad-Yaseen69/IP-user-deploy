@@ -455,8 +455,8 @@ const UploadAdditionalKYB = ({ isOpen, toggle, files, user_id, type = "kyb", par
                         background: "none",
                         border: "none",
                         color: "#ef4444",
-                        fontSize: "11px",
-                        fontWeight: "600",
+                        fontSize: "14px",
+                        fontWeight: "500",
                         display: "flex",
                         alignItems: "center",
                         gap: "4px",
@@ -490,13 +490,17 @@ const UploadAdditionalKYB = ({ isOpen, toggle, files, user_id, type = "kyb", par
               onClick={handleToggle}
               disabled={isUploading}
               style={{
+                height: "32px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
                 background: "#f1f5f9",
                 border: "1px solid #cbd5e1",
                 color: "#475569",
-                fontWeight: "600",
-                fontSize: "12px",
-                padding: "6px 12px",
-                borderRadius: "6px",
+                fontWeight: "500",
+                fontSize: "13px",
+                padding: "0 12px",
+                borderRadius: "8px",
                 cursor: "pointer",
               }}
             >
@@ -514,8 +518,8 @@ const UploadAdditionalKYB = ({ isOpen, toggle, files, user_id, type = "kyb", par
                 background: "transparent",
                 border: "none",
                 color: "#5926f0",
-                fontWeight: "600",
-                fontSize: "12px",
+                fontWeight: "500",
+                fontSize: "14px",
                 padding: "6px 12px",
                 cursor: "pointer",
               }}
@@ -528,14 +532,16 @@ const UploadAdditionalKYB = ({ isOpen, toggle, files, user_id, type = "kyb", par
             onClick={handleUploadCurrent}
             disabled={!selectedFile || isUploading}
             style={{
+              height: "32px",
+              justifyContent: "center",
               background: selectedFile
                 ? "linear-gradient(135deg, #e64067 0%, #5926f0 50%, #4828a0 100%)"
                 : "#cbd5e1",
               color: "#ffffff",
-              fontWeight: "700",
-              fontSize: "12px",
-              padding: "6px 14px",
-              borderRadius: "6px",
+              fontWeight: "500",
+              fontSize: "13px",
+              padding: "0 14px",
+              borderRadius: "8px",
               border: "none",
               cursor: !selectedFile || isUploading ? "not-allowed" : "pointer",
               display: "flex",

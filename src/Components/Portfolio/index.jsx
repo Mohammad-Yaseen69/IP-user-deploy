@@ -69,14 +69,17 @@ const Portfolio = () => {
           title={
             <>
               {t("My Portfolio")}
-              <Info
-                color="#5926f0"
-                style={{ cursor: "pointer" }}
+              <button
+                type="button"
+                className="tap-target"
+                aria-label={t("More info")}
                 onClick={() => setIsOpen(!isOpen)}
-                size={16}
-              />
+              >
+                <Info color="#5926f0" size={16} />
+              </button>
             </>
           }
+          subtitle={t("Showcase your work with images, videos and PDFs.")}
         />
         <p className={styles.desc}>
           {t(

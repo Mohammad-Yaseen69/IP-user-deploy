@@ -170,6 +170,7 @@ const CryptoAmountNew = ({ setSubStep, amount, setAmount, cryptoCurrency }) => {
         <Button
           size="sm"
           style={{
+            height: "40px",
             border: "none",
             outline: "none",
             background:
@@ -182,8 +183,8 @@ const CryptoAmountNew = ({ setSubStep, amount, setAmount, cryptoCurrency }) => {
             alignItems: "center",
             width: isBig ? "60%" : "100%",
             minWidth: "fit-content",
-            padding: ".75rem 2rem",
-            borderRadius: "12px",
+            padding: "0 2rem",
+            borderRadius: "10px",
           }}
           className="i_t_button"
           onClick={() => {

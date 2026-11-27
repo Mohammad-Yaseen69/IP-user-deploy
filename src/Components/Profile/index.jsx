@@ -15,7 +15,7 @@ const ProfileTest = () => {
     <>
       {window.innerWidth > 1000 ? (
         <div className={styles.container}>
-          <PageHeader title={t("User Profile")} />
+          <PageHeader title={t("Profile")} subtitle={t("Your public profile on InstaPay.")} />
           {userDetails?.username ? (
             <ProfileComponent />
           ) : (
