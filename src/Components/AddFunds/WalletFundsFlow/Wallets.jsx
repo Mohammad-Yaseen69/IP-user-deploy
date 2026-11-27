@@ -5,7 +5,7 @@ import card_styles from "../../PaymentsNewer/InternationalFlow/styles/walletscom
 import logo_white from "../../../assets/images/logo/logo_white.png";
 import { Progress } from "reactstrap";
 import { useTranslation } from "react-i18next";
-import { getLimits } from "../../WalletsNew/getLimits";
+import { useWalletLimits } from "../../../hooks/GeneralUse/useWalletsLimits";
 import { removeCommasAndCurrency } from "../../WalletsNew/AccountLimits";
 import { formatCurrencyLocal } from "./Amount";
 import { useLocation } from "react-router";
@@ -33,22 +33,15 @@ const Wallets = ({ data, dataHandler }) => {
 export default Wallets;
 
 const WalletCard = ({ item, data, dataHandler }) => {
-  const { authHeader } = useContext(UserContext);
   const { t } = useTranslation();
-  const [walletData, setWalletData] = useState({});
+  const { limits: walletData, isLoading: limitsLoading } = useWalletLimits(item);
   const [updateValue, setUpdateValue] = useState(0);
 
   useEffect(() => {
-    if (item?._id) {
-      getLimits(
-        item,
-        setWalletData,
-        authHeader,
-        (e) => dataHandler("loading", e),
-        () => {},
-      );
-    }
-  }, [item]);
+    if (!limitsLoading) return;
+    dataHandler("loading", true);
+    return () => dataHandler("loading", false);
+  }, [limitsLoading]);
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
