@@ -15,6 +15,8 @@ import { useTranslation } from "react-i18next";
 import PhoneInput from "../PhoneInput";
 import { toast } from "react-toastify";
 import { smsIcon, whatsappIcon } from "../Auth/files";
+import { formatCountdown, getOtpThrottle } from "../../utils/Functions/otpThrottle";
+import { useCountdown } from "../../hooks/useCountdown";
 
 const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
   const { t } = useTranslation();
@@ -39,6 +41,8 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
   }, []);
   const [isAnyFieldEmpty, setIsAnyFieldEmpty] = useState(true);
   const [resendTimer, setResendTimer] = useState(90);
+  const [isResendThrottled, setIsResendThrottled] = useState(false);
+  const { seconds: sendCooldown, setSeconds: setSendCooldown } = useCountdown(0);
   const [isLoginError, setIsLoginError] = useState("");
   const [showToolTip, setShowTooltip] = useState("");
   const [isAgent] = useState(window?.location?.href?.includes("agent") ? true : false);
@@ -55,6 +59,8 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
   const [availableMethods, setAvailableMethods] = useState({ sms: true });
   const whatsappAvailable = currentMethod === "sms" && availableMethods?.["whatsapp"];
   const canSwitchMethod = whatsappAvailable || availableMethods?.sms;
+  const isDisabled =
+    isPressed || sendCooldown > 0 || (!isPhoneNumber.test(email) && !isEmail.test(email));
 
   const changePassHandler = (e) => {
     const { name, value } = e.target;
@@ -116,6 +122,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
 
   const sendOTP = async (e, method) => {
     e.preventDefault();
+    if (isDisabled) return;
     setError("");
     setIsPressed(true);
     try {
@@ -149,6 +156,17 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
       }
       setEmailVerified(true);
     } catch (error) {
+      const throttle = getOtpThrottle(error);
+      if (throttle) {
+        toast.error(throttle.message || t("Wait For the Timer"));
+        if (throttle.seconds && emailVerified) {
+          setResendTimer(throttle.seconds);
+          setIsResendThrottled(true);
+        } else if (throttle.seconds) {
+          setSendCooldown(throttle.seconds);
+        }
+        return;
+      }
       const dec = decryptData(error?.response?.data?.data);
       console.log(dec);
       toast
@@ -236,6 +254,14 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
       clearTimeout(timeout);
     };
   }, [resendTimer, emailVerified]);
+
+  useEffect(() => {
+    if (resendTimer === 0) setIsResendThrottled(false);
+  }, [resendTimer]);
+
+  useEffect(() => {
+    setSendCooldown(0);
+  }, [email]);
 
   const [loginMethod, setLoginMethod] = useState("phone");
 
@@ -367,12 +393,12 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                     </div>
                   )}
                   <div className={styles.social_media_login}></div>
-                  <button
-                    type="submit"
-                    className={styles.form_btn}
-                    disabled={isPressed || (!isPhoneNumber.test(email) && !isEmail.test(email))}
-                  >
-                    <span>{t("Send OTP")}</span>
+                  <button type="submit" className={styles.form_btn} disabled={isDisabled}>
+                    <span>
+                      {sendCooldown > 0
+                        ? `${t("Resend in")} ${formatCountdown(sendCooldown)}`
+                        : t("Send OTP")}
+                    </span>
                     <ChevronRight size={28} color="white" />
                   </button>
                 </div>
@@ -508,7 +534,11 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                     className={styles.resend_text}
                   >
                     {resendTimer > 0 ? (
-                      t("Resend available in") + " " + resendTimer + " " + t("seconds")
+                      isResendThrottled ? (
+                        `${t("Resend in")} ${formatCountdown(resendTimer)}`
+                      ) : (
+                        t("Resend available in") + " " + resendTimer + " " + t("seconds")
+                      )
                     ) : (
                       <>
                         {t("Didn't receive OTP?") + " "}

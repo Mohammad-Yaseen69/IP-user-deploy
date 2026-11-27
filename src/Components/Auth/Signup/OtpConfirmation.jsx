@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { UserContext } from "../../../Context/UserContext";
 import { smsIcon, whatsappIcon } from "../files";
 import styles from "../styles/index.module.css";
+import { formatCountdown, resendWithCooldown } from "../../../utils/Functions/otpThrottle";
 
 const OtpConfirmation = ({
   verifyOTpHandler,
@@ -29,6 +30,12 @@ const OtpConfirmation = ({
   const [currentMethod, setCurrentMethod] = useState("whatsapp");
   const [isAnyFieldEmpty, setIsAnyFieldEmpty] = useState(true);
   const [showToolTip, setShowTooltip] = useState();
+  const [isResendThrottled, setIsResendThrottled] = useState(false);
+
+  const resend = async (method, seconds) => {
+    const result = await resendWithCooldown(resendHandler, method, setResendTimer, seconds);
+    if (result?.retryAfterSeconds > 0) setIsResendThrottled(true);
+  };
 
   useEffect(() => {
     if (isWhatsappDefault !== false) {
@@ -83,6 +90,10 @@ const OtpConfirmation = ({
     return () => {
       clearTimeout(timeout);
     };
+  }, [resendTimer]);
+
+  useEffect(() => {
+    if (resendTimer === 0) setIsResendThrottled(false);
   }, [resendTimer]);
 
   const handlePaste = (event) => {
@@ -178,13 +189,11 @@ const OtpConfirmation = ({
                     if (resendTimer === 0) {
                       if (currentMethod === "sms") {
                         setCurrentMethod("whatsapp");
-                        setResendTimer(90);
-                        resendHandler("whatsapp");
+                        resend("whatsapp", 90);
                         setOTPValues(Array(numberOfFields).fill(""), "whatsapp");
                       } else {
                         setCurrentMethod("sms");
-                        setResendTimer(90);
-                        resendHandler("sms");
+                        resend("sms", 90);
                         setOTPValues(Array(numberOfFields).fill(""));
                       }
                     }
@@ -242,7 +251,11 @@ const OtpConfirmation = ({
                   <>
                     {t("Didn't get it? You can resend in")}&nbsp;
                     <span className={styles.countDownTimer}>
-                      {type === "email" ? formatTimer(resendTimer) : resendTimer}
+                      {isResendThrottled
+                        ? formatCountdown(resendTimer)
+                        : type === "email"
+                          ? formatTimer(resendTimer)
+                          : resendTimer}
                     </span>
                   </>
                 ) : (
@@ -252,8 +265,7 @@ const OtpConfirmation = ({
                       style={{ color: "#5926f0", cursor: "pointer" }}
                       onClick={() => {
                         setOTPValues(Array(numberOfFields).fill(""));
-                        resendHandler(currentMethod || "whatsapp");
-                        setResendTimer(timer);
+                        resend(currentMethod || "whatsapp", timer);
                       }}
                     >
                       {t("Resend Now")}
