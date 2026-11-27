@@ -1,7 +1,7 @@
 import { logger } from "@sentry/react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useContext, useEffect, useMemo, useReducer, useState } from "react";
+import { useContext, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, HelpCircle } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -212,6 +212,7 @@ const InternationFlow = ({
   const can = usePermission();
   const hasPermission = useEffectivePermission();
   const canInternationTransfer = hasPermission(PERMISSIONS.INTERNATIONAL_TRANSFER);
+  const markupRatesRequestRef = useRef(null);
 
   const [requiredMissingFields, setRequiredMissingFields] = useState({
     beneficiary: {
@@ -456,6 +457,9 @@ const InternationFlow = ({
       updateInternationalData("exchange_rate_error", "sww");
     }
   };
+
+  useEffect(() => () => markupRatesRequestRef.current?.controller.abort(), []);
+
   // eslint-disable-next-line no-unused-vars
   const getConversionRate = async (
     amount = internationalData.amount,
@@ -467,8 +471,14 @@ const InternationFlow = ({
     fromOrTo = "from",
   ) => {
     if (internationalData.payer?.id && internationalData.payoutChannel?.id && amount) {
+      const previousRequest = markupRatesRequestRef.current;
+      previousRequest?.controller.abort();
+      previousRequest?.setLoading(false);
+      const controller = new AbortController();
+      markupRatesRequestRef.current = { controller, setLoading };
       setLoading(true);
       const destinationCurrency = await getCurrency();
+      if (controller.signal.aborted) return;
       try {
         const service_name =
           internationalData?.payoutChannel?.value === "bank"
@@ -483,7 +493,7 @@ const InternationFlow = ({
 
         const url = `${import.meta.env.VITE_IP_DEV_API}/api/payment/markup-rates?from=${internationalData.currency_wallet?.currency?.code}&to=${destinationCurrency}&amount=${+String(amount)?.replaceAll(",", "")}&fromOrTo=${fromOrTo}&service_name=${service_name}&account_id=${userDetails?._id}&payer_id=${internationalData.payer?.id}&service_id=${internationalData.payoutChannel?.id}&vendor=${internationalData.payoutChannel?.vendor}&transaction_type=${internationalData.flow}`;
 
-        const res = await axios.get(url, { headers: authHeader });
+        const res = await axios.get(url, { headers: authHeader, signal: controller.signal });
 
         const decrypted = decryptData(res.data.data);
         const exchange_rate_details = {
@@ -580,6 +590,7 @@ const InternationFlow = ({
         //     }
         // }
       } catch (err) {
+        if (axios.isCancel(err)) return;
         const dec = decryptData(err?.response.data.data);
         if (fromOrTo === "from") {
           updateInternationalData("receiving_amount", 0);
@@ -621,7 +632,7 @@ const InternationFlow = ({
           }
         }
       } finally {
-        setLoading(false);
+        if (markupRatesRequestRef.current?.controller === controller) setLoading(false);
       }
     }
   };

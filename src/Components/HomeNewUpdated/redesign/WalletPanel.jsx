@@ -13,28 +13,11 @@ import u from "../../../Common/WalletUI/ui.module.scss";
 import WalletCard from "../../../Common/WalletUI/WalletCard";
 import { UserContext } from "../../../Context/UserContext";
 import { usePermission } from "../../../hooks/GeneralUse/usePermission";
-import { getLimits } from "../../WalletsNew/getLimits";
+import { useWalletLimits, useWalletsLimits } from "../../../hooks/GeneralUse/useWalletsLimits";
 import d from "./dashboard.module.scss";
-import { useQuery } from "@tanstack/react-query";
-import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 
-// Each card loads its own monthly limit, as the old dashboard card did.
 const LimitCard = ({ wallet, hidden }) => {
-  const { authHeader } = useContext(UserContext);
-  const [limits, setLimits] = useState({});
-
-  useEffect(() => {
-    if (wallet?._id) {
-      // getLimits(
-      //   wallet,
-      //   setLimits,
-      //   authHeader,
-      //   () => {},
-      //   () => {},
-      // );
-    }
-  }, [wallet?._id]);
-
+  const { limits } = useWalletLimits(wallet);
   return <WalletCard wallet={wallet} limits={limits} small hidden={hidden} />;
 };
 
@@ -50,22 +33,11 @@ const WalletPanel = ({ setCurrentWallet, hidden }) => {
     () => (allWallets ?? []).filter((w) => w?.wallet_type !== "crypto"),
     [allWallets],
   );
-  const wallet = userWallets?.[activeDot];
-  const showSkeleton = walletsLoading && userWallets.length === 0;
 
-  const { data: limits = [], isLoading: limitsLoading } = useQuery({
-    queryKey: ["wallet", "get-limits"],
-    queryFn: async () => {
-      const dec = await apiWrapper({
-        endpoint: "/api/wallet/get-limits",
-        method: "GET",
-        isDecrypted: true,
-      });
-      console.log("dec", dec);
-      // const list = dec.data ?? [];
-      // return list;
-    },
-  });
+  const { isLoading: limitsLoading } = useWalletsLimits();
+
+  const wallet = userWallets?.[activeDot];
+  const showSkeleton = (walletsLoading && userWallets.length === 0) || limitsLoading;
 
   useEffect(() => {
     getUserWallets();
