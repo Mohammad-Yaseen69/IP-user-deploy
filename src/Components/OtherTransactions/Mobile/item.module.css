@@ -1,124 +1,123 @@
 .item {
-    border-radius: 16px;
-    box-shadow: 0px 4px 14.3px 0px rgba(0, 0, 0, 0.07);
-    padding: .75rem;
-    width: 100%;
+  border-radius: 16px;
+  box-shadow: 0px 4px 14.3px 0px rgba(0, 0, 0, 0.07);
+  padding: 0.75rem;
+  width: 100%;
 }
 
 .item .top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: .5rem;
-    width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
 }
 
 .item .top .left {
-    display: flex;
-    align-items: center;
-    gap: .5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .t_details h5 {
-    -webkit-line-clamp: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 40vw;
-    white-space: nowrap;
-    margin-bottom: 0;
-    font-size: min(5vw, .8rem);
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 40vw;
+  white-space: nowrap;
+  margin-bottom: 0;
+  font-size: min(5vw, 0.8rem);
 }
 
 .t_details span {
-    color: #848484;
-    font-size: min(3vw, .6rem);
+  color: #848484;
+  font-size: min(3vw, 0.6rem);
 }
 
 .dp {
-    height: 40px;
-    width: 40px;
-    flex-shrink: 0;
-    border-radius: 10px;
-    background: #EBE4FF;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: .9rem;
-    font-weight: 700;
+  height: 40px;
+  width: 40px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #ebe4ff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 
 .item .top .right {
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-    min-width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: fit-content;
 }
 
 .item .top .right h5 {
-    white-space: nowrap;
-    margin-bottom: 0;
+  white-space: nowrap;
+  margin-bottom: 0;
 }
 
-
 .tm_details {
-    margin-top: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .tmd_row {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .tmdr_item {
-    display: flex;
-    flex-direction: column;
-    gap: .1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
 }
 
 .tmdr_item span {
-    font-size: min(3vw, .7rem);
-    font-weight: 500;
-    color: #848484;
-    margin-bottom: 2px;
+  font-size: min(3vw, 0.7rem);
+  font-weight: 500;
+  color: #848484;
+  margin-bottom: 2px;
 }
 
 .tmdr_item h4 {
-    font-size: min(5vw, .9rem);
-    font-weight: 700;
-    margin-bottom: 0;
+  font-size: min(5vw, 0.9rem);
+  font-weight: 700;
+  margin-bottom: 0;
 }
 
 .tmdr_item p {
-    font-size: min(3vw, .7rem);
-    font-weight: 500;
-    color: red;
+  font-size: min(3vw, 0.7rem);
+  font-weight: 500;
+  color: red;
 }
 
 .tmdr_item:nth-child(even) {
-    text-align: right;
+  text-align: right;
 }
 
 .months_con {
-    gap: 1rem;
+  gap: 1rem;
 }
 
 .month_block {
-    height: 50px;
-    width: 50px;
-    flex-shrink: 0;
+  height: 50px;
+  width: 50px;
+  flex-shrink: 0;
 }
 
 @media screen and (max-width: 470px) {
-    .month_block {
-        height: 35px;
-        width: 35px;
-    }
+  .month_block {
+    height: 35px;
+    width: 35px;
+  }
 
-    .months_con {
-        gap: .5rem;
-    }
+  .months_con {
+    gap: 0.5rem;
+  }
 }

@@ -62,7 +62,7 @@
 
       .message {
         font-size: 1rem;
-        color: #6E7687;
+        color: #6e7687;
       }
 
       .features {
@@ -79,8 +79,8 @@
           font-size: 1rem;
           color: #333;
           border-radius: var(--sm, 6px);
-          border: 1px solid var(--Greyscale-25, #E4E3E5);
-          background: var(--Greyscale-0, #FFF);
+          border: 1px solid var(--Greyscale-25, #e4e3e5);
+          background: var(--Greyscale-0, #fff);
           font-weight: 600;
           box-shadow: 0 1px 1.5px 0 rgba(44, 54, 53, 0.03);
 
@@ -99,7 +99,7 @@
         gap: 8px;
         align-self: stretch;
         border-radius: var(--sm, 6px);
-        background: #4A32E3;
+        background: #4a32e3;
         border: none;
         color: #fff;
         font-weight: 700;
@@ -116,7 +116,7 @@
         align-items: center;
         gap: 1rem;
         color: #555;
-        color: var(--Greyscale-900, #0C0A20);
+        color: var(--Greyscale-900, #0c0a20);
 
         font-family: Inter;
         font-size: 16px;
@@ -152,8 +152,6 @@
     }
   }
 }
-
-
 
 .modalOverlay {
   position: fixed;
@@ -192,7 +190,7 @@
   p {
     font-size: 0.95rem;
     margin-bottom: 1.5rem;
-    color: #B2B2B2;
+    color: #b2b2b2;
   }
 }
 
@@ -202,7 +200,7 @@
   gap: 0.5rem;
   margin-bottom: 1.5rem;
   font-size: 0.95rem;
-  color: #B2B2B2;
+  color: #b2b2b2;
 
   input[type="checkbox"] {
     width: 16px;
@@ -249,7 +247,7 @@
 
     .MyeShop {
       display: block;
-      color: #4A32E3;
+      color: #4a32e3;
 
       font-family: Manrope;
       font-size: 30px;
@@ -276,7 +274,6 @@
           .featureItem {
             justify-content: center;
             font-size: 0.8rem;
-
           }
         }
 
@@ -298,7 +295,7 @@
 
     .MyeShop {
       display: block;
-      color: #4A32E3;
+      color: #4a32e3;
 
       font-family: Manrope;
       font-size: 30px;
@@ -324,7 +321,6 @@
           .featureItem {
             justify-content: center;
             font-size: 0.8rem;
-
           }
         }
 

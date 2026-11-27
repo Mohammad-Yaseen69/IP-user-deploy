@@ -1,897 +1,897 @@
 [
-    {
-        "name": "Accommodation and food services",
-        "children": [
-            {
-                "stagingReference": "30ea15fc-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e66027-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Food/Beverages"
-            },
-            {
-                "stagingReference": "30ea17fd-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e66349-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Hospitality"
-            },
-            {
-                "stagingReference": "30ea1a02-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e66697-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Recreational Facilities/Services (Spas, Saunas etc)"
-            },
-            {
-                "stagingReference": "30ea5818-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e66ce7-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Supermarkets/Convenience Store"
-            }
-        ]
-    },
-    {
-        "name": "Adult",
-        "children": [
-            {
-                "stagingReference": "30eaed17-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6729e-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Escort/Sex workers advertising"
-            },
-            {
-                "stagingReference": "30ea7552-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e66f7b-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "High Street Sex Shop"
-            },
-            {
-                "stagingReference": "30eb0852-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e673ed-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Massage Parlours"
-            },
-            {
-                "stagingReference": "30ebb7bc-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6790e-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Online Adult Services"
-            },
-            {
-                "stagingReference": "30eab905-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e67159-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Online Sex Shop"
-            },
-            {
-                "stagingReference": "30eb1ccf-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e67536-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Phone Chat"
-            },
-            {
-                "stagingReference": "30eb3d15-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6767c-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Pornographic video sharing and pornography website"
-            },
-            {
-                "stagingReference": "30eb7b12-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e677c4-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Strip Club"
-            }
-        ]
-    },
-    {
-        "name": "Arms and Defense",
-        "children": [
-            {
-                "stagingReference": "30ec17af-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e67ba5-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Manufacture and supply of military fighting vehicles"
-            },
-            {
-                "stagingReference": "30ec4337-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e67cef-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Manufacture and supply of weapons and ammunition"
-            },
-            {
-                "stagingReference": "30ec7fb7-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e67e4e-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Military equipment"
-            }
-        ]
-    },
-    {
-        "name": "Cash Intensive Business and High Value Dealers",
-        "children": [
-            {
-                "stagingReference": "30ed78c0-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6a0eb-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Art Market/Art Collectables/Galleries and Antiques"
-            },
-            {
-                "stagingReference": "30ee7396-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6a8e3-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Auctioneers"
-            },
-            {
-                "stagingReference": "30ee9302-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6aa27-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Builders/Building materials"
-            },
-            {
-                "stagingReference": "30ecbbde-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e680d8-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Cash and Valuables-in-Transit"
-            },
-            {
-                "stagingReference": "30ed4a59-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e69f22-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Construction"
-            },
-            {
-                "stagingReference": "30ef0945-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6aeb1-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Fast Moving consumer goods"
-            },
-            {
-                "stagingReference": "30ecf51a-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e69b9f-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Jewellery/Gold and Diamonds Dealers"
-            },
-            {
-                "stagingReference": "30edc563-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6a25a-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Motor Vehicles and Boat Traders"
-            },
-            {
-                "stagingReference": "30ede2a4-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6a3a6-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Nail Bars/Salon"
-            },
-            {
-                "stagingReference": "30ece137-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e68243-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Precious metals dealers that purchase metals from pawnbrokers and other secondary sources"
-            },
-            {
-                "stagingReference": "30ee09b8-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6a4ea-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Scrap Metals Dealers/Warehouse"
-            },
-            {
-                "stagingReference": "30ee2985-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6a62e-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Storage facilities"
-            },
-            {
-                "stagingReference": "30eebc77-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6ab63-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Tour and Travel companies"
-            },
-            {
-                "stagingReference": "30eed232-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6acaa-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Used motor vehicles dealers or auctions"
-            },
-            {
-                "stagingReference": "30ee3a08-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6a768-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Wholesale Duty Goods (e.g. Alcohol and tobacco)"
-            }
-        ]
-    },
-    {
-        "name": "Charities/Non-profit organisation",
-        "children": [
-            {
-                "stagingReference": "30ef5367-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6b416-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Animal Charities"
-            },
-            {
-                "stagingReference": "30ef79aa-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6b54d-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Art and Culture Charities"
-            },
-            {
-                "stagingReference": "30f02713-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6b695-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Education Charities"
-            },
-            {
-                "stagingReference": "30f044ce-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6b7fc-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Environment Charities"
-            },
-            {
-                "stagingReference": "30f0572f-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6b960-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Health Charities"
-            },
-            {
-                "stagingReference": "30ef4384-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6b2c0-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Humanitarian support"
-            },
-            {
-                "stagingReference": "30f06a53-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6baa3-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "International Charities"
-            },
-            {
-                "stagingReference": "30f0a95b-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6bbd8-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Political Charities"
-            },
-            {
-                "stagingReference": "30f0abe3-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6bd0a-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Religious Charities"
-            }
-        ]
-    },
-    {
-        "name": "Crowdfunding",
-        "children": [
-            {
-                "stagingReference": "30f0cc57-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6bfca-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Donation or rewards platforms"
-            },
-            {
-                "stagingReference": "30f1213b-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6c242-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Investment, equity or debt platforms"
-            },
-            {
-                "stagingReference": "30f13f60-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6c37a-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Loan-based or peer-to-peer platforms"
-            },
-            {
-                "stagingReference": "30f113b0-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6c100-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Non-Profit crowdfunding platform"
-            }
-        ]
-    },
-    {
-        "name": "Cryptocurrency business",
-        "children": [
-            {
-                "stagingReference": "30f19298-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6c689-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Crypto OTC Trading"
-            },
-            {
-                "stagingReference": "30f1a174-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6c7cf-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Cryptocurrency ATM"
-            },
-            {
-                "stagingReference": "30f1df20-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6ca53-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Cryptocurrency Investment Advisory"
-            },
-            {
-                "stagingReference": "30f1a3e2-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6c913-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Custodian wallet providers"
-            },
-            {
-                "stagingReference": "30f20aa4-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6ccdd-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Unlicensed VC exchange"
-            },
-            {
-                "stagingReference": "30f1f3d0-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6cb98-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Virtual Currency Administrators or Miners"
-            }
-        ]
-    },
-    {
-        "name": "Entertainment",
-        "children": [
-            {
-                "stagingReference": "30f29530-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6cf4b-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Media production/online publishing/animation"
-            },
-            {
-                "stagingReference": "30f2e949-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6dc56-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Motion pictures/film, broadcast media"
-            },
-            {
-                "stagingReference": "30f2ec48-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6dda3-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Movie production"
-            },
-            {
-                "stagingReference": "30f2d696-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6db06-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Music stores, musical instruments"
-            },
-            {
-                "stagingReference": "30f2d49d-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6d97c-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Radio, television, stereo"
-            },
-            {
-                "stagingReference": "30f2d221-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6d0f2-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Social Media platforms"
-            }
-        ]
-    },
-    {
-        "name": "Extractive Sector",
-        "children": [
-            {
-                "stagingReference": "30f33a2c-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6e17b-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Extraction of Natural Gas"
-            },
-            {
-                "stagingReference": "30f315b9-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6e035-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Extraction of crude Petroleum"
-            },
-            {
-                "stagingReference": "30f3693f-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6e2bc-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Mining and Quarrying"
-            }
-        ]
-    },
-    {
-        "name": "Financial Services",
-        "children": [
-            {
-                "stagingReference": "30f7d0b1-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e70c81-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Alternative banking platforms (ABPs)"
-            },
-            {
-                "stagingReference": "30f4b66e-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6f099-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Asset Finance"
-            },
-            {
-                "stagingReference": "30f46a4d-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6eda5-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Authorised Bank"
-            },
-            {
-                "stagingReference": "30f47f65-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6ef22-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Authorised Insurance Firm"
-            },
-            {
-                "stagingReference": "30f3a36b-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6e528-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Authorised Payment Institution (API)"
-            },
-            {
-                "stagingReference": "30f4e70a-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6f20e-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Brokerage services to Funds"
-            },
-            {
-                "stagingReference": "30f3ec75-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6e8d5-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Building Society"
-            },
-            {
-                "stagingReference": "30f86906-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e71ee0-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "CFDs/Forex trading/Brokers"
-            },
-            {
-                "stagingReference": "30f52efd-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6f6c3-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Consumer Credit Providers"
-            },
-            {
-                "stagingReference": "30f5457f-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6f83d-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Corporate Finance"
-            },
-            {
-                "stagingReference": "30f57fc5-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6fa51-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Credit Card"
-            },
-            {
-                "stagingReference": "30f40acb-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6ea55-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Credit Unions"
-            },
-            {
-                "stagingReference": "30f59466-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6fbd7-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Discretionary and advisory investment management"
-            },
-            {
-                "stagingReference": "30f812d5-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e70dcb-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Electronic money institution (EMI)"
-            },
-            {
-                "stagingReference": "30f61068-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6fed7-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Execution-only stockbrokers"
-            },
-            {
-                "stagingReference": "30f630bb-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e7001b-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Financial Advisors"
-            },
-            {
-                "stagingReference": "30f85922-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e71d97-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Informal Value Transfer System (FINCEN definition)"
-            },
-            {
-                "stagingReference": "30f66497-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e70151-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Invoice Finance"
-            },
-            {
-                "stagingReference": "30f66732-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e70289-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Life assurance, and life-related pensions and investment products"
-            },
-            {
-                "stagingReference": "30f83498-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e70f2d-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Money Services Business (MSB)"
-            },
-            {
-                "stagingReference": "30f69e50-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e703cc-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Motor Finance"
-            },
-            {
-                "stagingReference": "30f6dc3d-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e70508-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Name-passing brokers in inter-professional markets"
-            },
-            {
-                "stagingReference": "30f75d62-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e7064b-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Non-life providers of investment fund products"
-            },
-            {
-                "stagingReference": "30f5b372-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6fd58-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "PSD/EMD Agent"
-            },
-            {
-                "stagingReference": "30f50d6e-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6f54a-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Penny stock or microcap securities (US SEC definition)"
-            },
-            {
-                "stagingReference": "30f760b3-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e70791-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Private Equity"
-            },
-            {
-                "stagingReference": "30f837aa-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e716fc-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Retail Banking"
-            },
-            {
-                "stagingReference": "30f4e9bb-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6f3cd-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Shell Banks"
-            },
-            {
-                "stagingReference": "30f79309-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e708cb-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Syndicated Loan"
-            },
-            {
-                "stagingReference": "30f7b3ac-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e70a01-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Trade Finance"
-            },
-            {
-                "stagingReference": "30f854ec-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e71a80-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Unlicensed MSB"
-            },
-            {
-                "stagingReference": "30f4343b-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6ec13-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Unregulated Foreign Exchange Provider"
-            },
-            {
-                "stagingReference": "30f3e91f-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6e79d-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Virtual Asset Service Providers (VASPs)"
-            },
-            {
-                "stagingReference": "30f3a5b3-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e6e669-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Wealth Management and Private Bank"
-            },
-            {
-                "stagingReference": "30f85769-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e71c40-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Wholesale Banking - Capital Markets"
-            },
-            {
-                "stagingReference": "30f7cdb3-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e70b43-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Wholesale Markets"
-            }
-        ]
-    },
-    {
-        "name": "Gambling Business",
-        "children": [
-            {
-                "stagingReference": "30f8a1d9-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e722bd-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Arcades"
-            },
-            {
-                "stagingReference": "30f8f01e-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e723f5-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Bettings"
-            },
-            {
-                "stagingReference": "30f94758-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e72589-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Bingo"
-            },
-            {
-                "stagingReference": "30f9b94b-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e7283c-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Casino"
-            },
-            {
-                "stagingReference": "30f98d5e-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e726d9-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Casino - ship based, poker"
-            },
-            {
-                "stagingReference": "30f9cc9e-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e7297e-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Crypto Gambling (e.g., bitcoin Casino)"
-            },
-            {
-                "stagingReference": "30fa23af-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e7302a-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Fantasy sports, iGaming, video games"
-            },
-            {
-                "stagingReference": "30f9fc37-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e72ac8-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Gambling software"
-            },
-            {
-                "stagingReference": "30fa0e37-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e72c37-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Gaming machine"
-            },
-            {
-                "stagingReference": "30fa1e4c-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e72d97-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Lotteries"
-            },
-            {
-                "stagingReference": "30fa2141-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e72ee8-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Remote/Online"
-            },
-            {
-                "stagingReference": "30f89f97-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e72159-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Sports Betting"
-            },
-            {
-                "stagingReference": "30fa469c-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e731aa-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Unlicensed Gambling business (remote and non-remote)"
-            }
-        ]
-    },
-    {
-        "name": "Independent legal professionals (firm and sole practitioner)",
-        "children": [
-            {
-                "stagingReference": "30fad312-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e73b45-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Accountancy Services"
-            },
-            {
-                "stagingReference": "30fa6c0c-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e73483-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Auditor"
-            },
-            {
-                "stagingReference": "30fae32a-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e73ca4-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Corporate Structures formation company"
-            },
-            {
-                "stagingReference": "30fb124c-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e73dec-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "External Accountant"
-            },
-            {
-                "stagingReference": "30fb4033-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e73f2d-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Individuals who provide tax advice and/or aggressive tax schemes"
-            },
-            {
-                "stagingReference": "30fa6f39-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e7366b-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Insolvency practitioner"
-            },
-            {
-                "stagingReference": "30fb8a58-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e74073-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Legal Services Firm"
-            },
-            {
-                "stagingReference": "30fa8ecd-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e737f9-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Notaries"
-            },
-            {
-                "stagingReference": "30fbac75-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e741fa-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Tax Adviser"
-            },
-            {
-                "stagingReference": "30fab353-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e73970-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Trust and Company Services Providers (TCSPs)"
-            }
-        ]
-    },
-    {
-        "name": "Manufacturing",
-        "children": [
-            {
-                "stagingReference": "30fc76a0-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e7507a-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Automotive, accessories"
-            },
-            {
-                "stagingReference": "30fcaca1-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e754a0-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Electronic manufacturing, consumer electronics"
-            },
-            {
-                "stagingReference": "30fc9849-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e75348-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Railroad manufacture"
-            },
-            {
-                "stagingReference": "30fc78b1-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e751f0-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Shipbuilding, heavy machinery"
-            },
-            {
-                "stagingReference": "30fc5ef1-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e74d2d-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Telecommunications, mechanical, industrial engineering, semiconductors"
-            }
-        ]
-    },
-    {
-        "name": "Online Services",
-        "children": [
-            {
-                "stagingReference": "30fd90ec-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e75897-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Network security"
-            },
-            {
-                "stagingReference": "30fd928c-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e759f9-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Online service providers"
-            },
-            {
-                "stagingReference": "30fd8ec8-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e75742-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Streaming, hosting, cloud services"
-            }
-        ]
-    },
-    {
-        "name": "Other Companies",
-        "children": [
-            {
-                "stagingReference": "30fdce2c-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e774af-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Aviation/Aerospace/airline"
-            },
-            {
-                "stagingReference": "30fdbd8f-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e764bf-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Business Consultancy"
-            },
-            {
-                "stagingReference": "30fdcb6a-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e77226-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Chemicals/Biotechnology"
-            },
-            {
-                "stagingReference": "30fdb6bb-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e75cb6-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Commodity Trading Companies"
-            },
-            {
-                "stagingReference": "30fdc9e7-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e770a3-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Computers, hardware, software, IT"
-            },
-            {
-                "stagingReference": "30fdbbfb-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e7620d-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Dating/Matchmaking websites"
-            },
-            {
-                "stagingReference": "30fdbefb-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e766b6-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Direct Selling (MLM)"
-            },
-            {
-                "stagingReference": "30fdba4d-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e7604f-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Fashion, cloth, shoes, apparel, clothing stores, leather goods"
-            },
-            {
-                "stagingReference": "30fdc20b-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e769b7-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Football Sector"
-            },
-            {
-                "stagingReference": "30fdc050-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e76874-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Freelance Platforms/GIG Economy"
-            },
-            {
-                "stagingReference": "30fdc364-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e76b3a-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "General trading companies operating in free trade zones"
-            },
-            {
-                "stagingReference": "30fdc6ca-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e76e1b-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Graphic Design/Web design"
-            },
-            {
-                "stagingReference": "30fdb8ac-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e75e57-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Holding Companies"
-            },
-            {
-                "stagingReference": "30fdcf8c-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e775ec-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Human resources/staffing/recruiting/payroll services"
-            },
-            {
-                "stagingReference": "30fdc525-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e76c91-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Marine services, fishery"
-            },
-            {
-                "stagingReference": "30fdccdc-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e7736e-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Packing, containers, warehousing, facilities services/logistics"
-            },
-            {
-                "stagingReference": "30fdc85c-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e76f64-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Printing/Photography/Publishing"
-            }
-        ]
-    },
-    {
-        "name": "Pharmaceutical and Medicine",
-        "children": [
-            {
-                "stagingReference": "30fdd491-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e779a3-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Alternative medicines"
-            },
-            {
-                "stagingReference": "30fdd5fc-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e77ae8-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Cannabidiol (CBD) Distributor"
-            },
-            {
-                "stagingReference": "30fdd76c-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e77c27-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Cannabidiol (CBD) Manufacturer"
-            },
-            {
-                "stagingReference": "30fdd8d6-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e77d65-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Cannabidiol (CBD) Retailer"
-            },
-            {
-                "stagingReference": "30fdda4d-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e77e9e-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Medical, dental equipment and supplies"
-            },
-            {
-                "stagingReference": "30fdd2d5-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e77872-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Nutraceuticals"
-            }
-        ]
-    },
-    {
-        "name": "Public Sector",
-        "children": [
-            {
-                "stagingReference": "30fde5a5-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e78875-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Civic/social organization/defence and space"
-            },
-            {
-                "stagingReference": "30fddd22-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e78101-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Consulate"
-            },
-            {
-                "stagingReference": "30fdde9a-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e78239-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Diplomatic mission"
-            },
-            {
-                "stagingReference": "30fde018-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e7836e-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Embassies"
-            },
-            {
-                "stagingReference": "30fde2d2-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e785dc-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Govt administration/relations/Judiciary/Legislative office"
-            },
-            {
-                "stagingReference": "30fde431-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e78721-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "International Affairs, Trade and development"
-            },
-            {
-                "stagingReference": "30fde184-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e784a8-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Museums"
-            }
-        ]
-    },
-    {
-        "name": "Real Estate Activities",
-        "children": [
-            {
-                "stagingReference": "30fbc49a-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e74470-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Other letting and operating of own or leased real estate"
-            },
-            {
-                "stagingReference": "30fbc985-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e745c6-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Real estate agencies"
-            },
-            {
-                "stagingReference": "30fbdb1d-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e74708-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Renting and operating of Housing Association real estate"
-            }
-        ]
-    },
-    {
-        "name": "Wildlife",
-        "children": [
-            {
-                "stagingReference": "30fc0ad0-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e7497a-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Illegal Wildlife Trade"
-            },
-            {
-                "stagingReference": "30fc3549-06d8-11ef-b6e1-027612b7f6b5",
-                "productionReference": "56e74ac7-06fa-11ef-bbf8-02d3d923cf2b",
-                "name": "Wildlife Trade"
-            }
-        ]
-    }
+  {
+    "name": "Accommodation and food services",
+    "children": [
+      {
+        "stagingReference": "30ea15fc-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e66027-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Food/Beverages"
+      },
+      {
+        "stagingReference": "30ea17fd-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e66349-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Hospitality"
+      },
+      {
+        "stagingReference": "30ea1a02-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e66697-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Recreational Facilities/Services (Spas, Saunas etc)"
+      },
+      {
+        "stagingReference": "30ea5818-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e66ce7-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Supermarkets/Convenience Store"
+      }
+    ]
+  },
+  {
+    "name": "Adult",
+    "children": [
+      {
+        "stagingReference": "30eaed17-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6729e-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Escort/Sex workers advertising"
+      },
+      {
+        "stagingReference": "30ea7552-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e66f7b-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "High Street Sex Shop"
+      },
+      {
+        "stagingReference": "30eb0852-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e673ed-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Massage Parlours"
+      },
+      {
+        "stagingReference": "30ebb7bc-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6790e-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Online Adult Services"
+      },
+      {
+        "stagingReference": "30eab905-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e67159-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Online Sex Shop"
+      },
+      {
+        "stagingReference": "30eb1ccf-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e67536-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Phone Chat"
+      },
+      {
+        "stagingReference": "30eb3d15-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6767c-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Pornographic video sharing and pornography website"
+      },
+      {
+        "stagingReference": "30eb7b12-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e677c4-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Strip Club"
+      }
+    ]
+  },
+  {
+    "name": "Arms and Defense",
+    "children": [
+      {
+        "stagingReference": "30ec17af-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e67ba5-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Manufacture and supply of military fighting vehicles"
+      },
+      {
+        "stagingReference": "30ec4337-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e67cef-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Manufacture and supply of weapons and ammunition"
+      },
+      {
+        "stagingReference": "30ec7fb7-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e67e4e-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Military equipment"
+      }
+    ]
+  },
+  {
+    "name": "Cash Intensive Business and High Value Dealers",
+    "children": [
+      {
+        "stagingReference": "30ed78c0-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6a0eb-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Art Market/Art Collectables/Galleries and Antiques"
+      },
+      {
+        "stagingReference": "30ee7396-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6a8e3-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Auctioneers"
+      },
+      {
+        "stagingReference": "30ee9302-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6aa27-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Builders/Building materials"
+      },
+      {
+        "stagingReference": "30ecbbde-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e680d8-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Cash and Valuables-in-Transit"
+      },
+      {
+        "stagingReference": "30ed4a59-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e69f22-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Construction"
+      },
+      {
+        "stagingReference": "30ef0945-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6aeb1-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Fast Moving consumer goods"
+      },
+      {
+        "stagingReference": "30ecf51a-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e69b9f-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Jewellery/Gold and Diamonds Dealers"
+      },
+      {
+        "stagingReference": "30edc563-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6a25a-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Motor Vehicles and Boat Traders"
+      },
+      {
+        "stagingReference": "30ede2a4-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6a3a6-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Nail Bars/Salon"
+      },
+      {
+        "stagingReference": "30ece137-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e68243-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Precious metals dealers that purchase metals from pawnbrokers and other secondary sources"
+      },
+      {
+        "stagingReference": "30ee09b8-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6a4ea-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Scrap Metals Dealers/Warehouse"
+      },
+      {
+        "stagingReference": "30ee2985-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6a62e-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Storage facilities"
+      },
+      {
+        "stagingReference": "30eebc77-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6ab63-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Tour and Travel companies"
+      },
+      {
+        "stagingReference": "30eed232-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6acaa-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Used motor vehicles dealers or auctions"
+      },
+      {
+        "stagingReference": "30ee3a08-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6a768-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Wholesale Duty Goods (e.g. Alcohol and tobacco)"
+      }
+    ]
+  },
+  {
+    "name": "Charities/Non-profit organisation",
+    "children": [
+      {
+        "stagingReference": "30ef5367-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6b416-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Animal Charities"
+      },
+      {
+        "stagingReference": "30ef79aa-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6b54d-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Art and Culture Charities"
+      },
+      {
+        "stagingReference": "30f02713-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6b695-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Education Charities"
+      },
+      {
+        "stagingReference": "30f044ce-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6b7fc-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Environment Charities"
+      },
+      {
+        "stagingReference": "30f0572f-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6b960-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Health Charities"
+      },
+      {
+        "stagingReference": "30ef4384-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6b2c0-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Humanitarian support"
+      },
+      {
+        "stagingReference": "30f06a53-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6baa3-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "International Charities"
+      },
+      {
+        "stagingReference": "30f0a95b-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6bbd8-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Political Charities"
+      },
+      {
+        "stagingReference": "30f0abe3-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6bd0a-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Religious Charities"
+      }
+    ]
+  },
+  {
+    "name": "Crowdfunding",
+    "children": [
+      {
+        "stagingReference": "30f0cc57-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6bfca-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Donation or rewards platforms"
+      },
+      {
+        "stagingReference": "30f1213b-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6c242-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Investment, equity or debt platforms"
+      },
+      {
+        "stagingReference": "30f13f60-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6c37a-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Loan-based or peer-to-peer platforms"
+      },
+      {
+        "stagingReference": "30f113b0-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6c100-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Non-Profit crowdfunding platform"
+      }
+    ]
+  },
+  {
+    "name": "Cryptocurrency business",
+    "children": [
+      {
+        "stagingReference": "30f19298-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6c689-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Crypto OTC Trading"
+      },
+      {
+        "stagingReference": "30f1a174-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6c7cf-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Cryptocurrency ATM"
+      },
+      {
+        "stagingReference": "30f1df20-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6ca53-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Cryptocurrency Investment Advisory"
+      },
+      {
+        "stagingReference": "30f1a3e2-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6c913-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Custodian wallet providers"
+      },
+      {
+        "stagingReference": "30f20aa4-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6ccdd-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Unlicensed VC exchange"
+      },
+      {
+        "stagingReference": "30f1f3d0-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6cb98-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Virtual Currency Administrators or Miners"
+      }
+    ]
+  },
+  {
+    "name": "Entertainment",
+    "children": [
+      {
+        "stagingReference": "30f29530-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6cf4b-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Media production/online publishing/animation"
+      },
+      {
+        "stagingReference": "30f2e949-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6dc56-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Motion pictures/film, broadcast media"
+      },
+      {
+        "stagingReference": "30f2ec48-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6dda3-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Movie production"
+      },
+      {
+        "stagingReference": "30f2d696-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6db06-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Music stores, musical instruments"
+      },
+      {
+        "stagingReference": "30f2d49d-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6d97c-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Radio, television, stereo"
+      },
+      {
+        "stagingReference": "30f2d221-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6d0f2-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Social Media platforms"
+      }
+    ]
+  },
+  {
+    "name": "Extractive Sector",
+    "children": [
+      {
+        "stagingReference": "30f33a2c-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6e17b-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Extraction of Natural Gas"
+      },
+      {
+        "stagingReference": "30f315b9-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6e035-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Extraction of crude Petroleum"
+      },
+      {
+        "stagingReference": "30f3693f-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6e2bc-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Mining and Quarrying"
+      }
+    ]
+  },
+  {
+    "name": "Financial Services",
+    "children": [
+      {
+        "stagingReference": "30f7d0b1-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e70c81-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Alternative banking platforms (ABPs)"
+      },
+      {
+        "stagingReference": "30f4b66e-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6f099-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Asset Finance"
+      },
+      {
+        "stagingReference": "30f46a4d-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6eda5-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Authorised Bank"
+      },
+      {
+        "stagingReference": "30f47f65-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6ef22-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Authorised Insurance Firm"
+      },
+      {
+        "stagingReference": "30f3a36b-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6e528-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Authorised Payment Institution (API)"
+      },
+      {
+        "stagingReference": "30f4e70a-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6f20e-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Brokerage services to Funds"
+      },
+      {
+        "stagingReference": "30f3ec75-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6e8d5-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Building Society"
+      },
+      {
+        "stagingReference": "30f86906-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e71ee0-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "CFDs/Forex trading/Brokers"
+      },
+      {
+        "stagingReference": "30f52efd-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6f6c3-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Consumer Credit Providers"
+      },
+      {
+        "stagingReference": "30f5457f-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6f83d-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Corporate Finance"
+      },
+      {
+        "stagingReference": "30f57fc5-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6fa51-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Credit Card"
+      },
+      {
+        "stagingReference": "30f40acb-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6ea55-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Credit Unions"
+      },
+      {
+        "stagingReference": "30f59466-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6fbd7-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Discretionary and advisory investment management"
+      },
+      {
+        "stagingReference": "30f812d5-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e70dcb-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Electronic money institution (EMI)"
+      },
+      {
+        "stagingReference": "30f61068-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6fed7-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Execution-only stockbrokers"
+      },
+      {
+        "stagingReference": "30f630bb-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e7001b-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Financial Advisors"
+      },
+      {
+        "stagingReference": "30f85922-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e71d97-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Informal Value Transfer System (FINCEN definition)"
+      },
+      {
+        "stagingReference": "30f66497-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e70151-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Invoice Finance"
+      },
+      {
+        "stagingReference": "30f66732-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e70289-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Life assurance, and life-related pensions and investment products"
+      },
+      {
+        "stagingReference": "30f83498-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e70f2d-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Money Services Business (MSB)"
+      },
+      {
+        "stagingReference": "30f69e50-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e703cc-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Motor Finance"
+      },
+      {
+        "stagingReference": "30f6dc3d-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e70508-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Name-passing brokers in inter-professional markets"
+      },
+      {
+        "stagingReference": "30f75d62-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e7064b-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Non-life providers of investment fund products"
+      },
+      {
+        "stagingReference": "30f5b372-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6fd58-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "PSD/EMD Agent"
+      },
+      {
+        "stagingReference": "30f50d6e-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6f54a-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Penny stock or microcap securities (US SEC definition)"
+      },
+      {
+        "stagingReference": "30f760b3-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e70791-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Private Equity"
+      },
+      {
+        "stagingReference": "30f837aa-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e716fc-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Retail Banking"
+      },
+      {
+        "stagingReference": "30f4e9bb-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6f3cd-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Shell Banks"
+      },
+      {
+        "stagingReference": "30f79309-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e708cb-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Syndicated Loan"
+      },
+      {
+        "stagingReference": "30f7b3ac-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e70a01-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Trade Finance"
+      },
+      {
+        "stagingReference": "30f854ec-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e71a80-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Unlicensed MSB"
+      },
+      {
+        "stagingReference": "30f4343b-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6ec13-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Unregulated Foreign Exchange Provider"
+      },
+      {
+        "stagingReference": "30f3e91f-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6e79d-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Virtual Asset Service Providers (VASPs)"
+      },
+      {
+        "stagingReference": "30f3a5b3-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e6e669-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Wealth Management and Private Bank"
+      },
+      {
+        "stagingReference": "30f85769-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e71c40-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Wholesale Banking - Capital Markets"
+      },
+      {
+        "stagingReference": "30f7cdb3-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e70b43-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Wholesale Markets"
+      }
+    ]
+  },
+  {
+    "name": "Gambling Business",
+    "children": [
+      {
+        "stagingReference": "30f8a1d9-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e722bd-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Arcades"
+      },
+      {
+        "stagingReference": "30f8f01e-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e723f5-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Bettings"
+      },
+      {
+        "stagingReference": "30f94758-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e72589-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Bingo"
+      },
+      {
+        "stagingReference": "30f9b94b-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e7283c-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Casino"
+      },
+      {
+        "stagingReference": "30f98d5e-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e726d9-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Casino - ship based, poker"
+      },
+      {
+        "stagingReference": "30f9cc9e-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e7297e-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Crypto Gambling (e.g., bitcoin Casino)"
+      },
+      {
+        "stagingReference": "30fa23af-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e7302a-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Fantasy sports, iGaming, video games"
+      },
+      {
+        "stagingReference": "30f9fc37-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e72ac8-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Gambling software"
+      },
+      {
+        "stagingReference": "30fa0e37-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e72c37-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Gaming machine"
+      },
+      {
+        "stagingReference": "30fa1e4c-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e72d97-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Lotteries"
+      },
+      {
+        "stagingReference": "30fa2141-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e72ee8-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Remote/Online"
+      },
+      {
+        "stagingReference": "30f89f97-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e72159-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Sports Betting"
+      },
+      {
+        "stagingReference": "30fa469c-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e731aa-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Unlicensed Gambling business (remote and non-remote)"
+      }
+    ]
+  },
+  {
+    "name": "Independent legal professionals (firm and sole practitioner)",
+    "children": [
+      {
+        "stagingReference": "30fad312-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e73b45-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Accountancy Services"
+      },
+      {
+        "stagingReference": "30fa6c0c-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e73483-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Auditor"
+      },
+      {
+        "stagingReference": "30fae32a-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e73ca4-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Corporate Structures formation company"
+      },
+      {
+        "stagingReference": "30fb124c-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e73dec-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "External Accountant"
+      },
+      {
+        "stagingReference": "30fb4033-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e73f2d-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Individuals who provide tax advice and/or aggressive tax schemes"
+      },
+      {
+        "stagingReference": "30fa6f39-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e7366b-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Insolvency practitioner"
+      },
+      {
+        "stagingReference": "30fb8a58-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e74073-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Legal Services Firm"
+      },
+      {
+        "stagingReference": "30fa8ecd-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e737f9-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Notaries"
+      },
+      {
+        "stagingReference": "30fbac75-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e741fa-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Tax Adviser"
+      },
+      {
+        "stagingReference": "30fab353-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e73970-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Trust and Company Services Providers (TCSPs)"
+      }
+    ]
+  },
+  {
+    "name": "Manufacturing",
+    "children": [
+      {
+        "stagingReference": "30fc76a0-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e7507a-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Automotive, accessories"
+      },
+      {
+        "stagingReference": "30fcaca1-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e754a0-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Electronic manufacturing, consumer electronics"
+      },
+      {
+        "stagingReference": "30fc9849-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e75348-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Railroad manufacture"
+      },
+      {
+        "stagingReference": "30fc78b1-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e751f0-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Shipbuilding, heavy machinery"
+      },
+      {
+        "stagingReference": "30fc5ef1-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e74d2d-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Telecommunications, mechanical, industrial engineering, semiconductors"
+      }
+    ]
+  },
+  {
+    "name": "Online Services",
+    "children": [
+      {
+        "stagingReference": "30fd90ec-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e75897-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Network security"
+      },
+      {
+        "stagingReference": "30fd928c-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e759f9-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Online service providers"
+      },
+      {
+        "stagingReference": "30fd8ec8-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e75742-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Streaming, hosting, cloud services"
+      }
+    ]
+  },
+  {
+    "name": "Other Companies",
+    "children": [
+      {
+        "stagingReference": "30fdce2c-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e774af-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Aviation/Aerospace/airline"
+      },
+      {
+        "stagingReference": "30fdbd8f-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e764bf-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Business Consultancy"
+      },
+      {
+        "stagingReference": "30fdcb6a-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e77226-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Chemicals/Biotechnology"
+      },
+      {
+        "stagingReference": "30fdb6bb-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e75cb6-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Commodity Trading Companies"
+      },
+      {
+        "stagingReference": "30fdc9e7-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e770a3-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Computers, hardware, software, IT"
+      },
+      {
+        "stagingReference": "30fdbbfb-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e7620d-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Dating/Matchmaking websites"
+      },
+      {
+        "stagingReference": "30fdbefb-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e766b6-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Direct Selling (MLM)"
+      },
+      {
+        "stagingReference": "30fdba4d-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e7604f-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Fashion, cloth, shoes, apparel, clothing stores, leather goods"
+      },
+      {
+        "stagingReference": "30fdc20b-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e769b7-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Football Sector"
+      },
+      {
+        "stagingReference": "30fdc050-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e76874-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Freelance Platforms/GIG Economy"
+      },
+      {
+        "stagingReference": "30fdc364-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e76b3a-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "General trading companies operating in free trade zones"
+      },
+      {
+        "stagingReference": "30fdc6ca-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e76e1b-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Graphic Design/Web design"
+      },
+      {
+        "stagingReference": "30fdb8ac-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e75e57-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Holding Companies"
+      },
+      {
+        "stagingReference": "30fdcf8c-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e775ec-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Human resources/staffing/recruiting/payroll services"
+      },
+      {
+        "stagingReference": "30fdc525-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e76c91-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Marine services, fishery"
+      },
+      {
+        "stagingReference": "30fdccdc-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e7736e-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Packing, containers, warehousing, facilities services/logistics"
+      },
+      {
+        "stagingReference": "30fdc85c-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e76f64-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Printing/Photography/Publishing"
+      }
+    ]
+  },
+  {
+    "name": "Pharmaceutical and Medicine",
+    "children": [
+      {
+        "stagingReference": "30fdd491-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e779a3-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Alternative medicines"
+      },
+      {
+        "stagingReference": "30fdd5fc-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e77ae8-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Cannabidiol (CBD) Distributor"
+      },
+      {
+        "stagingReference": "30fdd76c-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e77c27-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Cannabidiol (CBD) Manufacturer"
+      },
+      {
+        "stagingReference": "30fdd8d6-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e77d65-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Cannabidiol (CBD) Retailer"
+      },
+      {
+        "stagingReference": "30fdda4d-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e77e9e-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Medical, dental equipment and supplies"
+      },
+      {
+        "stagingReference": "30fdd2d5-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e77872-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Nutraceuticals"
+      }
+    ]
+  },
+  {
+    "name": "Public Sector",
+    "children": [
+      {
+        "stagingReference": "30fde5a5-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e78875-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Civic/social organization/defence and space"
+      },
+      {
+        "stagingReference": "30fddd22-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e78101-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Consulate"
+      },
+      {
+        "stagingReference": "30fdde9a-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e78239-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Diplomatic mission"
+      },
+      {
+        "stagingReference": "30fde018-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e7836e-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Embassies"
+      },
+      {
+        "stagingReference": "30fde2d2-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e785dc-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Govt administration/relations/Judiciary/Legislative office"
+      },
+      {
+        "stagingReference": "30fde431-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e78721-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "International Affairs, Trade and development"
+      },
+      {
+        "stagingReference": "30fde184-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e784a8-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Museums"
+      }
+    ]
+  },
+  {
+    "name": "Real Estate Activities",
+    "children": [
+      {
+        "stagingReference": "30fbc49a-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e74470-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Other letting and operating of own or leased real estate"
+      },
+      {
+        "stagingReference": "30fbc985-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e745c6-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Real estate agencies"
+      },
+      {
+        "stagingReference": "30fbdb1d-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e74708-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Renting and operating of Housing Association real estate"
+      }
+    ]
+  },
+  {
+    "name": "Wildlife",
+    "children": [
+      {
+        "stagingReference": "30fc0ad0-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e7497a-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Illegal Wildlife Trade"
+      },
+      {
+        "stagingReference": "30fc3549-06d8-11ef-b6e1-027612b7f6b5",
+        "productionReference": "56e74ac7-06fa-11ef-bbf8-02d3d923cf2b",
+        "name": "Wildlife Trade"
+      }
+    ]
+  }
 ]

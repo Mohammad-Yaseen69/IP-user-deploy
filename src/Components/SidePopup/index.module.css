@@ -1,44 +1,44 @@
 .overlay {
-    background-color: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(1px);
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 100vw;
-    z-index: 999999999998;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(1px);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  z-index: 999999999998;
 }
 
 .container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    opacity: 0;
-    transform: translate(-50%, -50%);
-    border-radius: 20px;
-    background-color: white;
-    box-shadow: -3px 0px 6px #b1b1b13e;
-    height: 300px;
-    width: 300px;
-    z-index: 999999999999;
-    padding: 1.5rem;
-    transition: 300ms ease-out;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  border-radius: 20px;
+  background-color: white;
+  box-shadow: -3px 0px 6px #b1b1b13e;
+  height: 300px;
+  width: 300px;
+  z-index: 999999999999;
+  padding: 1.5rem;
+  transition: 300ms ease-out;
 }
 
 .container.open {
-    right: 0px;
-    opacity: 1;
+  right: 0px;
+  opacity: 1;
 }
 
 .top {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    justify-content: space-between;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: space-between;
 }
 
 .top h5 {
-    margin-bottom: 0;
-    font-size: .9rem;
-    font-weight: 700;
+  margin-bottom: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
 }

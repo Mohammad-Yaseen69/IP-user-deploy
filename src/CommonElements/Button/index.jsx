@@ -1,8 +1,7 @@
-import React from 'react';
-import { Button } from 'reactstrap';
+import { Button } from "reactstrap";
 
-const Btn = (props) =>{
-    return <Button {...props.attrBtn}>{props.children}</Button>;
+const Btn = (props) => {
+  return <Button {...props.attrBtn}>{props.children}</Button>;
 };
 
 export default Btn;

@@ -1,8 +1,6 @@
-import React, { Fragment } from 'react';
-import { Container, Row, Col } from 'reactstrap';
-import { Link } from 'react-router-dom';
-import H3 from '../Headings/H3Element';
-import { Home } from 'react-feather';
+import { Fragment } from "react";
+import { Container, Row, Col } from "reactstrap";
+import H3 from "../Headings/H3Element";
 
 const Breadcrumbs = (props) => {
   return (
@@ -21,7 +19,6 @@ const Breadcrumbs = (props) => {
                 <li className="breadcrumb-item active">{props.title}</li>
               </ol>
             </Col> */}
-
           </Row>
         </div>
       </Container>

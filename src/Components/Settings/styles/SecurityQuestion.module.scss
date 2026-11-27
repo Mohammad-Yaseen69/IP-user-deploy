@@ -1,0 +1,162 @@
+@use "settings-ui" as ui;
+
+.container {
+  @include ui.tab-root;
+}
+
+.sectionHeader {
+  @include ui.section-header;
+}
+
+.sectionText {
+  @include ui.section-text;
+}
+
+.sectionTitle {
+  @include ui.section-title;
+}
+
+.sectionSubtitle {
+  @include ui.section-subtitle;
+}
+
+.button {
+  @include ui.button;
+}
+
+.buttonPrimary {
+  @include ui.button-primary;
+}
+
+.buttonTertiary {
+  @include ui.button-tertiary;
+}
+
+.card {
+  @include ui.card;
+}
+
+.grid {
+  @include ui.grid;
+}
+
+.field {
+  @include ui.field;
+}
+
+.label {
+  @include ui.label;
+}
+
+.required {
+  @include ui.required;
+}
+
+.control {
+  @include ui.control;
+}
+
+.trailingIcon {
+  @include ui.overlay-icon;
+  right: 16px;
+}
+
+.hint {
+  @include ui.hint;
+}
+
+.rows {
+  padding: 0 24px 4px;
+
+  @media screen and (max-width: ui.$mobile) {
+    padding: 0 16px 4px;
+  }
+}
+
+.questionBlock + .questionBlock {
+  border-top: 1px solid ui.$border-subtle;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 0;
+}
+
+.tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: ui.$bg-surface;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: -0.42px;
+  color: ui.$text-secondary;
+}
+
+.rowTitle {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.42px;
+  color: ui.$text-primary;
+}
+
+.rowTitleEmpty {
+  font-weight: 400;
+  color: ui.$text-secondary;
+}
+
+.editor {
+  padding: 0 0 20px 54px;
+
+  @media screen and (max-width: ui.$mobile) {
+    padding-left: 0;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 16px 24px 20px;
+  border-top: 1px solid ui.$border-subtle;
+
+  .button {
+    @include ui.button-medium;
+  }
+
+  @media screen and (max-width: ui.$mobile) {
+    padding: 16px;
+  }
+}
+
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: ui.$bg-surface;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.42px;
+  color: ui.$text-primary;
+
+  svg {
+    flex-shrink: 0;
+  }
+}

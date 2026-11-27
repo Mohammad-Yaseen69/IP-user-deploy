@@ -1,95 +1,95 @@
 .poster {
-    background: #FFF;
-    container-type: inline-size;
-    min-width: 450px;
+  background: #fff;
+  container-type: inline-size;
+  min-width: 450px;
 }
 
 .container {
-    aspect-ratio: 355/500;
-    width: 100%;
-    background: url(./qr_p_bg.png);
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    padding: 11cqi 62px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  aspect-ratio: 355/500;
+  width: 100%;
+  background: url(./qr_p_bg.png);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  padding: 11cqi 62px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .logo {
-    /* width: 75.546px;
+  /* width: 75.546px;
     height: 21.272px; */
-    width: 30cqi;
-    flex-shrink: 0;
-    object-fit: contain;
-    margin-bottom: 10cqi;
+  width: 30cqi;
+  flex-shrink: 0;
+  object-fit: contain;
+  margin-bottom: 10cqi;
 }
 
 .container h3 {
-    color: #000;
-    text-align: center;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: "Clash Display";
-    font-size: 4.75cqi;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 100.03%;
-    /* 18.994px */
-    letter-spacing: -0.38px;
-    margin-bottom: 5cqi;
+  color: #000;
+  text-align: center;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: "Clash Display";
+  font-size: 4.75cqi;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 100.03%;
+  /* 18.994px */
+  letter-spacing: -0.38px;
+  margin-bottom: 5cqi;
 }
 
 .qr_con {
-    width: 50%;
-    padding: 1.5cqi;
-    flex-shrink: 0;
-    border-radius: 1.5rem;
-    background: url(./qr_bg.png);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    margin-bottom: 5cqi;
+  width: 50%;
+  padding: 1.5cqi;
+  flex-shrink: 0;
+  border-radius: 1.5rem;
+  background: url(./qr_bg.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-bottom: 5cqi;
 }
 
 .qr_container {
-    display: flex;
-    flex-direction: column;
-    padding: 1.5cqi;
-    border-radius: .8rem;
-    width: 100%;
-    background-color: white;
-    overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5cqi;
+  border-radius: 0.8rem;
+  width: 100%;
+  background-color: white;
+  overflow: hidden;
 }
 
 .qr_container img {
-    width: 100%;
-    object-fit: contain;
-    aspect-ratio: 1;
+  width: 100%;
+  object-fit: contain;
+  aspect-ratio: 1;
 }
 
 .qr_container div {
-    font-family: Clash Display;
-    font-size: 4cqi;
-    font-style: normal;
-    font-weight: 600;
-    letter-spacing: -.148px;
-    line-height: 100.03%;
-    text-align: center;
-    padding: 1.5cqi;
+  font-family: Clash Display;
+  font-size: 4cqi;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: -0.148px;
+  line-height: 100.03%;
+  text-align: center;
+  padding: 1.5cqi;
 }
 
 .qr_container div.wi {
-    background-color: #5926F0;
-    color: white;
-    margin: 1.5cqi -1.5cqi 0;
+  background-color: #5926f0;
+  color: white;
+  margin: 1.5cqi -1.5cqi 0;
 }
 
 .qr_container div.un {
-    background-color: white;
-    color: #333;
-    margin-bottom: -1.5cqi;
+  background-color: white;
+  color: #333;
+  margin-bottom: -1.5cqi;
 }
 
 /* .qr_con img {
@@ -101,100 +101,100 @@
 } */
 
 .container h4 {
-    color: #000;
-    text-align: center;
-    font-family: "Clash Display";
-    font-size: 4.2cqi;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 100.03%;
-    /* 14.839px */
-    letter-spacing: -0.148px;
+  color: #000;
+  text-align: center;
+  font-family: "Clash Display";
+  font-size: 4.2cqi;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 100.03%;
+  /* 14.839px */
+  letter-spacing: -0.148px;
 }
 
 .guide {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    list-style-type: decimal;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  list-style-type: decimal;
 }
 
 .guide ol {
-    color: #000;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 2.5cqi;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 219.5%;
-    /* 17.509px */
-    letter-spacing: -0.08px;
+  color: #000;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 2.5cqi;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 219.5%;
+  /* 17.509px */
+  letter-spacing: -0.08px;
 }
 
 .guide ol span {
-    color: #5926f0;
+  color: #5926f0;
 }
 
 .footer {
-    background-color: #5926F0;
-    padding: 4cqi;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    text-align: center;
-    position: relative;
+  background-color: #5926f0;
+  padding: 4cqi;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  text-align: center;
+  position: relative;
 }
 
 .t {
-    color: #FFF;
-    font-family: Manrope;
-    font-size: 2.1cqi;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    letter-spacing: -0.166px;
-    margin-bottom: 4px;
+  color: #fff;
+  font-family: Manrope;
+  font-size: 2.1cqi;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.166px;
+  margin-bottom: 4px;
 }
 
 .b {
-    color: rgba(255, 255, 255, 0.46);
-    text-align: center;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 2.2cqi;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 210%;
-    /* 9.944px */
-    margin-bottom: 0px;
+  color: rgba(255, 255, 255, 0.46);
+  text-align: center;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 2.2cqi;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 210%;
+  /* 9.944px */
+  margin-bottom: 0px;
 }
 
 .b a {
-    color: #FFF;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 2.2cqi;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 210%;
-    text-decoration-line: underline;
+  color: #fff;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 2.2cqi;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 210%;
+  text-decoration-line: underline;
 }
 
 @media (max-width: 700px) {
-    .qr_container {
-        height: 100px;
+  .qr_container {
+    height: 100px;
 
-        div {
-            margin-top: 40px;
+    div {
+      margin-top: 40px;
 
-            img {
-                top: -59% !important;
-            }
-        }
+      img {
+        top: -59% !important;
+      }
     }
+  }
 }

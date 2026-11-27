@@ -1,66 +1,68 @@
 .con {
-    border-radius: 1rem;
+  border-radius: 1rem;
 }
 
 .content {
-    padding: 2rem 2.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  padding: 2rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .content img {
-    height: 53px;
-    width: 53px;
-    margin-bottom: 2rem;
-    object-fit: contain;
+  height: 53px;
+  width: 53px;
+  margin-bottom: 2rem;
+  object-fit: contain;
 }
 
 .content h1 {
-    color: #000;
-    text-align: center;
-    font-family: Manrope;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 800;
-    line-height: 130%;
-    /* 31.2px */
-    letter-spacing: -0.48px;
-    margin-bottom: 1.25rem;
+  color: #000;
+  text-align: center;
+  font-family: Manrope;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 130%;
+  /* 31.2px */
+  letter-spacing: -0.48px;
+  margin-bottom: 1.25rem;
 }
 
 .content p {
-    color: #545454;
-    text-align: center;
-    font-family: Manrope;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 150%;
-    margin-bottom: 3rem;
-    width: 100%;
+  color: #545454;
+  text-align: center;
+  font-family: Manrope;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 150%;
+  margin-bottom: 3rem;
+  width: 100%;
 }
 
 .content button {
-    border-radius: 8px;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.50) 100%), linear-gradient(259deg, #E64067 8.36%, #5926F0 54.71%, #4828A0 91.64%);
-    background-blend-mode: soft-light, normal;
-    border: none;
-    outline: none;
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    padding: .75rem 1.2rem;
-    word-spacing: 2px;
+  border-radius: 8px;
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.5) 100%),
+    linear-gradient(259deg, #e64067 8.36%, #5926f0 54.71%, #4828a0 91.64%);
+  background-blend-mode: soft-light, normal;
+  border: none;
+  outline: none;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem 1.2rem;
+  word-spacing: 2px;
 }
 
 .content span {
-    color: #FFF;
-    font-family: Manrope;
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    letter-spacing: -0.36px;
-    text-transform: capitalize;
+  color: #fff;
+  font-family: Manrope;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.36px;
+  text-transform: capitalize;
 }

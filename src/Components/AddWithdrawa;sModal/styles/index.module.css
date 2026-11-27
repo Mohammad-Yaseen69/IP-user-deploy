@@ -1,204 +1,204 @@
 .content {
-    border-radius: 16px;
-    overflow: hidden;
+  border-radius: 16px;
+  overflow: hidden;
 }
 
 .container {
-    display: flex;
-    gap: 1rem;
-    padding: 0 !important;
-    aspect-ratio: 961/507;
+  display: flex;
+  gap: 1rem;
+  padding: 0 !important;
+  aspect-ratio: 961/507;
 }
 
 .left {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    flex: 1;
-    padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex: 1;
+  padding: 1.5rem;
 }
 
 .left h2 {
-    color: #5926F0;
-    font-family: Manrope;
-    font-size: 10px;
-    font-style: normal;
-    font-weight: 800;
-    line-height: normal;
-    letter-spacing: 3.6px;
-    text-transform: uppercase;
-    margin-bottom: 0;
+  color: #5926f0;
+  font-family: Manrope;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+  letter-spacing: 3.6px;
+  text-transform: uppercase;
+  margin-bottom: 0;
 }
 
 .left h1 {
-    color: #000;
-    font-family: Manrope;
-    font-size: 18.5px;
-    font-style: normal;
-    font-weight: 800;
-    line-height: 150%;
-    letter-spacing: -0.37px;
-    margin-bottom: .7rem;
-    max-height: 350px;
+  color: #000;
+  font-family: Manrope;
+  font-size: 18.5px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 150%;
+  letter-spacing: -0.37px;
+  margin-bottom: 0.7rem;
+  max-height: 350px;
 }
 
 .guide {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    max-height: 450px;
-    overflow-y: auto;
-    padding-right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-height: 450px;
+  overflow-y: auto;
+  padding-right: 1rem;
 }
 
-.guide>p {
-    color: #8D8D8D;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 180%;
-    margin-bottom: 0;
+.guide > p {
+  color: #8d8d8d;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 180%;
+  margin-bottom: 0;
 }
 
 .guide_item {
-    display: flex;
-    gap: 1rem;
+  display: flex;
+  gap: 1rem;
 }
 
 .step_count {
-    color: #5926F0;
-    font-family: Manrope;
-    font-size: 19px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 170%;
-    min-width: 70px;
-    margin-bottom: 0px;
-    padding-top: 6px;
+  color: #5926f0;
+  font-family: Manrope;
+  font-size: 19px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 170%;
+  min-width: 70px;
+  margin-bottom: 0px;
+  padding-top: 6px;
 }
 
 .gi_right {
-    display: flex;
-    flex-direction: column;
-    gap: .6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
 }
 
 .gi_right h3 {
-    color: #000;
-    font-family: Manrope;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 800;
-    line-height: 170%;
-    letter-spacing: -0.1px;
-    margin-bottom: 0;
+  color: #000;
+  font-family: Manrope;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 170%;
+  letter-spacing: -0.1px;
+  margin-bottom: 0;
 }
 
 .gi_right p {
-    color: #5E5E5E;
-    font-family: Manrope;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 170%;
-    letter-spacing: -0.09px;
+  color: #5e5e5e;
+  font-family: Manrope;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 170%;
+  letter-spacing: -0.09px;
 }
 
 .guide_item ul {
-    display: flex;
-    flex-direction: column;
-    padding-left: 1rem;
-    list-style-type: disc;
+  display: flex;
+  flex-direction: column;
+  padding-left: 1rem;
+  list-style-type: disc;
 }
 
 .guide_item ul li {
-    color: #000;
-    font-family: Manrope;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 14px;
-    line-height: 157%;
-    letter-spacing: -0.24px;
+  color: #000;
+  font-family: Manrope;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 157%;
+  letter-spacing: -0.24px;
 }
 
-.guide>h3 {
-    color: #5926F0;
-    font-family: Manrope;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 157%;
-    /* 37.68px */
-    letter-spacing: -0.24px;
+.guide > h3 {
+  color: #5926f0;
+  font-family: Manrope;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 157%;
+  /* 37.68px */
+  letter-spacing: -0.24px;
 }
 
 .button {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    border-radius: 10px;
-    background: linear-gradient(341deg, #E64067 -4.84%, #5926F0 90.69%, #4828A0 166.81%), #D9D9D9;
-    box-shadow: 0px 3.313px 5.797px 0px rgba(172, 53, 159, 0.31);
-    border: none;
-    outline: none;
-    padding: 1rem;
-    width: 100%;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 10px;
+  background: linear-gradient(341deg, #e64067 -4.84%, #5926f0 90.69%, #4828a0 166.81%), #d9d9d9;
+  box-shadow: 0px 3.313px 5.797px 0px rgba(172, 53, 159, 0.31);
+  border: none;
+  outline: none;
+  padding: 1rem;
+  width: 100%;
+  justify-content: center;
 }
 
 .button img {
-    width: 15.75px;
-    object-fit: contain;
+  width: 15.75px;
+  object-fit: contain;
 }
 
 .button span {
-    color: #FFF;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    letter-spacing: -0.32px;
+  color: #fff;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.32px;
 }
 
 .right {
-    flex: 1;
+  flex: 1;
 }
 
 .right img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 
 @media screen and (max-width: 1000px) {
-    .content {
-        width: 97vw;
-    }
+  .content {
+    width: 97vw;
+  }
 
-    .container {
-        flex-direction: column-reverse;
-        padding: 24px !important;
-        gap: 2rem;
-    }
+  .container {
+    flex-direction: column-reverse;
+    padding: 24px !important;
+    gap: 2rem;
+  }
 
-    .right img {
-        width: 100%;
-        object-fit: contain;
-    }
+  .right img {
+    width: 100%;
+    object-fit: contain;
+  }
 
-    .left {
-        padding: 0px;
-        margin-top: 3rem;
-    }
+  .left {
+    padding: 0px;
+    margin-top: 3rem;
+  }
 
-    .guide {
-        max-height: unset;
-        margin-top: 3rem;
-    }
+  .guide {
+    max-height: unset;
+    margin-top: 3rem;
+  }
 }

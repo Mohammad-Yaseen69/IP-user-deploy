@@ -1,35 +1,34 @@
 .mobile {
-    display: none;
+  display: none;
 }
 
 @media screen and (max-width: 1000px) {
-    .pc {
-        display: none;
-    }
+  .pc {
+    display: none;
+  }
 
-    .mobile {
-        display: flex;
-        flex-direction: column;
-    }
+  .mobile {
+    display: flex;
+    flex-direction: column;
+  }
 
-    .mobile h5 {
-        font-size: 1rem;
-        margin-bottom: 1.25rem;
-    }
+  .mobile h5 {
+    font-size: 1rem;
+    margin-bottom: 1.25rem;
+  }
 
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem;
-    }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+  }
 
-    .header span {
-        font-weight: 700;
+  .header span {
+    font-weight: 700;
+  }
 
-    }
-
-    .body {
-        padding-right: 1rem;
-    }
+  .body {
+    padding-right: 1rem;
+  }
 }

@@ -9,11 +9,11 @@
     }
   }
 }
-.customers{
-  &.social-group{
-    ul{
-      li{
-        + li{
+.customers {
+  &.social-group {
+    ul {
+      li {
+        + li {
           margin-left: -7%;
         }
       }
@@ -272,8 +272,8 @@
   .d-flex {
     position: relative;
     margin-bottom: 30px;
-    .flex-grow-1{
-      a{
+    .flex-grow-1 {
+      a {
         color: $theme-body-font-color;
       }
     }
@@ -343,12 +343,12 @@
     }
   }
 }
-.social-app-profile{
-  .custom-card{
-    .card-footer{
+.social-app-profile {
+  .custom-card {
+    .card-footer {
       border-top: 1px solid $light-gray;
     }
-  } 
+  }
 }
 .avatar-showcase {
   .friend-pic {
@@ -365,7 +365,7 @@
           margin-right: 0;
         }
         .add-friend {
-          img{
+          img {
             margin-right: 0;
           }
           h6 {
@@ -411,9 +411,9 @@
     }
   }
   .default-according {
-    .card{
-      .card-header{
-        h5{
+    .card {
+      .card-header {
+        h5 {
           margin-bottom: 2px;
         }
       }

@@ -5,26 +5,26 @@ import InstaPayLoader from "../../Components/Loader";
 import { getLoginPath } from "../../utils/Functions/loginPage";
 
 export const AgentRoute = ({ children }) => {
-    const { userDetails, verifyToken } = useContext(UserContext) || {};
-    const token = localStorage.getItem("token");
+  const { userDetails, verifyToken } = useContext(UserContext) || {};
+  const token = localStorage.getItem("token");
 
-    useEffect(() => {
-        if (verifyToken && token && !userDetails) {
-            verifyToken();
-        }
-    }, [token, userDetails, verifyToken]);
-
-    if (!token) {
-        return <Navigate to={getLoginPath()} replace />;
+  useEffect(() => {
+    if (verifyToken && token && !userDetails) {
+      verifyToken();
     }
+  }, [token, userDetails, verifyToken]);
 
-    if (userDetails === null) {
-        return <InstaPayLoader fallback={true} />;
-    }
+  if (!token) {
+    return <Navigate to={getLoginPath()} replace />;
+  }
 
-    if (!userDetails?.isInstapayAgent) {
-        return <Navigate to="/" replace />;
-    }
+  if (userDetails === null) {
+    return <InstaPayLoader fallback={true} />;
+  }
 
-    return children;
+  if (!userDetails?.isInstapayAgent) {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
 };

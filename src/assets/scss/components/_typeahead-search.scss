@@ -76,7 +76,7 @@
   width: 100%;
   overflow: scroll;
   background-color: $white;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 .Typeahead-menu.is-open {
   display: block;
@@ -118,17 +118,17 @@
   display: flex;
   justify-content: space-between;
   color: $dark-gray;
-  .realname{
+  .realname {
     text-align: left;
     color: $dark;
-    ~ span{
-      a{
+    ~ span {
+      a {
         color: $dark;
       }
     }
   }
 }
-.starred{
+.starred {
   color: $warning-color !important;
 }
 .ProfileCard-screenName {

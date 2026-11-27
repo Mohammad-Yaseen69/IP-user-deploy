@@ -1,0 +1,210 @@
+@use "settings-ui" as ui;
+
+$danger: #dc2626;
+$danger-hover: #b91c1c;
+$danger-bg: #fef2f2;
+$danger-border: #ef4444;
+
+.container {
+  @include ui.tab-root;
+}
+
+.sectionHeader {
+  @include ui.section-header;
+}
+
+.sectionText {
+  @include ui.section-text;
+}
+
+.sectionTitle {
+  @include ui.section-title;
+}
+
+.sectionSubtitle {
+  @include ui.section-subtitle;
+}
+
+.card {
+  @include ui.card;
+  overflow: hidden;
+}
+
+.cardTitle {
+  @include ui.card-title;
+}
+
+.cardSubtitle {
+  @include ui.card-subtitle;
+}
+
+.cardFooter {
+  @include ui.card-footer;
+  justify-content: flex-end;
+}
+
+.field {
+  @include ui.field;
+  gap: 6px;
+}
+
+.label {
+  @include ui.label;
+}
+
+.control {
+  @include ui.control;
+}
+
+.trailingIcon {
+  @include ui.overlay-icon;
+  right: 16px;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px 4px;
+
+  @media screen and (max-width: ui.$mobile) {
+    padding: 16px 16px 4px;
+  }
+}
+
+.cardHeaderText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+// "Ready"
+.pill {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 100px;
+  background: ui.$success-bg;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.33px;
+  color: ui.$success-text;
+  white-space: nowrap;
+}
+
+.checks {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 24px 24px;
+
+  @media screen and (max-width: ui.$mobile) {
+    padding: 12px 16px 16px;
+  }
+}
+
+.checkRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.checkLabel,
+.checkValue {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.42px;
+}
+
+.checkLabel {
+  flex: 1;
+  min-width: 0;
+  color: ui.$text-primary;
+}
+
+.checkValue {
+  flex-shrink: 0;
+  color: ui.$text-secondary;
+  white-space: nowrap;
+}
+
+.cardDanger {
+  border-color: $danger-border;
+}
+
+.dangerBody {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 12px 24px 24px;
+
+  @media screen and (max-width: ui.$mobile) {
+    padding: 12px 16px 16px;
+  }
+}
+
+.bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    position: relative;
+    padding-left: 14px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.42px;
+    color: ui.$text-secondary;
+
+    &::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+    }
+  }
+}
+
+.fieldConfirm {
+  gap: 8px;
+}
+
+.container select.placeholder {
+  color: ui.$text-secondary;
+
+  option {
+    color: ui.$text-primary;
+  }
+}
+
+.buttonDestructive {
+  @include ui.button;
+  @include ui.button-large;
+  margin: 0;
+  background: $danger;
+  color: #ffffff;
+
+  &:not(:disabled):hover {
+    background: $danger-hover;
+  }
+
+  // Figma: State=Disabled
+  &:disabled {
+    opacity: 1;
+    background: $danger-bg;
+    color: #ffffff;
+  }
+}

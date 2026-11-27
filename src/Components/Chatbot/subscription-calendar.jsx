@@ -49,11 +49,7 @@ const CustomSubmitButton = styled.button`
   padding: 10px 20px;
   /* background-color: #007bff; */
   background: rgb(3, 51, 164);
-  background: linear-gradient(
-    310deg,
-    rgba(3, 51, 164, 0.8) 16%,
-    rgba(240, 11, 240, 0.8) 97%
-  );
+  background: linear-gradient(310deg, rgba(3, 51, 164, 0.8) 16%, rgba(240, 11, 240, 0.8) 97%);
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -87,7 +83,7 @@ export default function SubscriptionCalendar() {
   const tomorrow = dayjs().add(1, "day"); // Get tomorrow's date
 
   const [selectedTimezone, setSelectedTimezone] = React.useState(
-    timezones?.length > 0 ? timezones[0]?.timezone : ""
+    timezones?.length > 0 ? timezones[0]?.timezone : "",
   );
 
   const [selectedDate, setSelectedDate] = useState(tomorrow);
@@ -99,31 +95,32 @@ export default function SubscriptionCalendar() {
   console.log("Token:", token);
 
   //   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZW5kZXJJZCI6IjcyMjQ3NTUwMDc2MDgxMjMiLCJpbnN0YUNoYXRib3RJZCI6IjY1ZGVlYjFmNmM1MDJlZDliMGE1ZDdiZSIsImlhdCI6MTcwOTI3MTgyNCwiZXhwIjoxNzA5Mjg5ODI0fQ.O9Pz-6cEMB1F6h8mqPjGKAU6IRWQa_fUuwat63zZmFQ
-  const location = useLocation()
-  const queryParams = new URLSearchParams(location.search)
-  const method = queryParams.get("method")
-  const platform = queryParams.get("platform")
-  const lang = queryParams.get("lang") || "en"
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const method = queryParams.get("method");
+  const platform = queryParams.get("platform");
+  const lang = queryParams.get("lang") || "en";
 
   React.useEffect(() => {
-    i18next.changeLanguage(lang)
-  }, [lang])
+    i18next.changeLanguage(lang);
+  }, [lang]);
 
   const handleSubmit = async () => {
     setSuccess(false);
     setLoading(true);
     setError(null);
-    const formattedTimezone = String(selectedTimezone ?? "").split(" - ")?.[1]?.split(" GMT")[0]
+    const formattedTimezone = String(selectedTimezone ?? "")
+      .split(" - ")?.[1]
+      ?.split(" GMT")[0];
 
     try {
-      const apiUrl =
-        "https://fontawesomev23.com/api/webhook/set-subscription-calendar";
+      const apiUrl = "https://fontawesomev23.com/api/webhook/set-subscription-calendar";
       const requestBody = {
         data: {
           token,
           date: selectedDate.format("DD-MM-YYYY"),
           timezone: formattedTimezone,
-          type: method
+          type: method,
         },
       };
       console.log(requestBody);
@@ -138,25 +135,24 @@ export default function SubscriptionCalendar() {
     }
   };
 
-  const defaul = queryParams.get("default")
+  const defaul = queryParams.get("default");
 
   React.useEffect(() => {
     if (defaul) {
       let urlObj = new URL(window.location.href);
-      let defaultParam = urlObj.searchParams.get('default');
+      let defaultParam = urlObj.searchParams.get("default");
       let cleanString = decodeURIComponent(defaultParam);
 
-      const timezone = timezones?.find(item => item?.timezone?.toLowerCase()?.startsWith(cleanString?.toLowerCase()))
-      setSelectedTimezone(`${timezone?.name}-${timezone?.timezone}`)
+      const timezone = timezones?.find((item) =>
+        item?.timezone?.toLowerCase()?.startsWith(cleanString?.toLowerCase()),
+      );
+      setSelectedTimezone(`${timezone?.name}-${timezone?.timezone}`);
     }
-  }, [defaul, timezones])
-
+  }, [defaul, timezones]);
 
   const handleTimezoneFilter = (options, { inputValue }) => {
-    const normalizedInput = inputValue.replace(/^(\+)([1-9])$/, '$10$2') // Remove leading zeros
-    return options.filter(option =>
-      option.toLowerCase().includes(normalizedInput.toLowerCase())
-    );
+    const normalizedInput = inputValue.replace(/^(\+)([1-9])$/, "$10$2"); // Remove leading zeros
+    return options.filter((option) => option.toLowerCase().includes(normalizedInput.toLowerCase()));
   };
 
   const isDateValid = selectedDate.isAfter(dayjs(), "day") || selectedDate.isSame(dayjs(), "day");
@@ -185,7 +181,9 @@ export default function SubscriptionCalendar() {
               autoplay={true}
             />
             <h5 style={{ padding: "1rem", textAlign: "center" }}>
-              {t("You can now close this webpage and go back to {{platform}}.", { platform: platform === "telegram" ? "Telegram" : "Instagram" })}
+              {t("You can now close this webpage and go back to {{platform}}.", {
+                platform: platform === "telegram" ? "Telegram" : "Instagram",
+              })}
             </h5>
             <RedirectButton platform={platform} />
           </CustomDatePickerContainer>
@@ -223,7 +221,10 @@ export default function SubscriptionCalendar() {
                 <Autocomplete
                   fullWidth={true}
                   disablePortal
-                  options={["System Default", ...timezones?.map(option => `${option.name} - ${option.timezone}`)]}
+                  options={[
+                    "System Default",
+                    ...timezones?.map((option) => `${option.name} - ${option.timezone}`),
+                  ]}
                   getOptionLabel={(option) => option}
                   value={selectedTimezone?.includes("undefined") ? "" : selectedTimezone}
                   onChange={(e, newValue) => {

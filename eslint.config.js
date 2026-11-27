@@ -4,6 +4,7 @@ import pluginReact from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import i18nextPlugin from "eslint-plugin-i18next";
+import eslintConfigPrettier from "eslint-config-prettier/flat";
 import { defineConfig } from "eslint/config";
 
 export default defineConfig([
@@ -36,24 +37,12 @@ export default defineConfig([
       "react-hooks/exhaustive-deps": "off",
       "no-dupe-keys": "off",
       "react/prop-types": "off",
-      "react-refresh/only-export-components": [
-        "warn",
-        { allowConstantExport: true },
-      ],
+      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "i18next/no-literal-string": [
         "warn",
         {
           markupOnly: true,
-          ignoreAttribute: [
-            "data-testid",
-            "to",
-            "src",
-            "alt",
-            "href",
-            "className",
-            "id",
-            "key",
-          ],
+          ignoreAttribute: ["data-testid", "to", "src", "alt", "href", "className", "id", "key"],
         },
       ],
     },
@@ -64,4 +53,5 @@ export default defineConfig([
       globals: globals.node,
     },
   },
+  eslintConfigPrettier, // keep last: turns off rules that conflict with Prettier
 ]);

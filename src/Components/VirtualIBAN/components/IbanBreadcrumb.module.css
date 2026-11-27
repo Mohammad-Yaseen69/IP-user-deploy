@@ -1,65 +1,65 @@
 .navigationRow {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 16px;
 }
 
 .breadcrumbList {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    gap: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 8px;
 }
 
 .breadcrumbItem {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    line-height: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 20px;
 }
 
 .breadcrumbLink {
-    background: none;
-    border: none;
-    padding: 0;
-    margin: 0;
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 400;
-    color: #475467;
-    cursor: pointer;
-    text-decoration: none;
-    transition: color 0.15s ease;
-    display: inline-flex;
-    align-items: center;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  color: #475467;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
 }
 
 .breadcrumbLink:hover {
-    color: #5626E6;
-    text-decoration: underline;
+  color: #5626e6;
+  text-decoration: underline;
 }
 
 .breadcrumbSeparator {
-    color: #98A2B3;
-    font-size: 13px;
-    user-select: none;
-    display: inline-flex;
-    align-items: center;
+  color: #98a2b3;
+  font-size: 13px;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
 }
 
 .breadcrumbActive {
-    color: #6941C6;
-    font-weight: 500;
-    font-size: 14px;
+  color: #6941c6;
+  font-weight: 500;
+  font-size: 14px;
 }
 
 .breadcrumbStatic {
-    color: #475467;
-    font-size: 14px;
-    font-weight: 400;
+  color: #475467;
+  font-size: 14px;
+  font-weight: 400;
 }

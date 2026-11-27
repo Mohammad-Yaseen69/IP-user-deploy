@@ -1,540 +1,325 @@
+import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { DateRangePicker } from "react-date-range";
-import { Search } from "react-feather";
+import dayjs from "dayjs";
+import { Receipt } from "lucide-react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router";
-import { Input } from "reactstrap";
+import { useLocation, useNavigate } from "react-router";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
+import { usePermission } from "../../hooks/GeneralUse/usePermission";
+import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
+import { DateGroup, EmptyState } from "../../Common/Ledger/Cells";
+import { ActiveFilters, FilterPanel } from "../../Common/Ledger/Filters";
+import Ledger from "../../Common/Ledger/Ledger";
+import s from "../../Common/Ledger/ledger.module.scss";
 import InstaPayLoader from "../Loader";
 import DownloadStatement from "../WalletsNew/DownloadStatement";
-import TransactionItemMobile from "./Mobile/TransactionItemMobile";
-import TransactionItem from "./TransactionItem";
-import all_grey from "./files/all_grey.png";
-import all_white from "./files/all_white.png";
-import calendar from "./files/calendar.png";
-import quoted_grey from "./files/quoted_grey.png";
-import quoted_white from "./files/quoted_white.png";
-import received_grey from "./files/received_grey.png";
-import received_white from "./files/received_white.png";
-import requested_grey from "./files/requested_grey.png";
-import requested_white from "./files/requested_white.png";
-import sent_grey from "./files/sent_grey.png";
-import sent_white from "./files/sent_white.png";
-import styles from "./styles/index.module.scss";
-import { usePermission } from "../../hooks/GeneralUse/usePermission";
+import TransactionRow from "./Transactionrow";
+
+const TABS = ["All", "Sent", "Received", "Requests", "Quotes"].map((key) => ({ key, label: key }));
+
+const FILTER_GROUPS = [
+  {
+    key: "status",
+    label: "Status",
+    options: ["CANCELLED", "COMPLETED", "DECLINED", "FAILED", "INITIATED", "PENDING", "PROCESSING"],
+  },
+  { key: "transaction_type", label: "Type", options: ["credit", "debit"] },
+];
 
 const transactionFilter = (t) => {
-    if (t.transaction_type?.toLowerCase() === "credit" && t.status?.toLowerCase() === "failed" && t.payment_type?.toLowerCase() === "mobile_wallet") {
-        return false
-    } else {
-        return true
-    }
-}
+  if (
+    t.transaction_type?.toLowerCase() === "credit" &&
+    t.status?.toLowerCase() === "failed" &&
+    t.payment_type?.toLowerCase() === "mobile_wallet"
+  ) {
+    return false;
+  } else {
+    return true;
+  }
+};
 
+const defaultRange = {
+  startDate: undefined,
+  endDate: undefined,
+  key: "selection",
+};
 
+const PAGE_SIZE = 15;
+const START_PAGE = 1;
+
+const fetchTransactionsPage = ({ userId, page, search, apiDates, filters, headers, signal }) => {
+  const baseUrl = `${import.meta.env.VITE_IP_DEV_API}/api/transaction`;
+  const filterQuery = new URLSearchParams(filters).toString();
+  const withFilters = (url) => (filterQuery ? `${url}?${filterQuery}` : url);
+  const config = { headers, signal };
+
+  if (apiDates) {
+    return axios.post(
+      withFilters(`${baseUrl}/search-account-transactions-by-date/${userId}/${page}/${PAGE_SIZE}`),
+      { data: encryptData({ ...apiDates, query: search }) },
+      config,
+    );
+  }
+  if (search) {
+    return axios.get(
+      withFilters(
+        `${baseUrl}/search-account-transactions/${userId}/${page}/${PAGE_SIZE}/${encodeURIComponent(search)}`,
+      ),
+      config,
+    );
+  }
+  return axios.get(
+    withFilters(`${baseUrl}/account-transactions/${userId}/${page}/${PAGE_SIZE}`),
+    config,
+  );
+};
+
+const isEndOfResults = (error) => {
+  const encrypted = error?.response?.data?.data;
+  if (!encrypted) return false;
+  try {
+    return decryptData(encrypted)?.status === false;
+  } catch {
+    return false;
+  }
+};
+
+const useTransactions = (search, apiDates, filters) => {
+  const { userDetails, authHeader } = useContext(UserContext);
+  return useInfiniteQuery({
+    queryKey: ["accountTransactions", userDetails?._id, search, apiDates, filters],
+    initialPageParam: START_PAGE,
+    queryFn: async ({ pageParam = START_PAGE, signal }) => {
+      try {
+        const res = await fetchTransactionsPage({
+          userId: userDetails?._id,
+          page: pageParam,
+          search,
+          apiDates,
+          filters,
+          headers: authHeader,
+          signal,
+        });
+        const raw = decryptData(res.data.data)?.transactionList ?? [];
+        return { list: raw.filter(transactionFilter), hasMore: raw.length >= PAGE_SIZE };
+      } catch (error) {
+        if (isEndOfResults(error)) return { list: [], hasMore: false };
+        throw error;
+      }
+    },
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage.hasMore ? allPages.length + START_PAGE : undefined,
+    enabled: !!userDetails?._id,
+    retry: false,
+  });
+};
 
 const TransactionsTable = () => {
-    const { t } = useTranslation()
-    const [active, setActive] = useState("All")
-    const [activeItem, setActiveItem] = useState(0)
-    const [dateRange, setDateRange] = useState({
-        startDate: new Date(),
-        endDate: new Date(),
-        key: 'selection',
-    });
-    const [showDatePicker, setShowDatePicker] = useState(false);
-    const datePickerRef = useRef(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { t } = useTranslation();
+  const search = new URLSearchParams(location.search).get("search") ?? "";
+  const [active, setActive] = useState("All");
+  const [activeItem, setActiveItem] = useState(0);
+  const [dateRange, setDateRange] = useState(defaultRange);
+  const [searchQuery, setSearchQuery] = useState(search);
+  const [apiDates, setApiDates] = useState(null);
+  const [filters, setFilters] = useState({});
+  const { userDetails, verifyToken } = useContext(UserContext);
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(search);
+  const [showStatementModal, setShowStatementModal] = useState(false);
+  const can = usePermission();
 
-    const handleClickOutside = useCallback((event) => {
-        if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
-            setShowDatePicker(false);
-        }
-    }, []);
+  const currentTrxType = apiDates ? "date_and_query" : debouncedSearchQuery ? "query" : "all";
 
-    const handleDatePickerClick = useCallback(() => {
-        setShowDatePicker(true);
-    }, []);
+  const { data, isLoading, isFetching, hasNextPage, fetchNextPage, isFetchNextPageError } =
+    useTransactions(debouncedSearchQuery, apiDates, filters);
 
-    useEffect(() => {
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [handleClickOutside]);
+  const transactions = useMemo(() => data?.pages.flatMap((page) => page.list) ?? [], [data]);
 
-    const [transactions, setTransactions] = useState([])
-    const [filtered, setFiltered] = useState([])
-    const [searchQuery, setSearchQuery] = useState("")
-    const [apiDates, setApiDates] = useState(null)
-    const [page, setPage] = useState(1);
-    const [currentTrxType, setCurrentTrxType] = useState("all")
-    const [maxLimit, setMaxLimit] = useState(false)
-    const { userDetails, authHeader, verifyToken, getUserBeneficiaries } = useContext(UserContext);
-    const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
-    const [debounceTimer, setDebounceTimer] = useState(null);
-    const [isLoading, setIsLoading] = useState(true)
-    const loaderRef = useRef()
-    const mobileLoaderRef = useRef()
-    const [stopLoader, setStopLoader] = useState(false)
-    const [exportLoading, setExportLoading] = useState(false)
-    const [showStatementModal, setShowStatementModal] = useState(false)
-    const can = usePermission();
+  const canLoadMore = hasNextPage && !isFetchNextPageError;
 
-    useEffect(() => {
-        getUserBeneficiaries()
-    }, [])
+  const loaderRef = useInfiniteScroll({ hasNextPage: canLoadMore, isFetching, fetchNextPage });
 
+  useEffect(() => {
+    if (searchQuery === debouncedSearchQuery) return;
+    const timer = setTimeout(() => setDebouncedSearchQuery(searchQuery), 1000);
+    return () => clearTimeout(timer);
+  }, [searchQuery, debouncedSearchQuery]);
 
-    useEffect(() => {
-        if (searchQuery !== debouncedSearchQuery) {
-            if (debounceTimer) {
-                clearTimeout(debounceTimer);
-            }
+  useEffect(() => {
+    setActive("All");
+  }, [debouncedSearchQuery, apiDates, filters]);
 
-            const timerId = setTimeout(() => {
-                setDebouncedSearchQuery(searchQuery);
-            }, 1000);
+  useEffect(() => {
+    verifyToken();
+  }, [currentTrxType]);
 
-            setDebounceTimer(timerId);
-        }
-    }, [searchQuery]);
+  const applyFilters = (next) => setFilters(next);
 
-    const getAllTransactions = () => {
-        const queryParams = new URLSearchParams(window.location.search);
-        if (queryParams.has("search")) return; // Don't fetch or spread if search param exists
+  const handleChange = (ranges) => {
+    if (ranges.selection) {
+      const startDate = new Date(ranges.selection.startDate);
+      startDate.setDate(startDate.getDate() + 1);
 
-        if (page === 1) {
-            setIsLoading(true)
-        }
+      const endDate = new Date(ranges.selection.endDate);
+      endDate.setDate(endDate.getDate() + 1);
 
-        if (debouncedSearchQuery) return;
-
-        // axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/account-transactions/${userDetails?._id}/${(page - 1) * 15}/15`, {
-        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/account-transactions/${userDetails?._id}/${page}/15`, {
-            headers: authHeader
-        })
-            .then(res => {
-                const decrypted = decryptData(res.data.data)
-                setTransactions(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
-                setFiltered(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
-                if (decrypted.transactionList.length < 15) {
-                    setMaxLimit(true)
-                    setStopLoader(true)
-                }
-                // console.log("all", decrypted)
-                setIsLoading(false)
-            })
-            .catch(err => {
-                const decrypted = decryptData(err.response.data.data)
-                setIsLoading(false)
-                setStopLoader(true)
-                if (decrypted.status === false) {
-                    setMaxLimit(true)
-                }
-            })
+      setApiDates({
+        from: startDate.toISOString().split("T")[0],
+        to: endDate.toISOString().split("T")[0],
+      });
+      setDateRange(ranges.selection);
     }
+  };
 
-    const getTransactionsByQuery = (search = null) => {
-        setActive("All")
-        if (search) {
-            console.log("calling from search")
-        }
-        if (page === 1) {
-            setIsLoading(true)
-        }
-        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions/${userDetails?._id}/${page}/15/${search ?? debouncedSearchQuery}`, {
-            headers: authHeader
-        })
-            .then(res => {
-                const decrypted = decryptData(res.data.data)
-                const newTransactions = decrypted.transactionList.filter(transactionFilter);
-
-                if (search) {
-                    setTransactions(decrypted.transactionList);
-                    setFiltered(decrypted.transactionList);
-                } else {
-                    if (page === 1) {
-                        setTransactions(newTransactions);
-                        setFiltered(newTransactions);
-                    } else {
-                        setTransactions(prev => [...prev, ...newTransactions]);
-                        setFiltered(prev => [...prev, ...newTransactions]);
-                    }
-                }
-
-                if (decrypted.transactionList.length < 15) {
-                    setMaxLimit(true)
-                    setStopLoader(true)
-                }
-                // console.log("query", decrypted)
-                setIsLoading(false)
-            })
-            .catch(err => {
-                const decrypted = decryptData(err.response.data.data)
-                setIsLoading(false)
-                setFiltered([])
-                setTransactions([])
-                setStopLoader(true)
-                if (decrypted.status === false) {
-                    setMaxLimit(true)
-                }
-            })
+  const filtered = useMemo(() => {
+    switch (active) {
+      case "Sent":
+        return transactions.filter((item) => item?.transaction_type === "debit");
+      case "Received":
+        return transactions.filter((item) => item?.transaction_type === "credit");
+      case "Quotes":
+        return transactions.filter((item) => item?.payment_type === "quotation");
+      case "Requests":
+        return transactions.filter((item) => item?.payment_type === "payment_request");
+      default:
+        return transactions;
     }
+  }, [active, transactions]);
 
-    const getTransactionsByQueryAndDate = () => {
-        setActive("All")
-        if (page === 1) {
-            setIsLoading(true)
-        }
-        const data = {
-            ...apiDates,
-            query: debouncedSearchQuery
-        }
-        // console.log(data)
-        const encrypted = encryptData(data)
-
-        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions-by-date/${userDetails?._id}/${page}/15`,
-            {
-                data: encrypted
-            }, {
-            headers: authHeader,
-        })
-            .then(res => {
-                const decrypted = decryptData(res.data.data)
-                setTransactions(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
-                setFiltered(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
-                if (decrypted.transactionList.length < 15) {
-                    setMaxLimit(true)
-                    setStopLoader(true)
-                }
-                // console.log("date & query", decrypted)
-                setIsLoading(false)
-            })
-            .catch(err => {
-                const decrypted = decryptData(err.response.data.data)
-                setIsLoading(false)
-                setFiltered([])
-                setTransactions([])
-                setStopLoader(true)
-                if (decrypted.status === false) {
-                    setMaxLimit(true)
-                }
-            })
+  const changeSearch = (value) => {
+    setSearchQuery(value);
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has("search")) {
+      urlParams.delete("search");
+      const newUrl =
+        window.location.pathname + (urlParams.toString() ? `?${urlParams.toString()}` : "");
+      window.history.replaceState({}, document.title, newUrl);
     }
+  };
 
-    useEffect(() => {
-        if (page === 1) {
-            setTransactions([])
-            setFiltered([])
+  const clearDates = () => {
+    setApiDates(null);
+    setDateRange(defaultRange);
+  };
+
+  const clearChips = () => {
+    clearDates();
+    applyFilters({});
+  };
+
+  const clearFilters = () => {
+    changeSearch("");
+    clearChips();
+  };
+
+  const groups = useMemo(() => {
+    const byDay = new Map();
+    [...filtered]
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .forEach((item, index) => {
+        const day = dayjs(item.createdAt).format("D MMM YYYY");
+        byDay.set(day, [...(byDay.get(day) ?? []), { item, index }]);
+      });
+    return [...byDay];
+  }, [filtered]);
+
+  const dateLabel = apiDates
+    ? `${dayjs(dateRange.startDate).format("MMM D")} - ${dayjs(dateRange.endDate).format("MMM D, YYYY")}`
+    : t("All dates");
+
+  return (
+    <>
+      <Ledger
+        tabs={TABS}
+        active={active}
+        onTab={setActive}
+        search={{
+          value: searchQuery,
+          onChange: changeSearch,
+          placeholder: t("Search transactions, names or IDs"),
+        }}
+        dateRange={dateRange}
+        onDateChange={handleChange}
+        dateLabel={dateLabel}
+        filters={
+          <FilterPanel
+            groups={FILTER_GROUPS}
+            filters={filters}
+            count={Object.keys(filters).length + (apiDates ? 1 : 0)}
+            onApply={applyFilters}
+          />
         }
-        if (currentTrxType === "all" && !maxLimit && userDetails) {
-            getAllTransactions()
+        activeFilters={
+          <ActiveFilters
+            groups={FILTER_GROUPS}
+            filters={filters}
+            dateLabel={apiDates && dateLabel}
+            onApply={applyFilters}
+            onClearDate={clearDates}
+            onClearAll={clearChips}
+          />
         }
-        if (currentTrxType === "query" && !maxLimit && userDetails) {
-            getTransactionsByQuery()
-        }
-        if (currentTrxType === "date_and_query" && !maxLimit && userDetails) {
-            getTransactionsByQueryAndDate()
-        }
-    }, [page, currentTrxType, debouncedSearchQuery, apiDates])
-
-    useEffect(() => {
-        setTransactions([])
-        setFiltered([])
-        setMaxLimit(false)
-        setStopLoader(false)
-        setPage(1)
-        if (apiDates !== null) {
-            setCurrentTrxType("date_and_query")
-        } else if (debouncedSearchQuery.length > 0 && apiDates === null) {
-            setCurrentTrxType("query")
-        } else if (debouncedSearchQuery.length === 0 && apiDates === null) {
-            setCurrentTrxType("all")
-        }
-    }, [debouncedSearchQuery, apiDates])
-
-    useEffect(() => {
-        setTransactions([])
-        setFiltered([])
-        setMaxLimit(false)
-        setStopLoader(false)
-        setPage(1)
-        verifyToken()
-    }, [currentTrxType])
-
-    const handleChange = (ranges) => {
-        // if (ranges.selection) {
-        //     const startDate = ranges.selection.startDate.toISOString().split('T')[0];
-        //     const endDate = ranges.selection.endDate.toISOString().split('T')[0];
-
-        //     const formattedDateRange = {
-        //         from: startDate,
-        //         to: endDate,
-        //     };
-
-        //     setApiDates(formattedDateRange)
-        //     setDateRange(ranges.selection);
-        // }
-        if (ranges.selection) {
-            const startDate = new Date(ranges.selection.startDate);
-            startDate.setDate(startDate.getDate() + 1);
-
-            const endDate = new Date(ranges.selection.endDate);
-            endDate.setDate(endDate.getDate() + 1);
-
-            const formattedDateRange = {
-                from: startDate.toISOString().split('T')[0],
-                to: endDate.toISOString().split('T')[0],
-            };
-
-            setApiDates(formattedDateRange);
-            setDateRange(ranges.selection);
-        }
-    };
-
-    const menuData = [
-        {
-            id: 1,
-            name: "All",
-            icon_white: all_white,
-            icon_grey: all_grey
-        },
-        {
-            id: 2,
-            name: "Sent",
-            icon_white: sent_white,
-            icon_grey: sent_grey
-        },
-        {
-            id: 3,
-            name: "Received",
-            icon_white: received_white,
-            icon_grey: received_grey
-        },
-        {
-            id: 4,
-            name: "Requested",
-            icon_white: requested_white,
-            icon_grey: requested_grey
-        },
-        {
-            id: 5,
-            name: "Quoted",
-            icon_white: quoted_white,
-            icon_grey: quoted_grey
-        },
-    ]
-
-
-
-    useEffect(() => {
-        if (isLoading || maxLimit) return;
-
-        const observer = new IntersectionObserver((enteries) => {
-            if (enteries[0].isIntersecting) {
-                setPage(prev => prev + 1)
-            }
-        }, { threshold: 0.1 })
-
-
-        if (loaderRef.current) observer.observe(loaderRef.current)
-        if (mobileLoaderRef.current) observer.observe(mobileLoaderRef.current)
-
-        return () => {
-            observer.disconnect()
-        }
-    }, [loaderRef.current, mobileLoaderRef.current, isLoading, maxLimit]);
-
-    useEffect(() => {
-        if (active === "All") {
-            setFiltered(transactions)
-        }
-        if (active === "Sent") {
-            const sentTransactions = transactions?.filter(item => item?.transaction_type === "debit")
-            setFiltered(sentTransactions)
-        }
-        if (active === "Received") {
-            const receivedTransactions = transactions?.filter(item => item?.transaction_type === "credit")
-            setFiltered(receivedTransactions)
-        }
-        if (active === "Quoted") {
-            const quotedTransactions = transactions?.filter(item => item?.payment_type === "quotation")
-            setFiltered(quotedTransactions)
-        }
-        if (active === "Requested") {
-            const requestedTransactions = transactions?.filter(item => item?.payment_type === "payment_request")
-            setFiltered(requestedTransactions)
-        }
-    }, [active, transactions])
-
-    const location = useLocation()
-    const queryParams = new URLSearchParams(location.search)
-    const search = queryParams.get("search")
-    const currentIndex = queryParams.get("current-index")
-
-    useEffect(() => {
-        if (search) {
-            setSearchQuery(search)
-            setDebouncedSearchQuery(search)
-        }
-    }, [search])
-
-
-
-    return (
-        <div className={styles.table}>
-            <div className={styles.menu}>
-                <div className={styles.right}>
-                    {
-                        menuData.map(item => (
-                            <div key={item.id} style={{
-                                background: active === item.name ? "linear-gradient(346deg, #E64067 0%, #5926F0 55.65%, #4828A0 100%), #D9D9D9" : "#f8f8f8",
-                                boxShadow: active === item.name ? "0px 11.90068244934082px 8.655041694641113px rgba(89, 38, 240, 0.17)" : "none",
-                                color: active === item.name ? "white" : "#848484",
-                                minWidth: "125px"
-                            }} className={styles.menu_item} onClick={() => setActive(item.name)}>
-                                <img src={active === item.name ? item.icon_white : item.icon_grey} style={{ width: "18px" }} />
-                                <span>{t(item.name)}</span>
-                                {
-                                    active === item.name
-                                    &&
-                                    <div className={styles.dot}></div>
-                                }
-                            </div>
-                        ))
-                    }
-                </div>
-                <div className={styles.left}>
-                    <div className={styles.search}>
-                        <Search size={16} color="#848484" />
-                        <Input placeholder={t("Search Transactions")} value={searchQuery} onChange={e => {
-                            setSearchQuery(e.target.value);
-                            const urlParams = new URLSearchParams(window.location.search);
-                            if (urlParams.has("search")) {
-                                urlParams.delete("search");
-                                const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
-                                window.history.replaceState({}, document.title, newUrl);
-                            }
-                        }} />
-                    </div>
-                    <img src={calendar} alt="c" onClick={handleDatePickerClick} />
-                    {can("transactions.main.export") && (
-                        <span
-                            onClick={() => setShowStatementModal(!showStatementModal)}
-
-                            // onClick={() => exportToExcel(transactions, userDetails, setExportLoading)}
-                            style={{ background: "linear-gradient(346deg, rgb(230, 64, 103) 0%, rgb(89, 38, 240) 55.65%, rgb(72, 40, 160) 100%), rgb(217, 217, 217)", borderRadius: "8px", padding: "4px", marginBottom: "3px", pointerEvents: exportLoading && "none", opacity: exportLoading && .6, display: "flex" }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                <path d="M21 6H17.8C16.1198 6 15.2798 6 14.638 6.32698C14.0735 6.6146 13.6146 7.07354 13.327 7.63803C13 8.27976 13 9.11984 13 10.8V12M21 6L18 3M21 6L18 9M10 3H7.8C6.11984 3 5.27976 3 4.63803 3.32698C4.07354 3.6146 3.6146 4.07354 3.32698 4.63803C3 5.27976 3 6.11984 3 7.8V16.2C3 17.8802 3 18.7202 3.32698 19.362C3.6146 19.9265 4.07354 20.3854 4.63803 20.673C5.27976 21 6.11984 21 7.8 21H16.2C17.8802 21 18.7202 21 19.362 20.673C19.9265 20.3854 20.3854 19.9265 20.673 19.362C21 18.7202 21 17.8802 21 16.2V14" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </span>
-                    )}
-                    {showDatePicker && (
-                        <div ref={datePickerRef} style={{ position: "absolute", top: "100%", right: 0, boxShadow: "0px 0px 3px rgba(0,0,0,0.1)", borderRadius: "10xp", overflow: "hidden", zIndex: 10000000 }}>
-                            <DateRangePicker maxDate={new Date()}
-                                ranges={[dateRange]}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    )}
-
-                </div>
-            </div>
-            <div className={styles.tableWrapper}>
-                <div className={styles.table_header}>
-                    <div>{t("Date & Time")}</div>
-                    <div>{t("Type")}</div>
-                    <div>{t("Transaction ID")}</div>
-                    <div>{t("Payment Type")}</div>
-                    {/* <div>{t("Sender Name")}</div> */}
-                    <div>{t("Recipient")}</div>
-                    <div>{t("Amount")}</div>
-                    <div>{t("Status")}</div>
-                    <div style={{ maxWidth: "15px" }}></div>
-                </div>
-                <div className={styles.table_body} >
-                    {
-                        isLoading ?
-                            <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
-                                <InstaPayLoader />
-                            </div>
-                            :
-                            <>
-                                {
-                                    filtered.length > 0
-                                        ?
-                                        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((item, index) => {
-                                            let color;
-                                            if (item?.status?.toLowerCase() === "completed") { color = "#15bd43" };
-                                            if (item?.status?.toLowerCase() === "pending") { color = "rgba(89, 38, 240, 0.55)" };
-                                            if (item?.status?.toLowerCase() === "cancelled") { color = "#ed1d1d" };
-
-                                            return (
-                                                <TransactionItem color={color} item={item} key={item.id} activeItem={activeItem} setActiveItem={setActiveItem} index={index} />
-                                            )
-                                        })
-                                        :
-                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No transactions")}</span>
-                                }
-                            </>
-                    }
-
-                    {(!isLoading && !stopLoader) &&
-                        <div ref={loaderRef} style={{ display: 'flex', justifyContent: "center", width: "100%" }}>
-                            <div style={{ width: "200px" }}>
-                                <InstaPayLoader />
-                            </div>
-                        </div>
-                    }
-                </div>
-                <div className={styles.table_body_mobile}>
-                    {
-                        isLoading ?
-                            <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
-                                <InstaPayLoader />
-                            </div>
-                            :
-                            <>
-                                {
-                                    filtered.length > 0
-                                        ?
-                                        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((item, index) => {
-                                            let color;
-                                            if (item?.status?.toLowerCase() === "completed") { color = "#15bd43" };
-                                            if (item?.status?.toLowerCase() === "pending") { color = "rgba(89, 38, 240, 0.55)" };
-                                            if (item?.status?.toLowerCase() === "cancelled") { color = "#ed1d1d" };
-
-                                            return (
-                                                <TransactionItemMobile color={color} item={item} key={item.id} activeItem={activeItem} setActiveItem={setActiveItem} index={index} />
-                                            )
-                                        })
-                                        :
-                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No transactions")}</span>
-                                }
-                            </>
-                    }
-
-                    {(!isLoading && !stopLoader) &&
-                        <div ref={mobileLoaderRef} style={{ display: 'flex', justifyContent: "space-between", width: "100%" }}>
-                            <div style={{ width: "200px" }}>
-                                <InstaPayLoader />
-                            </div>
-                        </div>}
-                </div>
-            </div>
-            {
-                showStatementModal && <DownloadStatement
-                    showModal={showStatementModal}
-                    setShowModal={setShowStatementModal}
-                    wallet={userDetails}
-                    isTransection={true}
+        hideDownload={!can("transactions.main.export")}
+        onDownload={() => setShowStatementModal(!showStatementModal)}
+        columns={["Transaction", "Recipient", "Status", "Time", "Amount", ""]}
+        template="2.2fr 1.6fr 112px 90px 1.3fr 16px"
+      >
+        {isLoading ? (
+          <div className={s.loader}>
+            <InstaPayLoader />
+          </div>
+        ) : groups.length > 0 ? (
+          groups.map(([day, rows]) => (
+            <div key={day}>
+              <DateGroup label={day} />
+              {rows.map(({ item, index }) => (
+                <TransactionRow
+                  key={item._id ?? item.id}
+                  item={item}
+                  index={index}
+                  activeItem={activeItem}
+                  setActiveItem={setActiveItem}
                 />
-            }
-        </div>
-    )
-}
+              ))}
+            </div>
+          ))
+        ) : (
+          <EmptyState
+            Icon={Receipt}
+            title={t("No transactions yet")}
+            text={t("Money you send and receive will appear here, grouped by day.")}
+          >
+            <button type="button" className={s.btnPrimary} onClick={() => navigate("/wallets")}>
+              {t("Add funds")}
+            </button>
+            <button type="button" className={s.btn} onClick={clearFilters}>
+              {t("Clear search")}
+            </button>
+          </EmptyState>
+        )}
 
-export default TransactionsTable
+        {!isLoading && canLoadMore && (
+          <div ref={loaderRef} className={s.loader}>
+            <InstaPayLoader />
+          </div>
+        )}
+      </Ledger>
+
+      {showStatementModal && (
+        <DownloadStatement
+          showModal={showStatementModal}
+          setShowModal={setShowStatementModal}
+          wallet={userDetails}
+          isTransection={true}
+        />
+      )}
+    </>
+  );
+};
+
+export default TransactionsTable;

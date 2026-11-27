@@ -9,8 +9,8 @@
   flex: 1;
   background: #ffffff;
   border-radius: var(--md, 10px);
-  border: 1px solid var(--Border-primary, #E7E4E3);
-  background: var(--Background-Surface-secondary, #FFF);
+  border: 1px solid var(--Border-primary, #e7e4e3);
+  background: var(--Background-Surface-secondary, #fff);
   padding: 16px 16px 8px 16px;
   min-width: 0;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
@@ -41,9 +41,9 @@
   align-items: center;
   gap: 8px;
   border-radius: var(--sm, 6px);
-  background: var(--Greyscale-15, #F3F3F4);
+  background: var(--Greyscale-15, #f3f3f4);
   border: none;
-  color: var(--Primary-900, #1A144F);
+  color: var(--Primary-900, #1a144f);
   text-align: center;
   font-size: 12px;
   font-style: normal;
@@ -64,7 +64,7 @@
 }
 
 .amount {
-  color: var(--Typography-primary, #1F1F21);
+  color: var(--Typography-primary, #1f1f21);
   text-align: center;
   font-size: 32px;
   font-style: normal;
@@ -72,8 +72,6 @@
   line-height: 120%;
   letter-spacing: -0.96px;
 }
-
-
 
 .badgeExpense {
   background: #ffd6d6;
@@ -145,7 +143,6 @@
 }
 
 @keyframes pulse {
-
   0%,
   100% {
     opacity: 1;

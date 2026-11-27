@@ -1,302 +1,302 @@
 [
-    {
-        "currency_code": "USD",
-        "name": "US Dollar",
-        "country_iso": "USA"
-    },
-    {
-        "currency_code": "EUR",
-        "name": "Euro",
-        "country_iso": "DEU"
-    },
-    {
-        "currency_code": "GBP",
-        "name": "British Pound",
-        "country_iso": "GBR"
-    },
-    {
-        "currency_code": "INR",
-        "name": "Indian Rupee",
-        "country_iso": "IND"
-    },
-    {
-        "currency_code": "AUD",
-        "name": "Australian Dollar",
-        "country_iso": "AUS"
-    },
-    {
-        "currency_code": "CAD",
-        "name": "Canadian Dollar",
-        "country_iso": "CAN"
-    },
-    {
-        "currency_code": "JPY",
-        "name": "Japanese Yen",
-        "country_iso": "JPN"
-    },
-    {
-        "currency_code": "CNY",
-        "name": "Chinese Yuan",
-        "country_iso": "CHN"
-    },
-    {
-        "currency_code": "RUB",
-        "name": "Russian Ruble",
-        "country_iso": "RUS"
-    },
-    {
-        "currency_code": "BRL",
-        "name": "Brazilian Real",
-        "country_iso": "BRA"
-    },
-    {
-        "currency_code": "PKR",
-        "name": "Pakistani Rupee",
-        "country_iso": "PAK"
-    },
-    {
-        "currency_code": "ZAR",
-        "name": "South African Rand",
-        "country_iso": "ZAF"
-    },
-    {
-        "currency_code": "MXN",
-        "name": "Mexican Peso",
-        "country_iso": "MEX"
-    },
-    {
-        "currency_code": "CHF",
-        "name": "Swiss Franc",
-        "country_iso": "CHE"
-    },
-    {
-        "currency_code": "TRY",
-        "name": "Turkish Lira",
-        "country_iso": "TUR"
-    },
-    {
-        "currency_code": "SGD",
-        "name": "Singapore Dollar",
-        "country_iso": "SGP"
-    },
-    {
-        "currency_code": "KRW",
-        "name": "South Korean Won",
-        "country_iso": "KOR"
-    },
-    {
-        "currency_code": "SEK",
-        "name": "Swedish Krona",
-        "country_iso": "SWE"
-    },
-    {
-        "currency_code": "NZD",
-        "name": "New Zealand Dollar",
-        "country_iso": "NZL"
-    },
-    {
-        "currency_code": "NOK",
-        "name": "Norwegian Krone",
-        "country_iso": "NOR"
-    },
-    {
-        "currency_code": "DKK",
-        "name": "Danish Krone",
-        "country_iso": "DNK"
-    },
-    {
-        "currency_code": "AED",
-        "name": "United Arab Emirates Dirham",
-        "country_iso": "ARE"
-    },
-    {
-        "currency_code": "HKD",
-        "name": "Hong Kong Dollar",
-        "country_iso": "HKG"
-    },
-    {
-        "currency_code": "SAR",
-        "name": "Saudi Riyal",
-        "country_iso": "SAU"
-    },
-    {
-        "currency_code": "PLN",
-        "name": "Polish Zloty",
-        "country_iso": "POL"
-    },
-    {
-        "currency_code": "IDR",
-        "name": "Indonesian Rupiah",
-        "country_iso": "IDN"
-    },
-    {
-        "currency_code": "THB",
-        "name": "Thai Baht",
-        "country_iso": "THA"
-    },
-    {
-        "currency_code": "MYR",
-        "name": "Malaysian Ringgit",
-        "country_iso": "MYS"
-    },
-    {
-        "currency_code": "PHP",
-        "name": "Philippine Peso",
-        "country_iso": "PHL"
-    },
-    {
-        "currency_code": "VND",
-        "name": "Vietnamese Dong",
-        "country_iso": "VNM"
-    },
-    {
-        "currency_code": "BDT",
-        "name": "Bangladeshi Taka",
-        "country_iso": "BGD"
-    },
-    {
-        "currency_code": "EGP",
-        "name": "Egyptian Pound",
-        "country_iso": "EGY"
-    },
-    {
-        "currency_code": "NPR",
-        "name": "Nepalese Rupee",
-        "country_iso": "NPL"
-    },
-    {
-        "currency_code": "LKR",
-        "name": "Sri Lankan Rupee",
-        "country_iso": "LKA"
-    },
-    {
-        "currency_code": "ARS",
-        "name": "Argentine Peso",
-        "country_iso": "ARG"
-    },
-    {
-        "currency_code": "CLP",
-        "name": "Chilean Peso",
-        "country_iso": "CHL"
-    },
-    {
-        "currency_code": "PEN",
-        "name": "Peruvian Sol",
-        "country_iso": "PER"
-    },
-    {
-        "currency_code": "COP",
-        "name": "Colombian Peso",
-        "country_iso": "COL"
-    },
-    {
-        "currency_code": "NGN",
-        "name": "Nigerian Naira",
-        "country_iso": "NGA"
-    },
-    {
-        "currency_code": "KES",
-        "name": "Kenyan Shilling",
-        "country_iso": "KEN"
-    },
-    {
-        "currency_code": "TZS",
-        "name": "Tanzanian Shilling",
-        "country_iso": "TZA"
-    },
-    {
-        "currency_code": "UGX",
-        "name": "Ugandan Shilling",
-        "country_iso": "UGA"
-    },
-    {
-        "currency_code": "GHS",
-        "name": "Ghanaian Cedi",
-        "country_iso": "GHA"
-    },
-    {
-        "currency_code": "ETB",
-        "name": "Ethiopian Birr",
-        "country_iso": "ETH"
-    },
-    {
-        "currency_code": "TND",
-        "name": "Tunisian Dinar",
-        "country_iso": "TUN"
-    },
-    {
-        "currency_code": "MAD",
-        "name": "Moroccan Dirham",
-        "country_iso": "MAR"
-    },
-    {
-        "currency_code": "DZD",
-        "name": "Algerian Dinar",
-        "country_iso": "DZA"
-    },
-    {
-        "currency_code": "AED",
-        "name": "United Arab Emirates Dirham",
-        "country_iso": "ARE"
-    },
-    {
-        "currency_code": "IQD",
-        "name": "Iraqi Dinar",
-        "country_iso": "IRQ"
-    },
-    {
-        "currency_code": "IRR",
-        "name": "Iranian Rial",
-        "country_iso": "IRN"
-    },
-    {
-        "currency_code": "QAR",
-        "name": "Qatari Rial",
-        "country_iso": "QAT"
-    },
-    {
-        "currency_code": "OMR",
-        "name": "Omani Rial",
-        "country_iso": "OMN"
-    },
-    {
-        "currency_code": "KWD",
-        "name": "Kuwaiti Dinar",
-        "country_iso": "KWT"
-    },
-    {
-        "currency_code": "BHD",
-        "name": "Bahraini Dinar",
-        "country_iso": "BHR"
-    },
-    {
-        "currency_code": "JOD",
-        "name": "Jordanian Dinar",
-        "country_iso": "JOR"
-    },
-    {
-        "currency_code": "LBP",
-        "name": "Lebanese Pound",
-        "country_iso": "LBN"
-    },
-    {
-        "currency_code": "SYP",
-        "name": "Syrian Pound",
-        "country_iso": "SYR"
-    },
-    {
-        "currency_code": "ILS",
-        "name": "Israeli New Shekel",
-        "country_iso": "ISR"
-    },
-    {
-        "currency_code": "XOF",
-        "name": "West African CFA Franc",
-        "country_iso": "SEN"
-    },
-    {
-        "currency_code": "XAF",
-        "name": "Central African Republic",
-        "country_iso": "CAF"
-    }
+  {
+    "currency_code": "USD",
+    "name": "US Dollar",
+    "country_iso": "USA"
+  },
+  {
+    "currency_code": "EUR",
+    "name": "Euro",
+    "country_iso": "DEU"
+  },
+  {
+    "currency_code": "GBP",
+    "name": "British Pound",
+    "country_iso": "GBR"
+  },
+  {
+    "currency_code": "INR",
+    "name": "Indian Rupee",
+    "country_iso": "IND"
+  },
+  {
+    "currency_code": "AUD",
+    "name": "Australian Dollar",
+    "country_iso": "AUS"
+  },
+  {
+    "currency_code": "CAD",
+    "name": "Canadian Dollar",
+    "country_iso": "CAN"
+  },
+  {
+    "currency_code": "JPY",
+    "name": "Japanese Yen",
+    "country_iso": "JPN"
+  },
+  {
+    "currency_code": "CNY",
+    "name": "Chinese Yuan",
+    "country_iso": "CHN"
+  },
+  {
+    "currency_code": "RUB",
+    "name": "Russian Ruble",
+    "country_iso": "RUS"
+  },
+  {
+    "currency_code": "BRL",
+    "name": "Brazilian Real",
+    "country_iso": "BRA"
+  },
+  {
+    "currency_code": "PKR",
+    "name": "Pakistani Rupee",
+    "country_iso": "PAK"
+  },
+  {
+    "currency_code": "ZAR",
+    "name": "South African Rand",
+    "country_iso": "ZAF"
+  },
+  {
+    "currency_code": "MXN",
+    "name": "Mexican Peso",
+    "country_iso": "MEX"
+  },
+  {
+    "currency_code": "CHF",
+    "name": "Swiss Franc",
+    "country_iso": "CHE"
+  },
+  {
+    "currency_code": "TRY",
+    "name": "Turkish Lira",
+    "country_iso": "TUR"
+  },
+  {
+    "currency_code": "SGD",
+    "name": "Singapore Dollar",
+    "country_iso": "SGP"
+  },
+  {
+    "currency_code": "KRW",
+    "name": "South Korean Won",
+    "country_iso": "KOR"
+  },
+  {
+    "currency_code": "SEK",
+    "name": "Swedish Krona",
+    "country_iso": "SWE"
+  },
+  {
+    "currency_code": "NZD",
+    "name": "New Zealand Dollar",
+    "country_iso": "NZL"
+  },
+  {
+    "currency_code": "NOK",
+    "name": "Norwegian Krone",
+    "country_iso": "NOR"
+  },
+  {
+    "currency_code": "DKK",
+    "name": "Danish Krone",
+    "country_iso": "DNK"
+  },
+  {
+    "currency_code": "AED",
+    "name": "United Arab Emirates Dirham",
+    "country_iso": "ARE"
+  },
+  {
+    "currency_code": "HKD",
+    "name": "Hong Kong Dollar",
+    "country_iso": "HKG"
+  },
+  {
+    "currency_code": "SAR",
+    "name": "Saudi Riyal",
+    "country_iso": "SAU"
+  },
+  {
+    "currency_code": "PLN",
+    "name": "Polish Zloty",
+    "country_iso": "POL"
+  },
+  {
+    "currency_code": "IDR",
+    "name": "Indonesian Rupiah",
+    "country_iso": "IDN"
+  },
+  {
+    "currency_code": "THB",
+    "name": "Thai Baht",
+    "country_iso": "THA"
+  },
+  {
+    "currency_code": "MYR",
+    "name": "Malaysian Ringgit",
+    "country_iso": "MYS"
+  },
+  {
+    "currency_code": "PHP",
+    "name": "Philippine Peso",
+    "country_iso": "PHL"
+  },
+  {
+    "currency_code": "VND",
+    "name": "Vietnamese Dong",
+    "country_iso": "VNM"
+  },
+  {
+    "currency_code": "BDT",
+    "name": "Bangladeshi Taka",
+    "country_iso": "BGD"
+  },
+  {
+    "currency_code": "EGP",
+    "name": "Egyptian Pound",
+    "country_iso": "EGY"
+  },
+  {
+    "currency_code": "NPR",
+    "name": "Nepalese Rupee",
+    "country_iso": "NPL"
+  },
+  {
+    "currency_code": "LKR",
+    "name": "Sri Lankan Rupee",
+    "country_iso": "LKA"
+  },
+  {
+    "currency_code": "ARS",
+    "name": "Argentine Peso",
+    "country_iso": "ARG"
+  },
+  {
+    "currency_code": "CLP",
+    "name": "Chilean Peso",
+    "country_iso": "CHL"
+  },
+  {
+    "currency_code": "PEN",
+    "name": "Peruvian Sol",
+    "country_iso": "PER"
+  },
+  {
+    "currency_code": "COP",
+    "name": "Colombian Peso",
+    "country_iso": "COL"
+  },
+  {
+    "currency_code": "NGN",
+    "name": "Nigerian Naira",
+    "country_iso": "NGA"
+  },
+  {
+    "currency_code": "KES",
+    "name": "Kenyan Shilling",
+    "country_iso": "KEN"
+  },
+  {
+    "currency_code": "TZS",
+    "name": "Tanzanian Shilling",
+    "country_iso": "TZA"
+  },
+  {
+    "currency_code": "UGX",
+    "name": "Ugandan Shilling",
+    "country_iso": "UGA"
+  },
+  {
+    "currency_code": "GHS",
+    "name": "Ghanaian Cedi",
+    "country_iso": "GHA"
+  },
+  {
+    "currency_code": "ETB",
+    "name": "Ethiopian Birr",
+    "country_iso": "ETH"
+  },
+  {
+    "currency_code": "TND",
+    "name": "Tunisian Dinar",
+    "country_iso": "TUN"
+  },
+  {
+    "currency_code": "MAD",
+    "name": "Moroccan Dirham",
+    "country_iso": "MAR"
+  },
+  {
+    "currency_code": "DZD",
+    "name": "Algerian Dinar",
+    "country_iso": "DZA"
+  },
+  {
+    "currency_code": "AED",
+    "name": "United Arab Emirates Dirham",
+    "country_iso": "ARE"
+  },
+  {
+    "currency_code": "IQD",
+    "name": "Iraqi Dinar",
+    "country_iso": "IRQ"
+  },
+  {
+    "currency_code": "IRR",
+    "name": "Iranian Rial",
+    "country_iso": "IRN"
+  },
+  {
+    "currency_code": "QAR",
+    "name": "Qatari Rial",
+    "country_iso": "QAT"
+  },
+  {
+    "currency_code": "OMR",
+    "name": "Omani Rial",
+    "country_iso": "OMN"
+  },
+  {
+    "currency_code": "KWD",
+    "name": "Kuwaiti Dinar",
+    "country_iso": "KWT"
+  },
+  {
+    "currency_code": "BHD",
+    "name": "Bahraini Dinar",
+    "country_iso": "BHR"
+  },
+  {
+    "currency_code": "JOD",
+    "name": "Jordanian Dinar",
+    "country_iso": "JOR"
+  },
+  {
+    "currency_code": "LBP",
+    "name": "Lebanese Pound",
+    "country_iso": "LBN"
+  },
+  {
+    "currency_code": "SYP",
+    "name": "Syrian Pound",
+    "country_iso": "SYR"
+  },
+  {
+    "currency_code": "ILS",
+    "name": "Israeli New Shekel",
+    "country_iso": "ISR"
+  },
+  {
+    "currency_code": "XOF",
+    "name": "West African CFA Franc",
+    "country_iso": "SEN"
+  },
+  {
+    "currency_code": "XAF",
+    "name": "Central African Republic",
+    "country_iso": "CAF"
+  }
 ]

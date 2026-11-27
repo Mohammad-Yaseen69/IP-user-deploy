@@ -1,6 +1,6 @@
 .confirm_container {
-    background: url("../files/confirm_bg.svg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+  background: url("../files/confirm_bg.svg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }

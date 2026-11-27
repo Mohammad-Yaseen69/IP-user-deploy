@@ -112,9 +112,9 @@
     border-right-color: $dark-color;
   }
 }
-.color-ribbon{
-  .row{
-    > div{
+.color-ribbon {
+  .row {
+    > div {
       margin-bottom: -30px;
     }
   }
@@ -156,9 +156,8 @@
     border-bottom: 10px solid transparent;
   }
 }
-@each $ribbon-name, $ribbon-color in (primary, $primary-color),
-  (secondary, $secondary-color), (success, $success-color),
-  (danger, $danger-color), (info, $info-color), (light, $light-color),
+@each $ribbon-name, $ribbon-color in (primary, $primary-color), (secondary, $secondary-color),
+  (success, $success-color), (danger, $danger-color), (info, $info-color), (light, $light-color),
   (dark, $dark-color), (warning, $warning-color)
 {
   .ribbon-#{$ribbon-name} {

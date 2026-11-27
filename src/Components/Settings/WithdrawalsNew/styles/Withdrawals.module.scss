@@ -1,0 +1,434 @@
+@use "../../styles/settings-ui" as ui;
+
+.container {
+  @include ui.tab-root;
+}
+
+.sectionHeader {
+  @include ui.section-header;
+}
+
+.sectionText {
+  @include ui.section-text;
+  flex: 1;
+
+  @media screen and (max-width: ui.$mobile) {
+    flex-basis: 100%;
+  }
+}
+
+.sectionTitle {
+  @include ui.section-title;
+}
+
+.sectionSubtitle {
+  @include ui.section-subtitle;
+}
+
+.button {
+  @include ui.button;
+  @include ui.button-medium;
+  margin: 0;
+}
+
+.buttonPrimary {
+  @include ui.button-primary;
+}
+
+.buttonTertiary {
+  @include ui.button-tertiary;
+}
+
+.card {
+  @include ui.card;
+}
+
+.cardTitle {
+  @include ui.card-title;
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Country meter ---------- */
+
+.meter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.meterBars {
+  display: flex;
+  gap: 3px;
+}
+
+.meterBar {
+  width: 18px;
+  height: 4px;
+  border-radius: 2px;
+  background: #d1d6e0;
+}
+
+.meterBarOn {
+  background: ui.$primary;
+}
+
+.meterText {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.42px;
+  color: ui.$text-secondary;
+}
+
+/* ---------- Country / crypto cards ---------- */
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px 4px;
+
+  > button {
+    margin-right: -16px;
+  }
+
+  @media screen and (max-width: ui.$mobile) {
+    flex-wrap: wrap;
+    row-gap: 4px;
+    padding: 16px 16px 4px;
+
+    > button {
+      margin-left: -16px;
+    }
+  }
+}
+
+.groupName {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.groupFlag {
+  flex-shrink: 0;
+  width: 22px;
+  height: 15px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.groupMeta {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.42px;
+  color: ui.$text-secondary;
+  white-space: nowrap;
+}
+
+.rows {
+  padding: 0 24px 4px;
+
+  @media screen and (max-width: ui.$mobile) {
+    padding: 0 16px 4px;
+  }
+}
+
+.rowsEmpty {
+  padding: 16px 0;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.42px;
+  color: ui.$text-secondary;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 0;
+
+  & + & {
+    border-top: 1px solid ui.$border-subtle;
+  }
+}
+
+.tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: ui.$bg-surface;
+}
+
+.rowText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.rowTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+
+  p {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: -0.42px;
+    color: ui.$text-primary;
+  }
+}
+
+.rowSubtitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.42px;
+  color: ui.$text-secondary;
+}
+
+// "Default"
+.badge {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: 100px;
+  background: ui.$primary-50;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.33px;
+  color: #3b17a8;
+  white-space: nowrap;
+}
+
+/* ---------- Row menu ---------- */
+
+.menuWrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.menuBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 150ms;
+
+  &:hover,
+  &[aria-expanded="true"] {
+    background: ui.$primary-50;
+  }
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+  padding: 6px;
+  border: 1px solid ui.$border-subtle;
+  border-radius: 10px;
+  background: ui.$bg-white;
+  box-shadow: 0px 12px 32px -8px rgba(27, 31, 42, 0.18);
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 36px;
+    padding: 0 10px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.42px;
+    color: ui.$text-primary;
+    text-align: left;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+      background: ui.$bg-canvas;
+    }
+  }
+
+  .menuDanger {
+    color: ui.$error;
+
+    &:hover {
+      background: #fef2f2;
+    }
+  }
+}
+
+.menuDivider {
+  height: 1px;
+  margin: 4px 0;
+  background: ui.$border-subtle;
+}
+
+/* ---------- Notes ---------- */
+
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: ui.$bg-surface;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.42px;
+  color: ui.$text-primary;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.noteWarning {
+  background: ui.$warning-bg;
+}
+
+.linkBtn {
+  display: inline;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  color: ui.$primary;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+/* ---------- Empty state ---------- */
+
+.empty {
+  align-items: center;
+  padding: 32px 24px 24px;
+  text-align: center;
+
+  @media screen and (max-width: ui.$mobile) {
+    padding: 24px 16px 16px;
+  }
+}
+
+.emptyTile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: ui.$primary-50;
+}
+
+.emptyTitle {
+  margin: 16px 0 6px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: ui.$text-primary;
+}
+
+.emptyText {
+  max-width: 440px;
+  margin-bottom: 20px !important;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.42px;
+  color: ui.$text-secondary;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  margin-top: 28px;
+  text-align: left;
+
+  @media screen and (max-width: ui.$mobile) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+  padding: 16px;
+  border: 1px solid ui.$border-subtle;
+  border-radius: 10px;
+  background: ui.$bg-canvas;
+}
+
+.featureTile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+  background: ui.$primary-50;
+}
+
+.featureTitle {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.42px;
+  color: ui.$text-primary;
+}
+
+.featureText {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: -0.42px;
+  color: ui.$text-secondary;
+}

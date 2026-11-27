@@ -1,95 +1,90 @@
-import { useTranslation } from "react-i18next"
-import borderline from "./files/borderline.png"
-import styles from './styles/index.module.scss'
+import { useTranslation } from "react-i18next";
+import borderline from "./files/borderline.png";
+import styles from "./styles/index.module.scss";
 import ip from "../../PaymentAddressPublic/instapay_black.svg";
-import { flagCheck } from "../../../utils/Functions"
+import { flagCheck } from "../../../utils/Functions";
 import { useNavigate } from "react-router";
 import { countriesInDiffLangs } from "../../../Data/CountriesWithTranslations/countries";
 
 const InvoiceDetails = ({ data, isSubscription = false }) => {
-    const { t, i18n } = useTranslation()
-    const navigate = useNavigate()
+  const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
 
-    const country = data?.countryIsoCode ? countriesInDiffLangs[i18n.language]?.find(c => c.alpha3 === data.countryIsoCode) : null
+  const country = data?.countryIsoCode
+    ? countriesInDiffLangs[i18n.language]?.find((c) => c.alpha3 === data.countryIsoCode)
+    : null;
 
-    return (
-        <>
-            <div className={styles.top}>
-                <div className={styles.top_content}>
-                    <img
-                        onClick={() => window.location.href = "https://insta-pay.ch"}
-                        src={ip}
-                        style={{ width: "150px", cursor: "pointer" }}
-                        alt=""
-                    />
-                    <h1>{isSubscription ? t("Subscription")?.toUpperCase() : t("Invoice")?.toUpperCase()} </h1>
-                </div>
+  return (
+    <>
+      <div className={styles.top}>
+        <div className={styles.top_content}>
+          <img
+            onClick={() => (window.location.href = "https://insta-pay.ch")}
+            src={ip}
+            style={{ width: "150px", cursor: "pointer" }}
+            alt=""
+          />
+          <h1>
+            {isSubscription ? t("Subscription")?.toUpperCase() : t("Invoice")?.toUpperCase()}{" "}
+          </h1>
+        </div>
 
-                <img style={{ width: "100%" }} src={borderline} alt="" />
+        <img style={{ width: "100%" }} src={borderline} alt="" />
+      </div>
+
+      <div className={styles.details}>
+        {flagCheck("allowTitle", data.account, "invoice") && (
+          <div>
+            <span>{isSubscription ? t("Plan Title") : t("Invoice Title")}</span>
+            <h2>{data?.plan?.title || data.title}</h2>
+          </div>
+        )}
+        <div>
+          <span>{isSubscription ? t("Plan ID") : t("Invoice ID")}</span>
+          <h4>{data?.plan?.planId || data.invoiceId}</h4>
+        </div>
+
+        {country && (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <span>{t("Country")}</span>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <img
+                src={country.file_url}
+                alt={country.alpha3}
+                width="30"
+                height="20"
+                style={{
+                  borderRadius: "2px",
+                  boxShadow: "0 0 4px rgba(0,0,0,.2)",
+                }}
+              />
+              <h2>{t(country.name)}</h2>
             </div>
+          </div>
+        )}
 
-            <div className={styles.details}>
-                {flagCheck("allowTitle", data.account, "invoice") &&
-                    <div>
-                        <span>
-                            {isSubscription ? t("Plan Title") : t("Invoice Title")}
-                        </span>
-                        <h2>
-                            {data?.plan?.title || data.title}
-                        </h2>
-                    </div>
-                }
-                <div>
-                    <span >
-                        {isSubscription ? t("Plan ID") : t("Invoice ID")}
-                    </span>
-                    <h4>
-                        {data?.plan?.planId || data.invoiceId}
-                    </h4>
-                </div>
+        {flagCheck("allowDescription", data.account, "invoice") && (
+          <div>
+            <span>{isSubscription ? t("Plan Description") : t("Invoice Description")}</span>
+            <h2
+              style={{
+                wordBreak: "break-word",
+                overflowWrap: "break-word",
+              }}
+            >
+              {data?.plan?.description || data.description}
+            </h2>
+          </div>
+        )}
+        {isSubscription && (
+          <div>
+            <span>{t("Billing Cycle")}</span>
+            <h2>{data?.plan?.billingCycle}</h2>
+          </div>
+        )}
+      </div>
+    </>
+  );
+};
 
-                {country && (
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                        <span>{t("Country")}</span>
-                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                            <img
-                                src={country.file_url}
-                                alt={country.alpha3}
-                                width="30"
-                                height="20"
-                                style={{ borderRadius: "2px", boxShadow: "0 0 4px rgba(0,0,0,.2)" }}
-                            />
-                            <h2>{t(country.name)}</h2>
-                        </div>
-                    </div>
-                )}
-
-                {flagCheck("allowDescription", data.account, "invoice") &&
-                    <div>
-                        <span>
-                            {isSubscription ? t("Plan Description") : t("Invoice Description")}
-                        </span>
-                        <h2 style={{
-                            wordBreak: "break-word",
-                            overflowWrap: "break-word",
-                        }}>
-                            {data?.plan?.description || data.description}
-                        </h2>
-                    </div>
-                }
-                {isSubscription && (
-                    <div>
-                        <span>
-                            {t("Billing Cycle")}
-                        </span>
-                        <h2 >
-                            {data?.plan?.billingCycle}
-                        </h2>
-                    </div>
-                )}
-            </div>
-        </>
-    )
-}
-
-export default InvoiceDetails
+export default InvoiceDetails;

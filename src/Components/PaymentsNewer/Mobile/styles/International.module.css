@@ -1,28 +1,28 @@
 .top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-right: .5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 0.5rem;
 }
 
 .back_btn {
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.25rem;
-    padding-top: .1rem;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.25rem;
+  padding-top: 0.1rem;
 }
 
 .top h5 {
-    font-size: 1.1rem;
-    color: #5926f0;
-    margin-bottom: 0;
+  font-size: 1.1rem;
+  color: #5926f0;
+  margin-bottom: 0;
 }
 
 .bottom {
-    margin-top: 2rem;
+  margin-top: 2rem;
 }

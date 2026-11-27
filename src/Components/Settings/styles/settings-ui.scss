@@ -1,0 +1,354 @@
+// Shared building blocks for the redesigned Settings tabs (Figma: Settings 2.0).
+// Each tab's CSS module does `@use "settings-ui" as ui;` and includes what it needs,
+// so class names stay local to that tab's module.
+
+$text-primary: #1b1f2a;
+$text-secondary: #6e7687;
+$text-muted: #9aa3b2;
+$text-inverse: #f8f9fc;
+$border-subtle: #eff1f6;
+$bg-white: #ffffff;
+$bg-canvas: #f8f9fc;
+$bg-surface: #eff1f6;
+$primary: #5926f0;
+$primary-hover: #4a1ed6;
+$primary-50: #f2eeff;
+$primary-900: #22106b;
+$success: #10b981;
+$success-bg: #ecfdf5;
+$success-text: #047857;
+$warning-bg: #fffbdf;
+$warning-text: #976600;
+$orange: #f97316;
+$error: #dc2626;
+
+$mobile: 768px;
+
+@mixin tab-root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: Inter, sans-serif;
+  color: $text-primary;
+
+  p,
+  h4,
+  label {
+    margin: 0;
+  }
+
+  // .form-select = reactstrap 9 selects
+  :global(.form-control),
+  :global(.form-select) {
+    height: 40px;
+    padding: 8px 12px;
+    border: 1px solid $border-subtle;
+    border-radius: 6px;
+    background-color: $bg-white;
+    box-shadow: 0px 1px 1.5px 0px rgba(27, 31, 42, 0.04);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: -0.42px;
+    color: $text-primary;
+
+    &::placeholder {
+      color: $text-muted;
+    }
+
+    &:focus {
+      border-color: $primary;
+      box-shadow: 0 0 0 3px rgba(89, 38, 240, 0.12);
+      outline: none;
+    }
+
+    &:disabled,
+    &[readonly] {
+      background-color: $bg-white;
+      color: $text-primary;
+      opacity: 1;
+    }
+  }
+
+  textarea:global(.form-control) {
+    height: auto;
+    min-height: 40px;
+    line-height: 1.5;
+    resize: vertical;
+    field-sizing: content;
+  }
+
+  select:global(.form-control),
+  :global(.form-select) {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: none;
+    padding-right: 40px;
+    cursor: pointer;
+
+    &:disabled {
+      cursor: default;
+    }
+  }
+
+  // Room for leading / trailing icons
+  .withLeadingIcon :global(.form-control) {
+    padding-left: 45px;
+  }
+
+  .withTrailingIcon :global(.form-control),
+  .withTrailingIcon :global(.form-select) {
+    padding-right: 40px;
+  }
+}
+
+/* ---------- Section header ---------- */
+
+@mixin section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0 4px;
+
+  @media screen and (max-width: $mobile) {
+    flex-wrap: wrap;
+  }
+}
+
+@mixin section-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+@mixin section-title {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.72px;
+  color: $text-primary;
+}
+
+@mixin section-subtitle {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.48px;
+  color: $text-secondary;
+}
+
+/* ---------- Buttons ---------- */
+
+@mixin button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 12px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.36px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 150ms;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+@mixin button-medium {
+  height: 36px;
+  padding: 0 16px;
+  font-size: 14px;
+  letter-spacing: -0.42px;
+}
+
+// 40px button (e.g. "Update password")
+@mixin button-large {
+  height: 40px;
+  padding: 0 20px;
+  font-size: 14px;
+  letter-spacing: -0.42px;
+}
+
+@mixin button-primary {
+  background: $primary;
+  color: #ffffff;
+
+  &:not(:disabled):hover {
+    background: $primary-hover;
+  }
+}
+
+@mixin button-secondary {
+  background: $border-subtle;
+  color: $primary-900;
+
+  &:not(:disabled):hover {
+    background: #e2e5ee;
+  }
+}
+
+@mixin button-tertiary {
+  background: transparent;
+  color: $primary;
+
+  &:not(:disabled):hover {
+    background: $primary-50;
+  }
+}
+
+/* ---------- Cards ---------- */
+
+@mixin card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: $bg-white;
+  border: 1px solid $border-subtle;
+  border-radius: 14px;
+  box-shadow: 0px 1px 2px 0px rgba(27, 31, 42, 0.04);
+}
+
+@mixin card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 20px 24px 4px;
+
+  @media screen and (max-width: $mobile) {
+    padding: 16px 16px 4px;
+  }
+}
+
+@mixin card-title {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: $text-primary;
+}
+
+@mixin card-subtitle {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.42px;
+  color: $text-secondary;
+}
+
+@mixin card-body {
+  padding: 16px 24px 24px;
+
+  @media screen and (max-width: $mobile) {
+    padding: 12px 16px 16px;
+  }
+}
+
+// Grey strip at the bottom of a card (helper text + action)
+@mixin card-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 24px;
+  background: $bg-canvas;
+  border-top: 1px solid $border-subtle;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.42px;
+  color: $text-secondary;
+
+  @media screen and (max-width: $mobile) {
+    flex-wrap: wrap;
+    padding: 16px;
+  }
+}
+
+/* ---------- Form grid + fields ---------- */
+
+@mixin grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 16px;
+  align-items: start;
+
+  @media screen and (max-width: $mobile) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@mixin full {
+  grid-column: 1 / -1;
+}
+
+@mixin field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  margin: 0 !important;
+}
+
+@mixin label {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.36px;
+  color: $text-primary;
+}
+
+@mixin required {
+  color: $error;
+  font-weight: 500;
+}
+
+@mixin counter {
+  margin-left: auto;
+  font-weight: 400;
+  color: $text-secondary;
+}
+
+@mixin control {
+  position: relative;
+}
+
+// Icon sitting inside an input, vertically centred
+@mixin overlay-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+@mixin hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.36px;
+  color: $text-secondary;
+
+  svg {
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+}
+
+@mixin hint-error {
+  color: $error;
+}

@@ -1,145 +1,147 @@
 .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(15, 23, 42, 0.6);
-    backdrop-filter: blur(4px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1050;
-    padding: 1rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 1rem;
 }
 
 .modalCard {
-    background: #ffffff;
-    border-radius: 20px;
-    width: 100%;
-    max-width: 440px;
-    padding: 28px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    text-align: center;
-    position: relative;
-    border: 1px solid rgba(109, 41, 220, 0.1);
-    animation: modalAppear 0.25s ease-out;
+  background: #ffffff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 440px;
+  padding: 28px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  position: relative;
+  border: 1px solid rgba(109, 41, 220, 0.1);
+  animation: modalAppear 0.25s ease-out;
 }
 
 @keyframes modalAppear {
-    from {
-        opacity: 0;
-        transform: scale(0.95) translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 .iconWrapper {
-    width: 68px;
-    height: 68px;
-    margin: 0 auto 20px auto;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #e64067, #5926f0, #4828a0);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ffffff;
-    box-shadow: 0 10px 25px rgba(89, 38, 240, 0.35);
+  width: 68px;
+  height: 68px;
+  margin: 0 auto 20px auto;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e64067, #5926f0, #4828a0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 10px 25px rgba(89, 38, 240, 0.35);
 }
 
 .title {
-    font-size: 20px;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 10px;
 }
 
 .description {
-    font-size: 14px;
-    color: #64748b;
-    line-height: 1.5;
-    margin-bottom: 22px;
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.5;
+  margin-bottom: 22px;
 }
 
 .benefitsList {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    text-align: left;
-    margin-bottom: 26px;
-    background: #f8fafc;
-    border-radius: 12px;
-    padding: 14px 16px;
-    border: 1px solid #edf2f7;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+  margin-bottom: 26px;
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 14px 16px;
+  border: 1px solid #edf2f7;
 }
 
 .benefitItem {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 13px;
-    color: #334155;
-    font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: #334155;
+  font-weight: 500;
 }
 
 .benefitDot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #5926f0;
-    flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #5926f0;
+  flex-shrink: 0;
 }
 
 .actions {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .enableBtn {
-    background: linear-gradient(to right bottom, #e64067, #5926f0, #4828a0);
-    color: #ffffff;
-    border: none;
-    outline: none;
-    border-radius: 12px;
-    padding: 12px 20px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-    box-shadow: 0 4px 12px rgba(89, 38, 240, 0.25);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+  background: linear-gradient(to right bottom, #e64067, #5926f0, #4828a0);
+  color: #ffffff;
+  border: none;
+  outline: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+  box-shadow: 0 4px 12px rgba(89, 38, 240, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .enableBtn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(89, 38, 240, 0.35);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(89, 38, 240, 0.35);
 }
 
 .enableBtn:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-    transform: none;
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .dismissBtn {
-    background: transparent;
-    border: 1px solid transparent;
-    color: #94a3b8;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 8px 16px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: color 0.15s ease;
+  background: transparent;
+  border: 1px solid transparent;
+  color: #94a3b8;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: color 0.15s ease;
 }
 
 .dismissBtn:hover {
-    color: #475569;
+  color: #475569;
 }

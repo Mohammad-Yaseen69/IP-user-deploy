@@ -1,357 +1,356 @@
 .container {
-    display: flex;
-    gap: 2rem;
-    padding: 2rem;
-    border-radius: 16px;
-    background: #FAFAFA;
-    box-shadow: 16.587px 4.739px 265.389px 0px rgba(0, 0, 0, 0.07);
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+  border-radius: 16px;
+  background: #fafafa;
+  box-shadow: 16.587px 4.739px 265.389px 0px rgba(0, 0, 0, 0.07);
 }
 
 .left {
-    flex: 1;
-    min-width: 300px;
-    display: flex;
-    flex-direction: column;
-    gap: 3.5rem;
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
 }
 
 .limits_card {
-    display: flex;
-    flex-direction: column;
-    gap: 2.2rem;
-    margin-top: -1rem;
-    border-radius: var(--8, 8px);
-    background: #F2F2F2;
-    padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.2rem;
+  margin-top: -1rem;
+  border-radius: var(--8, 8px);
+  background: #f2f2f2;
+  padding: 1.1rem;
 }
 
 .limits_card span {
-    color: #000;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 1.1rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: -0.54px;
+  color: #000;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 1.1rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.54px;
 }
 
 .limits_card h4 {
-    margin-bottom: 0;
-    color: #000;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 1.5rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: -0.96px;
+  margin-bottom: 0;
+  color: #000;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.96px;
 }
 
 .left h1 {
-    margin-bottom: 0;
-    color: #000;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 1.5rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: -0.72px;
+  margin-bottom: 0;
+  color: #000;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.72px;
 }
 
 .left_limits {
-    border-radius: var(--8, 8px);
-    background: #F2F2F2;
-    display: flex;
-    padding: 1rem;
-    flex-direction: column;
+  border-radius: var(--8, 8px);
+  background: #f2f2f2;
+  display: flex;
+  padding: 1rem;
+  flex-direction: column;
 }
 
 .left_limits h2 {
-    margin-bottom: 2rem;
-    color: #000;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 1.1rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: -0.54px;
+  margin-bottom: 2rem;
+  color: #000;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 1.1rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.54px;
 }
 
 .total_limits {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    justify-content: space-between;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: space-between;
 }
 
 .total_limits span {
-    color: #000;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
+  color: #000;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
 }
 
 .total_limits strong {
-    color: #000;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: -0.54px;
+  color: #000;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.54px;
 }
 
 .bars {
-    display: flex;
-    gap: .25rem;
-    margin-top: 1.3rem;
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 1.3rem;
 }
 
 .bars div {
-    height: 26px;
-    border-radius: 4px;
+  height: 26px;
+  border-radius: 4px;
 }
 
 .used,
 .remaining {
-    margin-top: .9rem;
-    border-radius: 4px;
-    background: #FFF;
-    display: flex;
-    padding: .8rem;
-    justify-content: space-between;
-    align-items: center;
+  margin-top: 0.9rem;
+  border-radius: 4px;
+  background: #fff;
+  display: flex;
+  padding: 0.8rem;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.used>div,
-.remaining>div {
-    display: flex;
-    align-items: center;
-    gap: .5rem;
+.used > div,
+.remaining > div {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .square {
-    height: 16px;
-    width: 16px;
-    flex-shrink: 0;
-    border-radius: .25rem;
+  height: 16px;
+  width: 16px;
+  flex-shrink: 0;
+  border-radius: 0.25rem;
 }
 
 .used span,
 .remaining span {
-    color: #000;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: .9rem;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
+  color: #000;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 0.9rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
 }
 
 .used strong,
 .remaining strong {
-    color: #000;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: .9rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
+  color: #000;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 0.9rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
 }
 
 .right {
-    flex: 3;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .right_item {
-    border-radius: var(--8, 8px);
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    background: #FFF;
-    display: flex;
-    padding: 1rem;
-    flex-direction: column;
-    gap: 1.3rem;
-    align-self: stretch;
+  border-radius: var(--8, 8px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: #fff;
+  display: flex;
+  padding: 1rem;
+  flex-direction: column;
+  gap: 1.3rem;
+  align-self: stretch;
 }
 
 .right_item h2 {
-    margin-bottom: 0;
-    color: #000;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 1.1rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: -0.54px;
+  margin-bottom: 0;
+  color: #000;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 1.1rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.54px;
 }
 
 .r_limits {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
 }
 
 .ri_limits {
-    border-radius: var(--8, 8px);
-    background: #FAFAFA;
-    display: flex;
-    flex-direction: column;
-    gap: 1.3rem;
-    padding: 1.25rem;
+  border-radius: var(--8, 8px);
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+  padding: 1.25rem;
 }
 
 .ril_top {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    justify-content: space-between;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: space-between;
 }
 
 .ril_top span {
-    color: rgba(0, 0, 0, 0.50);
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
+  color: rgba(0, 0, 0, 0.5);
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
 }
 
 .ril_top strong {
-    color: #000;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: -0.64px;
+  color: #000;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.64px;
 }
 
 .ri_bars {
-    display: flex;
-    gap: .25rem;
+  display: flex;
+  gap: 0.25rem;
 }
 
 .ri_bars div {
-    height: 26px;
-    border-radius: .25rem;
+  height: 26px;
+  border-radius: 0.25rem;
 }
 
 .ril_used,
 .ril_remaining {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
 }
 
 .ril_used div,
 .ril_remaining div {
-    display: flex;
-    align-items: center;
-    gap: .5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .ril_used .square,
 .ril_remaining .square {
-    width: 14px;
-    height: 14px;
-    border-radius: 4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
 }
 
 .ril_used span,
 .ril_remaining span {
-    color: #000;
-    font-family: Manrope;
-    font-size: .9rem;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
+  color: #000;
+  font-family: Manrope;
+  font-size: 0.9rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
 }
 
 .ril_used strong,
 .ril_remaining strong {
-    color: #000;
-    font-family: Manrope;
-    font-size: .9rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
+  color: #000;
+  font-family: Manrope;
+  font-size: 0.9rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
 }
 
 .chev {
-    display: none;
+  display: none;
 }
-
 
 @media screen and (max-width: 400px) {
-    .r_limits{
-        grid-template-columns: 1fr !important;
-    }
+  .r_limits {
+    grid-template-columns: 1fr !important;
+  }
 }
 @media screen and (max-width: 1000px) {
-    .container {
-        flex-direction: column;
-        padding: 0;
-        margin-top: 1.5rem;
-    }
+  .container {
+    flex-direction: column;
+    padding: 0;
+    margin-top: 1.5rem;
+  }
 
-    .left {
-        min-width: 100%;
-        gap: 2.5rem;
-    }
+  .left {
+    min-width: 100%;
+    gap: 2.5rem;
+  }
 
-    .right {
-        flex-direction: row;
-    }
+  .right {
+    flex-direction: row;
+  }
 
-    .right_item {
-        min-width: 100%;
-    }
+  .right_item {
+    min-width: 100%;
+  }
 
-    .chev {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 30px;
-        width: 30px;
-        background-color: white;
-        /* position: absolute;
+  .chev {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    width: 30px;
+    background-color: white;
+    /* position: absolute;
         top: 50%;
         transform: translateY(-50%); */
-        border-radius: 30px;
-        cursor: pointer;
-        box-shadow: 0 0 3px #333333;
-    }
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 0 3px #333333;
+  }
 
-    .chev_left {
-        left: -15px;
-    }
+  .chev_left {
+    left: -15px;
+  }
 
-    .chev_right {
-        right: -15px;
-    }
+  .chev_right {
+    right: -15px;
+  }
 }

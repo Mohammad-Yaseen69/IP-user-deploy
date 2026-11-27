@@ -1,139 +1,138 @@
-
 .stepTitle {
-    font-size: 24px;
-    font-weight: 600;
-    color: #000;
+  font-size: 24px;
+  font-weight: 600;
+  color: #000;
 }
 
 .stepHint {
-    margin: 4px 0 16px;
-    font-size: 14px;
-    color: #667085;
+  margin: 4px 0 16px;
+  font-size: 14px;
+  color: #667085;
 }
 
 .walletList {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-height: 420px;
-    overflow: auto;
-    padding-right: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 420px;
+  overflow: auto;
+  padding-right: 2px;
 }
 
 .emptyWallets {
-    padding: 24px;
-    border: 1px dashed #d0d5dd;
-    border-radius: 12px;
-    text-align: center;
+  padding: 24px;
+  border: 1px dashed #d0d5dd;
+  border-radius: 12px;
+  text-align: center;
 
-    p {
-        margin: 0 0 8px;
-        color: #344054;
-    }
+  p {
+    margin: 0 0 8px;
+    color: #344054;
+  }
 }
 
 .destination {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-top: 20px;
-    padding: 12px 14px;
-    border: 1px solid #e4e7ec;
-    border-radius: 12px;
-    background: #f9fafb;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 12px 14px;
+  border: 1px solid #e4e7ec;
+  border-radius: 12px;
+  background: #f9fafb;
 }
 
 .destinationMissing {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-    border-color: #fedf89;
-    background: #fffaeb;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  border-color: #fedf89;
+  background: #fffaeb;
 
-    p {
-        margin: 0;
-        font-size: 14px;
-        color: #93370d;
-    }
+  p {
+    margin: 0;
+    font-size: 14px;
+    color: #93370d;
+  }
 }
 
 .destinationText {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
 }
 
 .destinationLabel {
-    font-size: 12px;
-    color: #667085;
+  font-size: 12px;
+  color: #667085;
 }
 
 .destinationName {
-    font-size: 14px;
-    font-weight: 600;
-    color: #1b1f2a;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1b1f2a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .destinationBalance {
-    font-size: 13px;
-    color: #344054;
-    white-space: nowrap;
+  font-size: 13px;
+  color: #344054;
+  white-space: nowrap;
 }
 
 .linkBtn {
-    border: none;
-    background: none;
-    padding: 0;
-    color: #5926f0;
-    font-weight: 600;
-    text-decoration: underline;
-    cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  color: #5926f0;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .receiveCard {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin: 16px 0;
-    padding: 16px;
-    border-radius: 12px;
-    background: #f2eeff;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 16px 0;
+  padding: 16px;
+  border-radius: 12px;
+  background: #f2eeff;
 }
 
 .receiveLabel {
-    font-size: 13px;
-    color: #5926f0;
-    font-weight: 600;
+  font-size: 13px;
+  color: #5926f0;
+  font-weight: 600;
 }
 
 .receiveValue {
-    font-size: 26px;
-    font-weight: 700;
-    color: #1b1f2a;
+  font-size: 26px;
+  font-weight: 700;
+  color: #1b1f2a;
 }
 
 .receiveNote {
-    font-size: 12px;
-    color: #667085;
+  font-size: 12px;
+  color: #667085;
 }
 
 .reference {
-    margin: 12px 0 0;
-    font-size: 12px;
-    color: #667085;
-    word-break: break-all;
+  margin: 12px 0 0;
+  font-size: 12px;
+  color: #667085;
+  word-break: break-all;
 }
 
 @media (max-width: 600px) {
-    .walletList {
-        max-height: none;
-    }
+  .walletList {
+    max-height: none;
+  }
 
-    .receiveValue {
-        font-size: 22px;
-    }
+  .receiveValue {
+    font-size: 22px;
+  }
 }

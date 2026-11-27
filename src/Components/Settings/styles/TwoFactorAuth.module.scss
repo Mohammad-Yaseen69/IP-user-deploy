@@ -1,0 +1,283 @@
+@use "settings-ui" as ui;
+
+.container {
+  @include ui.tab-root;
+
+  :global(.switch) {
+    margin: 0;
+  }
+}
+
+.sectionHeader {
+  @include ui.section-header;
+}
+
+.sectionText {
+  @include ui.section-text;
+}
+
+.sectionTitle {
+  @include ui.section-title;
+}
+
+.sectionSubtitle {
+  @include ui.section-subtitle;
+}
+
+.button {
+  @include ui.button;
+  @include ui.button-medium;
+}
+
+.buttonSecondary {
+  @include ui.button-secondary;
+}
+
+.card {
+  @include ui.card;
+}
+
+.cardHeader {
+  @include ui.card-header;
+}
+
+.cardTitle {
+  @include ui.card-title;
+}
+
+.cardSubtitle {
+  @include ui.card-subtitle;
+}
+
+.toneSuccess {
+  --tone: #{ui.$success};
+  --tone-bg: #{ui.$success-bg};
+}
+
+.toneWarning {
+  --tone: #{ui.$orange};
+  --tone-bg: #fff7ed;
+}
+
+.toneDanger {
+  --tone: #{ui.$error};
+  --tone-bg: #fef2f2;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+
+  @media screen and (max-width: ui.$mobile) {
+    padding: 16px;
+  }
+}
+
+.statusTile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--tone-bg);
+}
+
+.statusText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.statusTitle {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: ui.$text-primary;
+}
+
+.statusSubtitle {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.42px;
+  color: ui.$text-secondary;
+}
+
+.meter {
+  display: flex;
+  gap: 4px;
+  padding-top: 8px;
+}
+
+.meterBar {
+  width: 48.8px;
+  height: 4px;
+  border-radius: 2px;
+  background: ui.$border-subtle;
+}
+
+.meterBarOn {
+  background: var(--tone);
+}
+
+.rows {
+  padding: 0 24px 4px;
+
+  @media screen and (max-width: ui.$mobile) {
+    padding: 0 16px 4px;
+  }
+
+  > * + * {
+    border-top: 1px solid ui.$border-subtle;
+  }
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 0;
+}
+
+.tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: ui.$bg-surface;
+}
+
+.rowText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.rowTitle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.42px;
+  color: ui.$text-primary;
+}
+
+.rowSubtitle {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.42px;
+  color: ui.$text-secondary;
+  overflow-wrap: anywhere;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: 100px;
+  background: ui.$primary-50;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.33px;
+  color: #3b17a8;
+  white-space: nowrap;
+}
+
+.spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  color: ui.$primary;
+}
+
+.caret {
+  display: flex;
+  transition: transform 200ms;
+}
+
+.caretOpen {
+  transform: rotate(180deg);
+}
+
+.devices {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 0 0 20px 54px;
+
+  @media screen and (max-width: ui.$mobile) {
+    padding-left: 0;
+  }
+}
+
+.deviceList {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: ui.$bg-canvas;
+  border: 1px solid ui.$border-subtle;
+  border-radius: 10px;
+}
+
+.device {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px 10px 16px;
+
+  & + & {
+    border-top: 1px solid ui.$border-subtle;
+  }
+}
+
+.deviceName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.42px;
+  color: ui.$text-primary;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.deleteButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+
+  &:hover {
+    background: #fef2f2;
+  }
+}
