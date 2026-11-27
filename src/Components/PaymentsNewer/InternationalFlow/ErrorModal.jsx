@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router";
 import { Button, Modal, ModalBody } from "reactstrap";
 
-const ErrorModal = ({ isOpen, toggle, message = "", heading = "Transaction Failed!" }) => {
+const ErrorModal = ({ isOpen, toggle, message = "", heading = "Transaction Failed!", extra }) => {
   const { t } = useTranslation();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -34,6 +34,7 @@ const ErrorModal = ({ isOpen, toggle, message = "", heading = "Transaction Faile
         <p style={{ textAlign: "center" }} color="#eaeaea">
           {t(message)}
         </p>
+        {extra && <p style={{ textAlign: "center", fontWeight: 700, margin: 0 }}>{extra}</p>}
         <Button
           color="primary"
           onClick={handleClick}
